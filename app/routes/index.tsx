@@ -17,7 +17,10 @@ import {
   TextInput
 } from '@trussworks/react-uswds'
 
-import { useLoaderData } from 'remix'
+import {
+  useLoaderData,
+  MetaFunction
+} from 'remix'
 
 import { CopyableCode } from '~/components/CopyableCode'
 
@@ -37,6 +40,10 @@ export let loader = () => [
     client_id: "oNv8GCPQY2hMsMgj4doRj2eP6F"
   }
 ]
+
+export const meta: MetaFunction = () => ({
+  title: "GCN: Client Credentials",
+})
 
 interface ClientCredentialData {
   name: string,

@@ -8,8 +8,6 @@ import {
 } from "remix";
 import type { MetaFunction } from "remix";
 
-// import '@trussworks/react-uswds/lib/uswds.css'
-// import '@trussworks/react-uswds/lib/index.css'
 import styles1 from '@trussworks/react-uswds/lib/uswds.css'
 import styles2 from '@trussworks/react-uswds/lib/uswds.css'
 import {
@@ -50,7 +48,7 @@ export default function App() {
         <Header basic>
           <div className="usa-nav-container">
             <div className="usa-navbar">
-              <Title>General Coordinates Network</Title>
+              <Title>GCN: General Coordinates Network</Title>
             </div>
           </div>
         </Header>
