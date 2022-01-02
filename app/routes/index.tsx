@@ -4,13 +4,8 @@ import {
 } from 'react'
 
 import {
-  CopyToClipboard
-} from 'react-copy-to-clipboard'
-
-import {
   Alert,
   Button,
-  IconContentCopy,
   IconDelete,
   Label,
   Modal,
@@ -23,6 +18,8 @@ import {
 } from '@trussworks/react-uswds'
 
 import { useLoaderData } from 'remix'
+
+import CopyableCode from '~/components/CopyableCode'
 
 export let loader = () => [
   {
@@ -38,27 +35,6 @@ export let loader = () => [
     client_id: "oNv8GCPQY2hMsMgj4doRj2eP6F"
   }
 ]
-
-function CopyableCode(props: JSX.IntrinsicElements['span']) {
-  return (
-    <CopyToClipboard text={props.children}>
-      <Button
-        type="button"
-        unstyled
-        className="padding-1px text-base-darkest"
-        title="Copy to clipboard"
-      >
-        <IconContentCopy />
-        {' '}
-        <code>
-          <small>
-            {props.children}
-          </small>
-        </code>
-      </Button>
-    </CopyToClipboard>
-  )
-}
 
 interface ClientCredentialProps {
   name: string,
