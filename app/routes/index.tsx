@@ -12,7 +12,6 @@ import {
   Button,
   IconContentCopy,
   IconDelete,
-  IconSentimentSatisfied,
   Label,
   Modal,
   ModalFooter,
