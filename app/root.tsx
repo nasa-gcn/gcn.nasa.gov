@@ -23,7 +23,7 @@ export function links() {
   return [
     {
       rel: "stylesheet",
-      // FIXME: should get from webpack
+      // FIXME: should get from bundle using webpack or postcss
       href: "https://unpkg.com/uswds@2.11.2/dist/css/uswds.min.css"
     }
   ];
