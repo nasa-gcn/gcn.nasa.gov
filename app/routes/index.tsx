@@ -36,10 +36,14 @@ export let loader = () => [
   }
 ]
 
-interface ClientCredentialProps {
+interface ClientCredentialData {
   name: string,
   client_id: string,
   client_secret?: string,
+  onDelete?: (client_id: string) => void
+}
+
+interface ClientCredentialProps extends ClientCredentialData {
   onDelete?: (client_id: string) => void
 }
 
@@ -105,7 +109,7 @@ function ClientCredential(props: ClientCredentialProps) {
 
 export default function Index() {
   const modalRef = useRef<ModalRef>(null)
-  const [items, setItems] = useState(useLoaderData())
+  const [items, setItems] = useState<ClientCredentialData[]>(useLoaderData())
   const [name, setName] = useState('')
   const [created, setCreated] = useState(false)
 

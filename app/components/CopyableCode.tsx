@@ -5,10 +5,13 @@ import {
   
   import CopyToClipboard from 'react-copy-to-clipboard'
 
-  export default function CopyableCode(props: JSX.IntrinsicElements['span']) {
-    console.log(props.children)
+  export interface CopyableCodeProps {
+    text: string
+  }
+
+  export default function CopyableCode(props: CopyableCodeProps) {
     return (
-      <CopyToClipboard text={props.children}>
+      <CopyToClipboard text={props.text}>
         <Button
           type="button"
           unstyled
@@ -19,7 +22,7 @@ import {
           {' '}
           <code>
             <small>
-              {props.children}
+              {props.text}
             </small>
           </code>
         </Button>
