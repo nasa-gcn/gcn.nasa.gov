@@ -8,8 +8,6 @@ import {
 } from "remix";
 import type { MetaFunction } from "remix";
 
-import styles1 from '@trussworks/react-uswds/lib/uswds.css'
-import styles2 from '@trussworks/react-uswds/lib/uswds.css'
 import {
   GovBanner,
   GridContainer,
@@ -25,11 +23,8 @@ export function links() {
   return [
     {
       rel: "stylesheet",
-      href: styles1
-    },
-    {
-      rel: "stylesheet",
-      href: styles2
+      // FIXME: should get from webpack
+      href: "https://unpkg.com/uswds@2.11.2/dist/css/uswds.min.css"
     }
   ];
 }
