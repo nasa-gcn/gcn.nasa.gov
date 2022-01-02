@@ -19,7 +19,9 @@ import {
 
 import { useLoaderData } from 'remix'
 
-import CopyableCode from '~/components/CopyableCode'
+import { CopyableCode } from '~/components/CopyableCode'
+
+import { randomAlphanumericString } from '~/lib/RandomAlphanumeric'
 
 export let loader = () => [
   {
@@ -116,16 +118,6 @@ export default function Index() {
   function handleDelete(client_id: string)
   {
     setItems(items.filter(item => item.client_id != client_id))
-  }
-
-  function randomAlphanumericChar() {
-    const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-    return alphabet.charAt(Math.floor(Math.random() * alphabet.length))
-  }
-
-  function randomAlphanumericString(length: Number)
-  {
-    return [...Array(length).keys()].map((item) => randomAlphanumericChar()).join('')
   }
 
   const handleCreate: React.MouseEventHandler<HTMLButtonElement> = (e) => {

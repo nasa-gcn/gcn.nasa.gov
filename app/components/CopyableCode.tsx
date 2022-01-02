@@ -9,7 +9,7 @@ import {
     text: string
   }
 
-  export default function CopyableCode(props: CopyableCodeProps) {
+  export function CopyableCode(props: CopyableCodeProps) {
     return (
       <CopyToClipboard text={props.text}>
         <Button
