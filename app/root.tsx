@@ -18,7 +18,6 @@ import {
   Header,
   Title
 } from '@trussworks/react-uswds'
-import { makeUSWDSIcon } from "@trussworks/react-uswds/lib/components/Icon/Icon";
 
 export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
