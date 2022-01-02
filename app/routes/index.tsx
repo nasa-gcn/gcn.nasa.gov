@@ -57,11 +57,11 @@ function ClientCredential(props: ClientCredentialProps) {
   return (
     <tr>
       <td>{props.name}</td>
-      <td><CopyableCode>{props.client_id}</CopyableCode></td>
+      <td><CopyableCode text={props.client_id} /></td>
       <td>
         {
-          ('client_secret' in props)
-          ? (<CopyableCode>{props.client_secret}</CopyableCode>)
+          (props.client_secret)
+          ? (<CopyableCode text={props.client_secret} />)
           : (<span className="text-base">(not shown)</span>)
         }
       </td>
