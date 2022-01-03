@@ -45,7 +45,10 @@ export class ClientCredentialVendingMachine
       throw new Response('Forbidden', { status: 403 })
     }
 
-    const command = new DeleteUserPoolClientCommand({ ClientId: client_id })
+    const command = new DeleteUserPoolClientCommand({
+      ClientId: client_id,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID
+    })
     await cognitoIdentityProviderClient.send(command)
   
     await db.clientCredential.delete({
