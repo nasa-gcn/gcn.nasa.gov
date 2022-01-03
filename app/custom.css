@@ -1,0 +1,35 @@
+@media all and (max-width: 64em)
+{
+  #site-logo {
+    visibility: hidden;
+  }
+
+}
+
+#site-logo {
+  height: 2em;
+  padding-right: 0.25em;
+}
+
+@media all and (min-width: 64em)
+{
+  .usa-header--basic .usa-navbar {
+    width: 50%;
+  }
+  
+  #site-title {
+    display: inline-block;
+    max-width: 70%;
+  }
+}
+
+.usa-footer {
+  position: sticky; /* instead of absolute */
+  top: 100vh;
+  left: 0;
+  width: 100%;
+} 
+
+html, body {
+  height: 100%;
+}
