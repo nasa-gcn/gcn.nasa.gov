@@ -25,18 +25,16 @@ import {
 import { storage } from '~/auth.server'
 
 export const meta: MetaFunction = () => {
-  return { title: "New Remix App" };
-};
-
-export function links() {
-  return [
-    {
-      rel: "stylesheet",
-      // FIXME: should get from bundle using webpack or postcss
-      href: "https://unpkg.com/uswds@2.11.2/dist/css/uswds.min.css"
-    }
-  ];
+  return { title: 'GCN - General Coordinates Network' }
 }
+
+export const links = () => [
+  {
+    rel: "stylesheet",
+    // FIXME: should get from bundle using webpack or postcss
+    href: "https://unpkg.com/uswds@2.11.2/dist/css/uswds.min.css"
+  }
+]
 
 export const loader: LoaderFunction = async function ({request}) {
   const session = await storage.getSession(request.headers.get('Cookie'))

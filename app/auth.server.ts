@@ -5,7 +5,7 @@
 import {
   createCookieSessionStorage,
   redirect
-} from 'remix';
+} from 'remix'
 
 import {
   generators,
