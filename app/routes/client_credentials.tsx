@@ -19,30 +19,21 @@ import {
 
 import {
   useLoaderData,
+  LoaderFunction,
   MetaFunction
 } from 'remix'
 
 import { CopyableCode } from '~/components/CopyableCode'
-
+import { ClientCredentialVendingMachine } from '~/ClientCredentialVendingMachine.server'
 import { randomAlphanumericString } from '~/lib/RandomAlphanumeric'
 
-export let loader = () => [
-  {
-    name: "Fritz Marshal",
-    client_id: "qiYEw7QkwoL9yzP4zI0tVKSXiG"
-  },
-  {
-    name: "My MacBook",
-    client_id: "C9SJFMLl4xhKoUDMDkeH2ccnnM"
-  },
-  {
-    name: "Lab Desktop",
-    client_id: "oNv8GCPQY2hMsMgj4doRj2eP6F"
-  }
-]
+export const loader: LoaderFunction = async function ({request}) {
+  const machine = await ClientCredentialVendingMachine.create(request)
+  return await machine.getClientCredentials()
+}
 
 export const meta: MetaFunction = () => ({
-  title: "GCN: Client Credentials",
+  title: "GCN - Client Credentials",
 })
 
 interface ClientCredentialData {
@@ -120,22 +111,38 @@ export default function Index() {
   const modalRef = useRef<ModalRef>(null)
   const [items, setItems] = useState<ClientCredentialData[]>(useLoaderData())
   const [name, setName] = useState('')
-  const [created, setCreated] = useState(false)
 
   function handleDelete(client_id: string)
   {
-    setItems(items.filter(item => item.client_id != client_id))
+    fetch(`/api/client_credentials/${client_id}`, {
+      method: 'delete',
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    }).then(result => {
+      if (result.ok)
+      {
+        setItems(items.filter(item => item.client_id != client_id))
+      } else {
+        console.log(result)
+      }
+    })
   }
 
   const handleCreate: React.MouseEventHandler<HTMLButtonElement> = (e) => {
     modalRef?.current?.toggleModal(e, false)
-    const item = {
-      name: name,
-      client_id: randomAlphanumericString(26),
-      client_secret: randomAlphanumericString(52)
-    }
-    setItems([...items, item])
-    setCreated(true)
+  
+    fetch('/api/client_credentials', {
+      method: 'post',
+      headers: {
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({'name': name})
+    }).then(
+      result => result.json()
+    ).then(
+      item => setItems([...items, item])
+    )
   }
 
   return (
@@ -170,7 +177,7 @@ export default function Index() {
             </tbody>
           </Table>
         )
-        : ''
+        : null
       }
 
       <Modal
@@ -199,13 +206,13 @@ export default function Index() {
       </Modal>
 
       {
-        (created)
+        (items.some(item => item.client_secret))
         ? (
           <Alert type="success" heading="Your new client credential was created.">
             Make sure that you copy the client secret. It will only be shown once.
           </Alert>
         )
-        : ''
+        : null
       }
     </section>
   )

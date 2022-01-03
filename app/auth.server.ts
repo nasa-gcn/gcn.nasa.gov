@@ -14,7 +14,7 @@ import {
 
 const redirect_uri = `${process.env.URL_PREFIX}/auth`
 
-const storage = createCookieSessionStorage({
+export const storage = createCookieSessionStorage({
   cookie: {
     name: 'session',
     // normally you want this to be `secure: true`
@@ -88,4 +88,13 @@ export async function authorize(request: Request)
       'Set-Cookie': await storage.commitSession(session)
     }
   })
+}
+
+export async function getSub(request: Request)
+{
+  const session = await storage.getSession(request.headers.get('Cookie'))
+  const sub = session.get('sub')
+  if (!sub)
+    throw new Response('Forbidden', { status: 403 })
+  return sub
 }
