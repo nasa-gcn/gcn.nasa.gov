@@ -25,7 +25,6 @@ import {
 
 import { CopyableCode } from '~/components/CopyableCode'
 import { ClientCredentialVendingMachine } from '~/ClientCredentialVendingMachine.server'
-import { randomAlphanumericString } from '~/lib/RandomAlphanumeric'
 
 export const loader: LoaderFunction = async function ({request}) {
   const machine = await ClientCredentialVendingMachine.create(request)
