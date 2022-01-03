@@ -96,7 +96,7 @@ export default function App() {
                 )
               ]}
             </PrimaryNav>
-            </div>
+          </div>
         </Header>
         <ScrollRestoration />
         <section className="usa-section">
