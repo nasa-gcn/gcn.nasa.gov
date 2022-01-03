@@ -82,19 +82,11 @@ export async function authorize(request: Request)
 
   session.unset('state')
   session.set('sub', claims.sub)
+  session.set('email', claims.email)
 
   return redirect('/', {
     headers: {
       'Set-Cookie': await storage.commitSession(session)
     }
   })
-}
-
-export async function getSub(request: Request)
-{
-  const session = await storage.getSession(request.headers.get('Cookie'))
-  const sub = session.get('sub')
-  if (!sub)
-    throw new Response('Forbidden', { status: 403 })
-  return sub
 }

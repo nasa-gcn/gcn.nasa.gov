@@ -1,19 +1,28 @@
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
-  ScrollRestoration
-} from "remix";
-import type { MetaFunction } from "remix";
+  ScrollRestoration,
+  useLoaderData
+} from 'remix'
+
+import type {
+  LoaderFunction,
+  MetaFunction
+} from 'remix'
 
 import {
+  PrimaryNav,
   GovBanner,
   GridContainer,
   Header,
   Title
 } from '@trussworks/react-uswds'
+
+import { storage } from '~/auth.server'
 
 export const meta: MetaFunction = () => {
   return { title: "New Remix App" };
@@ -29,7 +38,16 @@ export function links() {
   ];
 }
 
+export const loader: LoaderFunction = async function ({request}) {
+  const session = await storage.getSession(request.headers.get('Cookie'))
+  return {
+    email: session.get('email')
+  }
+}
+
 export default function App() {
+  const data = useLoaderData()
+
   return (
     <html lang="en">
       <head>
@@ -43,9 +61,27 @@ export default function App() {
         <Header basic>
           <div className="usa-nav-container">
             <div className="usa-navbar">
-              <Title>GCN: General Coordinates Network</Title>
+              <Title>
+                <Link to="/">General Coordinates Network</Link>
+              </Title>
             </div>
-          </div>
+            <PrimaryNav items={[
+              <a href="#" className="usa-nav__link">
+                Notices
+              </a>,
+              <a href="#" className="usa-nav__link">
+                Circulars
+              </a>
+            ]}>
+              {
+                (data.email) ? (
+                  <span>Logged in as {data.email}</span>
+                ) : (
+                  <Link to="/login">Log in</Link>
+                )
+              }
+            </PrimaryNav>
+            </div>
         </Header>
         <ScrollRestoration />
         <section className="usa-section">
@@ -57,5 +93,5 @@ export default function App() {
         {process.env.NODE_ENV === "development" && <LiveReload />}
       </body>
     </html>
-  );
+  )
 }

@@ -4,7 +4,7 @@ import {
   DeleteUserPoolClientCommand
 } from '@aws-sdk/client-cognito-identity-provider'
 
-import { getSub } from '~/auth.server'
+import { storage } from '~/auth.server'
 import { db } from '~/db.server'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
@@ -22,7 +22,13 @@ export class ClientCredentialVendingMachine
 
   static async create(request: Request)
   {
-    return new this(await getSub(request))
+    const session = await storage.getSession(request.headers.get('Cookie'))
+    const sub = session.get('sub')
+
+    if (!sub)
+      throw new Response('Forbidden', { status: 403 })
+
+    return new this(sub)
   }
 
   async getClientCredentials()
