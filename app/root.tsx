@@ -32,9 +32,9 @@ import {
   Title
 } from '@trussworks/react-uswds'
 
-import { storage } from '~/auth.server'
+import { storage } from '~/lib/auth.server'
 
-import style from '~/custom.css'
+import style from '~/css/custom.css'
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }

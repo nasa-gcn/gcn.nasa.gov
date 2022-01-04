@@ -1,2 +1,2 @@
-import { login } from '~/auth.server'
+import { login } from '~/lib/auth.server'
 export const loader = () => login()

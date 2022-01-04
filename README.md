@@ -1,6 +1,37 @@
-# Welcome to Remix!
+# General Coordinates Network Web Site
+
+This is a proposed implementation of the General Coordinates Network web site using Remix, a web framework built on React and written in TypeScript (a strongly typed superset of JavaScript). It combines the server side code (back end) and browser side code (front end) in a single codebase (sometimes called an "isomorphic application"). This project was bootstrapped using the create-remix template.
 
 - [Remix Docs](https://remix.run/docs)
+
+## Directory structure
+
+app/components
+: Custom React components
+
+app/lib
+: TypeScript modules that are not React components
+
+app/routes
+: Put all Web pages in here. Use Markdown for static pages or TSX (TypeScript with JSX) for reactive pages.
+
+app/root.tsx
+: Main route for the whole web site. Edit this file to customize the page template.
+
+prisma/schema.prisma
+: Back-end database schema.
+
+## Installation
+
+Before you begin, make sure that you have npm installed. You can get it from
+[the NodeJS download site](https://nodejs.org/en/download/).
+
+Then, clone this repository, cd into the cloned repository directory, and run
+this command from your terminal:
+
+```sh
+npm install
+```
 
 ## Development
 

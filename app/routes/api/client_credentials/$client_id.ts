@@ -4,7 +4,7 @@ import {
 
 import {
   ClientCredentialVendingMachine
-} from "~/ClientCredentialVendingMachine.server"
+} from "~/lib/ClientCredentialVendingMachine.server"
 
 export const action: ActionFunction = async({params, request}) => {
   if (request.method != 'DELETE')

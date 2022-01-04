@@ -24,7 +24,7 @@ import {
 } from 'remix'
 
 import { CopyableCode } from '~/components/CopyableCode'
-import { ClientCredentialVendingMachine } from '~/ClientCredentialVendingMachine.server'
+import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
 
 export const loader: LoaderFunction = async function ({request}) {
   const machine = await ClientCredentialVendingMachine.create(request)

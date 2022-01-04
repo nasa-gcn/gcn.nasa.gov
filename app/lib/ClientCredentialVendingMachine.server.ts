@@ -4,7 +4,7 @@ import {
   DeleteUserPoolClientCommand
 } from '@aws-sdk/client-cognito-identity-provider'
 
-import { storage } from '~/auth.server'
+import { storage } from '~/lib/auth.server'
 import { db } from '~/db.server'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({

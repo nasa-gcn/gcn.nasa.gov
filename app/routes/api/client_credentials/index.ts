@@ -5,7 +5,7 @@ import {
 
 import {
   ClientCredentialVendingMachine
-} from "~/ClientCredentialVendingMachine.server"
+} from "~/lib/ClientCredentialVendingMachine.server"
 
 export const loader: LoaderFunction = async({request}) => {
   const machine = await ClientCredentialVendingMachine.create(request)
