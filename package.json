@@ -1,7 +1,7 @@
 {
   "private": true,
-  "name": "remix-app-template",
-  "description": "",
+  "name": "remix-gcn",
+  "description": "General Coordinates Network web site in Remix.run",
   "license": "",
   "scripts": {
     "build": "remix build",
