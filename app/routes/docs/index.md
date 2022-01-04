@@ -5,4 +5,4 @@ meta:
 
 # Documentation
 
-This is the Documentation page.
+This is the Documentation page. See [dev](docs/dev)
