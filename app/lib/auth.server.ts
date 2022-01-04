@@ -15,7 +15,9 @@
 //    in the session, because we show the user's email in the nav bar to show
 //    that they are logged in.
 
-import { createCookieSessionStorage, redirect } from 'remix'
+import { redirect } from 'remix'
+// FIXME: Vendored from https://github.com/remix-run/remix/pull/1538
+import { createArcTableSessionStorage } from './arcTableSessionStorage'
 import memoizee from 'memoizee'
 import { UnsecuredJWT } from 'jose'
 import { generators, Issuer } from 'openid-client'
@@ -24,7 +26,7 @@ if (!process.env.SESSION_SECRET)
   throw new Error('environment variable SESSION_SECRET must be defined')
 
 // Short-lived session for storing the OIDC state and PKCE code verifier
-const oidcStorage = createCookieSessionStorage({
+const oidcStorage = createArcTableSessionStorage({
   cookie: {
     name: 'session',
     // normally you want this to be `secure: true`
@@ -37,11 +39,14 @@ const oidcStorage = createCookieSessionStorage({
     maxAge: 60,
     httpOnly: true,
   },
+  table: 'sessions',
+  idx: '_idx',
+  ttl: '_ttl',
 })
 
 // Long-lived user session. The cookie name is the same as the oidcStorage
 // session, so the cookie replaces it (with a longer expiration time).
-export const storage = createCookieSessionStorage({
+export const storage = createArcTableSessionStorage({
   cookie: {
     name: 'session',
     // normally you want this to be `secure: true`
@@ -54,10 +59,16 @@ export const storage = createCookieSessionStorage({
     maxAge: 3600,
     httpOnly: true,
   },
+  table: 'sessions',
+  idx: '_idx',
+  ttl: '_ttl',
 })
 
 function getRedirectUri(request: Request) {
   const url = new URL(request.url)
+  // FIXME: Remove this line once the following issue is fixed.
+  // https://github.com/remix-run/remix/issues/1536
+  if (process.env.ARC_SANDBOX) url.protocol = 'http'
   return `${url.origin}/auth`
 }
 
