@@ -1,14 +1,17 @@
-@media all and (max-width: 64em)
-{
-  #site-logo {
-    visibility: hidden;
-  }
-
-}
+/*
+ * Size and position the NASA meatball logo in the header. 
+ */
 
 #site-logo {
   height: 2em;
   padding-right: 0.25em;
+}
+
+@media all and (max-width: 64em)
+{
+  #site-logo {
+    vertical-align: middle;
+  }
 }
 
 @media all and (min-width: 64em)
@@ -23,17 +26,27 @@
   }
 }
 
+/*
+ * Without this, the mobile nav menu button seems to extend one pixel below
+ * the header.
+ *
+ * FIXME: Rewrite in SCSS so that we don't have to hard code the theme color.
+ */
+
+.usa-header--dark .usa-navbar {
+  border-bottom-color: #1b1b1b;
+}
+
+/*
+ * Pin the footer to the bottom of the screen.
+ * See https://css-tricks.com/a-clever-sticky-footer-technique/
+ */
+
 .usa-footer {
   position: sticky; /* instead of absolute */
   top: 100vh;
-  left: 0;
-  width: 100%;
 } 
 
 html, body {
   height: 100%;
-}
-
-.usa-header--dark .usa-navbar {
-  border-bottom-color: #1b1b1b;
 }
