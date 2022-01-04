@@ -73,11 +73,6 @@ Here are instructions for getting the GCN site set up on your computer for local
     # Fill in with a long, random string.
     SESSION_SECRET=fill-me-in
 
-    # (Required) Prisma database connection string.
-    # The value here is for a local SQLite database.
-    # See https://pris.ly/d/connection-strings
-    DATABASE_URL="file:./dev.db"
-
     # (Optional) OIDC provider info for Cognito.
     # For parts of the site that require authentication,
     # these lines must be uncommented and filled in.
@@ -95,18 +90,6 @@ Here are instructions for getting the GCN site set up on your computer for local
   </ProcessListItem>
   <ProcessListItem>
     <ProcessListHeading type="h3">
-      Initialize the database
-    </ProcessListHeading>
-
-    Initialize the database by running this command:
-
-    ```sh
-    npx prisma db push
-    ```
-
-  </ProcessListItem>
-  <ProcessListItem>
-    <ProcessListHeading type="h3">
       Start development server
     </ProcessListHeading>
 
@@ -116,7 +99,7 @@ Here are instructions for getting the GCN site set up on your computer for local
     npm run dev
     ```
 
-    Open a web browser and navigate to http://localhost:3000 to see the local site live. If you make a change in any of the source files, the change will be reflected instantly in the browser!
+    Open a web browser and navigate to http://localhost:3333 to see the local site live.
 
   </ProcessListItem>
 </ProcessList>
