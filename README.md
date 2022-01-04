@@ -9,7 +9,7 @@ This is a proposed implementation of the General Coordinates Network web site us
 * [app/components](app/components): Reusable custom React components.
 * [app/lib](app/lib): Reusable TypeScript modules that are not React components.
 * [app/root.tsx](app/root.tsx): Main route for the whole web site. Edit this file to customize the page template.
-* [app/routes](app/routes): Put all Web pages in here. Use Markdown for static pages or TSX (TypeScript with JSX) for reactive pages.
+* [app/routes](app/routes): Put all Web pages in here. Use Markdown for static pages or TSX (TypeScript with interleaved HTML markup) for reactive pages.
 * [app/routes/api](app/routes/api): Put API endpoints in here.
 * [prisma/schema.prisma](prisma/schema.prisma): Back-end database schema.
 
