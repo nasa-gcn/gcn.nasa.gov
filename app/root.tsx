@@ -9,6 +9,8 @@ import {
   useLoaderData
 } from 'remix'
 
+import { useState } from 'react'
+
 import type {
   LoaderFunction,
   MetaFunction
@@ -23,6 +25,7 @@ import {
   Footer,
   FooterNav,
   Logo,
+  NavMenuButton,
   PrimaryNav,
   Title
 } from '@trussworks/react-uswds'
@@ -56,6 +59,8 @@ export const loader: LoaderFunction = async function ({request}) {
 
 export default function App() {
   const data = useLoaderData()
+  const [expanded, setExpanded] = useState(false)
+  const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
 
   return (
     <html lang="en">
@@ -67,7 +72,8 @@ export default function App() {
       </head>
       <body>
         <GovBanner />
-        <Header basic className="usa-header--dark">
+        <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
+        <Header basic className="usa-header usa-header--dark">
           <div className="usa-nav-container">
             <div className="usa-navbar">
               <Title>
@@ -76,21 +82,26 @@ export default function App() {
                   <span id="site-title">General Coordinates Network</span>
                 </Link>
               </Title>
+              <NavMenuButton onClick={onClick} label="Menu" />
             </div>
-            <PrimaryNav items={[
-              <a href="#" className="usa-nav__link">
-                Missions
-              </a>,
-              <a href="#" className="usa-nav__link">
-                  Notices
+            <PrimaryNav
+              mobileExpanded={expanded}
+              items={[
+                <a href="#" className="usa-nav__link">
+                  Missions
                 </a>,
+                <a href="#" className="usa-nav__link">
+                    Notices
+                  </a>,
                 <a href="#" className="usa-nav__link">
                   Circulars
                 </a>,
                 <a href="#" className="usa-nav__link">
                   Documentation
-              </a>
-            ]}>
+                </a>
+              ]}
+              onToggleMobileNav={onClick}
+            >
               {[
                 (data.email) ? (
                   <Button outline className="text-white" type="button">{data.email}</Button>

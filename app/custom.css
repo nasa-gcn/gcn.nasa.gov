@@ -33,3 +33,7 @@
 html, body {
   height: 100%;
 }
+
+.usa-header--dark .usa-navbar {
+  border-bottom-color: #1b1b1b;
+}
