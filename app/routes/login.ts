@@ -1,8 +1,2 @@
-import {
-  login
-} from '~/auth.server'
-
-export async function loader()
-{
-  return login()
-}
+import { login } from '~/auth.server'
+export const loader = () => login()
