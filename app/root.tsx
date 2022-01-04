@@ -79,18 +79,21 @@ export default function App() {
             </div>
             <PrimaryNav items={[
               <a href="#" className="usa-nav__link">
-                Notices
+                Missions
               </a>,
               <a href="#" className="usa-nav__link">
-                Circulars
-              </a>,
-              <a href="#" className="usa-nav__link">
-                Docs
-            </a>
-          ]}>
+                  Notices
+                </a>,
+                <a href="#" className="usa-nav__link">
+                  Circulars
+                </a>,
+                <a href="#" className="usa-nav__link">
+                  Documentation
+              </a>
+            ]}>
               {[
                 (data.email) ? (
-                  <Button outline className="text-white">{data.email}</Button>
+                  <Button outline className="text-white" type="button">{data.email}</Button>
                 ) : (
                   <Link to="/login"><Button outline className="text-white" type="button">Log in</Button></Link>
                 )
