@@ -3,6 +3,7 @@ import {
   Links,
   LiveReload,
   Meta,
+  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -13,7 +14,8 @@ import { useState } from 'react'
 
 import type {
   LoaderFunction,
-  MetaFunction
+  MetaFunction,
+  NavLinkProps
 } from 'remix'
 
 import {
@@ -57,6 +59,15 @@ export const loader: LoaderFunction = async function ({request}) {
   }
 }
 
+function PrimaryNavLink(props: NavLinkProps) {
+  return (
+    <NavLink
+      className={({isActive}) => `usa-nav__link ${isActive ? 'usa-current' : ''}`}
+      {...props}
+    >{props.children}</NavLink>
+  )
+}
+
 export default function App() {
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
@@ -87,18 +98,10 @@ export default function App() {
             <PrimaryNav
               mobileExpanded={expanded}
               items={[
-                <a href="#" className="usa-nav__link">
-                  Missions
-                </a>,
-                <a href="#" className="usa-nav__link">
-                    Notices
-                  </a>,
-                <a href="#" className="usa-nav__link">
-                  Circulars
-                </a>,
-                <a href="#" className="usa-nav__link">
-                  Documentation
-                </a>
+                <PrimaryNavLink to="/missions">Missions</PrimaryNavLink>,
+                <PrimaryNavLink to="/notices">Notices</PrimaryNavLink>,
+                <PrimaryNavLink to="/circulars">Circulars</PrimaryNavLink>,
+                <PrimaryNavLink to="/docs">Documentation</PrimaryNavLink>
               ]}
               onToggleMobileNav={onClick}
             >
