@@ -49,6 +49,10 @@ export const links = () => [
   {
     rel: "stylesheet",
     href: style
+  },
+  {
+    rel: "shortcut icon",
+    href: 'https://unpkg.com/nasawds@3.0.177/src/img/favicons/favicon.ico'
   }
 ]
 
