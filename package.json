@@ -14,7 +14,7 @@
     "@prisma/client": "^3.7.0",
     "@remix-run/react": "^1.1.1",
     "@remix-run/serve": "^1.1.1",
-    "@trussworks/react-uswds": "^2.4.1",
+    "@trussworks/react-uswds": "^2.5.0",
     "dotenv": "^10.0.0",
     "nasawds": "^3.0.177",
     "openid-client": "^5.1.1",
