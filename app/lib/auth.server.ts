@@ -12,8 +12,6 @@ import {
   Issuer
 } from 'openid-client'
 
-const redirect_uri = `${process.env.URL_PREFIX}/auth`
-
 export const storage = createCookieSessionStorage({
   cookie: {
     name: 'session',
@@ -29,7 +27,13 @@ export const storage = createCookieSessionStorage({
   }
 })
 
-export async function getOpenIDClient()
+function getRedirectUri(request: Request)
+{
+  const url = new URL(request.url)
+  return `${url.origin}/auth`
+}
+
+export async function getOpenIDClient(request: Request)
 {
   if (!process.env.OIDC_PROVIDER_URL)
     throw Error('OIDC_PROVIDER_URL must be non-null')
@@ -41,13 +45,13 @@ export async function getOpenIDClient()
     client_id: process.env.OIDC_CLIENT_ID!,
     client_secret: process.env.OIDC_CLIENT_SECRET,
     response_types: ['code'],
-    redirect_uris: [redirect_uri]
+    redirect_uris: [getRedirectUri(request)]
   })
 }
 
-export async function login()
+export async function login(request: Request)
 {
-  const client = await getOpenIDClient()
+  const client = await getOpenIDClient(request)
   const state = generators.state()
 
   const authorizationUrl = client.authorizationUrl({
@@ -67,14 +71,14 @@ export async function login()
 
 export async function authorize(request: Request)
 {
-  const client = await getOpenIDClient()
+  const client = await getOpenIDClient(request)
   const session = await storage.getSession(request.headers.get('Cookie'))
   const url = new URL(request.url)
   const state = session.get('state')
 
   const params = client.callbackParams(url.search)
   const tokenSet = await client.callback(
-    redirect_uri,
+    getRedirectUri(request),
     params,
     { state }
   )
