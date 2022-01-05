@@ -4,12 +4,51 @@ import {
   DeleteUserPoolClientCommand
 } from '@aws-sdk/client-cognito-identity-provider'
 
+import { generate } from 'generate-password'
+
 import { storage } from '~/lib/auth.server'
 import { db } from '~/db.server'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
   region: 'us-east-1'
 })
+
+const isProduction = process.env.NODE_ENV === 'production'
+
+async function cognitoCreateUserPoolClient(sub: string)
+{
+  if (isProduction)
+  {
+    const command = new CreateUserPoolClientCommand({
+      AllowedOAuthFlows: ['client_credentials'],
+      AllowedOAuthFlowsUserPoolClient: true,
+      AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
+      ClientName: sub,
+      GenerateSecret: true,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID
+    })
+    const response = await cognitoIdentityProviderClient.send(command)
+    const client_id = response.UserPoolClient?.ClientId!
+    const client_secret = response.UserPoolClient?.ClientSecret!
+    return {client_id, client_secret}
+  } else {
+    const client_id = generate({length: 26})
+    const client_secret = generate({length: 51})
+    return {client_id, client_secret}
+  }
+}
+
+async function cognitoDeleteUserPooolClient(client_id: string)
+{
+  if (isProduction)
+  {
+    const command = new DeleteUserPoolClientCommand({
+      ClientId: client_id,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID
+    })
+    await cognitoIdentityProviderClient.send(command)
+  }
+}
 
 export class ClientCredentialVendingMachine
 {
@@ -36,14 +75,14 @@ export class ClientCredentialVendingMachine
     return await db.clientCredential.findMany({
       select: { name: true, client_id: true },
       where: { sub: this.#sub }
-    })  
+    })
   }
 
   async deleteClientCredential(client_id: string)
   {
     const cred = await db.clientCredential.findUnique({
       select: { sub: true },
-      where: {client_id}
+      where: { client_id }
     })
 
     if (cred?.sub !== this.#sub)
@@ -51,12 +90,8 @@ export class ClientCredentialVendingMachine
       throw new Response('Forbidden', { status: 403 })
     }
 
-    const command = new DeleteUserPoolClientCommand({
-      ClientId: client_id,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID
-    })
-    await cognitoIdentityProviderClient.send(command)
-  
+    await cognitoDeleteUserPooolClient(client_id)
+
     await db.clientCredential.delete({
       where: {client_id}
     })
@@ -68,25 +103,13 @@ export class ClientCredentialVendingMachine
     {
       throw new Response('name must not be empty', { status: 400 })
     }
-  
-    const command = new CreateUserPoolClientCommand({
-      AllowedOAuthFlows: ['client_credentials'],
-      AllowedOAuthFlowsUserPoolClient: true,
-      AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
-      ClientName: this.#sub,
-      GenerateSecret: true,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID
-    })
-    const response = await cognitoIdentityProviderClient.send(command)
-    const client_id = response.UserPoolClient?.ClientId!
-    const client_secret = response.UserPoolClient?.ClientSecret!
-  
-    const item = { name, client_id }
+
+    const {client_id, client_secret} = await cognitoCreateUserPoolClient(this.#sub)
 
     await db.clientCredential.create({
-      data: {...item, sub: this.#sub}
+      data: {name, client_id, sub: this.#sub}
     })
 
-    return {...item, client_secret}
+    return {name, client_id, client_secret}
   }
 }
