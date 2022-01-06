@@ -35,6 +35,7 @@ import {
 import { storage } from '~/lib/auth.server'
 
 import style from '~/css/custom.css'
+import highlightStyle from 'highlight.js/styles/github.css'
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
@@ -49,6 +50,10 @@ export const links = () => [
   {
     rel: "stylesheet",
     href: style
+  },
+  {
+    rel: "stylesheet",
+    href: highlightStyle
   },
   {
     rel: "shortcut icon",
