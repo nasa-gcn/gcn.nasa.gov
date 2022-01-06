@@ -5,4 +5,6 @@ meta:
 
 # Documentation
 
-This is the Documentation page. See [dev](docs/dev)
+This is the Documentation page.
+
+* [Documentation for developers](docs/dev)
