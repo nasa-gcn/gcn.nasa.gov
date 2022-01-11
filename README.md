@@ -25,6 +25,46 @@ this command from your terminal:
 npm install
 ```
 
+## Configuration
+
+In this directory, create a file called `.env` with the following contents.
+Replace the value of `SESSION_SECRET` with a random string.
+
+```sh
+# Signing key for session cookies. Fill in with a long, random string.
+# Some possible commands to generate it:
+#
+# With pwgen (https://linux.die.net/man/1/pwgen):
+#  $ pwgen -sn 64
+#
+# With Python:
+#  $ python -c 'import secrets; print(secrets.token_urlsafe(64))'
+
+SESSION_SECRET=fill-me-in
+
+# This was inserted by `prisma init`:
+# Environment variables declared in this file are automatically made available to Prisma.
+# See the documentation for more detail: https://pris.ly/d/prisma-schema#using-environment-variables
+
+# Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server and MongoDB (Preview).
+# See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+
+DATABASE_URL="file:./dev.db"
+
+# OIDC provider info for Cognito user pool.
+# For parts of the site that require authentication,
+# these lines must be uncommented and filled in.
+
+# OIDC_PROVIDER_URL=fill-me-in
+# OIDC_CLIENT_ID=fill-me-in
+# OIDC_CLIENT_SECRET=fill-me-in
+
+# Cognito user pool ID for client credential vending machine.
+# The client credential vending machine will not work properly without this.
+
+# COGNITO_USER_POOL_ID=fill-me-in
+```
+
 ## Development
 
 From your terminal:
