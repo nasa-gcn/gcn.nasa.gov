@@ -91,11 +91,11 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <GovBanner />
+      <GovBanner />
         <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
         <Header basic className="usa-header usa-header--dark">
           <div className="usa-nav-container">
-            <div className="usa-navbar">
+          <div className="usa-navbar">
               <Title>
                 <Link to="/">
                   <img id="site-logo" src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg" alt="NASA logo" />
@@ -116,9 +116,9 @@ export default function App() {
             >
               {[
                 (data.email) ? (
-                  <Button outline className="text-white" type="button">{data.email}</Button>
+                  <Button outline className="text-white" type="button" key="account">{data.email}</Button>
                 ) : (
-                  <Link to="/login"><Button outline className="text-white" type="button">Log in</Button></Link>
+                  <Link to="/login" key="login"><Button outline className="text-white" type="button">Log in</Button></Link>
                 )
               ]}
             </PrimaryNav>
