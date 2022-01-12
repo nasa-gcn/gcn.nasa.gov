@@ -80,6 +80,6 @@
       "eslint --cache --fix",
       "tsc --noEmit"
     ],
-    "*.{css,js,jsx,md,mdx,ts,tsx}": "prettier --write"
+    "*.{css,js,json,jsx,md,mdx,ts,tsx}": "prettier --write"
   }
 }
