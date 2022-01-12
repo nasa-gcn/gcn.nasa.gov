@@ -7,19 +7,17 @@
   padding-right: 0.25em;
 }
 
-@media all and (max-width: 64em)
-{
+@media all and (max-width: 64em) {
   #site-logo {
     vertical-align: middle;
   }
 }
 
-@media all and (min-width: 64em)
-{
+@media all and (min-width: 64em) {
   .usa-header--basic .usa-navbar {
     width: 50%;
   }
-  
+
   #site-title {
     display: inline-block;
     max-width: 70%;
@@ -45,8 +43,9 @@
 .usa-footer {
   position: sticky; /* instead of absolute */
   top: 100vh;
-} 
+}
 
-html, body {
+html,
+body {
   height: 100%;
 }

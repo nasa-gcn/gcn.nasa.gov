@@ -1,20 +1,14 @@
-import {
-  ActionFunction,
-  LoaderFunction
-} from "remix"
+import { ActionFunction, LoaderFunction } from 'remix'
 
-import {
-  ClientCredentialVendingMachine
-} from "~/lib/ClientCredentialVendingMachine.server"
+import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
 
-export const loader: LoaderFunction = async({request}) => {
+export const loader: LoaderFunction = async ({ request }) => {
   const machine = await ClientCredentialVendingMachine.create(request)
   return await machine.getClientCredentials()
 }
 
-export const action: ActionFunction = async({request}) => {
-  if (request.method != 'POST')
-  {
+export const action: ActionFunction = async ({ request }) => {
+  if (request.method != 'POST') {
     throw new Response('Method Not Allowed', { status: 405 })
   }
 

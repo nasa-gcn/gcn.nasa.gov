@@ -7,16 +7,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData
+  useLoaderData,
 } from 'remix'
 
 import { useState } from 'react'
 
-import type {
-  LoaderFunction,
-  MetaFunction,
-  NavLinkProps
-} from 'remix'
+import type { LoaderFunction, MetaFunction, NavLinkProps } from 'remix'
 
 import {
   Address,
@@ -29,7 +25,7 @@ import {
   Logo,
   NavMenuButton,
   PrimaryNav,
-  Title
+  Title,
 } from '@trussworks/react-uswds'
 
 import { storage } from '~/lib/auth.server'
@@ -43,37 +39,41 @@ export const meta: MetaFunction = () => {
 
 export const links = () => [
   {
-    rel: "stylesheet",
+    rel: 'stylesheet',
     // FIXME: should get from bundle using webpack or postcss
-    href: "https://unpkg.com/nasawds@3.0.177/src/css/styles.css"
+    href: 'https://unpkg.com/nasawds@3.0.177/src/css/styles.css',
   },
   {
-    rel: "stylesheet",
-    href: style
+    rel: 'stylesheet',
+    href: style,
   },
   {
-    rel: "stylesheet",
-    href: highlightStyle
+    rel: 'stylesheet',
+    href: highlightStyle,
   },
   {
-    rel: "shortcut icon",
-    href: 'https://unpkg.com/nasawds@3.0.177/src/img/favicons/favicon.ico'
-  }
+    rel: 'shortcut icon',
+    href: 'https://unpkg.com/nasawds@3.0.177/src/img/favicons/favicon.ico',
+  },
 ]
 
-export const loader: LoaderFunction = async function ({request}) {
+export const loader: LoaderFunction = async function ({ request }) {
   const session = await storage.getSession(request.headers.get('Cookie'))
   return {
-    email: session.get('email')
+    email: session.get('email'),
   }
 }
 
 function PrimaryNavLink(props: NavLinkProps) {
   return (
     <NavLink
-      className={({isActive}) => `usa-nav__link ${isActive ? 'usa-current' : ''}`}
+      className={({ isActive }) =>
+        `usa-nav__link ${isActive ? 'usa-current' : ''}`
+      }
       {...props}
-    >{props.children}</NavLink>
+    >
+      {props.children}
+    </NavLink>
   )
 }
 
@@ -91,14 +91,18 @@ export default function App() {
         <Links />
       </head>
       <body>
-      <GovBanner />
+        <GovBanner />
         <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
         <Header basic className="usa-header usa-header--dark">
           <div className="usa-nav-container">
-          <div className="usa-navbar">
+            <div className="usa-navbar">
               <Title>
                 <Link to="/">
-                  <img id="site-logo" src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg" alt="NASA logo" />
+                  <img
+                    id="site-logo"
+                    src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
+                    alt="NASA logo"
+                  />
                   <span id="site-title">General Coordinates Network</span>
                 </Link>
               </Title>
@@ -107,19 +111,38 @@ export default function App() {
             <PrimaryNav
               mobileExpanded={expanded}
               items={[
-                <PrimaryNavLink to="/missions" key="/missions">Missions</PrimaryNavLink>,
-                <PrimaryNavLink to="/notices" key="/notices">Notices</PrimaryNavLink>,
-                <PrimaryNavLink to="/circulars" key="/circulars">Circulars</PrimaryNavLink>,
-                <PrimaryNavLink to="/docs" key="/docs">Documentation</PrimaryNavLink>
+                <PrimaryNavLink to="/missions" key="/missions">
+                  Missions
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/notices" key="/notices">
+                  Notices
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/circulars" key="/circulars">
+                  Circulars
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/docs" key="/docs">
+                  Documentation
+                </PrimaryNavLink>,
               ]}
               onToggleMobileNav={onClick}
             >
               {[
-                (data.email) ? (
-                  <Button outline className="text-white" type="button" key="account">{data.email}</Button>
+                data.email ? (
+                  <Button
+                    outline
+                    className="text-white"
+                    type="button"
+                    key="account"
+                  >
+                    {data.email}
+                  </Button>
                 ) : (
-                  <Link to="/login" key="login"><Button outline className="text-white" type="button">Log in</Button></Link>
-                )
+                  <Link to="/login" key="login">
+                    <Button outline className="text-white" type="button">
+                      Log in
+                    </Button>
+                  </Link>
+                ),
               ]}
             </PrimaryNav>
           </div>
@@ -134,30 +157,30 @@ export default function App() {
           size="slim"
           primary={
             <div className="usa-footer__primary-container grid-row">
-            <div className="mobile-lg:grid-col-8">
-              <FooterNav
-                size="slim"
-                links={Array(4).fill(
-                  <a className="usa-footer__primary-link" href="#">
-                    Primary Link
-                  </a>
-                )}
-              />
+              <div className="mobile-lg:grid-col-8">
+                <FooterNav
+                  size="slim"
+                  links={Array(4).fill(
+                    <a className="usa-footer__primary-link" href="#">
+                      Primary Link
+                    </a>
+                  )}
+                />
+              </div>
+              <div className="tablet:grid-col-4">
+                <Address
+                  size="slim"
+                  items={[
+                    <a key="telephone" href="tel:1-800-555-5555">
+                      (800) CALL-GOVT
+                    </a>,
+                    <a key="email" href="mailto:info@agency.gov">
+                      info@agency.gov
+                    </a>,
+                  ]}
+                />
+              </div>
             </div>
-            <div className="tablet:grid-col-4">
-              <Address
-                size="slim"
-                items={[
-                  <a key="telephone" href="tel:1-800-555-5555">
-                    (800) CALL-GOVT
-                  </a>,
-                  <a key="email" href="mailto:info@agency.gov">
-                    info@agency.gov
-                  </a>,
-                ]}
-              />
-            </div>
-          </div>    
           }
           secondary={
             <Logo
@@ -169,12 +192,16 @@ export default function App() {
                   src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
                 />
               }
-              heading={<p className="usa-footer__logo-heading">National Aeronautics and Space Administration</p>}
-            />    
+              heading={
+                <p className="usa-footer__logo-heading">
+                  National Aeronautics and Space Administration
+                </p>
+              }
+            />
           }
         />
         <Scripts />
-        {process.env.NODE_ENV === "development" && <LiveReload />}
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   )
