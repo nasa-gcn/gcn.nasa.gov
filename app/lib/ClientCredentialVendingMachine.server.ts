@@ -8,12 +8,25 @@ import { generate } from 'generate-password'
 
 import { storage } from '~/lib/auth.server'
 import { db } from '~/db.server'
+import memoizee from 'memoizee'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
   region: 'us-east-1',
 })
 
-const isProduction = process.env.NODE_ENV === 'production'
+const getCognitoUserPoolId = memoizee(() => {
+  if (process.env.COGNITO_USER_POOL_ID) {
+    return process.env.COGNITO_USER_POOL_ID
+  } else if (process.env.NODE_ENV === 'production') {
+    throw new Error(
+      'Environment variable COGNITO_USER_POOL_ID must be defined.'
+    )
+  } else {
+    console.warn(
+      `Environment variable COGNITO_USER_POOL_ID must be defined for production. Since it is not set and the application is currently configured for ${process.env.NODE_ENV}, no Cognito client credentials will be created or deleted.`
+    )
+  }
+})
 
 export class ClientCredentialVendingMachine {
   #sub: string
@@ -68,14 +81,15 @@ export class ClientCredentialVendingMachine {
   }
 
   async #createClientCredentialInternal() {
-    if (isProduction) {
+    const cognitoUserPoolId = getCognitoUserPoolId()
+    if (cognitoUserPoolId) {
       const command = new CreateUserPoolClientCommand({
         AllowedOAuthFlows: ['client_credentials'],
         AllowedOAuthFlowsUserPoolClient: true,
         AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
         ClientName: this.#sub,
         GenerateSecret: true,
-        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+        UserPoolId: cognitoUserPoolId,
       })
       const response = await cognitoIdentityProviderClient.send(command)
       const client_id = response.UserPoolClient?.ClientId
@@ -91,10 +105,11 @@ export class ClientCredentialVendingMachine {
   }
 
   async #deleteClientCredentialInternal(client_id: string) {
-    if (isProduction) {
+    const cognitoUserPoolId = getCognitoUserPoolId()
+    if (cognitoUserPoolId) {
       const command = new DeleteUserPoolClientCommand({
         ClientId: client_id,
-        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+        UserPoolId: cognitoUserPoolId,
       })
       await cognitoIdentityProviderClient.send(command)
     }
