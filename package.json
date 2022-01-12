@@ -23,6 +23,7 @@
     "dotenv": "^10.0.0",
     "generate-password": "^1.7.0",
     "highlight.js": "^11.4.0",
+    "memoizee": "^0.4.15",
     "nasawds": "^3.0.177",
     "openid-client": "^5.1.1",
     "react": "^17.0.2",
@@ -33,6 +34,7 @@
   },
   "devDependencies": {
     "@remix-run/dev": "^1.1.1",
+    "@types/memoizee": "^0.4.7",
     "@types/react": "^17.0.24",
     "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/react-dom": "^17.0.9",
