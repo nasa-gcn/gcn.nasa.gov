@@ -25,6 +25,12 @@ this command from your terminal:
 npm install
 ```
 
+To activate the pre-commit hooks, run this command:
+
+```sh
+npm run prepare
+```
+
 ## Configuration
 
 In this directory, create a file called `.env` with the following contents.
