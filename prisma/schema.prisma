@@ -14,4 +14,6 @@ model ClientCredential {
   client_id   String  @id
   sub         String
   name        String
+
+  @@index([sub])
 }
