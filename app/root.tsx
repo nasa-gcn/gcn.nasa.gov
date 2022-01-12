@@ -107,10 +107,10 @@ export default function App() {
             <PrimaryNav
               mobileExpanded={expanded}
               items={[
-                <PrimaryNavLink to="/missions">Missions</PrimaryNavLink>,
-                <PrimaryNavLink to="/notices">Notices</PrimaryNavLink>,
-                <PrimaryNavLink to="/circulars">Circulars</PrimaryNavLink>,
-                <PrimaryNavLink to="/docs">Documentation</PrimaryNavLink>
+                <PrimaryNavLink to="/missions" key="/missions">Missions</PrimaryNavLink>,
+                <PrimaryNavLink to="/notices" key="/notices">Notices</PrimaryNavLink>,
+                <PrimaryNavLink to="/circulars" key="/circulars">Circulars</PrimaryNavLink>,
+                <PrimaryNavLink to="/docs" key="/docs">Documentation</PrimaryNavLink>
               ]}
               onToggleMobileNav={onClick}
             >

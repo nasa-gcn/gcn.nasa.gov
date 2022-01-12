@@ -1,7 +1,7 @@
 /**
  * @type {import('@remix-run/dev/config').RemixMdxConfigFunction}
  */
-const mdx = async filename => {
+const mdx = async () => {
   const [rehypeHighlight] = await Promise.all([
     import("rehype-highlight").then(mod => mod.default)
   ]);

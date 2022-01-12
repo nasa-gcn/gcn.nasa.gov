@@ -89,7 +89,7 @@ function ClientCredential(props: ClientCredentialProps) {
             Delete Client Credential
           </ModalHeading>
           <div className="usa-prose">
-            <p id="modal-delete-description">Are you sure that you want to delete the client credential named "{props.name}" with client ID <code>{props.client_id}</code>?</p>
+            <p id="modal-delete-description">Are you sure that you want to delete the client credential named “{props.name}” with client ID <code>{props.client_id}</code>?</p>
             <p>This action cannot be undone.</p>
           </div>
           <ModalFooter>
@@ -190,7 +190,7 @@ export default function Index() {
         </ModalHeading>
         <div className="usa-prose">
           <p id="modal-new-description">Choose a name for your new client credential.</p>
-          <p className="text-base">The name should help you remember what you use the client credential for, or where you use it. Examples: "My Laptop", "Lab Desktop", "GRB Pipeline".</p>
+          <p className="text-base">The name should help you remember what you use the client credential for, or where you use it. Examples: “My Laptop”, “Lab Desktop”, “GRB Pipeline”.</p>
         </div>
         <Label htmlFor="name">Name</Label>
         <TextInput data-focus name="name" id="name" type="text" placeholder="Name" onChange={(e) => setName(e.target.value)} />

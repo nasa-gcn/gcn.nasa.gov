@@ -12,6 +12,11 @@ import {
   Issuer
 } from 'openid-client'
 
+if (!process.env.SESSION_SECRET)
+{
+  throw new Error('environment variable SESSION_SECRET must be defined')
+}
+
 export const storage = createCookieSessionStorage({
   cookie: {
     name: 'session',
@@ -19,7 +24,7 @@ export const storage = createCookieSessionStorage({
     // but that doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === 'production',
-    secrets: [process.env.SESSION_SECRET!],
+    secrets: [process.env.SESSION_SECRET],
     sameSite: 'lax',
     path: '/',
     maxAge: 60 * 60 * 24 * 30,  // one month
@@ -36,13 +41,13 @@ function getRedirectUri(request: Request)
 export async function getOpenIDClient(request: Request)
 {
   if (!process.env.OIDC_PROVIDER_URL)
-    throw Error('OIDC_PROVIDER_URL must be non-null')
+    throw new Error('OIDC_PROVIDER_URL must be non-null')
   if (!process.env.OIDC_CLIENT_ID)
-    throw Error('OIDC_CLIENT_ID must be non-null')
+    throw new Error('OIDC_CLIENT_ID must be non-null')
 
   const issuer = await Issuer.discover(process.env.OIDC_PROVIDER_URL)
   return new issuer.Client({
-    client_id: process.env.OIDC_CLIENT_ID!,
+    client_id: process.env.OIDC_CLIENT_ID,
     client_secret: process.env.OIDC_CLIENT_SECRET,
     response_types: ['code'],
     redirect_uris: [getRedirectUri(request)]

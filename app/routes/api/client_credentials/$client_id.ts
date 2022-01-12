@@ -11,7 +11,11 @@ export const action: ActionFunction = async({params, request}) => {
   {
     throw new Response('Method Not Allowed', { status: 405 })
   }
+  if (!params.client_id)
+  {
+    throw new Response('params.client_id must be defined')
+  }
   const machine = await ClientCredentialVendingMachine.create(request)
-  await machine.deleteClientCredential(params.client_id!)
+  await machine.deleteClientCredential(params.client_id)
   return null
 }

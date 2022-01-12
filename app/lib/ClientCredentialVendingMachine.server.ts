@@ -28,8 +28,12 @@ async function cognitoCreateUserPoolClient(sub: string)
       UserPoolId: process.env.COGNITO_USER_POOL_ID
     })
     const response = await cognitoIdentityProviderClient.send(command)
-    const client_id = response.UserPoolClient?.ClientId!
-    const client_secret = response.UserPoolClient?.ClientSecret!
+    const client_id = response.UserPoolClient?.ClientId
+    const client_secret = response.UserPoolClient?.ClientSecret
+    if (!client_id)
+      throw new Error('AWS SDK must return ClientId')
+    if (!client_secret)
+      throw new Error('AWS SDK must return ClientSecret')
     return {client_id, client_secret}
   } else {
     const client_id = generate({length: 26})
