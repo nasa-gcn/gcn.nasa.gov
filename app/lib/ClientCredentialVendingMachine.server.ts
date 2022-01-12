@@ -51,7 +51,7 @@ async function cognitoDeleteUserPooolClient(client_id: string) {
 export class ClientCredentialVendingMachine {
   #sub: string
 
-  constructor(sub: string) {
+  private constructor(sub: string) {
     this.#sub = sub
   }
 
