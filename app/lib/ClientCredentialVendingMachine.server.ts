@@ -44,7 +44,7 @@ export class ClientCredentialVendingMachine {
       where: { client_id },
     })
 
-    if (cred?.sub !== this.#sub) throw new Response(null, { status: 403 })
+    if (cred?.sub !== this.#sub) throw new Response(null, { status: 404 })
 
     await Promise.all([
       this.#deleteClientCredentialInternal(client_id),
