@@ -2,6 +2,10 @@
   "private": true,
   "name": "remix-gcn",
   "description": "General Coordinates Network web site in Remix.run",
+  "repository": {
+    "type": "git",
+    "url": "tachgsfc/remix-gcn"
+  },
   "license": "",
   "scripts": {
     "build": "remix build",
