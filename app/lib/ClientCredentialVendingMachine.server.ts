@@ -59,7 +59,7 @@ export class ClientCredentialVendingMachine {
     const session = await storage.getSession(request.headers.get('Cookie'))
     const sub = session.get('sub')
 
-    if (!sub) throw new Response('Forbidden', { status: 403 })
+    if (!sub) throw new Response(null, { status: 403 })
 
     return new this(sub)
   }
@@ -77,9 +77,7 @@ export class ClientCredentialVendingMachine {
       where: { client_id },
     })
 
-    if (cred?.sub !== this.#sub) {
-      throw new Response('Forbidden', { status: 403 })
-    }
+    if (cred?.sub !== this.#sub) throw new Response(null, { status: 403 })
 
     await cognitoDeleteUserPooolClient(client_id)
 
@@ -89,9 +87,7 @@ export class ClientCredentialVendingMachine {
   }
 
   async createClientCredential(name?: string) {
-    if (!name) {
-      throw new Response('name must not be empty', { status: 400 })
-    }
+    if (!name) throw new Response('name must not be empty', { status: 400 })
 
     const { client_id, client_secret } = await cognitoCreateUserPoolClient(
       this.#sub

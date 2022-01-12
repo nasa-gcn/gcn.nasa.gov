@@ -8,9 +8,7 @@ export const loader: LoaderFunction = async ({ request }) => {
 }
 
 export const action: ActionFunction = async ({ request }) => {
-  if (request.method != 'POST') {
-    throw new Response('Method Not Allowed', { status: 405 })
-  }
+  if (request.method != 'POST') throw new Response(null, { status: 405 })
 
   const machine = await ClientCredentialVendingMachine.create(request)
   const body = await request.json()
