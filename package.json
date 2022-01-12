@@ -7,7 +7,8 @@
     "build": "remix build",
     "dev": "remix dev",
     "postinstall": "remix setup node",
-    "start": "remix-serve build"
+    "start": "remix-serve build",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.46.0",
@@ -37,6 +38,8 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.7",
     "prettier": "2.5.1",
     "prisma": "^3.8.0",
     "typescript": "^4.1.2"
@@ -71,5 +74,9 @@
     "env": {
       "node": true
     }
+  },
+  "lint-staged": {
+    "*.{js,jsx,md,mdx,ts,tsx}": "eslint --cache --fix",
+    "*.{css,js,jsx,md,mdx,ts,tsx}": "prettier --write"
   }
 }
