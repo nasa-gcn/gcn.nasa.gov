@@ -139,7 +139,7 @@ export default function App() {
                 ) : (
                   <Link to="/login" key="login">
                     <Button outline className="text-white" type="button">
-                      Log in
+                      Sign in / Sign up
                     </Button>
                   </Link>
                 ),
