@@ -1,31 +1,25 @@
-import {
-    Button,
-    IconContentCopy
-  } from '@trussworks/react-uswds'
-  
-  import CopyToClipboard from 'react-copy-to-clipboard'
+import { Button, IconContentCopy } from '@trussworks/react-uswds'
 
-  export interface CopyableCodeProps {
-    text: string
-  }
+import CopyToClipboard from 'react-copy-to-clipboard'
 
-  export function CopyableCode(props: CopyableCodeProps) {
-    return (
-      <CopyToClipboard text={props.text}>
-        <Button
-          type="button"
-          unstyled
-          className="padding-1px text-base-darkest"
-          title="Copy to clipboard"
-        >
-          <IconContentCopy />
-          {' '}
-          <code>
-            <small>
-              {props.text}
-            </small>
-          </code>
-        </Button>
-      </CopyToClipboard>
-    )
-  }
+export interface CopyableCodeProps {
+  text: string
+}
+
+export function CopyableCode(props: CopyableCodeProps) {
+  return (
+    <CopyToClipboard text={props.text}>
+      <Button
+        type="button"
+        unstyled
+        className="padding-1px text-base-darkest"
+        title="Copy to clipboard"
+      >
+        <IconContentCopy />{' '}
+        <code>
+          <small>{props.text}</small>
+        </code>
+      </Button>
+    </CopyToClipboard>
+  )
+}

@@ -7,4 +7,4 @@ meta:
 
 This is the Documentation page.
 
-* [Documentation for developers](docs/dev)
+- [Documentation for developers](docs/dev)

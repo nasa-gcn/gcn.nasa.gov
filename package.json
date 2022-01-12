@@ -7,14 +7,15 @@
     "build": "remix build",
     "dev": "remix dev",
     "postinstall": "remix setup node",
-    "start": "remix-serve build"
+    "start": "remix-serve build",
+    "prepare": "husky install"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.45.0",
-    "@prisma/client": "^3.7.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.46.0",
+    "@prisma/client": "^3.8.0",
     "@remix-run/react": "^1.1.1",
     "@remix-run/serve": "^1.1.1",
-    "@trussworks/react-uswds": "^2.5.0",
+    "@trussworks/react-uswds": "^2.6.0",
     "dotenv": "^10.0.0",
     "generate-password": "^1.7.0",
     "highlight.js": "^11.4.0",
@@ -31,11 +32,47 @@
     "@types/react": "^17.0.24",
     "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/react-dom": "^17.0.9",
-    "prisma": "^3.7.0",
+    "@typescript-eslint/eslint-plugin": "^5.9.1",
+    "@typescript-eslint/parser": "^5.9.1",
+    "eslint": "^8.6.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.7",
+    "prettier": "2.5.1",
+    "prisma": "^3.8.0",
     "typescript": "^4.1.2"
   },
   "engines": {
     "node": ">=14"
   },
-  "sideEffects": false
+  "sideEffects": false,
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "eslintConfig": {
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:react/recommended",
+      "plugin:react-hooks/recommended",
+      "plugin:react/jsx-runtime",
+      "prettier"
+    ],
+    "settings": {
+      "react": {
+        "version": "detect"
+      }
+    },
+    "env": {
+      "node": true
+    }
+  }
 }
