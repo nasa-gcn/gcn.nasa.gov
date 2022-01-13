@@ -2,12 +2,19 @@
  * @type {import('@remix-run/dev/config').RemixMdxConfigFunction}
  */
 const mdx = async () => {
-  const [rehypeHighlight] = await Promise.all([
-    import('rehype-highlight').then((mod) => mod.default),
-  ])
+  const [rehypeAutolinkHeadings, rehypeHighlight, rehypeSlug, remarkGfm] =
+    await Promise.all([
+      import('rehype-autolink-headings')
+        .then((mod) => mod.default)
+        .then((func) => (options) => func({ behavior: 'wrap', ...options })),
+      import('rehype-highlight').then((mod) => mod.default),
+      import('rehype-slug').then((mod) => mod.default),
+      import('remark-gfm').then((mod) => mod.default),
+    ])
 
   return {
-    rehypePlugins: [rehypeHighlight],
+    rehypePlugins: [rehypeHighlight, rehypeSlug, rehypeAutolinkHeadings],
+    remarkPlugins: [remarkGfm],
   }
 }
 
