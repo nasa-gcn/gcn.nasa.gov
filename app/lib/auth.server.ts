@@ -3,7 +3,7 @@
 // FIXME: Add PKCE for CSRF protection.
 
 import { createCookieSessionStorage, redirect } from 'remix'
-
+import memoizee from 'memoizee'
 import { generators, Issuer } from 'openid-client'
 
 if (!process.env.SESSION_SECRET)
@@ -29,13 +29,20 @@ function getRedirectUri(request: Request) {
   return `${url.origin}/auth`
 }
 
-export async function getOpenIDClient(request: Request) {
-  if (!process.env.OIDC_PROVIDER_URL)
-    throw new Error('environment variable OIDC_PROVIDER_URL must be defined')
+const issuerDiscover = memoizee(
+  async () => {
+    if (!process.env.OIDC_PROVIDER_URL)
+      throw new Error('environment variable OIDC_PROVIDER_URL must be defined')
+    return await Issuer.discover(process.env.OIDC_PROVIDER_URL)
+  },
+  { promise: true }
+)
+
+async function getOpenIDClient(request: Request) {
   if (!process.env.OIDC_CLIENT_ID)
     throw new Error('environment variable OIDC_CLIENT_ID must be non-null')
 
-  const issuer = await Issuer.discover(process.env.OIDC_PROVIDER_URL)
+  const issuer = await issuerDiscover()
   return new issuer.Client({
     client_id: process.env.OIDC_CLIENT_ID,
     client_secret: process.env.OIDC_CLIENT_SECRET,
