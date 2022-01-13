@@ -64,6 +64,7 @@
   },
   "eslintConfig": {
     "root": true,
+    "ignorePatterns": "*.mdx",
     "extends": [
       "eslint:recommended",
       "plugin:react/recommended",
