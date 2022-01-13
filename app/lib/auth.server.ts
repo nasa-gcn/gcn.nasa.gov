@@ -94,7 +94,7 @@ export async function authorize(request: Request) {
     // request, which causes validation to fail, because we did not provide a
     // nonce.
     //
-    // Setting nocne to null disables the nonce check entirely, but it angers
+    // Setting nonce to null disables the nonce check entirely, but it angers
     // TypeScript because the nonce property is typed as string | undefined.
     nonce: null,
   })
