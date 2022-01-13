@@ -1,0 +1,122 @@
+---
+meta:
+  title: GCN - Contributing
+---
+
+import {
+  ProcessList,
+  ProcessListItem,
+  ProcessListHeading,
+} from '@trussworks/react-uswds'
+
+# Contributing to General Coordinates Network
+
+Do you have an idea to make GCN better, or do you have a bug to report? We'd love to hear from you!
+
+GCN (this site) is an open source project on GitHub at https://github.com/tachgsfc/remix-gcn. Report feature requests and bug reports in our [GitHub issue tracker](https://github.com/tachgsfc/remix-gcn/issues). Or, if you feel like rolling your sleeves up, propose a code change by submitting a [GitHub pull request](https://github.com/tachgsfc/remix-gcn/pulls).
+
+## Project Overview
+
+- GCN is built in [Remix](https://remix.run), a full stack web framework. A Remix app combines the server side code (back end) and browser side code (front end) in a single codebase (sometimes called an [isomorphic application](https://en.wikipedia.org/wiki/Isomorphic_JavaScript)).
+- We use the [US Web Design System](https://designsystem.digital.gov), an open source design language and front end framework that is common to many Federal agencies.
+- US Web Design System components for [React](https://reactjs.org) are provided by [react-uswds](https://github.com/trussworks/react-uswds).
+
+The directory structure of the project is as follows:
+
+- [app/components](https://github.com/tachgsfc/remix-gcn/blob/main/app/components): Reusable custom React components.
+- [app/lib](https://github.com/tachgsfc/remix-gcn/blob/main/app/lib): Reusable TypeScript modules that are not React components.
+- [app/root.tsx](https://github.com/tachgsfc/remix-gcn/blob/main/app/root.tsx): Main route for the whole web site. Edit this file to cu stomize the page template.
+- [app/routes](https://github.com/tachgsfc/remix-gcn/blob/main/app/routes): Put all Web pages in here. Use [GitHub Flavored Markdown](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) for static pages or TSX (TypeScript with interleaved HTML markup) for reactive pages.
+- [app/routes/api](https://github.com/tachgsfc/remix-gcn/blob/main/app/routes/api): Put API endpoints in here.
+
+## Quick Start
+
+Here are instructions for getting the GCN site set up on your computer for local development.
+
+<ProcessList>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Set up Node.js on your computer
+    </ProcessListHeading>
+
+    Make sure that Node.js and NPM are installed on your computer. There are several options to install Node.js and NPM. Pick _one_ of the following:
+
+    -   Download and run [the Node.js installer for your operating system](https://nodejs.org/en/download/).
+    -   Install and use the [Node Version Manager, nvm](https://github.com/nvm-sh/nvm).
+    -   Install using a [package manager](https://nodejs.org/en/download/package-manager/).
+
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Clone and configure the project
+    </ProcessListHeading>
+
+    Clone the Git repository onto your computer, install all dependencies, and install the pre-commit hooks by running these commands:
+
+    ```sh
+    git clone https://github.com/tachgsfc/remix-gcn.git
+    cd remix-gcn
+    npm install
+    npm run prepare
+    ```
+
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Write configuration file
+    </ProcessListHeading>
+
+    Create a file called `.env` in the root directory of the repository with the following contents to define the configuration of your local development GCN server:
+
+    ```sh
+    # (Required) Signing key for session cookies.
+    # Fill in with a long, random string.
+    SESSION_SECRET=fill-me-in
+
+    # (Required) Prisma database connection string.
+    # The value here is for a local SQLite database.
+    # See https://pris.ly/d/connection-strings
+    DATABASE_URL="file:./dev.db"
+
+    # (Optional) OIDC provider info for Cognito.
+    # For parts of the site that require authentication,
+    # these lines must be uncommented and filled in.
+
+    # OIDC_PROVIDER_URL=fill-me-in
+    # OIDC_CLIENT_ID=fill-me-in
+    # OIDC_CLIENT_SECRET=fill-me-in
+
+    # (Optional) Cognito user pool ID for
+    # client credential vending machine.
+
+    # COGNITO_USER_POOL_ID=fill-me-in
+    ```
+
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Initialize the database
+    </ProcessListHeading>
+
+    Initialize the database by running this command:
+
+    ```sh
+    npx prisma db push
+    ```
+
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Start development server
+    </ProcessListHeading>
+
+    Start the local development server by running the following command:
+
+    ```sh
+    npm run dev
+    ```
+
+    Open a web browser and navigate to http://localhost:3000 to see the local site live. If you make a change in any of the source files, the change will be reflected instantly in the browser!
+
+  </ProcessListItem>
+</ProcessList>
