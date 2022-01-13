@@ -54,13 +54,20 @@ async function getOpenIDClient(request: Request) {
 export async function login(request: Request) {
   const client = await getOpenIDClient(request)
   const state = generators.state()
+  const code_verifier = generators.codeVerifier()
+  const code_challenge = generators.codeChallenge(code_verifier)
 
   const authorizationUrl = client.authorizationUrl({
     scope: 'openid',
     state,
+    code_challenge,
+    code_challenge_method: 'S256',
   })
 
   const session = await storage.getSession()
+  // FIXME: Does the code_verifier need to be encrypted, or is just signed OK?
+  // See https://github.com/panva/node-openid-client/discussions/455
+  session.set('code_verifier', code_verifier)
   session.set('state', state)
 
   return redirect(authorizationUrl, {
@@ -74,14 +81,17 @@ export async function authorize(request: Request) {
   const client = await getOpenIDClient(request)
   const session = await storage.getSession(request.headers.get('Cookie'))
   const url = new URL(request.url)
+  const code_verifier = session.get('code_verifier')
   const state = session.get('state')
 
   const params = client.callbackParams(url.search)
   const tokenSet = await client.callback(getRedirectUri(request), params, {
+    code_verifier,
     state,
   })
   const claims = tokenSet.claims()
 
+  session.unset('code_verifier')
   session.unset('state')
   session.set('sub', claims.sub)
   session.set('email', claims.email)
