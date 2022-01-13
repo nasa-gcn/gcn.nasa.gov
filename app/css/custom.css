@@ -76,3 +76,12 @@ h6 > a:hover::before {
   width: 0;
   right: 30px;
 }
+
+/*
+ * Background color for code samples
+ */
+
+code,
+code.hljs {
+  background-color: #f0f0f0; /* use bg-base-lightest from uswds */
+}
