@@ -88,6 +88,15 @@ export async function authorize(request: Request) {
   const tokenSet = await client.callback(getRedirectUri(request), params, {
     code_verifier,
     state,
+    // @ts-expect-error: Set this to null to disable nonce check.
+    //
+    // When Cognito is federating a social IdP, it adds a nonce to the callback
+    // request, which causes validation to fail, because we did not provide a
+    // nonce.
+    //
+    // Setting nocne to null disables the nonce check entirely, but it angers
+    // TypeScript because the nonce property is typed as string | undefined.
+    nonce: null,
   })
   const claims = tokenSet.claims()
 
