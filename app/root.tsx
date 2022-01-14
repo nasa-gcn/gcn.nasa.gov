@@ -171,32 +171,27 @@ export default function App() {
     }
     secondary={
       <div className="grid-row grid-gap">
-      <div className="usa-footer__contact-links mobile-lg:grid-col-7">
-        <Logo
-          size="medium"
-          image={
-            <img
-              className="usa-footer__logo-img"
-              alt="img alt text"
-              src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
-              alignment="left"
-              <p className="usa-footer__logo-heading" alignment="left">
+      
+        <div className="usa-footer__contact-links mobile-lg:grid-col-7">
+          <Logo
+            size="medium"
+            image={
+              <img
+                className="usa-footer__logo-img"
+                alt="img alt text"
+                src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
+                align="left"
+              />
+            }
+            heading={
+              <p className="usa-footer__logo-heading" align="left">
                 An official website of the<br/>National Aeronautics and Space Administration
               </p>
-            />
-            
-          }
-          {/*
-          heading={
-            <p className="usa-footer__logo-heading" alignment="left">
-              An official website of the<br/>National Aeronautics and Space Administration
-            </p>
-          }
-          */}
-        />
-      </div>
+            }
+          />
+        </div>
+        
         <div className="usa-footer__contact-links mobile-lg:grid-col-5">
-
           <h3 className="usa-footer__contact-heading">Goddard Space Flight Center</h3>
           <Address
             size="medium"
@@ -210,6 +205,7 @@ export default function App() {
             ]}
           />
         </div>
+          
       </div>
     }
   />
