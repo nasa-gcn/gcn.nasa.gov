@@ -155,58 +155,66 @@ export default function App() {
           </GridContainer>
         </section>
         
-        <Footer
+
+  <Footer
+    size="medium"
+//    returnToTop={returnToTop}
+    primary={
+      <FooterNav
+        size="medium"
+        links={Array(4).fill(
+          <a className="usa-footer__primary-link" href="#">
+            Primary Link
+          </a>
+        )}
+      />
+    }
+    secondary={
+      <div className="grid-row grid-gap">
+      <div className="usa-footer__contact-links mobile-lg:grid-col-7">
+        <Logo
           size="medium"
-          primary={
-            <div className="usa-footer__primary-container grid-row">
-              <div className="mobile-lg:grid-col-8">
-                <FooterNav
-                  size="slim"
-                  links={Array(4).fill(
-                    <a className="usa-footer__primary-link" href="#">
-                      Primary Link
-                    </a>
-                  )}
-                />
-              </div>
-              
-            </div>
-          }
-          secondary={
-          <div className="usa-footer__primary-container grid-row">
-          <div className="tablet:grid-col-8">
-            <Logo
-              size="medium"
-              image={
-                <img
-                  className="usa-footer__logo-img"
-                  alt="NASA logo"
-                  src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
-                />
-              }
-              heading={
-                <p className="usa-footer__logo-heading">
-                  An official website of the <br/> National Aeronautics and Space Administration
-                </p>
-              }
+          image={
+            <img
+              className="usa-footer__logo-img"
+              alt="img alt text"
+              src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
+              alignment="left"
+              <p className="usa-footer__logo-heading" alignment="left">
+                An official website of the<br/>National Aeronautics and Space Administration
+              </p>
             />
-            </div>
-            <div className="tablet:grid-col-4">
-              <Address
-                size="medium"
-                items={[
-                  <a key="telephone" href="tel:1-301-268-2000">
-                    Tel: (301) 286-2000
-                  </a>,
-                  <a key="email" href="https://www.nasa.gov/centers/goddard/about/email-goddard.html">
-                    Goddard Email
-                  </a>,
-                ]}
-              />
-            </div>
-          </div>
+            
           }
+          {/*
+          heading={
+            <p className="usa-footer__logo-heading" alignment="left">
+              An official website of the<br/>National Aeronautics and Space Administration
+            </p>
+          }
+          */}
         />
+      </div>
+        <div className="usa-footer__contact-links mobile-lg:grid-col-5">
+
+          <h3 className="usa-footer__contact-heading">Goddard Space Flight Center</h3>
+          <Address
+            size="medium"
+            items={[
+              <a key="telephone" href="tel:1-301-268-2000">
+                Tel: (301) 286-2000
+              </a>,
+              <a key="email" href="https://www.nasa.gov/centers/goddard/about/email-goddard.html">
+                Goddard Email
+              </a>,
+            ]}
+          />
+        </div>
+      </div>
+    }
+  />
+
+        
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
