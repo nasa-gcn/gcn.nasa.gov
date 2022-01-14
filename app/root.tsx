@@ -169,24 +169,14 @@ export default function App() {
                   )}
                 />
               </div>
-              <div className="tablet:grid-col-4">
-                <Address
-                  size="slim"
-                  items={[
-                    <a key="telephone" href="tel:1-800-555-5555">
-                      (800) CALL-GOVT
-                    </a>,
-                    <a key="email" href="mailto:info@agency.gov">
-                      info@agency.gov
-                    </a>,
-                  ]}
-                />
-              </div>
+              
             </div>
           }
           secondary={
+          <div className="usa-footer__primary-container grid-row">
+          <div className="tablet:grid-col-8">
             <Logo
-              size="slim"
+              size="medium"
               image={
                 <img
                   className="usa-footer__logo-img"
@@ -200,6 +190,21 @@ export default function App() {
                 </p>
               }
             />
+            </div>
+            <div className="tablet:grid-col-4">
+              <Address
+                size="medium"
+                items={[
+                  <a key="telephone" href="tel:1-301-268-2000">
+                    Tel: (301) 286-2000
+                  </a>,
+                  <a key="email" href="https://www.nasa.gov/centers/goddard/about/email-goddard.html">
+                    Goddard Email
+                  </a>,
+                ]}
+              />
+            </div>
+          </div>
           }
         />
         <Scripts />
