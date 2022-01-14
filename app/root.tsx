@@ -180,11 +180,10 @@ export default function App() {
                 className="usa-footer__logo-img"
                 alt="img alt text"
                 src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
-                align="left"
               />
             }
             heading={
-              <p className="usa-footer__logo-heading" align="left">
+              <p className="usa-footer__logo-heading">
                 An official website of the<br/>National Aeronautics and Space Administration
               </p>
             }
