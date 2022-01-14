@@ -111,6 +111,9 @@ export default function App() {
             <PrimaryNav
               mobileExpanded={expanded}
               items={[
+                <PrimaryNavLink to="/aboutgcn" key="/aboutgcn">
+                  About GCN
+                </PrimaryNavLink>,
                 <PrimaryNavLink to="/missions" key="/missions">
                   Missions
                 </PrimaryNavLink>,
@@ -148,70 +151,76 @@ export default function App() {
           </div>
         </Header>
         <ScrollRestoration />
-        
+
         <section className="usa-section">
           <GridContainer>
             <Outlet />
           </GridContainer>
         </section>
-        
 
-  <Footer
-    size="medium"
-//    returnToTop={returnToTop}
-    primary={
-      <FooterNav
-        size="medium"
-        links={Array(5).fill(
-          <a className="usa-footer__primary-link" href="#"> Contact GCN </a>,
-//          <a className="usa-footer__primary-link" href="#"> NASA and Partner Links </a>,
-//          <a className="usa-footer__primary-link" href="#"> Terms of Use </a>,
-//          <a className="usa-footer__primary-link" href="#"> System Status </a>,
-//          <a className="usa-footer__primary-link" href="#"> Change Log </a>
-        )}
-      />
-    }
-    secondary={
-      <div className="grid-row grid-gap">
-      
-        <div className="usa-footer__contact-links mobile-lg:grid-col-7">
-          <Logo
-            size="medium"
-            image={
-              <img
-                className="usa-footer__logo-img"
-                alt="img alt text"
-                src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
-              />
-            }
-            heading={
-              <p className="usa-footer__logo-heading">
-                An official website of the<br/>National Aeronautics and Space Administration
-              </p>
-            }
-          />
-        </div>
-        
-        <div className="usa-footer__contact-links mobile-lg:grid-col-5">
-          <h3 className="usa-footer__contact-heading">Goddard Space Flight Center</h3>
-          <Address
-            size="medium"
-            items={[
-              <a key="telephone" href="tel:1-301-268-2000">
-                Tel: (301) 286-2000
-              </a>,
-              <a key="email" href="https://www.nasa.gov/centers/goddard/about/email-goddard.html">
-                Goddard Email
-              </a>,
-            ]}
-          />
-        </div>
-          
-      </div>
-    }
-  />
+        <Footer
+          size="medium"
+          //    returnToTop={returnToTop}
+          primary={
+            <FooterNav
+              size="medium"
+              links={Array(5).fill(
+                <a className="usa-footer__primary-link" href="#">
+                  {' '}
+                  Contact GCN{' '}
+                </a>
+                //          <a className="usa-footer__primary-link" href="#"> NASA and Partner Links </a>,
+                //          <a className="usa-footer__primary-link" href="#"> Terms of Use </a>,
+                //          <a className="usa-footer__primary-link" href="#"> System Status </a>,
+                //          <a className="usa-footer__primary-link" href="#"> Change Log </a>
+              )}
+            />
+          }
+          secondary={
+            <div className="grid-row grid-gap">
+              <div className="usa-footer__contact-links mobile-lg:grid-col-7">
+                <Logo
+                  size="medium"
+                  image={
+                    <img
+                      className="usa-footer__logo-img"
+                      alt="img alt text"
+                      src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
+                    />
+                  }
+                  heading={
+                    <p className="usa-footer__logo-heading">
+                      An official website of the
+                      <br />
+                      National Aeronautics and Space Administration
+                    </p>
+                  }
+                />
+              </div>
 
-        
+              <div className="usa-footer__contact-links mobile-lg:grid-col-5">
+                <h3 className="usa-footer__contact-heading">
+                  Goddard Space Flight Center
+                </h3>
+                <Address
+                  size="medium"
+                  items={[
+                    <a key="telephone" href="tel:1-301-268-2000">
+                      Tel: (301) 286-2000
+                    </a>,
+                    <a
+                      key="email"
+                      href="https://www.nasa.gov/centers/goddard/about/email-goddard.html"
+                    >
+                      Goddard Email
+                    </a>,
+                  ]}
+                />
+              </div>
+            </div>
+          }
+        />
+
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
