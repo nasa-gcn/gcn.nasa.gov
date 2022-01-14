@@ -8,7 +8,7 @@
 // 2. Generate a unique and stable string to identify the user which serves
 //    as the primary key that identifies the user in our database. This key is
 //    called "subiss" and it is a combination of the "sub" and "iss" claims
-//    from the JWT. To convert it to a string, it is serealized as an unsecure
+//    from the JWT. To convert it to a string, it is serialized as an unsecure
 //    JWT.
 //
 // 3. Save the "subiss" key in the session. Also save the user's email address
