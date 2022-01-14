@@ -164,15 +164,26 @@ export default function App() {
           primary={
             <FooterNav
               size="medium"
-              links={Array(5).fill(
+              links={Array(
+                <a className="usa-footer__primary-link" href="#">
+                  Contact GCN
+                </a>,
                 <a className="usa-footer__primary-link" href="#">
                   {' '}
-                  Contact GCN{' '}
+                  NASA and Partner Links{' '}
+                </a>,
+                <a className="usa-footer__primary-link" href="#">
+                  {' '}
+                  Terms of Use{' '}
+                </a>,
+                <a className="usa-footer__primary-link" href="#">
+                  {' '}
+                  System Status{' '}
+                </a>,
+                <a className="usa-footer__primary-link" href="#">
+                  {' '}
+                  Change Log{' '}
                 </a>
-                //          <a className="usa-footer__primary-link" href="#"> NASA and Partner Links </a>,
-                //          <a className="usa-footer__primary-link" href="#"> Terms of Use </a>,
-                //          <a className="usa-footer__primary-link" href="#"> System Status </a>,
-                //          <a className="usa-footer__primary-link" href="#"> Change Log </a>
               )}
             />
           }
