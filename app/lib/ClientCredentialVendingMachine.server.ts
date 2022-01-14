@@ -87,7 +87,7 @@ export class ClientCredentialVendingMachine {
         AllowedOAuthFlows: ['client_credentials'],
         AllowedOAuthFlowsUserPoolClient: true,
         AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
-        ClientName: this.#subiss,
+        ClientName: 'auto-generated',
         GenerateSecret: true,
         UserPoolId: cognitoUserPoolId,
       })
