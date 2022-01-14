@@ -29,35 +29,35 @@ const getCognitoUserPoolId = memoizee(() => {
 })
 
 export class ClientCredentialVendingMachine {
-  #sub: string
+  #subiss: string
 
-  private constructor(sub: string) {
-    this.#sub = sub
+  private constructor(subiss: string) {
+    this.#subiss = subiss
   }
 
   static async create(request: Request) {
     const session = await storage.getSession(request.headers.get('Cookie'))
-    const sub = session.get('sub')
+    const subiss = session.get('subiss')
 
-    if (!sub) throw new Response(null, { status: 403 })
+    if (!subiss) throw new Response(null, { status: 403 })
 
-    return new this(sub)
+    return new this(subiss)
   }
 
   async getClientCredentials() {
     return await db.clientCredential.findMany({
       select: { name: true, client_id: true },
-      where: { sub: this.#sub },
+      where: { subiss: this.#subiss },
     })
   }
 
   async deleteClientCredential(client_id: string) {
     const cred = await db.clientCredential.findUnique({
-      select: { sub: true },
+      select: { subiss: true },
       where: { client_id },
     })
 
-    if (cred?.sub !== this.#sub) throw new Response(null, { status: 404 })
+    if (cred?.subiss !== this.#subiss) throw new Response(null, { status: 404 })
 
     await Promise.all([
       this.#deleteClientCredentialInternal(client_id),
@@ -74,7 +74,7 @@ export class ClientCredentialVendingMachine {
       await this.#createClientCredentialInternal()
 
     await db.clientCredential.create({
-      data: { name, client_id, sub: this.#sub },
+      data: { name, client_id, subiss: this.#subiss },
     })
 
     return { name, client_id, client_secret }
@@ -87,7 +87,7 @@ export class ClientCredentialVendingMachine {
         AllowedOAuthFlows: ['client_credentials'],
         AllowedOAuthFlowsUserPoolClient: true,
         AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
-        ClientName: this.#sub,
+        ClientName: this.#subiss,
         GenerateSecret: true,
         UserPoolId: cognitoUserPoolId,
       })

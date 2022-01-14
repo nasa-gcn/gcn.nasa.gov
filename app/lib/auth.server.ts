@@ -1,8 +1,23 @@
-// Authenticates using OpenID Connect,
-// then extracts the subject claim and stashes it in the session.
+// Authentication backend for GCN.
+//
+// The overall procedure is:
+//
+// 1. Complete OIDC authorization code flow with Cognito to get a secure JWT
+//    for the user.
+//
+// 2. Generate a unique and stable string to identify the user which serves
+//    as the primary key that identifies the user in our database. This key is
+//    called "subiss" and it is a combination of the "sub" and "iss" claims
+//    from the JWT. To convert it to a string, it is serealized as an unsecure
+//    JWT.
+//
+// 3. Save the "subiss" key in the session. Also save the user's email address
+//    in the session, because we show the user's email in the nav bar to show
+//    that they are logged in.
 
 import { createCookieSessionStorage, redirect } from 'remix'
 import memoizee from 'memoizee'
+import { UnsecuredJWT } from 'jose'
 import { generators, Issuer } from 'openid-client'
 
 if (!process.env.SESSION_SECRET)
@@ -101,7 +116,9 @@ export async function authorize(request: Request) {
 
   session.unset('code_verifier')
   session.unset('state')
-  session.set('sub', claims.sub)
+
+  const subiss = new UnsecuredJWT({ sub: claims.sub, iss: claims.iss })
+  session.set('subiss', subiss.encode())
   session.set('email', claims.email)
 
   return redirect('/', {

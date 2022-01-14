@@ -12,8 +12,8 @@ datasource db {
 
 model ClientCredential {
   client_id   String  @id
-  sub         String
+  subiss      String
   name        String
 
-  @@index([sub])
+  @@index([subiss])
 }
