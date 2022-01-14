@@ -26,6 +26,7 @@ import {
   NavMenuButton,
   PrimaryNav,
   Title,
+  Requiredlinks,
 } from '@trussworks/react-uswds'
 
 import { storage } from '~/lib/auth.server'
@@ -100,7 +101,7 @@ export default function App() {
                 <Link to="/">
                   <img
                     id="site-logo"
-                    src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
+                    src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
                     alt="NASA logo"
                   />
                   <span id="site-title">General Coordinates Network</span>
@@ -111,8 +112,14 @@ export default function App() {
             <PrimaryNav
               mobileExpanded={expanded}
               items={[
-                <PrimaryNavLink to="/missions" key="/missions">
+                <PrimaryNavLink to="/aboutgcn" key="/aboutgcn"> 
+                  About GCN
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/missions" key="/missions"> 
                   Missions
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/docs" key="/docs">
+                  Documentation
                 </PrimaryNavLink>,
                 <PrimaryNavLink to="/notices" key="/notices">
                   Notices
@@ -120,8 +127,8 @@ export default function App() {
                 <PrimaryNavLink to="/circulars" key="/circulars">
                   Circulars
                 </PrimaryNavLink>,
-                <PrimaryNavLink to="/docs" key="/docs">
-                  Documentation
+                <PrimaryNavLink to="/archives" key="/archives">
+                  Archives
                 </PrimaryNavLink>,
               ]}
               onToggleMobileNav={onClick}
@@ -139,7 +146,7 @@ export default function App() {
                 ) : (
                   <Link to="/login" key="login">
                     <Button outline className="text-white" type="button">
-                      Sign in / Sign up
+                      Log in
                     </Button>
                   </Link>
                 ),
@@ -147,12 +154,17 @@ export default function App() {
             </PrimaryNav>
           </div>
         </Header>
+        
         <ScrollRestoration />
+        
         <section className="usa-section">
+        
           <GridContainer>
             <Outlet />
           </GridContainer>
+          
         </section>
+        
         <Footer
           size="slim"
           primary={
@@ -160,7 +172,7 @@ export default function App() {
               <div className="mobile-lg:grid-col-8">
                 <FooterNav
                   size="slim"
-                  links={Array(4).fill(
+                  links={Array(5).fill(
                     <a className="usa-footer__primary-link" href="#">
                       Primary Link
                     </a>
@@ -168,38 +180,88 @@ export default function App() {
                 />
               </div>
               <div className="tablet:grid-col-4">
-                <Address
-                  size="slim"
-                  items={[
-                    <a key="telephone" href="tel:1-800-555-5555">
-                      (800) CALL-GOVT
-                    </a>,
-                    <a key="email" href="mailto:info@agency.gov">
-                      info@agency.gov
-                    </a>,
-                  ]}
-                />
+                
               </div>
             </div>
           }
-          secondary={
-            <Logo
-              size="slim"
-              image={
-                <img
-                  className="usa-footer__logo-img"
-                  alt="NASA logo"
-                  src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
-                />
-              }
-              heading={
-                <p className="usa-footer__logo-heading">
-                  National Aeronautics and Space Administration
-                </p>
-              }
-            />
-          }
-        />
+secondary={
+  <div className="usa-footer__secondary-container grid-row">
+    <div className="mobile-lg:grid-col-8">
+      <Logo
+        size="slim"
+        image={
+          <img
+            className="usa-footer__logo-img"
+            alt="NASA logo"
+            src="https://www.nasa.gov/sites/all/themes/custom/nasatwo/images/nasa-logo.svg"
+          />
+        }
+        heading={
+          <p className="usa-footer__logo-heading">
+            An official website of the<br/>National Aeronautics and Space Administration
+          </p>
+        }
+      />
+    </div>
+    <div className="mobile-lg:grid-col-4">
+      <Address
+        size="slim"
+        items={[
+          <a key="telephone" href="tel:1-301-286-2000">
+            (301) 286-2000
+          </a>,
+          <a key="email" href="https://www.nasa.gov/centers/goddard/about/email-goddard.html">
+            Email Goddard
+          </a>,
+        ]}
+      />
+    </div>
+  </div>
+  
+  <nav class="usa-identifier__section usa-identifier__section--required-links" aria-label="Important links," >
+    <div class="usa-identifier__container">
+      <ul class="usa-identifier__required-links-list">
+        <li class="usa-identifier__required-links-item">
+          <a
+            href="https://www.nasa.gov/about/index.html"
+            class="usa-identifier__required-link"
+            >About NASA</a
+          >
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a
+            href="https://www.nasa.gov/FOIA/index.html"
+            class="usa-identifier__required-link usa-link"
+            >FOIA requests</a
+          >
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a
+            href="https://www.nasa.gov/offices/odeo/no-fear-act"
+            class="usa-identifier__required-link usa-link"
+            >No FEAR Act data</a
+          >
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a
+            href="https://oig.nasa.gov/"
+            class="usa-identifier__required-link usa-link"
+            >Office of the Inspector General</a
+          >
+        </li>
+        <li class="usa-identifier__required-links-item">
+          <a
+            href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
+            class="usa-identifier__required-link usa-link"
+            >Privacy policy</a
+          >
+        </li>
+      </ul>          
+    </div>
+  </nav>
+  
+}
+          />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
