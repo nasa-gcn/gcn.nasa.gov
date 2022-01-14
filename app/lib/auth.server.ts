@@ -1,6 +1,5 @@
 // Authenticates using OpenID Connect,
 // then extracts the subject claim and stashes it in the session.
-// FIXME: Add PKCE for CSRF protection.
 
 import { createCookieSessionStorage, redirect } from 'remix'
 import memoizee from 'memoizee'
