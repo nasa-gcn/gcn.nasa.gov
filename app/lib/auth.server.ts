@@ -23,6 +23,24 @@ import { generators, Issuer } from 'openid-client'
 if (!process.env.SESSION_SECRET)
   throw new Error('environment variable SESSION_SECRET must be defined')
 
+// Short-lived session for storing the OIDC state and PKCE code verifier
+const oidcStorage = createCookieSessionStorage({
+  cookie: {
+    name: 'session',
+    // normally you want this to be `secure: true`
+    // but that doesn't work on localhost for Safari
+    // https://web.dev/when-to-use-local-https/
+    secure: process.env.NODE_ENV === 'production',
+    secrets: [process.env.SESSION_SECRET],
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60,
+    httpOnly: true,
+  },
+})
+
+// Long-lived user session. The cookie name is the same as the oidcStorage
+// session, so the cookie replaces it (with a longer expiration time).
 export const storage = createCookieSessionStorage({
   cookie: {
     name: 'session',
@@ -78,25 +96,28 @@ export async function login(request: Request) {
     code_challenge_method: 'S256',
   })
 
-  const session = await storage.getSession()
+  const oidcSession = await oidcStorage.getSession()
   // FIXME: Does the code_verifier need to be encrypted, or is just signed OK?
   // See https://github.com/panva/node-openid-client/discussions/455
-  session.set('code_verifier', code_verifier)
-  session.set('state', state)
+  oidcSession.set('code_verifier', code_verifier)
+  oidcSession.set('state', state)
 
   return redirect(authorizationUrl, {
     headers: {
-      'Set-Cookie': await storage.commitSession(session),
+      'Set-Cookie': await oidcStorage.commitSession(oidcSession),
     },
   })
 }
 
 export async function authorize(request: Request) {
   const client = await getOpenIDClient(request)
-  const session = await storage.getSession(request.headers.get('Cookie'))
+  const oidcSession = await oidcStorage.getSession(
+    request.headers.get('Cookie')
+  )
+  const session = await storage.getSession()
   const url = new URL(request.url)
-  const code_verifier = session.get('code_verifier')
-  const state = session.get('state')
+  const code_verifier = oidcSession.get('code_verifier')
+  const state = oidcSession.get('state')
 
   const params = client.callbackParams(url.search)
   const tokenSet = await client.callback(getRedirectUri(request), params, {
@@ -113,9 +134,6 @@ export async function authorize(request: Request) {
     nonce: null,
   })
   const claims = tokenSet.claims()
-
-  session.unset('code_verifier')
-  session.unset('state')
 
   const subiss = new UnsecuredJWT({ sub: claims.sub, iss: claims.iss })
   session.set('subiss', subiss.encode())
