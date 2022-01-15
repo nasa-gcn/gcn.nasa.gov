@@ -33,7 +33,7 @@ export const storage = createCookieSessionStorage({
     secrets: [process.env.SESSION_SECRET],
     sameSite: 'lax',
     path: '/',
-    maxAge: 60 * 60 * 24 * 30, // one month
+    maxAge: 3600,
     httpOnly: true,
   },
 })
