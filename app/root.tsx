@@ -28,6 +28,8 @@ import {
   Title,
 } from '@trussworks/react-uswds'
 
+import { LoginButton } from './components/LoginButton'
+
 import { storage } from '~/lib/auth.server'
 
 import style from '~/css/custom.css'
@@ -137,11 +139,7 @@ export default function App() {
                     {data.email}
                   </Button>
                 ) : (
-                  <Link to="/login" key="login">
-                    <Button outline className="text-white" type="button">
-                      Sign in / Sign up
-                    </Button>
-                  </Link>
+                  <LoginButton key="login" />
                 ),
               ]}
             </PrimaryNav>
