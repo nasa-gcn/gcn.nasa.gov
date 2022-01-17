@@ -25,7 +25,7 @@
     "highlight.js": "^11.4.0",
     "memoizee": "^0.4.15",
     "nasawds": "^3.0.177",
-    "openid-client": "5.1.1",
+    "openid-client": "^5.1.1",
     "react": "^17.0.2",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.2",

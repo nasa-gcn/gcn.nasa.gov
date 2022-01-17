@@ -85,12 +85,14 @@ async function getOpenIDClient(request: Request) {
 
 export async function login(request: Request) {
   const client = await getOpenIDClient(request)
+  const nonce = generators.nonce()
   const state = generators.state()
   const code_verifier = generators.codeVerifier()
   const code_challenge = generators.codeChallenge(code_verifier)
 
   const authorizationUrl = client.authorizationUrl({
     scope: 'openid',
+    nonce,
     state,
     code_challenge,
     code_challenge_method: 'S256',
@@ -100,6 +102,7 @@ export async function login(request: Request) {
   // FIXME: Does the code_verifier need to be encrypted, or is just signed OK?
   // See https://github.com/panva/node-openid-client/discussions/455
   oidcSession.set('code_verifier', code_verifier)
+  oidcSession.set('nonce', nonce)
   oidcSession.set('state', state)
 
   return redirect(authorizationUrl, {
@@ -117,21 +120,14 @@ export async function authorize(request: Request) {
   const session = await storage.getSession()
   const url = new URL(request.url)
   const code_verifier = oidcSession.get('code_verifier')
+  const nonce = oidcSession.get('nonce')
   const state = oidcSession.get('state')
 
   const params = client.callbackParams(url.search)
   const tokenSet = await client.callback(getRedirectUri(request), params, {
     code_verifier,
+    nonce,
     state,
-    // @ts-expect-error: Set this to null to disable nonce check.
-    //
-    // When Cognito is federating a social IdP, it adds a nonce to the callback
-    // request, which causes validation to fail, because we did not provide a
-    // nonce.
-    //
-    // Setting nonce to null disables the nonce check entirely, but it angers
-    // TypeScript because the nonce property is typed as string | undefined.
-    nonce: null,
   })
   const claims = tokenSet.claims()
 
