@@ -219,7 +219,7 @@ export default function App() {
                     />
                   }
                   heading={
-                    <p className="usa-footer__logo-heading" align="left">
+                    <p className="usa-footer__logo-heading">
                       An official website of the
                       <br />
                       National Aeronautics and Space Administration
