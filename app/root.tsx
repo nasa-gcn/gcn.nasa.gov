@@ -117,14 +117,17 @@ export default function App() {
                 <PrimaryNavLink to="/missions" key="/missions">
                   Missions
                 </PrimaryNavLink>,
+                <PrimaryNavLink to="/docs" key="/docs">
+                  Documentation
+                </PrimaryNavLink>,
                 <PrimaryNavLink to="/notices" key="/notices">
                   Notices
                 </PrimaryNavLink>,
                 <PrimaryNavLink to="/circulars" key="/circulars">
                   Circulars
                 </PrimaryNavLink>,
-                <PrimaryNavLink to="/docs" key="/docs">
-                  Documentation
+                <PrimaryNavLink to="/archives" key="/archives">
+                  Archives
                 </PrimaryNavLink>,
               ]}
               onToggleMobileNav={onClick}
