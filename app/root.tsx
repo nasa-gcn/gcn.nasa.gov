@@ -165,19 +165,19 @@ export default function App() {
             <FooterNav
               size="medium"
               links={[
-                <a className="usa-footer__primary-link" href="#">
+                <a className="usa-footer__primary-link" href="#" key="/contactgcn">
                   Contact GCN
                 </a>,
-                <a className="usa-footer__primary-link" href="#">
+                <a className="usa-footer__primary-link" href="#" key="/links">
                   NASA and Partner Links
                 </a>,
-                <a className="usa-footer__primary-link" href="#">
+                <a className="usa-footer__primary-link" href="#" key="/termsofuse">
                   Terms of Use
                 </a>,
-                <a className="usa-footer__primary-link" href="#">
+                <a className="usa-footer__primary-link" href="#" key="/status">
                   System Status
                 </a>,
-                <a className="usa-footer__primary-link" href="#">
+                <a className="usa-footer__primary-link" href="#" key="/changelog">
                   Change Log
                 </a>
               ]}
