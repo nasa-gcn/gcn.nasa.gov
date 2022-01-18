@@ -167,28 +167,36 @@ export default function App() {
               links={[
                 <a
                   className="usa-footer__primary-link"
-                  href="#"
-                  key="/contactgcn"
+                  href="/contactgcn"
+                  key="contactgcn"
                 >
                   Contact GCN
                 </a>,
-                <a className="usa-footer__primary-link" href="#" key="/links">
+                <a
+                  className="usa-footer__primary-link"
+                  href="/linkspage"
+                  key="linkspage"
+                >
                   NASA and Partner Links
                 </a>,
                 <a
                   className="usa-footer__primary-link"
-                  href="#"
-                  key="/termsofuse"
+                  href="/termsofuse"
+                  key="termsofuse"
                 >
                   Terms of Use
                 </a>,
-                <a className="usa-footer__primary-link" href="#" key="/status">
+                <a
+                  className="usa-footer__primary-link"
+                  href="/status"
+                  key="status"
+                >
                   System Status
                 </a>,
                 <a
                   className="usa-footer__primary-link"
-                  href="#"
-                  key="/changelog"
+                  href="/changelog"
+                  key="changelog"
                 >
                   Change Log
                 </a>,
@@ -197,7 +205,7 @@ export default function App() {
           }
           secondary={
             <div className="grid-row grid-gap">
-              <div className="usa-footer__contact-links mobile-lg:grid-col-7">
+              <div className="usa-footer__contact-links mobile-lg:grid-col-8">
                 <Logo
                   size="medium"
                   image={
@@ -208,7 +216,7 @@ export default function App() {
                     />
                   }
                   heading={
-                    <p className="usa-footer__logo-heading">
+                    <p className="usa-footer__logo-heading" align="left">
                       An official website of the
                       <br />
                       National Aeronautics and Space Administration
@@ -217,9 +225,10 @@ export default function App() {
                 />
               </div>
 
-              <div className="usa-footer__contact-links mobile-lg:grid-col-5">
+              <div className="usa-footer__contact-links mobile-lg:grid-col-4">
+                <h3 className="usa-footer__contact-heading">Goddard</h3>
                 <h3 className="usa-footer__contact-heading">
-                  Goddard Space Flight Center
+                  Space Flight Center
                 </h3>
                 <Address
                   size="medium"
