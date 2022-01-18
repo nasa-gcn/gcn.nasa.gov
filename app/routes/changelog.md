@@ -1,5 +1,4 @@
-GCN Changelog
-=============
+# GCN Changelog
 
 Place Holder Log. Manually written in static template.
 
