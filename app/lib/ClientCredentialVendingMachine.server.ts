@@ -4,10 +4,11 @@ import {
   DeleteUserPoolClientCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 
+import { tables } from '@architect/functions'
+
 import { generate } from 'generate-password'
 
 import { storage } from '~/lib/auth.server'
-import { db } from '~/db.server'
 import memoizee from 'memoizee'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
@@ -29,41 +30,50 @@ const getCognitoUserPoolId = memoizee(() => {
 })
 
 export class ClientCredentialVendingMachine {
-  #sub: string
+  #subiss: string
 
-  private constructor(sub: string) {
-    this.#sub = sub
+  private constructor(subiss: string) {
+    this.#subiss = subiss
   }
 
   static async create(request: Request) {
     const session = await storage.getSession(request.headers.get('Cookie'))
-    const sub = session.get('sub')
+    const subiss = session.get('subiss')
 
-    if (!sub) throw new Response(null, { status: 403 })
+    if (!subiss) throw new Response(null, { status: 403 })
 
-    return new this(sub)
+    return new this(subiss)
   }
 
   async getClientCredentials() {
-    return await db.clientCredential.findMany({
-      select: { name: true, client_id: true },
-      where: { sub: this.#sub },
+    const db = await tables()
+    const results = await db.client_credentials.query({
+      KeyConditionExpression: 'subiss = :subiss',
+      ExpressionAttributeNames: {
+        '#name': 'name',
+      },
+      ExpressionAttributeValues: {
+        ':subiss': this.#subiss,
+      },
+      ProjectionExpression: 'client_id, #name',
     })
+    return results.Items
   }
 
   async deleteClientCredential(client_id: string) {
-    const cred = await db.clientCredential.findUnique({
-      select: { sub: true },
-      where: { client_id },
-    })
+    const db = await tables()
 
-    if (cred?.sub !== this.#sub) throw new Response(null, { status: 404 })
+    // Make sure that the user actually owns the given client ID before
+    // we try to delete it
+    const item = await db.client_credentials.get({
+      subiss: this.#subiss,
+      client_id,
+    })
+    if (!item) throw new Response(null, { status: 404 })
 
     await Promise.all([
       this.#deleteClientCredentialInternal(client_id),
-      db.clientCredential.delete({
-        where: { client_id },
-      }),
+      db.client_credentials.delete({ subiss: this.#subiss, client_id }),
     ])
   }
 
@@ -73,8 +83,11 @@ export class ClientCredentialVendingMachine {
     const { client_id, client_secret } =
       await this.#createClientCredentialInternal()
 
-    await db.clientCredential.create({
-      data: { name, client_id, sub: this.#sub },
+    const db = await tables()
+    await db.client_credentials.put({
+      name,
+      client_id,
+      subiss: this.#subiss,
     })
 
     return { name, client_id, client_secret }
@@ -87,7 +100,7 @@ export class ClientCredentialVendingMachine {
         AllowedOAuthFlows: ['client_credentials'],
         AllowedOAuthFlowsUserPoolClient: true,
         AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
-        ClientName: this.#sub,
+        ClientName: 'auto-generated',
         GenerateSecret: true,
         UserPoolId: cognitoUserPoolId,
       })
