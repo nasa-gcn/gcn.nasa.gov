@@ -9,23 +9,22 @@
   "license": "",
   "scripts": {
     "build": "remix build",
-    "dev": "remix dev",
+    "dev": "concurrently \"remix watch\" \"arc sandbox\"",
     "postinstall": "remix setup node",
-    "start": "remix-serve build",
     "prepare": "husky install"
   },
   "dependencies": {
-    "@aws-sdk/client-cognito-identity-provider": "^3.46.0",
-    "@prisma/client": "^3.8.0",
+    "@architect/functions": "^4.1.1",
+    "@aws-sdk/client-cognito-identity-provider": "^3.47.0",
+    "@remix-run/architect": "^1.1.1",
     "@remix-run/react": "^1.1.1",
-    "@remix-run/serve": "^1.1.1",
     "@trussworks/react-uswds": "^2.6.0",
-    "dotenv": "^10.0.0",
     "generate-password": "^1.7.0",
     "highlight.js": "^11.4.0",
+    "jose": "^4.3.8",
     "memoizee": "^0.4.15",
     "nasawds": "^3.0.177",
-    "openid-client": "^5.1.1",
+    "openid-client": "^5.1.2",
     "react": "^17.0.2",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.2",
@@ -35,23 +34,26 @@
     "remark-gfm": "^3.0.1",
     "remix": "^1.1.1"
   },
+  "overrides": {
+    "@architect/architect": "^9.5.4"
+  },
   "devDependencies": {
     "@remix-run/dev": "^1.1.1",
+    "@types/architect__functions": "^3.13.6",
     "@types/memoizee": "^0.4.7",
     "@types/react": "^17.0.24",
     "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/react-dom": "^17.0.9",
-    "@typescript-eslint/eslint-plugin": "^5.9.1",
-    "@typescript-eslint/parser": "^5.9.1",
-    "eslint": "^8.6.0",
+    "@typescript-eslint/eslint-plugin": "^5.10.0",
+    "@typescript-eslint/parser": "^5.10.0",
+    "concurrently": "^7.0.0",
+    "eslint": "^8.7.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-mdx": "^1.16.0",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
     "husky": "^7.0.4",
     "lint-staged": "^12.1.7",
     "prettier": "2.5.1",
-    "prisma": "^3.8.0",
     "typescript": "^4.1.2"
   },
   "engines": {
@@ -67,26 +69,15 @@
     "ignorePatterns": "*.mdx",
     "extends": [
       "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
       "plugin:react/recommended",
       "plugin:react-hooks/recommended",
-      "plugin:mdx/recommended",
       "plugin:react/jsx-runtime",
       "prettier"
     ],
-    "overrides": [
-      {
-        "files": [
-          "*.ts",
-          "*.tsx"
-        ],
-        "parser": "@typescript-eslint/parser",
-        "plugins": [
-          "@typescript-eslint"
-        ],
-        "extends": [
-          "plugin:@typescript-eslint/recommended"
-        ]
-      }
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint"
     ],
     "settings": {
       "react": {
