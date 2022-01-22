@@ -22,4 +22,5 @@ profile default
 region us-east-1
 
 @macros
+lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
 permissionsBoundary  # configure IAM Role permissions boundaries required by Mission Cloud Platform
