@@ -6,7 +6,7 @@ remix-gcn
 @http
 /*
   method any
-  src server
+  src src
 
 @static
 
