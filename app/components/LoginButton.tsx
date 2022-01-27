@@ -19,6 +19,7 @@ export function LoginButton() {
         id="consent-modal"
         ref={modalRef}
         isLarge
+        renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
       >
         <ModalHeading id="consent-heading">NASA IT Consent</ModalHeading>
         <div className="usa-prose">

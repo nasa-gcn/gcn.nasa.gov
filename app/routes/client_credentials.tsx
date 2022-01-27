@@ -80,6 +80,7 @@ function ClientCredential(props: ClientCredentialProps) {
           ref={modalRef}
           aria-labelledby="modal-delete-heading"
           aria-describedby="modal-delete-description"
+          renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
         >
           <ModalHeading id="modal-delete-heading">
             Delete Client Credential
@@ -180,6 +181,7 @@ export default function Index() {
         ref={modalRef}
         aria-labelledby="modal-new-heading"
         aria-describedby="modal-new-description"
+        renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
       >
         <ModalHeading id="modal-new-heading">
           Create New Client Credential
