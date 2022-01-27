@@ -4,30 +4,30 @@ import {
   DeleteUserPoolClientCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 
+import type { SmithyException } from '@aws-sdk/types'
+
 import { tables } from '@architect/functions'
 
 import { generate } from 'generate-password'
 
 import { storage } from '~/lib/auth.server'
-import memoizee from 'memoizee'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
   region: 'us-east-1',
 })
 
-const getCognitoUserPoolId = memoizee(() => {
-  if (process.env.COGNITO_USER_POOL_ID) {
-    return process.env.COGNITO_USER_POOL_ID
-  } else if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      'Environment variable COGNITO_USER_POOL_ID must be defined.'
-    )
-  } else {
-    console.warn(
-      `Environment variable COGNITO_USER_POOL_ID must be defined for production. Since it is not set and the application is currently configured for ${process.env.NODE_ENV}, no Cognito client credentials will be created or deleted.`
-    )
-  }
-})
+/*
+ * Cognito user pool ID for generated client credentials.
+ *
+ * Note that his is safe to include in public code because it is public
+ * knowledge anyway: the Cognito user pool ID is easily deduced from the OpenID
+ * token endpoint URL, which is public knowledge because it is part of the
+ * client configuration for end users.
+ *
+ * FIXME: this should be parameterized for dev, test, and prod deployments,
+ * all of which will eventually have independent OIDC providers.
+ */
+const cognitoUserPoolId = 'us-east-1_KCtbSlt63'
 
 export class ClientCredentialVendingMachine {
   #subiss: string
@@ -94,37 +94,58 @@ export class ClientCredentialVendingMachine {
   }
 
   async #createClientCredentialInternal() {
-    const cognitoUserPoolId = getCognitoUserPoolId()
-    if (cognitoUserPoolId) {
-      const command = new CreateUserPoolClientCommand({
-        AllowedOAuthFlows: ['client_credentials'],
-        AllowedOAuthFlowsUserPoolClient: true,
-        AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
-        ClientName: 'auto-generated',
-        GenerateSecret: true,
-        UserPoolId: cognitoUserPoolId,
-      })
-      const response = await cognitoIdentityProviderClient.send(command)
-      const client_id = response.UserPoolClient?.ClientId
-      const client_secret = response.UserPoolClient?.ClientSecret
-      if (!client_id) throw new Error('AWS SDK must return ClientId')
-      if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
-      return { client_id, client_secret }
-    } else {
+    const command = new CreateUserPoolClientCommand({
+      AllowedOAuthFlows: ['client_credentials'],
+      AllowedOAuthFlowsUserPoolClient: true,
+      AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
+      ClientName: 'auto-generated',
+      GenerateSecret: true,
+      UserPoolId: cognitoUserPoolId,
+    })
+
+    let response
+    try {
+      response = await cognitoIdentityProviderClient.send(command)
+    } catch (e) {
+      const name = (e as SmithyException).name
+      if (
+        name !== 'UnrecognizedClientException' ||
+        process.env.NODE_ENV === 'production'
+      )
+        throw e
+      console.warn(
+        `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, creating fake client credentials.`
+      )
       const client_id = generate({ length: 26 })
       const client_secret = generate({ length: 51 })
       return { client_id, client_secret }
     }
+
+    const client_id = response.UserPoolClient?.ClientId
+    const client_secret = response.UserPoolClient?.ClientSecret
+    if (!client_id) throw new Error('AWS SDK must return ClientId')
+    if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
+    return { client_id, client_secret }
   }
 
   async #deleteClientCredentialInternal(client_id: string) {
-    const cognitoUserPoolId = getCognitoUserPoolId()
-    if (cognitoUserPoolId) {
-      const command = new DeleteUserPoolClientCommand({
-        ClientId: client_id,
-        UserPoolId: cognitoUserPoolId,
-      })
+    const command = new DeleteUserPoolClientCommand({
+      ClientId: client_id,
+      UserPoolId: cognitoUserPoolId,
+    })
+
+    try {
       await cognitoIdentityProviderClient.send(command)
+    } catch (e) {
+      const name = (e as SmithyException).name
+      if (
+        name !== 'UnrecognizedClientException' ||
+        process.env.NODE_ENV === 'production'
+      )
+        throw e
+      console.warn(
+        `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, deleting fake client credentials.`
+      )
     }
   }
 }
