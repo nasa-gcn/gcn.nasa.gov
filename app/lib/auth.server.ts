@@ -72,12 +72,22 @@ function getRedirectUri(request: Request) {
   return `${url.origin}/auth`
 }
 
+/*
+ * URL for OpenID Connect provider discovery.
+ *
+ * Note that his is safe to include in public code because it is public
+ * knowledge anyway: when a user clicks "Login" on the site, they are
+ * redirected to the Cognito hosted UI. From the URL of the Cognito hosted UI,
+ * it is easy to work out the discovery URL.
+ *
+ * FIXME: this should be parameterized for dev, test, and prod deployments,
+ * all of which will eventually have independent OIDC providers.
+ */
+const providerUrl =
+  'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_37HQxlQvW/'
+
 const issuerDiscover = memoizee(
-  async () => {
-    if (!process.env.OIDC_PROVIDER_URL)
-      throw new Error('environment variable OIDC_PROVIDER_URL must be defined')
-    return await Issuer.discover(process.env.OIDC_PROVIDER_URL)
-  },
+  async () => await Issuer.discover(providerUrl),
   { promise: true }
 )
 
