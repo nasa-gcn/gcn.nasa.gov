@@ -22,6 +22,8 @@ sessions
 @aws
 profile default
 region us-east-1
+architecture arm64
+memory 512
 
 @macros
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
