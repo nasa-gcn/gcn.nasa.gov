@@ -29,20 +29,32 @@ const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
  */
 const cognitoUserPoolId = 'us-east-1_KCtbSlt63'
 
+const errorsAllowedInDev = [
+  'ExpiredTokenException',
+  'UnrecognizedClientException',
+]
+
 export class ClientCredentialVendingMachine {
   #subiss: string
+  #groups: string[]
 
-  private constructor(subiss: string) {
+  private constructor(subiss: string, groups: string[]) {
     this.#subiss = subiss
+    this.#groups = groups
   }
 
   static async create(request: Request) {
     const session = await storage.getSession(request.headers.get('Cookie'))
     const subiss = session.get('subiss')
+    const groups = session.get('groups')
 
     if (!subiss) throw new Response(null, { status: 403 })
 
-    return new this(subiss)
+    return new this(subiss, groups)
+  }
+
+  get groups() {
+    return this.#groups
   }
 
   async getClientCredentials() {
@@ -51,11 +63,12 @@ export class ClientCredentialVendingMachine {
       KeyConditionExpression: 'subiss = :subiss',
       ExpressionAttributeNames: {
         '#name': 'name',
+        '#scope': 'scope',
       },
       ExpressionAttributeValues: {
         ':subiss': this.#subiss,
       },
-      ProjectionExpression: 'client_id, #name',
+      ProjectionExpression: 'client_id, #name, #scope',
     })
     return results.Items
   }
@@ -77,27 +90,33 @@ export class ClientCredentialVendingMachine {
     ])
   }
 
-  async createClientCredential(name?: string) {
+  async createClientCredential(name?: string, scope?: string) {
     if (!name) throw new Response('name must not be empty', { status: 400 })
+    if (!scope) throw new Response('scope must not be empty', { status: 400 })
+    if (!this.#groups.includes(scope))
+      throw new Response('user does not belong to the requested group', {
+        status: 403,
+      })
 
     const { client_id, client_secret } =
-      await this.#createClientCredentialInternal()
+      await this.#createClientCredentialInternal(scope)
 
     const db = await tables()
     await db.client_credentials.put({
       name,
       client_id,
+      scope,
       subiss: this.#subiss,
     })
 
-    return { name, client_id, client_secret }
+    return { name, client_id, client_secret, scope }
   }
 
-  async #createClientCredentialInternal() {
+  async #createClientCredentialInternal(scope: string) {
     const command = new CreateUserPoolClientCommand({
       AllowedOAuthFlows: ['client_credentials'],
       AllowedOAuthFlowsUserPoolClient: true,
-      AllowedOAuthScopes: ['gcn-tokens/kafka-consumer'],
+      AllowedOAuthScopes: [scope],
       ClientName: 'auto-generated',
       GenerateSecret: true,
       UserPoolId: cognitoUserPoolId,
@@ -109,7 +128,7 @@ export class ClientCredentialVendingMachine {
     } catch (e) {
       const name = (e as SmithyException).name
       if (
-        name !== 'UnrecognizedClientException' ||
+        !errorsAllowedInDev.includes(name) ||
         process.env.NODE_ENV === 'production'
       )
         throw e
@@ -139,7 +158,7 @@ export class ClientCredentialVendingMachine {
     } catch (e) {
       const name = (e as SmithyException).name
       if (
-        name !== 'UnrecognizedClientException' ||
+        !errorsAllowedInDev.includes(name) ||
         process.env.NODE_ENV === 'production'
       )
         throw e

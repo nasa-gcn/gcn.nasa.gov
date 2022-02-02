@@ -14,5 +14,5 @@ export const action: ActionFunction = async ({ request }) => {
     ClientCredentialVendingMachine.create(request),
     request.json(),
   ])
-  return await machine.createClientCredential(body.name)
+  return await machine.createClientCredential(body.name, body.scope)
 }

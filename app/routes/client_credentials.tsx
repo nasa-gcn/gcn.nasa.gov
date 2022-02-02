@@ -3,6 +3,7 @@ import { useState, useRef } from 'react'
 import {
   Alert,
   Button,
+  Dropdown,
   IconDelete,
   Label,
   Modal,
@@ -21,7 +22,9 @@ import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMac
 
 export const loader: LoaderFunction = async function ({ request }) {
   const machine = await ClientCredentialVendingMachine.create(request)
-  return await machine.getClientCredentials()
+  const client_credentials = await machine.getClientCredentials()
+  const groups = machine.groups
+  return { client_credentials, groups }
 }
 
 export const meta: MetaFunction = () => ({
@@ -32,7 +35,13 @@ interface ClientCredentialData {
   name: string
   client_id: string
   client_secret?: string
+  scope: string
   onDelete?: (client_id: string) => void
+}
+
+interface LoaderData {
+  client_credentials: ClientCredentialData[]
+  groups: string[]
 }
 
 interface ClientCredentialProps extends ClientCredentialData {
@@ -52,6 +61,7 @@ function ClientCredential(props: ClientCredentialProps) {
   return (
     <tr>
       <td>{props.name}</td>
+      <td>{props.scope}</td>
       <td>
         <CopyableCode text={props.client_id} />
       </td>
@@ -108,8 +118,12 @@ function ClientCredential(props: ClientCredentialProps) {
 
 export default function Index() {
   const modalRef = useRef<ModalRef>(null)
-  const [items, setItems] = useState<ClientCredentialData[]>(useLoaderData())
-  const [name, setName] = useState('')
+  const { client_credentials, groups } = useLoaderData() as LoaderData
+  const [items, setItems] = useState(client_credentials)
+  const defaultName = ''
+  const [name, setName] = useState(defaultName)
+  const defaultScope = 'gcn.gsfc.nasa.gov/kafka-public-consumer'
+  const [scope, setScope] = useState(defaultScope)
 
   function handleDelete(client_id: string) {
     fetch(`/api/client_credentials/${client_id}`, {
@@ -134,7 +148,7 @@ export default function Index() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name: name }),
+      body: JSON.stringify({ name, scope }),
     })
       .then((result) => result.json())
       .then((item) => setItems([...items, item]))
@@ -159,6 +173,7 @@ export default function Index() {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Scope</th>
               <th>Client ID</th>
               <th>Client Secret</th>
               <th></th>
@@ -203,8 +218,23 @@ export default function Index() {
           id="name"
           type="text"
           placeholder="Name"
+          defaultValue={defaultName}
           onChange={(e) => setName(e.target.value)}
         />
+        <Label htmlFor="scope">Scope</Label>
+        <Dropdown
+          id="scope"
+          name="scope"
+          defaultValue={defaultScope}
+          onChange={(e) => setScope(e.target.value)}
+          onBlur={(e) => setScope(e.target.value)}
+        >
+          {groups.map((group) => (
+            <option key={group} value={group}>
+              {group}
+            </option>
+          ))}
+        </Dropdown>
         <ModalFooter>
           <Button data-close-modal type="button" onClick={handleCreate}>
             Create

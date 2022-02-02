@@ -11,9 +11,10 @@
 //    from the JWT. To convert it to a string, it is serialized as an unsecure
 //    JWT.
 //
-// 3. Save the "subiss" key in the session. Also save the user's email address
-//    in the session, because we show the user's email in the nav bar to show
-//    that they are logged in.
+// 3. Store the following in the session:
+//    - subiss
+//    - the user's email address (shown in page header)
+//    - the user's group memberships (needed for client credential vending machine)
 
 import { redirect } from 'remix'
 // FIXME: Vendored from https://github.com/remix-run/remix/pull/1538
@@ -152,9 +153,13 @@ export async function authorize(request: Request) {
   })
   const claims = tokenSet.claims()
 
+  const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
+    (group) => group.startsWith('gcn.gsfc.nasa.gov')
+  )
   const subiss = new UnsecuredJWT({ sub: claims.sub, iss: claims.iss })
   session.set('subiss', subiss.encode())
   session.set('email', claims.email)
+  session.set('groups', groups)
 
   return redirect('/', {
     headers: {
