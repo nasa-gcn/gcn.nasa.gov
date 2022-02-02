@@ -7,7 +7,7 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  //useLoaderData,
+  useLoaderData,
 } from 'remix'
 
 import { useState } from 'react'
@@ -16,7 +16,7 @@ import type { LoaderFunction, MetaFunction, NavLinkProps } from 'remix'
 
 import {
   Address,
-  //Button,
+  Button,
   GovBanner,
   GridContainer,
   Header,
@@ -24,14 +24,11 @@ import {
   FooterNav,
   Logo,
   NavMenuButton,
-  //NavDropDownButton,
-  //MegaMenu,
-  //Menu,
-  //Search,
-  //PrimaryNav,
-  ExtendedNav,
+  PrimaryNav,
   Title,
 } from '@trussworks/react-uswds'
+
+import { LoginButton } from './components/LoginButton'
 
 import { storage } from '~/lib/auth.server'
 
@@ -83,156 +80,9 @@ function PrimaryNavLink(props: NavLinkProps) {
 }
 
 export default function App() {
-  //const data = useLoaderData()
+  const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
-  /*
-  const MissionsMegaMenu = [
-    [
-      <a href="#linkOne" key="fermi_mission">
-        Fermi
-      </a>,
-      <a href="#linkTwo" key="swift_mission">
-        Swift
-      </a>,
-      <a href="#linkOne" key="ipn_imission">
-        IPN
-      </a>,
-      <a href="#linkTwo" key="konus_mission">
-        KONUS
-      </a>,
-    ],
-    [
-      <a href="#linkOne" key="fermi_mission">
-        INTEGRAL
-      </a>,
-      <a href="#linkTwo" key="swift_mission">
-        AGILE
-      </a>,
-      <a href="#linkOne" key="ipn_imission">
-        MAXI
-      </a>,
-      <a href="#linkTwo" key="konus_mission">
-        MOA
-      </a>,
-    ],
-    [
-      <a href="#linkOne" key="snews_mission">
-        SNEWS
-      </a>,
-      <a href="#linkTwo" key="sk_sn_mission">
-        SK_SN
-      </a>,
-      <a href="#linkOne" key="calut_imission">
-        CALUT
-      </a>,
-      <a href="#linkTwo" key="amon_mission">
-        AMON
-      </a>,
-    ],
-    [
-      <a href="#linkOne" key="ligo-virgo_mission">
-        LIGO/Virgo
-      </a>,
-      <a href="#linkTwo" key="counterpart_mission">
-        Counterpart
-      </a>,
-      <a href="#linkOne" key="coincidence_mission">
-        Coincidence
-      </a>,
-      <a href="#linkTwo" key="simbad-ned_mission">
-        SIMBAD-NED
-      </a>,
-    ],
-  ]
-
-  const ArchivesMegaMenu = [
-    [
-      <a href="#linkOne" key="notices_archive">
-        Notices Archives
-      </a>,
-      <a href="#linkTwo" key="circular_archive">
-        Circular Archives
-      </a>,
-      <a href="#linkOne" key="gcn_pub_archive">
-        GCN Publications
-      </a>,
-      <a href="#linkTwo" key="gcn_classic">
-        GCN Classic
-      </a>,
-    ],
-  ]
-
-  const [isOpen, setIsOpen] = useState([false, false])
-  
-  const GCNMegaMenu = [
-    <>
-      <a href="/aboutgcn" key="/aboutgcn" className="usa-nav__link">
-        <span>About</span>
-      </a>
-      ,
-      <a href="/aboutgcn" key="/aboutgcn" className="usa-nav__link">
-        <span>Missions</span>
-      </a>
-      ,
-      <>
-        <NavDropDownButton
-          onToggle={(): void => {
-            onToggle(0, setIsOpen)
-          }}
-          menuId="mission_dropdown"
-          isOpen={isOpen[0]}
-          label="Missions"
-          isCurrent={false}
-        />
-        <Menu
-          key="missionsmegamenu"
-          items={MissionsMegaMenu}
-          isOpen={isOpen[0]}
-          id="missions_dropdown"
-        />
-      </>
-      ,
-      <a href="/docs" key="/docs" className="usa-nav__link">
-        <span>Documentation</span>
-      </a>
-      ,
-      <a href="/notices" key="/notices" className="usa-nav__link">
-        <span>Notices</span>
-      </a>
-      ,
-      <a href="/circulars" key="/circulars" className="usa-nav__link">
-        <span>Circulars</span>
-      </a>
-      ,
-      <>
-        <NavDropDownButton
-          onToggle={(): void => {
-            onToggle(1, setIsOpen)
-          }}
-          menuId="archive_dropdown"
-          isOpen={isOpen[1]}
-          label="Archives"
-        />
-        <Menu
-          key="archivesmegamenu"
-          items={ArchivesMegaMenu}
-          isOpen={isOpen[1]}
-          id="archive_dropdown"
-        />
-      </>
-      ,
-    </>,
-  ]
-*/
-  const sign_in_links = [
-    <a href="/login" key="login">
-      Log In
-    </a>,
-    <a href="/createaccount" key="create_account">
-      Create Account
-    </a>,
-  ]
 
   return (
     <html lang="en">
@@ -245,86 +95,106 @@ export default function App() {
       <body>
         <GovBanner />
         <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
-        <Header
-          extended={true}
-          className="usa-header usa-header--dark"
-          basicWithMegaMenu={true}
-        >
-          <div className="usa-navbar">
-            <Title>
-              <Link to="/">
-                <img
-                  id="site-logo"
-                  src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
-                  alt="NASA logo"
-                />
-                <span id="site-title">General Coordinates Network</span>
-              </Link>
-            </Title>
-            <NavMenuButton onClick={onClick} label="Menu" />
+        <Header basic className="usa-header usa-header--dark">
+          <div className="usa-nav-container">
+            <div className="usa-navbar">
+              <Title>
+                <Link to="/">
+                  <img
+                    id="site-logo"
+                    src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
+                    alt="NASA logo"
+                  />
+                  <span id="site-title">General Coordinates Network</span>
+                </Link>
+              </Title>
+              <NavMenuButton onClick={onClick} label="Menu" />
+            </div>
+            <PrimaryNav
+              mobileExpanded={expanded}
+              items={[
+                <PrimaryNavLink to="/missions" key="/missions">
+                  Missions
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/notices" key="/notices">
+                  Notices
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/circulars" key="/circulars">
+                  Circulars
+                </PrimaryNavLink>,
+                <PrimaryNavLink to="/docs" key="/docs">
+                  Documentation
+                </PrimaryNavLink>,
+              ]}
+              onToggleMobileNav={onClick}
+            >
+              {[
+                data.email ? (
+                  <Button
+                    outline
+                    className="text-white"
+                    type="button"
+                    key="account"
+                  >
+                    {data.email}
+                  </Button>
+                ) : (
+                  <LoginButton key="login" />
+                ),
+              ]}
+            </PrimaryNav>
           </div>
-          <ExtendedNav
-            primaryItems={[
-              <PrimaryNavLink to="/aboutgcn" key="/aboutgcn">
-                About
-              </PrimaryNavLink>,
-              <PrimaryNavLink to="/missions" key="/missions">
-                Missions
-              </PrimaryNavLink>,
-              <PrimaryNavLink to="/docs" key="/docs">
-                Documentation
-              </PrimaryNavLink>,
-              <PrimaryNavLink to="/notices" key="/notices">
-                Notices
-              </PrimaryNavLink>,
-              <PrimaryNavLink to="/circulars" key="/circulars">
-                Circulars
-              </PrimaryNavLink>,
-              <PrimaryNavLink to="/archives" key="/archives">
-                Archives
-              </PrimaryNavLink>,
-            ]}
-            secondaryItems={sign_in_links}
-            mobileExpanded={expanded}
-            onToggleMobileNav={onClick}
-          ></ExtendedNav>
         </Header>
         <ScrollRestoration />
-
         <section className="usa-section">
           <GridContainer>
             <Outlet />
           </GridContainer>
         </section>
-
         <Footer
-          size="slim"
+          size="medium"
+          //    returnToTop={returnToTop}
           primary={
-            <div className="usa-footer__primary-container grid-row">
-              <div className="mobile-lg:grid-col-8">
-                <FooterNav
-                  size="slim"
-                  links={Array(4).fill(
-                    <a className="usa-footer__primary-link" href="#">
-                      Primary Link
-                    </a>
-                  )}
-                />
-              </div>
-              <div className="tablet:grid-col-4">
-                <Address
-                  size="slim"
-                  items={[
-                    <a key="telephone" href="tel:1-800-555-5555">
-                      (800) CALL-GOVT
-                    </a>,
-                    <a key="email" href="mailto:info@agency.gov">
-                      info@agency.gov
-                    </a>,
-                  ]}
-                />
-              </div>
-            </div>
+            <FooterNav
+              size="medium"
+              links={[
+                <a
+                  className="usa-footer__primary-link"
+                  href="/contactgcn"
+                  key="contactgcn"
+                >
+                  Contact GCN
+                </a>,
+                <a
+                  className="usa-footer__primary-link"
+                  href="/linkspage"
+                  key="linkspage"
+                >
+                  NASA and Partner Links
+                </a>,
+                <a
+                  className="usa-footer__primary-link"
+                  href="/termsofuse"
+                  key="termsofuse"
+                >
+                  Terms of Use
+                </a>,
+                <a
+                  className="usa-footer__primary-link"
+                  href="/status"
+                  key="status"
+                >
+                  System Status
+                </a>,
+                <a
+                  className="usa-footer__primary-link"
+                  href="/changelog"
+                  key="changelog"
+                >
+                  Change Log
+                </a>,
+              ]}
+            />
           }
           secondary={
             <Logo
@@ -344,7 +214,6 @@ export default function App() {
             />
           }
         />
-
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
