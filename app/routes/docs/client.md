@@ -5,6 +5,11 @@ meta:
 
 # Client Configuration
 
+Note that these instructions will get a bit simpler once:
+
+1. Changes are in upstream packages and deployed, and
+2. We have nice domain names for all of our resources.
+
 ## hop-client
 
 To install [hop-client](https://pypi.org/project/hop-client/):
