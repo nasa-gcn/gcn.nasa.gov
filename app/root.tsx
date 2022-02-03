@@ -168,7 +168,7 @@ export default function App() {
                   href="/linkspage"
                   key="linkspage"
                 >
-                  NASA and Partner Links
+                  Contributors
                 </a>,
                 <a
                   className="usa-footer__primary-link"
