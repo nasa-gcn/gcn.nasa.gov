@@ -15,7 +15,7 @@ Note that these instructions will get a bit simpler once:
 To install [hop-client](https://pypi.org/project/hop-client/):
 
 ```sh
-# pip install hop-client
+# pip install hop-client  # once upstream packages are deployed
 pip install --extra-index-url https://asd.gsfc.nasa.gov/Leo.Singer/pypi hop-client==0.5.1.dev38+g8eeac6f adc_streaming==2.0.1.dev2+ga84d01f confluent-kafka==1.8.3+bleeding.edge
 ```
 
@@ -33,7 +33,7 @@ $ hop subscribe kafka://GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.
 To install [adc-streaming](https://pypi.org/project/adc-streaming/):
 
 ```sh
-# pip install adc-streaming
+# pip install adc-streaming  # once upstream packages are deployed
 pip install --extra-index-url https://asd.gsfc.nasa.gov/Leo.Singer/pypi adc_streaming==2.0.1.dev2+ga84d01f confluent-kafka==1.8.3+bleeding.edge
 ```
 
@@ -66,7 +66,7 @@ for message in consumer.stream():
 To install [confluent-kafka](https://pypi.org/project/confluent-kafka/):
 
 ```sh
-# pip install confluent-kafka
+# pip install confluent-kafka  # once upstream packages are deployed
 pip install --extra-index-url https://asd.gsfc.nasa.gov/Leo.Singer/pypi confluent-kafka==1.8.3+bleeding.edge
 ```
 
