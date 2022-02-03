@@ -15,7 +15,6 @@ import { useState } from 'react'
 import type { LoaderFunction, MetaFunction, NavLinkProps } from 'remix'
 
 import {
-  // Address,
   Button,
   GovBanner,
   GridContainer,
@@ -152,18 +151,17 @@ export default function App() {
           </GridContainer>
         </section>
         <Footer
-          size="medium"
-          //    returnToTop={returnToTop}
+          size="slim"
           primary={
             <FooterNav
               size="medium"
               links={[
                 <a
                   className="usa-footer__primary-link"
-                  href="/contactgcn"
-                  key="contactgcn"
+                  href="/contact"
+                  key="contact"
                 >
-                  Contact GCN
+                  Contact
                 </a>,
                 <a
                   className="usa-footer__primary-link"
@@ -174,21 +172,7 @@ export default function App() {
                 </a>,
                 <a
                   className="usa-footer__primary-link"
-                  href="/termsofuse"
-                  key="termsofuse"
-                >
-                  Terms of Use
-                </a>,
-                <a
-                  className="usa-footer__primary-link"
-                  href="/status"
-                  key="status"
-                >
-                  System Status
-                </a>,
-                <a
-                  className="usa-footer__primary-link"
-                  href="/changelog"
+                  href="/docs/changes"
                   key="changelog"
                 >
                   Change Log
