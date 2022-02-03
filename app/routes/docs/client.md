@@ -23,9 +23,9 @@ pip install --extra-index-url https://asd.gsfc.nasa.gov/Leo.Singer/pypi hop-clie
 $ hop auth add
 Username: ...
 Password: ...
-Hostname (may be empty): GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9093
+Hostname (may be empty): GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9092
 Token endpoint (empty if not applicable): https://gcn-tokens.auth.us-east-1.amazoncognito.com/oauth2/token
-$ hop subscribe kafka://GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9093/foobar
+$ hop subscribe kafka://GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9092/foobar
 ```
 
 ## adc-streaming
@@ -52,7 +52,7 @@ auth = SASLAuth(
     token_endpoint='https://gcn-tokens.auth.us-east-1.amazoncognito.com/oauth2/token')
 
 config = ConsumerConfig(
-    broker_urls=['GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9093'],
+    broker_urls=['GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9092'],
     group_id=str(uuid4()), auth=auth)
 
 consumer = Consumer(config)
@@ -83,7 +83,7 @@ client_secret = '...'
 config = {
     'sasl.oauthbearer.client.id': client_id,
     'sasl.oauthbearer.client.secret': client_secret,
-    'bootstrap.servers': 'GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9093',
+    'bootstrap.servers': 'GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9092',
     'sasl.oauthbearer.token.endpoint.url': 'https://gcn-tokens.auth.us-east-1.amazoncognito.com/oauth2/token',
     'sasl.mechanisms': 'OAUTHBEARER',
     'sasl.oauthbearer.method': 'oidc',
