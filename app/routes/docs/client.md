@@ -11,13 +11,16 @@ To install [hop-client](https://pypi.org/project/hop-client/):
 
 ```sh
 # pip install hop-client
-pip install --extra-index-url https://asd.gsfc.nasa.gov/Leo.Singer/pypi hop-client adc_streaming==2.0.1.dev2+ga84d01f confluent-kafka==1.8.3+bleeding.edge
+pip install --extra-index-url https://asd.gsfc.nasa.gov/Leo.Singer/pypi hop-client==0.5.1.dev38+g8eeac6f adc_streaming==2.0.1.dev2+ga84d01f confluent-kafka==1.8.3+bleeding.edge
 ```
 
-Python sample code:
-
-```python
-# TODO
+```sh
+$ hop auth add
+Username: ...
+Password: ...
+Hostname (may be empty): GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9093
+Token endpoint (empty if not applicable): https://gcn-tokens.auth.us-east-1.amazoncognito.com/oauth2/token
+$ hop subscribe kafka://GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com:9093/foobar
 ```
 
 ## adc-streaming
