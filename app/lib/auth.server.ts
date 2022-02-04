@@ -112,8 +112,6 @@ export async function login(request: Request) {
   })
 
   const oidcSession = await oidcStorage.getSession()
-  // FIXME: Does the code_verifier need to be encrypted, or is just signed OK?
-  // See https://github.com/panva/node-openid-client/discussions/455
   oidcSession.set('code_verifier', code_verifier)
   oidcSession.set('nonce', nonce)
   oidcSession.set('state', state)
