@@ -17,7 +17,7 @@
  * FIXME: This constant is also stored in app/lib/conf.ts. Refactor and store
  * it in only one place.
  */
-export const COGNITO_USER_POOL_ID = 'us-east-1_37HQxlQvW'
+const COGNITO_USER_POOL_ID = 'us-east-1_37HQxlQvW'
 
 // Grant the Lambda function access to Cognito to run the credential vending machine.
 module.exports = function lambdaCognitoPermissions(arc, sam) {
