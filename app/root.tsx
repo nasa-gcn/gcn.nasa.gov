@@ -15,7 +15,6 @@ import { useState } from 'react'
 import type { LoaderFunction, MetaFunction, NavLinkProps } from 'remix'
 
 import {
-  Address,
   Button,
   GovBanner,
   GridContainer,
@@ -154,31 +153,32 @@ export default function App() {
         <Footer
           size="slim"
           primary={
-            <div className="usa-footer__primary-container grid-row">
-              <div className="mobile-lg:grid-col-8">
-                <FooterNav
-                  size="slim"
-                  links={Array(4).fill(
-                    <a className="usa-footer__primary-link" href="#">
-                      Primary Link
-                    </a>
-                  )}
-                />
-              </div>
-              <div className="tablet:grid-col-4">
-                <Address
-                  size="slim"
-                  items={[
-                    <a key="telephone" href="tel:1-800-555-5555">
-                      (800) CALL-GOVT
-                    </a>,
-                    <a key="email" href="mailto:info@agency.gov">
-                      info@agency.gov
-                    </a>,
-                  ]}
-                />
-              </div>
-            </div>
+            <FooterNav
+              size="medium"
+              links={[
+                <a
+                  className="usa-footer__primary-link"
+                  href="/contact"
+                  key="contact"
+                >
+                  Contact
+                </a>,
+                <a
+                  className="usa-footer__primary-link"
+                  href="/linkspage"
+                  key="linkspage"
+                >
+                  Contributors
+                </a>,
+                <a
+                  className="usa-footer__primary-link"
+                  href="/docs/changes"
+                  key="changelog"
+                >
+                  Change Log
+                </a>,
+              ]}
+            />
           }
           secondary={
             <Logo
