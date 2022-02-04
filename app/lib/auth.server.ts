@@ -19,7 +19,7 @@
 import { redirect } from 'remix'
 // FIXME: Vendored from https://github.com/remix-run/remix/pull/1538
 import { createArcTableSessionStorage } from './arcTableSessionStorage'
-import { COGNITO_USER_POOL_ID } from './conf'
+import { COGNITO_USER_POOL_ID } from './conf.server'
 import memoizee from 'memoizee'
 import { UnsecuredJWT } from 'jose'
 import { generators, Issuer } from 'openid-client'
