@@ -24,7 +24,7 @@ const mdx = async () => {
 module.exports = {
   appDirectory: 'app',
   assetsBuildDirectory: 'public/build',
-  publicPath: '/_static/build/',
+  publicPath: '/static/build/',
   serverBuildDirectory: 'src/build',
   devServerPort: 8002,
   mdx: mdx,
