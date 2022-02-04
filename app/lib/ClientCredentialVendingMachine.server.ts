@@ -3,31 +3,13 @@ import {
   CreateUserPoolClientCommand,
   DeleteUserPoolClientCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
-
 import type { SmithyException } from '@aws-sdk/types'
-
 import { tables } from '@architect/functions'
-
 import { generate } from 'generate-password'
+import { storage } from './auth.server'
+import { COGNITO_USER_POOL_ID } from './conf'
 
-import { storage } from '~/lib/auth.server'
-
-const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({
-  region: 'us-east-1',
-})
-
-/*
- * Cognito user pool ID for generated client credentials.
- *
- * Note that his is safe to include in public code because it is public
- * knowledge anyway: the Cognito user pool ID is easily deduced from the OpenID
- * token endpoint URL, which is public knowledge because it is part of the
- * client configuration for end users.
- *
- * FIXME: this should be parameterized for dev, test, and prod deployments,
- * all of which will eventually have independent OIDC providers.
- */
-const cognitoUserPoolId = 'us-east-1_KCtbSlt63'
+const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
 
 const errorsAllowedInDev = [
   'ExpiredTokenException',
@@ -119,7 +101,7 @@ export class ClientCredentialVendingMachine {
       AllowedOAuthScopes: [scope],
       ClientName: 'auto-generated',
       GenerateSecret: true,
-      UserPoolId: cognitoUserPoolId,
+      UserPoolId: COGNITO_USER_POOL_ID,
     })
 
     let response
@@ -150,7 +132,7 @@ export class ClientCredentialVendingMachine {
   async #deleteClientCredentialInternal(client_id: string) {
     const command = new DeleteUserPoolClientCommand({
       ClientId: client_id,
-      UserPoolId: cognitoUserPoolId,
+      UserPoolId: COGNITO_USER_POOL_ID,
     })
 
     try {

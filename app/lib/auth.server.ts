@@ -19,6 +19,7 @@
 import { redirect } from 'remix'
 // FIXME: Vendored from https://github.com/remix-run/remix/pull/1538
 import { createArcTableSessionStorage } from './arcTableSessionStorage'
+import { COGNITO_USER_POOL_ID } from './conf'
 import memoizee from 'memoizee'
 import { UnsecuredJWT } from 'jose'
 import { generators, Issuer } from 'openid-client'
@@ -84,10 +85,11 @@ function getRedirectUri(request: Request) {
  * FIXME: this should be parameterized for dev, test, and prod deployments,
  * all of which will eventually have independent OIDC providers.
  */
-const providerUrl =
-  'https://cognito-idp.us-east-1.amazonaws.com/us-east-1_37HQxlQvW/'
+const providerUrl = `https://cognito-idp.${
+  COGNITO_USER_POOL_ID.split('_')[0]
+}.amazonaws.com/${COGNITO_USER_POOL_ID}/`
 
-const issuerDiscover = memoizee(
+export const issuerDiscover = memoizee(
   async () => await Issuer.discover(providerUrl),
   { promise: true }
 )
