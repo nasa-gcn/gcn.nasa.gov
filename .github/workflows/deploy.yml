@@ -1,0 +1,20 @@
+name: Deploy to AWS
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: aws
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: NPM Install
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Deploy
+        run: arc deploy
