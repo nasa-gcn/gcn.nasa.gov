@@ -2,18 +2,37 @@
  * @type {import('@remix-run/dev/config').RemixMdxConfigFunction}
  */
 const mdx = async () => {
-  const [rehypeAutolinkHeadings, rehypeHighlight, rehypeSlug, remarkGfm] =
-    await Promise.all([
-      import('rehype-autolink-headings')
-        .then((mod) => mod.default)
-        .then((func) => (options) => func({ behavior: 'wrap', ...options })),
-      import('rehype-highlight').then((mod) => mod.default),
-      import('rehype-slug').then((mod) => mod.default),
-      import('remark-gfm').then((mod) => mod.default),
-    ])
+  const [
+    rehypeAddClasses,
+    rehypeAutolinkHeadings,
+    rehypeHighlight,
+    rehypeSlug,
+    remarkGfm,
+  ] = await Promise.all([
+    import('rehype-add-classes')
+      .then((mod) => mod.default)
+      .then(
+        (func) => (options) =>
+          func({
+            table: 'usa-table',
+            ...options,
+          })
+      ),
+    import('rehype-autolink-headings')
+      .then((mod) => mod.default)
+      .then((func) => (options) => func({ behavior: 'wrap', ...options })),
+    import('rehype-highlight').then((mod) => mod.default),
+    import('rehype-slug').then((mod) => mod.default),
+    import('remark-gfm').then((mod) => mod.default),
+  ])
 
   return {
-    rehypePlugins: [rehypeHighlight, rehypeSlug, rehypeAutolinkHeadings],
+    rehypePlugins: [
+      rehypeHighlight,
+      rehypeSlug,
+      rehypeAddClasses,
+      rehypeAutolinkHeadings,
+    ],
     remarkPlugins: [remarkGfm],
   }
 }
