@@ -78,7 +78,7 @@ const providerUrl = `https://cognito-idp.${
   COGNITO_USER_POOL_ID.split('_')[0]
 }.amazonaws.com/${COGNITO_USER_POOL_ID}/`
 
-export const issuerDiscover = memoizee(
+const issuerDiscover = memoizee(
   async () => await Issuer.discover(providerUrl),
   { promise: true }
 )
