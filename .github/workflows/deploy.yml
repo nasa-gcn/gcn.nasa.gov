@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  build:
+  deploy:
     runs-on: aws
     steps:
       - uses: actions/checkout@v2
