@@ -13,9 +13,9 @@ jobs:
         with:
           node-version: 14.x
       - name: Install Architect
-        run: npm i -g @architect/architect aws-sdk esbuild
+        run: npm i -g @architect/architect aws-sdk
       - name: NPM Install
-        run: npm ci
+        run: npm i
       - name: Build
         run: npm run build
       - name: Deploy
