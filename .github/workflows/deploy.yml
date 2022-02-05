@@ -13,8 +13,7 @@ jobs:
           mkdir -p ~/.aws
           echo [default] > ~/.aws/credentials
           aws_access_key_id=$(jq .AccessKeyId cred.json) >> ~/.aws/credentials
-          aws_secret_access_key=$(jq .SecretAccessKey cred.json) >> ~/.aws/credentials
-          aws_session_token=$(jq .Token cred.json) >> ~/.aws/credentials
+          cat ~/.aws/credentials
       - uses: actions/checkout@v2
       - name: Install Node.js
         uses: actions/setup-node@v2
