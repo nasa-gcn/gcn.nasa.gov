@@ -24,7 +24,7 @@ $ hop auth add
 Username: ...
 Password: ...
 Hostname (may be empty): GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com
-Token endpoint (empty if not applicable): https://gcn-tokens.auth.us-east-1.amazoncognito.com/oauth2/token
+Token endpoint (empty if not applicable): https://gcn-dev.auth.us-east-1.amazoncognito.com/oauth2/token
 $ hop subscribe kafka://GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com/foobar
 ```
 
@@ -49,7 +49,7 @@ client_secret = '...'
 
 auth = SASLAuth(
     client_id, client_secret,
-    token_endpoint='https://gcn-tokens.auth.us-east-1.amazoncognito.com/oauth2/token')
+    token_endpoint='https://gcn-dev.auth.us-east-1.amazoncognito.com/oauth2/token')
 
 config = ConsumerConfig(
     broker_urls=['GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com'],
@@ -84,7 +84,7 @@ config = {
     'sasl.oauthbearer.client.id': client_id,
     'sasl.oauthbearer.client.secret': client_secret,
     'bootstrap.servers': 'GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com',
-    'sasl.oauthbearer.token.endpoint.url': 'https://gcn-tokens.auth.us-east-1.amazoncognito.com/oauth2/token',
+    'sasl.oauthbearer.token.endpoint.url': 'https://gcn-dev.auth.us-east-1.amazoncognito.com/oauth2/token',
     'sasl.mechanisms': 'OAUTHBEARER',
     'sasl.oauthbearer.method': 'oidc',
     'security.protocol': 'sasl_ssl',
