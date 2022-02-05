@@ -29,4 +29,5 @@ jobs:
       - name: Deploy
         run: arc deploy --prune
         env:
-          ARC_AWS_CREDS: ecs
+          AWS_PROFILE: default
+          AWS_REGION: us-east-1
