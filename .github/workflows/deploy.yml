@@ -5,7 +5,7 @@ on:
       - main
 jobs:
   deploy:
-    runs-on: aws
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v2
       - name: Install Node.js
