@@ -7,8 +7,6 @@ jobs:
   deploy:
     runs-on: aws
     steps:
-      - name: Test AWS CLI
-        run: aws s3 ls
       - uses: actions/checkout@v2
       - name: Install Node.js
         uses: actions/setup-node@v2
