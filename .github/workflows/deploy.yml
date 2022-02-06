@@ -18,13 +18,5 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
-      # - name: Install AWS credentials
-      #   run: |
-      #     curl -o cred.json 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
-      #     mkdir -p ~/.aws
-      #     echo [default] > ~/.aws/credentials
-      #     echo aws_access_key_id=$(jq -r .AccessKeyId cred.json) >> ~/.aws/credentials
-      #     echo aws_secret_access_key=$(jq -r .SecretAccessKey cred.json) >> ~/.aws/credentials
-      #     echo aws_session_token=$(jq -r .Token cred.json) >> ~/.aws/credentials
       - name: Deploy
         run: arc deploy --prune
