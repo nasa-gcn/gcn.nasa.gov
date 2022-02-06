@@ -12,9 +12,9 @@ jobs:
           curl -o cred.json 169.254.170.2$AWS_CONTAINER_CREDENTIALS_RELATIVE_URI
           mkdir -p ~/.aws
           echo [default] > ~/.aws/credentials
-          aws_access_key_id=$(jq .AccessKeyId cred.json) >> ~/.aws/credentials
-          aws_secret_access_key=$(jq .SecretAccessKey cred.json) >> ~/.aws/credentials
-          aws_session_token=$(jq .Token cred.json) >> ~/.aws/credentials
+          echo aws_access_key_id=$(jq .AccessKeyId cred.json) >> ~/.aws/credentials
+          echo aws_secret_access_key=$(jq .SecretAccessKey cred.json) >> ~/.aws/credentials
+          echo aws_session_token=$(jq .Token cred.json) >> ~/.aws/credentials
       - uses: actions/checkout@v2
       - name: Install Node.js
         uses: actions/setup-node@v2
