@@ -20,7 +20,6 @@ sessions
   _ttl TTL
 
 @aws
-profile default
 region us-east-1
 architecture arm64
 memory 256
