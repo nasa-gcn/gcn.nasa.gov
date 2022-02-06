@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '16'
       - name: Install Architect
-        run: npm i -g @architect/architect aws-sdk
+        run: npm i -g @architect/architect aws-sdk 'git+https://github.com/lpsinger/package.git#bucket-policy-document' 'git+https://github.com/lpsinger/deploy.git#dont-hardcode-bucket-object-permissions'
       - name: NPM Install
         run: npm ci
       - name: Build
