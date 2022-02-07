@@ -5,6 +5,7 @@ const mdx = async () => {
   const [
     rehypeAddClasses,
     rehypeAutolinkHeadings,
+    rehypeExternalLinks,
     rehypeHighlight,
     rehypeSlug,
     remarkGfm,
@@ -15,12 +16,23 @@ const mdx = async () => {
         (func) => (options) =>
           func({
             table: 'usa-table',
+            'a[rel~="external"]': 'usa-link--external',
             ...options,
           })
       ),
     import('rehype-autolink-headings')
       .then((mod) => mod.default)
       .then((func) => (options) => func({ behavior: 'wrap', ...options })),
+    import('rehype-external-links')
+      .then((mod) => mod.default)
+      .then(
+        (func) => (options) =>
+          func({
+            rel: 'external',
+            target: false,
+            ...options,
+          })
+      ),
     import('rehype-highlight').then((mod) => mod.default),
     import('rehype-slug').then((mod) => mod.default),
     import('remark-gfm').then((mod) => mod.default),
@@ -30,6 +42,7 @@ const mdx = async () => {
     rehypePlugins: [
       rehypeHighlight,
       rehypeSlug,
+      rehypeExternalLinks,
       rehypeAddClasses,
       rehypeAutolinkHeadings,
     ],
