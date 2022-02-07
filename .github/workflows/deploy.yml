@@ -20,3 +20,5 @@ jobs:
         run: npm run build
       - name: Deploy
         run: arc deploy --prune
+        env:
+          AWS_PROFILE: default
