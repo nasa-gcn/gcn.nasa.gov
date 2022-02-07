@@ -10,3 +10,8 @@ export const action: ActionFunction = async ({ params, request }) => {
   await machine.deleteClientCredential(params.client_id)
   return null
 }
+
+// FIXME: workaround for https://github.com/remix-run/remix/issues/1828.
+// Resource routes (without browser code) don't get server pruning done.
+// Once fixed upstream, remove.
+export const meta = () => ({})
