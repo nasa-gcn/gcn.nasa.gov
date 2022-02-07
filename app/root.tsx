@@ -27,8 +27,6 @@ import {
   Title,
 } from '@trussworks/react-uswds'
 
-import { LoginButton } from './components/LoginButton'
-
 import { storage } from '~/lib/auth.server'
 
 import style from '~/css/custom.css'
@@ -127,20 +125,17 @@ export default function App() {
               ]}
               onToggleMobileNav={onClick}
             >
-              {[
-                data.email ? (
-                  <Button
-                    outline
-                    className="text-white"
-                    type="button"
-                    key="account"
-                  >
-                    {data.email}
+              {data.email ? (
+                <Button outline className="text-white" type="button">
+                  {data.email}
+                </Button>
+              ) : (
+                <Link to="/login">
+                  <Button type="button" outline className="text-white">
+                    Sign in / Sign up
                   </Button>
-                ) : (
-                  <LoginButton key="login" />
-                ),
-              ]}
+                </Link>
+              )}
             </PrimaryNav>
           </div>
         </Header>
