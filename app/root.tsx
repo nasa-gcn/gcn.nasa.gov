@@ -29,7 +29,6 @@ import {
 
 import { storage } from '~/lib/auth.server'
 
-import style from '~/css/custom.css'
 import highlightStyle from 'highlight.js/styles/github.css'
 import logo from './img/logo.svg'
 import favicon from '../node_modules/nasawds/src/img/favicons/favicon.png'
@@ -41,12 +40,7 @@ export const meta: MetaFunction = () => {
 export const links = () => [
   {
     rel: 'stylesheet',
-    // FIXME: should get from bundle using webpack or postcss
-    href: 'https://unpkg.com/nasawds@3.0.177/src/css/styles.css',
-  },
-  {
-    rel: 'stylesheet',
-    href: style,
+    href: '/static/css/custom.css',
   },
   {
     rel: 'stylesheet',

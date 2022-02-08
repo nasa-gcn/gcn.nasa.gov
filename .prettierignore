@@ -9,3 +9,6 @@ node_modules
 entry.server.tsx
 entry.client.tsx
 server/index.js
+
+# From USWDS
+gulpfile.js
