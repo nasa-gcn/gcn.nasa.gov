@@ -29,12 +29,10 @@
 /*
  * Without this, the mobile nav menu button seems to extend one pixel below
  * the header.
- *
- * FIXME: Rewrite in SCSS so that we don't have to hard code the theme color.
  */
 
 .usa-header--dark .usa-navbar {
-  border-bottom-color: #1b1b1b;
+  border-bottom-color: color('ink');
 }
 
 /*
@@ -72,7 +70,7 @@ h3 > a:hover::before,
 h4 > a:hover::before,
 h5 > a:hover::before,
 h6 > a:hover::before {
-  content: url('https://unpkg.com/nasawds@3.0.177/src/img/usa-icons/link.svg');
+  content: url('../img/usa-icons/link.svg');
   position: relative;
   float: left;
   width: 0;
@@ -85,5 +83,13 @@ h6 > a:hover::before {
 
 code,
 code.hljs {
-  background-color: #f0f0f0; /* use bg-base-lightest from uswds */
+  @extend .bg-base-lightest;
+}
+
+/*
+ * Styling for external links
+ */
+
+ a[rel~="external"] {
+  @extend .usa-link--external;
 }

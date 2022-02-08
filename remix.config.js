@@ -16,7 +16,7 @@ const mdx = async () => {
         (func) => (options) =>
           func({
             table: 'usa-table',
-            'a[rel~="external"]': 'usa-link--external',
+            a: 'usa-link',
             ...options,
           })
       ),
