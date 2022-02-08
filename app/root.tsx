@@ -31,7 +31,7 @@ import { storage } from '~/lib/auth.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 import logo from './img/logo.svg'
-import favicon from '../node_modules/nasawds/src/img/favicons/favicon.png'
+import favicon from '../node_modules/nasawds/src/theme/img/favicons/favicon.png'
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
