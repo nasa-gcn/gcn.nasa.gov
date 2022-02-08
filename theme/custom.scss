@@ -51,6 +51,20 @@ body {
 }
 
 /*
+ * Set heading font to Helvetica
+ */
+
+@for $i from 1 through 6 {
+  h#{$i} > a {
+    font-family: family('lang');
+  }
+}
+
+.usa-footer__logo-heading {
+  font-family: family('lang');
+}
+
+/*
  * Hover link indicator for headings (like in GitHub's display of Markdown)
  */
 
