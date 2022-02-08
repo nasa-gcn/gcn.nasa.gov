@@ -31,6 +31,8 @@ import { storage } from '~/lib/auth.server'
 
 import style from '~/css/custom.css'
 import highlightStyle from 'highlight.js/styles/github.css'
+import logo from './img/logo.svg'
+import favicon from '../node_modules/nasawds/src/img/favicons/favicon.png'
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
@@ -52,7 +54,7 @@ export const links = () => [
   },
   {
     rel: 'shortcut icon',
-    href: 'https://unpkg.com/nasawds@3.0.177/src/img/favicons/favicon.ico',
+    href: favicon,
   },
 ]
 
@@ -97,11 +99,7 @@ export default function App() {
             <div className="usa-navbar">
               <Title>
                 <Link to="/">
-                  <img
-                    id="site-logo"
-                    src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
-                    alt="NASA logo"
-                  />
+                  <img id="site-logo" src={logo} alt="NASA logo" />
                   <span id="site-title">General Coordinates Network</span>
                 </Link>
               </Title>
@@ -182,7 +180,7 @@ export default function App() {
                 <img
                   className="usa-footer__logo-img"
                   alt="NASA logo"
-                  src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
+                  src={logo}
                 />
               }
               heading={
