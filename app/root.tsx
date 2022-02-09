@@ -1,6 +1,7 @@
 import {
   Link,
   Links,
+  LinksFunction,
   LiveReload,
   Meta,
   NavLink,
@@ -38,7 +39,7 @@ export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
 }
 
-export const links = () => [
+export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
     href: '/static/css/custom.css',
