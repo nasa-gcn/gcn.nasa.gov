@@ -33,7 +33,6 @@ import { storage } from '~/lib/auth.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 import logo from './img/logo.svg'
-import favicon from '../node_modules/nasawds/src/theme/img/favicons/favicon.png'
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
@@ -48,10 +47,11 @@ export const links: LinksFunction = () => [
     rel: 'stylesheet',
     href: highlightStyle,
   },
-  {
-    rel: 'shortcut icon',
-    href: favicon,
-  },
+  ...[16, 40, 57, 72, 114, 144, 192].map((size) => ({
+    rel: 'icon',
+    href: `/static/img/favicons/favicon-${size}.png`,
+    sizes: `${size}x${size}`,
+  })),
 ]
 
 export const loader: LoaderFunction = async function ({ request }) {
