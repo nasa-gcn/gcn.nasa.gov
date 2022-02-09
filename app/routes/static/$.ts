@@ -5,7 +5,7 @@
  * FIXME: This probably breaks the browser's caching.
  */
 
-import { LoaderFunction } from 'remix'
+import { LoaderFunction, redirect } from 'remix'
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 
@@ -15,7 +15,7 @@ export const loader: LoaderFunction = async ({ params }) => {
   const path = params['*']
   const sandbox = process.env.ARC_SANDBOX_PATH_TO_STATIC
   if (sandbox) {
-    return fetch(`http://localhost:3333/_static/${path}`)
+    return redirect(`/_static/${path}`, 301)
   } else {
     const command = new GetObjectCommand({
       Bucket: process.env.ARC_STATIC_BUCKET,
