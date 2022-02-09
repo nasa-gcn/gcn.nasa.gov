@@ -4,5 +4,3 @@ meta:
 ---
 
 # Welcome to the General Coordinates Network
-
-- [Client credentials](/client_credentials)

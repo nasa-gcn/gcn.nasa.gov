@@ -15,7 +15,6 @@ import { useState } from 'react'
 import type { LoaderFunction, MetaFunction, NavLinkProps } from 'remix'
 
 import {
-  Button,
   GovBanner,
   GridContainer,
   Header,
@@ -25,6 +24,8 @@ import {
   NavMenuButton,
   PrimaryNav,
   Title,
+  NavDropDownButton,
+  Menu,
 } from '@trussworks/react-uswds'
 
 import { storage } from '~/lib/auth.server'
@@ -75,6 +76,7 @@ function PrimaryNavLink(props: NavLinkProps) {
 export default function App() {
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
+  const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
 
   return (
@@ -114,21 +116,45 @@ export default function App() {
                 <PrimaryNavLink to="/docs" key="/docs">
                   Documentation
                 </PrimaryNavLink>,
+                data.email ? (
+                  <>
+                    <NavDropDownButton
+                      type="button"
+                      key="user"
+                      label={data.email}
+                      isOpen={userMenuIsOpen}
+                      onToggle={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      menuId="user"
+                    />
+                    <Menu
+                      id="user"
+                      isOpen={userMenuIsOpen}
+                      items={[
+                        <Link
+                          key="/client_credentials"
+                          to="/client_credentials"
+                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                        >
+                          Client Credentials
+                        </Link>,
+                        <Link
+                          key="/signout"
+                          to="/signout"
+                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                        >
+                          Sign Out
+                        </Link>,
+                      ]}
+                    />
+                  </>
+                ) : (
+                  <PrimaryNavLink to="/login" key="/login">
+                    Sign in / Sign up
+                  </PrimaryNavLink>
+                ),
               ]}
               onToggleMobileNav={onClick}
-            >
-              {data.email ? (
-                <Button outline className="text-white" type="button">
-                  {data.email}
-                </Button>
-              ) : (
-                <Link to="/login">
-                  <Button type="button" outline className="text-white">
-                    Sign in / Sign up
-                  </Button>
-                </Link>
-              )}
-            </PrimaryNav>
+            />
           </div>
         </Header>
         <ScrollRestoration />
