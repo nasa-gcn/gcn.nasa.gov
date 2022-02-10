@@ -114,7 +114,7 @@ export function createArcTableSessionStorage({
     },
     async deleteData(id) {
       const table = await getTable()
-      await table.delete(id)
+      await table.delete({ [props.idx]: id })
     },
   })
 }
