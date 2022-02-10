@@ -235,7 +235,11 @@ export default function App() {
           <IdentifierMasthead aria-label="Agency identifier">
             <IdentifierLogos>
               <IdentifierLogo href="https://www.nasa.gov">
-                <img src={logo} alt="NASA logo" />
+                <img
+                  src={logo}
+                  className="usa-identifier__logo-img"
+                  alt="NASA logo"
+                />
               </IdentifierLogo>
             </IdentifierLogos>
             <IdentifierIdentity domain="www.gcn.gsfc.nasa.gov">
