@@ -5,8 +5,4 @@ meta:
 
 # Documentation
 
-This is the Documentation page.
-
-- [Client Configuration](docs/client)
-- [Contributing](docs/contributing)
-- [Change log](docs/changes)
+Fill me in for top-level documentation page.
