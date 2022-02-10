@@ -96,7 +96,7 @@ code.hljs {
  * Styling for external links
  */
 
- a[rel~="external"] {
+a[rel~='external'] {
   @extend .usa-link--external;
 }
 
