@@ -25,7 +25,9 @@ import {
   Identifier,
   IdentifierGov,
   IdentifierIdentity,
+  IdentifierLink,
   IdentifierLinks,
+  IdentifierLinkItem,
   IdentifierLogo,
   IdentifierLogos,
   IdentifierMasthead,
@@ -233,24 +235,11 @@ export default function App() {
           <IdentifierMasthead aria-label="Agency identifier">
             <IdentifierLogos>
               <IdentifierLogo href="https://www.nasa.gov">
-                {
-                  <img
-                    id="meatball"
-                    src="https://www1.grc.nasa.gov/wp-content/themes/nasapress/dist/images/logo-nasa.svg"
-                    alt="NASA logo"
-                  />
-                }
-              </IdentifierLogo>
-              <IdentifierLogo href="https://www.nasa.gov/goddard">
-                  <img
-                    id="goddard"
-                    src="https://director.gsfc.nasa.gov/mma/webdesign/goddard.png"
-                    alt="goddard logo"
-                  />
+                <img src={logo} alt="NASA logo" />
               </IdentifierLogo>
             </IdentifierLogos>
             <IdentifierIdentity domain="www.gcn.gsfc.nasa.gov">
-              {`A service of the `}
+              A service of the{' '}
               <a href="https://science.gsfc.nasa.gov/astrophysics/">
                 Astrophysics Science Division at
                 <br />
@@ -259,59 +248,31 @@ export default function App() {
             </IdentifierIdentity>
           </IdentifierMasthead>
           <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
-            {[
-              <li
-                className="usa-identifier__required-links-item"
-                key="aboutNASA"
-              >
-                <a
-                  href="https://www.nasa.gov/about/index.html"
-                  key="aboutNASA"
-                  className="usa-identifier__required-links-item"
-                >
-                  About NASA
-                </a>
-              </li>,
-              <li className="usa-identifier__required-links-item" key="foia">
-                <a
-                  href="https://www.nasa.gov/FOIA/index.html"
-                  key="foia"
-                  className="usa-identifier__required-links-item"
-                >
-                  FOIA Requests
-                </a>
-              </li>,
-              <li
-                className="usa-identifier__required-links-item"
-                key="nofearact"
-              >
-                <a
-                  href="https://www.nasa.gov/offices/odeo/no-fear-act "
-                  key="nofearact"
-                  className="usa-identifier__required-links-item"
-                >
-                  No FEAR Act
-                </a>
-              </li>,
-              <li className="usa-identifier__required-links-item" key="oig">
-                <a
-                  href="https://oig.nasa.gov/"
-                  key="oig"
-                  className="usa-identifier__required-links-item"
-                >
-                  Office of the Inspector General
-                </a>
-              </li>,
-              <li className="usa-identifier__required-links-item" key="privacy">
-                <a
-                  href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
-                  key="privacy"
-                  className="usa-identifier__required-links-item"
-                >
-                  Privacy Policy
-                </a>
-              </li>,
-            ]}
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/about/index.html">
+                About NASA
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/FOIA/index.html">
+                FOIA Requests
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/offices/odeo/no-fear-act">
+                No FEAR Act
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://oig.nasa.gov/">
+                Office of the Inspector General
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/about/highlights/HP_Privacy.html">
+                Privacy Policy
+              </IdentifierLink>
+            </IdentifierLinkItem>
           </IdentifierLinks>
           <IdentifierGov aria-label="U.S. government information and services">
             NASA&apos;s Goddard Space Flight Center, Public Inquiries, Mail Code
@@ -324,7 +285,6 @@ export default function App() {
             <a href="https//www.usa.gov"> Visit USA.gov</a>
           </IdentifierGov>
         </Identifier>
-        <Scripts />
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
