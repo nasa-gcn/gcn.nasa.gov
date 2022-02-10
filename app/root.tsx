@@ -68,7 +68,6 @@ export default function App() {
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
-  console.log(matches)
 
   function pathMatches(path: string) {
     return matches.some(
