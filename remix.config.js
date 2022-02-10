@@ -57,7 +57,7 @@ module.exports = {
   appDirectory: 'app',
   assetsBuildDirectory: 'public/build',
   publicPath: '/static/build/',
-  serverBuildDirectory: 'src/build',
+  serverBuildDirectory: 'server/build',
   devServerPort: 8002,
   mdx: mdx,
   ignoredRouteFiles: ['.*'],
