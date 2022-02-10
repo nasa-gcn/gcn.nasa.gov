@@ -9,7 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
-  useMatches,
+  useLocation,
 } from 'remix'
 
 import { useState } from 'react'
@@ -75,18 +75,14 @@ export const loader: LoaderFunction = async function ({ request }) {
 }
 
 export default function App() {
-  const matches = useMatches()
+  const location = useLocation()
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
 
-  function pathMatches(path: string) {
-    return matches.some(
-      (match) =>
-        match.pathname === path || match.pathname.startsWith(`${path}/`)
-    )
-  }
+  const pathMatches = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(`${path}/`)
 
   return (
     <html lang="en-US">
