@@ -247,7 +247,6 @@ export default function App() {
                     src="https://director.gsfc.nasa.gov/mma/webdesign/goddard.png"
                     alt="goddard logo"
                   />
-                }
               </IdentifierLogo>
             </IdentifierLogos>
             <IdentifierIdentity domain="NASA.gov">
