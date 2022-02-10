@@ -17,11 +17,20 @@ import { useState } from 'react'
 import type { LoaderFunction, MetaFunction } from 'remix'
 
 import {
+  Footer,
+  FooterNav,
   GovBanner,
   GridContainer,
   Header,
-  Footer,
-  FooterNav,
+  Identifier,
+  IdentifierGov,
+  IdentifierIdentity,
+  IdentifierLink,
+  IdentifierLinks,
+  IdentifierLinkItem,
+  IdentifierLogo,
+  IdentifierLogos,
+  IdentifierMasthead,
   Logo,
   NavMenuButton,
   PrimaryNav,
@@ -222,6 +231,60 @@ export default function App() {
             />
           }
         />
+        <Identifier>
+          <IdentifierMasthead aria-label="Agency identifier">
+            <IdentifierLogos>
+              <IdentifierLogo href="https://www.nasa.gov">
+                <img src={logo} alt="NASA logo" />
+              </IdentifierLogo>
+            </IdentifierLogos>
+            <IdentifierIdentity domain="www.gcn.gsfc.nasa.gov">
+              A service of the{' '}
+              <a href="https://science.gsfc.nasa.gov/astrophysics/">
+                Astrophysics Science Division at
+                <br />
+                NASA&apos;s Goddard Space Flight Center
+              </a>
+            </IdentifierIdentity>
+          </IdentifierMasthead>
+          <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/about/index.html">
+                About NASA
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/FOIA/index.html">
+                FOIA Requests
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/offices/odeo/no-fear-act">
+                No FEAR Act
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://oig.nasa.gov/">
+                Office of the Inspector General
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink href="https://www.nasa.gov/about/highlights/HP_Privacy.html">
+                Privacy Policy
+              </IdentifierLink>
+            </IdentifierLinkItem>
+          </IdentifierLinks>
+          <IdentifierGov aria-label="U.S. government information and services">
+            NASA&apos;s Goddard Space Flight Center, Public Inquiries, Mail Code
+            130, Greenbelt, MD 20771 USA{' '}
+            <a key="telephone" href="tel:1-301-286-2000">
+              (301) 286-2000
+            </a>
+            <br />
+            U.S. government information and services:{' '}
+            <a href="https//www.usa.gov"> Visit USA.gov</a>
+          </IdentifierGov>
+        </Identifier>
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
