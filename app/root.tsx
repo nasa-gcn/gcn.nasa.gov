@@ -262,27 +262,51 @@ export default function App() {
           </IdentifierMasthead>
           <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
             {[
-              <a href="https://www.nasa.gov/about/index.html" key="aboutNASA">
-                About NASA
-              </a>,
-              <a href="https://www.nasa.gov/FOIA/index.html" key="foia">
-                FOIA Requests
-              </a>,
-              <a
-                href="https://www.nasa.gov/offices/odeo/no-fear-act"
-                key="nofearact"
-              >
-                No FEAR Act
-              </a>,
-              <a href="https://oig.nasa.gov/" key="oig">
-                Office of the Inspector General
-              </a>,
-              <a
-                href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
-                key="privacy"
-              >
-                Privacy Policy
-              </a>,
+              <li className="usa-identifier__required-links-item">
+                <a
+                  href="https://www.nasa.gov/about/index.html"
+                  key="aboutNASA"
+                  className="usa-identifier__required-links-item"
+                >
+                 About NASA
+                </a>
+              </li>,
+              <li className="usa-identifier__required-links-item">
+               <a
+                  href="https://www.nasa.gov/FOIA/index.html"
+                  key="foia"
+                  className="usa-identifier__required-links-item"
+                >
+                  FOIA Requests
+                </a>
+              </li>,
+              <li className="usa-identifier__required-links-item">
+               <a
+                  href="https://www.nasa.gov/offices/odeo/no-fear-act "
+                  key="nofearact"
+                  className="usa-identifier__required-links-item"
+                >
+                  No FEAR Act
+                </a>
+             </li>,
+             <li className="usa-identifier__required-links-item">
+                <a
+                  href="https://oig.nasa.gov/"
+                  key="oig"
+                  className="usa-identifier__required-links-item"
+                >
+                  Office of the Inspector General
+                </a>
+              </li>,
+              <li className="usa-identifier__required-links-item">
+                <a
+                  href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
+                  key="privacy"
+                  className="usa-identifier__required-links-item"
+                >
+                  Privacy Policy
+                </a>
+              </li>,
             ]}
           </IdentifierLinks>
           <IdentifierGov aria-label="U.S. government information and services">
