@@ -107,65 +107,76 @@ const getOpenIDClient = memoizee(
 )
 
 export async function login(request: Request) {
-  const client = await getOpenIDClient()
-  const nonce = generators.nonce()
-  const state = generators.state()
-  const code_verifier = generators.codeVerifier()
-  const code_challenge = generators.codeChallenge(code_verifier)
+  const [client, { cookie, ...props }] = await Promise.all([
+    getOpenIDClient(),
+    (async () => {
+      const oidcSessionPromise = oidcStorage.getSession()
+
+      const nonce = generators.nonce()
+      const state = generators.state()
+      const code_verifier = generators.codeVerifier()
+      const code_challenge = generators.codeChallenge(code_verifier)
+
+      const oidcSession = await oidcSessionPromise
+      oidcSession.set('code_verifier', code_verifier)
+      oidcSession.set('nonce', nonce)
+      oidcSession.set('state', state)
+
+      const cookie = await oidcStorage.commitSession(oidcSession)
+
+      return { cookie, nonce, state, code_challenge }
+    })(),
+  ])
 
   const authorizationUrl = client.authorizationUrl({
     scope: 'openid',
-    nonce,
-    state,
-    code_challenge,
     code_challenge_method: 'S256',
     redirect_uri: getAuthRedirectUri(request),
+    ...props,
   })
 
-  const oidcSession = await oidcStorage.getSession()
-  oidcSession.set('code_verifier', code_verifier)
-  oidcSession.set('nonce', nonce)
-  oidcSession.set('state', state)
-
-  return redirect(authorizationUrl, {
-    headers: {
-      'Set-Cookie': await oidcStorage.commitSession(oidcSession),
-    },
-  })
+  return redirect(authorizationUrl, { headers: { 'Set-Cookie': cookie } })
 }
 
 export async function authorize(request: Request) {
-  const client = await getOpenIDClient()
-  const oidcSession = await oidcStorage.getSession(
-    request.headers.get('Cookie')
-  )
-  const session = await storage.getSession()
-  const url = new URL(request.url)
-  const code_verifier = oidcSession.get('code_verifier')
-  const nonce = oidcSession.get('nonce')
-  const state = oidcSession.get('state')
+  const sessionPromise = await storage.getSession()
+  const [client, { oidcSessionDestroyPromise, ...checks }] = await Promise.all([
+    getOpenIDClient(),
+    (async () => {
+      const cookie = request.headers.get('Cookie')
+      const oidcSession = await oidcStorage.getSession(cookie)
+      const code_verifier = oidcSession.get('code_verifier')
+      const nonce = oidcSession.get('nonce')
+      const state = oidcSession.get('state')
+      const oidcSessionDestroyPromise = oidcStorage.destroySession(oidcSession)
+      return { oidcSessionDestroyPromise, code_verifier, nonce, state }
+    })(),
+  ])
 
+  const url = new URL(request.url)
   const params = client.callbackParams(url.search)
-  const tokenSet = await client.callback(getAuthRedirectUri(request), params, {
-    code_verifier,
-    nonce,
-    state,
-  })
+  const tokenSet = await client.callback(
+    getAuthRedirectUri(request),
+    params,
+    checks
+  )
   const claims = tokenSet.claims()
 
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
     (group) => group.startsWith('gcn.gsfc.nasa.gov')
   )
   const subiss = new UnsecuredJWT({ sub: claims.sub, iss: claims.iss })
+  const session = await sessionPromise
   session.set('subiss', subiss.encode())
   session.set('email', claims.email)
   session.set('groups', groups)
 
-  return redirect('/', {
-    headers: {
-      'Set-Cookie': await storage.commitSession(session),
-    },
-  })
+  const [cookie] = await Promise.all([
+    storage.commitSession(session),
+    oidcSessionDestroyPromise,
+  ])
+
+  return redirect('/', { headers: { 'Set-Cookie': cookie } })
 }
 
 export async function getLogoutURL(request: Request) {
@@ -188,12 +199,9 @@ export async function getLogoutURL(request: Request) {
 
 export async function logout(request: Request) {
   const session = await storage.getSession(request.headers.get('Cookie'))
-  console.log(session.data)
-  const red = redirect('/', {
+  return redirect('/', {
     headers: {
       'Set-Cookie': await storage.destroySession(session),
     },
   })
-  console.log(red)
-  return red
 }
