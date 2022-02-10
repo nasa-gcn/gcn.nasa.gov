@@ -78,26 +78,24 @@ const providerUrl = `https://cognito-idp.${
   COGNITO_USER_POOL_ID.split('_')[0]
 }.amazonaws.com/${COGNITO_USER_POOL_ID}/`
 
-const issuerDiscover = memoizee(
-  async () => await Issuer.discover(providerUrl),
+const getOpenIDClient = memoizee(
+  async function () {
+    if (!process.env.OIDC_CLIENT_ID)
+      throw new Error('environment variable OIDC_CLIENT_ID must be non-null')
+
+    const issuer = await Issuer.discover(providerUrl)
+
+    return new issuer.Client({
+      client_id: process.env.OIDC_CLIENT_ID,
+      client_secret: process.env.OIDC_CLIENT_SECRET,
+      response_types: ['code'],
+    })
+  },
   { promise: true }
 )
 
-async function getOpenIDClient(request: Request) {
-  if (!process.env.OIDC_CLIENT_ID)
-    throw new Error('environment variable OIDC_CLIENT_ID must be non-null')
-
-  const issuer = await issuerDiscover()
-  return new issuer.Client({
-    client_id: process.env.OIDC_CLIENT_ID,
-    client_secret: process.env.OIDC_CLIENT_SECRET,
-    response_types: ['code'],
-    redirect_uris: [getRedirectUri(request)],
-  })
-}
-
 export async function login(request: Request) {
-  const client = await getOpenIDClient(request)
+  const client = await getOpenIDClient()
   const nonce = generators.nonce()
   const state = generators.state()
   const code_verifier = generators.codeVerifier()
@@ -109,6 +107,7 @@ export async function login(request: Request) {
     state,
     code_challenge,
     code_challenge_method: 'S256',
+    redirect_uri: getRedirectUri(request),
   })
 
   const oidcSession = await oidcStorage.getSession()
@@ -124,7 +123,7 @@ export async function login(request: Request) {
 }
 
 export async function authorize(request: Request) {
-  const client = await getOpenIDClient(request)
+  const client = await getOpenIDClient()
   const oidcSession = await oidcStorage.getSession(
     request.headers.get('Cookie')
   )
