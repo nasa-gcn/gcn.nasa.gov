@@ -245,9 +245,11 @@ export default function App() {
             <IdentifierIdentity domain="www.gcn.gsfc.nasa.gov">
               A service of the{' '}
               <a href="https://science.gsfc.nasa.gov/astrophysics/">
-                Astrophysics Science Division at
-                <br />
-                NASA&apos;s Goddard Space Flight Center
+                Astrophysics Science Division
+              </a>{' '}
+              at <a href="https://www.nasa.gov/">NASA</a>&apos;s{' '}
+              <a href="https://www.nasa.gov/goddard">
+                Goddard Space Flight Center
               </a>
             </IdentifierIdentity>
           </IdentifierMasthead>
