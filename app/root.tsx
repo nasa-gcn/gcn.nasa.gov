@@ -17,7 +17,6 @@ import { useState } from 'react'
 import type { LoaderFunction, MetaFunction } from 'remix'
 
 import {
-  Footer,
   FooterNav,
   GovBanner,
   GridContainer,
@@ -31,7 +30,6 @@ import {
   IdentifierLogo,
   IdentifierLogos,
   IdentifierMasthead,
-  Logo,
   NavMenuButton,
   PrimaryNav,
   Title,
@@ -183,53 +181,32 @@ export default function App() {
             <Outlet />
           </GridContainer>
         </section>
-        <Footer
+        <FooterNav
+          aria-label="Footer navigation"
           size="slim"
-          primary={
-            <FooterNav
-              size="medium"
-              links={[
-                <a
-                  className="usa-footer__primary-link"
-                  href="/contact"
-                  key="contact"
-                >
-                  Contact
-                </a>,
-                <a
-                  className="usa-footer__primary-link"
-                  href="/linkspage"
-                  key="linkspage"
-                >
-                  Contributors
-                </a>,
-                <a
-                  className="usa-footer__primary-link"
-                  href="/docs/changes"
-                  key="changelog"
-                >
-                  Change Log
-                </a>,
-              ]}
-            />
-          }
-          secondary={
-            <Logo
-              size="slim"
-              image={
-                <img
-                  className="usa-footer__logo-img"
-                  alt="NASA logo"
-                  src={logo}
-                />
-              }
-              heading={
-                <p className="usa-footer__logo-heading">
-                  National Aeronautics and Space Administration
-                </p>
-              }
-            />
-          }
+          links={[
+            <a
+              className="usa-footer__primary-link"
+              href="/contact"
+              key="contact"
+            >
+              Contact
+            </a>,
+            <a
+              className="usa-footer__primary-link"
+              href="/linkspage"
+              key="linkspage"
+            >
+              Contributors
+            </a>,
+            <a
+              className="usa-footer__primary-link"
+              href="/docs/changes"
+              key="changelog"
+            >
+              Change Log
+            </a>,
+          ]}
         />
         <Identifier>
           <IdentifierMasthead aria-label="Agency identifier">
