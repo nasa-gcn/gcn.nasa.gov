@@ -9,6 +9,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useMatches,
 } from 'remix'
 
 import { useState } from 'react'
@@ -62,10 +63,19 @@ export const loader: LoaderFunction = async function ({ request }) {
 }
 
 export default function App() {
+  const matches = useMatches()
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
+  console.log(matches)
+
+  function pathMatches(path: string) {
+    return matches.some(
+      (match) =>
+        match.pathname === path || match.pathname.startsWith(`${path}/`)
+    )
+  }
 
   return (
     <html lang="en-US">
@@ -115,6 +125,7 @@ export default function App() {
                 data.email ? (
                   <>
                     <NavDropDownButton
+                      className={pathMatches('/user') ? 'active' : undefined}
                       type="button"
                       key="user"
                       label={data.email}
@@ -127,8 +138,8 @@ export default function App() {
                       isOpen={userMenuIsOpen}
                       items={[
                         <Link
-                          key="/client_credentials"
-                          to="/client_credentials"
+                          key="/user/client_credentials"
+                          to="/user/client_credentials"
                           onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                         >
                           Client Credentials
