@@ -13,7 +13,7 @@ import {
 
 import { useState } from 'react'
 
-import type { LoaderFunction, MetaFunction, NavLinkProps } from 'remix'
+import type { LoaderFunction, MetaFunction } from 'remix'
 
 import {
   GovBanner,
@@ -61,19 +61,6 @@ export const loader: LoaderFunction = async function ({ request }) {
   }
 }
 
-function PrimaryNavLink(props: NavLinkProps) {
-  return (
-    <NavLink
-      className={({ isActive }) =>
-        `usa-nav__link ${isActive ? 'usa-current' : ''}`
-      }
-      {...props}
-    >
-      {props.children}
-    </NavLink>
-  )
-}
-
 export default function App() {
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
@@ -105,18 +92,26 @@ export default function App() {
             <PrimaryNav
               mobileExpanded={expanded}
               items={[
-                <PrimaryNavLink to="/missions" key="/missions">
+                <NavLink
+                  className="usa-nav__link"
+                  to="/missions"
+                  key="/missions"
+                >
                   Missions
-                </PrimaryNavLink>,
-                <PrimaryNavLink to="/notices" key="/notices">
+                </NavLink>,
+                <NavLink className="usa-nav__link" to="/notices" key="/notices">
                   Notices
-                </PrimaryNavLink>,
-                <PrimaryNavLink to="/circulars" key="/circulars">
+                </NavLink>,
+                <NavLink
+                  className="usa-nav__link"
+                  to="/circulars"
+                  key="/circulars"
+                >
                   Circulars
-                </PrimaryNavLink>,
-                <PrimaryNavLink to="/docs" key="/docs">
+                </NavLink>,
+                <NavLink className="usa-nav__link" to="/docs" key="/docs">
                   Documentation
-                </PrimaryNavLink>,
+                </NavLink>,
                 data.email ? (
                   <>
                     <NavDropDownButton
@@ -149,9 +144,9 @@ export default function App() {
                     />
                   </>
                 ) : (
-                  <PrimaryNavLink to="/login" key="/login">
+                  <a className="usa-nav__link" href="/login" key="/login">
                     Sign in / Sign up
-                  </PrimaryNavLink>
+                  </a>
                 ),
               ]}
               onToggleMobileNav={onClick}
