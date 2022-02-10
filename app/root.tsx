@@ -29,11 +29,6 @@ import {
   IdentifierLogo,
   IdentifierLogos,
   IdentifierMasthead,
-<<<<<<< Updated upstream
-  Footer,
-  FooterNav,
-=======
->>>>>>> Stashed changes
   Logo,
   NavMenuButton,
   PrimaryNav,
@@ -261,11 +256,7 @@ export default function App() {
               <a href="https://science.gsfc.nasa.gov/astrophysics/">
                 Astrophysics Science Division at
                 <br />
-<<<<<<< Updated upstream
-                NASA Goddard Space Flight Center
-=======
                 NASA&apos;s Goddard Space Flight Center
->>>>>>> Stashed changes
               </a>
             </IdentifierIdentity>
           </IdentifierMasthead>
@@ -285,13 +276,8 @@ export default function App() {
             ]}
           </IdentifierLinks>
           <IdentifierGov aria-label="U.S. government information and services">
-<<<<<<< Updated upstream
-            NASA Goddard Space Flight Center, Public Inquiries, Mail Code 130,
-            Greenbelt, MD 20771 USA{' '}
-=======
             NASA&apos;s Goddard Space Flight Center, Public Inquiries, Mail Code
             130, Greenbelt, MD 20771 USA{' '}
->>>>>>> Stashed changes
             <a key="telephone" href="tel:1-301-286-2000">
               (301) 286-2000
             </a>
@@ -300,10 +286,7 @@ export default function App() {
             <a href="https//www.usa.gov"> Visit USA.gov</a>
           </IdentifierGov>
         </Identifier>
-<<<<<<< Updated upstream
-=======
         <Scripts />
->>>>>>> Stashed changes
         <Scripts />
         {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
