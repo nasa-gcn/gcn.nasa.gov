@@ -262,15 +262,25 @@ export default function App() {
           </IdentifierMasthead>
           <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
             {[
-              <a href="https://www.nasa.gov/about/index.html">About NASA</a>,
-              <a href="https://www.nasa.gov/FOIA/index.html">FOIA Requests</a>,
-              <a href="https://www.nasa.gov/offices/odeo/no-fear-act">
+              <a href="https://www.nasa.gov/about/index.html" key="aboutNASA">
+                About NASA
+              </a>,
+              <a href="https://www.nasa.gov/FOIA/index.html" key="foia">
+                FOIA Requests
+              </a>,
+              <a
+                href="https://www.nasa.gov/offices/odeo/no-fear-act"
+                key="nofearact"
+              >
                 No FEAR Act
               </a>,
-              <a href="https://oig.nasa.gov/">
+              <a href="https://oig.nasa.gov/" key="oig">
                 Office of the Inspector General
               </a>,
-              <a href="https://www.nasa.gov/about/highlights/HP_Privacy.html">
+              <a
+                href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
+                key="privacy"
+              >
                 Privacy Policy
               </a>,
             ]}
