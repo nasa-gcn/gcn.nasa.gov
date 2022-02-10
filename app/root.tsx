@@ -242,7 +242,6 @@ export default function App() {
                 }
               </IdentifierLogo>
               <IdentifierLogo href="https://www.nasa.gov/goddard">
-                {
                   <img
                     id="goddard"
                     src="https://director.gsfc.nasa.gov/mma/webdesign/goddard.png"
