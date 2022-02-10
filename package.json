@@ -1,10 +1,10 @@
 {
   "private": true,
-  "name": "remix-gcn",
-  "description": "General Coordinates Network web site in Remix.run",
+  "name": "www.gcn.gsfc.nasa.gov",
+  "description": "General Coordinates Network web site",
   "repository": {
     "type": "git",
-    "url": "tachgsfc/remix-gcn"
+    "url": "tachgsfc/www.gcn.gsfc.nasa.gov"
   },
   "license": "",
   "scripts": {
