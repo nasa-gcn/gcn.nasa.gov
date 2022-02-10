@@ -17,7 +17,6 @@ import { useState } from 'react'
 import type { LoaderFunction, MetaFunction } from 'remix'
 
 import {
-  Footer,
   FooterNav,
   GovBanner,
   GridContainer,
@@ -31,7 +30,6 @@ import {
   IdentifierLogo,
   IdentifierLogos,
   IdentifierMasthead,
-  Logo,
   NavMenuButton,
   PrimaryNav,
   Title,
@@ -183,9 +181,8 @@ export default function App() {
             <Outlet />
           </GridContainer>
         </section>
-        <Footer
-          size="slim"
-          primary={
+        <Identifier>
+          <div className="usa-footer__primary-section">
             <FooterNav
               size="medium"
               links={[
@@ -212,26 +209,7 @@ export default function App() {
                 </a>,
               ]}
             />
-          }
-          secondary={
-            <Logo
-              size="slim"
-              image={
-                <img
-                  className="usa-footer__logo-img"
-                  alt="NASA logo"
-                  src={logo}
-                />
-              }
-              heading={
-                <p className="usa-footer__logo-heading">
-                  National Aeronautics and Space Administration
-                </p>
-              }
-            />
-          }
-        />
-        <Identifier>
+          </div>
           <IdentifierMasthead aria-label="Agency identifier">
             <IdentifierLogos>
               <IdentifierLogo href="https://www.nasa.gov">
