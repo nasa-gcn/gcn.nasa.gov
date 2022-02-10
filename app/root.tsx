@@ -253,12 +253,12 @@ export default function App() {
           </IdentifierMasthead>
           <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
             <IdentifierLinkItem>
-              <IdentifierLink href="https://www.nasa.gov/about/index.html">
+              <IdentifierLink href="https://www.nasa.gov/about">
                 About NASA
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
-              <IdentifierLink href="https://www.nasa.gov/FOIA/index.html">
+              <IdentifierLink href="https://www.nasa.gov/FOIA">
                 FOIA Requests
               </IdentifierLink>
             </IdentifierLinkItem>
