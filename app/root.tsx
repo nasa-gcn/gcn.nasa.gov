@@ -288,7 +288,7 @@ export default function App() {
             </a>
             <br />
             U.S. government information and services:{' '}
-            <a href="https//www.usa.gov"> Visit USA.gov</a>
+            <a href="https://www.usa.gov">Visit USA.gov</a>
           </IdentifierGov>
         </Identifier>
         <Scripts />
