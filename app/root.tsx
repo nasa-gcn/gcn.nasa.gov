@@ -249,7 +249,7 @@ export default function App() {
                   />
               </IdentifierLogo>
             </IdentifierLogos>
-            <IdentifierIdentity domain="NASA.gov">
+            <IdentifierIdentity domain="www.gcn.gsfc.nasa.gov">
               {`A service of the `}
               <a href="https://science.gsfc.nasa.gov/astrophysics/">
                 Astrophysics Science Division at
