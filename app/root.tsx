@@ -30,7 +30,7 @@ import {
   Menu,
 } from '@trussworks/react-uswds'
 
-import { storage } from '~/lib/auth.server'
+import { getLogoutURL, storage } from '~/lib/auth.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 import logo from './img/logo.svg'
@@ -57,8 +57,13 @@ export const links: LinksFunction = () => [
 
 export const loader: LoaderFunction = async function ({ request }) {
   const session = await storage.getSession(request.headers.get('Cookie'))
-  return {
-    email: session.get('email'),
+  if (session.get('subiss')) {
+    return {
+      email: session.get('email'),
+      logoutURL: await getLogoutURL(request),
+    }
+  } else {
+    return {}
   }
 }
 
@@ -143,13 +148,13 @@ export default function App() {
                         >
                           Client Credentials
                         </Link>,
-                        <Link
-                          key="/signout"
-                          to="/signout"
+                        <a
+                          key="logout"
+                          href={data.logoutURL}
                           onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                         >
                           Sign Out
-                        </Link>,
+                        </a>,
                       ]}
                     />
                   </>

@@ -66,7 +66,7 @@ export const storage = createArcTableSessionStorage({
   ttl: '_ttl',
 })
 
-function getRedirectUri(request: Request) {
+function getAuthRedirectUri(request: Request) {
   const url = new URL(request.url)
   // FIXME: Remove this line once the following issue is fixed.
   // https://github.com/remix-run/remix/issues/1536
@@ -74,19 +74,31 @@ function getRedirectUri(request: Request) {
   return `${url.origin}/auth`
 }
 
+function getLogoutRedirectUri(request: Request) {
+  const url = new URL(request.url)
+  // FIXME: Remove this line once the following issue is fixed.
+  // https://github.com/remix-run/remix/issues/1536
+  if (process.env.ARC_SANDBOX) url.protocol = 'http'
+  return `${url.origin}/logout`
+}
+
 const providerUrl = `https://cognito-idp.${
   COGNITO_USER_POOL_ID.split('_')[0]
 }.amazonaws.com/${COGNITO_USER_POOL_ID}/`
 
+function getClientId() {
+  const client_id = process.env.OIDC_CLIENT_ID
+  if (!client_id)
+    throw new Error('environment variable OIDC_CLIENT_ID must be non-null')
+  return client_id
+}
+
 const getOpenIDClient = memoizee(
   async function () {
-    if (!process.env.OIDC_CLIENT_ID)
-      throw new Error('environment variable OIDC_CLIENT_ID must be non-null')
-
     const issuer = await Issuer.discover(providerUrl)
 
     return new issuer.Client({
-      client_id: process.env.OIDC_CLIENT_ID,
+      client_id: getClientId(),
       client_secret: process.env.OIDC_CLIENT_SECRET,
       response_types: ['code'],
     })
@@ -107,7 +119,7 @@ export async function login(request: Request) {
     state,
     code_challenge,
     code_challenge_method: 'S256',
-    redirect_uri: getRedirectUri(request),
+    redirect_uri: getAuthRedirectUri(request),
   })
 
   const oidcSession = await oidcStorage.getSession()
@@ -134,7 +146,7 @@ export async function authorize(request: Request) {
   const state = oidcSession.get('state')
 
   const params = client.callbackParams(url.search)
-  const tokenSet = await client.callback(getRedirectUri(request), params, {
+  const tokenSet = await client.callback(getAuthRedirectUri(request), params, {
     code_verifier,
     nonce,
     state,
@@ -154,4 +166,34 @@ export async function authorize(request: Request) {
       'Set-Cookie': await storage.commitSession(session),
     },
   })
+}
+
+export async function getLogoutURL(request: Request) {
+  const client = await getOpenIDClient()
+
+  // Determine the Cognito logout URI endpoint
+  const auth_endpoint = client.issuer.metadata.authorization_endpoint
+  if (!auth_endpoint)
+    throw new Error(
+      'client.issuer.metadata.authorization_endpoint must be present'
+    )
+  const url = new URL(auth_endpoint)
+  url.pathname = '/logout'
+
+  url.searchParams.set('client_id', getClientId())
+  url.searchParams.set('logout_uri', getLogoutRedirectUri(request))
+
+  return url.toString()
+}
+
+export async function logout(request: Request) {
+  const session = await storage.getSession(request.headers.get('Cookie'))
+  console.log(session.data)
+  const red = redirect('/', {
+    headers: {
+      'Set-Cookie': await storage.destroySession(session),
+    },
+  })
+  console.log(red)
+  return red
 }
