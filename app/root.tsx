@@ -262,17 +262,20 @@ export default function App() {
           </IdentifierMasthead>
           <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
             {[
-              <li className="usa-identifier__required-links-item">
+              <li
+                className="usa-identifier__required-links-item"
+                key="aboutNASA"
+              >
                 <a
                   href="https://www.nasa.gov/about/index.html"
                   key="aboutNASA"
                   className="usa-identifier__required-links-item"
                 >
-                 About NASA
+                  About NASA
                 </a>
               </li>,
-              <li className="usa-identifier__required-links-item">
-               <a
+              <li className="usa-identifier__required-links-item" key="foia">
+                <a
                   href="https://www.nasa.gov/FOIA/index.html"
                   key="foia"
                   className="usa-identifier__required-links-item"
@@ -280,16 +283,19 @@ export default function App() {
                   FOIA Requests
                 </a>
               </li>,
-              <li className="usa-identifier__required-links-item">
-               <a
+              <li
+                className="usa-identifier__required-links-item"
+                key="nofearact"
+              >
+                <a
                   href="https://www.nasa.gov/offices/odeo/no-fear-act "
                   key="nofearact"
                   className="usa-identifier__required-links-item"
                 >
                   No FEAR Act
                 </a>
-             </li>,
-             <li className="usa-identifier__required-links-item">
+              </li>,
+              <li className="usa-identifier__required-links-item" key="oig">
                 <a
                   href="https://oig.nasa.gov/"
                   key="oig"
@@ -298,7 +304,7 @@ export default function App() {
                   Office of the Inspector General
                 </a>
               </li>,
-              <li className="usa-identifier__required-links-item">
+              <li className="usa-identifier__required-links-item" key="privacy">
                 <a
                   href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
                   key="privacy"
