@@ -222,38 +222,50 @@ export default function App() {
             </IdentifierLogos>
             <IdentifierIdentity domain="www.gcn.gsfc.nasa.gov">
               A service of the{' '}
-              <a href="https://science.gsfc.nasa.gov/astrophysics/">
+              <a
+                rel="external"
+                href="https://science.gsfc.nasa.gov/astrophysics/"
+              >
                 Astrophysics Science Division
               </a>{' '}
-              at <a href="https://www.nasa.gov/">NASA</a>&apos;s{' '}
-              <a href="https://www.nasa.gov/goddard">
+              at{' '}
+              <a rel="external" href="https://www.nasa.gov/">
+                NASA
+              </a>{' '}
+              <a rel="external" href="https://www.nasa.gov/goddard">
                 Goddard Space Flight Center
               </a>
             </IdentifierIdentity>
           </IdentifierMasthead>
           <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
             <IdentifierLinkItem>
-              <IdentifierLink href="https://www.nasa.gov/about">
+              <IdentifierLink rel="external" href="https://www.nasa.gov/about">
                 About NASA
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
-              <IdentifierLink href="https://www.nasa.gov/FOIA">
+              <IdentifierLink rel="external" href="https://www.nasa.gov/FOIA">
                 FOIA Requests
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
-              <IdentifierLink href="https://www.nasa.gov/offices/odeo/no-fear-act">
+              <IdentifierLink
+                rel="external"
+                href="https://www.nasa.gov/offices/odeo/no-fear-act"
+              >
                 No FEAR Act
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
-              <IdentifierLink href="https://oig.nasa.gov/">
+              <IdentifierLink rel="external" href="https://oig.nasa.gov/">
                 Office of the Inspector General
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
-              <IdentifierLink href="https://www.nasa.gov/about/highlights/HP_Privacy.html">
+              <IdentifierLink
+                rel="external"
+                href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
+              >
                 Privacy Policy
               </IdentifierLink>
             </IdentifierLinkItem>
@@ -266,7 +278,9 @@ export default function App() {
             </a>
             <br />
             U.S. government information and services:{' '}
-            <a href="https://www.usa.gov">Visit USA.gov</a>
+            <a rel="external" href="https://www.usa.gov">
+              Visit USA.gov
+            </a>
           </IdentifierGov>
         </Identifier>
         <Scripts />
