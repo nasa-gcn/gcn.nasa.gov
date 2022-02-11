@@ -7,6 +7,9 @@ export default function Docs() {
       <div className="desktop:grid-col-3">
         <SideNav
           items={[
+            <NavLink key="about" to="about">
+              About GCN
+            </NavLink>,
             <NavLink key="client" to="client">
               Client Configuration
             </NavLink>,

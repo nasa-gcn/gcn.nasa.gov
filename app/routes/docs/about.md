@@ -1,8 +1,8 @@
 ---
 meta:
-  title: GCN - Documentation
+  title: GCN - About
 ---
 
-# Documentation
+# About GCN
 
 Fill me in for top-level documentation page.
