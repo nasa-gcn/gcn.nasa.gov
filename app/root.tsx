@@ -8,11 +8,12 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useCatch,
   useLoaderData,
   useLocation,
 } from 'remix'
 
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 import type { LoaderFunction, MetaFunction } from 'remix'
 
@@ -74,7 +75,26 @@ export const loader: LoaderFunction = async function ({ request }) {
   }
 }
 
+export function CatchBoundary() {
+  const caught = useCatch()
+  return (
+    <Document>
+      <h1>
+        Error {caught.status}: {caught.statusText}
+      </h1>
+    </Document>
+  )
+}
+
 export default function App() {
+  return (
+    <Document>
+      <Outlet />
+    </Document>
+  )
+}
+
+function Document({ children }: { children: ReactNode }) {
   const location = useLocation()
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
@@ -129,7 +149,7 @@ export default function App() {
                 <NavLink className="usa-nav__link" to="/docs" key="/docs">
                   Documentation
                 </NavLink>,
-                data.email ? (
+                data?.email ? (
                   <>
                     <NavDropDownButton
                       className={pathMatches('/user') ? 'active' : undefined}
@@ -173,9 +193,7 @@ export default function App() {
         </Header>
         <ScrollRestoration />
         <section className="usa-section">
-          <GridContainer>
-            <Outlet />
-          </GridContainer>
+          <GridContainer>{children}</GridContainer>
         </section>
         <Identifier>
           <div className="usa-footer__primary-section">
