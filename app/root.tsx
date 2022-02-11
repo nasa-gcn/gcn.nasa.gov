@@ -20,8 +20,13 @@ import type { LoaderFunction, MetaFunction } from 'remix'
 import {
   FooterNav,
   GovBanner,
+  Grid,
   GridContainer,
   Header,
+  IconBugReport,
+  IconComment,
+  IconGithub,
+  IconList,
   Identifier,
   IdentifierGov,
   IdentifierIdentity,
@@ -196,31 +201,108 @@ function Document({ children }: { children: ReactNode }) {
           <GridContainer>{children}</GridContainer>
         </section>
         <Identifier>
-          <div className="usa-footer__primary-section">
+          <div className="usa-footer__primary-section text-ink">
             <FooterNav
               size="medium"
               links={[
-                <a
-                  className="usa-footer__primary-link"
-                  href="/contact"
-                  key="contact"
-                >
-                  Contact
-                </a>,
-                <a
-                  className="usa-footer__primary-link"
-                  href="/linkspage"
-                  key="linkspage"
-                >
-                  Contributors
-                </a>,
-                <a
-                  className="usa-footer__primary-link"
-                  href="/docs/changes"
-                  key="changelog"
-                >
-                  Change Log
-                </a>,
+                <GridContainer key="footerlinkgrid">
+                  <Grid row gap>
+                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
+                      <div className="usa-media-block">
+                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
+                          <a
+                            className="usa-footer__primary-link"
+                            href="/contact"
+                            key="contacticon"
+                          >
+                            <IconComment size={4} color={'white'} />
+                          </a>
+                        </div>
+                        <div className="usa-media-block_body">
+                          Questions or Comments?
+                          <a
+                            className="usa-footer__primary-link"
+                            href="/contact"
+                            key="contact"
+                            rel="external"
+                          >
+                            Contact GCN directly
+                          </a>
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
+                      <div className="usa-media-block">
+                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
+                          <a
+                            className="usa-footer__primary-link"
+                            href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov"
+                            key="githubicon"
+                          >
+                            <IconGithub size={4} color={'white'} />
+                          </a>
+                        </div>
+                        <div className="usa-media-block_body">
+                          Running into an issue?
+                          <a
+                            className="usa-footer__primary-link"
+                            href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov"
+                            key="github"
+                            rel="external"
+                          >
+                            Reference the GCN Github.
+                          </a>
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
+                      <div className="usa-media-block">
+                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
+                          <a
+                            className="usa-footer__primary-link"
+                            href="/bugreport"
+                            key="bugreporticon"
+                          >
+                            <IconBugReport size={4} color={'white'} />
+                          </a>
+                        </div>
+                        <div className="usa-media-block_body">
+                          Observed something that seems broken or inaccurate?
+                          <a
+                            className="usa-footer__primary-link"
+                            href="/bugreport"
+                            key="bugreport"
+                          >
+                            Report a Bug.
+                          </a>
+                        </div>
+                      </div>
+                    </Grid>
+                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
+                      <div className="usa-media-block">
+                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
+                          <a
+                            className="usa-footer__primary-link"
+                            href="/docs/changes"
+                            key="changelogicon"
+                          >
+                            <IconList size={4} color={'white'} />
+                          </a>
+                        </div>
+                        <div className="usa-media-block_body">
+                          Latest updates are recorded on the{' '}
+                          <a
+                            className="usa-footer__primary-link"
+                            href="/docs/changes"
+                            key="changelog"
+                          >
+                            Change Log.
+                          </a>
+                        </div>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </GridContainer>,
               ]}
             />
           </div>
