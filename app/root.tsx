@@ -205,7 +205,7 @@ function Document({ children }: { children: ReactNode }) {
             <FooterNav
               size="medium"
               links={[
-                <GridContainer>
+                <GridContainer key="footerlinkgrid">
                   <Grid row gap>
                     <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
                       <div className="usa-media-block">
