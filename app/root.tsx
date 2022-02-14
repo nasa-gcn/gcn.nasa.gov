@@ -18,7 +18,6 @@ import { ReactNode, useState } from 'react'
 import type { LoaderFunction, MetaFunction } from 'remix'
 
 import {
-  FooterNav,
   GovBanner,
   Grid,
   GridContainer,
@@ -96,6 +95,35 @@ export default function App() {
     <Document>
       <Outlet />
     </Document>
+  )
+}
+
+function ContactLink({
+  children,
+  headline,
+  href,
+  icon,
+}: {
+  children: ReactNode
+  headline: ReactNode
+  href: string
+  icon: ReactNode
+}) {
+  return (
+    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
+      <div className="usa-media-block">
+        <div className="usa-media-block__img circle-6 bg-primary-light display-flex flex-row flex-align-center flex-justify-center">
+          <a href={href}>{icon}</a>
+        </div>
+        <div className="usa-media-block_body">
+          {headline}{' '}
+          <a className="usa-link" href={href}>
+            {children}
+          </a>
+          .
+        </div>
+      </div>
+    </Grid>
   )
 }
 
@@ -201,110 +229,39 @@ function Document({ children }: { children: ReactNode }) {
           <GridContainer>{children}</GridContainer>
         </section>
         <Identifier>
-          <div className="usa-footer__primary-section text-ink">
-            <FooterNav
-              size="medium"
-              links={[
-                <GridContainer key="footerlinkgrid">
-                  <Grid row gap>
-                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
-                      <div className="usa-media-block">
-                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
-                          <a
-                            className="usa-footer__primary-link"
-                            href="/contact"
-                            key="contacticon"
-                          >
-                            <IconComment size={4} color={'white'} />
-                          </a>
-                        </div>
-                        <div className="usa-media-block_body">
-                          Questions or Comments?
-                          <a
-                            className="usa-footer__primary-link"
-                            href="/contact"
-                            key="contact"
-                            rel="external"
-                          >
-                            Contact GCN directly
-                          </a>
-                        </div>
-                      </div>
-                    </Grid>
-                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
-                      <div className="usa-media-block">
-                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
-                          <a
-                            className="usa-footer__primary-link"
-                            href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov"
-                            key="githubicon"
-                          >
-                            <IconGithub size={4} color={'white'} />
-                          </a>
-                        </div>
-                        <div className="usa-media-block_body">
-                          Running into an issue?
-                          <a
-                            className="usa-footer__primary-link"
-                            href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov"
-                            key="github"
-                            rel="external"
-                          >
-                            Reference the GCN Github.
-                          </a>
-                        </div>
-                      </div>
-                    </Grid>
-                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
-                      <div className="usa-media-block">
-                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
-                          <a
-                            className="usa-footer__primary-link"
-                            href="/bugreport"
-                            key="bugreporticon"
-                          >
-                            <IconBugReport size={4} color={'white'} />
-                          </a>
-                        </div>
-                        <div className="usa-media-block_body">
-                          Observed something that seems broken or inaccurate?
-                          <a
-                            className="usa-footer__primary-link"
-                            href="/bugreport"
-                            key="bugreport"
-                          >
-                            Report a Bug.
-                          </a>
-                        </div>
-                      </div>
-                    </Grid>
-                    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
-                      <div className="usa-media-block">
-                        <div className="usa-media-block__img circle-6 bg-base-darkest display-flex flex-row flex-align-center flex-justify-center">
-                          <a
-                            className="usa-footer__primary-link"
-                            href="/docs/changes"
-                            key="changelogicon"
-                          >
-                            <IconList size={4} color={'white'} />
-                          </a>
-                        </div>
-                        <div className="usa-media-block_body">
-                          Latest updates are recorded on the{' '}
-                          <a
-                            className="usa-footer__primary-link"
-                            href="/docs/changes"
-                            key="changelog"
-                          >
-                            Change Log.
-                          </a>
-                        </div>
-                      </div>
-                    </Grid>
-                  </Grid>
-                </GridContainer>,
-              ]}
-            />
+          <div className="usa-footer__primary-section text-ink padding-3">
+            <GridContainer>
+              <Grid row gap>
+                <ContactLink
+                  href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn"
+                  icon={<IconComment size={4} color={'white'} />}
+                  headline="Questions or Comments?"
+                >
+                  Contact GCN directly
+                </ContactLink>
+                <ContactLink
+                  href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov"
+                  icon={<IconGithub size={4} color={'white'} />}
+                  headline="Running into an issue?"
+                >
+                  Reference the GCN Github
+                </ContactLink>
+                <ContactLink
+                  href="/bugreport"
+                  icon={<IconBugReport size={4} color={'white'} />}
+                  headline="Observed something that seems broken or inaccurate?"
+                >
+                  Report a Bug
+                </ContactLink>
+                <ContactLink
+                  href="/docs/changes"
+                  icon={<IconList size={4} color={'white'} />}
+                  headline="Latest updates are recorded on the"
+                >
+                  Change Log
+                </ContactLink>
+              </Grid>
+            </GridContainer>
           </div>
           <IdentifierMasthead aria-label="Agency identifier">
             <IdentifierLogos>
@@ -369,9 +326,7 @@ function Document({ children }: { children: ReactNode }) {
           <IdentifierGov aria-label="U.S. government information and services">
             NASA&apos;s Goddard Space Flight Center, Public Inquiries, Mail Code
             130, Greenbelt, MD 20771 USA{' '}
-            <a key="telephone" href="tel:1-301-286-2000">
-              (301) 286-2000
-            </a>
+            <a href="tel:1-301-286-2000">(301) 286-2000</a>
             <br />
             U.S. government information and services:{' '}
             <a rel="external" href="https://www.usa.gov">
