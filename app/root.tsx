@@ -40,6 +40,7 @@ import {
   Title,
   NavDropDownButton,
   Menu,
+  Search,
 } from '@trussworks/react-uswds'
 
 import { getLogoutURL, storage } from '~/lib/auth.server'
@@ -134,6 +135,10 @@ function Document({ children }: { children: ReactNode }) {
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
 
+  const mockSubmit = (): void => {
+    /* mock submit fn */
+  }
+
   const pathMatches = (path: string) =>
     location.pathname === path || location.pathname.startsWith(`${path}/`)
 
@@ -219,6 +224,11 @@ function Document({ children }: { children: ReactNode }) {
                     Sign in / Sign up
                   </a>
                 ),
+                <Search
+                  placeholder="Search"
+                  size="small"
+                  onSubmit={mockSubmit}
+                />,
               ]}
               onToggleMobileNav={onClick}
             />
