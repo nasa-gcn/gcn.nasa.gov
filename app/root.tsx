@@ -228,8 +228,6 @@ function Document({ children }: { children: ReactNode }) {
                   placeholder="Search"
                   size="small"
                   onSubmit={mockSubmit}
-                  color="white"
-                  key="searchbar"
                 />,
               ]}
               onToggleMobileNav={onClick}
