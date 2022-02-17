@@ -228,12 +228,15 @@ function Document({ children }: { children: ReactNode }) {
                   placeholder="Search"
                   size="small"
                   onSubmit={mockSubmit}
+                  color="white"
+                  key="searchbar"
                 />,
               ]}
               onToggleMobileNav={onClick}
             />
           </div>
         </Header>
+        <ScrollRestoration />
         <section className="usa-section">
           <GridContainer>{children}</GridContainer>
         </section>
@@ -343,9 +346,8 @@ function Document({ children }: { children: ReactNode }) {
             </a>
           </IdentifierGov>
         </Identifier>
-        <ScrollRestoration />
         <Scripts />
-        <LiveReload />
+        {process.env.NODE_ENV === 'development' && <LiveReload />}
       </body>
     </html>
   )
