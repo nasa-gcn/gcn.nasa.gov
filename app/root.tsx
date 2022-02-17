@@ -135,12 +135,12 @@ function Document({ children }: { children: ReactNode }) {
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
 
+  const pathMatches = (path: string) =>
+    location.pathname === path || location.pathname.startsWith(`${path}/`)
+
   const mockSubmit = (): void => {
     /* mock submit fn */
   }
-
-  const pathMatches = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(`${path}/`)
 
   return (
     <html lang="en-US">
@@ -228,13 +228,14 @@ function Document({ children }: { children: ReactNode }) {
                   placeholder="Search"
                   size="small"
                   onSubmit={mockSubmit}
+                  color="white"
+                  key="searchbar"
                 />,
               ]}
               onToggleMobileNav={onClick}
             />
           </div>
         </Header>
-        <ScrollRestoration />
         <section className="usa-section">
           <GridContainer>{children}</GridContainer>
         </section>
@@ -344,8 +345,9 @@ function Document({ children }: { children: ReactNode }) {
             </a>
           </IdentifierGov>
         </Identifier>
+        <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
+        <LiveReload />
       </body>
     </html>
   )
