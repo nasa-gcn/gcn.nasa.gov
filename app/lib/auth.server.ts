@@ -17,8 +17,7 @@
 //    - the user's group memberships (needed for client credential vending machine)
 
 import { redirect } from 'remix'
-// FIXME: Vendored from https://github.com/remix-run/remix/pull/1538
-import { createArcTableSessionStorage } from './arcTableSessionStorage'
+import { createArcTableSessionStorage } from '@remix-run/architect'
 import { COGNITO_USER_POOL_ID } from './conf.server'
 import memoizee from 'memoizee'
 import { UnsecuredJWT } from 'jose'

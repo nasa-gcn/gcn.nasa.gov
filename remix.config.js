@@ -54,11 +54,14 @@ const mdx = async () => {
  * @type {import('@remix-run/dev/config').AppConfig}
  */
 module.exports = {
-  appDirectory: 'app',
-  assetsBuildDirectory: 'public/build',
-  publicPath: '/static/build/',
-  serverBuildDirectory: 'server/build',
-  devServerPort: 8002,
-  mdx: mdx,
+  serverBuildTarget: 'arc',
+  server: './server.js',
   ignoredRouteFiles: ['.*'],
+  mdx: mdx,
+  publicPath: '/static/build/',
+  // appDirectory: "app",
+  // assetsBuildDirectory: "public/build",
+  // serverBuildPath: "server/index.js",
+  // publicPath: "/_static/build/",
+  // devServerPort: 8002
 }

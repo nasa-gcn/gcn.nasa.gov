@@ -13,7 +13,9 @@ jobs:
         with:
           node-version: '16'
       - name: Install Architect
-        run: npm i -g @architect/architect aws-sdk 'git+https://github.com/lpsinger/package.git#bucket-policy-document' 'git+https://github.com/lpsinger/deploy.git#dont-hardcode-bucket-object-permissions'
+        # FIXME: remove explicit @architect/package@^8.0.0 @architect/deploy@^4.0.1
+        # dependencies once architect 10 is released
+        run: npm i -g @architect/architect aws-sdk @architect/package@^8.0.0 @architect/deploy@^4.0.1
       - name: NPM Install
         run: npm ci
       - name: Build

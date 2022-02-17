@@ -224,7 +224,6 @@ function Document({ children }: { children: ReactNode }) {
             />
           </div>
         </Header>
-        <ScrollRestoration />
         <section className="usa-section">
           <GridContainer>{children}</GridContainer>
         </section>
@@ -334,8 +333,9 @@ function Document({ children }: { children: ReactNode }) {
             </a>
           </IdentifierGov>
         </Identifier>
+        <ScrollRestoration />
         <Scripts />
-        {process.env.NODE_ENV === 'development' && <LiveReload />}
+        <LiveReload />
       </body>
     </html>
   )
