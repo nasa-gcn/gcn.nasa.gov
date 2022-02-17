@@ -13,7 +13,7 @@ jobs:
         with:
           node-version: '16'
       - name: Install Architect
-        run: npm i -g @architect/architect aws-sdk 'git+https://github.com/architect/package.git#423f92c44d4f0ec7f8d19431be3d613ba1a606b9' 'git+https://github.com/architect/deploy.git#c40913a608ac0cdd38a569141096d19f6b5b15a6'
+        run: npm i -g @architect/architect@^10.0.0-RC.0 aws-sdk
       - name: NPM Install
         run: npm ci
       - name: Build
