@@ -21,7 +21,7 @@
     "prepare": "run-p prepare:*"
   },
   "dependencies": {
-    "@architect/functions": "^4.1.1",
+    "@architect/functions": "^4.1.2",
     "@aws-sdk/client-cognito-identity-provider": "^3.47.0",
     "@aws-sdk/client-s3": "^3.49.0",
     "@aws-sdk/s3-request-presigner": "^3.49.0",
@@ -40,10 +40,8 @@
     "remark-gfm": "^3.0.1",
     "remix": "^1.2.1"
   },
-  "overrides": {
-    "@architect/architect": "^9.5.4"
-  },
   "devDependencies": {
+    "@architect/architect": "^9.5.4",
     "@remix-run/dev": "^1.2.1",
     "@types/architect__functions": "^3.13.6",
     "@types/memoizee": "^0.4.7",
