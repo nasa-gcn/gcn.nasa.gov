@@ -20,8 +20,10 @@
     "prepare:husky": "husky install",
     "prepare": "run-p prepare:*"
   },
+  "overrides": {
+    "@architect/functions": "^5.0.2"
+  },
   "dependencies": {
-    "@architect/functions": "^4.1.2",
     "@aws-sdk/client-cognito-identity-provider": "^3.47.0",
     "@aws-sdk/client-s3": "^3.49.0",
     "@aws-sdk/s3-request-presigner": "^3.49.0",
@@ -41,7 +43,7 @@
     "remix": "^1.2.1"
   },
   "devDependencies": {
-    "@architect/architect": "^9.5.4",
+    "@architect/architect": "^10.0.0-RC.0",
     "@remix-run/dev": "^1.2.1",
     "@types/architect__functions": "^3.13.6",
     "@types/memoizee": "^0.4.7",

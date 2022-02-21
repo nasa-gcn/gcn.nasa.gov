@@ -13,8 +13,7 @@ const client = new S3Client({})
 
 export const loader: LoaderFunction = async ({ params }) => {
   const path = params['*']
-  const sandbox = process.env.ARC_SANDBOX_PATH_TO_STATIC
-  if (sandbox) {
+  if (process.env.ARC_SANDBOX) {
     return redirect(`/_static/${path}`, 301)
   } else {
     const command = new GetObjectCommand({
