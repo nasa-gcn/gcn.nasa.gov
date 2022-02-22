@@ -21,7 +21,7 @@
     "prepare": "run-p prepare:*"
   },
   "overrides": {
-    "@architect/functions": "^5.0.2"
+    "@architect/functions": "5.0.2"
   },
   "dependencies": {
     "@aws-sdk/client-cognito-identity-provider": "^3.47.0",
