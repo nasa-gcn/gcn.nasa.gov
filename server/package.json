@@ -1,0 +1,5 @@
+{
+  "overrides": {
+    "@architect/functions": "^5.0.2"
+  }
+}
