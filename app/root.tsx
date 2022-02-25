@@ -296,6 +296,14 @@ function Document({ children }: { children: ReactNode }) {
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
+              <IdentifierLink
+                rel="external"
+                href="https://www.nasa.gov/content/section-508-accessibility-at-nasa"
+              >
+                Accessibility
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
               <IdentifierLink rel="external" href="https://www.nasa.gov/FOIA">
                 FOIA Requests
               </IdentifierLink>
