@@ -304,8 +304,11 @@ function Document({ children }: { children: ReactNode }) {
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
-              <IdentifierLink rel="external" href="https://www.nasa.gov/FOIA">
-                FOIA Requests
+              <IdentifierLink
+                rel="external"
+                href="https://www.nasa.gov/news/budget"
+              >
+                Budget and Performance
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
@@ -314,6 +317,11 @@ function Document({ children }: { children: ReactNode }) {
                 href="https://www.nasa.gov/offices/odeo/no-fear-act"
               >
                 No FEAR Act
+              </IdentifierLink>
+            </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink rel="external" href="https://www.nasa.gov/FOIA">
+                FOIA Requests
               </IdentifierLink>
             </IdentifierLinkItem>
             <IdentifierLinkItem>
