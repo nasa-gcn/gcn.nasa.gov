@@ -339,10 +339,6 @@ function Document({ children }: { children: ReactNode }) {
             </IdentifierLinkItem>
           </IdentifierLinks>
           <IdentifierGov aria-label="U.S. government information and services">
-            NASA&apos;s Goddard Space Flight Center, Public Inquiries, Mail Code
-            130, Greenbelt, MD 20771 USA{' '}
-            <a href="tel:1-301-286-2000">(301) 286-2000</a>
-            <br />
             Looking for U.S. government information and services?{' '}
             <a rel="external" href="https://www.usa.gov">
               Visit USA.gov
