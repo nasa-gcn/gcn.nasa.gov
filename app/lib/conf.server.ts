@@ -14,4 +14,4 @@
  * FIXME: this should be parameterized for dev, test, and prod deployments,
  * all of which will eventually have independent OIDC providers.
  */
-export const COGNITO_USER_POOL_ID = 'us-east-1_37HQxlQvW'
+export const COGNITO_USER_POOL_ID = 'us-east-1_TpnV4ajcP'
