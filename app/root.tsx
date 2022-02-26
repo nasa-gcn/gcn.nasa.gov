@@ -337,6 +337,14 @@ function Document({ children }: { children: ReactNode }) {
                 Privacy Policy
               </IdentifierLink>
             </IdentifierLinkItem>
+            <IdentifierLinkItem>
+              <IdentifierLink
+                rel="external"
+                href="https://www.nasa.gov/vulnerability-disclosure-policy"
+              >
+                Vulnerability Disclosure Policy
+              </IdentifierLink>
+            </IdentifierLinkItem>
           </IdentifierLinks>
           <IdentifierGov aria-label="U.S. government information and services">
             Looking for U.S. government information and services?{' '}
