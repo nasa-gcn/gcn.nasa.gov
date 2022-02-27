@@ -107,3 +107,11 @@ a[rel~='external'] {
 .active {
   @extend .usa-current;
 }
+
+/*
+ * Disabled link visited color in contact links
+ */
+
+.contact-link a:visited {
+  @include u-text($theme-link-color);
+}

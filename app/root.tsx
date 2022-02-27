@@ -23,9 +23,7 @@ import {
   GridContainer,
   Header,
   IconBugReport,
-  IconComment,
   IconGithub,
-  IconList,
   Identifier,
   IdentifierGov,
   IdentifierIdentity,
@@ -40,6 +38,7 @@ import {
   Title,
   NavDropDownButton,
   Menu,
+  IconHelp,
 } from '@trussworks/react-uswds'
 
 import { getLogoutURL, storage } from '~/lib/auth.server'
@@ -110,17 +109,19 @@ function ContactLink({
   icon: ReactNode
 }) {
   return (
-    <Grid mobileLg={{ col: 6 }} desktop={{ col: 3 }}>
+    <Grid
+      tablet={{ col: true }}
+      className="contact-link padding-y-1 tablet:padding-0"
+    >
       <div className="usa-media-block">
-        <div className="usa-media-block__img circle-6 bg-primary-light display-flex flex-row flex-align-center flex-justify-center">
-          <a href={href}>{icon}</a>
+        <div className="usa-media-block__img circle-6 bg-accent-cool-dark display-flex flex-row flex-align-center flex-justify-center">
+          {icon}
         </div>
         <div className="usa-media-block_body">
           {headline}{' '}
-          <a className="usa-link" href={href}>
-            {children}
-          </a>
-          .
+          <div className="display-block tablet:display-inline">
+            <a href={href}>{children}</a>.
+          </div>
         </div>
       </div>
     </Grid>
@@ -228,36 +229,29 @@ function Document({ children }: { children: ReactNode }) {
           <GridContainer>{children}</GridContainer>
         </section>
         <Identifier>
-          <div className="usa-footer__primary-section text-ink padding-3">
+          <div className="usa-footer__secondary-section text-ink padding-3">
             <GridContainer>
               <Grid row gap>
                 <ContactLink
                   href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn"
-                  icon={<IconComment size={4} color={'white'} />}
-                  headline="Questions or Comments?"
+                  icon={<IconHelp size={4} color={'white'} />}
+                  headline="Questions or comments?"
                 >
                   Contact GCN directly
                 </ContactLink>
                 <ContactLink
+                  href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov/issues"
+                  icon={<IconBugReport size={4} color={'white'} />}
+                  headline="Have you found a bug in GCN?"
+                >
+                  Open an issue
+                </ContactLink>
+                <ContactLink
                   href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov"
                   icon={<IconGithub size={4} color={'white'} />}
-                  headline="Running into an issue?"
+                  headline="Want to contribute code to GCN?"
                 >
-                  Reference the GCN Github
-                </ContactLink>
-                <ContactLink
-                  href="/bugreport"
-                  icon={<IconBugReport size={4} color={'white'} />}
-                  headline="Observed something that seems broken or inaccurate?"
-                >
-                  Report a Bug
-                </ContactLink>
-                <ContactLink
-                  href="/docs/changes"
-                  icon={<IconList size={4} color={'white'} />}
-                  headline="Latest updates are recorded on the"
-                >
-                  Change Log
+                  Get involved on GitHub
                 </ContactLink>
               </Grid>
             </GridContainer>
