@@ -147,6 +147,9 @@ function Document({ children }: { children: ReactNode }) {
         <Links />
       </head>
       <body>
+        <a className="usa-skipnav" href="#main-content">
+          Skip to main content
+        </a>
         <GovBanner />
         <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
         <Header basic className="usa-header usa-header--dark">
@@ -225,7 +228,7 @@ function Document({ children }: { children: ReactNode }) {
             />
           </div>
         </Header>
-        <section className="usa-section">
+        <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
         </section>
         <Identifier>
