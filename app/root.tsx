@@ -11,6 +11,7 @@ import {
   useCatch,
   useLoaderData,
   useLocation,
+  useTransition,
 } from 'remix'
 
 import { ReactNode, useState } from 'react'
@@ -45,6 +46,7 @@ import { getLogoutURL, storage } from '~/lib/auth.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 import logo from './img/logo.svg'
+import TopBarProgress from 'react-topbar-progress-indicator'
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
@@ -128,12 +130,21 @@ function ContactLink({
   )
 }
 
+TopBarProgress.config({
+  barColors: {
+    '0': '#e52207',
+    '0.5': '#ffffff',
+    '1.0': '#0050d8',
+  },
+})
+
 function Document({ children }: { children: ReactNode }) {
   const location = useLocation()
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
+  const transition = useTransition()
 
   const pathMatches = (path: string) =>
     location.pathname === path || location.pathname.startsWith(`${path}/`)
@@ -150,6 +161,7 @@ function Document({ children }: { children: ReactNode }) {
         <a className="usa-skipnav" href="#main-content">
           Skip to main content
         </a>
+        {transition.state !== 'idle' && <TopBarProgress />}
         <GovBanner />
         <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
         <Header basic className="usa-header usa-header--dark">
