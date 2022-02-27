@@ -232,7 +232,7 @@ function Document({ children }: { children: ReactNode }) {
           <GridContainer>{children}</GridContainer>
         </section>
         <Identifier>
-          <div className="usa-footer__secondary-section text-ink padding-3">
+          <div className="usa-footer__secondary-section text-ink">
             <GridContainer>
               <Grid row gap>
                 <ContactLink
