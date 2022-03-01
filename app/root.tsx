@@ -255,14 +255,14 @@ function Document({ children }: { children: ReactNode }) {
                   Contact GCN directly
                 </ContactLink>
                 <ContactLink
-                  href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov/issues"
+                  href="https://github.com/tachgsfc/gcn.nasa.gov/issues"
                   icon={<IconBugReport size={4} color={'white'} />}
                   headline="Have you found a bug in GCN?"
                 >
                   Open an issue
                 </ContactLink>
                 <ContactLink
-                  href="https://github.com/tachgsfc/www.gcn.gsfc.nasa.gov"
+                  href="https://github.com/tachgsfc/gcn.nasa.gov"
                   icon={<IconGithub size={4} color={'white'} />}
                   headline="Want to contribute code to GCN?"
                 >
@@ -281,7 +281,7 @@ function Document({ children }: { children: ReactNode }) {
                 />
               </IdentifierLogo>
             </IdentifierLogos>
-            <IdentifierIdentity domain="www.gcn.gsfc.nasa.gov">
+            <IdentifierIdentity domain="gcn.nasa.gov">
               A service of the{' '}
               <a
                 rel="external"
