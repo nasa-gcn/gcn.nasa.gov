@@ -95,7 +95,7 @@ function Document({ children }: { children: ReactNode }) {
   const data = useLoaderData()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
-  const onClick = (): void => setExpanded((prvExpanded) => !prvExpanded)
+  const onClick = () => setExpanded((prvExpanded) => !prvExpanded)
   const transition = useTransition()
 
   const pathMatches = (path: string) =>
