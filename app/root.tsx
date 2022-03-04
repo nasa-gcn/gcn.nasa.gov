@@ -1,10 +1,8 @@
 import {
-  Link,
   Links,
   LinksFunction,
   LiveReload,
   Meta,
-  NavLink,
   Outlet,
   Scripts,
   ScrollRestoration,
@@ -13,23 +11,13 @@ import {
   useLocation,
   useTransition,
 } from 'remix'
-import { ReactNode, useState } from 'react'
+import { ReactNode } from 'react'
 import type { LoaderFunction, MetaFunction } from 'remix'
-import {
-  GovBanner,
-  GridContainer,
-  Header,
-  NavMenuButton,
-  PrimaryNav,
-  Title,
-  NavDropDownButton,
-  Menu,
-} from '@trussworks/react-uswds'
+import { GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
+import { Header } from './components/Header'
 import { getLogoutURL, storage } from '~/lib/auth.server'
 import highlightStyle from 'highlight.js/styles/github.css'
-import logo from './img/logo.svg'
-import TopBarProgress from 'react-topbar-progress-indicator'
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
@@ -50,6 +38,11 @@ export const links: LinksFunction = () => [
     sizes: `${size}x${size}`,
   })),
 ]
+
+interface LoaderData {
+  email?: string
+  logoutURL?: string
+}
 
 export const loader: LoaderFunction = async function ({ request }) {
   const session = await storage.getSession(request.headers.get('Cookie'))
@@ -82,24 +75,10 @@ export default function App() {
   )
 }
 
-TopBarProgress.config({
-  barColors: {
-    '0': '#e52207',
-    '0.5': '#ffffff',
-    '1.0': '#0050d8',
-  },
-})
-
 function Document({ children }: { children: ReactNode }) {
   const location = useLocation()
-  const data = useLoaderData()
-  const [expanded, setExpanded] = useState(false)
-  const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
-  const onClick = () => setExpanded((prvExpanded) => !prvExpanded)
+  const loaderData = useLoaderData<LoaderData>()
   const transition = useTransition()
-
-  const pathMatches = (path: string) =>
-    location.pathname === path || location.pathname.startsWith(`${path}/`)
 
   return (
     <html lang="en-US">
@@ -110,88 +89,11 @@ function Document({ children }: { children: ReactNode }) {
         <Links />
       </head>
       <body>
-        <a className="usa-skipnav" href="#main-content">
-          Skip to main content
-        </a>
-        {transition.state !== 'idle' && <TopBarProgress />}
-        <GovBanner />
-        <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
-        <Header basic className="usa-header usa-header--dark">
-          <div className="usa-nav-container">
-            <div className="usa-navbar">
-              <Title>
-                <Link to="/">
-                  <img id="site-logo" src={logo} alt="NASA logo" />
-                  <span id="site-title">General Coordinates Network</span>
-                </Link>
-              </Title>
-              <NavMenuButton onClick={onClick} label="Menu" />
-            </div>
-            <PrimaryNav
-              mobileExpanded={expanded}
-              items={[
-                <NavLink
-                  className="usa-nav__link"
-                  to="/missions"
-                  key="/missions"
-                >
-                  Missions
-                </NavLink>,
-                <NavLink className="usa-nav__link" to="/notices" key="/notices">
-                  Notices
-                </NavLink>,
-                <NavLink
-                  className="usa-nav__link"
-                  to="/circulars"
-                  key="/circulars"
-                >
-                  Circulars
-                </NavLink>,
-                <NavLink className="usa-nav__link" to="/docs" key="/docs">
-                  Documentation
-                </NavLink>,
-                data?.email ? (
-                  <>
-                    <NavDropDownButton
-                      className={pathMatches('/user') ? 'active' : undefined}
-                      type="button"
-                      key="user"
-                      label={data.email}
-                      isOpen={userMenuIsOpen}
-                      onToggle={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                      menuId="user"
-                    />
-                    <Menu
-                      id="user"
-                      isOpen={userMenuIsOpen}
-                      items={[
-                        <Link
-                          key="/user/client_credentials"
-                          to="/user/client_credentials"
-                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                        >
-                          Client Credentials
-                        </Link>,
-                        <a
-                          key="logout"
-                          href={data.logoutURL}
-                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                        >
-                          Sign Out
-                        </a>,
-                      ]}
-                    />
-                  </>
-                ) : (
-                  <a className="usa-nav__link" href="/login" key="/login">
-                    Sign in / Sign up
-                  </a>
-                ),
-              ]}
-              onToggleMobileNav={onClick}
-            />
-          </div>
-        </Header>
+        <Header
+          pathname={location.pathname}
+          loading={transition.state !== 'idle'}
+          {...loaderData}
+        />
         <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
         </section>
