@@ -6,7 +6,7 @@
     "type": "git",
     "url": "tachgsfc/gcn.nasa.gov"
   },
-  "license": "",
+  "license": "NASA-1.3",
   "scripts": {
     "postinstall": "remix setup node",
     "build:remix": "cross-env NODE_ENV=production remix build",
