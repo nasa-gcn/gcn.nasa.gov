@@ -5,6 +5,8 @@ meta:
 
 # Welcome to the General Coordinates Network (GCN)
 
+<img src="https://gcn.gsfc.nasa.gov/GCN.gif" width="400" align="right"/>
+
 GCN is the NASA broker for transient alerts and community reports from space- and ground-based missions, observatories, and experiments used by the multimessenger and time-domain astrophysics communities. GCN is the primary distributer of detections and follow-up observations of Gamma-ray Bursts (GRBs), gravitational wave compact binary mergers, and high-energy neutrinos.
 
 The new GCN is the next generation transient alert system built upon the legacy of the Gamma-ray Coordinates Network (referred to throughout as GCN-Classic, formerly BACODINE/TAN), updated to use the latest technologies for transient distribution being utilized by the optical transient community and providing a robust reliable cloud-based system.
@@ -40,4 +42,8 @@ New system serving data in AVRO schema, which are JSON records. These schema hav
 
 ### GRB Name Server
 
+In parnership with the [Transient Name Server](https://www.wis-tns.org), the GCN team is building a GRB name server that will allow GRB-detecting instruments to both name GRBs and retreive names of already discovered GRBs. These names will be automatically ingested into GCN and associated with GCN notices and circular for the same event. This feature will be available soon.
+
 ### GCN Viewer
+
+The GCN Viewer provides a browse interface to the archive of the text versions of GCN Notices and Circulars organized by event and source type.
