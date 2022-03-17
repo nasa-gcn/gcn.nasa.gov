@@ -58,7 +58,6 @@ module.exports = {
   server: './server.js',
   ignoredRouteFiles: ['.*'],
   mdx: mdx,
-  publicPath: '/static/build/',
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
   // serverBuildPath: "server/index.js",

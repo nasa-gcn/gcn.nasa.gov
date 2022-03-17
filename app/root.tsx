@@ -34,7 +34,7 @@ export const meta: MetaFunction = () => {
 export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
-    href: '/static/css/custom.css',
+    href: '/_static/css/custom.css',
   },
   {
     rel: 'stylesheet',
@@ -42,7 +42,7 @@ export const links: LinksFunction = () => [
   },
   ...[16, 40, 57, 72, 114, 144, 192].map((size) => ({
     rel: 'icon',
-    href: `/static/img/favicons/favicon-${size}.png`,
+    href: `/_static/img/favicons/favicon-${size}.png`,
     sizes: `${size}x${size}`,
   })),
 ]
