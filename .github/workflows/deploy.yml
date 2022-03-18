@@ -19,4 +19,4 @@ jobs:
       - name: Build
         run: npm run build
       - name: Deploy
-        run: arc deploy --prune
+        run: arc deploy --prune --production
