@@ -27,8 +27,8 @@
     "@aws-sdk/client-cognito-identity-provider": "^3.47.0",
     "@aws-sdk/client-s3": "^3.49.0",
     "@aws-sdk/s3-request-presigner": "^3.49.0",
-    "@remix-run/architect": "^1.2.1",
-    "@remix-run/react": "^1.2.1",
+    "@remix-run/architect": "^1.3.2",
+    "@remix-run/react": "^1.3.2",
     "@trussworks/react-uswds": "^2.6.0",
     "cross-env": "^7.0.3",
     "generate-password": "^1.7.0",
@@ -42,25 +42,22 @@
     "react-tag-autocomplete": "^6.3.0",
     "react-topbar-progress-indicator": "^4.1.1",
     "remark-gfm": "^3.0.1",
-    "remix": "^1.2.1"
+    "remix": "^1.3.2"
   },
   "devDependencies": {
     "@architect/architect": "^10.0.0",
-    "@remix-run/dev": "^1.2.1",
+    "@remix-run/dev": "^1.3.2",
+    "@remix-run/eslint-config": "^1.3.2",
     "@types/architect__functions": "^3.13.6",
     "@types/memoizee": "^0.4.7",
     "@types/react": "^17.0.24",
     "@types/react-copy-to-clipboard": "^5.0.2",
     "@types/react-dom": "^17.0.9",
     "@types/react-tag-autocomplete": "^6.1.1",
-    "@typescript-eslint/eslint-plugin": "^5.10.0",
-    "@typescript-eslint/parser": "^5.10.0",
     "autoprefixer": "^10.4.2",
     "del": "^6.0.0",
-    "eslint": "^8.7.0",
+    "eslint": "^8.11.0",
     "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-react": "^7.28.0",
-    "eslint-plugin-react-hooks": "^4.3.0",
     "gulp": "^4.0.2",
     "gulp-postcss": "^9.0.1",
     "gulp-rename": "^2.0.0",
@@ -81,7 +78,7 @@
     "rehype-highlight": "^5.0.2",
     "rehype-slug": "^5.0.1",
     "sass": "^1.49.7",
-    "typescript": "^4.1.2",
+    "typescript": "^4.5.5",
     "uswds": "^2.13.1"
   },
   "engines": {
@@ -93,27 +90,11 @@
     "singleQuote": true
   },
   "eslintConfig": {
-    "root": true,
     "ignorePatterns": "*.mdx",
     "extends": [
-      "eslint:recommended",
-      "plugin:@typescript-eslint/recommended",
-      "plugin:react/recommended",
-      "plugin:react-hooks/recommended",
-      "plugin:react/jsx-runtime",
+      "@remix-run/eslint-config",
+      "@remix-run/eslint-config/node",
       "prettier"
-    ],
-    "parser": "@typescript-eslint/parser",
-    "plugins": [
-      "@typescript-eslint"
-    ],
-    "settings": {
-      "react": {
-        "version": "detect"
-      }
-    },
-    "env": {
-      "node": true
-    }
+    ]
   }
 }
