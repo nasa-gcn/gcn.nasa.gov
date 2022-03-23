@@ -7,6 +7,7 @@
  */
 
 // Use https URL for static bucket proxy
+// FIXME: remove once https://github.com/architect/package/pull/150 has been merged
 module.exports = function httpsBucketUrl(arc, sam) {
   sam.Resources.HTTP.Properties.DefinitionBody.paths['/_static/{proxy+}'].get[
     'x-amazon-apigateway-integration'
