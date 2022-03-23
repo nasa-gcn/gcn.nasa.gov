@@ -15,7 +15,6 @@ import type { SmithyException } from '@aws-sdk/types'
 import { tables } from '@architect/functions'
 import { generate } from 'generate-password'
 import { storage } from './auth.server'
-import { COGNITO_USER_POOL_ID } from './conf.server'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
 
@@ -109,7 +108,7 @@ export class ClientCredentialVendingMachine {
       AllowedOAuthScopes: [scope],
       ClientName: 'auto-generated',
       GenerateSecret: true,
-      UserPoolId: COGNITO_USER_POOL_ID,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
 
     let response
@@ -140,7 +139,7 @@ export class ClientCredentialVendingMachine {
   async #deleteClientCredentialInternal(client_id: string) {
     const command = new DeleteUserPoolClientCommand({
       ClientId: client_id,
-      UserPoolId: COGNITO_USER_POOL_ID,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
 
     try {

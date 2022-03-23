@@ -6,30 +6,16 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-/*
- * Cognito user pool ID.
- *
- * Note that this is safe to include in public code because it is public
- * knowledge anyway:
- * - When a user clicks "Login" on the site, they are redirected to the Cognito
- *   hosted UI. From the URL of the Cognito hosted UI, it is easy to work out
- *   the public OpenID Connect discovery URL, whose response discloses the
- *   Cognito user pool ID.
- * - The Cognito user pool ID is easily deduced from the OpenID token endpoint
- *   URL, which is public knowledge because it is part of the client
- *   configuration for end users.
- *
- * FIXME: this should be parameterized for dev, test, and prod deployments,
- * all of which will eventually have independent OIDC providers.
- *
- * FIXME: This constant is also stored in app/lib/conf.ts. Refactor and store
- * it in only one place.
- */
-const COGNITO_USER_POOL_ID = 'us-east-1_TpnV4ajcP'
-
 // Grant the Lambda function access to Cognito to run the credential vending machine.
 module.exports = function lambdaCognitoPermissions(arc, sam) {
-  const [region] = COGNITO_USER_POOL_ID.split('_')
+  // FIXME: Is there a better way to look up an arc env variable in a macro?
+  const user_pool_id =
+    sam.Resources.AnyCatchallHTTPLambda.Properties.Environment.Variables
+      .COGNITO_USER_POOL_ID
+  if (!user_pool_id)
+    throw new Error('Environment variable COGNITO_USER_POOL_ID must be set')
+
+  const [region] = user_pool_id.split('_')
   sam.Resources.Role.Properties.Policies.push({
     PolicyName: 'ArcCognitoIdpPolicy',
     PolicyDocument: {
@@ -41,7 +27,7 @@ module.exports = function lambdaCognitoPermissions(arc, sam) {
             'cognito-idp:DeleteUserPoolClient',
           ],
           Resource: {
-            'Fn::Sub': `arn:aws:cognito-idp:${region}:\${AWS::AccountId}:userpool/${COGNITO_USER_POOL_ID}`,
+            'Fn::Sub': `arn:aws:cognito-idp:${region}:\${AWS::AccountId}:userpool/${user_pool_id}`,
           },
         },
       ],

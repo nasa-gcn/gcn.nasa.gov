@@ -26,13 +26,15 @@
 
 import { redirect } from 'remix'
 import { createArcTableSessionStorage } from '@remix-run/architect'
-import { COGNITO_USER_POOL_ID } from './conf.server'
 import memoizee from 'memoizee'
 import { UnsecuredJWT } from 'jose'
 import { generators, Issuer } from 'openid-client'
 
-if (!process.env.SESSION_SECRET)
-  throw new Error('environment variable SESSION_SECRET must be defined')
+function getEnvOrDie(key: string) {
+  const result = process.env[key]
+  if (!result) throw new Error(`environment variable ${key} must be set`)
+  return result
+}
 
 // Short-lived session for storing the OIDC state and PKCE code verifier
 const oidcStorage = createArcTableSessionStorage({
@@ -42,7 +44,7 @@ const oidcStorage = createArcTableSessionStorage({
     // but that doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === 'production',
-    secrets: [process.env.SESSION_SECRET],
+    secrets: [getEnvOrDie('SESSION_SECRET')],
     sameSite: 'lax',
     path: '/',
     maxAge: 60,
@@ -62,7 +64,7 @@ export const storage = createArcTableSessionStorage({
     // but that doesn't work on localhost for Safari
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === 'production',
-    secrets: [process.env.SESSION_SECRET],
+    secrets: [getEnvOrDie('SESSION_SECRET')],
     sameSite: 'lax',
     path: '/',
     maxAge: 3600,
@@ -89,24 +91,19 @@ function getLogoutRedirectUri(request: Request) {
   return `${url.origin}/logout`
 }
 
-const providerUrl = `https://cognito-idp.${
-  COGNITO_USER_POOL_ID.split('_')[0]
-}.amazonaws.com/${COGNITO_USER_POOL_ID}/`
-
-function getClientId() {
-  const client_id = process.env.OIDC_CLIENT_ID
-  if (!client_id)
-    throw new Error('environment variable OIDC_CLIENT_ID must be non-null')
-  return client_id
-}
-
 const getOpenIDClient = memoizee(
   async function () {
+    const user_pool_id = getEnvOrDie('COGNITO_USER_POOL_ID')
+
+    const providerUrl = `https://cognito-idp.${
+      user_pool_id.split('_')[0]
+    }.amazonaws.com/${user_pool_id}/`
+
     const issuer = await Issuer.discover(providerUrl)
 
     return new issuer.Client({
-      client_id: getClientId(),
-      client_secret: process.env.OIDC_CLIENT_SECRET,
+      client_id: getEnvOrDie('OIDC_CLIENT_ID'),
+      client_secret: getEnvOrDie('OIDC_CLIENT_SECRET'),
       response_types: ['code'],
     })
   },
@@ -198,7 +195,7 @@ export async function getLogoutURL(request: Request) {
   const url = new URL(auth_endpoint)
   url.pathname = '/logout'
 
-  url.searchParams.set('client_id', getClientId())
+  url.searchParams.set('client_id', getEnvOrDie('OIDC_CLIENT_ID'))
   url.searchParams.set('logout_uri', getLogoutRedirectUri(request))
 
   return url.toString()
