@@ -6,6 +6,7 @@ on:
 jobs:
   deploy:
     strategy:
+      fail-fast: false
       matrix:
         env:
           - dev
