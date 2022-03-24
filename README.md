@@ -6,4 +6,4 @@ This is a proposed implementation of the General Coordinates Network web site us
 
 ## Getting started for local development
 
-See the [Contributing guide](https://d43fqxexhj.execute-api.us-east-1.amazonaws.com/docs/contributing) for instructions on getting started!
+See the [Contributing guide](https://fnk00qhbl0.execute-api.us-east-1.amazonaws.com/docs/contributing) for instructions on getting started!
