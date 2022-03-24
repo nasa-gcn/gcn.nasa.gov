@@ -152,6 +152,11 @@ export async function authorize(request: Request) {
       const code_verifier = oidcSession.get('code_verifier')
       const nonce = oidcSession.get('nonce')
       const state = oidcSession.get('state')
+      if (!code_verifier || !nonce || !state)
+        throw new Response(
+          'Your session timed out. Please try logging in again.',
+          { status: 400 }
+        )
       const oidcSessionDestroyPromise = oidcStorage.destroySession(oidcSession)
       return { oidcSessionDestroyPromise, code_verifier, nonce, state }
     })(),
