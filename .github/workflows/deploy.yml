@@ -5,7 +5,19 @@ on:
       - main
 jobs:
   deploy:
-    runs-on: aws
+    strategy:
+      matrix:
+        env:
+          - dev
+          - test
+          - prod
+    runs-on:
+      - aws
+      - ${{ matrix.env }}
+    environment:
+      name: ${{ matrix.env }}
+      # FIXME: fill in URL
+      # url: ...
     steps:
       - uses: actions/checkout@v2
       - name: Install Node.js
