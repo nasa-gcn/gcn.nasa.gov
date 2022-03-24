@@ -12,6 +12,7 @@ jobs:
           - dev
           - test
           - prod
+    concurrency: ${{ matrix.env }}
     runs-on:
       - aws
       - ${{ matrix.env }}
