@@ -13,7 +13,7 @@ The General Coordinates Network is the modern evolution of the Gamma-ray Coordin
 
 ## GCN Data Products:
 
-- **Notices:** Locations of GRBs and other Transients (e.g. gravitational waves, neutrinos, AGN flares) detected by space- and ground-based observatories (most in realtime while the source is still bursting and others are that delayed due to communications and processing).
+- **Notices**  are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
 - **Circulars:** Reports of follow-up observations made by ground-based and space-based optical, radio, X-ray, gamma-ray, TeV, and other particle observers.
 
 These two functions provide a one-stop shopping network for follow-up sites and GRB and transient researchers. The new GCN system uses the [Apache Kafka](https://kafka.apache.org) protocol for distributing Notices, and is operated within the Commercial managed Kafka system, [Confluent Platform](https://www.confluent.io), running on Amazon Web Services. The Kafka systems utilizes Hopclient, developed by SCiMMA, and ...
