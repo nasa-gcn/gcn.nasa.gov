@@ -13,17 +13,19 @@ The General Coordinates Network is the modern evolution of the Gamma-ray Coordin
 
 ## GCN Data Products:
 
-- **Notices**  are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
+- **Notices** are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
 - **Circulars** are human-readable, citable, rapid but generally not real-time, bulletins observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
 
-These two functions provide a one-stop shopping network for follow-up sites and GRB and transient researchers. The new GCN system uses the [Apache Kafka](https://kafka.apache.org) protocol for distributing Notices, and is operated within the Commercial managed Kafka system, [Confluent Platform](https://www.confluent.io), running on Amazon Web Services. The Kafka systems utilizes Hopclient, developed by SCiMMA, and ...
+These two functions provide a robust interface for follow-up sites and GRB and transient researchers. The new GCN system uses the [Apache Kafka](https://kafka.apache.org) protocol for distributing Notices, and is operated within the Commercial managed Kafka system, [Confluent Platform](https://www.confluent.io), running in the Cloud. The Kafka systems utilizes Hopclient, developed by [SCiMMA](https://scimma.org).
+
+Users benefit to transitioning to the new GCN kafka distribution because it provides self-service subscription management, strong guarantees that all alerts are delivered exactly once, and a secure connection.
 
 ## The GCN system has three ways to access the data
 
 | System                 | Transmission Protocols | Data Formats                   |
 | ---------------------- | ---------------------- | ------------------------------ |
-| GCN Classic            | Email, Socket          | Text, 160 byte Binary, VOevent |
-| GCN Classic over Kafka | Kafka                  | Text, 160 byte Binary, VOevent |
+| GCN Classic            | Email, Socket          | Text, 160 byte Binary, VOEvent |
+| GCN Classic over Kafka | Kafka                  | Text, 160 byte Binary, VOEvent |
 | GCN                    | Kafka                  | Avro/JSON                      |
 
 ### GCN Classic
