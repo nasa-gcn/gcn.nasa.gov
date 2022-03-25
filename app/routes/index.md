@@ -7,11 +7,11 @@ meta:
 
 <img src="https://gcn.gsfc.nasa.gov/GCN.gif" width="400" align="right" alt="GCN Diagram"/>
 
-GCN is the NASA collaboration platform for transient alerts and community reports from space- and ground-based missions, observatories, and experiments used by the multimessenger and time-domain astrophysics communities. GCN is the primary distributer of detections and follow-up observations of Gamma-ray Bursts (GRBs), gravitational wave compact binary mergers, and high-energy neutrinos.
+The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. GCN is the established platform for publishing discoveries and follow-up of gamma-ray bursts (GRBs), gravitational-wave (GW) compact binary mergers, and high-energy neutrinos. GCN distributes alerts between space- and ground-based observatories, physics experiments, and thousands of astronomers around the world.
 
-The new GCN is the next generation transient alert system built upon the legacy of the Gamma-ray Coordinates Network (referred to throughout as GCN Classic, formerly BACODINE/TAN), updated to use the modern technologies for transient distribution being utilized by the optical transient community and providing a robust reliable cloud-based system.
+The General Coordinates Network is the modern evolution of the Gamma-ray Coordinates Network (now referred to as GCN Classic, and formerly known as BACODINE/TAN), updated to use modern, open-source, reliable, and secure alert distribution technologies that have been established by the optical transient community.
 
-## The GCN system distributes:
+## GCN Data Products:
 
 - **Notices:** Locations of GRBs and other Transients (e.g. gravitational waves, neutrinos, AGN flares) detected by space- and ground-based observatories (most in realtime while the source is still bursting and others are that delayed due to communications and processing).
 - **Circulars:** Reports of follow-up observations made by ground-based and space-based optical, radio, X-ray, gamma-ray, TeV, and other particle observers.
@@ -23,14 +23,14 @@ These two functions provide a one-stop shopping network for follow-up sites and 
 | System                 | Transmission Protocols | Data Formats                   |
 | ---------------------- | ---------------------- | ------------------------------ |
 | GCN Classic            | Email, Socket          | Text, 160 byte Binary, VOevent |
-| GCN-Classic-over-Kafka | Kafka                  | Text, 160 byte Binary, VOevent |
-| GCN                    | Kafka                  | AVRO/JSON                      |
+| GCN Classic over Kafka | Kafka                  | Text, 160 byte Binary, VOevent |
+| GCN                    | Kafka                  | Avro/JSON                      |
 
 ### GCN Classic
 
 Legacy system run on premises at NASA/GSFC utilizing bespoke protocols for ingestion and distribution of transient data. New web application to modify your configurations coming soon. The GCN Classic system is being maintained until the community has fully transitioned to the new GCN
 
-### GCN-Classic-over-Kafka
+### GCN Classic over Kafka
 
 Transition system serving legacy GCN Classic formats via Kafka.
 
