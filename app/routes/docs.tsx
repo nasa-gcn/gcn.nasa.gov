@@ -24,9 +24,6 @@ export default function Docs() {
             <NavLink key="contributing" to="contributing">
               Contributing
             </NavLink>,
-            <NavLink key="changes" to="changes">
-              Change Log
-            </NavLink>,
           ]}
         />
       </div>
