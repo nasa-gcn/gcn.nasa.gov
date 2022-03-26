@@ -16,7 +16,7 @@ The General Coordinates Network is the modern evolution of the Gamma-ray Coordin
 - **Notices** are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
 - **Circulars** are human-readable, citable, rapid but generally not real-time, bulletins observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
 
-These two functions provide a robust interface for follow-up sites and GRB and transient researchers. The new GCN system uses the [Apache Kafka](https://kafka.apache.org) protocol for distributing Notices, and is operated within the Commercial managed Kafka system, [Confluent Platform](https://www.confluent.io), running in the Cloud. The Kafka systems utilizes Hopclient, developed by [SCiMMA](https://scimma.org).
+These two functions provide a robust interface for follow-up sites and GRB and transient researchers. The new GCN system uses the [Apache Kafka](https://kafka.apache.org) protocol for distributing Notices, and is operated within the Commercial managed Kafka system, [Confluent Platform](https://www.confluent.io), running in the Cloud. The Kafka system is compatible with hop-client, developed by [SCiMMA](https://scimma.org).
 
 Users benefit to transitioning to the new GCN kafka distribution because it provides self-service subscription management, strong guarantees that all alerts are delivered exactly once, and a secure connection.
 
