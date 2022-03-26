@@ -8,10 +8,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env:
-          - dev
-          - test
-          - prod
+        include:
+          - env: dev
+            url: dev.gcn.nasa.gov
+          - env: test
+            url: test.gcn.nasa.gov
+          - env: prod
+            url: gcn.nasa.gov
     concurrency: ${{ matrix.env }}
     runs-on:
       - aws

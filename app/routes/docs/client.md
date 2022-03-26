@@ -5,10 +5,7 @@ meta:
 
 # Client Configuration
 
-Note that these instructions will get a bit simpler once:
-
-1. Changes are in upstream packages and deployed, and
-2. We have nice domain names for all of our resources.
+Note that these instructions will get a bit simpler once changes are in upstream packages and deployed.
 
 ## hop-client
 
@@ -23,9 +20,9 @@ pip install --extra-index-url https://asd.gsfc.nasa.gov/Leo.Singer/pypi hop-clie
 $ hop auth add
 Username: ...
 Password: ...
-Hostname (may be empty): GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com
-Token endpoint (empty if not applicable): https://gcn-dev.auth.us-east-1.amazoncognito.com/oauth2/token
-$ hop subscribe kafka://GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com/foobar
+Hostname (may be empty): kafka.gcn.nasa.gov
+Token endpoint (empty if not applicable): https://auth.gcn.nasa.gov/oauth2/token
+$ hop subscribe kafka://kafka.gcn.nasa.gov/foobar
 ```
 
 ## adc-streaming
@@ -49,10 +46,10 @@ client_secret = '...'
 
 auth = SASLAuth(
     client_id, client_secret,
-    token_endpoint='https://gcn-dev.auth.us-east-1.amazoncognito.com/oauth2/token')
+    token_endpoint='https://auth.gcn.nasa.gov/oauth2/token')
 
 config = ConsumerConfig(
-    broker_urls=['GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com'],
+    broker_urls=['kafka.gcn.nasa.gov'],
     group_id=str(uuid4()), auth=auth)
 
 consumer = Consumer(config)
@@ -83,8 +80,8 @@ client_secret = '...'
 config = {
     'sasl.oauthbearer.client.id': client_id,
     'sasl.oauthbearer.client.secret': client_secret,
-    'bootstrap.servers': 'GcnKa-Front-IHEMYJWGHZXT-d9d5d67a1752570b.elb.us-east-1.amazonaws.com',
-    'sasl.oauthbearer.token.endpoint.url': 'https://gcn-dev.auth.us-east-1.amazoncognito.com/oauth2/token',
+    'bootstrap.servers': 'kafka.gcn.nasa.gov',
+    'sasl.oauthbearer.token.endpoint.url': 'https://auth.gcn.nasa.gov/oauth2/token',
     'sasl.mechanisms': 'OAUTHBEARER',
     'sasl.oauthbearer.method': 'oidc',
     'security.protocol': 'sasl_ssl',
