@@ -10,11 +10,11 @@ jobs:
       matrix:
         include:
           - env: dev
-            url: dev.gcn.nasa.gov
+            url: https://dev.gcn.nasa.gov
           - env: test
-            url: test.gcn.nasa.gov
+            url: https://test.gcn.nasa.gov
           - env: prod
-            url: gcn.nasa.gov
+            url: https://gcn.nasa.gov
     concurrency: ${{ matrix.env }}
     runs-on:
       - aws
