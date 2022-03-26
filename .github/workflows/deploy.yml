@@ -21,8 +21,7 @@ jobs:
       - ${{ matrix.env }}
     environment:
       name: ${{ matrix.env }}
-      # FIXME: fill in URL
-      # url: ...
+      url: ${{ matrix.url }}
     steps:
       - uses: actions/checkout@v2
       - name: Install Node.js
