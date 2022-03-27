@@ -172,7 +172,7 @@ export async function authorize(request: Request) {
   const claims = tokenSet.claims()
 
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
-    (group) => group.startsWith('gcn.gsfc.nasa.gov')
+    (group) => group.startsWith('gcn.nasa.gov')
   )
   const subiss = new UnsecuredJWT({ sub: claims.sub, iss: claims.iss })
   const session = await sessionPromise
