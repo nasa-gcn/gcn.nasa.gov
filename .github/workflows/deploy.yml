@@ -15,7 +15,6 @@ jobs:
             url: https://test.gcn.nasa.gov
           - env: prod
             url: https://gcn.nasa.gov
-    concurrency: ${{ matrix.env }}
     runs-on:
       - aws
       - ${{ matrix.env }}
