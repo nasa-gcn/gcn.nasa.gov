@@ -5,4 +5,4 @@ meta:
 
 # Missions
 
-This is the Missions page. Missions include...
+This is the Missions page.
