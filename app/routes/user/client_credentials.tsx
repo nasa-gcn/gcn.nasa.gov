@@ -130,7 +130,7 @@ export default function Index() {
   const [items, setItems] = useState(client_credentials)
   const defaultName = ''
   const [name, setName] = useState(defaultName)
-  const defaultScope = 'gcn.gsfc.nasa.gov/kafka-public-consumer'
+  const defaultScope = 'gcn.nasa.gov/kafka-public-consumer'
   const [scope, setScope] = useState(defaultScope)
 
   function handleDelete(client_id: string) {
