@@ -28,7 +28,7 @@ jobs:
         with:
           node-version: '16'
       - name: Install Architect
-        run: npm i -g 'git+https://github.com/lpsinger/architect.git#caret-versions' 'git+https://github.com/lpsinger/hydrate.git#hydrate-preserve-overrides' aws-sdk
+        run: npm i -g @architect/architect aws-sdk
       - name: NPM Install
         run: npm ci
       - name: Build

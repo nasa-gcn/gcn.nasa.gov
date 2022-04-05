@@ -20,10 +20,8 @@
     "prepare:husky": "husky install",
     "prepare": "run-p prepare:*"
   },
-  "overrides": {
-    "@architect/functions": "5.0.2"
-  },
   "dependencies": {
+    "@architect/functions": "^5.0.2",
     "@aws-sdk/client-cognito-identity-provider": "^3.47.0",
     "@remix-run/architect": "^1.3.2",
     "@remix-run/react": "^1.3.2",
