@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import {
   Grid,
   GridContainer,
