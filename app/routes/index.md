@@ -36,16 +36,8 @@ Legacy system run on premises at NASA/GSFC utilizing bespoke protocols for inges
 
 Transition system serving legacy GCN Classic formats via Kafka.
 
-### GCN
+## Coming Soon
 
-New system serving data in AVRO schema, which are JSON records. These schema have been formatted to provide uniformity between instruments wherever possible making it easier to compare records across missions. GCN provides both instrument specific topics as well as combined event based topics.
+The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn) is an interactive, searchable, filterable index of all GCN Notices and Circulars, updated in real time. In the near future, it will be integrated with this web site.
 
-## Other Components of the New GCN
-
-### GRB Name Server
-
-In parnership with the [Transient Name Server](https://www.wis-tns.org), the GCN team is building a GRB name server that will allow GRB-detecting instruments to both name GRBs and retreive names of already discovered GRBs. These names will be automatically ingested into GCN and associated with GCN notices and circular for the same event. This feature will be available soon.
-
-### GCN Viewer
-
-The GCN Viewer provides a browse interface to the archive of the text versions of GCN Notices and Circulars organized by event and source type.
+See the [GCN Road Map](docs/roadmap) for features that are coming soon to GCN.

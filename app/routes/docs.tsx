@@ -24,6 +24,9 @@ export default function Docs() {
             <NavLink key="contributing" to="contributing">
               Contributing
             </NavLink>,
+            <NavLink key="roadmap" to="roadmap">
+              Road Map
+            </NavLink>,
           ]}
         />
       </div>
