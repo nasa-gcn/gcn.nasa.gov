@@ -7,7 +7,7 @@
  */
 
 import { useState, useRef } from 'react'
-
+import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Alert,
   Button,
@@ -17,14 +17,12 @@ import {
   Modal,
   ModalFooter,
   ModalHeading,
-  ModalRef,
   ModalToggleButton,
   Table,
   TextInput,
 } from '@trussworks/react-uswds'
-
-import { useLoaderData, LoaderFunction, MetaFunction } from 'remix'
-
+import type { LoaderFunction, MetaFunction } from 'remix'
+import { useLoaderData } from 'remix'
 import { CopyableCode } from '~/components/CopyableCode'
 import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
 

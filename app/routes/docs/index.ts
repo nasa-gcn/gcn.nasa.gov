@@ -6,7 +6,8 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { LoaderFunction, redirect } from 'remix'
+import type { LoaderFunction } from 'remix'
+import { redirect } from 'remix'
 
 export const loader: LoaderFunction = () => redirect('/docs/about')
 

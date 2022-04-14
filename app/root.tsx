@@ -8,7 +8,6 @@
 
 import {
   Links,
-  LinksFunction,
   LiveReload,
   Meta,
   Outlet,
@@ -19,8 +18,8 @@ import {
   useLocation,
   useTransition,
 } from 'remix'
-import { ReactNode } from 'react'
-import type { LoaderFunction, MetaFunction } from 'remix'
+import type { ReactNode } from 'react'
+import type { LoaderFunction, MetaFunction, LinksFunction } from 'remix'
 import { GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'

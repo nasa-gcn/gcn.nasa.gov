@@ -77,17 +77,11 @@ export const storage = createArcTableSessionStorage({
 
 function getAuthRedirectUri(request: Request) {
   const url = new URL(request.url)
-  // FIXME: Remove this line once the following issue is fixed.
-  // https://github.com/remix-run/remix/issues/1536
-  if (process.env.ARC_SANDBOX) url.protocol = 'http'
   return `${url.origin}/auth`
 }
 
 function getLogoutRedirectUri(request: Request) {
   const url = new URL(request.url)
-  // FIXME: Remove this line once the following issue is fixed.
-  // https://github.com/remix-run/remix/issues/1536
-  if (process.env.ARC_SANDBOX) url.protocol = 'http'
   return `${url.origin}/logout`
 }
 

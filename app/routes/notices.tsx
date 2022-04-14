@@ -7,13 +7,15 @@ import {
   IconClose,
   Tag,
 } from '@trussworks/react-uswds'
-import { ReactNode, useEffect, useRef, useState } from 'react'
-import ReactTags, {
+import type { ReactNode } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import type {
   SuggestionComponentProps,
   Tag as ReactTag,
   TagComponentProps,
 } from 'react-tag-autocomplete'
-import { MetaFunction } from 'remix'
+import ReactTags from 'react-tag-autocomplete'
+import type { MetaFunction } from 'remix'
 
 export const meta: MetaFunction = () => ({
   title: 'GCN - Notices',

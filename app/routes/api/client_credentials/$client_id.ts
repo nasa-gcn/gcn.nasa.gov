@@ -6,8 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { ActionFunction } from 'remix'
-
+import type { ActionFunction } from 'remix'
 import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
 
 export const action: ActionFunction = async ({ params, request }) => {
