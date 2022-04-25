@@ -12,7 +12,7 @@ import {
   Alert,
   Button,
   Dropdown,
-  IconDelete,
+  Icon,
   Label,
   Modal,
   ModalFooter,
@@ -87,7 +87,7 @@ function ClientCredential(props: ClientCredentialProps) {
           opener
         >
           <big>
-            <IconDelete />
+            <Icon.Delete />
           </big>
         </ModalToggleButton>
 
@@ -252,7 +252,7 @@ export default function Index() {
       </Modal>
 
       {items.some((item) => item.client_secret) ? (
-        <Alert type="success" heading="Your new client credential was created.">
+        <Alert type="success" headingLevel="h3" heading="Your new client credential was created.">
           Make sure that you copy the client secret. It will only be shown once.
         </Alert>
       ) : null}
