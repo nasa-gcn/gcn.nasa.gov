@@ -7,7 +7,7 @@
  */
 
 import { SideNav } from '@trussworks/react-uswds'
-import { NavLink, Outlet } from 'remix'
+import { NavLink, Outlet } from '@remix-run/react'
 
 export default function Docs() {
   return (

@@ -23,8 +23,9 @@
   "dependencies": {
     "@architect/functions": "^5.0.2",
     "@aws-sdk/client-cognito-identity-provider": "^3.47.0",
-    "@remix-run/architect": "^1.3.5",
-    "@remix-run/react": "^1.3.5",
+    "@remix-run/architect": "^1.4.1",
+    "@remix-run/node": "^1.4.1",
+    "@remix-run/react": "^1.4.1",
     "@trussworks/react-uswds": "^2.6.0",
     "cross-env": "^7.0.3",
     "generate-password": "^1.7.0",
@@ -38,12 +39,12 @@
     "react-tag-autocomplete": "^6.3.0",
     "react-topbar-progress-indicator": "^4.1.1",
     "remark-gfm": "^3.0.1",
-    "remix": "^1.3.5"
+    "remix": "^1.4.1"
   },
   "devDependencies": {
     "@architect/architect": "^10.0.0",
-    "@remix-run/dev": "^1.3.5",
-    "@remix-run/eslint-config": "^1.3.5",
+    "@remix-run/dev": "^1.4.1",
+    "@remix-run/eslint-config": "^1.4.1",
     "@types/architect__functions": "^3.13.6",
     "@types/memoizee": "^0.4.7",
     "@types/react": "^17.0.24",

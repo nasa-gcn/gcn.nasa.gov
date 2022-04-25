@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Link, NavLink } from 'remix'
+import { Link, NavLink } from '@remix-run/react'
 import { useState } from 'react'
 import {
   GovBanner,

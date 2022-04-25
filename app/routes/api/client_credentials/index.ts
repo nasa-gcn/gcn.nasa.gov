@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import type { ActionFunction, LoaderFunction } from 'remix'
+import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
 
 export const loader: LoaderFunction = async ({ request }) => {

@@ -15,7 +15,7 @@ import type {
   TagComponentProps,
 } from 'react-tag-autocomplete'
 import ReactTags from 'react-tag-autocomplete'
-import type { MetaFunction } from 'remix'
+import type { MetaFunction } from '@remix-run/node'
 
 export const meta: MetaFunction = () => ({
   title: 'GCN - Notices',

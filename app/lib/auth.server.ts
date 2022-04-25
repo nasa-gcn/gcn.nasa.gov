@@ -24,7 +24,7 @@
 //    - the user's email address (shown in page header)
 //    - the user's group memberships (needed for client credential vending machine)
 
-import { redirect } from 'remix'
+import { redirect } from '@remix-run/node'
 import { createArcTableSessionStorage } from '@remix-run/architect'
 import memoizee from 'memoizee'
 import { UnsecuredJWT } from 'jose'

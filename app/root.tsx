@@ -17,9 +17,13 @@ import {
   useLoaderData,
   useLocation,
   useTransition,
-} from 'remix'
+} from '@remix-run/react'
 import type { ReactNode } from 'react'
-import type { LoaderFunction, MetaFunction, LinksFunction } from 'remix'
+import type {
+  LoaderFunction,
+  MetaFunction,
+  LinksFunction,
+} from '@remix-run/node'
 import { GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'

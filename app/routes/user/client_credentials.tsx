@@ -21,8 +21,8 @@ import {
   Table,
   TextInput,
 } from '@trussworks/react-uswds'
-import type { LoaderFunction, MetaFunction } from 'remix'
-import { useLoaderData } from 'remix'
+import type { LoaderFunction, MetaFunction } from '@remix-run/node'
+import { useLoaderData } from '@remix-run/react'
 import { CopyableCode } from '~/components/CopyableCode'
 import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
 

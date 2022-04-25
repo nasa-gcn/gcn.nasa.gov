@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import type { LoaderFunction } from 'remix'
+import type { LoaderFunction } from '@remix-run/node'
 import { authorize } from '~/lib/auth.server'
 export const loader: LoaderFunction = ({ request }) => authorize(request)
 
