@@ -5,7 +5,12 @@ meta:
 
 # Welcome to the General Coordinates Network (GCN)
 
-<img src="https://gcn.gsfc.nasa.gov/GCN.gif" width="400" align="right" alt="GCN Diagram"/>
+<img
+  src="https://gcn.gsfc.nasa.gov/GCN.gif"
+  width="400"
+  align="right"
+  alt="GCN Diagram"
+/>
 
 The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. GCN is the established platform for publishing discoveries and follow-up of gamma-ray bursts (GRBs), gravitational-wave (GW) compact binary mergers, and high-energy neutrinos. GCN distributes alerts between space- and ground-based observatories, physics experiments, and thousands of astronomers around the world.
 
