@@ -76,7 +76,7 @@
     "rehype-slug": "^5.0.1",
     "sass": "^1.49.7",
     "typescript": "^4.5.5",
-    "uswds": "^2.13.1"
+    "uswds": "2.13.2"
   },
   "engines": {
     "node": ">=14"
