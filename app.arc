@@ -24,6 +24,7 @@ architecture arm64
 memory 256
 
 @macros
+workaroundArchitect153  # Work around https://github.com/architect/package/pull/153
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
 lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
 manualStaticBucketPolicy  # Mission Cloud Platform requires bucket policies to be set manually
