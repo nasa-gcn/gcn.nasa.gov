@@ -137,6 +137,21 @@ a[rel~='external'] {
 }
 
 /*
+ * Accented cards
+ */
+
+.card-accent-cool {
+  & .usa-card__container {
+    @include u-border('accent-cool');
+    @include u-bg('accent-cool');
+  }
+
+  & .usa-card__footer {
+    @include u-bg('white');
+  }
+}
+
+/*
  * react-tag-autocomplete styles, adapted from
  * https://github.com/i-like-robots/react-tags/blob/main/example/styles.css
  */
