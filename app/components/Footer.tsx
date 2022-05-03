@@ -23,7 +23,6 @@ import {
   IdentifierMasthead,
   IconHelp,
 } from '@trussworks/react-uswds'
-import logo from '../img/logo.svg'
 
 function ContactLink({
   children,
@@ -90,7 +89,7 @@ export function Footer() {
         <IdentifierLogos>
           <IdentifierLogo href="https://www.nasa.gov">
             <img
-              src={logo}
+              src="/_static/img/logo.svg"
               className="usa-identifier__logo-img"
               alt="NASA logo"
             />
