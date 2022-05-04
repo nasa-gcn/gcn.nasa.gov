@@ -17,7 +17,6 @@ import {
   NavDropDownButton,
   Menu,
 } from '@trussworks/react-uswds'
-import logo from '../img/logo.svg'
 import TopBarProgress from 'react-topbar-progress-indicator'
 
 TopBarProgress.config({
@@ -59,7 +58,11 @@ export function Header({
           <div className="usa-navbar">
             <Title>
               <Link to="/">
-                <img id="site-logo" src={logo} alt="NASA logo" />
+                <img
+                  id="site-logo"
+                  src="/_static/img/logo.svg"
+                  alt="NASA logo"
+                />
                 <span id="site-title">General Coordinates Network</span>
               </Link>
             </Title>
