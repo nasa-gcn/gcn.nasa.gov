@@ -6,7 +6,7 @@ meta:
 # Fermi Gamma-ray Space Telescope
 
 <img 
-  src="/_static/img/missions/Fermi_Gamma-ray_Space_Telescope_logo.png"
+  src="/_static/img/Fermi_Gamma-ray_Space_Telescope_logo.svg"
   width="200"
   align="right"
   alt="Fermi Gamma-ray Space Telescope logo"

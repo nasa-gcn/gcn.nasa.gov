@@ -6,7 +6,7 @@ meta:
 # Neil Gehrels Swift Observatory
 
 <img 
-  src="/_static/img/missions/swift.gif"
+  src="/_static/img/logo_swift.gif"
   width="200"
   align="right"
   alt="Swift Observatory logo"
