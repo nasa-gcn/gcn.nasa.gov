@@ -27,6 +27,36 @@ export default function Docs() {
             <NavLink key="lvk" to="lvk">
               LIGO/Virgo/KAGRA
             </NavLink>,
+            <NavLink key="icecube" to="icecube">
+              IceCube
+            </NavLink>,
+            <NavLink key="hawc" to="hawc">
+              HAWC
+            </NavLink>,
+            <NavLink key="calet" to="calet">
+              CALET
+            </NavLink>,
+            <NavLink key="maxi" to="maxi">
+              MAXI
+            </NavLink>,
+            <NavLink key="integral" to="integral">
+              INTEGRAL
+            </NavLink>,
+            <NavLink key="agile" to="agile">
+              AGILE
+            </NavLink>,
+            <NavLink key="konus" to="konus">
+              Wind-KONUS
+            </NavLink>,
+            <NavLink key="moa" to="moa">
+              MOA
+            </NavLink>,
+            <NavLink key="snews" to="snews">
+              SNEWS
+            </NavLink>,
+            <NavLink key="sksn" to="sksn">
+              SKSN
+            </NavLink>,
           ]}
         />
       </div>
