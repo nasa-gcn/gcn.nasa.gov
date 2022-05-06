@@ -1,8 +1,8 @@
 ---
 meta:
-  title: GCN - Missions/Instruments/Facilities
+  title: GCN - Missions, Instruments, and Facilities
 ---
 
-# Missions/Instruments/Facilities
+# Missions, Instruments, and Facilities
 
 Observatories that generate GCN notices for transient alerts, as consumed by the science community. Explore mission resources and GCN notice details in left menu.

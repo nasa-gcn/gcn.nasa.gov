@@ -15,8 +15,8 @@ export default function Docs() {
       <div className="desktop:grid-col-4">
         <SideNav
           items={[
-            <NavLink key="gcnmissions" to="gcnmissions">
-              Missions/Instruments/Facilities
+            <NavLink key="missions" to="missions">
+              Missions, Instruments, and Facilities
             </NavLink>,
             <NavLink key="fermi" to="fermi">
               Fermi Gamma-ray Space Telescope
