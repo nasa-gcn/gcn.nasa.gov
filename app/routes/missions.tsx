@@ -22,7 +22,7 @@ export default function Docs() {
               Fermi Gamma-ray Space Telescope
             </NavLink>,
             <NavLink key="swift" to="swift">
-              Neil Gehrel's Swift Observatory
+              Neil Gehrels Swift Observatory
             </NavLink>,
             <NavLink key="lvk" to="lvk">
               LIGO/Virgo/KAGRA
