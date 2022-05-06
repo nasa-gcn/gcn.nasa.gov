@@ -9,7 +9,7 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 
-export const loader: LoaderFunction = () => redirect('/missions/gcnmissions')
+export const loader: LoaderFunction = () => redirect('/missions/missions')
 
 // FIXME: workaround for https://github.com/remix-run/remix/issues/1828.
 // Resource routes (without browser code) don't get server pruning done.
