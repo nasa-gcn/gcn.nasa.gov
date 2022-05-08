@@ -17,7 +17,7 @@ GCN [Client Configuration](/docs/client) documentation for [**hop-client**](/doc
 
 ## Contributing
 
-GCN is an open source project built in [Remix](https://remix.run), a full stack web framework. Have an idea to make GCN better and want to contribute, or have a bug to report? Head over to our [contributing](/docs/contributing) documentation for our quick start instructions.
+The GCN website is an open source project built in [Remix](https://remix.run), a full stack web framework. Have an idea to make GCN better and want to contribute, or have a bug to report? Head over to our [contributing](/docs/contributing) documentation for our quick start instructions.
 
 ## Roadmap
 
