@@ -13,12 +13,12 @@ GCN is the established platform for publishing discoveries and follow-up of gamm
 
 ## Client Configuration
 
-GCN [Client Configuration](https://gcn.nasa.gov/docs/client) documentation for [**hop-client**](https://gcn.nasa.gov/docs/client#hop-client), [**adc-streaming**](https://gcn.nasa.gov/docs/client#adc-streaming) and [**confluent-kafka**](https://gcn.nasa.gov/docs/client#confluent-kafka).
+GCN [Client Configuration](/docs/client) documentation for [**hop-client**](/docs/client#hop-client), [**adc-streaming**](/docs/client#adc-streaming) and [**confluent-kafka**](/docs/client#confluent-kafka).
 
 ## Contributing
 
-GCN is an open source project built in [Remix](https://remix.run), a full stack web framework. Have an idea to make GCN better and want to contribute, or have a bug to report? Head over to our [contributing](https://gcn.nasa.gov/docs/contributing) documentation for our quick start instructions.
+GCN is an open source project built in [Remix](https://remix.run), a full stack web framework. Have an idea to make GCN better and want to contribute, or have a bug to report? Head over to our [contributing](/docs/contributing) documentation for our quick start instructions.
 
 ## Roadmap
 
-Interested in our roadmap? Check out our [roadmap documentation](https://gcn.nasa.gov/docs/roadmap) for more information, including details on the Unified Schema and the GRB Name Server.
+Check out our [roadmap](/docs/roadmap) for features that are under development, including the Unified Schema and the GRB Name Server.
