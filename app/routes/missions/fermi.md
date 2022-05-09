@@ -31,14 +31,14 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 | Type | Contents | Latency |
 | - | - | - |
-| Fermi-GBM Alert | Trigger info | ~5 s |
-| Fermi-GBM Flight Position | Flight localization, classification | ~10 s |
-| Fermi-GBM Ground Position | Updated ground localization using finer lookup tables | 20–300 s |
-| Fermi-GBM Final Position | Final trigger localization | 15 min |
-| Fermi-GBM Subthreshold | Ground pipeline detected signals | 0.5–6 h |
-| Fermi-LAT Position Initial | Onboard LAT detection, initial position| 2–4 s |
-| Fermi-LAT Position Update | Updated onboard localization with more data | 2–32 s|
-| Fermi-LAT Position Ground | Ground localization of onboard trigger| 8–12 h |
-| Fermi-LAT Offline Position | Ground-detected GRB localization | 8–12 h|
-| Fermi-LAT Transient | Unknown source transient | 1 d |
-| Fermi-LAT Monitor | Known source flare | 1 d |
+| `FERMI_GBM_ALERT` | Trigger info | ~5 s |
+| `FERMI_GBM_FLT_POS` | Flight localization, classification | ~10 s |
+| `FERMI_GBM_GND_POS` | Updated ground localization using finer lookup tables | 20–300 s |
+| `FERMI_GBM_FIN_POS` | Final trigger localization | 15 min |
+| `FERMI_GBM_SUBTHRESH` | Ground pipeline detected signals | 0.5–6 h |
+| `FERMI_LAT_POS_INI` | Onboard LAT detection, initial position| 2–4 s |
+| `FERMI_LAT_POS_UPD` | Updated onboard localization with more data | 2–32 s|
+| `FERMI_LAT_GND` | Ground localization of onboard trigger| 8–12 h |
+| `FERMI_LAT_OFFLINE` | Ground-detected GRB localization | 8–12 h|
+| `FERMI_LAT_TRANS` | Unknown source transient | 1 d |
+| `FERMI_LAT_MONITOR` | Known source flare | 1 d |
