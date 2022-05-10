@@ -25,7 +25,7 @@ The GCN Circulars list is independent from the machine-readable [GCN Notices (TO
 
 To receive or submit to this GCN Circular list, you must first be added to the vetted list, managed by Scott Barthelmy. The purpose is to prevent spam and other unwanted messages. There are no restrictions to being added to the list.
 
-You can request access through the [sign up page](https://gcn.gsfc.nasa.gov/gcn_circ_signup.html) [TODO:Will change?] or by sending an e-mail to scott@lheamail.gsfc.nasa.gov. The following information is required:
+You can request access through the [sign up page](https://gcn.gsfc.nasa.gov/gcn_circ_signup.html) [TODO:Will change?] or by sending an e-mail to scott@lheamail.gsfc.nasa.gov [TODO: scott@milkyway.gsfc.nasa.gov?]. The following information is required:
 
 1) Name —e.g. *John Doe*.
 2) Institutional or project affiliation —e.g. *GSFC*.
@@ -50,7 +50,7 @@ Include example
 <a name="subject-word-list"></a>
 Case sensitive
 
- > <table style="width:100%">
+ <table style="width:100%">
   <tr>
     <td>GRB</td>
     <td>grb</td>
@@ -103,7 +103,7 @@ Case sensitive
 
 
 
-## Style
+## Style guidelines
  
 Brief, link to Eric's details?
  
