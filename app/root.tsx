@@ -24,11 +24,21 @@ import type {
   MetaFunction,
   LinksFunction,
 } from '@remix-run/node'
-import { GridContainer } from '@trussworks/react-uswds'
+import { GovBanner, GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { getLogoutURL, storage } from '~/lib/auth.server'
 import highlightStyle from 'highlight.js/styles/github.css'
+import TopBarProgress from 'react-topbar-progress-indicator'
+import { DevBanner } from './components/DevBanner'
+
+TopBarProgress.config({
+  barColors: {
+    '0': '#e52207',
+    '0.5': '#ffffff',
+    '1.0': '#0050d8',
+  },
+})
 
 export const meta: MetaFunction = () => {
   return { title: 'GCN - General Coordinates Network' }
@@ -53,17 +63,21 @@ export const links: LinksFunction = () => [
 interface LoaderData {
   email?: string
   logoutURL?: string
+  hostname: string
 }
 
 export const loader: LoaderFunction = async function ({ request }) {
+  const url = new URL(request.url)
+  const result = { hostname: url.hostname }
   const session = await storage.getSession(request.headers.get('Cookie'))
   if (session.get('subiss')) {
     return {
       email: session.get('email'),
       logoutURL: await getLogoutURL(request),
+      ...result,
     }
   } else {
-    return {}
+    return result
   }
 }
 
@@ -100,11 +114,13 @@ function Document({ children }: { children: ReactNode }) {
         <Links />
       </head>
       <body>
-        <Header
-          pathname={location.pathname}
-          loading={transition.state !== 'idle'}
-          {...loaderData}
-        />
+        <a className="usa-skipnav" href="#main-content">
+          Skip to main content
+        </a>
+        {transition.state !== 'idle' && <TopBarProgress />}
+        <GovBanner />
+        <DevBanner hostname={loaderData.hostname} />
+        <Header pathname={location.pathname} {...loaderData} />
         <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
         </section>

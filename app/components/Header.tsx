@@ -9,7 +9,6 @@
 import { Link, NavLink } from '@remix-run/react'
 import { useState } from 'react'
 import {
-  GovBanner,
   Header as USWDSHeader,
   NavMenuButton,
   PrimaryNav,
@@ -17,23 +16,12 @@ import {
   NavDropDownButton,
   Menu,
 } from '@trussworks/react-uswds'
-import TopBarProgress from 'react-topbar-progress-indicator'
-
-TopBarProgress.config({
-  barColors: {
-    '0': '#e52207',
-    '0.5': '#ffffff',
-    '1.0': '#0050d8',
-  },
-})
 
 export function Header({
-  loading,
   pathname,
   email,
   logoutURL,
 }: {
-  loading: boolean
   pathname: string
   email?: string
   logoutURL?: string
@@ -47,11 +35,6 @@ export function Header({
 
   return (
     <>
-      <a className="usa-skipnav" href="#main-content">
-        Skip to main content
-      </a>
-      {loading && <TopBarProgress />}
-      <GovBanner />
       <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
       <USWDSHeader basic className="usa-header usa-header--dark">
         <div className="usa-nav-container">
