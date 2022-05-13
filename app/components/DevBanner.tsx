@@ -8,10 +8,10 @@ export function DevBanner({ hostname }: { hostname: string }) {
   let heading: string
   let description: string
 
-  if (hostname === `dev.${hostname}`) {
+  if (hostname === `dev.${production_hostname}`) {
     heading = 'Development'
     description = 'the internal development version'
-  } else if (hostname === `test.${hostname}`) {
+  } else if (hostname === `test.${production_hostname}`) {
     heading = 'Testing'
     description = 'the public testing version'
   } else if (hostname === 'localhost') {
