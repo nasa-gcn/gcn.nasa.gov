@@ -23,24 +23,9 @@ The GCN Circulars list is independent from the machine-readable [GCN Notices (TO
 
 ## Subscribing
 
-To receive or submit to this GCN Circular list, you must first be added to the vetted list, managed by Scott Barthelmy. The purpose is to prevent spam and other unwanted messages. There are no restrictions to being added to the list.
+To receive or submit to this GCN Circular list, you must first be added to the vetted list. The purpose is to prevent spam and other unwanted messages. Incoming emails from an address that is not part of the list will be rejected. 
 
-You can request access through the [sign up page](https://gcn.gsfc.nasa.gov/gcn_circ_signup.html) [TODO:Will change?] or by sending an e-mail to scott@lheamail.gsfc.nasa.gov [TODO: scott@milkyway.gsfc.nasa.gov?]. The following information is required:
-
-1) Name —e.g. *John Doe*.
-2) Institutional or project affiliation —e.g. *GSFC*.
-3) Email address you want to receive the Circulars —e.g. *jdoe@virgo&#46;gsfc.nasagov*
-4) Email account name you will be using to submit —e.g. jdoe
-5) Email domain from which you will be submitting —e.g. llnl.gov
-6) A flag to enable (1) or disable (0) the entry to receive Circulars   —e.g. 1
-7) Comments. Please include one sentence about why you are signing up and the type of work you do.
-
-
-Your name and affiliations will appear on the outgoing Circulars you submit. 
-
-The email you use during submission —account and domain— is used in the validation checking process for incoming Circulars. Incoming emails from an address that is not part of the list will be rejected. It is recommended that you send an email Scott Barthelmy \<scott@milkyway.gsfc.nasa.gov\> who will confirm that your account name and domain are correct.
-
-The email address from which you submit circulars can be different from the one where you want to received them. One person is allowed to have multiple entries in this list.
+You can request access through the [sign up page](https://gcn.gsfc.nasa.gov/gcn_circ_signup.html). There are no restrictions to being added to the list.   It is recommended that you send an email Scott Barthelmy \<scott.d.barthelmy@nasa.gov\> who will confirm that your account name and domain are correct.
 
 ## Submitting procedure
 
@@ -100,8 +85,6 @@ Case sensitive
     <td></td>
   </tr>
 </table>
-
-
 
 ## Style guidelines
  
