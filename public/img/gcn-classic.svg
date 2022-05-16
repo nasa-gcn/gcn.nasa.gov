@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 26.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 274.48 282.47" enable-background="new 0 0 274.48 282.47" xml:space="preserve">
+	 viewBox="0 0 347.84 282.47" enable-background="new 0 0 347.84 282.47" xml:space="preserve">
 <font horiz-adv-x="1024">
 <!-- Copyright (c) 2000-2010, Ben Weiner (ben@readingtype.org.uk), with Reserved Font Name Geo. -->
 <!-- Copyright: Copyright 2022 Adobe System Incorporated. All rights reserved. -->
@@ -141,5 +141,22 @@
 	<polygon fill="#F68D64" points="255.22,170.78 75.39,170.78 75.39,152.4 255.22,152.4 255.22,142.48 274.48,161.75 255.22,181.01 	
 		"/>
 	<text transform="matrix(1 0 0 1 148.1978 165.8412)" font-family="'SourceSansPro-Semibold'" font-size="14px">Email</text>
+</g>
+<g>
+	<path fill="#666766" d="M347.84,69.42c0-9.98-7.16-22.27-16.63-24.03c-1.18-0.22-2.4-0.01-3.49,0.51c-2.55,1.22-5.4,1.91-8.41,1.91
+		s-5.86-0.69-8.41-1.91c-1.09-0.52-2.31-0.74-3.49-0.51c-9.46,1.77-16.63,14.06-16.63,24.03H347.84z"/>
+	<circle fill="#666766" cx="319.31" cy="28.22" r="15.99"/>
+</g>
+<g>
+	<path fill="#666766" d="M347.84,172.08c0-9.98-7.16-22.27-16.63-24.03c-1.18-0.22-2.4-0.01-3.49,0.51
+		c-2.55,1.22-5.4,1.91-8.41,1.91s-5.86-0.69-8.41-1.91c-1.09-0.52-2.31-0.74-3.49-0.51c-9.46,1.77-16.63,14.06-16.63,24.03H347.84z"
+		/>
+	<circle fill="#666766" cx="319.31" cy="130.88" r="15.99"/>
+</g>
+<g>
+	<path fill="#666766" d="M347.84,273.74c0-9.98-7.16-22.27-16.63-24.03c-1.18-0.22-2.4-0.01-3.49,0.51
+		c-2.55,1.22-5.4,1.91-8.41,1.91s-5.86-0.69-8.41-1.91c-1.09-0.52-2.31-0.74-3.49-0.51c-9.46,1.77-16.63,14.06-16.63,24.03H347.84z"
+		/>
+	<circle fill="#666766" cx="319.31" cy="232.53" r="15.99"/>
 </g>
 </svg>
