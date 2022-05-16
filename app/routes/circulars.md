@@ -122,7 +122,8 @@ TODO: Link to Eric's guidelines? Or copy-paste them here?
 
 ## Archive
 
-- [Real-time archive of all GCN Circulars by date](https://gcn.gsfc.nasa.gov/gcn3_archive.html)
-- [GCN Circulars by object](https://gcn.gsfc.nasa.gov/selected.html)
+GCN Circular are atuomatically archived. There are various ways to access past Circular:
 
-
+- The list of all Circulars [in serial number order](https://gcn.gsfc.nasa.gov/gcn3_archive.html).
+- A human-curated list of Circulars grouped [by object](https://gcn.gsfc.nasa.gov/selected.html).
+- The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn), which aumatically ingests and parses GCN Circulars, and fills a searchable relational database. 
