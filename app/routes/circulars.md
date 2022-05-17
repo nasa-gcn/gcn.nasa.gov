@@ -15,18 +15,16 @@ Circulars allow the GRB community to **email** messages to a central queue where
 The GCN Circulars list is independent from the machine-readable [GCN Notices (TODO:link)](notices) system.
 
 
- > **Quick [submission](#circular-submission) refresher**
+ > **Quick [submission](#submission-process) refresher**
  > 1. Email your submission to gcncirc@capella2.gsfc.nasa.gov.
  > 2. The email subject-line must contain at least one of the strings in the [list of instruments and source types](#subject-word-list).
 
-<a name="subscribing"></a>
 ## Subscribing
 
 To receive or submit to this GCN Circular list, you must first be added to the vetted list. The purpose is to prevent spam and other unwanted messages. Incoming emails from an address that is not part of the list will be rejected. 
 
 You can request access through the [sign up page](https://gcn.gsfc.nasa.gov/gcn_circ_signup.html). There are no restrictions to being added to the list.   It is recommended that you send an email to [Scott Barthelmy](mailto:scott.d.barthelmy@nasa.gov) who will confirm that your account name and domain are correct.
 
-<a name="circular-submission"></a>
 ## Submission process
 
 To submit a GCN Circular send an email to gcncirc@capella2.gsfc.nasa.gov. It is recommended that you copy [Scott Barthelmy](mailto:scott.d.barthelmy@nasa.gov).
@@ -110,7 +108,6 @@ You will receive either a *success* or a *problem* report:
    - If your submission was rejected, within a minute you will be notified via email along with an explanation of the possible reasons
      for this and what remedies you can employ to allow a successful resubmission.
 
-<a name="style-guidelines"></a> 
 ## Style guidelines
 
 TODO: Link to Eric's guidelines? Or copy-paste them here?
