@@ -13,12 +13,10 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
   useLoaderData,
   useLocation,
   useTransition,
 } from '@remix-run/react'
-import type { ReactNode } from 'react'
 import type {
   LoaderFunction,
   MetaFunction,
@@ -81,26 +79,7 @@ export const loader: LoaderFunction = async function ({ request }) {
   }
 }
 
-export function CatchBoundary() {
-  const caught = useCatch()
-  return (
-    <Document>
-      <h1>
-        Error {caught.status}: {caught.statusText}
-      </h1>
-    </Document>
-  )
-}
-
 export default function App() {
-  return (
-    <Document>
-      <Outlet />
-    </Document>
-  )
-}
-
-function Document({ children }: { children: ReactNode }) {
   const location = useLocation()
   const loaderData = useLoaderData<LoaderData>()
   const transition = useTransition()
@@ -122,7 +101,9 @@ function Document({ children }: { children: ReactNode }) {
         <DevBanner hostname={loaderData.hostname} />
         <Header pathname={location.pathname} {...loaderData} />
         <section className="usa-section main-content">
-          <GridContainer>{children}</GridContainer>
+          <GridContainer>
+            <Outlet />
+          </GridContainer>
         </section>
         <Footer />
         <ScrollRestoration />
