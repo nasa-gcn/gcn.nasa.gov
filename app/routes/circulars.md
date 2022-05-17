@@ -12,7 +12,7 @@ GCN Circulars are rapid astronomical bulletins submitted by and distributed to c
 
 Circulars allow the GRB community to **email** messages to a central queue where they are automatically vetted and distributed to the entire GRB community. These prose-style messages allow the community to coordinate and make optimum use of its limited resources. 
 
-The GCN Circulars list is independent from the machine-readable [GCN Notices (TODO:link)](notices.md) system.
+The GCN Circulars list is independent from the machine-readable [GCN Notices (TODO:link)](notices) system.
 
 
  > **Quick [submission](#circular-submission) refresher**
