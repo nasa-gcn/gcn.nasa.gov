@@ -70,6 +70,7 @@ gulp.task("copy-uswds-setup", () => {
 gulp.task("copy-nasawds-setup", () => {
   return gulp
     .src(`${nasawds}/src/theme/**/**`)
+    .pipe(replace('$theme-show-compile-warnings: true;', '$theme-show-compile-warnings: true; $theme-show-notifications: false;'))
     .pipe(gulp.dest(`${PROJECT_SASS_SRC}`));
 });
 
