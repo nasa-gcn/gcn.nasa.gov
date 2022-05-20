@@ -4,6 +4,19 @@
  * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
  *
  * SPDX-License-Identifier: NASA-1.3
+ *
+ *
+ *                                +-------------+
+ *                                | TACH! TACH! |
+ *                                +-------------+
+ *                         \\    /
+ *                 \\      (o>  /
+ *                 (o>     //\
+ *             ____(()_____V_/_____
+ *                 ||      ||
+ *                         ||
+ *
+ *
  */
 
 import {
