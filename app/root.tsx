@@ -42,6 +42,7 @@ import { getLogoutURL, storage } from '~/lib/auth.server'
 import highlightStyle from 'highlight.js/styles/github.css'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { DevBanner } from './components/DevBanner'
+import { useSpinDelay } from 'spin-delay'
 
 TopBarProgress.config({
   barColors: {
@@ -96,6 +97,7 @@ export default function App() {
   const location = useLocation()
   const loaderData = useLoaderData<LoaderData>()
   const transition = useTransition()
+  const showProgress = useSpinDelay(transition.state !== 'idle')
 
   return (
     <html lang="en-US">
@@ -109,7 +111,7 @@ export default function App() {
         <a className="usa-skipnav" href="#main-content">
           Skip to main content
         </a>
-        {transition.state !== 'idle' && <TopBarProgress />}
+        {showProgress && <TopBarProgress />}
         <GovBanner />
         <DevBanner hostname={loaderData.hostname} />
         <Header pathname={location.pathname} {...loaderData} />
