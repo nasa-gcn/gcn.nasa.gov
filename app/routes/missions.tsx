@@ -15,7 +15,7 @@ export default function Docs() {
       <div className="desktop:grid-col-4">
         <SideNav
           items={[
-            <NavLink key="missions" to="missions">
+            <NavLink key="." to="." end>
               Missions, Instruments, and Facilities
             </NavLink>,
             <NavLink key="fermi" to="fermi">
