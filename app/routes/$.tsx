@@ -1,6 +1,6 @@
 import { ButtonGroup } from '@trussworks/react-uswds'
-import type { LoaderFunction } from 'remix'
-import { Link } from 'remix'
+import type { LoaderFunction } from '@remix-run/node'
+import { Link } from '@remix-run/react'
 
 export const loader: LoaderFunction = function () {
   throw new Response(null, { status: 404 })
