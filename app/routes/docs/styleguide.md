@@ -4,9 +4,9 @@ meta:
 ---
 
 import {
-  ProcessList,
-  ProcessListItem,
-  ProcessListHeading,
+ProcessList,
+ProcessListItem,
+ProcessListHeading,
 } from '@trussworks/react-uswds'
 
 ## Style Guide
