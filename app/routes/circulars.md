@@ -1,0 +1,102 @@
+---
+meta:
+  title: GCN - Circulars
+---
+
+import { SummaryBox } from '@trussworks/react-uswds'
+
+# GCN Circulars
+
+GCN Circulars are rapid astronomical bulletins submitted by and distributed to community members worldwide.
+
+- Circulars are **brief**, **citeable**, and **human-readable**.
+- Circulars can announce observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
+
+Circulars allow the GRB community to **email** messages to a central queue where they are automatically vetted and distributed to the entire GRB community. These prose-style messages allow the community to coordinate and make optimum use of its limited resources.
+
+The GCN Circulars list is independent from the machine-readable [GCN Notices (TODO:link)](notices) system.
+
+<SummaryBox heading="Summary">
+
+1. Email your submission to gcncirc@capella2.gsfc.nasa.gov.
+
+2. The email subject line must contain at least one of the strings in the [list of
+   instruments and source types](#subject-word-list).
+
+</SummaryBox>
+
+## Subscribing
+
+To receive or submit to this GCN Circular list, you must first be added to the vetted list. The purpose is to prevent spam and other unwanted messages. Incoming emails from an address that is not part of the list will be rejected.
+
+You can request access through the [sign up page](https://gcn.gsfc.nasa.gov/gcn_circ_signup.html). There are no restrictions to being added to the list. It is recommended that you send an email to [Scott Barthelmy](mailto:scott.d.barthelmy@nasa.gov) who will confirm that your account name and domain are correct.
+
+## Submission process
+
+To submit a GCN Circular send an email to gcncirc@capella2.gsfc.nasa.gov. It is recommended that you copy [Scott Barthelmy](mailto:scott.d.barthelmy@nasa.gov).
+
+Please follow the [style guidelines](/docs/styleguide). In particular, the email subject must contain at least one of the following case-sensitive strings:
+
+<ul className="grid-row usa-list usa-list--unstyled">
+  <li className="grid-col-2">AGILE</li>
+  <li className="grid-col-2">ANTARES</li>
+  <li className="grid-col-2">AXP</li>
+  <li className="grid-col-2">Chandra</li>
+  <li className="grid-col-2">Fermi</li>
+  <li className="grid-col-2">FXT</li>
+  <li className="grid-col-2">grb</li>
+  <li className="grid-col-2">GRB</li>
+  <li className="grid-col-2">GW</li>
+  <li className="grid-col-2">HAWC</li>
+  <li className="grid-col-2">HST</li>
+  <li className="grid-col-2">IBAS</li>
+  <li className="grid-col-2">IceCube</li>
+  <li className="grid-col-2">ICECUBE</li>
+  <li className="grid-col-2">ICECUBE</li>
+  <li className="grid-col-2">INTEGRAL</li>
+  <li className="grid-col-2">IPN</li>
+  <li className="grid-col-2">KONUS</li>
+  <li className="grid-col-2">LIGO</li>
+  <li className="grid-col-2">LVC</li>
+  <li className="grid-col-2">MAXI</li>
+  <li className="grid-col-2">RATIR</li>
+  <li className="grid-col-2">SDSS</li>
+  <li className="grid-col-2">SGR</li>
+  <li className="grid-col-2">Swift</li>
+  <li className="grid-col-2">SWIFT</li>
+  <li className="grid-col-2">Virgo</li>
+  <li className="grid-col-2">VLA</li>
+  <li className="grid-col-2">VLBI</li>
+  <li className="grid-col-2">XRB</li>
+  <li className="grid-col-2">XTR</li>
+</ul>
+
+A copy of the body of you email will be distributed along with the following header:
+
+```
+TITLE:   GCN CIRCULAR
+NUMBER:  <serial number>
+SUBJECT: <exact copy of your email subject>
+DATE:    <date and time>
+FROM:    <the name and email you used to register>
+```
+
+We will verify that you are a valid submitter. Make sure you are submitting your email from the address you used to [sign up](#subscribing).
+
+You will receive either a _success_ or a _problem_ report:
+
+- If you are valid submitter, within 2 to 3 minutes you will receive three emails as notification of success:
+  - An immediate email that your submission was a success
+  - A generic email message that your submission was successful and was distributed
+  - An email giving the number of recipients your Circular was distributed to and the time difference from first to last.
+    In addition, you will receive a copy of the outgoing Circular if you have elected to receive them.
+- If your submission was rejected, within a minute you will be notified via email along with an explanation of the possible reasons
+  for this and what remedies you can employ to allow a successful resubmission.
+
+## Archive
+
+GCN Circulars are atuomatically archived. There are various ways to access past Circulars:
+
+- The list of all Circulars [in serial number order](https://gcn.gsfc.nasa.gov/gcn3_archive.html).
+- A human-curated list of Circulars [grouped by object](https://gcn.gsfc.nasa.gov/selected.html).
+- The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn), which aumatically ingests and parses GCN Circulars, and fills out a searchable relational database.
