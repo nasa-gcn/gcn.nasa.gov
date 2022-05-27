@@ -5,4 +5,4 @@ meta:
 
 # Missions, Instruments, and Facilities
 
-Observatories that generate GCN notices for transient alerts, as consumed by the science community. Explore mission resources and GCN notice details in left menu.
+Details about the observatories and their instruments that generate GCN notices for transient alerts, including mission and instrument descriptions, links to archives and missions websites, and GCN notice types are describedin the pages accessible from the left menu.
