@@ -1,13 +1,7 @@
 ---
 meta:
-  title: GCN - Contributing
+  title: GCN - Circulars Style Guide
 ---
-
-import {
-ProcessList,
-ProcessListItem,
-ProcessListHeading,
-} from '@trussworks/react-uswds'
 
 ## Style Guide
 
