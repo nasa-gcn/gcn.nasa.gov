@@ -5,7 +5,66 @@ meta:
 
 ## Style Guide
 
-Every Circular begins with the header information described above, determined by the GCN system, the email subject line, and the approved submitted. The content within the circular should always begin with the ordered author list with affiliations. This is then followed by the scientific content.
+Every Circular begins with the header information. In the example below the Title, Number, Date, and From are added automatically by the GCN system. The GCN Circular Subject is taken from the email subject line from the submission process.
+
+The body of the email contains, in order, the author list, the scientific content, and then references or acknowledgements when necessary. Note below the submitter is an email from Kim Page, which is distinct from the lead author of J.D. Gropp.
+
+```
+TITLE:   GCN CIRCULAR
+NUMBER:  32060
+SUBJECT: GRB 220518A: Swift detection of a burst
+DATE:    22/05/18 06:47:24 GMT
+FROM:    Kim Page at U.of Leicester  <kimlpage1978@gmail.com>
+
+J.D. Gropp (PSU), K. L. Page (U Leicester),
+T. M. Parsotan (GSFC/UMBC/CRESSTII), B. Sbarufatti (PSU) and
+M. H. Siegel (PSU) report on behalf of the Neil Gehrels Swift
+Observatory Team:
+
+At 06:19:20 UT, the Swift Burst Alert Telescope (BAT) triggered and
+located GRB 220518A (trigger= 1107050).  Swift slewed immediately to the burst.
+The BAT on-board calculated location is
+RA, Dec 55.369, -47.571 which is
+   RA(J2000) = +03h 41m 29s
+   Dec(J2000) = -47d 34' 15"
+with an uncertainty of 3 arcmin (radius, 90% containment, including
+systematic uncertainty).  There are currently no BAT light curve data available
+at this time.
+
+The XRT began observing the field at 06:21:27.1 UT, 126.4 seconds after
+the BAT trigger. Using promptly downlinked data we find an uncatalogued
+X-ray source with an enhanced position: RA, Dec 55.34297, -47.58392
+which is equivalent to:
+   RA(J2000)  = 03h 41m 22.31s
+   Dec(J2000) = -47d 35' 02.1"
+with an uncertainty of 1.9 arcseconds (radius, 90% containment). This
+location is 78 arcseconds from the BAT onboard position, within the BAT
+error circle. This position may be improved as more data are received;
+the latest position is available at https://www.swift.ac.uk/sper.
+
+A power-law fit to a spectrum formed from promptly downlinked event
+data gives a column density in excess of the Galactic value (9.33 x
+10^19 cm^-2, Willingale et al. 2013), with an excess column of 5
+(+3.25/-2.72) x 10^21 cm^-2 (90% confidence).
+
+UVOT took a finding chart exposure of 150 seconds with the White filter
+starting 129 seconds after the BAT trigger. No credible afterglow candidate has
+been found in the initial data products. The 2.7'x2.7' sub-image covers none of
+the XRT error circle. The 8'x8' region for the list of sources generated
+on-board covers 100% of the XRT error circle. The list of sources is typically
+complete to about 18 mag. No correction has been made for the expected
+extinction corresponding to E(B-V) of 0.008.
+
+Burst Advocate for this burst is J.D. Gropp (jdg44 AT psu.edu).
+Please contact the BA by email if you require additional information
+regarding Swift followup of this burst. In extremely urgent cases, after
+trying the Burst Advocate, you can contact the Swift PI by phone (see
+Swift TOO web site for information: http://www.swift.psu.edu/)
+```
+
+The above Circular is a great example only the relevant information in the title and the content. Swift detection Circulars are generally longer than the style guide recommends due to reporting infrmation from three unique instruments, in this case two detections and one non-detection.
+
+This style guide contains information on how to properly prepare a GCN Circular for submission. Before your first submission, and especially when creating templates, please follow the guidlines below.
 
 - **One Event per Circular:** Each message should be limited to discussion of a single event, i.e. a GRB or a GW. Reporting multiple candidate counterparts is acceptable as this is observations specific to a single event. If you have observations on more than one event then you must divide them into multiple submissions. This allows for automated grouping of circulars by individual event.
 - **Near-Term**: Circulars must be timely. Their content must be relevant to inform potential additional observations for that specific event. A nominal working definition is a few weeks which is generally sufficient for GRBs and kilonovae; however, long-evolving transients allow for longer term consideration (e.g. the afterglow of GRB 170817A).
