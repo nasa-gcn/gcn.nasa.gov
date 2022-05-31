@@ -45,7 +45,7 @@ export const oidcStorage = createArcTableSessionStorage({
     secrets: [getEnvOrDie('SESSION_SECRET')],
     sameSite: 'lax',
     path: '/',
-    maxAge: 60,
+    maxAge: 300,
     httpOnly: true,
   },
   table: 'sessions',
