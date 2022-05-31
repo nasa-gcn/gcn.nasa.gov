@@ -8,7 +8,6 @@
 
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
-import { UnsecuredJWT } from 'jose'
 import { generators } from 'openid-client'
 import { getOpenIDClient, oidcStorage, storage } from './auth.server'
 
@@ -74,9 +73,8 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
       (group) => group.startsWith('gcn.nasa.gov')
     )
-    const subiss = new UnsecuredJWT({ sub: claims.sub, iss: claims.iss })
     const session = await sessionPromise
-    session.set('subiss', subiss.encode())
+    session.set('sub', claims.sub)
     session.set('email', claims.email)
     session.set('groups', groups)
 

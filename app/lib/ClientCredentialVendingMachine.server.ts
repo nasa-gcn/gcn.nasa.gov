@@ -24,18 +24,18 @@ const errorsAllowedInDev = [
 ]
 
 export class ClientCredentialVendingMachine {
-  #subiss: string
+  #sub: string
   #groups: string[]
 
-  private constructor(subiss: string, groups: string[]) {
-    this.#subiss = subiss
+  private constructor(sub: string, groups: string[]) {
+    this.#sub = sub
     this.#groups = groups
   }
 
   static async create(request: Request) {
     const user = await getUser(request)
     if (!user) throw new Response(null, { status: 403 })
-    return new this(user.subiss, user.groups)
+    return new this(user.sub, user.groups)
   }
 
   get groups() {
@@ -45,13 +45,14 @@ export class ClientCredentialVendingMachine {
   async getClientCredentials() {
     const db = await tables()
     const results = await db.client_credentials.query({
-      KeyConditionExpression: 'subiss = :subiss',
+      KeyConditionExpression: '#sub = :sub',
       ExpressionAttributeNames: {
         '#name': 'name',
         '#scope': 'scope',
+        '#sub': 'sub',
       },
       ExpressionAttributeValues: {
-        ':subiss': this.#subiss,
+        ':sub': this.#sub,
       },
       ProjectionExpression: 'client_id, #name, #scope',
     })
@@ -64,14 +65,14 @@ export class ClientCredentialVendingMachine {
     // Make sure that the user actually owns the given client ID before
     // we try to delete it
     const item = await db.client_credentials.get({
-      subiss: this.#subiss,
+      sub: this.#sub,
       client_id,
     })
     if (!item) throw new Response(null, { status: 404 })
 
     await Promise.all([
       this.#deleteClientCredentialInternal(client_id),
-      db.client_credentials.delete({ subiss: this.#subiss, client_id }),
+      db.client_credentials.delete({ sub: this.#sub, client_id }),
     ])
   }
 
@@ -91,7 +92,7 @@ export class ClientCredentialVendingMachine {
       name,
       client_id,
       scope,
-      subiss: this.#subiss,
+      sub: this.#sub,
     })
 
     return { name, client_id, client_secret, scope }

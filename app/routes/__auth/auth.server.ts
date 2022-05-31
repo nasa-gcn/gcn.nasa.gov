@@ -6,24 +6,6 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-// Authentication backend for GCN.
-//
-// The overall procedure is:
-//
-// 1. Complete OIDC authorization code flow with Cognito to get a secure JWT
-//    for the user.
-//
-// 2. Generate a unique and stable string to identify the user which serves
-//    as the primary key that identifies the user in our database. This key is
-//    called "subiss" and it is a combination of the "sub" and "iss" claims
-//    from the JWT. To convert it to a string, it is serialized as an unsecure
-//    JWT.
-//
-// 3. Store the following in the session:
-//    - subiss
-//    - the user's email address (shown in page header)
-//    - the user's group memberships (needed for client credential vending machine)
-
 import { createArcTableSessionStorage } from '@remix-run/architect'
 import memoizee from 'memoizee'
 import { Issuer } from 'openid-client'
