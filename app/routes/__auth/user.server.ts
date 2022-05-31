@@ -10,11 +10,11 @@ import { storage } from './auth.server'
 
 export async function getUser({ headers }: Request) {
   const session = await storage.getSession(headers.get('Cookie'))
-  const subiss = session.get('subiss') as string | null
+  const sub = session.get('sub') as string | null
   const email = session.get('email') as string
   const groups = session.get('groups') as string[]
 
-  if (!subiss) return null
+  if (!sub) return null
 
-  return { subiss, email, groups }
+  return { sub, email, groups }
 }
