@@ -51,9 +51,9 @@ LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/lvc.html)
 
-| Type              | Contents                                                                                      | Latency    |
-| ----------------- | --------------------------------------------------------------------------------------------- | ---------- |
-| `LVC_PRELIMINARY` | First Notice, Timestamp Alert, location probability sky map; all automated processing.           | 1–10 min   |
-| `LVC_INITIAL`     | Improved SkyMap now available (human-involved procesing).                                     | 4–24 h    |
-| `LVC_UPDATE`      | Ultimate refined skymap (more detailed off-line processing).                                  | ~1–7 d  |
-| `LVC_RETRACTION`  | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 h–1 d |
+| Type              | Contents                                                                                      | Latency  |
+| ----------------- | --------------------------------------------------------------------------------------------- | -------- |
+| `LVC_PRELIMINARY` | First Notice, Timestamp Alert, location probability sky map; all automated processing.        | 1–10 min |
+| `LVC_INITIAL`     | Improved SkyMap now available (human-involved procesing).                                     | 4–24 h   |
+| `LVC_UPDATE`      | Ultimate refined skymap (more detailed off-line processing).                                  | ~1–7 d   |
+| `LVC_RETRACTION`  | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 h–1 d  |
