@@ -21,6 +21,9 @@ export default function Docs() {
             <NavLink key="client" to="client">
               Client Configuration
             </NavLink>,
+            <NavLink key="styleguide" to="styleguide">
+              Circulars Style Guide
+            </NavLink>,
             <NavLink key="contributing" to="contributing">
               Contributing
             </NavLink>,
