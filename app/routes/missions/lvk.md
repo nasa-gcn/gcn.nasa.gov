@@ -5,24 +5,29 @@ meta:
 
 # Gravitational Wave Network
 
-<img 
-  src="/_static/img/ligo_logo.png"
-  width="200"
-  align="left"
-  alt="LIGO logo"
-/>
-<img 
-  src="/_static/img/egovirgo.jpg"
-  width="200"
-  align="center"
-  alt="Virgo logo"
-/>
-<img 
-  src="/_static/img/KAGRA-logo.svg"
-  width="200"
-  align="right"
-  alt="KAGRA logo"
-/>
+<div className="width-card-lg float-right">
+  <img 
+    src="/_static/img/lsc-logo.png"
+    alt="LIGO logo"
+  />
+  <img 
+    src="/_static/img/virgo-logo.png"
+    alt="Virgo logo"
+  />
+  <img 
+    src="/_static/img/kagra-logo.png"
+    alt="KAGRA logo"
+  />
+</div>
+
+**Planned Lifetime:** 2028+
+
+**End of Operations:** No specific requirement
+
+**Data Archive:**
+https://www.gw-openscience.org
+
+LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network. LIGO is operated by the National Science Foundation, Virgo by the European Gravitational Wave Observatory, and KAGRA by the ministry of Education, Culture, Sports, Science and Technology-Japan (MEXT). Together they detect, localize, and characterize the coalescence of compact binary mergers, continuous gravitational waves, and burst gravitational waves.
 
 | Interferometers                                                                        | Location                                       | Size | Joined GW Network | BNS Range (O4) |
 | -------------------------------------------------------------------------------------- | ---------------------------------------------- | ---- | ----------------- | -------------- |
@@ -38,15 +43,6 @@ O4 predictions from [Abbott et al. 2020, LRR](https://link.springer.com/article/
   aligh="center"
   alt="LVK Observing Timeline"
 />
-
-**Planned Lifetime:** 2028+
-
-**End of Operations:** No specific requirement
-
-**Data Archive:**
-https://www.gw-openscience.org
-
-LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network. LIGO is operated by the National Science Foundation, Virgo by the European Gravitational Wave Observatory, and KAGRA by the ministry of Education, Culture, Sports, Science and Technology-Japan (MEXT). Together they detect, localize, and characterize the coalescence of compact binary mergers, continuous gravitational waves, and burst gravitational waves.
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/lvc.html)
