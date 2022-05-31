@@ -46,7 +46,7 @@ O4 predictions from [Abbott et al. 2020, LRR](https://link.springer.com/article/
 **Data Archive:**
 https://www.gw-openscience.org
 
-LIGO, Virgo, and KAGRA comprise the advanced gravitational wave network. LIGO is operated by the National Science Foundation, Virgo by the European Gravitational Wave Observatory, and KAGRA by the ministry of Education, Culture, Sports, Science and Technology-Japan (MEXT). Together they detect, localize, and characterize the coalescence of compact binary mergers, continuous gravitational waves, and burst gravitational waves.
+LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network. LIGO is operated by the National Science Foundation, Virgo by the European Gravitational Wave Observatory, and KAGRA by the ministry of Education, Culture, Sports, Science and Technology-Japan (MEXT). Together they detect, localize, and characterize the coalescence of compact binary mergers, continuous gravitational waves, and burst gravitational waves.
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/lvc.html)
