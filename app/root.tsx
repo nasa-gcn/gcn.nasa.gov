@@ -38,11 +38,11 @@ import type {
 import { GovBanner, GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { getLogoutURL, storage } from '~/lib/auth.server'
 import highlightStyle from 'highlight.js/styles/github.css'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { DevBanner } from './components/DevBanner'
 import { useSpinDelay } from 'spin-delay'
+import { getUser } from './routes/__auth/user.server'
 
 TopBarProgress.config({
   barColors: {
@@ -74,18 +74,16 @@ export const links: LinksFunction = () => [
 
 interface LoaderData {
   email?: string
-  logoutURL?: string
   hostname: string
 }
 
 export const loader: LoaderFunction = async function ({ request }) {
   const url = new URL(request.url)
   const result = { hostname: url.hostname }
-  const session = await storage.getSession(request.headers.get('Cookie'))
-  if (session.get('subiss')) {
+  const user = await getUser(request)
+  if (user) {
     return {
-      email: session.get('email'),
-      logoutURL: await getLogoutURL(request),
+      email: user.email,
       ...result,
     }
   } else {
