@@ -14,7 +14,7 @@ import {
 import type { SmithyException } from '@aws-sdk/types'
 import { tables } from '@architect/functions'
 import { generate } from 'generate-password'
-import { storage } from './auth.server'
+import { getUser } from '~/routes/__auth/user.server'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
 
@@ -33,13 +33,9 @@ export class ClientCredentialVendingMachine {
   }
 
   static async create(request: Request) {
-    const session = await storage.getSession(request.headers.get('Cookie'))
-    const subiss = session.get('subiss')
-    const groups = session.get('groups')
-
-    if (!subiss) throw new Response(null, { status: 403 })
-
-    return new this(subiss, groups)
+    const user = await getUser(request)
+    if (!user) throw new Response(null, { status: 403 })
+    return new this(user.subiss, user.groups)
   }
 
   get groups() {
