@@ -9,7 +9,7 @@ Every Circular begins with the header information. In the example below the Titl
 
 The body of the email contains, in order, the author list, the scientific content, and then references or acknowledgements when necessary. Note below the submitter is an email from Kim Page, which is distinct from the lead author of J.D. Gropp.
 
-```
+```text
 TITLE:   GCN CIRCULAR
 NUMBER:  32060
 SUBJECT: GRB 220518A: Swift detection of a burst
