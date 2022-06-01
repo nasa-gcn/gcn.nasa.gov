@@ -4,6 +4,19 @@
  * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
  *
  * SPDX-License-Identifier: NASA-1.3
+ *
+ *
+ *                                +-------------+
+ *                                | TACH! TACH! |
+ *                                +-------------+
+ *                         \\    /
+ *                 \\      (o>  /
+ *                 (o>     //\
+ *             ____(()_____V_/_____
+ *                 ||      ||
+ *                         ||
+ *
+ *
  */
 
 import {
@@ -25,10 +38,11 @@ import type {
 import { GovBanner, GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { getLogoutURL, storage } from '~/lib/auth.server'
 import highlightStyle from 'highlight.js/styles/github.css'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { DevBanner } from './components/DevBanner'
+import { useSpinDelay } from 'spin-delay'
+import { getUser } from './routes/__auth/user.server'
 
 TopBarProgress.config({
   barColors: {
@@ -60,18 +74,16 @@ export const links: LinksFunction = () => [
 
 interface LoaderData {
   email?: string
-  logoutURL?: string
   hostname: string
 }
 
 export const loader: LoaderFunction = async function ({ request }) {
   const url = new URL(request.url)
   const result = { hostname: url.hostname }
-  const session = await storage.getSession(request.headers.get('Cookie'))
-  if (session.get('subiss')) {
+  const user = await getUser(request)
+  if (user) {
     return {
-      email: session.get('email'),
-      logoutURL: await getLogoutURL(request),
+      email: user.email,
       ...result,
     }
   } else {
@@ -83,6 +95,7 @@ export default function App() {
   const location = useLocation()
   const loaderData = useLoaderData<LoaderData>()
   const transition = useTransition()
+  const showProgress = useSpinDelay(transition.state !== 'idle')
 
   return (
     <html lang="en-US">
@@ -96,7 +109,7 @@ export default function App() {
         <a className="usa-skipnav" href="#main-content">
           Skip to main content
         </a>
-        {transition.state !== 'idle' && <TopBarProgress />}
+        {showProgress && <TopBarProgress />}
         <GovBanner />
         <DevBanner hostname={loaderData.hostname} />
         <Header pathname={location.pathname} {...loaderData} />

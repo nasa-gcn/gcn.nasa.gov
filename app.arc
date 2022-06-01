@@ -10,7 +10,7 @@ remix-gcn
 
 @tables
 client_credentials
-  subiss *String
+  sub *String
   client_id **String
 
 sessions

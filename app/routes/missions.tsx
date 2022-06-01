@@ -7,7 +7,7 @@
  */
 
 import { SideNav } from '@trussworks/react-uswds'
-import { NavLink, Outlet } from 'remix'
+import { NavLink, Outlet } from '@remix-run/react'
 
 export default function Docs() {
   return (
@@ -15,7 +15,7 @@ export default function Docs() {
       <div className="desktop:grid-col-4">
         <SideNav
           items={[
-            <NavLink key="missions" to="missions">
+            <NavLink key="." to="." end>
               Missions, Instruments, and Facilities
             </NavLink>,
             <NavLink key="fermi" to="fermi">
