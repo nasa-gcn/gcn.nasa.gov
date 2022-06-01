@@ -20,11 +20,9 @@ import {
 export function Header({
   pathname,
   email,
-  logoutURL,
 }: {
   pathname: string
   email?: string
-  logoutURL?: string
 }) {
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
@@ -92,22 +90,16 @@ export function Header({
                       >
                         Client Credentials
                       </Link>,
-                      logoutURL && (
-                        <a
-                          key="logout"
-                          href={logoutURL}
-                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                        >
-                          Sign Out
-                        </a>
-                      ),
+                      <Link key="logout" to="/logout">
+                        Sign Out
+                      </Link>,
                     ]}
                   />
                 </>
               ) : (
-                <a className="usa-nav__link" href="/login" key="/login">
+                <Link className="usa-nav__link" to="/login" key="/login">
                   Sign in / Sign up
-                </a>
+                </Link>
               ),
             ]}
             onToggleMobileNav={onClick}

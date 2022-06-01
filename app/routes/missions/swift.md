@@ -42,7 +42,7 @@ https://swift.gsfc.nasa.gov/archive/
 | `SWIFT_FOM_OBS` |14–41 s | 1–3′ | FOM decision: Observe or Not|
 | `SWIFT_SC_SLEW` |14–41 s | 1–3′ | Spacecraft decision: Slew or Not|
 | `SWIFT_XRT_POSITION` |30–80 s | &lt;7″ | XRT afterglow location|
-| `SWIFT_XRT_POS_NACK` |30–80 s | N/A | Could not find an XRT afterglow location|
+| `SWIFT_XRT_CENTROID` |30–80 s | N/A | Could not find an XRT afterglow location|
 | `SWIFT_XRT_IMAGE` |31–81 s | &lt;7″ | 2′×2′ FOV (5-30 s integration)|
 | `SWIFT_XRT_SPECTRUM` |40–81 s | N/A | Spectrum (few-to-100 s integration)|
 | `SWIFT_XRT_LC` |141–910 s | N/A | The x-ray lightcurve (106–826 s)|
