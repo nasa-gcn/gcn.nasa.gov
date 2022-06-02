@@ -11,10 +11,10 @@
     "build:remix": "remix build",
     "build:sass": "gulp build-sass",
     "build": "run-p build:*",
-    "dev:remix": "cross-env NODE_ENV=development remix watch",
+    "dev:remix": "remix watch",
     "dev:arc": "cross-env NODE_ENV=development arc sandbox",
     "dev:sass": "gulp watch",
-    "dev": "cross-env NODE_ENV=development remix build && run-p dev:*",
+    "dev": "remix build && run-p dev:*",
     "prepare:sass": "gulp init",
     "prepare:husky": "husky install",
     "prepare": "run-p prepare:*"
