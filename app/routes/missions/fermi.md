@@ -29,6 +29,7 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 | [Gamma-ray Burst Monitor (GBM)](https://gammaray.msfc.nasa.gov/gbm/) | 8 keV–30 MeV       | 8.8 ster      | ≳1–10° radius (statistical + systematic) |
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
+[Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/fermi.html)
 
 | Type                  | Contents                                              | Latency  |
 | --------------------- | ----------------------------------------------------- | -------- |
@@ -43,3 +44,16 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 | `FERMI_LAT_OFFLINE`   | Ground-detected GRB localization                      | 8–12 h   |
 | `FERMI_LAT_TRANS`     | Unknown source transient                              | 1 d      |
 | `FERMI_LAT_MONITOR`   | Known source flare                                    | 1 d      |
+
+**Fermi Yearly Trigger Rates:**
+
+| Instrument | Type                           | Rates |
+| ---------- | ------------------------------ | ----- |
+| GBM        | Short GRB                      | 35–40 |
+|            | Long GRB                       | 200   |
+|            | Soft Gamma-ray Repeater Flares | 35–40 |
+|            | Terrestrial Gamma-ray Flashes  | 80–90 |
+|            | Solar Flares                   | 90–95 |
+| LAT        | GRB                            | 15–20 |
+
+Trigger Rates determined from catalogued information including the [Fermi-GBM Trigger Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigtrig.html), the [Fermi-GBM GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigbrst.html), and the [Fermi-LAT GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermilgrb.html).
