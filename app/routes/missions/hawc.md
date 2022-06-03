@@ -3,7 +3,7 @@ meta:
   title: GCN - HAWC
 ---
 
-# High Altitude Water Cherenkov Gamma-Ray Observatory
+# High Altitude Water Cherenkov Gamma-Ray Observatory (HAWC)
 
 <img 
   src="/_static/img/hawc-logo.png"
