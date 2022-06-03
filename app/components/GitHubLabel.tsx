@@ -41,7 +41,8 @@ export function GitHubLabel({
       ref={ref}
       className="text-semibold font-body-3xs padding-x-1 radius-pill"
       style={{
-        backgroundColor: 'gray',
+        color: 'white',
+        backgroundColor: 'black',
         textDecoration: 'none',
         whiteSpace: 'nowrap',
       }}

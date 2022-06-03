@@ -7,34 +7,43 @@ import {
   ProcessList,
   ProcessListItem,
   ProcessListHeading,
+  SummaryBox,
 } from '@trussworks/react-uswds'
 import { GitHubLabel } from '~/components/GitHubLabel'
 
+<SummaryBox heading="Quick Start">
+  To install a local development version of the GCN web site on your own
+  computer, skip ahead to the [Quick Start](#quick-start) section below.
+</SummaryBox>
+
 # Contributing to General Coordinates Network
 
-Do you have an idea to make GCN better, or do you have a bug to report? We'd love to hear from you!
+Do you have an idea to make GCN better, or do you have a bug to report? We'd love to hear from you! GCN (this site) is an [open source project on GitHub](https://github.com/tachgsfc/gcn.nasa.gov). Help us by reporting feature requests and bugs in our [GitHub issue tracker](https://github.com/tachgsfc/gcn.nasa.gov/issues).
 
-GCN (this site) is an [open source project on GitHub](https://github.com/tachgsfc/gcn.nasa.gov). Report feature requests and bug reports in our [GitHub issue tracker](https://github.com/tachgsfc/gcn.nasa.gov/issues). Or, if you feel like rolling your sleeves up, propose a code change by [forking the project](https://github.com/tachgsfc/gcn.nasa.gov/fork) and submitting a [GitHub pull request](https://github.com/tachgsfc/gcn.nasa.gov/pulls).
+Or, if you feel like rolling your sleeves up, propose a code change by [forking the project](https://github.com/tachgsfc/gcn.nasa.gov/fork) and submitting a [GitHub pull request](https://github.com/tachgsfc/gcn.nasa.gov/pulls). Don't know where to start? Look for issues in GitHub that are labelled <GitHubLabel owner="tachgsfc" repo="gcn.nasa.gov" name="good first issue"/>.
 
-Don't know where to start? Look for issues in GitHub that are marked <GitHubLabel owner="tachgsfc" repo="gcn.nasa.gov" name="good first issue"/>.
+Here are some more specific ways that _you_ can help.
 
-## Project Overview
+- **Write documentation.**
+  The best and easiest way to help is to contribute text or typographical corrections, especially in the [Documentation](/docs) section (the [app/routes/docs](https://github.com/tachgsfc/gcn.nasa.gov/blob/main/app/routes/docs) directory in GitHub) and [Missions](/missions) section (the [app/routes/missions](https://github.com/tachgsfc/gcn.nasa.gov/blob/main/app/routes/missions) directory in GitHub). Look for GitHub issues with the label <GitHubLabel owner="tachgsfc" repo="gcn.nasa.gov" name="content"/>.
 
-- GCN is built in [Remix](https://remix.run), a full stack web framework. A Remix app combines the server side code (back end) and browser side code (front end) in a single codebase (sometimes called an [isomorphic application](https://en.wikipedia.org/wiki/Isomorphic_JavaScript)).
-- We use the [US Web Design System](https://designsystem.digital.gov), an open source design language and front end framework that is common to many Federal agencies.
-- US Web Design System components for [React](https://reactjs.org) are provided by [react-uswds](https://github.com/trussworks/react-uswds).
+  Most of the written content on this site is formatted in Markdown, an easy to use markup language. To learn Markdown, read the [GitHub Flavored Markdown guide](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
 
-The directory structure of the project is as follows:
+  In general, written content should follow the [American Astronomical Society style guide](https://journals.aas.org/manuscript-preparation/#style) and use SI unit abbreviations.
 
-- [app/components](https://github.com/tachgsfc/gcn.nasa.gov/blob/main/app/components): Reusable custom React components.
-- [app/root.tsx](https://github.com/tachgsfc/gcn.nasa.gov/blob/main/app/root.tsx): Main route for the whole web site. Edit this file to customize the page template.
-- [app/routes](https://github.com/tachgsfc/gcn.nasa.gov/blob/main/app/routes): Put all Web pages in here. Use [GitHub Flavored Markdown](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) for static pages or TSX (TypeScript with interleaved HTML markup) for reactive pages.
-  - Follow the [American Astronomical Society style guide](https://journals.aas.org/manuscript-preparation/#style) for unit abbreviations.
-- [app/routes/api](https://github.com/tachgsfc/gcn.nasa.gov/blob/main/app/routes/api): Put API endpoints in here.
+- **Improve design and accessibility.**
+  We are constantly seeking to improve the GCN user experience. Look for issues in GitHub that are marked <GitHubLabel owner="tachgsfc" repo="gcn.nasa.gov" name="frontend"/>.
+
+  We use the [US Web Design System](https://designsystem.digital.gov), an open source design language and front end framework that is common to many Federal agencies. US Web Design System components for [React](https://reactjs.org) are provided by [react-uswds](https://github.com/trussworks/react-uswds).
+
+- **Add new features to the web site.**
+  We have lots of ideas for new features, visualizations, and ways to interact with GCN data. We bet you have lots of ideas too! Look for issues in GitHub that are marked <GitHubLabel owner="tachgsfc" repo="gcn.nasa.gov" name="frontend"/> or <GitHubLabel owner="tachgsfc" repo="gcn.nasa.gov" name="backend"/>.
+
+  GCN is built in [Remix](https://remix.run), a full stack web framework built on [React](https://reactjs.org) and written in [TypeScript](https://www.typescriptlang.org) ([JavaScript](https://developer.mozilla.org/en-US/docs/Web/JavaScript) with type annotations).
 
 ## Quick Start
 
-Here are instructions for getting the GCN site set up on your computer for local development.
+Here are instructions for getting the GCN site set up and running on your own computer for local development.
 
 <ProcessList>
   <ProcessListItem>
