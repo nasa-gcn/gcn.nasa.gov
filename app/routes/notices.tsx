@@ -225,7 +225,7 @@ export default function Notices() {
           tags={['x-ray', 'gw']}
           selectedTags={tagNames}
         >
-          Swift XRT counterpart candidates of LVK events.
+          Swift counterpart candidates of LVK events.
         </NoticeCard>
         <NoticeCard
           name="INTEGRAL GRBs"
