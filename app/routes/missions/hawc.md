@@ -12,7 +12,7 @@ meta:
   alt="HAWC logo"
 />
 
-**Inauguration:** March 2015
+**Start of Full Operations:** March 2015
 
 **End of Operations:** No specific requirement
 
