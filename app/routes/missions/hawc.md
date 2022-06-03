@@ -30,4 +30,4 @@ sky, and during each 24 hour period it observes two-thirds of the sky.
 
 | Type                 | Contents                       | Latency   |
 | -------------------- | ------------------------------ | --------- |
-| `HAWC_BURST_MONITOR` | HAWC alert of GRB-like events. | 0.5-1 min |
+| `HAWC_BURST_MONITOR` | HAWC alert of GRB-like events. | 0.5–1 min |
