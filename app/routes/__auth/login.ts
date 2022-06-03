@@ -8,8 +8,29 @@
 
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
+import type { TokenSet } from 'openid-client'
 import { generators } from 'openid-client'
 import { getOpenIDClient, oidcStorage, storage } from './auth.server'
+import type { getUser } from './user.server'
+
+function userFromTokenSet(
+  tokenSet: TokenSet
+): NonNullable<Awaited<ReturnType<typeof getUser>>> {
+  const claims = tokenSet.claims()
+  const sub = claims.sub
+  const email = claims.email as string
+
+  const idp =
+    claims.identities instanceof Array && claims.identities.length > 0
+      ? (claims.identities[0].providerName as string)
+      : null
+
+  const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
+    (group) => group.startsWith('gcn.nasa.gov')
+  )
+
+  return { sub, email, groups, idp }
+}
 
 export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
   const parsedUrl = new URL(url)
@@ -68,21 +89,18 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     const params = client.callbackParams(parsedUrl.search)
     parsedUrl.search = ''
     const tokenSet = await client.callback(parsedUrl.toString(), params, checks)
-    const claims = tokenSet.claims()
 
-    const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
-      (group) => group.startsWith('gcn.nasa.gov')
-    )
+    const user = userFromTokenSet(tokenSet)
     const session = await sessionPromise
-    session.set('sub', claims.sub)
-    session.set('email', claims.email)
-    session.set('groups', groups)
+    Object.entries(user).forEach(([key, value]) => {
+      session.set(key, value)
+    })
 
     const [cookie] = await Promise.all([
       storage.commitSession(session),
       oidcSessionDestroyPromise,
     ])
 
-    return redirect('/', { headers: { 'Set-Cookie': cookie } })
+    return redirect('/user', { headers: { 'Set-Cookie': cookie } })
   }
 }

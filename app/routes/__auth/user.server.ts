@@ -13,8 +13,9 @@ export async function getUser({ headers }: Request) {
   const sub = session.get('sub') as string | null
   const email = session.get('email') as string
   const groups = session.get('groups') as string[]
+  const idp = session.get('idp') as string | null
 
   if (!sub) return null
 
-  return { sub, email, groups }
+  return { sub, email, groups, idp }
 }
