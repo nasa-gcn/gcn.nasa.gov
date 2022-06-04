@@ -52,6 +52,14 @@ LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network
 | `LVC_UPDATE`      | Ultimate refined skymap (more detailed off-line processing).                                  | ~1–7 d   |
 | `LVC_RETRACTION`  | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 h–1 d  |
 
+**Common GCN Circular Types:**
+
+| Type                                     | Latency | Example                                                          |
+| ---------------------------------------- | ------- | ---------------------------------------------------------------- |
+| Identification of a GW trigger           | 1 hour  | [LIGO/Virgo S191105e](https://gcn.gsfc.nasa.gov/gcn3/26182.gcn3) |
+| Updated sky localization of a GW trigger | days    | [LIGO/Virgo S191105e](https://gcn.gsfc.nasa.gov/gcn3/26245.gcn3) |
+| Retraction of a GW trigger               | days    | [LIGO/Virgo S191117j](https://gcn.gsfc.nasa.gov/gcn3/26254.gcn3) |
+
 **Predicted Detection Rates for O4:**
 
 | Merger Class            | Detection Rates per Calendar Year | Area [deg<sup>2</sup>] |

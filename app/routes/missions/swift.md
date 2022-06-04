@@ -64,6 +64,21 @@ https://swift.gsfc.nasa.gov/archive/
 | `SWIFT_BAT_SUBSUB`        | 1–12 h                      | 1–7′               | Sub-Sub-Threshold blips in all image produced on-board      |
 | `SWIFT_BAT_KNOWN_SRC`     | 1–12 h                      | 1–7′               | Peaks of known-sources found in all image produced on-board |
 
+**Common GCN Circular Types:**
+
+| Type                                   | Latency    | Example                                                          |
+| -------------------------------------- | ---------- | ---------------------------------------------------------------- |
+| Swift identification of a GRB          | 30 minutes | [GRB 210517A](https://gcn.gsfc.nasa.gov/gcn3/30032.gcn3)         |
+| XRT enhanced GRB position              | hours      | [GRB 210517A](https://gcn.gsfc.nasa.gov/gcn3/30034.gcn3)         |
+| UVOT follow-up of a GRB                | hours      | [GRB 210517A](https://gcn.gsfc.nasa.gov/gcn3/30040.gcn3)         |
+| BAT refined analysis of a GRB          | 12 hours   | [GRB 210517A](https://gcn.gsfc.nasa.gov/gcn3/30043.gcn3)         |
+| XRT refined analysis of a GRB          | 12 hours   | [GRB 210517A](https://gcn.gsfc.nasa.gov/gcn3/30042.gcn3)         |
+| BAT GUANO localization of a GRB        | 6 hours    | [GRB 210827A](https://gcn.gsfc.nasa.gov/gcn3/30732.gcn3)         |
+| BAT GUANO recovery of a GRB            | 6 hours    | [GRB 211105A](https://gcn.gsfc.nasa.gov/gcn3/31047.gcn3)         |
+| Swift ToO observations                 | 12 hours   | [GRB 210704A](https://gcn.gsfc.nasa.gov/gcn3/30374.gcn3)         |
+| Swift BAT observations of a GW trigger | 12 hours   | [LIGO/Virgo S200114f](https://gcn.gsfc.nasa.gov/gcn3/26748.gcn3) |
+| Swift tiling of a GW trigger           | 1 day      | [LIGO/Virgo S200114f](https://gcn.gsfc.nasa.gov/gcn3/26787.gcn3) |
+
 **Swift GRB Annual Trigger Detection Rates:**
 
 | Instrument | Long GRBs | Short GRBs | Description                   |

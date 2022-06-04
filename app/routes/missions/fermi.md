@@ -45,15 +45,29 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 | `FERMI_LAT_TRANS`     | Unknown source transient                              | 1 d      |
 | `FERMI_LAT_MONITOR`   | Known source flare                                    | 1 d      |
 
+**Common GCN Circular Types:**
+
+| Type                           | Latency    | Example                                                          |
+| ------------------------------ | ---------- | ---------------------------------------------------------------- |
+| GBM identification of a GRB    | 15 minutes | [GRB 220530A](https://gcn.gsfc.nasa.gov/gcn3/32147.gcn3)         |
+| GBM analysis of a GRB          | 4 hours    | [GRB 220528A](https://gcn.gsfc.nasa.gov/gcn3/32155.gcn3)         |
+| LAT observation of a GRB       | 8 hours    | [GRB 220228A](https://gcn.gsfc.nasa.gov/gcn3/31659.gcn3)         |
+| GBM subthreshold detection     | 8 hours    | [GRB 220325A](https://gcn.gsfc.nasa.gov/gcn3/31791.gcn3)         |
+| GBM observations of SGR flares | 1 day      | [SGR 1935+2154](https://gcn.gsfc.nasa.gov/gcn3/31445.gcn3)       |
+| GBM follow-up of GW trigger    | 8 hours    | [LIGO/Virgo S200128d](https://gcn.gsfc.nasa.gov/gcn3/26916.gcn3) |
+| LAT follow-up of GW trigger    | 8 hours    | [LIGO/Virgo S200128d](https://gcn.gsfc.nasa.gov/gcn3/26925.gcn3) |
+| GBM follow-up of a neutrino    | 8 hours    | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31255.gcn3)     |
+| LAT follow-up of a neutrino    | 8 hours    | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31257.gcn3)     |
+
 **Fermi Yearly Trigger Rates:**
 
 | Instrument | Type                           | Rates |
 | ---------- | ------------------------------ | ----- |
-| GBM        | Short GRB                      | 35–40 |
-|            | Long GRB                       | 200   |
-|            | Soft Gamma-ray Repeater Flares | 35–40 |
-|            | Terrestrial Gamma-ray Flashes  | 80–90 |
-|            | Solar Flares                   | 90–95 |
-| LAT        | GRB                            | 15–20 |
+| GBM        | Short gamma-ray burst          | 35–40 |
+|            | Long gamma-ray burst           | 200   |
+|            | Soft gamma-ray repeater flares | 35–40 |
+|            | Terrestrial gamma-ray flashes  | 80–90 |
+|            | Solar flares                   | 90–95 |
+| LAT        | Gamma-ray burst                | 15–20 |
 
 Trigger Rates determined from catalogued information including the [Fermi-GBM Trigger Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigtrig.html), the [Fermi-GBM GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigbrst.html), and the [Fermi-LAT GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermilgrb.html).

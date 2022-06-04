@@ -31,3 +31,11 @@ sky, and during each 24 hour period it observes two-thirds of the sky.
 | Type                 | Contents                       | Latency   |
 | -------------------- | ------------------------------ | --------- |
 | `HAWC_BURST_MONITOR` | HAWC alert of GRB-like events. | 0.5–1 min |
+
+**Common GCN Circular Types:**
+
+| Type                            | Latency | Example                                                          |
+| ------------------------------- | ------- | ---------------------------------------------------------------- |
+| IceCube-HAWC subthreshold alert | hours   | [NuEm-211209A](https://gcn.gsfc.nasa.gov/gcn3/31192.gcn3)        |
+| HAWC follow-up of a neutrino    | hours   | [IceCube-211208A](https://gcn.gsfc.nasa.gov/gcn3/31199.gcn3)     |
+| HAWC follow-up of a GW          | hours   | [LIGO/Virgo S200128d](https://gcn.gsfc.nasa.gov/gcn3/26907.gcn3) |
