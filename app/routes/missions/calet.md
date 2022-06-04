@@ -14,14 +14,14 @@ meta:
 
 **Launch Date:** August 19, 2015
 
-**Extended Mission Lifetime:** 2025+ (Pending NASA Review)
+**Extended Mission Lifetime:** 2024+ (Pending NASA and JAXA Review)
 
-**End of Operations:** No specific requirement (no consumables, no significant degradation)
+**End of Operations:** Limited by ISS lifetime, currently 2030
 
-**Data Archive:**
+**Data Archives:** https://darts.isas.jaxa.jp/astro/calet/
 https://heasarc.gsfc.nasa.gov/cgi-bin/W3Browse/w3table.pl?MissionHelp=calet
 
-The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research/calet) is ISS mission studying cosmic rays, signatures for dark matter, and gamma-ray bursts. CALET was developed by JAXA with contributions from the Italian Space Agency and [NASA](https://www.nasa.gov/mission_pages/station/research/experiments/explorer/Investigation.html?#id=1027).
+The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research/calet)) is ISS mission studying cosmic rays, signatures for dark matter, and gamma-ray bursts. CALET was developed by JAXA with contributions from the Italian Space Agency and [NASA](https://www.nasa.gov/mission_pages/station/research/experiments/explorer/Investigation.html?#id=1027).
 
 | Instruments                  | Energy Range   | Field of View |
 | ---------------------------- | -------------- | ------------- |
@@ -34,6 +34,13 @@ The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research
 | Type               | Contents                             | Latency |
 | ------------------ | ------------------------------------ | ------- |
 | `CALET_GBM_FLT_LC` | Signifcance and CALET-GBM Lightcurve | Minutes |
+
+**Common GCN Circular Types:**
+
+| Type                      | Latency | Example                                                          |
+| ------------------------- | ------- | ---------------------------------------------------------------- |
+| Observation of a GRB      | 1 day   | [GRB 211115A](https://gcn.gsfc.nasa.gov/gcn3/31084.gcn3)         |
+| Follow-up of a GW trigger | hours   | [LIGO/Virgo S200115j](https://gcn.gsfc.nasa.gov/gcn3/26797.gcn3) |
 
 **CALET-GBM Yearly Trigger Rates:**
 
