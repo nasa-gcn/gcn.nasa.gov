@@ -84,6 +84,13 @@ export function Header({
                     isOpen={userMenuIsOpen}
                     items={[
                       <Link
+                        key="/user"
+                        to="/user"
+                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      >
+                        User Settings
+                      </Link>,
+                      <Link
                         key="/user/client_credentials"
                         to="/user/client_credentials"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
