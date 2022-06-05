@@ -36,6 +36,6 @@ http://www.ioffe.ru/LEA/kw/index.html
 
 | Type          | Rates   |
 | ------------- | ------- |
-| GRBs          | 120-130 |
-| SGRs          | 0-100   |
-| Solare flares | 0-100   |
+| GRBs          | 120–130 |
+| SGRs          | 0–100   |
+| Solare flares | 0–100   |

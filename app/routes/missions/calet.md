@@ -46,6 +46,6 @@ The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research
 
 | Instrument | Type                                                   | Rates   |
 | ---------- | ------------------------------------------------------ | ------- |
-| CALET      | GRBs, other transients, and non-astrophysical triggers | 140-150 |
+| CALET      | GRBs, other transients, and non-astrophysical triggers | 140–150 |
 
 Approximately half of CALET triggers will be of non-astrophysical origin.
