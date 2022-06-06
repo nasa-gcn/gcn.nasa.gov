@@ -46,7 +46,7 @@ export default function Docs() {
               AGILE
             </NavLink>,
             <NavLink key="konus" to="konus">
-              Wind-KONUS
+              Konus-Wind
             </NavLink>,
             <NavLink key="moa" to="moa">
               MOA
