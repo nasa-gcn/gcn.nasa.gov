@@ -44,8 +44,8 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 
 **IceCube Yearly Alert Rates:**
 
-| Type                        | Rate | Radius       |
-| --------------------------- | ---- | ------------ |
+| Type                        | Rate | Radius    |
+| --------------------------- | ---- | --------- |
 | `ICECUBE_ASTROTRACK_GOLD`   | 12   | 0.2–0.75° |
 | `ICECUBE_ASTROTRACK_BRONZE` | 16   | 0.2–0.75° |
 | `AMON_NU_EM_COINC`          | 4–8  | 0.2–1°    |
