@@ -21,7 +21,7 @@ meta:
 **Data Archives:** https://darts.isas.jaxa.jp/astro/calet/
 https://heasarc.gsfc.nasa.gov/cgi-bin/W3Browse/w3table.pl?MissionHelp=calet
 
-The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research/calet)) is ISS mission studying cosmic rays, signatures for dark matter, and gamma-ray bursts. CALET was developed by JAXA with contributions from the Italian Space Agency and [NASA](https://www.nasa.gov/mission_pages/station/research/experiments/explorer/Investigation.html?#id=1027).
+The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research/calet)) is a mission on the International Space Station (ISS) studying cosmic rays, signatures for dark matter, and gamma-ray bursts. CALET was developed by JAXA with contributions from the Italian Space Agency and [NASA](https://www.nasa.gov/mission_pages/station/research/experiments/explorer/Investigation.html?#id=1027).
 
 | Instruments                  | Energy Range   | Field of View |
 | ---------------------------- | -------------- | ------------- |
