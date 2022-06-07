@@ -54,9 +54,14 @@ export class ClientCredentialVendingMachine {
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression: 'client_id, #name, #scope',
+      ProjectionExpression: 'client_id, #name, #scope, created',
     })
-    return results.Items as { client_id: string; name: string; scope: string }[]
+    return results.Items as {
+      client_id: string
+      name: string
+      scope: string
+      created: number
+    }[]
   }
 
   async deleteClientCredential(client_id: string) {
@@ -86,16 +91,18 @@ export class ClientCredentialVendingMachine {
 
     const { client_id, client_secret } =
       await this.#createClientCredentialInternal(scope)
+    const created = Date.now()
 
     const db = await tables()
     await db.client_credentials.put({
       name,
+      created,
       client_id,
       scope,
       sub: this.#sub,
     })
 
-    return { name, client_id, client_secret, scope }
+    return { name, created, client_id, client_secret, scope }
   }
 
   async #createClientCredentialInternal(scope: string) {
