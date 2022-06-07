@@ -56,7 +56,7 @@ export class ClientCredentialVendingMachine {
       },
       ProjectionExpression: 'client_id, #name, #scope',
     })
-    return results.Items
+    return results.Items as { client_id: string; name: string; scope: string }[]
   }
 
   async deleteClientCredential(client_id: string) {
