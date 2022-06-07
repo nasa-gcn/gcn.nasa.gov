@@ -25,6 +25,7 @@ import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { CopyableCode } from '~/components/CopyableCode'
 import { ClientCredentialVendingMachine } from './client_credentials.server'
+import moment from 'moment'
 
 export const loader: LoaderFunction = async function ({ request }) {
   const machine = await ClientCredentialVendingMachine.create(request)
@@ -39,6 +40,7 @@ export const meta: MetaFunction = () => ({
 
 interface ClientCredentialData {
   name: string
+  created: number
   client_id: string
   client_secret?: string
   scope: string
@@ -63,9 +65,12 @@ function ClientCredential(props: ClientCredentialProps) {
     }
   }
 
+  const momentCreated = moment.utc(props.created)
+
   return (
     <tr>
       <td>{props.name}</td>
+      <td title={momentCreated.format()}>{momentCreated.fromNow()}</td>
       <td>{props.scope}</td>
       <td>
         <CopyableCode text={props.client_id} />
@@ -129,6 +134,7 @@ export default function Index() {
   const [name, setName] = useState(defaultName)
   const defaultScope = 'gcn.nasa.gov/kafka-public-consumer'
   const [scope, setScope] = useState(defaultScope)
+  client_credentials.sort((a, b) => a.created - b.created)
 
   function handleDelete(client_id: string) {
     fetch(`/api/client_credentials/${client_id}`, {
@@ -178,6 +184,7 @@ export default function Index() {
           <thead>
             <tr>
               <th>Name</th>
+              <th>Created</th>
               <th>Scope</th>
               <th>Client ID</th>
               <th>Client Secret</th>
