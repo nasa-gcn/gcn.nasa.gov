@@ -65,7 +65,7 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
 
     return redirect(authorizationUrl, { headers: { 'Set-Cookie': cookie } })
   } else {
-    const sessionPromise = await storage.getSession()
+    const sessionPromise = storage.getSession()
     const [client, { oidcSessionDestroyPromise, ...checks }] =
       await Promise.all([
         getOpenIDClient(),
