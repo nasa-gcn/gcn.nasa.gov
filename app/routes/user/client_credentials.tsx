@@ -42,7 +42,6 @@ interface ClientCredentialData {
   client_id: string
   client_secret?: string
   scope: string
-  onDelete?: (client_id: string) => void
 }
 
 interface LoaderData {
