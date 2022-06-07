@@ -24,7 +24,7 @@ import {
 import type { LoaderFunction, MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { CopyableCode } from '~/components/CopyableCode'
-import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
+import { ClientCredentialVendingMachine } from './client_credentials.server'
 
 export const loader: LoaderFunction = async function ({ request }) {
   const machine = await ClientCredentialVendingMachine.create(request)
@@ -252,7 +252,11 @@ export default function Index() {
       </Modal>
 
       {items.some((item) => item.client_secret) ? (
-        <Alert type="success" headingLevel="h3" heading="Your new client credential was created.">
+        <Alert
+          type="success"
+          headingLevel="h3"
+          heading="Your new client credential was created."
+        >
           Make sure that you copy the client secret. It will only be shown once.
         </Alert>
       ) : null}
