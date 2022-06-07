@@ -161,7 +161,7 @@ export default function Index() {
   }
 
   return (
-    <section>
+    <>
       <h1>Client Credentials</h1>
       <div className="usa-prose">
         <p>
@@ -260,6 +260,6 @@ export default function Index() {
           Make sure that you copy the client secret. It will only be shown once.
         </Alert>
       ) : null}
-    </section>
+    </>
   )
 }
