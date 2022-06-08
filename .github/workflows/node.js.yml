@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: '16'
       - name: NPM Install
-        run: npm ci
+        run: npm ci --legacy-peer-deps
       - name: Run eslint linter
         run: npx eslint --max-warnings 0 .
       - name: Run TypeScript compiler
