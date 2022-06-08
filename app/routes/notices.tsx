@@ -4,7 +4,7 @@ import {
   CardFooter,
   CardGroup,
   CardHeader,
-  Icon,
+  IconClose,
   Tag,
 } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
@@ -71,7 +71,7 @@ function ReactTagComponent({
         title={removeButtonText}
         onClick={onDelete}
       >
-        <Icon.Close className="margin-left-1 text-bottom" color={'white'} />
+        <IconClose className="margin-left-1 text-bottom" color={'white'} />
       </Button>
     </Tag>
   )
