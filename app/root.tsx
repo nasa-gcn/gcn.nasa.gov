@@ -74,16 +74,12 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url)
-  const result = { hostname: url.hostname }
+  const hostname = url.hostname
+
   const user = await getUser(request)
-  if (user) {
-    return {
-      email: user.email,
-      ...result,
-    }
-  } else {
-    return result
-  }
+  const email = user?.email
+
+  return { hostname, email }
 }
 
 export default function App() {
