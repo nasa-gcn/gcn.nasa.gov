@@ -31,9 +31,9 @@ import {
   useTransition,
 } from '@remix-run/react'
 import type {
-  LoaderFunction,
   MetaFunction,
   LinksFunction,
+  DataFunctionArgs,
 } from '@remix-run/node'
 import { GovBanner, GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
@@ -72,12 +72,7 @@ export const links: LinksFunction = () => [
   })),
 ]
 
-interface LoaderData {
-  email?: string
-  hostname: string
-}
-
-export const loader: LoaderFunction = async function ({ request }) {
+export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url)
   const result = { hostname: url.hostname }
   const user = await getUser(request)
@@ -93,7 +88,7 @@ export const loader: LoaderFunction = async function ({ request }) {
 
 export default function App() {
   const location = useLocation()
-  const loaderData = useLoaderData<LoaderData>()
+  const loaderData = useLoaderData<Awaited<ReturnType<typeof loader>>>()
   const transition = useTransition()
   const showProgress = useSpinDelay(transition.state !== 'idle')
 
