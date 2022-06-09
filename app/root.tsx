@@ -83,7 +83,7 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export default function App() {
-  const location = useLocation()
+  const { pathname } = useLocation()
   const loaderData = useLoaderData<Awaited<ReturnType<typeof loader>>>()
   const transition = useTransition()
   const showProgress = useSpinDelay(transition.state !== 'idle')
@@ -103,7 +103,7 @@ export default function App() {
         {showProgress && <TopBarProgress />}
         <GovBanner />
         <DevBanner hostname={loaderData.hostname} />
-        <Header pathname={location.pathname} {...loaderData} />
+        <Header pathname={pathname} {...loaderData} />
         <section className="usa-section main-content">
           <GridContainer>
             <Outlet />
