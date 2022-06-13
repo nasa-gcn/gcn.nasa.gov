@@ -35,34 +35,34 @@ https://swift.gsfc.nasa.gov/archive/
 | Type                      | Typical Latency Since Burst | Location Precision | Description                                                 |
 | ------------------------- | --------------------------- | ------------------ | ----------------------------------------------------------- |
 | **Flight Generated:**     |                             |                    |                                                             |
-| `SWIFT_BAT_GRB_ALERT`     | ~7 s                        | N/A                | First Notice, Timestamp Alert                               |
-| `SWIFT_BAT_QL_POS`        | 13–30 s                     | 1–3′               | QuickLook Position Notice (subset of BAT_POS info)          |
-| `SWIFT_BAT_GRB_POS_ACK`   | 13–30 s                     | 1–3′               | First Position Notice, the BAT Position                     |
-| `SWIFT_BAT_GRB_POS_NACK`  | 30–60 s                     | N/A                | Only if no position was found                               |
-| `SWIFT_BAT_SUB_THRESHOLD` | 13–30 s                     | 1–4′               | Sub-threshold triggers (Position)                           |
-| `SWIFT_BAT_GRB_LC`        | ~220 s                      | 1–3′               | Lightcurve (also has the position)                          |
-| `SWIFT_FOM_OBS`           | 14–41 s                     | 1–3′               | FOM decision: Observe or Not                                |
-| `SWIFT_SC_SLEW`           | 14–41 s                     | 1–3′               | Spacecraft decision: Slew or Not                            |
-| `SWIFT_XRT_POSITION`      | 30–80 s                     | &lt;7″             | XRT afterglow location                                      |
-| `SWIFT_XRT_CENTROID`      | 30–80 s                     | N/A                | Could not find an XRT afterglow location                    |
-| `SWIFT_XRT_IMAGE`         | 31–81 s                     | &lt;7″             | 2′×2′ FOV (5-30 s integration)                              |
-| `SWIFT_XRT_SPECTRUM`      | 40–81 s                     | N/A                | Spectrum (few-to-100 s integration)                         |
-| `SWIFT_XRT_LC`            | 141–910 s                   | N/A                | The x-ray lightcurve (106–826 s)                            |
-| `SWIFT_UVOT_FCHART`       | ~260 s                      | N/A                | Thresholded pixel clusters                                  |
-| `SWIFT_UVOT_DBURST`       | ~320 s                      | N/A                | All pixels from an 80×80 pixel subarray                     |
-| `SWIFT_UVOT_POS`          | 1–3 h                       | &lt;2″             | UVOT afterglow location (Gnd-generated only)                |
-| `SWIFT_UVOT_POS_NACK`     | 1–3 h                       | N/A                | Could not find an UVOT afterglow location                   |
+| `SWIFT_BAT_GRB_ALERT`     | ~7 seconds                  | N/A                | First Notice, Timestamp Alert                               |
+| `SWIFT_BAT_QL_POS`        | 13–30 seconds               | 1–3′               | QuickLook Position Notice (subset of BAT_POS info)          |
+| `SWIFT_BAT_GRB_POS_ACK`   | 13–30 seconds               | 1–3′               | First Position Notice, the BAT Position                     |
+| `SWIFT_BAT_GRB_POS_NACK`  | 30–60 seconds               | N/A                | Only if no position was found                               |
+| `SWIFT_BAT_SUB_THRESHOLD` | 13–30 seconds               | 1–4′               | Sub-threshold triggers (Position)                           |
+| `SWIFT_BAT_GRB_LC`        | ~220 seconds                | 1–3′               | Lightcurve (also has the position)                          |
+| `SWIFT_FOM_OBS`           | 14–41 seconds               | 1–3′               | FOM decision: Observe or Not                                |
+| `SWIFT_SC_SLEW`           | 14–41 seconds               | 1–3′               | Spacecraft decision: Slew or Not                            |
+| `SWIFT_XRT_POSITION`      | 30–80 seconds               | &lt;7″             | XRT afterglow location                                      |
+| `SWIFT_XRT_CENTROID`      | 30–80 seconds               | N/A                | Could not find an XRT afterglow location                    |
+| `SWIFT_XRT_IMAGE`         | 31–81 seconds               | &lt;7″             | 2′×2′ FOV (5-30 s integration)                              |
+| `SWIFT_XRT_SPECTRUM`      | 40–81 seconds               | N/A                | Spectrum (few-to-100 s integration)                         |
+| `SWIFT_XRT_LC`            | 141–910 seconds             | N/A                | The x-ray lightcurve (106–826 s)                            |
+| `SWIFT_UVOT_FCHART`       | ~260 seconds                | N/A                | Thresholded pixel clusters                                  |
+| `SWIFT_UVOT_DBURST`       | ~320 seconds                | N/A                | All pixels from an 80×80 pixel subarray                     |
+| `SWIFT_UVOT_POS`          | 1–3 hours                   | &lt;2″             | UVOT afterglow location (Gnd-generated only)                |
+| `SWIFT_UVOT_POS_NACK`     | 1–3 hours                   | N/A                | Could not find an UVOT afterglow location                   |
 | **Ground Processed:**     |                             |                    |                                                             |
-| `SWIFT_BAT_GRB_LC_PROC`   | ~225 s                      | 1–3′               | Lightcurve (also has the position)                          |
-| `SWIFT_XRT_IMAGE_PROC`    | 40–70 s                     | &lt;6″             | 2′×2′ FOV (~10 s integration)                               |
-| `SWIFT_XRT_SPECTRUM_PROC` | 50–90 s                     | N/A                | The spectrum from that integration (~10 s)                  |
-| `SWIFT_UVOT_FCHART_PROC`  | ~280 s                      | N/A                | Thresholded pixel clusters                                  |
-| `SWIFT_UVOT_DBURST_PROC`  | ~340 s                      | N/A                | All pixels from an 80×80 pixel subarray                     |
+| `SWIFT_BAT_GRB_LC_PROC`   | ~225 seconds                | 1–3′               | Lightcurve (also has the position)                          |
+| `SWIFT_XRT_IMAGE_PROC`    | 40–70 seconds               | &lt;6″             | 2′×2′ FOV (~10 s integration)                               |
+| `SWIFT_XRT_SPECTRUM_PROC` | 50–90 seconds               | N/A                | The spectrum from that integration (~10 s)                  |
+| `SWIFT_UVOT_FCHART_PROC`  | ~280 seconds                | N/A                | Thresholded pixel clusters                                  |
+| `SWIFT_UVOT_DBURST_PROC`  | ~340 seconds                | N/A                | All pixels from an 80×80 pixel subarray                     |
 | **Special:**              |                             |                    |                                                             |
-| `SWIFT_BAT_SLEW_POS`      | 1–6 h                       | 1–7′               | Bursts & Transient found in the slew data (BATSS)           |
-| `SWIFT_BAT_MONITOR`       | 1–12 h                      | 1–7′               | Flares from known sources                                   |
-| `SWIFT_BAT_SUBSUB`        | 1–12 h                      | 1–7′               | Sub-Sub-Threshold blips in all image produced on-board      |
-| `SWIFT_BAT_KNOWN_SRC`     | 1–12 h                      | 1–7′               | Peaks of known-sources found in all image produced on-board |
+| `SWIFT_BAT_SLEW_POS`      | 1–6 hours                   | 1–7′               | Bursts & Transient found in the slew data (BATSS)           |
+| `SWIFT_BAT_MONITOR`       | 1–12 hours                  | 1–7′               | Flares from known sources                                   |
+| `SWIFT_BAT_SUBSUB`        | 1–12 hours                  | 1–7′               | Sub-Sub-Threshold blips in all image produced on-board      |
+| `SWIFT_BAT_KNOWN_SRC`     | 1–12 hours                  | 1–7′               | Peaks of known-sources found in all image produced on-board |
 
 **Common GCN Circular Types:**
 
@@ -79,7 +79,7 @@ https://swift.gsfc.nasa.gov/archive/
 | Swift BAT observations of a GW trigger | 12 hours   | [LIGO/Virgo S200114f](https://gcn.gsfc.nasa.gov/gcn3/26748.gcn3) |
 | Swift tiling of a GW trigger           | 1 day      | [LIGO/Virgo S200114f](https://gcn.gsfc.nasa.gov/gcn3/26787.gcn3) |
 
-**Swift GRB Annual Trigger Detection Rates:**
+**Annual Trigger Rates:**
 
 | Instrument | Long GRBs | Short GRBs | Description                   |
 | ---------- | --------- | ---------- | ----------------------------- |

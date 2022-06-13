@@ -3,7 +3,7 @@ meta:
   title: GCN - CALET
 ---
 
-# CALET
+# CALorimetric Electron Telescope (CALET)
 
 <div className="width-card-lg float-right">
   <img 
@@ -42,7 +42,7 @@ The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research
 | Observation of a GRB      | 1 day   | [GRB 211115A](https://gcn.gsfc.nasa.gov/gcn3/31084.gcn3)         |
 | Follow-up of a GW trigger | hours   | [LIGO/Virgo S200115j](https://gcn.gsfc.nasa.gov/gcn3/26797.gcn3) |
 
-**CALET-GBM Yearly Trigger Rates:**
+**Yearly Trigger Rates:**
 
 | Instrument | Type                                                   | Rates   |
 | ---------- | ------------------------------------------------------ | ------- |

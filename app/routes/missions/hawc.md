@@ -28,9 +28,9 @@ sky, and during each 24 hour period it observes two-thirds of the sky.
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 
-| Type                 | Contents                       | Latency   |
-| -------------------- | ------------------------------ | --------- |
-| `HAWC_BURST_MONITOR` | HAWC alert of GRB-like events. | 0.5–1 min |
+| Type                 | Contents                       | Latency       |
+| -------------------- | ------------------------------ | ------------- |
+| `HAWC_BURST_MONITOR` | HAWC alert of GRB-like events. | 0.5–1 minutes |
 
 **Common GCN Circular Types:**
 

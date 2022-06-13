@@ -27,12 +27,12 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/amon.html)
 
-| Type                        | Latency   | Comments                                     |
-| --------------------------- | --------- | -------------------------------------------- |
-| `ICECUBE_ASTROTRACK_GOLD`   | 0.5–1 min | Hi-energy single neutrino directions         |
-| `ICECUBE_ASTROTRACK_BRONZE` | 0.5–1 min | Hi-energy single neutrino directions         |
-| `AMON_NU_EM_COINC`          | 7 hour    | Coincidence of IceCube+HAWC or ANTARES+Fermi |
-| `AMON_ICECUBE_CASCADE`      | 0.5–1 min | Direction of a single hi-energy neutrino     |
+| Type                        | Latency       | Comments                                     |
+| --------------------------- | ------------- | -------------------------------------------- |
+| `ICECUBE_ASTROTRACK_GOLD`   | 0.5–1 minutes | Hi-energy single neutrino directions         |
+| `ICECUBE_ASTROTRACK_BRONZE` | 0.5–1 minutes | Hi-energy single neutrino directions         |
+| `AMON_NU_EM_COINC`          | 7 hours       | Coincidence of IceCube+HAWC or ANTARES+Fermi |
+| `AMON_ICECUBE_CASCADE`      | 0.5–1 minutes | Direction of a single hi-energy neutrino     |
 
 **Common GCN Circular Types:**
 
@@ -42,7 +42,7 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 | Follow up of high energy neutrino candidate      | ~1 day  | [IceCube-220524A](https://gcn.gsfc.nasa.gov/gcn3/32114.gcn3)     |
 | Follow up of gravitational wave trigger          | ~1 day  | [LIGO/Virgo S200129m](https://gcn.gsfc.nasa.gov/gcn3/26927.gcn3) |
 
-**IceCube Yearly Alert Rates:**
+**Yearly Alert Rates:**
 
 | Type                        | Rate | Radius    |
 | --------------------------- | ---- | --------- |
