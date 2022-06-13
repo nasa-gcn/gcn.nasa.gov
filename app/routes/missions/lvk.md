@@ -45,22 +45,22 @@ LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/lvc.html)
 
-| Type              | Contents                                                                                      | Latency  |
-| ----------------- | --------------------------------------------------------------------------------------------- | -------- |
-| `LVC_PRELIMINARY` | First Notice, Timestamp Alert, location probability sky map; all automated processing.        | 1–10 min |
-| `LVC_INITIAL`     | Improved SkyMap now available (human-involved procesing).                                     | 4–24 h   |
-| `LVC_UPDATE`      | Ultimate refined skymap (more detailed off-line processing).                                  | ~1–7 d   |
-| `LVC_RETRACTION`  | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 h–1 d  |
+| Type              | Contents                                                                                      | Latency      |
+| ----------------- | --------------------------------------------------------------------------------------------- | ------------ |
+| `LVC_PRELIMINARY` | First Notice, Timestamp Alert, location probability sky map; all automated processing.        | 1–10 minutes |
+| `LVC_INITIAL`     | Improved SkyMap now available (human-involved procesing).                                     | 4–24 hours   |
+| `LVC_UPDATE`      | Ultimate refined skymap (more detailed off-line processing).                                  | ~1–7 days    |
+| `LVC_RETRACTION`  | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 hour–1 day |
 
 **Common GCN Circular Types:**
 
-| Type                                     | Latency | Example                                                          |
-| ---------------------------------------- | ------- | ---------------------------------------------------------------- |
-| Identification of a GW trigger           | 1 hour  | [LIGO/Virgo S191105e](https://gcn.gsfc.nasa.gov/gcn3/26182.gcn3) |
-| Updated sky localization of a GW trigger | days    | [LIGO/Virgo S191105e](https://gcn.gsfc.nasa.gov/gcn3/26245.gcn3) |
-| Retraction of a GW trigger               | days    | [LIGO/Virgo S191117j](https://gcn.gsfc.nasa.gov/gcn3/26254.gcn3) |
+| Type                                     | Latency    | Example                                                          |
+| ---------------------------------------- | ---------- | ---------------------------------------------------------------- |
+| Identification of a GW trigger           | 4-24 hours | [LIGO/Virgo S191105e](https://gcn.gsfc.nasa.gov/gcn3/26182.gcn3) |
+| Updated sky localization of a GW trigger | 1-7 days   | [LIGO/Virgo S191105e](https://gcn.gsfc.nasa.gov/gcn3/26245.gcn3) |
+| Retraction of a GW trigger               | 1 day      | [LIGO/Virgo S191117j](https://gcn.gsfc.nasa.gov/gcn3/26254.gcn3) |
 
-**Predicted Detection Rates for O4:**
+**Predicted Annual Detection Rates for O4:**
 
 | Merger Class            | Detection Rates per Calendar Year | Area [deg<sup>2</sup>] |
 | ----------------------- | --------------------------------- | ---------------------- |

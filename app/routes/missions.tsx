@@ -28,7 +28,7 @@ export default function Docs() {
               LIGO/Virgo/KAGRA
             </NavLink>,
             <NavLink key="icecube" to="icecube">
-              IceCube
+              IceCube Neutrino Observatory
             </NavLink>,
             <NavLink key="hawc" to="hawc">
               HAWC
@@ -55,7 +55,7 @@ export default function Docs() {
               SNEWS
             </NavLink>,
             <NavLink key="sksn" to="sksn">
-              SKSN
+              Super-Kamiokande
             </NavLink>,
           ]}
         />
