@@ -13,7 +13,7 @@ GCN is the established platform for publishing discoveries and follow-up of gamm
 
 ## Client Configuration
 
-GCN [Client Configuration](/docs/client) documentation for [**hop-client**](/docs/client#hop-client), [**adc-streaming**](/docs/client#adc-streaming) and [**confluent-kafka**](/docs/client#confluent-kafka).
+To begin receiving GCN notices via kafka, users have three options for setting up their listeners. GCN [Client Configuration](/docs/client) documentation for [**hop-client**](/docs/client#hop-client), [**adc-streaming**](/docs/client#adc-streaming) and [**confluent-kafka**](/docs/client#confluent-kafka). Once the listener is setup, users can specify which Kafka topics they wish to follow for different GCN notice types.
 
 ## Contributing
 

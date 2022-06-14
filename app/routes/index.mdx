@@ -34,6 +34,14 @@ The General Coordinates Network is the modern evolution of the [Gamma-ray Coordi
 - [**Notices**](/notices) are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
 - [**Circulars**](/circulars) are human-readable, citable, rapid but generally not real-time, bulletins observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
 
+## Kafka Streaming Platform
+
+[Apache Kafka](https://kafka.apache.org) is an open-source distributed event streaming platform used in both commerical web applications
+and in recent years, it has been widely adopted by the astronomical community. Utilizing a rich development environment with
+open-source and commericially available tools, GCN is running a cloud-based high-reliability Kafka broker that distributes
+GCN notices to users. Kafka is the platform of streaming data, and is agnostic of data format. However, GCN will transition to
+distributing native Kafka Avro records (see [roadmap](docs/roadmap)), which can be losslessly converted between text based JSON records and a binary format.
+
 ## GCN Data Access Methods
 
 There are three ways to receive GCN Notices programmatically in real time:
