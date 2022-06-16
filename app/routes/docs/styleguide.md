@@ -3,7 +3,7 @@ meta:
   title: GCN - Circulars Style Guide
 ---
 
-## Style Guide
+# Circulars Style Guide
 
 Every Circular begins with the header information. In the example below the Title, Number, Date, and From are added automatically by the GCN system. The GCN Circular Subject is taken from the email subject line from the submission process.
 
@@ -72,7 +72,7 @@ This style guide contains information on how to properly prepare a GCN Circular 
 - **Writing Style:** Please remember that this media (e-mail) does not lend itself to a wide latitude of inter-personal communications. That is to say, the reader does not have access to the writer's "tone of voice", facial expressions, nor (in some cases) knowledge of the writer's personality. So a casually used phrase might be taken the wrong way by the reader. Please keep your writing style to that used in scientific journals.
 - **Quality of Content:** It is understood by everyone in the GCN/GRB/transient community that these reports are preliminary. While everyone makes their best attempt to submit accurate reports, these reports are also timely, based on preliminary analysis, and may be subject to change when the full analysis is done months later. See the "Corrections" section below.
 
-### Scope
+## Scope
 
 Acceptable content for the GCN Circulars falls within only four areas:
 
@@ -84,7 +84,7 @@ Acceptable content for the GCN Circulars falls within only four areas:
 - **Requests for Correlated or Cooperative Observations:** Requests for observations to be made by others for coordinated follow-up across wavelengths, in response to local bad weather, the need for longer-term monitoring, etc.
 - **Future Plans:** Sites can make statements about future plans for observations. An example would be "HST will image the OT plus host galaxy to X-th mag Y days from now (and the data will be made available to the public within Z hours)".
 
-### Message Content
+## Message Content
 
 - **Subject-line Format:** The subject line in your submission should describe the event being discussed (e.g. GRB YYMMDDa, SYYMMDDa, ATYYYYxyz), the observation (e.g. Fermi-GBM, LIGO/Virgo/KAGRA, VLA, etc), and a description of the results (e.g. discovery, detection, upper limits, etc). The Circular subject line is "SUBJECT:" prepended to your email subject. Automatic subject-line filters are in place to prevent spam Circulars (e.g. rejecting all subject lines with "RE:", "vacation", "?", etc).
 - **Contact Information:** You can list "contact" information (e.g. phone number(s) & e-mail address(s), especially if different than the address that appears in the by-line) to allow the reader to contact you for further communications. However, ensure email signatures are not sent in the email content for your circular.
@@ -95,14 +95,14 @@ Acceptable content for the GCN Circulars falls within only four areas:
 - **Line Breaks:** It is now getting common that people use mailers with an editor window that automatically inserts line breaks on the screen. However, these line breaks are not actually in the message. As such, when they are received/read by people using simple-text displays, they appear as one long giant line that wraps on their screens at strange places. Please insert explicit line-breaks into your text when composing the circular.
 - **MIME/Mailer Stuff:** The processing of the incoming circular submissions is now MIME-compliant. That means any HTML-ized duplicates attached will be ignored -- only the plain_text version will be distributed. Attachments will also be deleted from the outgoing distribution.
 
-### Referencing, Citations, and Acknowledgements
+## Referencing, Citations, and Acknowledgements
 
 - **References:** References to previous GCN Circulars on an event are required; references to external articles are acceptable. References to previous GCN Circulars should be of the form "J. Doe, et al., GCN Circ. 270" or "J. Doe, et al., GCN Circ. 270, 1998". Note "J. Doe" should be the first author of the Circular, which sometimes differs from the submitter (the FROM-line entry). References to journal articles, books, etc, follow the standard conventions and formats.
 - **Support Acknowledgements:** It is quite acceptable to included statements acknowledging support (eg "This work was supported by XYZ Grant #1234." or "This work was conducted using the National Hoosits Facility.", etc).
 - **Citability (all are citable by default):** All Circulars are citable and indexed as such. Journal articles, books, etc that make use of content in Circulars should cite them the same as journal articles.
 - **Citations:** Since these GRB follow-up efforts are fast-paced, it is possible that not everyone will be aware of all previous work. The reasons are numerous: people may not have access to their normal or full e-mail accounts, they have just spent the last two hours furiously analyzing their own data, it's 5 o'clock in the morning and the mind is somewhat frazzled by lack of sleep, etc. As such, a reference to prior work may be innocently left out of the current Circular. While everyone will make an honest effort to be current and to cite prior work, it is understood that some omissions will inevitably happen.
 
-### Dont's
+## Dont's
 
 - Do not submit a Circular without a specified event in the title
 - Do not submit instrument specific information. Submit physical units (with specified energy range). E.g. do not quote "we detect Event X at 10 cts", report "we detect Event X at 1.0E-12 erg/s/cm^2 in the 0.2-10 keV energy range"
@@ -115,10 +115,10 @@ Acceptable content for the GCN Circulars falls within only four areas:
 - Do not neglect to mention potential systematic errors if they are expeced
 - Do not declare an event start time if you likely missed the beginning
 
-### Do's
+## Do's
 
 - Work together to discover secrets of the Universe
 
-#### Acknowledgements
+### Acknowledgements
 
 The GCN Circular service has benefited from numerous discussions and beta-testing with many people, most notably Roland Vanderspek, Ralph Wijers, James Rhoads, and Hye-Sook Park, plus the people at the 4th Huntsville GRB Workshop evening SIG session and the Woods Hole GRB Workshop. The overwhelming development work was performed by Scott Barthelmy. This Style Guide was adapted from the original with input from Kevin Hurley.
