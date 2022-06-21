@@ -10,6 +10,7 @@ import {
   CognitoIdentityProviderClient,
   CreateUserPoolClientCommand,
   DeleteUserPoolClientCommand,
+  DescribeUserPoolClientCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { SmithyException } from '@aws-sdk/types'
 import { tables } from '@architect/functions'
@@ -18,10 +19,37 @@ import { getUser } from '~/routes/__auth/user.server'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
 
-const errorsAllowedInDev = [
-  'ExpiredTokenException',
-  'UnrecognizedClientException',
-]
+function maybeThrow(e: any, warning: string) {
+  const errorsAllowedInDev = [
+    'ExpiredTokenException',
+    'UnrecognizedClientException',
+  ]
+  const { name } = e as SmithyException
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(
+      `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+    )
+  }
+}
+
+export type RedactedClientCredential = {
+  name: string
+  client_id: string
+  scope: string
+  created: number
+}
+
+export type ClientCredential = RedactedClientCredential & {
+  client_secret?: string
+}
+
+export type UnRedactedClientCredential = Required<ClientCredential>
 
 export class ClientCredentialVendingMachine {
   #sub: string
@@ -56,12 +84,29 @@ export class ClientCredentialVendingMachine {
       },
       ProjectionExpression: 'client_id, #name, #scope, created',
     })
-    return results.Items as {
-      client_id: string
-      name: string
-      scope: string
-      created: number
-    }[]
+    return results.Items as RedactedClientCredential[]
+  }
+
+  async getClientCredential(
+    client_id: string
+  ): Promise<UnRedactedClientCredential> {
+    const db = await tables()
+
+    // Make sure that the user actually owns the given client ID before
+    // we try to get its client secret
+    const item = (await db.client_credentials.get({
+      sub: this.#sub,
+      client_id,
+    })) as ({ sub: string } & RedactedClientCredential) | null
+    if (!item) throw new Response(null, { status: 404 })
+
+    const { sub, ...client_credential } = item
+    const client_secret = await this.#getClientSecretInternal(client_id)
+
+    return {
+      client_secret,
+      ...client_credential,
+    }
   }
 
   async deleteClientCredential(client_id: string) {
@@ -81,7 +126,10 @@ export class ClientCredentialVendingMachine {
     ])
   }
 
-  async createClientCredential(name?: string, scope?: string) {
+  async createClientCredential(
+    name?: string,
+    scope?: string
+  ): Promise<UnRedactedClientCredential> {
     if (!name) throw new Response('name must not be empty', { status: 400 })
     if (!scope) throw new Response('scope must not be empty', { status: 400 })
     if (!this.#groups.includes(scope))
@@ -119,15 +167,7 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognitoIdentityProviderClient.send(command)
     } catch (e) {
-      const name = (e as SmithyException).name
-      if (
-        !errorsAllowedInDev.includes(name) ||
-        process.env.NODE_ENV === 'production'
-      )
-        throw e
-      console.warn(
-        `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, creating fake client credentials.`
-      )
+      maybeThrow(e, 'creating fake client credentials')
       const client_id = generate({ length: 26 })
       const client_secret = generate({ length: 51 })
       return { client_id, client_secret }
@@ -140,6 +180,26 @@ export class ClientCredentialVendingMachine {
     return { client_id, client_secret }
   }
 
+  async #getClientSecretInternal(client_id: string) {
+    const command = new DescribeUserPoolClientCommand({
+      ClientId: client_id,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    })
+
+    let response
+    try {
+      response = await cognitoIdentityProviderClient.send(command)
+    } catch (e) {
+      maybeThrow(e, 'creating fake client secret')
+      const client_secret = generate({ length: 51 })
+      return client_secret
+    }
+
+    const client_secret = response.UserPoolClient?.ClientSecret
+    if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
+    return client_secret
+  }
+
   async #deleteClientCredentialInternal(client_id: string) {
     const command = new DeleteUserPoolClientCommand({
       ClientId: client_id,
@@ -149,15 +209,7 @@ export class ClientCredentialVendingMachine {
     try {
       await cognitoIdentityProviderClient.send(command)
     } catch (e) {
-      const name = (e as SmithyException).name
-      if (
-        !errorsAllowedInDev.includes(name) ||
-        process.env.NODE_ENV === 'production'
-      )
-        throw e
-      console.warn(
-        `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, deleting fake client credentials.`
-      )
+      maybeThrow(e, 'deleting fake client credentials')
     }
   }
 }
