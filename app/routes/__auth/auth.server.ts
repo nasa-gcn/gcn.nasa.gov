@@ -25,7 +25,6 @@ export const oidcStorage = createArcTableSessionStorage({
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === 'production',
     secrets: [getEnvOrDie('SESSION_SECRET')],
-    sameSite: 'lax',
     path: '/',
     maxAge: 300,
     httpOnly: true,
@@ -45,7 +44,6 @@ export const storage = createArcTableSessionStorage({
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === 'production',
     secrets: [getEnvOrDie('SESSION_SECRET')],
-    sameSite: 'lax',
     path: '/',
     maxAge: 3600,
     httpOnly: true,
