@@ -25,6 +25,7 @@ module.exports = function lambdaCognitoPermissions(arc, sam) {
           Action: [
             'cognito-idp:CreateUserPoolClient',
             'cognito-idp:DeleteUserPoolClient',
+            'cognito-idp:DescribeUserPoolClient',
           ],
           Resource: {
             'Fn::Sub': `arn:aws:cognito-idp:${region}:\${AWS::AccountId}:userpool/${user_pool_id}`,
