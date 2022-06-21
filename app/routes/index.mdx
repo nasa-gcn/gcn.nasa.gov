@@ -34,14 +34,6 @@ The General Coordinates Network is the modern evolution of the [Gamma-ray Coordi
 - [**Notices**](/notices) are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
 - [**Circulars**](/circulars) are human-readable, citable, rapid but generally not real-time, bulletins observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
 
-## Kafka Streaming Platform
-
-[Apache Kafka](https://kafka.apache.org) is an open-source distributed event streaming platform used in both commerical web applications
-and in recent years, it has been widely adopted by the astronomical community. Utilizing a rich development environment with
-open-source and commericially available tools, GCN is running a cloud-based high-reliability Kafka broker that distributes
-GCN notices to users. Kafka is the platform of streaming data, and is agnostic of data format. However, GCN will transition to
-distributing native Kafka Avro records (see [roadmap](docs/roadmap)), which can be losslessly converted between text based JSON records and a binary format.
-
 ## GCN Data Access Methods
 
 There are three ways to receive GCN Notices programmatically in real time:
@@ -107,6 +99,10 @@ There are three ways to receive GCN Notices programmatically in real time:
 | <div><IconAccountBox size="3"/></div> **Self-service**              | <span className="text-red text-bold">NO.</span> Users need to contact administrator in order to make account and subscription changes | <span className="text-green text-bold">YES.</span> Manage your own account and subscription settings through this web site            |
 | <div><IconSecurity size="3"/></div> **Secure**                      | <span className="text-red text-bold">NO.</span> Notices are sent as plaintext                                                         | <span className="text-green text-bold">YES.</span> Notices are protected with SSL/TLS                                                 |
 | <div><IconCloud size="3"/></div> **Highly Available**               | <span className="text-red text-bold">NO.</span>                                                                                       | <span className="text-green text-bold">YES.</span> Notices are served by a cluster of highly-available Kafka brokers in the cloud     |
+
+## What is Kafka?
+
+See [FAQ](docs/faq) to find this answer and other frequently asked questions.
 
 ## Coming Soon
 

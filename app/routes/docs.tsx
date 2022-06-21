@@ -30,6 +30,9 @@ export default function Docs() {
             <NavLink key="roadmap" to="roadmap">
               Road Map
             </NavLink>,
+            <NavLink key="faq" to="faq">
+              FAQ
+            </NavLink>,
           ]}
         />
       </div>
