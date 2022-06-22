@@ -146,7 +146,7 @@ a[rel~='external'] {
     @include u-bg('accent-cool');
   }
 
-  & .usa-card__footer {
+  & .usa-card__body {
     @include u-bg('white');
   }
 }
