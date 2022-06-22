@@ -31,8 +31,8 @@ export function DevBanner({ hostname }: { hostname: string }) {
   }
 
   return (
-    <SiteAlert variant="emergency" heading={heading}>
-      You are viewing {description} of GCN.
+    <SiteAlert slim variant="emergency">
+      <strong>{heading}.</strong> You are viewing {description} of GCN.
     </SiteAlert>
   )
 }
