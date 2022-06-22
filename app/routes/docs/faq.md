@@ -3,7 +3,7 @@ meta:
   title: GCN - FAQ
 ---
 
-# Frequently Asked Questions (FAQ)
+# Frequently Asked Questions
 
 ## What is Kafka?
 
