@@ -31,7 +31,7 @@ export default function Docs() {
               Road Map
             </NavLink>,
             <NavLink key="faq" to="faq">
-              FAQ
+              Frequently Asked Questions
             </NavLink>,
           ]}
         />
