@@ -3,8 +3,10 @@ meta:
   title: GCN - General Coordinates Network
 ---
 
+import { Link } from '@remix-run/react'
 import {
   Card,
+  CardBody,
   CardFooter,
   CardGroup,
   CardHeader,
@@ -16,27 +18,33 @@ import {
   IconSecurity,
 } from '@trussworks/react-uswds'
 
-# Welcome to the General Coordinates Network (GCN)
+<div
+  className="grid-row usa-hero margin-0 padding-0"
+  style={{ backgroundImage: 'none' }}
+>
+  <div className="tablet:grid-col-6 bg-base-darkest padding-4">
+    <h1 className="usa-hero__heading">
+      <span className="usa-hero__heading--alt">The new GCN:</span>{' '}
+      Multimessenger astronomy alerts delivered over Kafka
+    </h1>
+    <p className="text-base-lightest">
+      GCN distributes alerts between space- and ground-based observatories,
+      physics experiments, and thousands of astronomers around the world.
+    </p>
+    <Link to="/TODO" className="usa-button">
+      Start streaming GCN Notices
+    </Link>
+  </div>
+  <img
+    src="https://gcn.gsfc.nasa.gov/GCN.gif"
+    className="tablet:grid-col-6"
+    alt="GCN Diagram"
+  />
+</div>
 
-<img
-  src="https://gcn.gsfc.nasa.gov/GCN.gif"
-  width="400"
-  align="right"
-  alt="GCN Diagram"
-/>
+The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. For more information, see [What is GCN?](/docs/#what-is-gcn)
 
-The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. GCN is the established platform for publishing discoveries and follow-up of gamma-ray bursts (GRBs), gravitational-wave (GW) compact binary mergers, and high-energy neutrinos. GCN distributes alerts between space- and ground-based observatories, physics experiments, and thousands of astronomers around the world.
-
-The General Coordinates Network is the modern evolution of the [Gamma-ray Coordinates Network](https://gcn.gsfc.nasa.gov) (now referred to as GCN Classic, and formerly known as BACODINE/TAN), updated to use modern, open-source, reliable, and secure alert distribution technologies that have been established by the broader astronomy community.
-
-## GCN Data Products
-
-- [**Notices**](/notices) are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
-- [**Circulars**](/circulars) are human-readable, citable, rapid but generally not real-time, bulletins observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
-
-## GCN Data Access Methods
-
-There are three ways to receive GCN Notices programmatically in real time:
+There are three ways to stream GCN Notices in real time:
 
 <CardGroup>
   <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
@@ -50,8 +58,16 @@ There are three ways to receive GCN Notices programmatically in real time:
         alt="Data flow diagram for GCN Classic"
       />
     </CardMedia>
-    <CardFooter>
+    <CardBody>
       <p>Three formats, three protocols.</p>
+    </CardBody>
+    <CardFooter>
+      <a
+        className="usa-button usa-button--base"
+        href="https://gcn.gsfc.nasa.gov/invitation.html"
+      >
+        <>Get Started (Old Web Site)</>
+      </a>
     </CardFooter>
   </Card>
   <Card
@@ -69,8 +85,13 @@ There are three ways to receive GCN Notices programmatically in real time:
         alt="Data flow diagram for GCN Classic over Kafka"
       />
     </CardMedia>
-    <CardFooter>
+    <CardBody>
       <p>Three formats, one protocol.</p>
+    </CardBody>
+    <CardFooter>
+      <Link className="usa-button" to="/TODO">
+        Get Started
+      </Link>
     </CardFooter>
   </Card>
   <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
@@ -84,9 +105,9 @@ There are three ways to receive GCN Notices programmatically in real time:
         alt="Data flow diagram for GCN Kafka"
       />
     </CardMedia>
-    <CardFooter>
+    <CardBody>
       <p>One format, one protocol.</p>
-    </CardFooter>
+    </CardBody>
   </Card>
 </CardGroup>
 
