@@ -30,7 +30,7 @@ import { CopyableCode } from '~/components/CopyableCode'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { ClientCredentialVendingMachine } from './client_credentials.server'
 import moment from 'moment'
-import Tabs from './Tabs'
+import Tabs from '~/components/Tabs'
 import {
   GcnKafkaPythonSampleCode,
   GcnKafkaJsSampleCode,
