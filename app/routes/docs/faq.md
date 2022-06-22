@@ -1,6 +1,6 @@
 ---
 meta:
-  title: GCN - FAQ
+  title: GCN - Frequently Asked Questions
 ---
 
 # Frequently Asked Questions
