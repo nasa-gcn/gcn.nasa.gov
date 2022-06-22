@@ -18,7 +18,7 @@ sessions
   _ttl TTL
 
 @aws
-runtime nodejs14.x
+runtime nodejs16.x
 region us-east-1
 architecture arm64
 memory 256
