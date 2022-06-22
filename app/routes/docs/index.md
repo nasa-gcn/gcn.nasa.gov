@@ -13,7 +13,7 @@ GCN is the established platform for publishing discoveries and follow-up of gamm
 
 ## Client Configuration
 
-To begin receiving GCN notices via kafka, users have two options for setting up their listeners. GCN [Client Configuration](/docs/client) documentation describes lightweight wrappers around [**kafka.js**](/docs/client#node.js) and [**confluent-kafka**](/docs/client#confluent-kafka). Once the listener is setup, users can specify which Kafka topics they wish to follow for different GCN notice types.
+To begin receiving GCN notices via Kafka, users have two options for setting up their listeners. The [Client Configuration](/docs/client) section describes how to connect to Kafka using [Python](/docs/client#python) or [JavaScript](/docs/client#nodejs). Once the listener is set up, users can specify which Kafka topics they wish to follow for different GCN notice types.
 
 ## Contributing
 
