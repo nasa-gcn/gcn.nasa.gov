@@ -9,6 +9,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { getUser } from '../__auth/user.server'
+import StreamingSteps from './streaming_steps'
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
@@ -22,6 +23,7 @@ export default function User() {
     <>
       <h1>Welcome, {email}!</h1>
       <p>You signed in with {idp || 'username and password'}.</p>
+      <StreamingSteps></StreamingSteps>
     </>
   )
 }
