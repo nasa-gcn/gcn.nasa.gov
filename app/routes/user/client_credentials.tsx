@@ -35,12 +35,14 @@ import {
   GcnKafkaPythonSampleCode,
   GcnKafkaJsSampleCode,
 } from '~/components/ClientSampleCode'
+import { getEnvOrDieInProduction } from '~/lib/env'
 
 export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
   const groups = machine.groups
-  return { client_credentials, groups }
+  const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
+  return { client_credentials, groups, recaptchaSiteKey }
 }
 
 export const meta: MetaFunction = () => ({
@@ -140,7 +142,7 @@ function ClientCredential(props: ClientCredentialProps) {
 }
 
 export default function Index() {
-  const { client_credentials, groups } =
+  const { client_credentials, groups, recaptchaSiteKey } =
     useLoaderData<Awaited<ReturnType<typeof loader>>>()
   const [items, setItems] = useState<ClientCredentialData[]>(client_credentials)
 
@@ -148,11 +150,10 @@ export default function Index() {
   const [name, setName] = useState(defaultName)
   const defaultScope = 'gcn.nasa.gov/kafka-public-consumer'
   const [scope, setScope] = useState(defaultScope)
-  const defaultDisableButton = true && process.env.NODE_ENV === 'production'
+  const defaultDisableButton = !!recaptchaSiteKey
   const [disableRequestButton, setDisableButton] =
     useState(defaultDisableButton)
   const [validations, setValidations] = useState({ name: false })
-  const siteKey = 'site-key'
   client_credentials.sort((a, b) => a.created - b.created)
 
   const validateInput = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -224,19 +225,22 @@ export default function Index() {
   }
 
   function handleCreate() {
-    if (process.env.NODE_ENV === 'production') {
-      var validationResponse = grecaptcha.getResponse()
-      if (validationResponse === '') {
-        // TODO: throw an error or something, for now return
-        return
-      }
+    if (!recaptchaSiteKey) return
+    const recaptchaResponse = grecaptcha.getResponse()
+    if (!recaptchaResponse) {
+      // TODO: throw an error or something, for now return
+      return
     }
     fetch('/api/client_credentials', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, scope }),
+      body: JSON.stringify({
+        name,
+        scope,
+        recaptchaResponse,
+      }),
     })
       .then((result) => result.json())
       .then((item) => {
@@ -245,11 +249,7 @@ export default function Index() {
   }
 
   function onChange(value: any) {
-    if (value) {
-      setDisableButton(false)
-    } else {
-      setDisableButton(true)
-    }
+    setDisableButton(!value)
   }
   return (
     <>
@@ -310,8 +310,11 @@ export default function Index() {
             ))}
           </Dropdown>
           <br />
-          {process.env.NODE_ENV === 'production' ? (
-            <ReCAPTCHA sitekey={siteKey} onChange={onChange}></ReCAPTCHA>
+          {recaptchaSiteKey ? (
+            <ReCAPTCHA
+              sitekey={recaptchaSiteKey}
+              onChange={onChange}
+            ></ReCAPTCHA>
           ) : (
             <div className="usa-prose">
               <p className="text-base">
