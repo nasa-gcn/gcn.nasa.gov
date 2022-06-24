@@ -91,6 +91,13 @@ export function Header({
                         User Settings
                       </Link>,
                       <Link
+                        key="/streaming_steps"
+                        to="/user/streaming_steps"
+                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      >
+                        Streaming Steps
+                      </Link>,
+                      <Link
                         key="/user/client_credentials"
                         to="/user/client_credentials"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}

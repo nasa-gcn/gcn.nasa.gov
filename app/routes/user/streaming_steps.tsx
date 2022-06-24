@@ -52,7 +52,7 @@ export default function Streaming() {
       <StepIndicator counters="small" headingLevel="h4">
         <StepIndicatorStep label="Account Info" status={getStatus(steps[0])} />
         <StepIndicatorStep
-          label="Generate Credentials"
+          label="Select Credentials"
           status={getStatus(steps[1])}
         />
         <StepIndicatorStep
