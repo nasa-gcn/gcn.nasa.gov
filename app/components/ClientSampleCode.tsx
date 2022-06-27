@@ -7,6 +7,7 @@
  */
 
 import { useMatches } from '@remix-run/react'
+import dedent from 'dedent'
 import { Highlight } from './Highlight'
 
 function useDomain() {
@@ -22,87 +23,90 @@ function useDomain() {
   }
 }
 
-export function GcnKafkaPythonSampleCode({
-  clientId,
-  clientSecret,
-}: {
-  clientId?: string
-  clientSecret?: string
-}) {
-  const domain = useDomain()
-  return (
-    <Highlight
-      language="python"
-      code={`from gcn_kafka import Consumer
-
-# Connect as a consumer
-consumer = Consumer(client_id='${clientId ?? 'fill me in'}',
-                    client_secret='${clientSecret ?? 'fill me in'}',${
-        domain
-          ? `
-                    domain='${domain}'`
-          : ''
-      })
-
-# List all topics
-print(consumer.list_topics().topics)
-
-# Subscribe to topics and receive alerts
-consumer.subscribe(['gcn.classic.text.FERMI_GBM_FIN_POS',
-                    'gcn.classic.text.LVC_INITIAL'])
-while True:
-    for message in consumer.consume():
-        print(message.value())
-`}
-    />
-  )
-}
-
-export function GcnKafkaJsSampleCode({
-  clientId,
-  clientSecret,
-}: {
-  clientId?: string
-  clientSecret?: string
-}) {
-  const domain = useDomain()
-  return (
-    <Highlight
-      language="mjs"
-      code={`import { Kafka } from 'gcn-kafka'
-
-// Create a client
-const kafka = new Kafka({
-  client_id: '${clientId ?? 'fill me in'}',
-  client_secret: '${clientSecret ?? 'fill me in'}',${
-        domain
-          ? `
-  domain: '${domain}',`
-          : ''
-      }
-})
-
-// List topics
-const admin = kafka.admin()
-const topics = await admin.listTopics()
-console.log(topics)
-
-// Subscribe to topics and receive alerts
-const consumer = kafka.consumer()
-await consumer.subscribe({
-  topics: [
+export function ClientSampleCode({
+  clientId = 'fill me in',
+  clientSecret = 'fill me in',
+  noticeTypes = [
     'gcn.classic.text.FERMI_GBM_FIN_POS',
     'gcn.classic.text.LVC_INITIAL',
   ],
-})
+  language,
+}: {
+  clientId?: string
+  clientSecret?: string
+  noticeTypes?: string[]
+  language: 'python' | 'mjs'
+}) {
+  const domain = useDomain()
 
-await consumer.run({
-  eachMessage: async (payload) => {
-    const value = payload.message.value
-    console.log(value?.toString())
-  },
-})
-`}
-    />
-  )
+  let code
+  switch (language) {
+    case 'python':
+      code = dedent`
+        from gcn_kafka import Consumer
+
+        # Connect as a consumer
+        consumer = Consumer(client_id='${clientId}',
+                            client_secret='${clientSecret}'${
+        domain
+          ? `,
+                            domain='${domain}'`
+          : ''
+      })
+
+        # List all topics
+        print(consumer.list_topics().topics)
+
+        # Subscribe to topics and receive alerts
+        consumer.subscribe([${noticeTypes.map((noticeType) => `'${noticeType}'`)
+          .join(`,
+                            `)}])
+        while True:
+            for message in consumer.consume():
+                print(message.value())
+        `
+      break
+    case 'mjs':
+      code = dedent`
+        import { Kafka } from 'gcn-kafka'
+
+        // Create a client
+        const kafka = new Kafka({
+          client_id: '${clientId}',
+          client_secret: '${clientSecret}',${
+        domain
+          ? `
+          domain: '${domain}',`
+          : ''
+      }
+        })
+
+        // List topics
+        const admin = kafka.admin()
+        const topics = await admin.listTopics()
+        console.log(topics)
+
+        // Subscribe to topics and receive alerts
+        const consumer = kafka.consumer()
+        await consumer.subscribe({
+          topics: [${noticeTypes
+            .map(
+              (noticeType) => `
+            '${noticeType}',`
+            )
+            .join('')}
+          ],
+        })
+
+        await consumer.run({
+          eachMessage: async (payload) => {
+            const value = payload.message.value
+            console.log(value?.toString())
+          },
+        })
+        `
+      break
+  }
+
+  return <Highlight language={language} code={code} />
 }
