@@ -31,10 +31,7 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { ClientCredentialVendingMachine } from './client_credentials.server'
 import moment from 'moment'
 import Tabs from '~/components/Tabs'
-import {
-  GcnKafkaPythonSampleCode,
-  GcnKafkaJsSampleCode,
-} from '~/components/ClientSampleCode'
+import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { getEnvOrDieInProduction } from '~/lib/env'
 
 export async function loader({ request }: DataFunctionArgs) {
@@ -169,14 +166,12 @@ export default function Index() {
     setValidations({ ...validations, ...updatedValidations })
   }
 
-  function getClientId(): string {
-    return items.sort((a, b) => b.created - a.created)[0]?.client_id ?? '...'
+  function getClientId() {
+    return items.sort((a, b) => b.created - a.created)[0]?.client_id
   }
 
-  function getClientSecret(): string {
-    return (
-      items.sort((a, b) => b.created - a.created)[0]?.client_secret ?? '...'
-    )
+  function getClientSecret() {
+    return items.sort((a, b) => b.created - a.created)[0]?.client_secret
   }
 
   function tabs(): CodeDemoTabsType[] {
@@ -185,16 +180,18 @@ export default function Index() {
     return [
       {
         label: 'Python',
-        Component: GcnKafkaPythonSampleCode({
+        Component: ClientSampleCode({
           clientId,
           clientSecret,
+          language: 'python',
         }),
       },
       {
         label: 'JavaScript',
-        Component: GcnKafkaJsSampleCode({
+        Component: ClientSampleCode({
           clientId,
           clientSecret,
+          language: 'mjs',
         }),
       },
     ]
