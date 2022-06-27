@@ -360,3 +360,22 @@ input.react-tags__search-input:focus {
 .tabs-component.vertical [role='tablist'] button:hover {
   border-color: #e9ecef transparent #e9ecef #b41c1c;
 }
+
+/*
+Card formatting
+*/
+.card-headline h3,
+.card-headline p,
+.card-headline small {
+  display: inline;
+  vertical-align: bottom;
+}
+.card-headline h3 {
+  font-weight: bold;
+}
+
+.card-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
