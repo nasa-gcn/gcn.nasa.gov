@@ -189,7 +189,7 @@ export default function Index() {
         }),
       },
       {
-        label: 'Javscript',
+        label: 'JavaScript',
         Component: GcnKafkaJsSampleCode({
           clientId: getClientId(),
           clientSecret: getClientSecret(),
