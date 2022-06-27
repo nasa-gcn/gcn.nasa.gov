@@ -180,19 +180,21 @@ export default function Index() {
   }
 
   function tabs(): CodeDemoTabsType[] {
+    const clientId = getClientId()
+    const clientSecret = getClientSecret()
     return [
       {
         label: 'Python',
         Component: GcnKafkaPythonSampleCode({
-          clientId: getClientId(),
-          clientSecret: getClientSecret(),
+          clientId,
+          clientSecret,
         }),
       },
       {
         label: 'JavaScript',
         Component: GcnKafkaJsSampleCode({
-          clientId: getClientId(),
-          clientSecret: getClientSecret(),
+          clientId,
+          clientSecret,
         }),
       },
     ]
