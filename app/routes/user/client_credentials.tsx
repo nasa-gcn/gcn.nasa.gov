@@ -225,11 +225,13 @@ export default function Index() {
   }
 
   function handleCreate() {
-    if (!recaptchaSiteKey) return
-    const recaptchaResponse = grecaptcha.getResponse()
-    if (!recaptchaResponse) {
-      // TODO: throw an error or something, for now return
-      return
+    let recaptchaResponse
+    if (recaptchaSiteKey) {
+      const recaptchaResponse = grecaptcha.getResponse()
+      if (!recaptchaResponse) {
+        // TODO: throw an error or something, for now return
+        return
+      }
     }
     fetch('/api/client_credentials', {
       method: 'post',
