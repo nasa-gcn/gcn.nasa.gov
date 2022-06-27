@@ -19,7 +19,6 @@ import {
 } from '@trussworks/react-uswds'
 import type { DataFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-// import { CopyableCode } from '~/components/CopyableCode'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { ClientCredentialVendingMachine } from './client_credentials.server'
 import Tabs from '~/components/Tabs'
