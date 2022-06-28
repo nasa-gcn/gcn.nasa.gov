@@ -364,17 +364,16 @@ input.react-tags__search-input:focus {
 /*
 Card formatting
 */
-.card-headline h3,
-.card-headline p,
-.card-headline small {
+.client-cred-card-headline h3,
+.client-cred-card-headline p,
+.client-cred-card-headline small {
   display: inline;
   vertical-align: bottom;
 }
-.card-headline h3 {
+.client-cred-card-headline h3 {
   font-weight: bold;
 }
-
-.card-centered {
+.client-cred-card-centered {
   display: flex;
   align-items: center;
   justify-content: center;

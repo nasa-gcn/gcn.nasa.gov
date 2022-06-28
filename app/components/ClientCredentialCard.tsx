@@ -40,14 +40,14 @@ export default function ClientCredential(props: ClientCredentialProps) {
   return (
     <Card key={props.client_id} headerFirst>
       <Grid row>
-        <Grid col={1} className="grid-col-auto card-centered">
-          <div className="card-centered">
+        <Grid col={1} className="grid-col-auto client-cred-card-centered">
+          <div className="client-cred-card-centered">
             <IconSecurity color="#00a91c" size={5} />
           </div>
         </Grid>
         <Grid col={10}>
-          <div className="card-headline">
-            <h3 className="usa-card__heading">{props.name}&nbsp;&nbsp;</h3>
+          <div className="client-cred-card-headline">
+            <h3 className="usa-card__heading margin-right-1">{props.name}</h3>
             <p>
               <small className="text-base-light">
                 Created {momentCreated.fromNow()}
