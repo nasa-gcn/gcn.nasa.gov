@@ -29,7 +29,8 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets[matrix.aws_iam_role_key] }}
+          # role-to-assume: ${{ secrets[matrix.aws_iam_role_key] }}
+          role-to-assume: ${{ secrets.aws_iam_role_dev }}
           aws-region: us-east-1
       - name: Install Node.js
         uses: actions/setup-node@v2
