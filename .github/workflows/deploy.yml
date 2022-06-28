@@ -4,6 +4,7 @@ on:
     branches:
       - main
 permissions:
+  contents: read
   id-token: write
 jobs:
   deploy:
@@ -25,8 +26,6 @@ jobs:
       url: ${{ matrix.url }}
     runs-on: ubuntu-latest
     steps:
-      - name: Check actor
-        run: echo ${{ github.actor }}
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
