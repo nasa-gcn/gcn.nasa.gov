@@ -30,7 +30,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           # role-to-assume: ${{ secrets[matrix.aws_iam_role_key] }}
-          role-to-assume: ${{ secrets.aws_iam_role_dev }}
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_DEV }}
           aws-region: us-east-1
       - uses: actions/checkout@v2
       - name: Install Node.js
