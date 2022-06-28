@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - main
+permissions:
+  id-token: write
 jobs:
   deploy:
     strategy:
@@ -15,14 +17,16 @@ jobs:
             url: https://test.gcn.nasa.gov
           - env: prod
             url: https://gcn.nasa.gov
-    runs-on:
-      - aws
-      - ${{ matrix.env }}
     environment:
       name: ${{ matrix.env }}
       url: ${{ matrix.url }}
     steps:
       - uses: actions/checkout@v2
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets['aws_iam_role_' + matrix.env] }}
+          aws-region: us-east-1
       - name: Install Node.js
         uses: actions/setup-node@v2
         with:
