@@ -360,3 +360,21 @@ input.react-tags__search-input:focus {
 .tabs-component.vertical [role='tablist'] button:hover {
   border-color: #e9ecef transparent #e9ecef #b41c1c;
 }
+
+/*
+Card formatting
+*/
+.client-cred-card-headline h3,
+.client-cred-card-headline p,
+.client-cred-card-headline small {
+  display: inline;
+  vertical-align: bottom;
+}
+.client-cred-card-headline h3 {
+  font-weight: bold;
+}
+.client-cred-card-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

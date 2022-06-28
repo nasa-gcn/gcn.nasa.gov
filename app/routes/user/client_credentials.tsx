@@ -6,33 +6,26 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { useState, useRef } from 'react'
+import { useState } from 'react'
 import type { ChangeEvent } from 'react'
-import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Alert,
   Button,
   Dropdown,
-  IconDelete,
   Label,
-  Modal,
-  ModalFooter,
-  ModalHeading,
-  ModalToggleButton,
-  Table,
   TextInput,
   ValidationChecklist,
   ValidationItem,
 } from '@trussworks/react-uswds'
 import type { DataFunctionArgs, MetaFunction } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
-import { CopyableCode } from '~/components/CopyableCode'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { ClientCredentialVendingMachine } from './client_credentials.server'
-import moment from 'moment'
 import Tabs from '~/components/Tabs'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { getEnvOrDieInProduction } from '~/lib/env'
+import ClientCredential from '~/components/ClientCredentialCard'
+import type { ClientCredentialData } from '~/components/ClientCredentialCard'
 
 export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
@@ -46,18 +39,6 @@ export const meta: MetaFunction = () => ({
   title: 'GCN - Client Credentials',
 })
 
-interface ClientCredentialData {
-  name: string
-  created: number
-  client_id: string
-  client_secret?: string
-  scope: string
-}
-
-interface ClientCredentialProps extends ClientCredentialData {
-  onDelete?: (client_id: string) => void
-}
-
 interface Validator {
   [key: string]: any
 }
@@ -65,77 +46,6 @@ interface Validator {
 interface CodeDemoTabsType {
   label: string
   Component: React.ReactNode
-}
-
-function ClientCredential(props: ClientCredentialProps) {
-  const modalRef = useRef<ModalRef>(null)
-
-  const handleDelete: React.MouseEventHandler<HTMLButtonElement> = (e) => {
-    modalRef?.current?.toggleModal(e, false)
-    if (props.onDelete !== undefined) {
-      props.onDelete(props.client_id)
-    }
-  }
-
-  const momentCreated = moment.utc(props.created)
-
-  return (
-    <tr>
-      <td>{props.name}</td>
-      <td title={momentCreated.format()}>{momentCreated.fromNow()}</td>
-      <td>{props.scope}</td>
-      <td>
-        <CopyableCode text={props.client_id} />
-      </td>
-      <td>
-        {props.client_secret ? (
-          <CopyableCode text={props.client_secret} />
-        ) : (
-          <span className="text-base">(not shown)</span>
-        )}
-      </td>
-      <td>
-        <ModalToggleButton
-          type="button"
-          unstyled
-          title="Delete this client credential"
-          modalRef={modalRef}
-          opener
-        >
-          <big>
-            <IconDelete />
-          </big>
-        </ModalToggleButton>
-
-        <Modal
-          id="modal-delete"
-          ref={modalRef}
-          aria-labelledby="modal-delete-heading"
-          aria-describedby="modal-delete-description"
-          renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
-        >
-          <ModalHeading id="modal-delete-heading">
-            Delete Client Credential
-          </ModalHeading>
-          <div className="usa-prose">
-            <p id="modal-delete-description">
-              Are you sure that you want to delete the client credential named “
-              {props.name}” with client ID <code>{props.client_id}</code>?
-            </p>
-            <p>This action cannot be undone.</p>
-          </div>
-          <ModalFooter>
-            <Button data-close-modal type="button" onClick={handleDelete}>
-              Delete
-            </Button>
-            <ModalToggleButton modalRef={modalRef} closer outline>
-              Cancel
-            </ModalToggleButton>
-          </ModalFooter>
-        </Modal>
-      </td>
-    </tr>
-  )
 }
 
 export default function Index() {
@@ -261,6 +171,20 @@ export default function Index() {
           Secret that you can use in script to connect to the GCN Kafka broker.
         </p>
       </div>
+      {items.length > 0 ? (
+        <>
+          <h3>Existing Credentials</h3>
+          <ul style={{ listStyleType: 'none', paddingLeft: 0 }}>
+            {items.map((item) => (
+              <ClientCredential
+                {...item}
+                key={item.client_id}
+                onDelete={handleDelete}
+              />
+            ))}
+          </ul>
+        </>
+      ) : null}
       <h3>Create New Client Credential</h3>
       <section>
         <div>
@@ -348,29 +272,6 @@ export default function Index() {
           </div>
         ) : null}
       </div>
-      {items.length > 0 ? (
-        <Table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Created</th>
-              <th>Scope</th>
-              <th>Client ID</th>
-              <th>Client Secret</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {items.map((item) => (
-              <ClientCredential
-                {...item}
-                key={item.client_id}
-                onDelete={handleDelete}
-              />
-            ))}
-          </tbody>
-        </Table>
-      ) : null}
       <h3>Code Samples</h3>
       <Tabs tabs={tabs()} />
     </>
