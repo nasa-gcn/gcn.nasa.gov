@@ -13,10 +13,13 @@ jobs:
         include:
           - env: dev
             url: https://dev.gcn.nasa.gov
+            aws_iam_role_key: aws_iam_role_dev
           - env: test
             url: https://test.gcn.nasa.gov
+            aws_iam_role_key: aws_iam_role_test
           - env: prod
             url: https://gcn.nasa.gov
+            aws_iam_role_key: aws_iam_role_prod
     environment:
       name: ${{ matrix.env }}
       url: ${{ matrix.url }}
@@ -25,7 +28,7 @@ jobs:
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: ${{ secrets['aws_iam_role_' + matrix.env] }}
+          role-to-assume: ${{ secrets[matrix.aws_iam_role_key] }}
           aws-region: us-east-1
       - name: Install Node.js
         uses: actions/setup-node@v2
