@@ -1,9 +1,6 @@
 import type { Tab } from '~/components/Tabs'
 import Tabs from '~/components/Tabs'
-import {
-  GcnKafkaPythonSampleCode,
-  GcnKafkaJsSampleCode,
-} from '~/components/ClientSampleCode'
+import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { useClient } from '../streaming_steps'
 
 export default function Code() {
@@ -19,18 +16,20 @@ export default function Code() {
     return [
       {
         label: 'Python',
-        Component: GcnKafkaPythonSampleCode({
+        Component: ClientSampleCode({
           clientId: clientData.codeSampleClientId,
           clientSecret: clientData.codeSampleClientSecret,
-          subscriptionStrings: buildConnectionStrings(),
+          noticeTypes: buildConnectionStrings(),
+          language: 'python',
         }),
       },
       {
         label: 'Javscript',
-        Component: GcnKafkaJsSampleCode({
+        Component: ClientSampleCode({
           clientId: clientData.codeSampleClientId, //getClientId(),
           clientSecret: clientData.codeSampleClientSecret, //getClientSecret(),
-          subscriptionStrings: buildConnectionStrings(),
+          noticeTypes: buildConnectionStrings(),
+          language: 'mjs',
         }),
       },
     ]
