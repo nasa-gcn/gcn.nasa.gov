@@ -23,6 +23,7 @@ jobs:
     environment:
       name: ${{ matrix.env }}
       url: ${{ matrix.url }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Configure aws credentials
