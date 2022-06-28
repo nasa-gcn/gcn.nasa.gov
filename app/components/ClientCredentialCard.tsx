@@ -12,6 +12,7 @@ import {
 import type { ModalRef } from '@trussworks/react-uswds'
 import moment from 'moment'
 import { useRef } from 'react'
+import type { CSSProperties } from 'react'
 
 export interface ClientCredentialData {
   name: string
@@ -19,6 +20,8 @@ export interface ClientCredentialData {
   client_id: string
   client_secret?: string
   scope: string
+  className?: string
+  listStyles?: CSSProperties | undefined
 }
 
 interface ClientCredentialProps extends ClientCredentialData {
@@ -34,11 +37,15 @@ export default function ClientCredential(props: ClientCredentialProps) {
       props.onDelete(props.client_id)
     }
   }
-
   const momentCreated = moment.utc(props.created)
 
   return (
-    <Card key={props.client_id} headerFirst>
+    <Card
+      key={props.client_id}
+      headerFirst
+      style={{ ...props.listStyles, listStyle: 'none' }}
+      containerProps={{ className: props.className }}
+    >
       <Grid row>
         <Grid col={1} className="grid-col-auto client-cred-card-centered">
           <div className="client-cred-card-centered">
