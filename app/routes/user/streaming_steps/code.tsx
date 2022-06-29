@@ -7,8 +7,8 @@ export default function Code() {
   const clientData = useClient()
 
   function buildConnectionStrings() {
-    return clientData.alertSettings.map(
-      (item) => `'gcn.classic.${item.format}.${item.noticeType}'`
+    return clientData.noticeTypes?.map(
+      (item) => `'gcn.classic.${clientData.noticeFormat}.${item}'`
     )
   }
 

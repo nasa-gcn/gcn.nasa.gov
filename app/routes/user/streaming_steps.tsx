@@ -20,6 +20,12 @@ type ContextType = {
   setCodeSampleClientSecret: (arg: string) => void
   alertSettings: AlertSettings[]
   setAlertSettings: (arg: AlertSettings[]) => void
+  noticeFormat: string
+  setNoticeFormat: (arg: string) => void
+  noticeTypes: string[]
+  setNoticeTypes: (arg: string[]) => void
+  activeStep: string
+  setActiveStep: (arg: string) => void
 }
 
 export default function Streaming() {
@@ -27,6 +33,9 @@ export default function Streaming() {
 
   const defaultArray: AlertSettings[] = []
   const [alertSettings, setAlertSettings] = useState(defaultArray)
+  const [noticeFormat, setNoticeFormat] = useState('')
+  const defaultNoticeTypes: string[] = []
+  const [noticeTypes, setNoticeTypes] = useState(defaultNoticeTypes)
 
   const [codeSampleClientId, setCodeSampleClientId] = useState('')
   const [codeSampleClientSecret, setCodeSampleClientSecret] = useState('')
@@ -69,6 +78,12 @@ export default function Streaming() {
           setCodeSampleClientSecret,
           alertSettings,
           setAlertSettings,
+          noticeFormat,
+          setNoticeFormat,
+          noticeTypes,
+          setNoticeTypes,
+          activeStep,
+          setActiveStep,
         }}
       />
       <ButtonGroup type="default">
