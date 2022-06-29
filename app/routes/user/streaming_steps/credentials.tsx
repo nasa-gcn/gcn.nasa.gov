@@ -1,9 +1,9 @@
 import { Accordion, Fieldset, Radio } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { useClient } from '../streaming_steps'
+import { steps, useClient } from '../streaming_steps'
 import ClientCredentialCard from '~/components/ClientCredentialCard'
 import type { ClientCredentialData } from '~/components/ClientCredentialCard'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import { ClientCredentialVendingMachine } from '../client_credentials.server'
 import type { DataFunctionArgs } from '@remix-run/node'
 import type { AccordionItemProps } from '@trussworks/react-uswds/lib/components/Accordion/Accordion'
@@ -67,6 +67,22 @@ export default function Credentials() {
       </Fieldset>
       <br />
       <Accordion items={accordianItems} bordered />
+      <Link
+        type="button"
+        className="usa-button"
+        to="../"
+        onClick={() => clientData.setActiveStep(steps[0])}
+      >
+        Back
+      </Link>
+      <Link
+        type="button"
+        className="usa-button"
+        to="../alerts"
+        onClick={() => clientData.setActiveStep(steps[2])}
+      >
+        Alerts
+      </Link>
     </>
   )
 }

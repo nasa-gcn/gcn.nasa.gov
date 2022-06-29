@@ -1,25 +1,14 @@
-import {
-  ButtonGroup,
-  StepIndicator,
-  StepIndicatorStep,
-} from '@trussworks/react-uswds'
+import { StepIndicator, StepIndicatorStep } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { Link, Outlet, useOutletContext } from '@remix-run/react'
+import { Outlet, useOutletContext } from '@remix-run/react'
 
-const steps = ['login', 'credentials', 'alerts', 'display']
-
-export type AlertSettings = {
-  format: string
-  noticeType: string
-}
+export const steps = ['login', 'credentials', 'alerts', 'display']
 
 type ContextType = {
   codeSampleClientId?: string
   setCodeSampleClientId: (arg: string) => void
   codeSampleClientSecret?: string
   setCodeSampleClientSecret: (arg: string) => void
-  alertSettings: AlertSettings[]
-  setAlertSettings: (arg: AlertSettings[]) => void
   noticeFormat: string
   setNoticeFormat: (arg: string) => void
   noticeTypes: string[]
@@ -29,10 +18,8 @@ type ContextType = {
 }
 
 export default function Streaming() {
-  const [activeStep, setActiveStep] = useState('login')
+  const [activeStep, setActiveStep] = useState(steps[0])
 
-  const defaultArray: AlertSettings[] = []
-  const [alertSettings, setAlertSettings] = useState(defaultArray)
   const [noticeFormat, setNoticeFormat] = useState('')
   const defaultNoticeTypes: string[] = []
   const [noticeTypes, setNoticeTypes] = useState(defaultNoticeTypes)
@@ -40,12 +27,6 @@ export default function Streaming() {
   const [codeSampleClientId, setCodeSampleClientId] = useState('')
   const [codeSampleClientSecret, setCodeSampleClientSecret] = useState('')
 
-  function previousStep() {
-    setActiveStep(steps[steps.indexOf(activeStep) - 1])
-  }
-  function nextStep() {
-    setActiveStep(steps[steps.indexOf(activeStep) + 1])
-  }
   function getStatus(step: string) {
     if (step == activeStep) {
       return 'current'
@@ -76,8 +57,6 @@ export default function Streaming() {
           setCodeSampleClientId,
           codeSampleClientSecret,
           setCodeSampleClientSecret,
-          alertSettings,
-          setAlertSettings,
           noticeFormat,
           setNoticeFormat,
           noticeTypes,
@@ -86,65 +65,6 @@ export default function Streaming() {
           setActiveStep,
         }}
       />
-      <ButtonGroup type="default">
-        {activeStep == steps[0] ? (
-          <Link
-            to="credentials"
-            key="credentials"
-            className="usa-button"
-            onClick={nextStep}
-          >
-            Credentials
-          </Link>
-        ) : null}
-        {activeStep == steps[1] ? (
-          <>
-            <Link
-              to="."
-              className="usa-button usa-button--outline"
-              onClick={previousStep}
-            >
-              Back
-            </Link>
-            <Link
-              to="alerts"
-              key="alerts"
-              className="usa-button"
-              onClick={nextStep}
-            >
-              Alerts
-            </Link>
-          </>
-        ) : null}
-        {activeStep == steps[2] ? (
-          <>
-            <Link
-              to="credentials"
-              className="usa-button usa-button--outline"
-              onClick={previousStep}
-            >
-              Back
-            </Link>
-            <Link
-              to="code"
-              key="code"
-              className="usa-button"
-              onClick={nextStep}
-            >
-              Generate Code
-            </Link>
-          </>
-        ) : null}
-        {activeStep == steps[3] ? (
-          <Link
-            to="alerts"
-            className="usa-button usa-button--outline"
-            onClick={previousStep}
-          >
-            Back
-          </Link>
-        ) : null}
-      </ButtonGroup>
     </>
   )
 }

@@ -1,4 +1,8 @@
+import { Link } from '@remix-run/react'
+import { steps, useClient } from '../streaming_steps'
+
 export default function StreamingSteps() {
+  const clientData = useClient()
   return (
     <div className="usa-prose">
       <p>
@@ -8,6 +12,14 @@ export default function StreamingSteps() {
         sure you sign in the same way each time to keep your credentials
         together.
       </p>
+      <Link
+        type="button"
+        className="usa-button"
+        to="credentials"
+        onClick={() => clientData.setActiveStep(steps[1])}
+      >
+        Credentials
+      </Link>
     </div>
   )
 }
