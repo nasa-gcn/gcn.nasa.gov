@@ -1,11 +1,11 @@
-import { Button, Dropdown, Form, Label } from '@trussworks/react-uswds'
+import { Button, Form, Label } from '@trussworks/react-uswds'
 import React from 'react'
 import { NoticeFormat } from '~/components/NoticeFormat'
+import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 import { useClient } from '../streaming_steps'
 
 type NoticeSettings = {
   noticeFormat: { value: string }
-  noticeTypes: { value: string[] }
 }
 
 export default function Alerts() {
@@ -15,8 +15,15 @@ export default function Alerts() {
     event.preventDefault()
     const target = event.target as typeof event.target & NoticeSettings
     clientData.setNoticeFormat(target.noticeFormat.value)
-    const noticeTypes: string[] = target.noticeTypes.value
-    clientData.setNoticeTypes(noticeTypes) // To be updated with nested chechbox thing
+    let noticeTypes: string[] = []
+    // Might be a better way to do this, but need to exclude the 'parent' option, unless it works as a valid option
+    const checkedOptions = document.querySelectorAll(
+      '.sub-option input[type="checkbox"]:checked'
+    )
+    for (let index = 0; index < checkedOptions.length; index++) {
+      noticeTypes.push(checkedOptions[index].id)
+    }
+    clientData.setNoticeTypes(noticeTypes)
   }
 
   return (
@@ -35,20 +42,7 @@ export default function Alerts() {
         <Form onSubmit={(event) => handleSubmit(event)}>
           <NoticeFormat name="noticeFormat"></NoticeFormat>
           <Label htmlFor="noticeTypes">Notice Type</Label>
-          <Dropdown id="noticeTypes" name="noticeTypes">
-            <option>- Select - </option>
-            <option value="FERMI_GBM_ALERT">FERMI_GBM_ALERT</option>
-            <option value="FERMI_GBM_FLT_POS">FERMI_GBM_FLT_POS</option>
-            <option value="FERMI_GBM_GND_POS">FERMI_GBM_GND_POS</option>
-            <option value="FERMI_GBM_FIN_POS">FERMI_GBM_FIN_POS</option>
-            <option value="FERMI_GBM_SUBTHRESH">FERMI_GBM_SUBTHRESH</option>
-            <option value="FERMI_LAT_POS_INI">FERMI_LAT_POS_INI</option>
-            <option value="FERMI_LAT_POS_UPD">FERMI_LAT_POS_UPD</option>
-            <option value="FERMI_LAT_GND">FERMI_LAT_GND</option>
-            <option value="FERMI_LAT_OFFLINE">FERMI_LAT_OFFLINE</option>
-            <option value="FERMI_LAT_TRANS">FERMI_LAT_TRANS</option>
-            <option value="FERMI_LAT_MONITOR">FERMI_LAT_MONITOR</option>
-          </Dropdown>
+          <NoticeTypeCheckboxes />
           <Button type="submit">Generate Code</Button>
         </Form>
       </div>
