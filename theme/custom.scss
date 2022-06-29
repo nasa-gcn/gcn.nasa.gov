@@ -379,3 +379,27 @@ input.react-tags__search-input:focus {
   align-items: center;
   justify-content: center;
 }
+
+/*
+ * Indeterminate checkboxes
+ */
+
+.usa-checkbox__input:indeterminate {
+  &:not(:disabled) {
+    @include format-input {
+      @include add-background-svg('../../img/checkbox-indeterminate');
+      background-size: 75%;
+      background-position: center;
+      background-color: #0050d8;
+      box-shadow: 0 0 0 2px #0050d8;
+    }
+  }
+  &:disabled {
+    @include format-input {
+      @include add-background-svg('../../img/checkbox-indeterminate');
+      background-size: 75%;
+      background-position: center;
+      background-color: rgba(27, 27, 27, 0.3);
+    }
+  }
+}
