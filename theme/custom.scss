@@ -291,8 +291,8 @@ input.react-tags__search-input:focus {
 }
 
 /*
- Styling for the tab component
-*/
+ * Styling for the tab component
+ */
 
 .tabs-component [role='tablist'] {
   display: flex;
@@ -362,8 +362,9 @@ input.react-tags__search-input:focus {
 }
 
 /*
-Card formatting
-*/
+ * Client credential cards
+ */
+
 .client-cred-card-headline h3,
 .client-cred-card-headline p,
 .client-cred-card-headline small {
