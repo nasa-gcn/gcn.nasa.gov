@@ -1,18 +1,19 @@
-import type { FC } from 'react'
 import { useState } from 'react'
 
+export type Tab = {
+  label: string
+  Component: React.ReactNode
+}
+
 type TabsContainerProps = {
-  tabs: {
-    label: string
-    Component: React.ReactNode
-  }[]
+  tabs: Tab[]
 }
 
 /**
  * Avalible Props
- * @param tabs Array of object with properties label: string and a Component: React.ReactNode
+ * @param tabs Array of Tab objects with properties label: string and a Component: React.ReactNode
  */
-let Tabs: FC<TabsContainerProps> = ({ tabs = [] }) => {
+let Tabs: React.FC<TabsContainerProps> = ({ tabs = [] }) => {
   const [selectedTab, setSelectedTab] = useState(0)
   const Panel = tabs && tabs[selectedTab]
 

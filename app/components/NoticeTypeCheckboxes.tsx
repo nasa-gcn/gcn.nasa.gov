@@ -172,6 +172,7 @@ export function NoticeTypeCheckboxes() {
           id: noticeType,
           label: noticeType,
           name: noticeType,
+          className: 'sub-option',
         })),
       }))}
     />
