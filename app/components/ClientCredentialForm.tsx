@@ -3,13 +3,15 @@ import { useLoaderData } from '@remix-run/react'
 import { Label, TextInput, Dropdown, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
+import { getEnvOrDieInProduction } from '~/lib/env'
 import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
 import type { ClientCredentialData } from './ClientCredentialCard'
 
 export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
-  return { client_credentials }
+  const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
+  return { client_credentials, recaptchaSiteKey }
 }
 
 export default function ClientCredentialForm({
@@ -17,14 +19,13 @@ export default function ClientCredentialForm({
 }: {
   setItems: React.Dispatch<React.SetStateAction<ClientCredentialData[]>>
 }) {
-  const { client_credentials } =
+  const { client_credentials, recaptchaSiteKey } =
     useLoaderData<Awaited<ReturnType<typeof loader>>>() ?? []
   const [items] = useState<ClientCredentialData[]>(client_credentials)
   const defaultName = ''
   const [name, setName] = useState(defaultName)
   const defaultScope = 'gcn.nasa.gov/kafka-public-consumer'
   const [scope, setScope] = useState(defaultScope)
-  const siteKey = 'site-key'
   const [disableRequestButton, setDisableButton] = useState(false)
 
   function handleCreate() {
@@ -84,8 +85,8 @@ export default function ClientCredentialForm({
         </option>
       </Dropdown>
       <br />
-      {process.env.NODE_ENV === 'production' ? (
-        <ReCAPTCHA sitekey={siteKey} onChange={onChange}></ReCAPTCHA>
+      {recaptchaSiteKey ? (
+        <ReCAPTCHA sitekey={recaptchaSiteKey} onChange={onChange}></ReCAPTCHA>
       ) : (
         <div className="usa-prose">
           <p className="text-base">

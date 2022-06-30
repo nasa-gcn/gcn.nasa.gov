@@ -20,7 +20,7 @@ export default function Credentials() {
   const clientData = useClient()
   // Data loaded for options
   const { client_credentials } =
-    useLoaderData<Awaited<ReturnType<typeof loader>>>() ?? []
+    useLoaderData<Awaited<ReturnType<typeof loader>>>()
   const [items, setItems] = useState<ClientCredentialData[]>(client_credentials)
   const [linkDisabled, setLinkDisabled] = useState(
     clientData.codeSampleClientSecret == ''
