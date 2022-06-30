@@ -11,7 +11,7 @@ import { Label } from '@trussworks/react-uswds'
 import React from 'react'
 import { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
-import { steps, useClient } from '../streaming_steps'
+import { useClient } from '../streaming_steps'
 
 export default function Alerts() {
   const clientData = useClient()
@@ -38,7 +38,6 @@ export default function Alerts() {
       noticeTypes.push(checkedOptions[index].id)
     }
     clientData.setNoticeTypes(noticeTypes)
-    clientData.setActiveStep(steps[3])
   }
 
   return (
@@ -54,7 +53,6 @@ export default function Alerts() {
           to="../credentials"
           type="button"
           className="usa-button usa-button--outline"
-          onClick={() => clientData.setActiveStep(steps[1])}
         >
           Back
         </Link>

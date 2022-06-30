@@ -8,7 +8,7 @@
 
 import { Accordion, Fieldset, Radio } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { steps, useClient } from '../streaming_steps'
+import { useClient } from '../streaming_steps'
 import ClientCredentialCard from '~/components/ClientCredentialCard'
 import type { ClientCredentialData } from '~/components/ClientCredentialCard'
 import { Link, useLoaderData } from '@remix-run/react'
@@ -91,21 +91,11 @@ export default function Credentials() {
       </Fieldset>
       <br />
       <Accordion items={accordianItems} bordered />
-      <Link
-        type="button"
-        className="usa-button"
-        to="../"
-        onClick={() => clientData.setActiveStep(steps[0])}
-      >
+      <Link type="button" className="usa-button" to="../">
         Back
       </Link>
       {linkDisabled ? null : (
-        <Link
-          type="button"
-          className="usa-button"
-          to="../alerts"
-          onClick={() => clientData.setActiveStep(steps[2])}
-        >
+        <Link type="button" className="usa-button" to="../alerts">
           Alerts
         </Link>
       )}
