@@ -371,9 +371,11 @@ input.react-tags__search-input:focus {
   display: inline;
   vertical-align: bottom;
 }
+
 .client-cred-card-headline h3 {
   font-weight: bold;
 }
+
 .client-cred-card-centered {
   display: flex;
   align-items: center;
@@ -432,7 +434,7 @@ input.react-tags__search-input:focus {
 }
 
 /* 
-Spinner styling 
+* Spinner styling 
 */
 .loader,
 .loader:after {
