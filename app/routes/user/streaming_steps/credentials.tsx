@@ -22,7 +22,9 @@ export default function Credentials() {
   const { client_credentials } =
     useLoaderData<Awaited<ReturnType<typeof loader>>>() ?? []
   const [items, setItems] = useState<ClientCredentialData[]>(client_credentials)
-
+  const [linkDisabled, setLinkDisabled] = useState(
+    clientData.codeSampleClientSecret == ''
+  )
   const accordianItem: AccordionItemProps = {
     id: 'new-cred',
     title: 'New Credential',
@@ -30,6 +32,22 @@ export default function Credentials() {
     expanded: items.length == 0,
   }
   const accordianItems: AccordionItemProps[] = [accordianItem]
+
+  async function setClientIdAndSecret(clientId: string) {
+    clientData.setCodeSampleClientId(clientId)
+    fetch('/api/client_credentials/$client_data', {
+      method: 'post',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ clientId: clientId }),
+    })
+      .then((result) => result.json())
+      .then((credential) => {
+        clientData.setCodeSampleClientSecret(credential.client_secret)
+        setLinkDisabled(false)
+      })
+  }
 
   return (
     <>
@@ -45,9 +63,7 @@ export default function Credentials() {
                 id={item.client_id}
                 name="existing-client-creds"
                 onClick={() => {
-                  // //getSecret() -> then call next line
-                  clientData.setCodeSampleClientId(item.client_id)
-                  //clientData.setCodeSampleClientSecret(item.client_secret)
+                  setClientIdAndSecret(item.client_id)
                 }}
                 label={
                   <ClientCredentialCard
@@ -75,14 +91,16 @@ export default function Credentials() {
       >
         Back
       </Link>
-      <Link
-        type="button"
-        className="usa-button"
-        to="../alerts"
-        onClick={() => clientData.setActiveStep(steps[2])}
-      >
-        Alerts
-      </Link>
+      {linkDisabled ? null : (
+        <Link
+          type="button"
+          className="usa-button"
+          to="../alerts"
+          onClick={() => clientData.setActiveStep(steps[2])}
+        >
+          Alerts
+        </Link>
+      )}
     </>
   )
 }
