@@ -50,11 +50,7 @@ export default function ClientCredentialForm({
       })
   }
   function onChange(value: any) {
-    if (value) {
-      setDisableButton(false)
-    } else {
-      setDisableButton(true)
-    }
+    setDisableButton(!value)
   }
   return (
     <div>
