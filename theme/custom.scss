@@ -403,3 +403,30 @@ input.react-tags__search-input:focus {
     }
   }
 }
+
+/*
+ * Nested checkboxes
+ */
+
+.nested-checkboxes__node {
+  list-style: url('../img/usa-icons/chevron_right.svg');
+}
+
+.nested-checkboxes__node[aria-expanded='true'] {
+  list-style: url('../img/usa-icons/expand_more.svg');
+}
+
+.nested-checkboxes__leaf {
+  list-style: none;
+}
+
+.nested-checkboxes__node [data-testid='checkbox'] {
+  position: relative;
+  top: -0.25rem;
+  display: inline-block;
+}
+
+.nested-checkboxes__node label {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
