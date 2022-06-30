@@ -9,7 +9,7 @@
 import type { Tab } from '~/components/Tabs'
 import Tabs from '~/components/Tabs'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
-import { steps, useClient } from '../streaming_steps'
+import { useClient } from '../streaming_steps'
 import { Link } from '@remix-run/react'
 
 export default function Code() {
@@ -51,7 +51,6 @@ export default function Code() {
         to="../alerts"
         type="button"
         className="usa-button usa-button--outline"
-        onClick={() => clientData.setActiveStep(steps[2])}
       >
         Back
       </Link>
