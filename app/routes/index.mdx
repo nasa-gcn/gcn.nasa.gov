@@ -3,7 +3,6 @@ meta:
   title: GCN - General Coordinates Network
 ---
 
-import { Hero } from '~/components/Hero'
 import { Link } from '@remix-run/react'
 import {
   Card,
@@ -19,7 +18,29 @@ import {
   IconSecurity,
 } from '@trussworks/react-uswds'
 
-<Hero />
+<div
+  className="grid-row usa-hero margin-0 padding-0"
+  style={{ backgroundImage: 'none' }}
+>
+  <div className="tablet:grid-col-6 bg-base-darkest padding-4">
+    <h1 className="usa-hero__heading">
+      <span className="usa-hero__heading--alt">The new GCN:</span>{' '}
+      Multimessenger astronomy alerts delivered over Kafka
+    </h1>
+    <p className="text-base-lightest">
+      GCN distributes alerts between space- and ground-based observatories,
+      physics experiments, and thousands of astronomers around the world.
+    </p>
+    <Link to="/user/streaming_steps" className="usa-button">
+      Start streaming GCN Notices
+    </Link>
+  </div>
+  <img
+    src="https://gcn.gsfc.nasa.gov/GCN.gif"
+    className="tablet:grid-col-6"
+    alt="GCN Diagram"
+  />
+</div>
 
 The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. For more information, see [What is GCN?](/docs/#what-is-gcn)
 
