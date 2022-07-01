@@ -13,6 +13,7 @@ export function NoticeFormat({ name }: { name: string }) {
     <Fieldset legend="Notice Format">
       <Radio
         tile
+        defaultChecked
         id="text"
         name={name}
         value="text"

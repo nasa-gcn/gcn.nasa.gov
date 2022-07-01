@@ -6,29 +6,10 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { useState } from 'react'
-import { Outlet, useOutletContext } from '@remix-run/react'
+import { Outlet } from '@remix-run/react'
 import { NavStepIndicator } from '~/components/NavStepIndicator'
 
-type ContextType = {
-  codeSampleClientId?: string
-  setCodeSampleClientId: (arg: string) => void
-  codeSampleClientSecret?: string
-  setCodeSampleClientSecret: (arg: string) => void
-  noticeFormat: string
-  setNoticeFormat: (arg: string) => void
-  noticeTypes: string[]
-  setNoticeTypes: (arg: string[]) => void
-}
-
 export default function Streaming() {
-  const [noticeFormat, setNoticeFormat] = useState('')
-  const defaultNoticeTypes: string[] = []
-  const [noticeTypes, setNoticeTypes] = useState(defaultNoticeTypes)
-
-  const [codeSampleClientId, setCodeSampleClientId] = useState('')
-  const [codeSampleClientSecret, setCodeSampleClientSecret] = useState('')
-
   return (
     <>
       <NavStepIndicator
@@ -41,22 +22,7 @@ export default function Streaming() {
           { to: 'code', label: 'Code Sample' },
         ]}
       />
-      <Outlet
-        context={{
-          codeSampleClientId,
-          setCodeSampleClientId,
-          codeSampleClientSecret,
-          setCodeSampleClientSecret,
-          noticeFormat,
-          setNoticeFormat,
-          noticeTypes,
-          setNoticeTypes,
-        }}
-      />
+      <Outlet />
     </>
   )
-}
-
-export function useClient() {
-  return useOutletContext<ContextType>()
 }
