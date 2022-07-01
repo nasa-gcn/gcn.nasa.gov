@@ -6,54 +6,69 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import type { Tab } from '~/components/Tabs'
 import Tabs from '~/components/Tabs'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
-import { useClient } from '../streaming_steps'
-import { Link } from '@remix-run/react'
+import { Form, useLoaderData } from '@remix-run/react'
+import type { DataFunctionArgs } from '@remix-run/node'
+import { ClientCredentialVendingMachine } from '../client_credentials.server'
+import { Button } from '@trussworks/react-uswds'
+
+export async function loader({ request }: DataFunctionArgs) {
+  const { clientId, noticeFormat, ...rest } = Object.fromEntries(
+    new URL(request.url).searchParams
+  )
+  const noticeTypes = Object.keys(rest)
+  const machine = await ClientCredentialVendingMachine.create(request)
+  const clientCredentialProps = await machine.getClientCredential(clientId)
+  return {
+    noticeFormat,
+    noticeTypes,
+    ...clientCredentialProps,
+  }
+}
 
 export default function Code() {
-  const clientData = useClient()
+  const {
+    client_id: clientId,
+    client_secret: clientSecret,
+    noticeFormat,
+    noticeTypes,
+  } = useLoaderData<Awaited<ReturnType<typeof loader>>>()
 
-  function buildConnectionStrings() {
-    return clientData.noticeTypes?.map(
-      (item) => `'gcn.classic.${clientData.noticeFormat}.${item}'`
-    )
-  }
+  const topics = noticeTypes.map(
+    (noticeType) => `gcn.classic.${noticeFormat}.${noticeType}`
+  )
 
-  function tabs(): Tab[] {
-    return [
-      {
-        label: 'Python',
-        Component: ClientSampleCode({
-          clientId: clientData.codeSampleClientId,
-          clientSecret: clientData.codeSampleClientSecret,
-          noticeTypes: buildConnectionStrings(),
-          language: 'python',
-        }),
-      },
-      {
-        label: 'Javscript',
-        Component: ClientSampleCode({
-          clientId: clientData.codeSampleClientId, //getClientId(),
-          clientSecret: clientData.codeSampleClientSecret, //getClientSecret(),
-          noticeTypes: buildConnectionStrings(),
-          language: 'mjs',
-        }),
-      },
-    ]
-  }
+  const tabs = [
+    {
+      label: 'Python',
+      Component: ClientSampleCode({
+        clientId,
+        clientSecret,
+        topics,
+        language: 'python',
+      }),
+    },
+    {
+      label: 'Javscript',
+      Component: ClientSampleCode({
+        clientId,
+        clientSecret,
+        topics,
+        language: 'mjs',
+      }),
+    },
+  ]
 
   return (
     <>
-      <Tabs tabs={tabs()} />
-      <Link
-        to="../alerts"
-        type="button"
-        className="usa-button usa-button--outline"
-      >
-        Back
-      </Link>
+      <Tabs tabs={tabs} />
+      <Form method="get" action="../alerts">
+        <input type="hidden" name="clientId" value={clientId} />
+        <Button type="submit" className="usa-button--outline">
+          Back
+        </Button>
+      </Form>
     </>
   )
 }

@@ -25,7 +25,7 @@ function useDomain() {
 export function ClientSampleCode({
   clientId = 'fill me in',
   clientSecret = 'fill me in',
-  noticeTypes = [
+  topics = [
     'gcn.classic.text.FERMI_GBM_FIN_POS',
     'gcn.classic.text.LVC_INITIAL',
   ],
@@ -33,7 +33,7 @@ export function ClientSampleCode({
 }: {
   clientId?: string
   clientSecret?: string
-  noticeTypes?: string[]
+  topics?: string[]
   language: 'python' | 'mjs'
 }) {
   const domain = useDomain()
@@ -57,8 +57,7 @@ export function ClientSampleCode({
         print(consumer.list_topics().topics)
 
         # Subscribe to topics and receive alerts
-        consumer.subscribe([${noticeTypes.map((noticeType) => `'${noticeType}'`)
-          .join(`,
+        consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
                             `)}])
         while True:
             for message in consumer.consume():
@@ -88,10 +87,10 @@ export function ClientSampleCode({
         // Subscribe to topics and receive alerts
         const consumer = kafka.consumer()
         await consumer.subscribe({
-          topics: [${noticeTypes
+          topics: [${topics
             .map(
-              (noticeType) => `
-            '${noticeType}',`
+              (topic) => `
+            '${topic}',`
             )
             .join('')}
           ],

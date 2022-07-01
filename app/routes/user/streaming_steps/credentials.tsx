@@ -6,98 +6,195 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Accordion, Fieldset, Radio } from '@trussworks/react-uswds'
-import { useState } from 'react'
-import { useClient } from '../streaming_steps'
-import ClientCredentialCard from '~/components/ClientCredentialCard'
-import type { ClientCredentialData } from '~/components/ClientCredentialCard'
-import { Link, useLoaderData } from '@remix-run/react'
+import {
+  Button,
+  Dropdown,
+  Grid,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
+import { Form, Link, useLoaderData } from '@remix-run/react'
 import { ClientCredentialVendingMachine } from '../client_credentials.server'
 import type { DataFunctionArgs } from '@remix-run/node'
-import type { AccordionItemProps } from '@trussworks/react-uswds/lib/components/Accordion/Accordion'
-import ClientCredentialForm from '~/components/ClientCredentialForm'
+import { redirect } from '@remix-run/node'
+import moment from 'moment'
+import type { ReactNode } from 'react'
+import { useState } from 'react'
+import ReCAPTCHA from 'react-google-recaptcha'
+import { getEnvOrDieInProduction } from '~/lib/env'
 
 export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
-  return { client_credentials }
+  const groups = machine.groups
+  const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
+  return { client_credentials, recaptchaSiteKey, groups }
+}
+
+async function verifyRecaptcha(response?: string) {
+  const secret = getEnvOrDieInProduction('RECAPTCHA_SITE_SECRET')
+  if (!secret) return
+  const verifyResponse = await fetch(
+    'https://www.google.com/recaptcha/api/siteverify',
+    { method: 'POST', body: JSON.stringify({ response, secret }) }
+  )
+  const { success } = await verifyResponse.json()
+  if (!success) throw new Response('ReCAPTCHA was invalid', { status: 400 })
+}
+
+export async function action({ request }: DataFunctionArgs) {
+  const {
+    name,
+    scope,
+    'g-recaptcha-response': recaptchaResponse,
+  } = Object.fromEntries(await request.formData()) as { [k: string]: string }
+  await verifyRecaptcha(recaptchaResponse)
+  const machine = await ClientCredentialVendingMachine.create(request)
+  const { client_id } = await machine.createClientCredential(name, scope)
+  return redirect(
+    `/user/streaming_steps/alerts?clientId=${encodeURIComponent(client_id)}`
+  )
+}
+
+function SegmentedCard({ children }: { children: ReactNode[] }) {
+  return (
+    <>
+      {children.map((child, index) => (
+        <div
+          key={index}
+          className={`padding-2 border-base-lighter border-left-2px border-right-2px border-bottom-2px border-solid ${
+            index == 0 ? 'radius-top-md' : ''
+          } ${index == children.length - 1 ? 'radius-bottom-md' : ''} ${
+            index > 0 ? 'border-top-0' : 'border-top-2px'
+          }`}
+        >
+          {child}
+        </div>
+      ))}
+    </>
+  )
+}
+
+export function NewCredentialForm() {
+  const { groups, recaptchaSiteKey } =
+    useLoaderData<Awaited<ReturnType<typeof loader>>>()
+  const [recaptchaValid, setRecaptchaValid] = useState(!recaptchaSiteKey)
+  const [nameValid, setNameValid] = useState(false)
+
+  return (
+    <Form method="post">
+      <div className="usa-prose">
+        <p>Choose a name for your new client credential.</p>
+        <p className="text-base">
+          The name should help you remember what you use the client credential
+          for, or where you use it. Examples: “My Laptop”, “Lab Desktop”, “GRB
+          Pipeline”.
+        </p>
+      </div>
+      <Label htmlFor="name">Name</Label>
+      <TextInput
+        data-focus
+        name="name"
+        id="name"
+        type="text"
+        placeholder="Name"
+        onChange={(e) => setNameValid(!!e.target.value)}
+      />
+      <Label htmlFor="scope">Scope</Label>
+      <Dropdown
+        id="scope"
+        name="scope"
+        defaultValue="gcn.nasa.gov/kafka-public-consumer"
+      >
+        {groups.map((group) => (
+          <option value={group} key={group}>
+            {group}
+          </option>
+        ))}
+      </Dropdown>
+      <p>
+        {recaptchaSiteKey ? (
+          <ReCAPTCHA
+            sitekey={recaptchaSiteKey}
+            onChange={(value) => {
+              setRecaptchaValid(!!value)
+            }}
+          ></ReCAPTCHA>
+        ) : (
+          <div className="usa-prose">
+            <p className="text-base">
+              You are working in a development environment, the ReCaptcha is
+              currently hidden
+            </p>
+          </div>
+        )}
+      </p>
+      <Link to=".." type="button" className="usa-button usa-button--outline">
+        Back
+      </Link>
+      <Button disabled={!(nameValid && recaptchaValid)} type="submit">
+        Request New Credentials
+      </Button>
+    </Form>
+  )
 }
 
 export default function Credentials() {
-  //Data passed between steps
-  const clientData = useClient()
-  // Data loaded for options
   const { client_credentials } =
     useLoaderData<Awaited<ReturnType<typeof loader>>>()
-  const [items, setItems] = useState<ClientCredentialData[]>(client_credentials)
-  const [linkDisabled, setLinkDisabled] = useState(
-    clientData.codeSampleClientSecret == ''
-  )
-  const accordianItem: AccordionItemProps = {
-    id: 'new-cred',
-    title: 'New Credential',
-    content: <ClientCredentialForm setItems={setItems} />,
-    expanded: items.length == 0,
-  }
-  const accordianItems: AccordionItemProps[] = [accordianItem]
 
-  async function setClientIdAndSecret(clientId: string) {
-    clientData.setCodeSampleClientId(clientId)
-    fetch('/api/client_credentials/$client_data', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ clientId: clientId }),
-    })
-      .then((result) => result.json())
-      .then((credential) => {
-        clientData.setCodeSampleClientSecret(credential.client_secret)
-        setLinkDisabled(false)
-      })
-  }
+  const explanation = (
+    <>
+      Client credentials allow your scripts to interact with GCN on your behalf.
+    </>
+  )
 
   return (
     <>
-      <p>
-        Select from your available existing credentials or create a new one
-        below.
-      </p>
-      <Fieldset>
-        {items
-          ? items.map((item) => (
-              <Radio
-                key={item.client_id}
-                id={item.client_id}
-                name="existing-client-creds"
-                onClick={() => {
-                  setClientIdAndSecret(item.client_id)
-                }}
-                label={
-                  <ClientCredentialCard
-                    listStyles={{ marginBottom: 0 }}
-                    className="margin-bottom-0 border-0"
-                    name={item.name}
-                    client_id={item.client_id}
-                    client_secret={item.client_secret}
-                    created={item.created}
-                    scope={item.scope}
-                  />
-                }
-                tile
-              />
-            ))
-          : null}
-      </Fieldset>
-      <br />
-      <Accordion items={accordianItems} bordered />
-      <Link type="button" className="usa-button" to="../">
-        Back
-      </Link>
-      {linkDisabled ? null : (
-        <Link type="button" className="usa-button" to="../alerts">
-          Alerts
-        </Link>
+      {client_credentials.length > 0 ? (
+        <>
+          <p>
+            {explanation} Select one of your existing client credentials, or
+            create a new one.
+          </p>
+          <SegmentedCard>
+            {client_credentials.map(({ name, client_id, created }) => (
+              <Link
+                className="text-no-underline text-ink"
+                key={client_id}
+                to={`../alerts?clientId=${encodeURIComponent(client_id)}`}
+              >
+                <Grid row>
+                  <div className="grid-col flex-fill">
+                    <div>
+                      <strong>{name}</strong>{' '}
+                      <small className="text-base">
+                        (created {moment.utc(created).fromNow()})
+                      </small>
+                    </div>
+                    <div>
+                      <small>
+                        client ID: <code>{client_id}</code>
+                      </small>
+                    </div>
+                  </div>
+                  <div className="grid-col flex-auto">
+                    <Button type="button">Select</Button>
+                  </div>
+                </Grid>
+              </Link>
+            ))}
+          </SegmentedCard>
+          <div className="padding-2" key="new">
+            <strong>New client credentials....</strong>
+            <NewCredentialForm />
+          </div>
+        </>
+      ) : (
+        <>
+          <p>{explanation}</p>
+          <NewCredentialForm />
+        </>
       )}
     </>
   )
