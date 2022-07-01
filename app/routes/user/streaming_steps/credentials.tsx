@@ -36,14 +36,27 @@ export default function Credentials() {
   const accordianItem: AccordionItemProps = {
     id: 'new-cred',
     title: 'New Credential',
-    content: <ClientCredentialForm setItems={setItems} />,
+    content: <ClientCredentialForm postClickHandler={pullClientCredentials} />,
     expanded: items.length == 0,
   }
   const accordianItems: AccordionItemProps[] = [accordianItem]
 
+  function pullClientCredentials() {
+    fetch('/api/client_credentials', {
+      method: 'get',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((result) => result.json())
+      .then((resultItems) => {
+        setItems(resultItems)
+      })
+  }
+
   async function setClientIdAndSecret(clientId: string) {
     clientData.setCodeSampleClientId(clientId)
-    fetch('/api/client_credentials/$client_data', {
+    fetch(`/api/client_credentials/client_data/${clientId}`, {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
@@ -55,6 +68,21 @@ export default function Credentials() {
         clientData.setCodeSampleClientSecret(credential.client_secret)
         setLinkDisabled(false)
       })
+  }
+
+  function handleDelete(client_id: string) {
+    fetch(`/api/client_credentials/${client_id}`, {
+      method: 'delete',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }).then((result) => {
+      if (result.ok) {
+        setItems(items.filter((item) => item.client_id != client_id))
+      } else {
+        console.log(result)
+      }
+    })
   }
 
   return (
@@ -82,6 +110,7 @@ export default function Credentials() {
                     client_secret={item.client_secret}
                     created={item.created}
                     scope={item.scope}
+                    onDelete={handleDelete}
                   />
                 }
                 tile

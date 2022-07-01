@@ -6,30 +6,20 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import type { DataFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import { Label, TextInput, Dropdown, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { getEnvOrDieInProduction } from '~/lib/env'
-import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
-import type { ClientCredentialData } from './ClientCredentialCard'
 
-export async function loader({ request }: DataFunctionArgs) {
-  const machine = await ClientCredentialVendingMachine.create(request)
-  const client_credentials = await machine.getClientCredentials()
+export async function loader() {
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
-  return { client_credentials, recaptchaSiteKey }
+  return { recaptchaSiteKey }
 }
 
-export default function ClientCredentialForm({
-  setItems,
-}: {
-  setItems: React.Dispatch<React.SetStateAction<ClientCredentialData[]>>
-}) {
-  const { client_credentials, recaptchaSiteKey } =
+export default function ClientCredentialForm({ ...props }) {
+  const { recaptchaSiteKey } =
     useLoaderData<Awaited<ReturnType<typeof loader>>>() ?? []
-  const [items] = useState<ClientCredentialData[]>(client_credentials)
   const defaultName = ''
   const [name, setName] = useState(defaultName)
   const defaultScope = 'gcn.nasa.gov/kafka-public-consumer'
@@ -37,9 +27,10 @@ export default function ClientCredentialForm({
   const [disableRequestButton, setDisableButton] = useState(false)
 
   function handleCreate() {
-    if (process.env.NODE_ENV === 'production') {
-      var validationResponse = grecaptcha.getResponse()
-      if (validationResponse === '') {
+    let recaptchaResponse
+    if (recaptchaSiteKey) {
+      const recaptchaResponse = grecaptcha.getResponse()
+      if (!recaptchaResponse) {
         // TODO: throw an error or something, for now return
         return
       }
@@ -49,13 +40,11 @@ export default function ClientCredentialForm({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, scope }),
+      body: JSON.stringify({ name, scope, recaptchaResponse }),
     })
       .then((result) => result.json())
-      .then((item) => {
-        setItems([...items, item])
-        // clientData.setCodeSampleClientId(item.client_id)
-        // clientData.setCodeSampleClientSecret(item.client_secret)
+      .then(() => {
+        props.postClickHandler()
       })
   }
   function onChange(value: any) {
