@@ -27,9 +27,8 @@ export function NoticeTypeCheckboxes() {
           'AMON_ICECUBE_HESE',
           'AMON_NU_EM_COINC',
         ],
-        Calet: [
-          'CALET_GBM_FLT_LC',
-          'CALET_GBM_GND_LC',
+        Calet: ['CALET_GBM_FLT_LC', 'CALET_GBM_GND_LC'],
+        Fermi: [
           'FERMI_GBM_ALERT',
           'FERMI_GBM_ALERT_INTERNAL',
           'FERMI_GBM_FIN_INTERNAL',
