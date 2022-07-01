@@ -6,21 +6,51 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Link } from '@remix-run/react'
+import type { DataFunctionArgs } from '@remix-run/node'
+import { Link, useLoaderData } from '@remix-run/react'
+import { getUser } from '~/routes/__auth/user.server'
+
+export async function loader({ request }: DataFunctionArgs) {
+  const user = await getUser(request)
+  return { email: user?.email, idp: user?.idp, url: request.url }
+}
 
 export default function StreamingSteps() {
+  const { email, idp, url } =
+    useLoaderData<Awaited<ReturnType<typeof loader>>>()
   return (
-    <div className="usa-prose">
+    <>
+      {email ? (
+        <p>
+          Congratulations! You are signed in as <strong>{email}</strong> using{' '}
+          <strong>{idp ?? 'username and password'}</strong>.
+        </p>
+      ) : (
+        <p>
+          To begin, click the button below to sign up or sign in with a username
+          and password, Google, Facebook, or (for NASA employees and affiliates)
+          LaunchPad.
+        </p>
+      )}
       <p>
-        Keys are bound to your unique account. For example, choosing the "Sign
-        in with Google" option will sign in with a different account than if you
-        use that same gmail address in the standard email sign in form. Make
-        sure you sign in the same way each time to keep your credentials
-        together.
+        <strong>
+          Important: make sure you sign in the same way each time.
+        </strong>{' '}
+        Accounts are <em>not</em> linked.
       </p>
-      <Link type="button" className="usa-button" to="credentials">
-        Credentials
-      </Link>
-    </div>
+      {email ? (
+        <Link type="button" className="usa-button" to="credentials">
+          Next
+        </Link>
+      ) : (
+        <Link
+          type="button"
+          className="usa-button"
+          to={`/login?redirect=${encodeURIComponent(url)}`}
+        >
+          Sign in / Sign up
+        </Link>
+      )}
+    </>
   )
 }
