@@ -83,11 +83,19 @@ export async function loader({ request }: DataFunctionArgs) {
   return { url, email }
 }
 
+export function useUrl() {
+  const [{ data }] = useMatches()
+  const { url } = data as Awaited<ReturnType<typeof loader>>
+  return url
+}
+
+export function useHostname() {
+  return new URL(useUrl()).hostname
+}
+
 function Document({ children }: { children?: React.ReactNode }) {
   const [{ data }] = useMatches()
-  const { url, email } = data as Awaited<ReturnType<typeof loader>>
-  const parsedUrl = new URL(url)
-  const { hostname, pathname } = parsedUrl
+  const { email } = data as Awaited<ReturnType<typeof loader>>
   const transition = useTransition()
   const showProgress = useSpinDelay(transition.state !== 'idle')
 
@@ -105,8 +113,8 @@ function Document({ children }: { children?: React.ReactNode }) {
         </a>
         {showProgress && <TopBarProgress />}
         <GovBanner />
-        <DevBanner hostname={hostname} />
-        <Header pathname={pathname} email={email} />
+        <DevBanner />
+        <Header email={email} />
         <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
         </section>

@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Link, NavLink } from '@remix-run/react'
+import { Link, NavLink, useLocation } from '@remix-run/react'
 import { useState } from 'react'
 import {
   Header as USWDSHeader,
@@ -17,13 +17,8 @@ import {
   Menu,
 } from '@trussworks/react-uswds'
 
-export function Header({
-  pathname,
-  email,
-}: {
-  pathname: string
-  email?: string
-}) {
+export function Header({ email }: { email?: string }) {
+  const { pathname } = useLocation()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = () => setExpanded((prvExpanded) => !prvExpanded)

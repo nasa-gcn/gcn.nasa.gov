@@ -6,13 +6,12 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { useMatches } from '@remix-run/react'
 import dedent from 'dedent'
+import { useHostname } from '~/root'
 import { Highlight } from './Highlight'
 
 function useDomain() {
-  const [{ data }] = useMatches()
-  const hostname = new URL(data.url as string).hostname
+  const hostname = useHostname()
 
   if (hostname === 'gcn.nasa.gov') {
     return null

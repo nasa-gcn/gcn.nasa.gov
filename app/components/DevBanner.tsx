@@ -7,10 +7,12 @@
  */
 
 import { SiteAlert } from '@trussworks/react-uswds'
+import { useHostname } from '~/root'
 
 const production_hostname = 'gcn.nasa.gov'
 
-export function DevBanner({ hostname }: { hostname: string }) {
+export function DevBanner() {
+  const hostname = useHostname()
   if (hostname === production_hostname) return null
 
   let heading: string
