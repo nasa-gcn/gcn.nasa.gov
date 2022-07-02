@@ -31,12 +31,16 @@ export async function loader({ request }: DataFunctionArgs) {
   return { client_credentials, recaptchaSiteKey, groups }
 }
 
-async function verifyRecaptcha(response?: string) {
+async function verifyRecaptcha(response: string) {
   const secret = getEnvOrDieInProduction('RECAPTCHA_SITE_SECRET')
   if (!secret) return
+
+  const params = new URLSearchParams()
+  params.set('response', response)
+  params.set('secret', secret)
   const verifyResponse = await fetch(
     'https://www.google.com/recaptcha/api/siteverify',
-    { method: 'POST', body: JSON.stringify({ response, secret }) }
+    { method: 'POST', body: params }
   )
   const { success } = await verifyResponse.json()
   if (!success) throw new Response('ReCAPTCHA was invalid', { status: 400 })
