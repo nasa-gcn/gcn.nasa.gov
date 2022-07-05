@@ -50,6 +50,12 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
         oidcSession.set('nonce', nonce)
         oidcSession.set('state', state)
 
+        const localRedirect = parsedUrl.searchParams.get('redirect')
+        if (localRedirect) {
+          oidcSession.set('redirect', localRedirect)
+          parsedUrl.searchParams.delete('redirect')
+        }
+
         const cookie = await oidcStorage.commitSession(oidcSession)
 
         return { cookie, nonce, state, code_challenge }
@@ -59,14 +65,14 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     const authorizationUrl = client.authorizationUrl({
       scope: 'openid',
       code_challenge_method: 'S256',
-      redirect_uri: url,
+      redirect_uri: parsedUrl.toString(),
       ...props,
     })
 
     return redirect(authorizationUrl, { headers: { 'Set-Cookie': cookie } })
   } else {
-    const sessionPromise = await storage.getSession()
-    const [client, { oidcSessionDestroyPromise, ...checks }] =
+    const sessionPromise = storage.getSession()
+    const [client, { localRedirect, oidcSessionDestroyPromise, ...checks }] =
       await Promise.all([
         getOpenIDClient(),
         (async () => {
@@ -75,6 +81,7 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
           const code_verifier = oidcSession.get('code_verifier')
           const nonce = oidcSession.get('nonce')
           const state = oidcSession.get('state')
+          const localRedirect = oidcSession.get('redirect')
           if (!code_verifier || !nonce || !state)
             throw new Response(
               'Your session timed out. Please try logging in again.',
@@ -82,7 +89,13 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
             )
           const oidcSessionDestroyPromise =
             oidcStorage.destroySession(oidcSession)
-          return { oidcSessionDestroyPromise, code_verifier, nonce, state }
+          return {
+            localRedirect,
+            oidcSessionDestroyPromise,
+            code_verifier,
+            nonce,
+            state,
+          }
         })(),
       ])
 
@@ -101,6 +114,8 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
       oidcSessionDestroyPromise,
     ])
 
-    return redirect('/user', { headers: { 'Set-Cookie': cookie } })
+    return redirect(localRedirect ?? '/user', {
+      headers: { 'Set-Cookie': cookie },
+    })
   }
 }

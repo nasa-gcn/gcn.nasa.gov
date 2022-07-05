@@ -32,7 +32,7 @@ http://www.ioffe.ru/LEA/kw/index.html
 | Follow-up of a gravitational wave trigger | ~1 day  | [LIGO/Virgo S200129m](https://gcn.gsfc.nasa.gov/gcn3/26979.gcn3) |
 | Follow-up of an optical transient         | ~1 day  | [ZTF19abvizsw](https://gcn.gsfc.nasa.gov/gcn3/26197.gcn3)        |
 
-**Konus Yearly Trigger Rates:**
+**Yearly Trigger Rates:**
 
 | Type          | Rates   |
 | ------------- | ------- |

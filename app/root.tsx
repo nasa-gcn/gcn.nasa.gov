@@ -20,22 +20,23 @@
  */
 
 import {
+  Link,
   Links,
   LiveReload,
   Meta,
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData,
-  useLocation,
+  useCatch,
+  useMatches,
   useTransition,
 } from '@remix-run/react'
 import type {
-  LoaderFunction,
   MetaFunction,
   LinksFunction,
+  DataFunctionArgs,
 } from '@remix-run/node'
-import { GovBanner, GridContainer } from '@trussworks/react-uswds'
+import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import highlightStyle from 'highlight.js/styles/github.css'
@@ -43,6 +44,7 @@ import TopBarProgress from 'react-topbar-progress-indicator'
 import { DevBanner } from './components/DevBanner'
 import { useSpinDelay } from 'spin-delay'
 import { getUser } from './routes/__auth/user.server'
+import React from 'react'
 
 TopBarProgress.config({
   barColors: {
@@ -72,28 +74,20 @@ export const links: LinksFunction = () => [
   })),
 ]
 
-interface LoaderData {
-  email?: string
-  hostname: string
-}
+export async function loader({ request }: DataFunctionArgs) {
+  const { url } = request
 
-export const loader: LoaderFunction = async function ({ request }) {
-  const url = new URL(request.url)
-  const result = { hostname: url.hostname }
   const user = await getUser(request)
-  if (user) {
-    return {
-      email: user.email,
-      ...result,
-    }
-  } else {
-    return result
-  }
+  const email = user?.email
+
+  return { url, email }
 }
 
-export default function App() {
-  const location = useLocation()
-  const loaderData = useLoaderData<LoaderData>()
+function Document({ children }: { children?: React.ReactNode }) {
+  const [{ data }] = useMatches()
+  const { url, email } = data as Awaited<ReturnType<typeof loader>>
+  const parsedUrl = new URL(url)
+  const { hostname, pathname } = parsedUrl
   const transition = useTransition()
   const showProgress = useSpinDelay(transition.state !== 'idle')
 
@@ -111,12 +105,10 @@ export default function App() {
         </a>
         {showProgress && <TopBarProgress />}
         <GovBanner />
-        <DevBanner hostname={loaderData.hostname} />
-        <Header pathname={location.pathname} {...loaderData} />
+        <DevBanner hostname={hostname} />
+        <Header pathname={pathname} email={email} />
         <section className="usa-section main-content">
-          <GridContainer>
-            <Outlet />
-          </GridContainer>
+          <GridContainer>{children}</GridContainer>
         </section>
         <Footer />
         <ScrollRestoration />
@@ -124,5 +116,51 @@ export default function App() {
         <LiveReload />
       </body>
     </html>
+  )
+}
+
+export function CatchBoundary() {
+  const { status } = useCatch()
+  const [{ data }] = useMatches()
+  if (status == 403) {
+    const { url } = data as Awaited<ReturnType<typeof loader>>
+    return (
+      <Document>
+        <h1>Unauthorized</h1>
+        <p className="usa-intro">
+          We're sorry, you must log in to access the page you're looking for.
+        </p>
+        <p>Log in to access that page, or go home.</p>
+        <ButtonGroup>
+          <Link
+            to={`/login?redirect=${encodeURIComponent(url)}`}
+            className="usa-button"
+          >
+            Log in and take me there
+          </Link>
+          <Link to="/" className="usa-button usa-button--outline">
+            Go home
+          </Link>
+        </ButtonGroup>
+      </Document>
+    )
+  } else {
+    ;<Document>
+      <h1>Unexpected error (HTTP {status}</h1>
+      <p className="usa-intro">An unexpected error occurred.</p>
+      <ButtonGroup>
+        <Link to="/" className="usa-button">
+          Go home
+        </Link>
+      </ButtonGroup>
+    </Document>
+  }
+}
+
+export default function App() {
+  return (
+    <Document>
+      <Outlet />
+    </Document>
   )
 }

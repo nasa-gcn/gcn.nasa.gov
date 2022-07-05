@@ -7,9 +7,23 @@
  */
 
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
-import { ClientCredentialVendingMachine } from '~/lib/ClientCredentialVendingMachine.server'
+import { getEnvOrDieInProduction } from '~/lib/env'
+import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
+
+async function verifyRecaptcha(response?: string) {
+  const secret = getEnvOrDieInProduction('RECAPTCHA_SITE_SECRET')
+  if (!secret) return
+  const verifyResponse = await fetch(
+    'https://www.google.com/recaptcha/api/siteverify',
+    { method: 'POST', body: JSON.stringify({ response, secret }) }
+  )
+  const { success } = await verifyResponse.json()
+  if (!success) throw new Response('ReCAPTCHA was invalid', { status: 400 })
+}
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const { recaptchaResponse } = await request.json()
+  await verifyRecaptcha(recaptchaResponse)
   const machine = await ClientCredentialVendingMachine.create(request)
   return await machine.getClientCredentials()
 }

@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - main
+permissions:
+  contents: read
+  id-token: write
 jobs:
   deploy:
     strategy:
@@ -15,12 +18,10 @@ jobs:
             url: https://test.gcn.nasa.gov
           - env: prod
             url: https://gcn.nasa.gov
-    runs-on:
-      - aws
-      - ${{ matrix.env }}
     environment:
       name: ${{ matrix.env }}
       url: ${{ matrix.url }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Install Node.js
@@ -33,5 +34,10 @@ jobs:
         run: npm ci --legacy-peer-deps
       - name: Build
         run: npm run build
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
+          aws-region: us-east-1
       - name: Deploy
         run: arc deploy --prune --production

@@ -9,12 +9,7 @@
 import { createArcTableSessionStorage } from '@remix-run/architect'
 import memoizee from 'memoizee'
 import { Issuer } from 'openid-client'
-
-export function getEnvOrDie(key: string) {
-  const result = process.env[key]
-  if (!result) throw new Error(`environment variable ${key} must be set`)
-  return result
-}
+import { getEnvOrDie } from '~/lib/env'
 
 // Short-lived session for storing the OIDC state and PKCE code verifier
 export const oidcStorage = createArcTableSessionStorage({
@@ -25,7 +20,6 @@ export const oidcStorage = createArcTableSessionStorage({
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === 'production',
     secrets: [getEnvOrDie('SESSION_SECRET')],
-    sameSite: 'lax',
     path: '/',
     maxAge: 300,
     httpOnly: true,
@@ -45,7 +39,6 @@ export const storage = createArcTableSessionStorage({
     // https://web.dev/when-to-use-local-https/
     secure: process.env.NODE_ENV === 'production',
     secrets: [getEnvOrDie('SESSION_SECRET')],
-    sameSite: 'lax',
     path: '/',
     maxAge: 3600,
     httpOnly: true,
