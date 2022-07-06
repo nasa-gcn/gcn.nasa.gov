@@ -38,12 +38,14 @@ export async function loader({ request }: DataFunctionArgs) {
   return { client_credentials, recaptchaSiteKey, groups }
 }
 
-async function verifyRecaptcha(response: string) {
+async function verifyRecaptcha(response?: string) {
   const secret = getEnvOrDieInProduction('RECAPTCHA_SITE_SECRET')
   if (!secret) return
 
   const params = new URLSearchParams()
-  params.set('response', response)
+  if (response) {
+    params.set('response', response)
+  }
   params.set('secret', secret)
   const verifyResponse = await fetch(
     'https://www.google.com/recaptcha/api/siteverify',
@@ -55,9 +57,13 @@ async function verifyRecaptcha(response: string) {
 
 function getFormDataString(formData: FormData, key: string) {
   const value = formData.get(key)
-  if (typeof value !== 'string')
+  if (typeof value === 'string') {
+    return value
+  } else if (value === null) {
+    return undefined
+  } else {
     throw new Response(`expected ${key} to be a string`, { status: 400 })
-  return value
+  }
 }
 
 export async function action({ request }: DataFunctionArgs) {
@@ -79,6 +85,9 @@ export async function action({ request }: DataFunctionArgs) {
 
     case 'delete':
       const clientId = getFormDataString(data, 'clientId')
+      if (!clientId) {
+        throw new Response('clientId not present', { status: 400 })
+      }
       await machine.deleteClientCredential(clientId)
       return null
 
