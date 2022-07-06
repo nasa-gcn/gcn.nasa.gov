@@ -78,20 +78,6 @@ export function Header({ email }: { email?: string }) {
                     id="user"
                     isOpen={userMenuIsOpen}
                     items={[
-                      <Link
-                        key="/user"
-                        to="/user"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                      >
-                        User Settings
-                      </Link>,
-                      <Link
-                        key="/quickstart"
-                        to="/quickstart"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                      >
-                        Streaming Steps
-                      </Link>,
                       <Link key="logout" to="/logout">
                         Sign Out
                       </Link>,
