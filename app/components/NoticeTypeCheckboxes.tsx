@@ -8,7 +8,7 @@
 
 import { NestedCheckboxes } from './NestedCheckboxes'
 
-export const NoticeTypes = {
+const NoticeTypes = {
   Agile: [
     'AGILE_GRB_GROUND',
     'AGILE_GRB_POS_TEST',
