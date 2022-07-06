@@ -166,7 +166,7 @@ export function NoticeTypeCheckboxes() {
       }).map(([mission, noticeTypes]) => ({
         id: mission,
         label: mission,
-        name: mission,
+        name: '',
         nodes: noticeTypes.map((noticeType) => ({
           id: noticeType,
           label: noticeType,
