@@ -12,15 +12,12 @@ import { Form, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
 import { Button } from '@trussworks/react-uswds'
-import { NoticeTypes } from '~/components/NoticeTypeCheckboxes'
 
 export async function loader({ request }: DataFunctionArgs) {
   const { clientId, noticeFormat, ...rest } = Object.fromEntries(
     new URL(request.url).searchParams
   )
-  const noticeTypes = Object.keys(rest).filter(
-    (noticeType) => Object.keys(NoticeTypes).indexOf(noticeType) == -1
-  )
+  const noticeTypes = Object.keys(rest)
   const machine = await ClientCredentialVendingMachine.create(request)
   const clientCredentialProps = await machine.getClientCredential(clientId)
   return {
