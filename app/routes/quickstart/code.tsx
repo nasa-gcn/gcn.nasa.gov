@@ -21,7 +21,6 @@ export async function loader({ request }: DataFunctionArgs) {
   const noticeTypes = Object.keys(rest).filter(
     (noticeType) => Object.keys(NoticeTypes).indexOf(noticeType) == -1
   )
-  console.log(noticeTypes)
   const machine = await ClientCredentialVendingMachine.create(request)
   const clientCredentialProps = await machine.getClientCredential(clientId)
   return {
