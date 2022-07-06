@@ -25,6 +25,7 @@ function useDomain() {
 export function ClientSampleCode({
   clientId = 'fill me in',
   clientSecret = 'fill me in',
+  listTopics = true,
   topics = [
     'gcn.classic.text.FERMI_GBM_FIN_POS',
     'gcn.classic.text.LVC_INITIAL',
@@ -33,6 +34,7 @@ export function ClientSampleCode({
 }: {
   clientId?: string
   clientSecret?: string
+  listTopics?: boolean
   topics?: string[]
   language: 'python' | 'mjs'
 }) {
@@ -52,10 +54,14 @@ export function ClientSampleCode({
                             domain='${domain}'`
           : ''
       })
-
+      ${
+        listTopics
+          ? `
         # List all topics
         print(consumer.list_topics().topics)
-
+        `
+          : ''
+      }
         # Subscribe to topics and receive alerts
         consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
                             `)}])
@@ -78,12 +84,16 @@ export function ClientSampleCode({
           : ''
       }
         })
-
+      ${
+        listTopics
+          ? `
         // List topics
         const admin = kafka.admin()
         const topics = await admin.listTopics()
         console.log(topics)
-
+        `
+          : ''
+      }
         // Subscribe to topics and receive alerts
         const consumer = kafka.consumer()
         await consumer.subscribe({
