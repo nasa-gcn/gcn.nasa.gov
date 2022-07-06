@@ -114,7 +114,7 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
       oidcSessionDestroyPromise,
     ])
 
-    return redirect(localRedirect ?? '.', {
+    return redirect(localRedirect ?? '/', {
       headers: { 'Set-Cookie': cookie },
     })
   }
