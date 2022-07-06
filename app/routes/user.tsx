@@ -21,9 +21,6 @@ export default function UserTableOfContents() {
             <NavLink key="streaming" to="streaming_steps">
               Streaming Steps
             </NavLink>,
-            <NavLink key="client" to="client_credentials">
-              Client Credentials
-            </NavLink>,
             <NavLink key="logout" to="/logout">
               Sign Out
             </NavLink>,

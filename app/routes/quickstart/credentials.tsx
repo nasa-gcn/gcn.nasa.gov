@@ -19,8 +19,8 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import type { RedactedClientCredential } from '../client_credentials.server'
-import { ClientCredentialVendingMachine } from '../client_credentials.server'
+import type { RedactedClientCredential } from '../user/client_credentials.server'
+import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import moment from 'moment'
@@ -74,7 +74,7 @@ export async function action({ request }: DataFunctionArgs) {
       await verifyRecaptcha(recaptchaResponse)
       const { client_id } = await machine.createClientCredential(name, scope)
       return redirect(
-        `/user/streaming_steps/alerts?clientId=${encodeURIComponent(client_id)}`
+        `/quickstart/alerts?clientId=${encodeURIComponent(client_id)}`
       )
 
     case 'delete':

@@ -86,18 +86,11 @@ export function Header({ email }: { email?: string }) {
                         User Settings
                       </Link>,
                       <Link
-                        key="/streaming_steps"
-                        to="/user/streaming_steps"
+                        key="/quickstart"
+                        to="/quickstart"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                       >
                         Streaming Steps
-                      </Link>,
-                      <Link
-                        key="/user/client_credentials"
-                        to="/user/client_credentials"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                      >
-                        Client Credentials
                       </Link>,
                       <Link key="logout" to="/logout">
                         Sign Out
