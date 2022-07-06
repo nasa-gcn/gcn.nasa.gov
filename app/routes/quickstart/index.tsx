@@ -20,24 +20,27 @@ export default function StreamingSteps() {
     useLoaderData<Awaited<ReturnType<typeof loader>>>()
   return (
     <>
-      {email ? (
+      <div className="maxw-tablet">
+        {email ? (
+          <p>
+            Congratulations! You are signed in as <strong>{email}</strong> using{' '}
+            <strong>{idp ?? 'username and password'}</strong>.
+          </p>
+        ) : (
+          <p>
+            To begin, click the button below to sign up or sign in with a
+            username and password, Google, Facebook, or (for NASA employees and
+            affiliates) LaunchPad.
+          </p>
+        )}
         <p>
-          Congratulations! You are signed in as <strong>{email}</strong> using{' '}
-          <strong>{idp ?? 'username and password'}</strong>.
+          <strong>
+            Important: make sure you sign in the same way each time.
+          </strong>{' '}
+          Accounts are <em>not</em> linked.
         </p>
-      ) : (
-        <p>
-          To begin, click the button below to sign up or sign in with a username
-          and password, Google, Facebook, or (for NASA employees and affiliates)
-          LaunchPad.
-        </p>
-      )}
-      <p>
-        <strong>
-          Important: make sure you sign in the same way each time.
-        </strong>{' '}
-        Accounts are <em>not</em> linked.
-      </p>
+      </div>
+
       {email ? (
         <Link type="button" className="usa-button" to="credentials">
           Next
