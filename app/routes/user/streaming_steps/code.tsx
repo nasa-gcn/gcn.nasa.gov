@@ -50,7 +50,7 @@ export default function Code() {
       }),
     },
     {
-      label: 'Javscript',
+      label: 'JavaScript',
       Component: ClientSampleCode({
         clientId,
         clientSecret,
