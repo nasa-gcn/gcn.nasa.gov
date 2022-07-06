@@ -26,7 +26,7 @@ import { redirect } from '@remix-run/node'
 import moment from 'moment'
 import type { ReactNode } from 'react'
 import { useRef } from 'react'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { getEnvOrDieInProduction } from '~/lib/env'
 
