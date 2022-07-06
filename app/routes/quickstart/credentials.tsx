@@ -151,7 +151,7 @@ export function NewCredentialForm() {
             onChange={(value) => {
               setRecaptchaValid(!!value)
             }}
-          ></ReCAPTCHA>
+          />
         ) : (
           <div className="usa-prose">
             <p className="text-base">
