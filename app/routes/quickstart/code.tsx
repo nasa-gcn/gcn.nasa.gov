@@ -38,6 +38,7 @@ export default function Code() {
   const topics = noticeTypes.map(
     (noticeType) => `gcn.classic.${noticeFormat}.${noticeType}`
   )
+  const listTopics = false
 
   const tabs = [
     {
@@ -46,6 +47,7 @@ export default function Code() {
         clientId,
         clientSecret,
         topics,
+        listTopics,
         language: 'python',
       }),
     },
@@ -55,6 +57,7 @@ export default function Code() {
         clientId,
         clientSecret,
         topics,
+        listTopics,
         language: 'mjs',
       }),
     },
