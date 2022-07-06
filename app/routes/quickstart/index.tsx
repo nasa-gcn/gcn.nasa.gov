@@ -26,7 +26,7 @@ export default function StreamingSteps() {
           <strong>{idp ?? 'username and password'}</strong>.
         </p>
       ) : (
-        <p>
+        <p className="maxw-tablet">
           To begin, click the button below to sign up or sign in with a username
           and password, Google, Facebook, or (for NASA employees and affiliates)
           LaunchPad.

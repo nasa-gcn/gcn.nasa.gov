@@ -12,6 +12,7 @@ import { NavStepIndicator } from '~/components/NavStepIndicator'
 export default function Streaming() {
   return (
     <>
+      <h1>Start Streaming GCN Notices</h1>
       <NavStepIndicator
         counters="small"
         headingLevel="h4"

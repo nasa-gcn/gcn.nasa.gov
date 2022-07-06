@@ -10,7 +10,7 @@ import Tabs from '~/components/Tabs'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Form, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { ClientCredentialVendingMachine } from '../client_credentials.server'
+import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
 import { Button } from '@trussworks/react-uswds'
 
 export async function loader({ request }: DataFunctionArgs) {
