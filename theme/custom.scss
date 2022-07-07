@@ -478,3 +478,18 @@ input.react-tags__search-input:focus {
     transform: rotate(360deg);
   }
 }
+
+/*
+ Hero formatting
+*/
+
+.hero-text-left {
+  width: 40%;
+}
+.hero-image-right {
+  width: 60%;
+  object-fit: scale-down;
+}
+h1.usa-hero__heading > p {
+  margin-top: 0;
+}
