@@ -14,7 +14,7 @@ meta:
 
 **Launch Date:** June 11, 2008
 
-**Extended Mission Lifetime:** 2024+ (Pending NASA Senior Review)
+**Extended Mission Lifetime:** 2025+ (Pending NASA Senior Review)
 
 **End of Operations:** No specific requirement (no consumables, no significant degradation)
 
