@@ -77,6 +77,7 @@ export const links: LinksFunction = () => [
 export async function loader({ request }: DataFunctionArgs) {
   let url = request.url
   const forwardedHost = request.headers.get('X-Forwarded-Host')
+  console.log(request.headers)
   if (forwardedHost) {
     const newUrl = new URL(url)
     newUrl.hostname = forwardedHost
