@@ -75,8 +75,7 @@ export const links: LinksFunction = () => [
 ]
 
 export async function loader({ request }: DataFunctionArgs) {
-  const { url, headers } = request
-  console.log(headers)
+  const { url } = request
 
   const user = await getUser(request)
   const email = user?.email
