@@ -24,15 +24,12 @@ const NoticeTypes = {
     'AMON_ICECUBE_HESE',
     'AMON_NU_EM_COINC',
   ],
+  BeppoSAX: ['SAX_NFI_ALERT', 'SAX_NFI_SRC', 'SAX_WFC_ALERT', 'SAX_WFC_SRC'],
   Calet: ['CALET_GBM_FLT_LC', 'CALET_GBM_GND_LC'],
   Fermi: [
     'FERMI_GBM_ALERT',
-    'FERMI_GBM_ALERT_INTERNAL',
-    'FERMI_GBM_FIN_INTERNAL',
     'FERMI_GBM_FIN_POS',
-    'FERMI_GBM_FLT_INTERNAL',
     'FERMI_GBM_FLT_POS',
-    'FERMI_GBM_GND_INTERNAL',
     'FERMI_GBM_GND_POS',
     'FERMI_GBM_LC',
     'FERMI_GBM_POS_TEST',
@@ -48,9 +45,8 @@ const NoticeTypes = {
     'FERMI_LAT_TRANS',
     'FERMI_POINTDIR',
     'FERMI_SC_SLEW',
-    'FERMI_SC_SLEW_INTERNAL',
   ],
-  HETE: [
+  'HETE-2': [
     'HETE_ALERT_SRC',
     'HETE_FINAL_SRC',
     'HETE_GNDANA_SRC',
@@ -81,7 +77,13 @@ const NoticeTypes = {
     'LVC_UPDATE',
   ],
   MAXI: ['MAXI_KNOWN', 'MAXI_TEST', 'MAXI_UNKNOWN'],
-  SAX: ['SAX_NFI_ALERT', 'SAX_NFI_SRC', 'SAX_WFC_ALERT', 'SAX_WFC_SRC'],
+  RXTE: [
+    'XTE_ASM_ALERT',
+    'XTE_ASM_SRC',
+    'XTE_ASM_TRANS',
+    'XTE_PCA_ALERT',
+    'XTE_PCA_SRC',
+  ],
   Swift: [
     'SWIFT_ACTUAL_POINTDIR',
     'SWIFT_BAT_ALARM_LONG',
@@ -127,13 +129,6 @@ const NoticeTypes = {
     'SWIFT_XRT_SPER_PROC',
     'SWIFT_XRT_THRESHPIX',
     'SWIFT_XRT_THRESHPIX_PROC',
-  ],
-  XTE: [
-    'XTE_ASM_ALERT',
-    'XTE_ASM_SRC',
-    'XTE_ASM_TRANS',
-    'XTE_PCA_ALERT',
-    'XTE_PCA_SRC',
   ],
   Other: [
     'AAVSO',
