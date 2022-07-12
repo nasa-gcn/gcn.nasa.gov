@@ -11,7 +11,7 @@ import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Form, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
-import { Button, Link } from '@trussworks/react-uswds'
+import { Button } from '@trussworks/react-uswds'
 
 export async function loader({ request }: DataFunctionArgs) {
   const { clientId, noticeFormat, ...rest } = Object.fromEntries(
@@ -65,28 +65,6 @@ export default function Code() {
 
   return (
     <>
-      <div>
-        You will need the gcn-kafka package to stream with this API. For python
-        users, run this command to install with{' '}
-        <Link href="https://pip.pypa.io/">pip</Link>:
-        <pre>
-          <code className="hljs language-sh">pip install gcn-kafka</code>
-        </pre>
-        or this command to install with with{' '}
-        <Link href="https://docs.conda.io/">conda</Link> :
-        <pre>
-          <code className="hljs language-sh">
-            conda install -c conda-forge gcn-kafka
-          </code>
-        </pre>
-        For Javascript (Node) use, run the following to install with npm
-        <pre>
-          <code className="hljs language-sh">npm install gcn-kafka</code>
-        </pre>
-        Here is a sample to print the alerts to your console, feel free to edit
-        it and use it as you need.
-      </div>
-      <br />
       <Tabs tabs={tabs} />
       <Form method="get" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
