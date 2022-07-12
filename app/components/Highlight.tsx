@@ -6,7 +6,9 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import { Button, IconContentCopy } from '@trussworks/react-uswds'
 import hljs from 'highlight.js'
+import CopyToClipboard from 'react-copy-to-clipboard'
 
 export function Highlight({
   code,
@@ -16,13 +18,23 @@ export function Highlight({
   language: string
 }) {
   return (
-    <pre>
-      <code
-        className={`hljs language-${language}`}
-        dangerouslySetInnerHTML={{
-          __html: hljs.highlight(code, { language }).value,
-        }}
-      />
-    </pre>
+    <div className="position-relative">
+      <CopyToClipboard text={code}>
+        <Button
+          type="button"
+          className="position-absolute pin-right pin-top radius-0"
+        >
+          Copy <IconContentCopy />
+        </Button>
+      </CopyToClipboard>
+      <pre>
+        <code
+          className={`hljs language-${language}`}
+          dangerouslySetInnerHTML={{
+            __html: hljs.highlight(code, { language }).value,
+          }}
+        />
+      </pre>
+    </div>
   )
 }
