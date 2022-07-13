@@ -109,7 +109,7 @@ export default function ClientCredentialForm({
         type="submit"
         onClick={handleCreate}
       >
-        Request New Credentials
+        Create New Credentials
       </Button>
     </div>
   )
