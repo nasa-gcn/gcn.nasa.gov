@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import { Link } from '@trussworks/react-uswds'
 import dedent from 'dedent'
 import { useHostname } from '~/root'
 import { Highlight } from './Highlight'
@@ -41,8 +42,26 @@ export function ClientSampleCode({
   const domain = useDomain()
 
   let code
+  let instructions
   switch (language) {
     case 'python':
+      instructions = (
+        <>
+          <p>
+            Run this command to install with{' '}
+            <Link href="https://pip.pypa.io/">pip</Link>:
+          </p>
+          <Highlight language="sh" code="pip install gcn-kafka" />
+          <p>
+            or this command to install with with{' '}
+            <Link href="https://docs.conda.io/">conda</Link>:
+          </p>
+          <Highlight
+            language="sh"
+            code="conda install -c conda-forge gcn-kafka"
+          />
+        </>
+      )
       code = dedent`
         from gcn_kafka import Consumer
 
@@ -71,6 +90,15 @@ export function ClientSampleCode({
         `
       break
     case 'mjs':
+      instructions = (
+        <>
+          <p>
+            Run this command to install with{' '}
+            <Link href="https://www.npmjs.com">npm</Link>:
+          </p>
+          <Highlight language="sh" code="npm install gcn-kafka" />
+        </>
+      )
       code = dedent`
         import { Kafka } from 'gcn-kafka'
 
@@ -116,5 +144,11 @@ export function ClientSampleCode({
       break
   }
 
-  return <Highlight language={language} code={code} />
+  return (
+    <>
+      {instructions}
+      Sample code:
+      <Highlight language={language} code={code} />
+    </>
+  )
 }
