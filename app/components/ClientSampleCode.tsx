@@ -49,24 +49,15 @@ export function ClientSampleCode({
   const domain = useDomain()
 
   let code
-  let content: ContentBody[] = []
+  let instructions
   switch (language) {
     case 'python':
-      content.push({
-        text: 'Run this command to install with ',
-        link: <Link href="https://pip.pypa.io/">pip</Link>,
-        code: <Highlight language="sh" code={'pip install gcn-kafka'} />,
-      })
-      content.push({
-        text: 'or this command to install with with ',
-        link: <Link href="https://docs.conda.io/">conda</Link>,
-        code: (
-          <Highlight
-            language="sh"
-            code={'conda install -c conda-forge gcn-kafka'}
-          />
-        ),
-      })
+      instructions = <>
+        <p>Run this command to install with <Link href="https://pip.pypa.io/">pip</Link>:</p>
+        <Highlight language="sh" code="pip install gcn-kafka" />
+        <p>or this command to install with with <Link href="https://docs.conda.io/">conda</Link>:</p>
+        <Highlight language="sh" code="conda install -c conda-forge gcn-kafka" />
+      </>
       code = dedent`
         from gcn_kafka import Consumer
 
