@@ -96,7 +96,7 @@ export function ClientSampleCode({
             Run this command to install with{' '}
             <Link href="https://www.npmjs.com">npm</Link>:
           </p>
-          <Highlight language="sh" code={'npm install gcn-kafka'} />
+          <Highlight language="sh" code="npm install gcn-kafka" />
         </>
       )
       code = dedent`
