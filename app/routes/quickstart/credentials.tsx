@@ -174,7 +174,7 @@ export function NewCredentialForm() {
         Back
       </Link>
       <Button disabled={!(nameValid && recaptchaValid)} type="submit">
-        Request New Credentials
+        Create New Credentials
       </Button>
     </Form>
   )
