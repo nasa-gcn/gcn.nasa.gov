@@ -8,6 +8,7 @@
 
 import { Link } from '@trussworks/react-uswds'
 import dedent from 'dedent'
+import type { ReactElement } from 'react'
 import { useHostname } from '~/root'
 import { Highlight } from './Highlight'
 
@@ -21,6 +22,12 @@ function useDomain() {
   } else {
     return 'test.gcn.nasa.gov'
   }
+}
+
+type ContentBody = {
+  text: string
+  link: ReactElement
+  code: ReactElement
 }
 
 export function ClientSampleCode({
@@ -42,8 +49,24 @@ export function ClientSampleCode({
   const domain = useDomain()
 
   let code
+  let content: ContentBody[] = []
   switch (language) {
     case 'python':
+      content.push({
+        text: 'Run this command to install with ',
+        link: <Link href="https://pip.pypa.io/">pip</Link>,
+        code: <Highlight language="sh" code={'pip install gcn-kafka'} />,
+      })
+      content.push({
+        text: 'or this command to install with with ',
+        link: <Link href="https://docs.conda.io/">conda</Link>,
+        code: (
+          <Highlight
+            language="sh"
+            code={'conda install -c conda-forge gcn-kafka'}
+          />
+        ),
+      })
       code = dedent`
         from gcn_kafka import Consumer
 
@@ -72,6 +95,11 @@ export function ClientSampleCode({
         `
       break
     case 'mjs':
+      content.push({
+        text: 'Run this command to install with ',
+        link: <Link href="https://www.npmjs.com">npm</Link>,
+        code: <Highlight language="sh" code={'npm install gcn-kafka'} />,
+      })
       code = dedent`
         import { Kafka } from 'gcn-kafka'
 
@@ -119,34 +147,15 @@ export function ClientSampleCode({
 
   return (
     <>
-      <div>
-        {language == 'python' ? (
-          <div>
-            Run this command to install with{' '}
-            <Link href="https://pip.pypa.io/">pip</Link>:
-            <pre>
-              <code className="hljs language-sh">pip install gcn-kafka</code>
-            </pre>
-            or this command to install with with{' '}
-            <Link href="https://docs.conda.io/">conda</Link> :
-            <pre>
-              <code className="hljs language-sh">
-                conda install -c conda-forge gcn-kafka
-              </code>
-            </pre>
+      {content.map((item) => {
+        return (
+          <div key={item.text}>
+            {item.text}
+            {item.link}:{item.code}
           </div>
-        ) : null}
-        {language == 'mjs' ? (
-          <div>
-            Run this command to install with{' '}
-            <Link href="https://www.npmjs.com">npm</Link>:
-            <pre>
-              <code className="hljs language-sh">npm install gcn-kafka</code>
-            </pre>
-          </div>
-        ) : null}
-        Sample code:
-      </div>
+        )
+      })}
+      Sample code:
       <Highlight language={language} code={code} />
     </>
   )
