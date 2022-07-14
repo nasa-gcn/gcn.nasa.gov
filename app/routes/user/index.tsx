@@ -17,7 +17,7 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export default function User() {
-  const { email, idp } = useLoaderData<Awaited<ReturnType<typeof loader>>>()
+  const { email, idp } = useLoaderData<typeof loader>()
   return (
     <>
       <h1>Welcome, {email}!</h1>

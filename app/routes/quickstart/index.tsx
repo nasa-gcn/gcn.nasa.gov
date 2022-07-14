@@ -16,8 +16,7 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export default function StreamingSteps() {
-  const { email, idp, url } =
-    useLoaderData<Awaited<ReturnType<typeof loader>>>()
+  const { email, idp, url } = useLoaderData<typeof loader>()
   return (
     <>
       <div className="maxw-tablet">

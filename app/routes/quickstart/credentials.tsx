@@ -116,8 +116,7 @@ function SegmentedCard({ children }: { children: ReactNode[] }) {
 }
 
 export function NewCredentialForm() {
-  const { groups, recaptchaSiteKey } =
-    useLoaderData<Awaited<ReturnType<typeof loader>>>()
+  const { groups, recaptchaSiteKey } = useLoaderData<typeof loader>()
   const [recaptchaValid, setRecaptchaValid] = useState(!recaptchaSiteKey)
   const [nameValid, setNameValid] = useState(false)
 
@@ -250,8 +249,7 @@ function Credential({ name, client_id, created }: RedactedClientCredential) {
 }
 
 export default function Credentials() {
-  const { client_credentials } =
-    useLoaderData<Awaited<ReturnType<typeof loader>>>()
+  const { client_credentials } = useLoaderData<typeof loader>()
 
   const explanation = (
     <>

@@ -28,7 +28,7 @@ export default function ClientCredentialForm({
   setItems: React.Dispatch<React.SetStateAction<ClientCredentialData[]>>
 }) {
   const { client_credentials, recaptchaSiteKey } =
-    useLoaderData<Awaited<ReturnType<typeof loader>>>() ?? []
+    useLoaderData<typeof loader>() ?? []
   const [items] = useState<ClientCredentialData[]>(client_credentials)
   const defaultName = ''
   const [name, setName] = useState(defaultName)

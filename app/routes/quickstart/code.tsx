@@ -33,7 +33,7 @@ export default function Code() {
     client_secret: clientSecret,
     noticeFormat,
     noticeTypes,
-  } = useLoaderData<Awaited<ReturnType<typeof loader>>>()
+  } = useLoaderData<typeof loader>()
 
   const topics = noticeTypes.map(
     (noticeType) => `gcn.classic.${noticeFormat}.${noticeType}`
