@@ -43,8 +43,11 @@ export function ClientSampleCode({
 
   let code
   let instructions
+  let suffix
+
   switch (language) {
     case 'python':
+      suffix = 'py'
       instructions = (
         <>
           <p>
@@ -90,6 +93,7 @@ export function ClientSampleCode({
         `
       break
     case 'mjs':
+      suffix = 'js'
       instructions = (
         <>
           <p>
@@ -148,7 +152,11 @@ export function ClientSampleCode({
     <>
       {instructions}
       Sample code:
-      <Highlight language={language} code={code} />
+      <Highlight
+        language={language}
+        code={code}
+        filename={`example.${suffix}`}
+      />
     </>
   )
 }
