@@ -48,7 +48,7 @@ export function ClientSampleCode({
       instructions = (
         <>
           <p>
-            Run this command to install with{' '}
+            Open a terminal and run this command to install with{' '}
             <Link href="https://pip.pypa.io/">pip</Link>:
           </p>
           <Highlight language="sh" code="pip install gcn-kafka" />
@@ -93,7 +93,7 @@ export function ClientSampleCode({
       instructions = (
         <>
           <p>
-            Run this command to install with{' '}
+            Open a terminal and run this command to install with{' '}
             <Link href="https://www.npmjs.com">npm</Link>:
           </p>
           <Highlight language="sh" code="npm install gcn-kafka" />
