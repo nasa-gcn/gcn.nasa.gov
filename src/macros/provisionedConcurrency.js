@@ -12,5 +12,7 @@ module.exports = function provisionedConcurrency(arc, sam) {
     {
       ProvisionedConcurrentExecutions: 1,
     }
+  sam.Resources.AnyCatchallHTTPLambda.Properties.AutoPublishAlias =
+    'ProvisionedConcurrencyAlias'
   return sam
 }
