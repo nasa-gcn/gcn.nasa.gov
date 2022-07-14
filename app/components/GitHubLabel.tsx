@@ -7,7 +7,7 @@
  */
 
 import { hex } from 'color-convert'
-import { Octokit } from 'octokit'
+import { Octokit } from '@octokit/rest'
 import { useEffect, useRef } from 'react'
 
 const octokit = new Octokit()
