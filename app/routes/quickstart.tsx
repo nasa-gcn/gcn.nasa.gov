@@ -6,8 +6,13 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import type { MetaFunction } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { NavStepIndicator } from '~/components/NavStepIndicator'
+
+export const meta: MetaFunction = () => ({
+  title: 'GCN - Start Streaming GCN Notices',
+})
 
 export default function Streaming() {
   return (
