@@ -9,7 +9,7 @@
 import { SideNav } from '@trussworks/react-uswds'
 import { NavLink, Outlet } from '@remix-run/react'
 
-export default function Docs() {
+export default function Missions() {
   return (
     <div className="grid-row grid-gap">
       <div className="desktop:grid-col-4">
