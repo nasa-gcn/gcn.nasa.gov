@@ -45,26 +45,22 @@ export function ClientSampleCode({
     case 'py':
       return (
         <>
-          <p>
-            Open a terminal and run this command to install with{' '}
-            <Link rel="external" href="https://pip.pypa.io/">
-              pip
-            </Link>
-            :
-          </p>
+          Open a terminal and run this command to install with{' '}
+          <Link rel="external" href="https://pip.pypa.io/">
+            pip
+          </Link>
+          :
           <Highlight language="sh" code="pip install gcn-kafka" />
-          <p>
-            or this command to install with with{' '}
-            <Link rel="external" href="https://docs.conda.io/">
-              conda
-            </Link>
-            :
-          </p>
+          or this command to install with with{' '}
+          <Link rel="external" href="https://docs.conda.io/">
+            conda
+          </Link>
+          :
           <Highlight
             language="sh"
             code="conda install -c conda-forge gcn-kafka"
           />
-          Sample code:
+          Save the Python code below to a file called <code>example.py</code>:
           <Highlight
             language={language}
             filename={`example.${language}`}
@@ -96,18 +92,18 @@ export function ClientSampleCode({
                       print(message.value())
               `}
           />
+          Run the code by typing this command in the terminal:
+          <Highlight language="sh" code="python example.py" />
         </>
       )
     case 'js':
       return (
         <>
-          <p>
-            Open a terminal and run this command to install with{' '}
-            <Link rel="external" href="https://www.npmjs.com">
-              npm
-            </Link>
-            :
-          </p>
+          Open a terminal and run this command to install with{' '}
+          <Link rel="external" href="https://www.npmjs.com">
+            npm
+          </Link>
+          :
           <Highlight language="sh" code="npm install gcn-kafka" />
           Sample code:
           <Highlight
@@ -157,6 +153,8 @@ export function ClientSampleCode({
               })
               `}
           />
+          Run the code by typing this command in the terminal:
+          <Highlight language="sh" code="node example.js" />
         </>
       )
   }
