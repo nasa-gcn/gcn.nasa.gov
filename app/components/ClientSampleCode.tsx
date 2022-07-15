@@ -41,12 +41,9 @@ export function ClientSampleCode({
 }) {
   const domain = useDomain()
 
-  let code
-  let instructions
-
   switch (language) {
     case 'py':
-      instructions = (
+      return (
         <>
           <p>
             Open a terminal and run this command to install with{' '}
@@ -67,38 +64,42 @@ export function ClientSampleCode({
             language="sh"
             code="conda install -c conda-forge gcn-kafka"
           />
+          Sample code:
+          <Highlight
+            language={language}
+            filename={`example.${language}`}
+            code={dedent`
+              from gcn_kafka import Consumer
+
+              # Connect as a consumer.
+              # Warning: don't share the client secret with others.
+              consumer = Consumer(client_id='${clientId}',
+                                  client_secret='${clientSecret}'${
+              domain
+                ? `,
+                                  domain='${domain}'`
+                : ''
+            })
+            ${
+              listTopics
+                ? `
+              # List all topics
+              print(consumer.list_topics().topics)
+              `
+                : ''
+            }
+              # Subscribe to topics and receive alerts
+              consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
+                                  `)}])
+              while True:
+                  for message in consumer.consume():
+                      print(message.value())
+              `}
+          />
         </>
       )
-      code = dedent`
-        from gcn_kafka import Consumer
-
-        # Connect as a consumer.
-        # Warning: don't share the client secret with others.
-        consumer = Consumer(client_id='${clientId}',
-                            client_secret='${clientSecret}'${
-        domain
-          ? `,
-                            domain='${domain}'`
-          : ''
-      })
-      ${
-        listTopics
-          ? `
-        # List all topics
-        print(consumer.list_topics().topics)
-        `
-          : ''
-      }
-        # Subscribe to topics and receive alerts
-        consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
-                            `)}])
-        while True:
-            for message in consumer.consume():
-                print(message.value())
-        `
-      break
     case 'js':
-      instructions = (
+      return (
         <>
           <p>
             Open a terminal and run this command to install with{' '}
@@ -108,63 +109,55 @@ export function ClientSampleCode({
             :
           </p>
           <Highlight language="sh" code="npm install gcn-kafka" />
+          Sample code:
+          <Highlight
+            language={language}
+            filename={`example.${language}`}
+            code={dedent`
+              const { Kafka } = require('gcn-kafka')
+
+              // Create a client.
+              // Warning: don't share the client secret with others.
+              const kafka = new Kafka({
+                client_id: '${clientId}',
+                client_secret: '${clientSecret}',${
+              domain
+                ? `
+                domain: '${domain}',`
+                : ''
+            }
+              })
+            ${
+              listTopics
+                ? `
+              // List topics
+              const admin = kafka.admin()
+              const topics = await admin.listTopics()
+              console.log(topics)
+              `
+                : ''
+            }
+              // Subscribe to topics and receive alerts
+              const consumer = kafka.consumer()
+              await consumer.subscribe({
+                topics: [${topics
+                  .map(
+                    (topic) => `
+                  '${topic}',`
+                  )
+                  .join('')}
+                ],
+              })
+
+              await consumer.run({
+                eachMessage: async (payload) => {
+                  const value = payload.message.value
+                  console.log(value?.toString())
+                },
+              })
+              `}
+          />
         </>
       )
-      code = dedent`
-        const { Kafka } = require('gcn-kafka')
-
-        // Create a client.
-        // Warning: don't share the client secret with others.
-        const kafka = new Kafka({
-          client_id: '${clientId}',
-          client_secret: '${clientSecret}',${
-        domain
-          ? `
-          domain: '${domain}',`
-          : ''
-      }
-        })
-      ${
-        listTopics
-          ? `
-        // List topics
-        const admin = kafka.admin()
-        const topics = await admin.listTopics()
-        console.log(topics)
-        `
-          : ''
-      }
-        // Subscribe to topics and receive alerts
-        const consumer = kafka.consumer()
-        await consumer.subscribe({
-          topics: [${topics
-            .map(
-              (topic) => `
-            '${topic}',`
-            )
-            .join('')}
-          ],
-        })
-
-        await consumer.run({
-          eachMessage: async (payload) => {
-            const value = payload.message.value
-            console.log(value?.toString())
-          },
-        })
-        `
-      break
   }
-
-  return (
-    <>
-      {instructions}
-      Sample code:
-      <Highlight
-        language={language}
-        code={code}
-        filename={`example.${language}`}
-      />
-    </>
-  )
 }
