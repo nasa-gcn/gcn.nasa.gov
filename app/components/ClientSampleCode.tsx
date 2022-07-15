@@ -89,7 +89,8 @@ export function ClientSampleCode({
                                   `)}])
               while True:
                   for message in consumer.consume():
-                      print(message.value())
+                      value = message.value()
+                      print(value)
               `}
           />
           Run the code by typing this command in the terminal:
