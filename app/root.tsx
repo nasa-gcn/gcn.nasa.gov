@@ -55,7 +55,11 @@ TopBarProgress.config({
 })
 
 export const meta: MetaFunction = () => {
-  return { title: 'GCN - General Coordinates Network' }
+  return {
+    charset: 'utf-8',
+    viewport: 'width=device-width,initial-scale=1',
+    title: 'GCN - General Coordinates Network',
+  }
 }
 
 export const links: LinksFunction = () => [
@@ -102,8 +106,6 @@ function Document({ children }: { children?: React.ReactNode }) {
   return (
     <html lang="en-US">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
       </head>
