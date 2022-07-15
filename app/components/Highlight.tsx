@@ -6,11 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import {
-  Button,
-  IconContentCopy,
-  IconFileDownload,
-} from '@trussworks/react-uswds'
+import { Button, Icon } from '@trussworks/react-uswds'
 import hljs from 'highlight.js'
 import CopyToClipboard from 'react-copy-to-clipboard'
 
@@ -33,12 +29,12 @@ export function Highlight({
             className="usa-button radius-0"
             href={`data:,${encodeURIComponent(code)}`}
           >
-            Download {filename} <IconFileDownload />
+            Download {filename} <Icon.FileDownload />
           </a>
         )}
         <CopyToClipboard text={code}>
           <Button type="button" className="radius-0">
-            Copy <IconContentCopy />
+            Copy <Icon.ContentCopy />
           </Button>
         </CopyToClipboard>
       </div>

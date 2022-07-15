@@ -10,8 +10,7 @@ import {
   Button,
   Card,
   Grid,
-  IconDelete,
-  IconSecurity,
+  Icon,
   Modal,
   ModalFooter,
   ModalHeading,
@@ -57,7 +56,7 @@ export default function ClientCredential(props: ClientCredentialProps) {
       <Grid row>
         <Grid col={1} className="grid-col-auto client-cred-card-centered">
           <div className="client-cred-card-centered">
-            <IconSecurity color="#00a91c" size={5} />
+            <Icon.Security color="#00a91c" size={5} />
           </div>
         </Grid>
         <Grid col={10}>
@@ -87,7 +86,7 @@ export default function ClientCredential(props: ClientCredentialProps) {
             opener
           >
             <big>
-              <IconDelete />
+              <Icon.Delete />
             </big>
           </ModalToggleButton>
         </Grid>
