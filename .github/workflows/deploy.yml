@@ -31,7 +31,7 @@ jobs:
       - name: Install Architect
         run: npm i -g @architect/architect@^10.3.2 github:lpsinger/package#provisioned-concurrency aws-sdk
       - name: NPM Install
-        run: npm ci --legacy-peer-deps
+        run: npm ci
       - name: Build
         run: npm run build
       - name: Configure aws credentials
