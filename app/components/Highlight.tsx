@@ -6,8 +6,9 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Button, Icon } from '@trussworks/react-uswds'
+import { Button, Icon, Tooltip } from '@trussworks/react-uswds'
 import hljs from 'highlight.js'
+import { useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 
 export function Highlight({
@@ -19,24 +20,40 @@ export function Highlight({
   language: string
   filename?: string
 }) {
+  const [copyTooltip, setCopyTooltip] = useState('Copy')
+
+  function copyTooltipTextHandler() {
+    setCopyTooltip('Copied!')
+    setTimeout(() => {
+      setCopyTooltip('Copy')
+    }, 3000)
+  }
+
   return (
     <div className="position-relative">
       <div className="position-absolute pin-right pin-top">
         {filename && (
-          <a
-            download={filename}
-            type="button"
-            className="usa-button radius-0"
-            href={`data:,${encodeURIComponent(code)}`}
+          <Tooltip
+            position="top"
+            label={'Download ' + filename}
+            className="margin-top-1 margin-right-1 usa-button--unstyled"
           >
-            Download {filename} <Icon.FileDownload />
-          </a>
+            <a download={filename} href={`data:,${encodeURIComponent(code)}`}>
+              <Icon.FileDownload />
+            </a>
+          </Tooltip>
         )}
-        <CopyToClipboard text={code}>
-          <Button type="button" className="radius-0">
-            Copy <Icon.ContentCopy />
-          </Button>
-        </CopyToClipboard>
+        <Tooltip
+          position="top"
+          label={copyTooltip}
+          className="margin-top-1 margin-right-1 usa-button--unstyled"
+        >
+          <CopyToClipboard text={code} onCopy={copyTooltipTextHandler}>
+            <Button type="button" className="radius-0" unstyled>
+              <Icon.ContentCopy />
+            </Button>
+          </CopyToClipboard>
+        </Tooltip>
       </div>
       <pre>
         <code
