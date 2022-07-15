@@ -68,7 +68,8 @@ export function ClientSampleCode({
       code = dedent`
         from gcn_kafka import Consumer
 
-        # Connect as a consumer
+        # Connect as a consumer.
+        # Warning: don't share the client secret with others.
         consumer = Consumer(client_id='${clientId}',
                             client_secret='${clientSecret}'${
         domain
@@ -106,7 +107,8 @@ export function ClientSampleCode({
       code = dedent`
         import { Kafka } from 'gcn-kafka'
 
-        // Create a client
+        // Create a client.
+        // Warning: don't share the client secret with others.
         const kafka = new Kafka({
           client_id: '${clientId}',
           client_secret: '${clientSecret}',${
