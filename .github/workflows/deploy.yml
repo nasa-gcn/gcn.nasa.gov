@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: '16'
       - name: Install Architect
-        run: npm i -g @architect/architect@^10.3.2 github:lpsinger/package#provisioned-concurrency aws-sdk
+        run: npm i -g @architect/architect@^10.3.3 github:lpsinger/package#provisioned-concurrency aws-sdk
       - name: NPM Install
         run: npm ci
       - name: Build
