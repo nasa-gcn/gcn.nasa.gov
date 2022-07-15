@@ -22,10 +22,10 @@ export default function Streaming() {
         counters="small"
         headingLevel="h4"
         steps={[
-          { to: '.', label: 'Account Info' },
+          { to: '.', label: 'Sign in / Sign up' },
           { to: 'credentials', label: 'Select Credentials' },
           { to: 'alerts', label: 'Customize Alerts' },
-          { to: 'code', label: 'Code Sample' },
+          { to: 'code', label: 'Get Sample Code' },
         ]}
       />
       <Outlet />
