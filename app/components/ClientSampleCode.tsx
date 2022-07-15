@@ -37,17 +37,15 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'python' | 'mjs'
+  language: 'py' | 'js'
 }) {
   const domain = useDomain()
 
   let code
   let instructions
-  let suffix
 
   switch (language) {
-    case 'python':
-      suffix = 'py'
+    case 'py':
       instructions = (
         <>
           <p>
@@ -99,8 +97,7 @@ export function ClientSampleCode({
                 print(message.value())
         `
       break
-    case 'mjs':
-      suffix = 'js'
+    case 'js':
       instructions = (
         <>
           <p>
@@ -114,7 +111,7 @@ export function ClientSampleCode({
         </>
       )
       code = dedent`
-        import { Kafka } from 'gcn-kafka'
+        const { Kafka } = require('gcn-kafka')
 
         // Create a client.
         // Warning: don't share the client secret with others.
@@ -166,7 +163,7 @@ export function ClientSampleCode({
       <Highlight
         language={language}
         code={code}
-        filename={`example.${suffix}`}
+        filename={`example.${language}`}
       />
     </>
   )

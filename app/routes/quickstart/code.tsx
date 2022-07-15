@@ -48,7 +48,7 @@ export default function Code() {
         clientSecret,
         topics,
         listTopics,
-        language: 'python',
+        language: 'py',
       }),
     },
     {
@@ -58,7 +58,7 @@ export default function Code() {
         clientSecret,
         topics,
         listTopics,
-        language: 'mjs',
+        language: 'js',
       }),
     },
   ]
