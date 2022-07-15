@@ -52,12 +52,18 @@ export function ClientSampleCode({
         <>
           <p>
             Open a terminal and run this command to install with{' '}
-            <Link href="https://pip.pypa.io/">pip</Link>:
+            <Link rel="external" href="https://pip.pypa.io/">
+              pip
+            </Link>
+            :
           </p>
           <Highlight language="sh" code="pip install gcn-kafka" />
           <p>
             or this command to install with with{' '}
-            <Link href="https://docs.conda.io/">conda</Link>:
+            <Link rel="external" href="https://docs.conda.io/">
+              conda
+            </Link>
+            :
           </p>
           <Highlight
             language="sh"
@@ -99,7 +105,10 @@ export function ClientSampleCode({
         <>
           <p>
             Open a terminal and run this command to install with{' '}
-            <Link href="https://www.npmjs.com">npm</Link>:
+            <Link rel="external" href="https://www.npmjs.com">
+              npm
+            </Link>
+            :
           </p>
           <Highlight language="sh" code="npm install gcn-kafka" />
         </>
