@@ -40,7 +40,6 @@
     "react-router": "^6.3.0",
     "react-tag-autocomplete": "^6.3.0",
     "react-topbar-progress-indicator": "^4.1.1",
-    "remark-gfm": "^3.0.1",
     "spin-delay": "^1.1.0"
   },
   "devDependencies": {
@@ -82,6 +81,7 @@
     "rehype-external-links": "^1.0.1",
     "rehype-highlight": "^5.0.2",
     "rehype-slug": "^5.0.1",
+    "remark-gfm": "^3.0.1",
     "sass": "^1.49.7",
     "typescript": "^4.7.4",
     "uswds": "2.13.3"
