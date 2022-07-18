@@ -15,7 +15,7 @@ const mdx = async () => {
       .then(
         (func) => (options) =>
           func({
-            table: 'usa-table',
+            table: 'usa-table usa-table--stacked',
             a: 'usa-link',
             ...options,
           })
