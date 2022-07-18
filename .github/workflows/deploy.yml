@@ -21,7 +21,6 @@ jobs:
     environment:
       name: ${{ matrix.env }}
       url: ${{ matrix.url }}
-    concurrency: ${{ matrix.env }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
