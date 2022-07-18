@@ -84,7 +84,9 @@ export class ClientCredentialVendingMachine {
       },
       ProjectionExpression: 'client_id, #name, #scope, created',
     })
-    return results.Items as RedactedClientCredential[]
+    const credentials = results.Items as RedactedClientCredential[]
+    credentials.sort((a, b) => a.created - b.created)
+    return credentials
   }
 
   async getClientCredential(
