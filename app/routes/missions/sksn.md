@@ -7,9 +7,9 @@ meta:
 
 <img 
   src="/_static/img/sk-logo.png"
-  width="200"
   align="right"
   alt="Super-Kamiokande logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Start:** 1996
@@ -30,7 +30,9 @@ https://www-sk.icrr.u-tokyo.ac.jp/sk/publications/result-e.html
 
 **Yearly Event Rates:**
 
+<div className="overflow-table">
 | Instrument | Type                    | Rates | Localization |
 | ---------- | ----------------------- | ----- | ------------ |
 | Super-K    | Core-collapse supernova | 0.03  | 5–10°        |
 |            | Test alert              | 12    | 5–10°        |
+</div>

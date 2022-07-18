@@ -19,12 +19,16 @@ https://gcn.gsfc.nasa.gov/moa_events.html
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/moa.html)
 
+<div className="overflow-table">
 | Type  | Contents      | Latency |
 | ----- | ------------- | ------- |
 | `MOA` | Lensing Event | Minutes |
+</div>
 
 **Yearly Event Rates:**
 
+<div className="overflow-table">
 | Instrument    | Type               | Rates    |
 | ------------- | ------------------ | -------- |
 | MOA Telescope | Microlensing event | &gt;1000 |
+</div>

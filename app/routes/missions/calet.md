@@ -5,12 +5,12 @@ meta:
 
 # CALorimetric Electron Telescope (CALET)
 
-<div className="width-card-lg float-right">
-  <img 
-    src="/_static/img/calet-logo.png"
-    alt="CALET logo"
-  />
-</div>
+<img 
+  src="/_static/img/calet-logo.png"
+  alt="CALET logo"
+  align="right"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
+/>
 
 **Launch Date:** August 19, 2015
 
@@ -23,29 +23,36 @@ https://heasarc.gsfc.nasa.gov/cgi-bin/W3Browse/w3table.pl?MissionHelp=calet
 
 The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research/calet)) is a mission on the International Space Station (ISS) studying cosmic rays, signatures for dark matter, and gamma-ray bursts. CALET was developed by JAXA with contributions from the Italian Space Agency and [NASA](https://www.nasa.gov/mission_pages/station/research/experiments/explorer/Investigation.html?#id=1027).
 
+<div className="overflow-table">
 | Instruments                  | Energy Range   | Field of View |
 | ---------------------------- | -------------- | ------------- |
 | Hard X-ray Monitor (HXM)     | 40 keV–20 MeV  | ~8 ster       |
 | Soft Gamma-ray Monitor (SGM) | 7 keV–1000 keV | ~3 ster       |
+</div>
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/calet.html)
 
+<div className="overflow-table">
 | Type               | Contents                             | Latency |
 | ------------------ | ------------------------------------ | ------- |
 | `CALET_GBM_FLT_LC` | Signifcance and CALET-GBM Lightcurve | Minutes |
+</div>
 
 **Common GCN Circular Types:**
 
+<div className="overflow-table">
 | Type                      | Latency | Example                                                          |
 | ------------------------- | ------- | ---------------------------------------------------------------- |
 | Observation of a GRB      | 1 day   | [GRB 211115A](https://gcn.gsfc.nasa.gov/gcn3/31084.gcn3)         |
 | Follow-up of a GW trigger | hours   | [LIGO/Virgo S200115j](https://gcn.gsfc.nasa.gov/gcn3/26797.gcn3) |
+</div>
 
 **Yearly Trigger Rates:**
 
+<div className="overflow-table">
 | Instrument | Type                                                   | Rates   |
 | ---------- | ------------------------------------------------------ | ------- |
 | CALET      | GRBs, other transients, and non-astrophysical triggers | 140–150 |
-
+</div>
 Approximately half of CALET triggers will be of non-astrophysical origin.

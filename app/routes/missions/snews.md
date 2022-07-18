@@ -10,6 +10,7 @@ meta:
   width="200"
   align="right"
   alt="SNEWS logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Start:** 2004
@@ -19,6 +20,7 @@ https://gcn.gsfc.nasa.gov/snews_trans.html
 
 [SNEWS](https://snews2.org/) is a consortium of MeV neutrino facilities which work together to distribute early warning alerts for core-collapse supernovae, reporting the neutrinos released during the collapse event before the first light of the supernova escapes.
 
+<div className="overflow-table">
 | Facility                                                             | Type                               |
 | -------------------------------------------------------------------- | ---------------------------------- |
 | [Super-Kamikande](https://www-sk.icrr.u-tokyo.ac.jp/sk/index-e.html) | Water Cherenkov detectors          |
@@ -31,17 +33,22 @@ https://gcn.gsfc.nasa.gov/snews_trans.html
 | [XENONnt](https://science.purdue.edu/xenon1t/?tag=xenonnt)           | Liquid noble dark matter detectors |
 | [LZ](https://lz.lbl.gov/)                                            | Liquid noble dark matter detectors |
 | [PANDAX-4T](https://pandax.sjtu.edu.cn/)                             | Liquid noble dark matter detectors |
+</div>
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/snews.html)
 
+<div className="overflow-table">
 | Type    | Contents                     | Latency |
 | ------- | ---------------------------- | ------- |
 | `SNEWS` | REAL or TEST supernova alert | Minutes |
+</div>
 
 **Yearly Event Rates:**
 
+<div className="overflow-table">
 | Instrument | Type                    | Rates | Localization |
 | ---------- | ----------------------- | ----- | ------------ |
 | SNEWS      | Core-collapse supernova | 0.03  | 5–360°       |
 |            | Test alert              | 52    | 5–360°       |
+</div>

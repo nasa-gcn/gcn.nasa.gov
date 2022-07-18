@@ -489,3 +489,15 @@ input.react-tags__search-input:focus {
 h1.usa-hero__heading > p {
   margin-top: 0;
 }
+
+/*
+  General Responsiveness in missions page
+*/
+.overflow-table {
+  width: 100;
+  overflow-x: auto;
+}
+
+a {
+  word-break: break-word;
+}

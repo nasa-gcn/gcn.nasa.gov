@@ -7,9 +7,9 @@ meta:
 
 <img 
   src="/_static/img/logo_swift.gif"
-  width="200"
   align="right"
   alt="Swift Observatory logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Launch Date:** November 20, 2004
@@ -23,15 +23,16 @@ https://swift.gsfc.nasa.gov/archive/
 
 [Swift](https://swift.gsfc.nasa.gov) is a MidEx class mission operated by [NASA](https://www.nasa.gov/fermi/) in partnership with agencies in Italy and the United Kingdom. BAT autonomously detects gamma-ray transients, and Swift autonomously begins a sequence of follow-up observations with XRT and UVOT. All three instruments provide alerts to GCN autonomously upon the detection of transients.
 
+<div className="overflow-table">
 | Instruments                                                                          | Energy Range | Field of View | Localization                         |
 | ------------------------------------------------------------------------------------ | ------------ | ------------- | ------------------------------------ |
 | [Burst Alert Telescope (BAT)](https://swift.gsfc.nasa.gov/about_swift/bat_desc.html) | 15-350 keV   | 2 ster        | &leq; 1–3′ radius (statistical, 90%) |
 | [X-ray Telescope (XRT)](https://www.swift.psu.edu/xrt/)                              | 0.3–10 keV   | 23.6′×23.6′   | 1–3″                                 |
 | [Ultraviolet/Optical Telescope UVOT](https://www.swift.psu.edu/uvot/)                | 170–650 nm   | 17′×17′       | &lt;1″                               |
-
+</div>
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/swift.html)
-
+<div className="overflow-table">
 | Type                      | Typical Latency Since Burst | Location Precision | Description                                                 |
 | ------------------------- | --------------------------- | ------------------ | ----------------------------------------------------------- |
 | **Flight Generated:**     |                             |                    |                                                             |
@@ -63,7 +64,8 @@ https://swift.gsfc.nasa.gov/archive/
 | `SWIFT_BAT_MONITOR`       | 1–12 hours                  | 1–7′               | Flares from known sources                                   |
 | `SWIFT_BAT_SUBSUB`        | 1–12 hours                  | 1–7′               | Sub-Sub-Threshold blips in all image produced on-board      |
 | `SWIFT_BAT_KNOWN_SRC`     | 1–12 hours                  | 1–7′               | Peaks of known-sources found in all image produced on-board |
-
+</div>
+<div className="overflow-table">
 **Common GCN Circular Types:**
 
 | Type                                   | Latency    | Example                                                          |
@@ -79,6 +81,8 @@ https://swift.gsfc.nasa.gov/archive/
 | Swift BAT observations of a GW trigger | 12 hours   | [LIGO/Virgo S200114f](https://gcn.gsfc.nasa.gov/gcn3/26748.gcn3) |
 | Swift tiling of a GW trigger           | 1 day      | [LIGO/Virgo S200114f](https://gcn.gsfc.nasa.gov/gcn3/26787.gcn3) |
 
+</div>
+<div className="overflow-table">
 **Annual Trigger Rates:**
 
 | Instrument | Long GRBs | Short GRBs | Description                   |
@@ -88,4 +92,5 @@ https://swift.gsfc.nasa.gov/archive/
 | UVOT       | 20–25     | 0–1        | UVOT follow-up detections     |
 | BAT        | 8–10      | 2–4        | GUANO arcminute recovery rate |
 
+</div>
 Trigger Rates determined from cataloged information including the [Swift-BAT Third GRB Catalog](https://swift.gsfc.nasa.gov/results/batgrbcat/index.html) and the [Swift GRB Lookup Table](https://swift.gsfc.nasa.gov/archive/grb_table/). GUANO results are from the [online summary table](https://www.swift.psu.edu/guano/).
