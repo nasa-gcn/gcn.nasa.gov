@@ -34,7 +34,12 @@ export function DevBanner() {
 
   return (
     <SiteAlert slim variant="emergency">
-      <strong>{heading}.</strong> You are viewing {description} of GCN.
+      <strong>{heading}.</strong> You are viewing {description} of GCN. For the
+      production version, go to{' '}
+      <a className="text-white" href={`https://${production_hostname}/`}>
+        https://{production_hostname}
+      </a>
+      .
     </SiteAlert>
   )
 }
