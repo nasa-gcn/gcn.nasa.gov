@@ -59,7 +59,7 @@
     "autoprefixer": "^10.4.2",
     "cross-env": "^7.0.3",
     "del": "^6.0.0",
-    "eslint": "^8.15.0",
+    "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.3.0",
     "generate-password": "^1.7.0",
     "gulp": "^4.0.2",
