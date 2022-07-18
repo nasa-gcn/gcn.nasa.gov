@@ -18,7 +18,7 @@ import {
   ModalToggleButton,
   TextInput,
 } from '@trussworks/react-uswds'
-import { Form, Link, useLoaderData } from '@remix-run/react'
+import { Form, Link, useFetcher, useLoaderData } from '@remix-run/react'
 import type { RedactedClientCredential } from '../user/client_credentials.server'
 import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
 import type { DataFunctionArgs } from '@remix-run/node'
@@ -180,9 +180,11 @@ export function NewCredentialForm() {
 
 function Credential({ name, client_id, created }: RedactedClientCredential) {
   const ref = useRef<ModalRef>(null)
+  const fetcher = useFetcher()
+  const disabled = fetcher.state !== 'idle'
   return (
     <>
-      <Grid row>
+      <Grid row style={disabled ? { opacity: '50%' } : undefined}>
         <div className="grid-col flex-fill">
           <div>
             <strong>{name}</strong>{' '}
@@ -199,18 +201,19 @@ function Credential({ name, client_id, created }: RedactedClientCredential) {
         <div className="grid-col flex-auto">
           <ModalToggleButton
             opener
+            disabled={disabled}
             modalRef={ref}
             type="button"
             className="usa-button--secondary"
           >
             Delete
           </ModalToggleButton>
-          <Link
-            className="usa-button"
-            to={`../alerts?clientId=${encodeURIComponent(client_id)}`}
-          >
-            Select
-          </Link>
+          <Form method="get" action="../alerts" className="display-inline">
+            <input type="hidden" name="clientId" value={client_id} />
+            <Button disabled={disabled} type="submit">
+              Select
+            </Button>
+          </Form>
         </div>
       </Grid>
       <Modal
@@ -220,7 +223,7 @@ function Credential({ name, client_id, created }: RedactedClientCredential) {
         aria-describedby="modal-delete-description"
         renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
       >
-        <Form method="post">
+        <fetcher.Form method="post">
           <input type="hidden" name="intent" value="delete" />
           <input type="hidden" name="clientId" value={client_id} />
           <ModalHeading id="modal-delete-heading">
@@ -241,7 +244,7 @@ function Credential({ name, client_id, created }: RedactedClientCredential) {
               Delete
             </Button>
           </ModalFooter>
-        </Form>
+        </fetcher.Form>
       </Modal>
     </>
   )
