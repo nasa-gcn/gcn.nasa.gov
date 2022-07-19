@@ -1,10 +1,10 @@
 {
   "private": true,
-  "name": "gcn.nasa.gov",
+  "name": "@nasa-gcn/gcn.nasa.gov",
   "description": "General Coordinates Network web site",
   "repository": {
     "type": "git",
-    "url": "github:nasa/gcn.nasa.gov"
+    "url": "github:nasa-gcn/gcn.nasa.gov"
   },
   "license": "NASA-1.3",
   "scripts": {

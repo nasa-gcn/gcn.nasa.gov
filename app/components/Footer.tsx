@@ -67,14 +67,14 @@ export function Footer() {
               Contact GCN directly
             </ContactLink>
             <ContactLink
-              href="https://github.com/tachgsfc/gcn.nasa.gov/issues"
+              href="https://github.com/nasa-gcn/gcn.nasa.gov/issues"
               icon={<Icon.BugReport size={4} color={'white'} />}
               headline="Have you found a bug in GCN?"
             >
               Open an issue
             </ContactLink>
             <ContactLink
-              href="https://github.com/tachgsfc/gcn.nasa.gov"
+              href="https://github.com/nasa-gcn/gcn.nasa.gov"
               icon={<Icon.Github size={4} color={'white'} />}
               headline="Want to contribute code to GCN?"
             >
