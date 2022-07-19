@@ -29,6 +29,7 @@ The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research
 | Soft Gamma-ray Monitor (SGM) | 7 keV–1000 keV | ~3 ster       |
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
+
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/calet.html)
 
 | Type               | Contents                             | Latency |
@@ -36,13 +37,16 @@ The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research
 | `CALET_GBM_FLT_LC` | Signifcance and CALET-GBM Lightcurve | Minutes |
 
 **Common GCN Circular Types:**
-| Type | Latency | Example |
+
+| Type                      | Latency | Example                                                          |
 | ------------------------- | ------- | ---------------------------------------------------------------- |
-| Observation of a GRB | 1 day | [GRB 211115A](https://gcn.gsfc.nasa.gov/gcn3/31084.gcn3) |
-| Follow-up of a GW trigger | hours | [LIGO/Virgo S200115j](https://gcn.gsfc.nasa.gov/gcn3/26797.gcn3) |
+| Observation of a GRB      | 1 day   | [GRB 211115A](https://gcn.gsfc.nasa.gov/gcn3/31084.gcn3)         |
+| Follow-up of a GW trigger | hours   | [LIGO/Virgo S200115j](https://gcn.gsfc.nasa.gov/gcn3/26797.gcn3) |
 
 **Yearly Trigger Rates:**
-| Instrument | Type | Rates |
+
+| Instrument | Type                                                   | Rates   |
 | ---------- | ------------------------------------------------------ | ------- |
-| CALET | GRBs, other transients, and non-astrophysical triggers | 140–150 |
+| CALET      | GRBs, other transients, and non-astrophysical triggers | 140–150 |
+
 Approximately half of CALET triggers will be of non-astrophysical origin.

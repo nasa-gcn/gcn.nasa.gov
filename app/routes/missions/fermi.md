@@ -43,18 +43,21 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 | `FERMI_LAT_OFFLINE` | Ground-detected GRB localization | 8–12 hours |
 | `FERMI_LAT_TRANS` | Unknown source transient | 1 days |
 | `FERMI_LAT_MONITOR` | Known source flare | 1 days |
+
 **Common GCN Circular Types:**
-| Type | Latency | Example |
+
+| Type                           | Latency    | Example                                                          |
 | ------------------------------ | ---------- | ---------------------------------------------------------------- |
-| GBM identification of a GRB | 15 minutes | [GRB 220530A](https://gcn.gsfc.nasa.gov/gcn3/32147.gcn3) |
-| GBM analysis of a GRB | 4 hours | [GRB 220528A](https://gcn.gsfc.nasa.gov/gcn3/32155.gcn3) |
-| LAT observation of a GRB | 8 hours | [GRB 220228A](https://gcn.gsfc.nasa.gov/gcn3/31659.gcn3) |
-| GBM subthreshold detection | 8 hours | [GRB 220325A](https://gcn.gsfc.nasa.gov/gcn3/31791.gcn3) |
-| GBM observations of SGR flares | 1 day | [SGR 1935+2154](https://gcn.gsfc.nasa.gov/gcn3/31445.gcn3) |
-| GBM follow-up of GW trigger | 8 hours | [LIGO/Virgo S200128d](https://gcn.gsfc.nasa.gov/gcn3/26916.gcn3) |
-| LAT follow-up of GW trigger | 8 hours | [LIGO/Virgo S200128d](https://gcn.gsfc.nasa.gov/gcn3/26925.gcn3) |
-| GBM follow-up of a neutrino | 8 hours | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31255.gcn3) |
-| LAT follow-up of a neutrino | 8 hours | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31257.gcn3) |
+| GBM identification of a GRB    | 15 minutes | [GRB 220530A](https://gcn.gsfc.nasa.gov/gcn3/32147.gcn3)         |
+| GBM analysis of a GRB          | 4 hours    | [GRB 220528A](https://gcn.gsfc.nasa.gov/gcn3/32155.gcn3)         |
+| LAT observation of a GRB       | 8 hours    | [GRB 220228A](https://gcn.gsfc.nasa.gov/gcn3/31659.gcn3)         |
+| GBM subthreshold detection     | 8 hours    | [GRB 220325A](https://gcn.gsfc.nasa.gov/gcn3/31791.gcn3)         |
+| GBM observations of SGR flares | 1 day      | [SGR 1935+2154](https://gcn.gsfc.nasa.gov/gcn3/31445.gcn3)       |
+| GBM follow-up of GW trigger    | 8 hours    | [LIGO/Virgo S200128d](https://gcn.gsfc.nasa.gov/gcn3/26916.gcn3) |
+| LAT follow-up of GW trigger    | 8 hours    | [LIGO/Virgo S200128d](https://gcn.gsfc.nasa.gov/gcn3/26925.gcn3) |
+| GBM follow-up of a neutrino    | 8 hours    | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31255.gcn3)     |
+| LAT follow-up of a neutrino    | 8 hours    | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31257.gcn3)     |
+
 **Yearly Trigger Rates:**
 
 <table className="usa-table usa-table--stacked">

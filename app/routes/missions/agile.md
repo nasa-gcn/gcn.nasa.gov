@@ -41,14 +41,16 @@ https://agile.asdc.asi.it/
 | `AGILE_MCAL_ALERT`  | Ground processing of the MCAL triggers | 40–130 minutes |
 
 **Common GCN Circular Types:**
-| Type | Latency | Example |
+
+| Type                             | Latency | Example                                                          |
 | -------------------------------- | ------- | ---------------------------------------------------------------- |
-| AGILE detection of a GRB | hours | [GRB 220527A](https://gcn.gsfc.nasa.gov/gcn3/32129.gcn3) |
-| MCAL detection of a GRB | hours | [GRB 220323A](https://gcn.gsfc.nasa.gov/gcn3/31784.gcn3) |
-| MCAL observation of a GW trigger | hours | [LIGO/Virgo S200129m](https://gcn.gsfc.nasa.gov/gcn3/26930.gcn3) |
+| AGILE detection of a GRB         | hours   | [GRB 220527A](https://gcn.gsfc.nasa.gov/gcn3/32129.gcn3)         |
+| MCAL detection of a GRB          | hours   | [GRB 220323A](https://gcn.gsfc.nasa.gov/gcn3/31784.gcn3)         |
+| MCAL observation of a GW trigger | hours   | [LIGO/Virgo S200129m](https://gcn.gsfc.nasa.gov/gcn3/26930.gcn3) |
 
 **Yearly Trigger Rates:**
-| Instrument | Type | Rates |
+
+| Instrument | Type            | Rates |
 | ---------- | --------------- | ----- |
 | SuperAGILE | Gamma-ray burst | 20–30 |
-| MCAL | GRB or GRB-like | 10–15 |
+| MCAL       | GRB or GRB-like | 10–15 |
