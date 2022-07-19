@@ -32,7 +32,7 @@ https://swift.gsfc.nasa.gov/archive/
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/swift.html)
 
-<table className="usa-table usa-table--stacked">
+<table className="usa-table">
   <thead>
     <tr>
       <th>Type</th>

@@ -32,7 +32,7 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/fermi.html)
 | Type | Contents | Latency |
 | --------------------- | ----------------------------------------------------- | -------------- |
-| `FERMI_GBM_ALERT` | Trigger info | ~5 seconds |
+| `FERMI_GBM_ALERT` |Trigger info | ~5 seconds |
 | `FERMI_GBM_FLT_POS` | Flight localization, classification | ~10 seconds |
 | `FERMI_GBM_GND_POS` | Updated ground localization using finer lookup tables | 20–300 seconds |
 | `FERMI_GBM_FIN_POS` | Final trigger localization | 15 minutes |
@@ -60,7 +60,7 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 
 **Yearly Trigger Rates:**
 
-<table className="usa-table usa-table--stacked">
+<table className="usa-table">
   <thead>
     <tr><th>Instrument</th><th>Type</th><th>Rates</th></tr>
   </thead>

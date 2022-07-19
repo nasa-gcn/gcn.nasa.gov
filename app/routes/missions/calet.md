@@ -29,7 +29,6 @@ The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research
 | Soft Gamma-ray Monitor (SGM) | 7 keV–1000 keV | ~3 ster       |
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
-
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/calet.html)
 
 | Type               | Contents                             | Latency |
