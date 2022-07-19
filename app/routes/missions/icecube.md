@@ -24,12 +24,13 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/amon.html)
-| Type | Latency | Comments |
+
+| Type                        | Latency       | Comments                                     |
 | --------------------------- | ------------- | -------------------------------------------- |
-| `ICECUBE_ASTROTRACK_GOLD` | 0.5–1 minutes | Hi-energy single neutrino directions |
-| `ICECUBE_ASTROTRACK_BRONZE` | 0.5–1 minutes | Hi-energy single neutrino directions |
-| `AMON_NU_EM_COINC` | 7 hours | Coincidence of IceCube+HAWC or ANTARES+Fermi |
-| `AMON_ICECUBE_CASCADE` | 0.5–1 minutes | Direction of a single hi-energy neutrino |
+| `ICECUBE_ASTROTRACK_GOLD`   | 0.5–1 minutes | Hi-energy single neutrino directions         |
+| `ICECUBE_ASTROTRACK_BRONZE` | 0.5–1 minutes | Hi-energy single neutrino directions         |
+| `AMON_NU_EM_COINC`          | 7 hours       | Coincidence of IceCube+HAWC or ANTARES+Fermi |
+| `AMON_ICECUBE_CASCADE`      | 0.5–1 minutes | Direction of a single hi-energy neutrino     |
 
 **Common GCN Circular Types:**
 
