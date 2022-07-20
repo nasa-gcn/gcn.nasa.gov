@@ -15,7 +15,7 @@ meta:
   <img 
     src="/_static/img/virgo-logo.png"
     alt="Virgo logo"
-  />  
+  />
   <img 
     src="/_static/img/kagra-logo.png"
     alt="KAGRA logo"
