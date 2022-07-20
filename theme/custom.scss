@@ -146,7 +146,7 @@ a[rel~='external'] {
     @include u-bg('accent-cool');
   }
 
-  & .usa-card__footer {
+  & .usa-card__body {
     @include u-bg('white');
   }
 }
@@ -371,9 +371,11 @@ input.react-tags__search-input:focus {
   display: inline;
   vertical-align: bottom;
 }
+
 .client-cred-card-headline h3 {
   font-weight: bold;
 }
+
 .client-cred-card-centered {
   display: flex;
   align-items: center;
@@ -402,4 +404,88 @@ input.react-tags__search-input:focus {
       background-color: rgba(27, 27, 27, 0.3);
     }
   }
+}
+
+/*
+ * Nested checkboxes
+ */
+
+.nested-checkboxes__node {
+  list-style: url('../img/usa-icons/chevron_right.svg');
+}
+
+.nested-checkboxes__node[aria-expanded='true'] {
+  list-style: url('../img/usa-icons/expand_more.svg');
+}
+
+.nested-checkboxes__leaf {
+  list-style: none;
+}
+
+.nested-checkboxes__node [data-testid='checkbox'] {
+  position: relative;
+  top: -0.25rem;
+  display: inline-block;
+}
+
+.nested-checkboxes__node label {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+/*
+ * Spinner styling
+ */
+
+.loader,
+.loader:after {
+  border-radius: 50%;
+  width: 10em;
+  height: 10em;
+}
+.loader {
+  margin: 60px auto;
+  font-size: 10px;
+  position: relative;
+  text-indent: -9999em;
+  border-top: 1.1em solid rgba(0, 80, 216, 0.2);
+  border-right: 1.1em solid rgba(0, 80, 216, 0.2);
+  border-bottom: 1.1em solid rgba(0, 80, 216, 0.2);
+  border-left: 1.1em solid #0050d8;
+  -webkit-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: load8 1.1s infinite linear;
+  animation: load8 1.1s infinite linear;
+}
+@-webkit-keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes load8 {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+
+/*
+ Hero formatting
+*/
+
+.hero-image-right {
+  object-fit: scale-down;
+}
+h1.usa-hero__heading > p {
+  margin-top: 0;
 }

@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Accordion, Checkbox } from '@trussworks/react-uswds'
-import { useRef } from 'react'
+import { Checkbox } from '@trussworks/react-uswds'
+import { useEffect, useRef, useState } from 'react'
 
 type CheckboxArgs = Parameters<typeof Checkbox>
 type CheckboxProps = CheckboxArgs[0]
@@ -15,74 +15,89 @@ interface NestedCheckboxProps extends CheckboxProps {
   nodes: CheckboxProps[]
 }
 
+function allTrue(values: boolean[]) {
+  return values.every(Boolean)
+}
+
+function allSame([first, ...rest]: any[]) {
+  return rest.every((value) => value === first)
+}
+
 function NestedCheckboxNode({
   nodes,
   ...topLevelNodeProps
 }: NestedCheckboxProps) {
+  const [expanded, setExpanded] = useState(false)
   const topLevelRef = useRef<HTMLInputElement>(null)
-  const childRefs = useRef<(HTMLInputElement | null)[]>(nodes.map(() => null))
-  const childValues = nodes.map(() => false)
+  const childRefs = useRef<(HTMLInputElement | null)[]>(
+    new Array(nodes.length).fill(null)
+  )
+  const [topLevelValue, setTopLevelValue] = useState(false)
+  const [childValues, setChildValues] = useState(
+    new Array<boolean>(nodes.length).fill(false)
+  )
 
   function updateParent() {
-    const first = childValues[0]
     if (topLevelRef.current) {
-      topLevelRef.current.checked = childValues.every(Boolean)
-      topLevelRef.current.indeterminate = !childValues.every(
-        (value) => value == first
-      )
+      topLevelRef.current.checked = allTrue(childValues)
+      topLevelRef.current.indeterminate = !allSame(childValues)
     }
   }
 
-  return {
-    title: (
+  useEffect(updateParent)
+
+  return (
+    <li
+      role="treeitem"
+      aria-expanded={expanded}
+      onClick={() => setExpanded(!expanded)}
+      className="nested-checkboxes__node"
+    >
       <Checkbox
-        key={topLevelNodeProps.id}
+        className="display-inline-block"
         {...topLevelNodeProps}
         inputRef={topLevelRef}
-        onClick={(e) => {
-          if (!topLevelRef.current) return
-          const checked = topLevelRef.current.checked
-          childRefs.current.forEach((childRef, index) => {
-            childValues[index] = checked
+        onClick={() => {
+          const checked = !topLevelValue
+          setTopLevelValue(checked)
+          setChildValues(childValues.fill(checked))
+          if (topLevelRef.current) {
+            topLevelRef.current.indeterminate = false
+          }
+          childRefs.current.forEach((childRef) => {
             if (childRef) {
               childRef.checked = checked
             }
           })
-          updateParent()
         }}
       />
-    ),
-    content: nodes.map((node, index) => (
-      <Checkbox
-        key={node.id}
-        {...node}
-        inputRef={(instance) => {
-          childRefs.current[index] = instance
-        }}
-        onChange={(e) => {
-          childValues[index] = e.target.checked
-          updateParent()
-        }}
-      />
-    )),
-  }
+      <ul hidden={!expanded} className="nested-checkboxes__leaf">
+        {nodes.map((node, index) => (
+          <li role="treeitem" key={index}>
+            <Checkbox
+              {...node}
+              inputRef={(instance) => {
+                childRefs.current[index] = instance
+              }}
+              onChange={(e) => {
+                childValues[index] = e.target.checked
+                setChildValues(childValues)
+                updateParent()
+              }}
+            />
+          </li>
+        ))}
+      </ul>
+    </li>
+  )
 }
 
-export function NestedCheckboxes({
-  nodes: topLevelNodes,
-}: {
-  nodes: NestedCheckboxProps[]
-}) {
+export function NestedCheckboxes({ nodes }: { nodes: NestedCheckboxProps[] }) {
   return (
-    <Accordion
-      multiselectable
-      items={topLevelNodes.map((args) => {
-        return {
-          id: args.id,
-          expanded: false,
-          ...NestedCheckboxNode(args),
-        }
-      })}
-    />
+    <ul role="tree" aria-multiselectable>
+      {nodes.map((node, index) => (
+        <NestedCheckboxNode key={index} {...node} />
+      ))}
+    </ul>
   )
 }

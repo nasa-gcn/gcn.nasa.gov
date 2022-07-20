@@ -10,8 +10,7 @@ import type { ReactNode } from 'react'
 import {
   Grid,
   GridContainer,
-  IconBugReport,
-  IconGithub,
+  Icon,
   Identifier,
   IdentifierGov,
   IdentifierIdentity,
@@ -21,7 +20,6 @@ import {
   IdentifierLogo,
   IdentifierLogos,
   IdentifierMasthead,
-  IconHelp,
 } from '@trussworks/react-uswds'
 
 function ContactLink({
@@ -63,21 +61,21 @@ export function Footer() {
           <Grid row gap>
             <ContactLink
               href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn"
-              icon={<IconHelp size={4} color={'white'} />}
+              icon={<Icon.Help size={4} color={'white'} />}
               headline="Questions or comments?"
             >
               Contact GCN directly
             </ContactLink>
             <ContactLink
-              href="https://github.com/tachgsfc/gcn.nasa.gov/issues"
-              icon={<IconBugReport size={4} color={'white'} />}
+              href="https://github.com/nasa-gcn/gcn.nasa.gov/issues"
+              icon={<Icon.BugReport size={4} color={'white'} />}
               headline="Have you found a bug in GCN?"
             >
               Open an issue
             </ContactLink>
             <ContactLink
-              href="https://github.com/tachgsfc/gcn.nasa.gov"
-              icon={<IconGithub size={4} color={'white'} />}
+              href="https://github.com/nasa-gcn/gcn.nasa.gov"
+              icon={<Icon.Github size={4} color={'white'} />}
               headline="Want to contribute code to GCN?"
             >
               Get involved on GitHub

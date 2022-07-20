@@ -1,18 +1,27 @@
-import type { FC } from 'react'
+/*!
+ * Copyright © 2022 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration. No copyright is claimed
+ * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ *
+ * SPDX-License-Identifier: NASA-1.3
+ */
+
 import { useState } from 'react'
 
+export type Tab = {
+  label: string
+  Component: React.ReactNode
+}
+
 type TabsContainerProps = {
-  tabs: {
-    label: string
-    Component: React.ReactNode
-  }[]
+  tabs: Tab[]
 }
 
 /**
  * Avalible Props
- * @param tabs Array of object with properties label: string and a Component: React.ReactNode
+ * @param tabs Array of Tab objects with properties label: string and a Component: React.ReactNode
  */
-let Tabs: FC<TabsContainerProps> = ({ tabs = [] }) => {
+let Tabs: React.FC<TabsContainerProps> = ({ tabs = [] }) => {
   const [selectedTab, setSelectedTab] = useState(0)
   const Panel = tabs && tabs[selectedTab]
 

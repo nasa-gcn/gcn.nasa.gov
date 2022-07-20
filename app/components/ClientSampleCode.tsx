@@ -6,13 +6,13 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { useMatches } from '@remix-run/react'
+import { Link } from '@trussworks/react-uswds'
 import dedent from 'dedent'
+import { useHostname } from '~/root'
 import { Highlight } from './Highlight'
 
 function useDomain() {
-  const [{ data }] = useMatches()
-  const hostname = new URL(data.url as string).hostname
+  const hostname = useHostname()
 
   if (hostname === 'gcn.nasa.gov') {
     return null
@@ -26,7 +26,8 @@ function useDomain() {
 export function ClientSampleCode({
   clientId = 'fill me in',
   clientSecret = 'fill me in',
-  noticeTypes = [
+  listTopics = true,
+  topics = [
     'gcn.classic.text.FERMI_GBM_FIN_POS',
     'gcn.classic.text.LVC_INITIAL',
   ],
@@ -34,79 +35,128 @@ export function ClientSampleCode({
 }: {
   clientId?: string
   clientSecret?: string
-  noticeTypes?: string[]
-  language: 'python' | 'mjs'
+  listTopics?: boolean
+  topics?: string[]
+  language: 'py' | 'js'
 }) {
   const domain = useDomain()
 
-  let code
   switch (language) {
-    case 'python':
-      code = dedent`
-        from gcn_kafka import Consumer
+    case 'py':
+      return (
+        <>
+          Open a terminal and run this command to install with{' '}
+          <Link rel="external" href="https://pip.pypa.io/">
+            pip
+          </Link>
+          :
+          <Highlight language="sh" code="pip install gcn-kafka" />
+          or this command to install with with{' '}
+          <Link rel="external" href="https://docs.conda.io/">
+            conda
+          </Link>
+          :
+          <Highlight
+            language="sh"
+            code="conda install -c conda-forge gcn-kafka"
+          />
+          Save the Python code below to a file called <code>example.py</code>:
+          <Highlight
+            language={language}
+            filename={`example.${language}`}
+            code={dedent`
+              from gcn_kafka import Consumer
 
-        # Connect as a consumer
-        consumer = Consumer(client_id='${clientId}',
-                            client_secret='${clientSecret}'${
-        domain
-          ? `,
-                            domain='${domain}'`
-          : ''
-      })
+              # Connect as a consumer.
+              # Warning: don't share the client secret with others.
+              consumer = Consumer(client_id='${clientId}',
+                                  client_secret='${clientSecret}'${
+              domain
+                ? `,
+                                  domain='${domain}'`
+                : ''
+            })
+            ${
+              listTopics
+                ? `
+              # List all topics
+              print(consumer.list_topics().topics)
+              `
+                : ''
+            }
+              # Subscribe to topics and receive alerts
+              consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
+                                  `)}])
+              while True:
+                  for message in consumer.consume():
+                      value = message.value()
+                      print(value)
+              `}
+          />
+          Run the code by typing this command in the terminal:
+          <Highlight language="sh" code="python example.py" />
+        </>
+      )
+    case 'js':
+      return (
+        <>
+          Open a terminal and run this command to install with{' '}
+          <Link rel="external" href="https://www.npmjs.com">
+            npm
+          </Link>
+          :
+          <Highlight language="sh" code="npm install gcn-kafka" />
+          Sample code:
+          <Highlight
+            language={language}
+            filename={`example.${language}`}
+            code={dedent`
+              const { Kafka } = require('gcn-kafka')
 
-        # List all topics
-        print(consumer.list_topics().topics)
+              // Create a client.
+              // Warning: don't share the client secret with others.
+              const kafka = new Kafka({
+                client_id: '${clientId}',
+                client_secret: '${clientSecret}',${
+              domain
+                ? `
+                domain: '${domain}',`
+                : ''
+            }
+              })
+            ${
+              listTopics
+                ? `
+              // List topics
+              const admin = kafka.admin()
+              const topics = await admin.listTopics()
+              console.log(topics)
+              `
+                : ''
+            }
+              // Subscribe to topics and receive alerts
+              const consumer = kafka.consumer()
+              await consumer.subscribe({
+                topics: [${topics
+                  .map(
+                    (topic) => `
+                  '${topic}',`
+                  )
+                  .join('')}
+                ],
+              })
 
-        # Subscribe to topics and receive alerts
-        consumer.subscribe([${noticeTypes.map((noticeType) => `'${noticeType}'`)
-          .join(`,
-                            `)}])
-        while True:
-            for message in consumer.consume():
-                print(message.value())
-        `
-      break
-    case 'mjs':
-      code = dedent`
-        import { Kafka } from 'gcn-kafka'
-
-        // Create a client
-        const kafka = new Kafka({
-          client_id: '${clientId}',
-          client_secret: '${clientSecret}',${
-        domain
-          ? `
-          domain: '${domain}',`
-          : ''
-      }
-        })
-
-        // List topics
-        const admin = kafka.admin()
-        const topics = await admin.listTopics()
-        console.log(topics)
-
-        // Subscribe to topics and receive alerts
-        const consumer = kafka.consumer()
-        await consumer.subscribe({
-          topics: [${noticeTypes
-            .map(
-              (noticeType) => `
-            '${noticeType}',`
-            )
-            .join('')}
-          ],
-        })
-
-        await consumer.run({
-          eachMessage: async (payload) => {
-            const value = payload.message.value
-            console.log(value?.toString())
-          },
-        })
-        `
-      break
+              await consumer.run({
+                eachMessage: async (payload) => {
+                  const value = payload.message.value
+                  console.log(value?.toString())
+                },
+              })
+              `}
+          />
+          Run the code by typing this command in the terminal:
+          <Highlight language="sh" code="node example.js" />
+        </>
+      )
   }
-
-  return <Highlight language={language} code={code} />
 }

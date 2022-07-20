@@ -16,3 +16,7 @@ The Kafka platform itself does not care about the format of the records. However
 ## How do I start receving GCN notices via Kafka?
 
 See [Client Configuration](docs/client).
+
+## What does the warning `Subscribed topic not available: gcn.classic.text.AGILE_GRB_GROUND: Broker: Unknown topic or partition'` mean?
+
+This warning means that there have not been any recent alerts on that topic.

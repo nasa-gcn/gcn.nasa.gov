@@ -7,10 +7,12 @@
  */
 
 import { SiteAlert } from '@trussworks/react-uswds'
+import { useHostname } from '~/root'
 
 const production_hostname = 'gcn.nasa.gov'
 
-export function DevBanner({ hostname }: { hostname: string }) {
+export function DevBanner() {
+  const hostname = useHostname()
   if (hostname === production_hostname) return null
 
   let heading: string
@@ -32,7 +34,12 @@ export function DevBanner({ hostname }: { hostname: string }) {
 
   return (
     <SiteAlert slim variant="emergency">
-      <strong>{heading}.</strong> You are viewing {description} of GCN.
+      <strong>{heading}.</strong> You are viewing {description} of GCN. For the
+      production version, go to{' '}
+      <a className="text-white" href={`https://${production_hostname}/`}>
+        https://{production_hostname}
+      </a>
+      .
     </SiteAlert>
   )
 }

@@ -55,7 +55,11 @@ TopBarProgress.config({
 })
 
 export const meta: MetaFunction = () => {
-  return { title: 'GCN - General Coordinates Network' }
+  return {
+    charset: 'utf-8',
+    viewport: 'width=device-width,initial-scale=1',
+    title: 'GCN - General Coordinates Network',
+  }
 }
 
 export const links: LinksFunction = () => [
@@ -83,19 +87,25 @@ export async function loader({ request }: DataFunctionArgs) {
   return { url, email }
 }
 
+export function useUrl() {
+  const [{ data }] = useMatches()
+  const { url } = data as Awaited<ReturnType<typeof loader>>
+  return url
+}
+
+export function useHostname() {
+  return new URL(useUrl()).hostname
+}
+
 function Document({ children }: { children?: React.ReactNode }) {
   const [{ data }] = useMatches()
-  const { url, email } = data as Awaited<ReturnType<typeof loader>>
-  const parsedUrl = new URL(url)
-  const { hostname, pathname } = parsedUrl
+  const { email } = data as Awaited<ReturnType<typeof loader>>
   const transition = useTransition()
   const showProgress = useSpinDelay(transition.state !== 'idle')
 
   return (
     <html lang="en-US">
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
         <Meta />
         <Links />
       </head>
@@ -105,8 +115,8 @@ function Document({ children }: { children?: React.ReactNode }) {
         </a>
         {showProgress && <TopBarProgress />}
         <GovBanner />
-        <DevBanner hostname={hostname} />
-        <Header pathname={pathname} email={email} />
+        <DevBanner />
+        <Header email={email} />
         <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
         </section>

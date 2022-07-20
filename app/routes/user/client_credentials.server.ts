@@ -62,7 +62,7 @@ export class ClientCredentialVendingMachine {
 
   static async create(request: Request) {
     const user = await getUser(request)
-    if (!user) throw new Response(null, { status: 403 })
+    if (!user) throw new Response('not signed in', { status: 403 })
     return new this(user.sub, user.groups)
   }
 
@@ -84,7 +84,9 @@ export class ClientCredentialVendingMachine {
       },
       ProjectionExpression: 'client_id, #name, #scope, created',
     })
-    return results.Items as RedactedClientCredential[]
+    const credentials = results.Items as RedactedClientCredential[]
+    credentials.sort((a, b) => a.created - b.created)
+    return credentials
   }
 
   async getClientCredential(

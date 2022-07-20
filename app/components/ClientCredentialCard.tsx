@@ -1,9 +1,16 @@
+/*!
+ * Copyright © 2022 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration. No copyright is claimed
+ * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ *
+ * SPDX-License-Identifier: NASA-1.3
+ */
+
 import {
   Button,
   Card,
   Grid,
-  IconDelete,
-  IconSecurity,
+  Icon,
   Modal,
   ModalFooter,
   ModalHeading,
@@ -12,6 +19,7 @@ import {
 import type { ModalRef } from '@trussworks/react-uswds'
 import moment from 'moment'
 import { useRef } from 'react'
+import type { CSSProperties } from 'react'
 
 export interface ClientCredentialData {
   name: string
@@ -19,6 +27,8 @@ export interface ClientCredentialData {
   client_id: string
   client_secret?: string
   scope: string
+  className?: string
+  listStyles?: CSSProperties | undefined
 }
 
 interface ClientCredentialProps extends ClientCredentialData {
@@ -34,15 +44,19 @@ export default function ClientCredential(props: ClientCredentialProps) {
       props.onDelete(props.client_id)
     }
   }
-
   const momentCreated = moment.utc(props.created)
 
   return (
-    <Card key={props.client_id} headerFirst>
+    <Card
+      key={props.client_id}
+      headerFirst
+      style={{ ...props.listStyles, listStyle: 'none' }}
+      containerProps={{ className: props.className }}
+    >
       <Grid row>
         <Grid col={1} className="grid-col-auto client-cred-card-centered">
           <div className="client-cred-card-centered">
-            <IconSecurity color="#00a91c" size={5} />
+            <Icon.Security color="#00a91c" size={5} />
           </div>
         </Grid>
         <Grid col={10}>
@@ -72,7 +86,7 @@ export default function ClientCredential(props: ClientCredentialProps) {
             opener
           >
             <big>
-              <IconDelete />
+              <Icon.Delete />
             </big>
           </ModalToggleButton>
         </Grid>
