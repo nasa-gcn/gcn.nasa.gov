@@ -1,34 +1,25 @@
 const { Provider } = require('oidc-provider')
+const crypto = require('crypto')
+require('dotenv').config()
+
+const LOCAL_OIDC_CLIENT_PORT = process.env.LOCAL_OIDC_PORT
+const LOCAL_OIDC_PROVIDER = 'http://localhost:' + LOCAL_OIDC_CLIENT_PORT
+const LOCAL_OIDC_CLIENT_ID = crypto.randomBytes(20).toString('hex')
+const LOCAL_OIDC_CLIENT_SECRET = crypto.randomBytes(20).toString('hex')
+
 const configuration = {
   // ... see /docs for available configuration
   clients: [
     {
-      client_id: '6qa6a6rq65ncanflojnknqt1ae',
-      client_secret: '1530ks93a1d8inrpfvd73ccu2de7bf8iq033b1873brpa8qmukc0',
+      client_id: LOCAL_OIDC_CLIENT_ID,
+      client_secret: LOCAL_OIDC_CLIENT_SECRET,
       redirect_uris: ['http://localhost:3333/login'],
+      post_logout_redirect_uris: ['http://localhost:3333'],
       // + other client properties
     },
   ],
   claims: {
-    address: ['address'],
-    email: ['email', 'email_verified'],
-    phone: ['phone_number', 'phone_number_verified'],
-    profile: [
-      'birthdate',
-      'family_name',
-      'gender',
-      'given_name',
-      'locale',
-      'middle_name',
-      'name',
-      'nickname',
-      'picture',
-      'preferred_username',
-      'profile',
-      'updated_at',
-      'website',
-      'zoneinfo',
-    ],
+    openid: ['email', 'email_verified'],
   },
   features: {
     devInteractions: { enabled: true }, // defaults to true
@@ -38,39 +29,17 @@ const configuration = {
   },
   scopes: ['openid', 'email', 'phone', 'profile'],
   responseTypes: ['code', 'id_token'],
-  async findById(ctx, id) {
+  routes: {
+    end_session: '/logout',
+  },
+  async findAccount(ctx, id) {
     return {
-      accountId: 'V1StGXR8_Z5jdHi6B-myT',
+      accountId: id,
       async claims(use, scope) {
         return {
-          sub: 'V1StGXR8_Z5jdHi6B-myT',
-
-          address: {
-            country: '000',
-            formatted: '000',
-            locality: '000',
-            postal_code: '000',
-            region: '000',
-            street_address: '000',
-          },
-          birthdate: '1987-10-16',
-          email: 'johndoe@example.com',
+          sub: id,
+          email: 'local-user@tach.com',
           email_verified: false,
-          family_name: 'Doe',
-          gender: 'male',
-          given_name: 'John',
-          locale: 'en-US',
-          middle_name: 'Middle',
-          name: 'John Doe',
-          nickname: 'Johny',
-          phone_number: '+49 000 000000',
-          phone_number_verified: false,
-          picture: 'http://lorempixel.com/400/200/',
-          preferred_username: 'johnny',
-          profile: 'https://johnswebsite.com',
-          updated_at: 1454704946,
-          website: 'http://example.com',
-          zoneinfo: 'Europe/Berlin',
         }
       },
     }
@@ -80,15 +49,36 @@ const configuration = {
 module.exports = {
   sandbox: {
     start: async ({ arc, inventory, invoke }) => {
-      const PORT = inventory.inv._project.env.local.testing.LOCAL_OIDC_PORT
-
-      const oidc = new Provider('http://localhost:' + PORT, configuration)
+      const oidc = new Provider(LOCAL_OIDC_PROVIDER, configuration)
 
       oidc.listen(3000, () => {
         console.log(
-          'oidc-provider listening on port 3000, check http://localhost:3000/.well-known/openid-configuration'
+          'oidc-provider listening on port ' +
+            LOCAL_OIDC_CLIENT_PORT +
+            ', check ' +
+            LOCAL_OIDC_PROVIDER +
+            '/.well-known/openid-configuration'
         )
       })
+    },
+  },
+  set: {
+    env: ({ arc, inventory }) => {
+      if (process.env.NODE_ENV === 'production') {
+        return {
+          OIDC_PROVIDER: `https://cognito-idp.${
+            process.env.COGNITO_USER_POOL_ID.split('_')[0]
+          }.amazonaws.com/${process.env.COGNITO_USER_POOL_ID}/`,
+          OIDC_CLIENT_ID: process.env.COGNITO_OIDC_CLIENT_ID,
+          OIDC_CLIENT_SECRET: process.env.COGNITO_OIDC_CLIENT_SECRET,
+        }
+      } else {
+        return {
+          OIDC_PROVIDER: LOCAL_OIDC_PROVIDER,
+          OIDC_CLIENT_ID: LOCAL_OIDC_CLIENT_ID,
+          OIDC_CLIENT_SECRET: LOCAL_OIDC_CLIENT_SECRET,
+        }
+      }
     },
   },
 }

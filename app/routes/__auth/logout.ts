@@ -29,7 +29,12 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
   logoutUrl.pathname = '/logout'
 
   logoutUrl.searchParams.set('client_id', client.metadata.client_id)
-  logoutUrl.searchParams.set('logout_uri', new URL(url).origin)
+  logoutUrl.searchParams.set(
+    process.env.NODE_ENV === 'production'
+      ? 'logout_uri'
+      : 'post_logout_redirect_uri',
+    new URL(url).origin
+  )
 
   return redirect(logoutUrl.toString(), {
     headers: {
