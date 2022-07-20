@@ -29,7 +29,7 @@ export default function AnnouncementContent() {
         <div className="grid-col-4">
           August 2, 2022 04:00-05:00 UTC <br /> (best for Asia and Oceania):
           <br />
-          <Link href={'https://bit.ly/3v2pNwV'}>https://bit.ly/3v2pNwV</Link>
+          <Link rel="external" href="https://bit.ly/3v2pNwV">https://bit.ly/3v2pNwV</Link>
         </div>
       </div>
     </section>
