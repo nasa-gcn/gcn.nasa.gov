@@ -66,10 +66,10 @@ https://fermi.gsfc.nasa.gov/ssc/data/
     <tr><th>Instrument</th><th>Type</th><th>Rates</th></tr>
   </thead>
   <tbody>
-    <tr><td rowSpan="3"><strong>GBM</strong></td><td>Short gamma-ray burst</td><td>35–40</td></tr>
+    <tr><td rowSpan="5"><strong>GBM</strong></td><td>Short gamma-ray burst</td><td>35–40</td></tr>
     <tr><td>Long gamma-ray burst</td><td>200</td></tr><tr><td>Soft gamma-ray repeater flares</td><td>35–40</td></tr>
-    <tr><td><strong>LAT</strong></td><td>Terrestrial gamma-ray flashes</td><td>80–90</td></tr>
-    <tr><td>Solar flares</td><td>90–95</td></tr><tr><td>Gamma-ray burst</td><td>15–20</td></tr>
+    <tr><td>Terrestrial gamma-ray flashes</td><td>80–90</td></tr>
+    <tr><td>Solar flares</td><td>90–95</td></tr><tr><td><strong>LAT</strong></td><td>Gamma-ray burst</td><td>15–20</td></tr>
   </tbody>
 </table>
 
