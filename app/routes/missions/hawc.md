@@ -7,9 +7,9 @@ meta:
 
 <img 
   src="/_static/img/hawc-logo.png"
-  width="200"
   align="right"
   alt="HAWC logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Start of Full Operations:** March 2015

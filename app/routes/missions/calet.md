@@ -5,12 +5,12 @@ meta:
 
 # CALorimetric Electron Telescope (CALET)
 
-<div className="width-card-lg float-right">
-  <img 
-    src="/_static/img/calet-logo.png"
-    alt="CALET logo"
-  />
-</div>
+<img 
+  src="/_static/img/calet-logo.png"
+  alt="CALET logo"
+  align="right"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
+/>
 
 **Launch Date:** August 19, 2015
 

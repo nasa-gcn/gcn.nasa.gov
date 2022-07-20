@@ -5,10 +5,12 @@ meta:
 
 # Gravitational Wave Network
 
-<div className="width-card-lg float-right">
+<div
+  align="right"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3">
   <img 
-    src="/_static/img/lsc-logo.png"
-    alt="LIGO logo"
+      src="/_static/img/lsc-logo.png"
+      alt="LIGO logo"
   />
   <img 
     src="/_static/img/virgo-logo.png"

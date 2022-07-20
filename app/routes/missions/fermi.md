@@ -7,9 +7,9 @@ meta:
 
 <img 
   src="/_static/img/Fermi_Gamma-ray_Space_Telescope_logo.svg"
-  width="200"
   align="right"
   alt="Fermi Gamma-ray Space Telescope logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Launch Date:** June 11, 2008
@@ -61,13 +61,16 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 
 **Yearly Trigger Rates:**
 
-| Instrument | Type                           | Rates |
-| ---------- | ------------------------------ | ----- |
-| GBM        | Short gamma-ray burst          | 35–40 |
-|            | Long gamma-ray burst           | 200   |
-|            | Soft gamma-ray repeater flares | 35–40 |
-|            | Terrestrial gamma-ray flashes  | 80–90 |
-|            | Solar flares                   | 90–95 |
-| LAT        | Gamma-ray burst                | 15–20 |
+<table className="usa-table">
+  <thead>
+    <tr><th>Instrument</th><th>Type</th><th>Rates</th></tr>
+  </thead>
+  <tbody>
+    <tr><td rowSpan="5"><strong>GBM</strong></td><td>Short gamma-ray burst</td><td>35–40</td></tr>
+    <tr><td>Long gamma-ray burst</td><td>200</td></tr><tr><td>Soft gamma-ray repeater flares</td><td>35–40</td></tr>
+    <tr><td>Terrestrial gamma-ray flashes</td><td>80–90</td></tr>
+    <tr><td>Solar flares</td><td>90–95</td></tr><tr><td><strong>LAT</strong></td><td>Gamma-ray burst</td><td>15–20</td></tr>
+  </tbody>
+</table>
 
 Trigger Rates determined from catalogued information including the [Fermi-GBM Trigger Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigtrig.html), the [Fermi-GBM GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigbrst.html), and the [Fermi-LAT GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermilgrb.html).

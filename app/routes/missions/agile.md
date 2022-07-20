@@ -10,6 +10,7 @@ meta:
   width="200"
   align="right"
   alt="AGILE logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Launch Date:** April 23, 2007

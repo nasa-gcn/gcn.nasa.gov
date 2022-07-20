@@ -5,12 +5,10 @@ meta:
 
 # IceCube
 
-<div className="width-card-lg float-right">
-  <img 
-    src="/_static/img/icecube-logo.png"
-    alt="IceCube logo"
-  />
-</div>
+<img 
+  src="/_static/img/icecube-logo.png"
+  alt="IceCube logo"
+/>
 
 **Construction Completion Date:** December 17, 2010
 
