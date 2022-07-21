@@ -25,6 +25,10 @@ https://gcn.gsfc.nasa.gov/moa_events.html
 
 **Yearly Event Rates:**
 
+<div className="overflow-table">
+
 | Instrument    | Type               | Rates    |
 | ------------- | ------------------ | -------- |
 | MOA Telescope | Microlensing event | &gt;1000 |
+
+</div>

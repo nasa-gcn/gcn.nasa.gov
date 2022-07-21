@@ -24,13 +24,19 @@ https://www.cosmos.esa.int/web/integral/integral-data-archives
 
 [INTEGRAL](https://www.cosmos.esa.int/web/integral) performs spectroscopy and imaging of gamma-ray sources. It is an ESA medium-sized mission with additional contributions from Italy, France, Germany, and Spain, and with Roscosmos and NASA as external partners. Gamma-ray bursts are distributed through the [Integral Burst Alert System (IBAS)](https://www.isdc.unige.ch/integral/science/grb).
 
+<div className="overflow-table">
+
 | Instruments                                                                                                     | Energy Range  | Field of View | Localization                       |
 | --------------------------------------------------------------------------------------------------------------- | ------------- | ------------- | ---------------------------------- |
 | [Imager on Board the INTEGRAL Satellite (IBIS)](https://www.cosmos.esa.int/web/integral/instruments-ibis)       | 15 keV–10 MeV | 0.25 ster     | &leq; 4′ radius (statistical, 90%) |
 | [SPectrometer on INTEGRAL AntiCoincidence Shield (SPI-ACS)](https://www.isdc.unige.ch/integral/science/grb#ACS) | &gt;75 keV    | 4π ster       |                                    |
 
+</div>
+
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/integral.html)
+
+<div className="overflow-table">
 
 | Type               | Contents                                | Latency     |
 | ------------------ | --------------------------------------- | ----------- |
@@ -40,16 +46,26 @@ https://www.cosmos.esa.int/web/integral/integral-data-archives
 | `INTEGRAL_OFFLINE` | Human-involved post-processing          | 1–3 hours   |
 | `INTEGRAL_SPIACS`  | Timestamp only; no position information | ~1 minutes  |
 
+</div>
+
 **Common GCN Circular Types:**
+
+<div className="overflow-table">
 
 | Type                      | Latency | Example                                                          |
 | ------------------------- | ------- | ---------------------------------------------------------------- |
 | Identification of a GRB   | hours   | [GRB 220514A](https://gcn.gsfc.nasa.gov/gcn3/32041.gcn3)         |
 | Follow-up of a GW trigger | 1 hour  | [LIGO/Virgo S191213g](https://gcn.gsfc.nasa.gov/gcn3/26401.gcn3) |
 
+</div>
+
 **Yearly Trigger Rates:**
+
+<div className="overflow-table">
 
 | Instrument | Type            | Rates   |
 | ---------- | --------------- | ------- |
 | IBIS       | Gamma-ray burst | 5-10    |
 | SPI-ACS    | Gamma-ray burst | 100-120 |
+
+</div>

@@ -31,21 +31,33 @@ The CALorimetric Electron Telescope ([CALET](http://www.yoshida-agu.net/research
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/calet.html)
 
+<div className="overflow-table">
+
 | Type               | Contents                             | Latency |
 | ------------------ | ------------------------------------ | ------- |
 | `CALET_GBM_FLT_LC` | Signifcance and CALET-GBM Lightcurve | Minutes |
 
+</div>
+
 **Common GCN Circular Types:**
+
+<div className="overflow-table">
 
 | Type                      | Latency | Example                                                          |
 | ------------------------- | ------- | ---------------------------------------------------------------- |
 | Observation of a GRB      | 1 day   | [GRB 211115A](https://gcn.gsfc.nasa.gov/gcn3/31084.gcn3)         |
 | Follow-up of a GW trigger | hours   | [LIGO/Virgo S200115j](https://gcn.gsfc.nasa.gov/gcn3/26797.gcn3) |
 
+</div>
+
 **Yearly Trigger Rates:**
+
+<div className="overflow-table">
 
 | Instrument | Type                                                   | Rates   |
 | ---------- | ------------------------------------------------------ | ------- |
 | CALET      | GRBs, other transients, and non-astrophysical triggers | 140–150 |
+
+</div>
 
 Approximately half of CALET triggers will be of non-astrophysical origin.

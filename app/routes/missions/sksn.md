@@ -30,7 +30,11 @@ https://www-sk.icrr.u-tokyo.ac.jp/sk/publications/result-e.html
 
 **Yearly Event Rates:**
 
+<div className="overflow-table">
+
 | Instrument | Type                    | Rates | Localization |
 | ---------- | ----------------------- | ----- | ------------ |
 | Super-K    | Core-collapse supernova | 0.03  | 5–10°        |
 |            | Test alert              | 12    | 5–10°        |
+
+</div>

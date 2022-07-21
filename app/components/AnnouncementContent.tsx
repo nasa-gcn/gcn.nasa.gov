@@ -15,7 +15,6 @@ export default function AnnouncementContent() {
         <div className="mobile-lg:grid-col-4">
           August 1, 2022 12:00-13:00 UTC
           <div>(best for Atlantic):</div>
-          <br />
           <Link rel="external" href="https://bit.ly/3Pt2TH9">
             https://bit.ly/3Pt2TH9
           </Link>

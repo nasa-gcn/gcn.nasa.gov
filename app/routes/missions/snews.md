@@ -42,7 +42,11 @@ https://gcn.gsfc.nasa.gov/snews_trans.html
 
 **Yearly Event Rates:**
 
+<div className="overflow-table">
+
 | Instrument | Type                    | Rates | Localization |
 | ---------- | ----------------------- | ----- | ------------ |
 | SNEWS      | Core-collapse supernova | 0.03  | 5–360°       |
 |            | Test alert              | 52    | 5–360°       |
+
+</div>

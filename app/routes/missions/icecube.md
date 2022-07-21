@@ -25,6 +25,8 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/amon.html)
 
+<div className="overflow-table">
+
 | Type                        | Latency       | Comments                                     |
 | --------------------------- | ------------- | -------------------------------------------- |
 | `ICECUBE_ASTROTRACK_GOLD`   | 0.5–1 minutes | Hi-energy single neutrino directions         |
@@ -32,7 +34,11 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 | `AMON_NU_EM_COINC`          | 7 hours       | Coincidence of IceCube+HAWC or ANTARES+Fermi |
 | `AMON_ICECUBE_CASCADE`      | 0.5–1 minutes | Direction of a single hi-energy neutrino     |
 
+</div>
+
 **Common GCN Circular Types:**
+
+<div className="overflow-table">
 
 | Type                                             | Latency | Example                                                          |
 | ------------------------------------------------ | ------- | ---------------------------------------------------------------- |
@@ -40,7 +46,11 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 | Follow up of high energy neutrino candidate      | ~1 day  | [IceCube-220524A](https://gcn.gsfc.nasa.gov/gcn3/32114.gcn3)     |
 | Follow up of gravitational wave trigger          | ~1 day  | [LIGO/Virgo S200129m](https://gcn.gsfc.nasa.gov/gcn3/26927.gcn3) |
 
+</div>
+
 **Yearly Alert Rates:**
+
+<div className="overflow-table">
 
 | Type                        | Rate | Radius    |
 | --------------------------- | ---- | --------- |
@@ -48,3 +58,5 @@ https://heasarc.gsfc.nasa.gov/W3Browse/icecube/icecubepsc.html
 | `ICECUBE_ASTROTRACK_BRONZE` | 16   | 0.2–0.75° |
 | `AMON_NU_EM_COINC`          | 4–8  | 0.2–1°    |
 | `AMON_ICECUBE_CASCADE`      | 8    | 2–20°     |
+
+</div>
