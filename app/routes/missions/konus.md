@@ -19,11 +19,17 @@ http://www.ioffe.ru/LEA/kw/index.html
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/konus.html)
 
+<div className="overflow-table">
+
 | Type               | Contents                     | Latency |
 | ------------------ | ---------------------------- | ------- |
 | `KONUS_Lightcurve` | Trigger info and lightcurves | ~1 day  |
 
+</div>
+
 **Common GCN Circular Types:**
+
+<div className="overflow-table">
 
 | Type                                      | Latency | Example                                                          |
 | ----------------------------------------- | ------- | ---------------------------------------------------------------- |
@@ -31,6 +37,8 @@ http://www.ioffe.ru/LEA/kw/index.html
 | Observation of SGR flares                 | ~1 day  | [SGR 1935+2154](https://gcn.gsfc.nasa.gov/gcn3/30418.gcn3)       |
 | Follow-up of a gravitational wave trigger | ~1 day  | [LIGO/Virgo S200129m](https://gcn.gsfc.nasa.gov/gcn3/26979.gcn3) |
 | Follow-up of an optical transient         | ~1 day  | [ZTF19abvizsw](https://gcn.gsfc.nasa.gov/gcn3/26197.gcn3)        |
+
+</div>
 
 **Yearly Trigger Rates:**
 
