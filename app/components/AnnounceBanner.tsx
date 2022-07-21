@@ -26,10 +26,10 @@ export default function AnnounceBanner() {
         <header className="usa-banner__header">
           <div className="usa-banner__inner">
             <div className="grid-col-fill tablet:grid-col-auto">
-              <p className="usa-banner__header-text">
+              <h2 className="usa-banner__header-text">
                 We invite you to join one of our three public Zoom webinars for
                 an overview of the new GCN.
-              </p>
+              </h2>
             </div>
             {showFullBanner ? (
               <Button
@@ -52,7 +52,7 @@ export default function AnnounceBanner() {
         </header>
         {showFullBanner ? (
           <div
-            className="usa-banner__content usa-accordion__content"
+            className="usa-banner__content usa-accordion__content padding-top-2"
             id="announcement-banner-blue"
           >
             <AnnouncementContent />
