@@ -7,6 +7,10 @@ meta:
 
 The following features are coming soon to GCN.
 
+## GCN Notices over Email
+
+Users can now stream GCN Notices with GCN Classic over Kafka using the python or javascript source code generated via the [QuickStart guide](https://gcn.nasa.gov/quickstart). Self-subscription of GCN Notices delivered via email will available in a near-future release.
+
 ## Unified Schema
 
 The unified schema is a modern and standards-based format for GCN Notices. The schema itself is described in the machine-readable [Apache Avro](https://avro.apache.org) format and the records are serialized as easily parsed JSON records. Similar fields have consistent naming and units across all missions supported by GCN.
