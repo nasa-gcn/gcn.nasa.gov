@@ -20,3 +20,7 @@ See [Client Configuration](docs/client).
 ## What does the warning `Subscribed topic not available: gcn.classic.text.AGILE_GRB_GROUND: Broker: Unknown topic or partition'` mean?
 
 This warning means that there have not been any recent alerts on that topic.
+
+## How do I receive GCN Notices via email from GCN Classic over Kafka?
+
+This feature is under development and will be released in the near future. Currently GCN Classic over Kafka serves GCN notices only via the Kafka broker, which you can setup via the [QuickStart guide](https://gcn.nasa.gov/quickstart).
