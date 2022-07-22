@@ -9,7 +9,7 @@ The following features are coming soon to GCN.
 
 ## GCN Notices over Email
 
-Users can now stream GCN Notices with GCN Classic over Kafka using the python or javascript source code generated via the [QuickStart guide](https://gcn.nasa.gov/quickstart). Self-subscription of GCN Notices delivered via email will available in a near-future release.
+Users can now stream GCN Notices with GCN Classic over Kafka using the Python or JavaScript source code generated via the [Start Streaming GCN Notices](https://gcn.nasa.gov/quickstart) quick start guide. Self-subscription of GCN Notices delivered via email will available in a near-future release.
 
 ## Unified Schema
 
