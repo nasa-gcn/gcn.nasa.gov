@@ -58,7 +58,7 @@
     "@types/react-google-recaptcha": "^2.1.5",
     "@types/react-tag-autocomplete": "^6.1.1",
     "autoprefixer": "^10.4.2",
-    "del": "^6.0.0",
+    "del": "^7.0.0",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.3.0",
     "generate-password": "^1.7.0",
