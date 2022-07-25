@@ -44,7 +44,7 @@
     "spin-delay": "^1.1.0"
   },
   "devDependencies": {
-    "@architect/architect": "^10.3.3",
+    "@architect/architect": "^10.3.4",
     "@remix-run/dev": "^1.6.5",
     "@remix-run/eslint-config": "^1.6.5",
     "@types/architect__functions": "^3.13.6",
