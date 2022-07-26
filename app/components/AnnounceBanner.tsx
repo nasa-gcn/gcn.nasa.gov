@@ -31,23 +31,16 @@ export default function AnnounceBanner() {
                 an overview of the new GCN.
               </h2>
             </div>
-            {showFullBanner ? (
-              <Button
-                type="button"
-                className="usa-banner__button"
-                onClick={toggleShowBanner}
-              >
-                <span className="usa-banner__button-text">Show Less</span>
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                className="usa-banner__button"
-                onClick={toggleShowBanner}
-              >
-                <span className="usa-banner__button-text">Show More</span>
-              </Button>
-            )}
+            <Button
+              type="button"
+              className="usa-banner__button"
+              aria-expanded={showFullBanner}
+              onClick={toggleShowBanner}
+            >
+              <span className="usa-banner__button-text">
+                Show {showFullBanner ? 'less' : 'more'}
+              </span>
+            </Button>
           </div>
         </header>
         {showFullBanner ? (
