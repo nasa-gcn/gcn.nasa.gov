@@ -42,7 +42,7 @@ export default function AnnounceBanner() {
             </Button>
           </div>
         </header>
-        {showFullBanner ? (
+        {showFullBanner && (
           <div
             className="usa-banner__content usa-accordion__content padding-top-2"
             id="announcement-banner-blue"
@@ -72,7 +72,7 @@ export default function AnnounceBanner() {
               </div>
             </div>
           </div>
-        ) : null}
+        )}
       </div>
     </section>
   )
