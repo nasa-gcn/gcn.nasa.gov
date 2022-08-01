@@ -53,7 +53,7 @@
     "@types/grecaptcha": "^3.0.4",
     "@types/memoizee": "^0.4.7",
     "@types/react": "^17.0.45",
-    "@types/react-copy-to-clipboard": "^5.0.2",
+    "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^17.0.17",
     "@types/react-google-recaptcha": "^2.1.5",
     "@types/react-tag-autocomplete": "^6.1.1",
