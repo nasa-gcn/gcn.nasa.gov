@@ -59,7 +59,6 @@
     "@types/react-tag-autocomplete": "^6.1.1",
     "autoprefixer": "^10.4.2",
     "del": "^6.0.0",
-    "dotenv": "^16.0.1",
     "eslint": "^8.20.0",
     "eslint-config-prettier": "^8.3.0",
     "generate-password": "^1.7.0",

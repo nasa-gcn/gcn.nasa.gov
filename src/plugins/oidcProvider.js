@@ -1,11 +1,10 @@
+const { generate } = require('generate-password')
 const { Provider } = require('oidc-provider')
-const crypto = require('crypto')
-require('dotenv').config()
 
-const LOCAL_OIDC_CLIENT_PORT = process.env.LOCAL_OIDC_PORT
-const LOCAL_OIDC_PROVIDER = 'http://localhost:' + LOCAL_OIDC_CLIENT_PORT
-const LOCAL_OIDC_CLIENT_ID = crypto.randomBytes(20).toString('hex')
-const LOCAL_OIDC_CLIENT_SECRET = crypto.randomBytes(20).toString('hex')
+const LOCAL_OIDC_CLIENT_PORT = 3000
+const LOCAL_OIDC_PROVIDER = `http://localhost:${LOCAL_OIDC_CLIENT_PORT}`
+const LOCAL_OIDC_CLIENT_ID = generate({ length: 26 })
+const LOCAL_OIDC_CLIENT_SECRET = generate({ length: 51 })
 
 const configuration = {
   // ... see /docs for available configuration
@@ -38,7 +37,7 @@ const configuration = {
       async claims(use, scope) {
         return {
           sub: id,
-          email: 'local-user@tach.com',
+          email: 'user@example.com',
           email_verified: false,
         }
       },
@@ -51,7 +50,7 @@ module.exports = {
     start: async ({ arc, inventory, invoke }) => {
       const oidc = new Provider(LOCAL_OIDC_PROVIDER, configuration)
 
-      oidc.listen(3000, () => {
+      oidc.listen(LOCAL_OIDC_CLIENT_PORT, () => {
         console.log(
           'oidc-provider listening on port ' +
             LOCAL_OIDC_CLIENT_PORT +
