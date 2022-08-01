@@ -71,6 +71,16 @@ export default function AnnounceBanner() {
                 </Link>
               </div>
             </div>
+            <p>
+              If you cannot attend live, then you can get the{' '}
+              <Link
+                rel="external"
+                href="https://nasa-gcn.github.io/gcn-presentation/"
+              >
+                presentation
+              </Link>{' '}
+              at any time.
+            </p>
           </div>
         )}
       </div>
