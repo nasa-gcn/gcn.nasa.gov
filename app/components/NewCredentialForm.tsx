@@ -15,8 +15,8 @@ import ReCAPTCHA from 'react-google-recaptcha'
 import { getEnvOrDieInProduction } from '~/lib/env'
 import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
 
-export async function loader({ request }: DataFunctionArgs) {
-  return await handleCredentialLoader({ request } as DataFunctionArgs)
+export async function loader(args: DataFunctionArgs) {
+  return await handleCredentialLoader(args)
 }
 
 export function getFormDataString(formData: FormData, key: string) {

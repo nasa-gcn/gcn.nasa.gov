@@ -16,8 +16,8 @@ import {
 } from '~/components/NewCredentialForm'
 import CredentialCard from '~/components/CredentialCard'
 
-export async function loader({ request }: DataFunctionArgs) {
-  return await handleCredentialLoader({ request } as DataFunctionArgs)
+export async function loader(args: DataFunctionArgs) {
+  return await handleCredentialLoader(args)
 }
 
 export async function action({ request }: DataFunctionArgs) {
