@@ -7,9 +7,9 @@ meta:
 
 <img 
   src="/_static/img/Fermi_Gamma-ray_Space_Telescope_logo.svg"
-  width="200"
   align="right"
   alt="Fermi Gamma-ray Space Telescope logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Launch Date:** June 11, 2008
@@ -23,13 +23,20 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 
 [Fermi](https://fermi.gsfc.nasa.gov) is a probe class mission operated by [NASA](https://www.nasa.gov/fermi/) in partnership with DOE, and agencies in Italy, France, Sweden, Japan, and Germany. It surveys the sky over a wide gamma-ray band with two instruments, the LAT and GBM. Both instruments provide alerts to GCN autonomously upon the detection of transients.
 
+<div className="overflow-table">
+
 | Instruments                                                          | Energy Range       | Field of View | Localization                             |
 | -------------------------------------------------------------------- | ------------------ | ------------- | ---------------------------------------- |
 | [Large Area Telescope (LAT)](https://glast.sites.stanford.edu)       | 20 MeV–&gt;300 GeV | 2.5 ster      | &leq;1° radius (statistical, 90%)        |
 | [Gamma-ray Burst Monitor (GBM)](https://gammaray.msfc.nasa.gov/gbm/) | 8 keV–30 MeV       | 8.8 ster      | ≳1–10° radius (statistical + systematic) |
 
+</div>
+
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
+
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/fermi.html)
+
+<div className="overflow-table">
 
 | Type                  | Contents                                              | Latency        |
 | --------------------- | ----------------------------------------------------- | -------------- |
@@ -45,7 +52,11 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 | `FERMI_LAT_TRANS`     | Unknown source transient                              | 1 days         |
 | `FERMI_LAT_MONITOR`   | Known source flare                                    | 1 days         |
 
+</div>
+
 **Common GCN Circular Types:**
+
+<div className="overflow-table">
 
 | Type                           | Latency    | Example                                                          |
 | ------------------------------ | ---------- | ---------------------------------------------------------------- |
@@ -59,15 +70,20 @@ https://fermi.gsfc.nasa.gov/ssc/data/
 | GBM follow-up of a neutrino    | 8 hours    | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31255.gcn3)     |
 | LAT follow-up of a neutrino    | 8 hours    | [IceCube-211216A](https://gcn.gsfc.nasa.gov/gcn3/31257.gcn3)     |
 
+</div>
+
 **Yearly Trigger Rates:**
 
-| Instrument | Type                           | Rates |
-| ---------- | ------------------------------ | ----- |
-| GBM        | Short gamma-ray burst          | 35–40 |
-|            | Long gamma-ray burst           | 200   |
-|            | Soft gamma-ray repeater flares | 35–40 |
-|            | Terrestrial gamma-ray flashes  | 80–90 |
-|            | Solar flares                   | 90–95 |
-| LAT        | Gamma-ray burst                | 15–20 |
+<table className="usa-table">
+  <thead>
+    <tr><th>Instrument</th><th>Type</th><th>Rates</th></tr>
+  </thead>
+  <tbody>
+    <tr><td rowSpan="5"><strong>GBM</strong></td><td>Short gamma-ray burst</td><td>35–40</td></tr>
+    <tr><td>Long gamma-ray burst</td><td>200</td></tr><tr><td>Soft gamma-ray repeater flares</td><td>35–40</td></tr>
+    <tr><td>Terrestrial gamma-ray flashes</td><td>80–90</td></tr>
+    <tr><td>Solar flares</td><td>90–95</td></tr><tr><td><strong>LAT</strong></td><td>Gamma-ray burst</td><td>15–20</td></tr>
+  </tbody>
+</table>
 
 Trigger Rates determined from catalogued information including the [Fermi-GBM Trigger Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigtrig.html), the [Fermi-GBM GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermigbrst.html), and the [Fermi-LAT GRB Catalog](https://heasarc.gsfc.nasa.gov/W3Browse/fermi/fermilgrb.html).

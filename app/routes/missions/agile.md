@@ -10,6 +10,7 @@ meta:
   width="200"
   align="right"
   alt="AGILE logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Launch Date:** April 23, 2007
@@ -23,14 +24,20 @@ https://agile.asdc.asi.it/
 
 [AGILE](http://agile.rm.iasf.cnr.it/) is a gamma-ray satellite from the Italian Space Agency with participation from INFN, INAF, and CIFS. It observes the high energy sky with two instruments and a calorimeter.
 
+<div className="overflow-table">
+
 | Instruments                       | Energy Range    | Field of View |
 | --------------------------------- | --------------- | ------------- |
 | SuperAGILE (SA)                   | 18 keV–60 keV   | &gt; 1 ster   |
 | Gamma Ray Imaging Detector (GRID) | 30 MeV–50 GeV   | &gt; 2.5 ster |
 | [Mini-Calorimeter (MCAL)          | 350 keV–100 MeV |               |
 
+</div>
+
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/agile.html)
+
+<div className="overflow-table">
 
 | Type                | Contents                               | Latency        |
 | ------------------- | -------------------------------------- | -------------- |
@@ -39,13 +46,19 @@ https://agile.asdc.asi.it/
 | `AGILE_GRB_REFINED` | Humans in the loop                     | ~2–5 hours     |
 | `AGILE_MCAL_ALERT`  | Ground processing of the MCAL triggers | 40–130 minutes |
 
+</div>
+
 **Common GCN Circular Types:**
+
+<div className="overflow-table">
 
 | Type                             | Latency | Example                                                          |
 | -------------------------------- | ------- | ---------------------------------------------------------------- |
 | AGILE detection of a GRB         | hours   | [GRB 220527A](https://gcn.gsfc.nasa.gov/gcn3/32129.gcn3)         |
 | MCAL detection of a GRB          | hours   | [GRB 220323A](https://gcn.gsfc.nasa.gov/gcn3/31784.gcn3)         |
 | MCAL observation of a GW trigger | hours   | [LIGO/Virgo S200129m](https://gcn.gsfc.nasa.gov/gcn3/26930.gcn3) |
+
+</div>
 
 **Yearly Trigger Rates:**
 

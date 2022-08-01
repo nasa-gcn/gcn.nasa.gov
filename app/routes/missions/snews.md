@@ -10,6 +10,7 @@ meta:
   width="200"
   align="right"
   alt="SNEWS logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 />
 
 **Start:** 2004
@@ -41,7 +42,11 @@ https://gcn.gsfc.nasa.gov/snews_trans.html
 
 **Yearly Event Rates:**
 
+<div className="overflow-table">
+
 | Instrument | Type                    | Rates | Localization |
 | ---------- | ----------------------- | ----- | ------------ |
 | SNEWS      | Core-collapse supernova | 0.03  | 5–360°       |
 |            | Test alert              | 52    | 5–360°       |
+
+</div>

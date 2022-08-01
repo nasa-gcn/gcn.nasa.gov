@@ -45,6 +45,7 @@ import { DevBanner } from './components/DevBanner'
 import { useSpinDelay } from 'spin-delay'
 import { getUser } from './routes/__auth/user.server'
 import React from 'react'
+import AnnounceBanner from './components/AnnounceBanner'
 
 TopBarProgress.config({
   barColors: {
@@ -116,6 +117,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         {showProgress && <TopBarProgress />}
         <GovBanner />
         <DevBanner />
+        <AnnounceBanner />
         <Header email={email} />
         <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>

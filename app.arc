@@ -22,7 +22,8 @@ runtime nodejs16.x
 region us-east-1
 architecture arm64
 memory 256
-provisionedConcurrency 1
+concurrency 100
+provisionedConcurrency 5
 
 @macros
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.

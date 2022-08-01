@@ -26,7 +26,8 @@ export default function Alerts() {
         Choose how you would like your results returned. Select a Format and
         Notice type for each alert you would like to subscribe to.
       </p>
-      <NoticeFormat name="noticeFormat" />
+      <Label htmlFor="noticeFormat">Notice Format</Label>
+      <NoticeFormat name="noticeFormat" value="text" />
       <Label htmlFor="noticeTypes">Notice Type</Label>
       <NoticeTypeCheckboxes />
       <input type="hidden" name="clientId" value={clientId} />
