@@ -51,11 +51,10 @@ export class EmailNotificationVendingMachine {
     if (!format) throw new Response('format must not be empty', { status: 400 })
 
     const created = Date.now()
-
     const topics = mapFormatAndNoticeTypesToTopics(format, noticeTypes)
+    const uuid = crypto.randomUUID()
 
     const db = await tables()
-    const uuid = crypto.randomUUID()
     await db.email_notification.put({
       sub: this.#sub,
       uuid,
@@ -89,9 +88,9 @@ export class EmailNotificationVendingMachine {
     })
     const emailNotifications = results.Items as EmailNotification[]
     for (const notice of emailNotifications) {
-      let holder = mapTopicsToFormatAndNoticeTypes(notice.topics)
-      notice.format = holder.noticeFormat
-      notice.noticeTypes = holder.noticeTypes
+      let mappedData = mapTopicsToFormatAndNoticeTypes(notice.topics)
+      notice.format = mappedData.noticeFormat
+      notice.noticeTypes = mappedData.noticeTypes
     }
     emailNotifications.sort((a, b) => a.created - b.created)
     return emailNotifications
