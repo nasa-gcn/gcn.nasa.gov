@@ -17,6 +17,10 @@ sessions
   _idx *String
   _ttl TTL
 
+email_notification
+  sub *String
+  uuid **String
+
 @aws
 runtime nodejs16.x
 region us-east-1
