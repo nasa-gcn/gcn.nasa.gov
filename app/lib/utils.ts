@@ -6,14 +6,14 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-export function mapFormatAndNoticeTypeToTopics(
+export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
 ) {
   return `gcn.classic.${noticeFormat}.${noticeType}`
 }
 
-export function mapTopicsToFormatAndNoticeType(topic: string): {
+export function topicToFormatAndNoticeType(topic: string): {
   noticeFormat: string
   noticeType: string
 } {
