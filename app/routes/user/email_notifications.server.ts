@@ -6,21 +6,23 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { tables } from '@architect/functions'
+import { mapTopicsToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
-import {
-  mapFormatAndNoticeTypesToTopics,
-  mapTopicsToFormatAndNoticeTypes,
-} from '~/lib/utils'
 
+// db model
 export type EmailNotification = {
   name: string
   recipient: string
-  format: string
-  noticeTypes: string[]
   created: number
   active: boolean
   uuid?: string
   topics: string[]
+}
+
+// view model
+export type EmailNotificationVM = EmailNotification & {
+  format: string
+  noticeTypes: string[]
 }
 
 export class EmailNotificationVendingMachine {
@@ -38,34 +40,27 @@ export class EmailNotificationVendingMachine {
   }
 
   // Create
-  async createEmailNotification(
-    active: boolean,
-    name: string,
-    recipient: string,
-    format: string,
-    noticeTypes: string[]
-  ): Promise<EmailNotification> {
-    if (!name) throw new Response('name must not be empty', { status: 400 })
-    if (!recipient)
+  async createEmailNotification(notification: EmailNotification) {
+    if (!notification.name)
+      throw new Response('name must not be empty', { status: 400 })
+    if (!notification.recipient)
       throw new Response('recipient must not be empty', { status: 400 })
-    if (!format) throw new Response('format must not be empty', { status: 400 })
+    if (!notification.topics)
+      throw new Response('topics must not be empty', { status: 400 })
 
     const created = Date.now()
-    const topics = mapFormatAndNoticeTypesToTopics(format, noticeTypes)
     const uuid = crypto.randomUUID()
 
     const db = await tables()
     await db.email_notification.put({
       sub: this.#sub,
       uuid,
-      name,
+      name: notification.name,
       created,
-      topics,
-      active,
-      recipient,
+      topics: notification.topics,
+      active: notification.active,
+      recipient: notification.recipient,
     })
-
-    return { name, created, recipient, format, active, topics, noticeTypes }
   }
 
   // Read
@@ -86,24 +81,34 @@ export class EmailNotificationVendingMachine {
       },
       ProjectionExpression: '#uuid, #created, #name, #topics, #recipient',
     })
-    const emailNotifications = results.Items as EmailNotification[]
+    const emailNotifications = results.Items as EmailNotificationVM[]
     for (const notice of emailNotifications) {
-      let mappedData = mapTopicsToFormatAndNoticeTypes(notice.topics)
-      notice.format = mappedData.noticeFormat
-      notice.noticeTypes = mappedData.noticeTypes
+      let formats = []
+      for (const topic of notice.topics) {
+        let mappedData = mapTopicsToFormatAndNoticeType(topic)
+        formats.push(mappedData.noticeFormat)
+        notice.noticeTypes.push(mappedData.noticeType)
+      }
+      notice.format = [...new Set(formats)][0]
     }
     emailNotifications.sort((a, b) => a.created - b.created)
     return emailNotifications
   }
 
-  async getEmailNotification(uuid: string): Promise<EmailNotification> {
+  async getEmailNotification(uuid: string): Promise<EmailNotificationVM> {
     const db = await tables()
     const item = (await db.email_notification.get({
       sub: this.#sub,
       uuid,
-    })) as ({ sub: string } & EmailNotification) | null
+    })) as ({ sub: string } & EmailNotificationVM) | null
     if (!item) throw new Response(null, { status: 404 })
-
+    let formats = []
+    for (const topic of item.topics) {
+      let mappedData = mapTopicsToFormatAndNoticeType(topic)
+      formats.push(mappedData.noticeFormat)
+      item.noticeTypes.push(mappedData.noticeType)
+    }
+    item.format = [...new Set(formats)][0]
     const { sub, ...notification } = item
     return {
       uuid,
