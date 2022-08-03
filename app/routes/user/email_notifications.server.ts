@@ -150,10 +150,10 @@ export class EmailNotificationVendingMachine {
     const db = await tables()
     const item = await db.email_notification.get({
       sub: this.#sub,
-      notice_id,
+      uuid,
     })
     if (!item) throw new Response(null, { status: 404 })
 
-    await db.email_notification.delete({ sub: this.#sub, notice_id })
+    await db.email_notification.delete({ sub: this.#sub, uuid })
   }
 }
