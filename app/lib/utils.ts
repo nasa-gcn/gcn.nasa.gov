@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-export function mapFormatAndNoticeTypeToTopics(
+export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
 ) {
