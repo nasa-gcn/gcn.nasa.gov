@@ -141,7 +141,7 @@ export class EmailNotificationVendingMachine {
   }
 
   // Delete
-  async deleteEmailNotification(notice_id: string) {
+  async deleteEmailNotification(uuid: string) {
     const db = await tables()
     const item = await db.email_notification.get({
       sub: this.#sub,
