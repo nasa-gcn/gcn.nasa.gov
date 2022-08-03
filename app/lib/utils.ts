@@ -6,26 +6,17 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-export function mapFormatAndNoticeTypesToTopics(
+export function mapFormatAndNoticeTypeToTopics(
   noticeFormat: string,
-  noticeTypes: string[]
+  noticeType: string
 ) {
-  return noticeTypes.map(
-    (noticeType) => `gcn.classic.${noticeFormat}.${noticeType}`
-  )
+  return `gcn.classic.${noticeFormat}.${noticeType}`
 }
 
-export function mapTopicsToFormatAndNoticeTypes(topics: string[]): {
+export function mapTopicsToFormatAndNoticeType(topic: string): {
   noticeFormat: string
-  noticeTypes: string[]
+  noticeType: string
 } {
-  let formats: string[] = []
-  let types: string[] = []
-
-  for (const topic of topics) {
-    const splitString = topic.split('.')
-    formats.push(splitString[2])
-    types.push(splitString[3])
-  }
-  return { noticeFormat: [...new Set(formats)][0], noticeTypes: types }
+  const splitString = topic.split('.')
+  return { noticeFormat: splitString[2], noticeType: splitString[3] }
 }
