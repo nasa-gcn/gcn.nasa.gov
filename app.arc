@@ -21,6 +21,11 @@ email_notification
   sub *String
   uuid **String
 
+email_notification_subscription
+  uuid *String
+  topic **String
+
+
 @aws
 runtime nodejs16.x
 region us-east-1

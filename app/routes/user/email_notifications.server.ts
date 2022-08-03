@@ -58,9 +58,18 @@ export class EmailNotificationVendingMachine {
       name: notification.name,
       created,
       topics: notification.topics,
-      active: notification.active,
+      active: true,
       recipient: notification.recipient,
     })
+
+    // Materialized view
+    for (const topic of notification.topics) {
+      await db.email_notification_subscription.put({
+        uuid,
+        topic,
+        recipient: notification.recipient,
+      })
+    }
   }
 
   // Read
@@ -84,6 +93,7 @@ export class EmailNotificationVendingMachine {
     const emailNotifications = results.Items as EmailNotificationVM[]
     for (const notice of emailNotifications) {
       let formats = []
+      notice.noticeTypes = []
       for (const topic of notice.topics) {
         let mappedData = mapTopicsToFormatAndNoticeType(topic)
         formats.push(mappedData.noticeFormat)
@@ -103,6 +113,7 @@ export class EmailNotificationVendingMachine {
     })) as ({ sub: string } & EmailNotificationVM) | null
     if (!item) throw new Response(null, { status: 404 })
     let formats = []
+    item.noticeTypes = []
     for (const topic of item.topics) {
       let mappedData = mapTopicsToFormatAndNoticeType(topic)
       formats.push(mappedData.noticeFormat)
@@ -143,6 +154,30 @@ export class EmailNotificationVendingMachine {
         else console.log(data)
       }
     )
+    console.log('Updated base')
+    // Update Materialized View
+    const subscriptions = await db.email_notification_subscription.query({
+      KeyConditionExpression: '#uuid = :uuid',
+      ExpressionAttributeNames: {
+        '#uuid': 'uuid',
+      },
+      ExpressionAttributeValues: {
+        ':uuid': email_notification.uuid,
+      },
+    })
+    for (const sub of subscriptions.Items) {
+      await db.email_notification_subscription.delete({
+        uuid: sub.uuid,
+        topic: sub.topic,
+      })
+    }
+    for (const topic of email_notification.topics) {
+      await db.email_notification_subscription.put({
+        uuid: email_notification.uuid,
+        topic,
+        recipient: email_notification.recipient,
+      })
+    }
   }
 
   // Delete
@@ -153,7 +188,21 @@ export class EmailNotificationVendingMachine {
       uuid,
     })
     if (!item) throw new Response(null, { status: 404 })
-
     await db.email_notification.delete({ sub: this.#sub, uuid })
+    const subscriptions = await db.email_notification_subscription.query({
+      KeyConditionExpression: '#uuid = :uuid',
+      ExpressionAttributeNames: {
+        '#uuid': 'uuid',
+      },
+      ExpressionAttributeValues: {
+        ':uuid': uuid,
+      },
+    })
+    for (const sub of subscriptions.Items) {
+      await db.email_notification_subscription.delete({
+        uuid: sub.uuid,
+        topic: sub.topic,
+      })
+    }
   }
 }
