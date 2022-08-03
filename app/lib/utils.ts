@@ -13,7 +13,7 @@ export function mapFormatAndNoticeTypeToTopics(
   return `gcn.classic.${noticeFormat}.${noticeType}`
 }
 
-export function mapTopicsToFormatAndNoticeType(topic: string): {
+export function topicToFormatAndNoticeType(topic: string): {
   noticeFormat: string
   noticeType: string
 } {
