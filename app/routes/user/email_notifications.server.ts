@@ -62,12 +62,12 @@ export class EmailNotificationVendingMachine {
       active: true,
       recipient: notification.recipient,
     })
-    const subscriptionPromises = notification.topics.map((topic) => {
-      return db.email_notification_subscription.put({
+    const subscriptionPromises = notification.topics.map((topic) => (
+      db.email_notification_subscription.put({
         uuid,
         topic,
         recipient: notification.recipient,
-      })
+      ))
     })
 
     await Promise.all([main, ...subscriptionPromises])
