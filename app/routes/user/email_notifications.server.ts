@@ -99,9 +99,9 @@ export class EmailNotificationVendingMachine {
         return {
           format: topicToFormatAndNoticeType(notification.topics[0])
             .noticeFormat,
-          noticeTypes: notification.topics.map((topic) => {
-            return topicToFormatAndNoticeType(topic).noticeType
-          }),
+          noticeTypes: notification.topics.map((topic) => (
+            topicToFormatAndNoticeType(topic).noticeType
+          )),
           name: notification.name,
           recipient: notification.recipient,
           created: notification.created,
