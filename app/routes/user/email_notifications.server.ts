@@ -205,12 +205,12 @@ export class EmailNotificationVendingMachine {
       },
     })
     await Promise.all(
-      subscriptions.Items.map((sub) => {
-        return db.email_notification_subscription.delete({
+      subscriptions.Items.map((sub) =>
+        db.email_notification_subscription.delete({
           uuid: sub.uuid,
           topic: sub.topic,
         })
-      })
+      )
     )
   }
 }
