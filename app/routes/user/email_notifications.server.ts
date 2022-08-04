@@ -62,13 +62,13 @@ export class EmailNotificationVendingMachine {
       active: true,
       recipient: notification.recipient,
     })
-    const subscriptionPromises = notification.topics.map((topic) => (
+    const subscriptionPromises = notification.topics.map((topic) =>
       db.email_notification_subscription.put({
         uuid,
         topic,
         recipient: notification.recipient,
-      ))
-    })
+      })
+    )
 
     await Promise.all([main, ...subscriptionPromises])
   }
@@ -99,9 +99,9 @@ export class EmailNotificationVendingMachine {
         return {
           format: topicToFormatAndNoticeType(notification.topics[0])
             .noticeFormat,
-          noticeTypes: notification.topics.map((topic) => (
-            topicToFormatAndNoticeType(topic).noticeType
-          )),
+          noticeTypes: notification.topics.map(
+            (topic) => topicToFormatAndNoticeType(topic).noticeType
+          ),
           name: notification.name,
           recipient: notification.recipient,
           created: notification.created,
@@ -122,9 +122,9 @@ export class EmailNotificationVendingMachine {
       uuid,
     })) as ({ sub: string } & EmailNotificationVM) | null
     if (!item) throw new Response(null, { status: 404 })
-    item.noticeTypes = item.topics.map((topic) => (
-      topicToFormatAndNoticeType(topic).noticeType
-    ))
+    item.noticeTypes = item.topics.map(
+      (topic) => topicToFormatAndNoticeType(topic).noticeType
+    )
     item.format = topicToFormatAndNoticeType(item.topics[0]).noticeFormat
     const { sub, ...notification } = item
     return {
@@ -175,13 +175,13 @@ export class EmailNotificationVendingMachine {
     )
     if (email_notification.active) {
       await Promise.all(
-        email_notification.topics.map((topic) => (
+        email_notification.topics.map((topic) =>
           db.email_notification_subscription.put({
             uuid: email_notification.uuid,
             topic,
             recipient: email_notification.recipient,
-          ))
-        })
+          })
+        )
       )
     }
   }
