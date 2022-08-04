@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { tables } from '@architect/functions'
-import { mapTopicsToFormatAndNoticeType } from '~/lib/utils'
+import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
 
 // db model
@@ -84,18 +84,20 @@ export class EmailNotificationVendingMachine {
         '#created': 'created',
         '#topics': 'topics',
         '#recipient': 'recipient',
+        '#active': 'active',
       },
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression: '#uuid, #created, #name, #topics, #recipient',
+      ProjectionExpression:
+        '#uuid, #created, #name, #topics, #recipient, #active',
     })
     const emailNotifications = results.Items as EmailNotificationVM[]
     for (const notice of emailNotifications) {
       let formats = []
       notice.noticeTypes = []
       for (const topic of notice.topics) {
-        let mappedData = mapTopicsToFormatAndNoticeType(topic)
+        let mappedData = topicToFormatAndNoticeType(topic)
         formats.push(mappedData.noticeFormat)
         notice.noticeTypes.push(mappedData.noticeType)
       }
@@ -115,7 +117,7 @@ export class EmailNotificationVendingMachine {
     let formats = []
     item.noticeTypes = []
     for (const topic of item.topics) {
-      let mappedData = mapTopicsToFormatAndNoticeType(topic)
+      let mappedData = topicToFormatAndNoticeType(topic)
       formats.push(mappedData.noticeFormat)
       item.noticeTypes.push(mappedData.noticeType)
     }
@@ -171,12 +173,14 @@ export class EmailNotificationVendingMachine {
         topic: sub.topic,
       })
     }
-    for (const topic of email_notification.topics) {
-      await db.email_notification_subscription.put({
-        uuid: email_notification.uuid,
-        topic,
-        recipient: email_notification.recipient,
-      })
+    if (email_notification.active) {
+      for (const topic of email_notification.topics) {
+        await db.email_notification_subscription.put({
+          uuid: email_notification.uuid,
+          topic,
+          recipient: email_notification.recipient,
+        })
+      }
     }
   }
 
