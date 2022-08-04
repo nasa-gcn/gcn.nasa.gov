@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+
 import { tables } from '@architect/functions'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
@@ -20,7 +21,7 @@ export type EmailNotification = {
 }
 
 // view model
-export type EmailNotificationVM = EmailNotification & {
+export interface EmailNotificationVM extends EmailNotification {
   format: string
   noticeTypes: string[]
 }
@@ -52,7 +53,7 @@ export class EmailNotificationVendingMachine {
     const uuid = crypto.randomUUID()
 
     const db = await tables()
-    await db.email_notification.put({
+    const main = db.email_notification.put({
       sub: this.#sub,
       uuid,
       name: notification.name,
@@ -61,15 +62,15 @@ export class EmailNotificationVendingMachine {
       active: true,
       recipient: notification.recipient,
     })
-
-    // Materialized view
-    for (const topic of notification.topics) {
-      await db.email_notification_subscription.put({
+    const subscriptionPromises = notification.topics.map((topic) => {
+      return db.email_notification_subscription.put({
         uuid,
         topic,
         recipient: notification.recipient,
       })
-    }
+    })
+
+    await Promise.all([main, ...subscriptionPromises])
   }
 
   // Read
@@ -92,17 +93,24 @@ export class EmailNotificationVendingMachine {
       ProjectionExpression:
         '#uuid, #created, #name, #topics, #recipient, #active',
     })
-    const emailNotifications = results.Items as EmailNotificationVM[]
-    for (const notice of emailNotifications) {
-      let formats = []
-      notice.noticeTypes = []
-      for (const topic of notice.topics) {
-        let mappedData = topicToFormatAndNoticeType(topic)
-        formats.push(mappedData.noticeFormat)
-        notice.noticeTypes.push(mappedData.noticeType)
+    const items = results.Items as EmailNotification[]
+    const emailNotifications: EmailNotificationVM[] = items.map(
+      (notification) => {
+        return {
+          format: topicToFormatAndNoticeType(notification.topics[0])
+            .noticeFormat,
+          noticeTypes: notification.topics.map((topic) => {
+            return topicToFormatAndNoticeType(topic).noticeType
+          }),
+          name: notification.name,
+          recipient: notification.recipient,
+          created: notification.created,
+          active: notification.active,
+          topics: notification.topics,
+        }
       }
-      notice.format = [...new Set(formats)][0]
-    }
+    )
+
     emailNotifications.sort((a, b) => a.created - b.created)
     return emailNotifications
   }
@@ -114,14 +122,10 @@ export class EmailNotificationVendingMachine {
       uuid,
     })) as ({ sub: string } & EmailNotificationVM) | null
     if (!item) throw new Response(null, { status: 404 })
-    let formats = []
-    item.noticeTypes = []
-    for (const topic of item.topics) {
-      let mappedData = topicToFormatAndNoticeType(topic)
-      formats.push(mappedData.noticeFormat)
-      item.noticeTypes.push(mappedData.noticeType)
-    }
-    item.format = [...new Set(formats)][0]
+    item.noticeTypes = item.topics.map((topic) => {
+      return topicToFormatAndNoticeType(topic).noticeType
+    })
+    item.format = topicToFormatAndNoticeType(item.topics[0]).noticeFormat
     const { sub, ...notification } = item
     return {
       uuid,
@@ -133,30 +137,24 @@ export class EmailNotificationVendingMachine {
   async updateEmailNotification(email_notification: EmailNotification) {
     if (!email_notification.uuid) return null
     const db = await tables()
-    db.email_notification.update(
-      {
-        Key: { sub: this.#sub, uuid: email_notification.uuid },
-        UpdateExpression:
-          'set #name = :name, #recipient = :recipient, #topics = :topics, #active = :active ',
-        ExpressionAttributeNames: {
-          '#name': 'name',
-          '#topics': 'topics',
-          '#recipient': 'recipient',
-          '#active': 'active',
-        },
-        ExpressionAttributeValues: {
-          ':name': email_notification.name,
-          ':recipient': email_notification.recipient,
-          ':topics': email_notification.topics,
-          ':active': email_notification.active,
-        },
+    await db.email_notification.update({
+      Key: { sub: this.#sub, uuid: email_notification.uuid },
+      UpdateExpression:
+        'set #name = :name, #recipient = :recipient, #topics = :topics, #active = :active ',
+      ExpressionAttributeNames: {
+        '#name': 'name',
+        '#topics': 'topics',
+        '#recipient': 'recipient',
+        '#active': 'active',
       },
-      (err, data) => {
-        if (err) console.log(err)
-        else console.log(data)
-      }
-    )
-    console.log('Updated base')
+      ExpressionAttributeValues: {
+        ':name': email_notification.name,
+        ':recipient': email_notification.recipient,
+        ':topics': email_notification.topics,
+        ':active': email_notification.active,
+      },
+    })
+
     // Update Materialized View
     const subscriptions = await db.email_notification_subscription.query({
       KeyConditionExpression: '#uuid = :uuid',
@@ -167,20 +165,24 @@ export class EmailNotificationVendingMachine {
         ':uuid': email_notification.uuid,
       },
     })
-    for (const sub of subscriptions.Items) {
-      await db.email_notification_subscription.delete({
-        uuid: sub.uuid,
-        topic: sub.topic,
-      })
-    }
-    if (email_notification.active) {
-      for (const topic of email_notification.topics) {
-        await db.email_notification_subscription.put({
-          uuid: email_notification.uuid,
-          topic,
-          recipient: email_notification.recipient,
+    await Promise.all(
+      subscriptions.Items.map((sub) => {
+        return db.email_notification_subscription.delete({
+          uuid: sub.uuid,
+          topic: sub.topic,
         })
-      }
+      })
+    )
+    if (email_notification.active) {
+      await Promise.all(
+        email_notification.topics.map((topic) => {
+          return db.email_notification_subscription.put({
+            uuid: email_notification.uuid,
+            topic,
+            recipient: email_notification.recipient,
+          })
+        })
+      )
     }
   }
 
@@ -202,11 +204,13 @@ export class EmailNotificationVendingMachine {
         ':uuid': uuid,
       },
     })
-    for (const sub of subscriptions.Items) {
-      await db.email_notification_subscription.delete({
-        uuid: sub.uuid,
-        topic: sub.topic,
+    await Promise.all(
+      subscriptions.Items.map((sub) => {
+        return db.email_notification_subscription.delete({
+          uuid: sub.uuid,
+          topic: sub.topic,
+        })
       })
-    }
+    )
   }
 }
