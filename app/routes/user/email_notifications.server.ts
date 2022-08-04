@@ -122,9 +122,9 @@ export class EmailNotificationVendingMachine {
       uuid,
     })) as ({ sub: string } & EmailNotificationVM) | null
     if (!item) throw new Response(null, { status: 404 })
-    item.noticeTypes = item.topics.map((topic) => {
-      return topicToFormatAndNoticeType(topic).noticeType
-    })
+    item.noticeTypes = item.topics.map((topic) => (
+      topicToFormatAndNoticeType(topic).noticeType
+    ))
     item.format = topicToFormatAndNoticeType(item.topics[0]).noticeFormat
     const { sub, ...notification } = item
     return {
