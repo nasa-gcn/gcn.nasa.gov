@@ -25,7 +25,11 @@ email_notification_subscription
   uuid *String
   topic **String
 
-
+@tables-indexes
+email_notification_subscription
+  topic *String
+  name byTopic
+  
 @aws
 runtime nodejs16.x
 region us-east-1
