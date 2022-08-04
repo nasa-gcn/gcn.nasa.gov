@@ -95,20 +95,17 @@ export class EmailNotificationVendingMachine {
     })
     const items = results.Items as EmailNotification[]
     const emailNotifications: EmailNotificationVM[] = items.map(
-      (notification) => (
-        {
-          format: topicToFormatAndNoticeType(notification.topics[0])
-            .noticeFormat,
-          noticeTypes: notification.topics.map(
-            (topic) => topicToFormatAndNoticeType(topic).noticeType
-          ),
-          name: notification.name,
-          recipient: notification.recipient,
-          created: notification.created,
-          active: notification.active,
-          topics: notification.topics,
-        }
-      )
+      (notification) => ({
+        format: topicToFormatAndNoticeType(notification.topics[0]).noticeFormat,
+        noticeTypes: notification.topics.map(
+          (topic) => topicToFormatAndNoticeType(topic).noticeType
+        ),
+        name: notification.name,
+        recipient: notification.recipient,
+        created: notification.created,
+        active: notification.active,
+        topics: notification.topics,
+      })
     )
 
     emailNotifications.sort((a, b) => a.created - b.created)
