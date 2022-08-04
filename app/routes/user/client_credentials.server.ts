@@ -38,18 +38,20 @@ function maybeThrow(e: any, warning: string) {
   }
 }
 
-export type RedactedClientCredential = {
+export interface RedactedClientCredential {
   name: string
   client_id: string
   scope: string
   created: number
 }
 
-export type ClientCredential = RedactedClientCredential & {
+export interface ClientCredential extends RedactedClientCredential {
   client_secret?: string
 }
 
-export type UnRedactedClientCredential = Required<ClientCredential>
+export interface UnRedactedClientCredential extends RedactedClientCredential {
+  client_secret: string
+}
 
 export class ClientCredentialVendingMachine {
   #sub: string
