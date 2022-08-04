@@ -17,6 +17,15 @@ The Kafka platform itself does not care about the format of the records. However
 
 See [Client Configuration](docs/client).
 
+## What ports do I need to open in order to receive or send GCN notices with Kafka?
+
+Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP connections. The client uses the following ports.
+
+| Protocol | Direction | Port | Purpose |
+| -------- | --------- | ---- | ------- |
+| TCP      | outbound  | 443  | HTTPS   |
+| TCP      | outbound  | 9092 | Kafka   |
+
 ## What does the warning `Subscribed topic not available: gcn.classic.text.AGILE_GRB_GROUND: Broker: Unknown topic or partition'` mean?
 
 This warning means that there have not been any recent alerts on that topic.
