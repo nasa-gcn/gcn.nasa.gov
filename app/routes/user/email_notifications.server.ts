@@ -175,12 +175,12 @@ export class EmailNotificationVendingMachine {
     )
     if (email_notification.active) {
       await Promise.all(
-        email_notification.topics.map((topic) => {
-          return db.email_notification_subscription.put({
+        email_notification.topics.map((topic) => (
+          db.email_notification_subscription.put({
             uuid: email_notification.uuid,
             topic,
             recipient: email_notification.recipient,
-          })
+          ))
         })
       )
     }
