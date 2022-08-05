@@ -29,7 +29,8 @@ jobs:
         with:
           node-version: '16'
       - name: Install Architect
-        run: npm i -g @architect/architect@^10.3.3 github:lpsinger/package#provisioned-concurrency aws-sdk
+        # FIXME: Pinning architect to 10.3.4 due to regression: https://github.com/architect/architect/issues/1364
+        run: npm i -g @architect/architect@10.3.4 github:lpsinger/package#provisioned-concurrency aws-sdk
       - name: NPM Install
         run: npm ci
       - name: Build
