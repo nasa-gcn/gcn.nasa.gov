@@ -19,64 +19,75 @@ import {
 import { useState } from 'react'
 import { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
+import { formatAndNoticeTypeToTopic } from '~/lib/utils'
+import type {
+  EmailNotification,
+  EmailNotificationVM,
+} from '../email_notifications.server'
+import { EmailNotificationVendingMachine } from '../email_notifications.server'
 
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
-  const { id, intent, name, recipient, noticeFormat, active, ...rest } =
+  const { uuid, intent, name, recipient, noticeFormat, active, ...rest } =
     Object.fromEntries(data)
   const noticeTypes = Object.keys(rest)
-
+  const topics = noticeTypes.map((noticeType) =>
+    formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
+  )
+  const emailNotification: EmailNotification = {
+    name: name.toString(),
+    recipient: recipient.toString(),
+    created: 0,
+    active: active.toString() == 'on',
+    topics: topics,
+    uuid: uuid?.toString(),
+  }
+  const machine = await EmailNotificationVendingMachine.create(request)
   switch (intent) {
     case 'create':
-      console.log('Creating:')
-      console.log(active)
-      console.log(intent)
-      console.log(name)
-      console.log(recipient)
-      console.log(noticeFormat)
-      console.log(noticeTypes)
+      await machine.createEmailNotification(emailNotification)
       return redirect('/user/notifications')
     case 'update':
-      console.log('Updating:')
-      console.log(active)
-      console.log(intent)
-      console.log(name)
-      console.log(recipient)
-      console.log(noticeFormat)
-      console.log(noticeTypes)
+      await machine.updateEmailNotification(emailNotification)
       return redirect('/user/notifications')
     case 'delete':
       return null
-
     default:
       throw new Response('unknown intent', { status: 400 })
   }
 }
 
 export async function loader({ request }: DataFunctionArgs) {
-  const { id } = Object.fromEntries(new URL(request.url).searchParams)
+  const { uuid } = Object.fromEntries(new URL(request.url).searchParams)
   let intent = 'create'
-  // Placeholder until models are defined
-  let active = true
-  if (id != undefined) {
+  let notification: EmailNotificationVM = {
+    format: 'text',
+    noticeTypes: [],
+    name: '',
+    recipient: '',
+    created: 0,
+    active: false,
+    topics: [],
+  }
+  if (uuid != undefined) {
+    const machine = await EmailNotificationVendingMachine.create(request)
+    notification = await machine.getEmailNotification(uuid)
     intent = 'update'
   }
-  return {
-    id: id,
-    intent: intent,
-    active: active,
-  }
+  const format = notification.format as 'text' | 'voevent' | 'binary'
+  return { notification, intent, format }
 }
 
 export default function Edit() {
-  const { id, intent, active } = useLoaderData<typeof loader>()
-  const [nameValid, setNameValid] = useState(false)
-  const [recipientValid, setrecipientValid] = useState(false)
-
+  const { notification, intent, format } = useLoaderData<typeof loader>()
+  const defaultNameValid = !!notification.name
+  const [nameValid, setNameValid] = useState(defaultNameValid)
+  const defaultRecipientValid = !!notification.recipient
+  const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
   return (
     <div className="tablet:grid-col-12">
       <Form method="post">
-        <input type="hidden" name="id" value={id} />
+        <input type="hidden" name="uuid" value={notification.uuid} />
         <input type="hidden" name="intent" value={intent} />
         {intent == 'update' ? (
           <>
@@ -85,7 +96,7 @@ export default function Edit() {
               id="active"
               name="active"
               label={'Set Active'}
-              defaultChecked={active}
+              defaultChecked={notification.active}
             />
           </>
         ) : (
@@ -104,6 +115,7 @@ export default function Edit() {
           inputSize="small"
           autoCapitalize="off"
           autoCorrect="off"
+          defaultValue={notification.name}
           required={true}
           onChange={(e) => setNameValid(!!e.target.value)}
         />
@@ -121,12 +133,15 @@ export default function Edit() {
           autoCorrect="off"
           required={true}
           placeholder="email"
+          defaultValue={notification.recipient}
           onChange={(e) => setrecipientValid(!!e.target.value)}
         />
         <Label htmlFor="format">Format</Label>
-        <NoticeFormat name="noticeFormat" value="text" />
+        <NoticeFormat name="noticeFormat" value={format} />
         <Label htmlFor="noticeTypes">Types</Label>
-        <NoticeTypeCheckboxes></NoticeTypeCheckboxes>
+        <NoticeTypeCheckboxes
+          defaultSelected={notification.noticeTypes}
+        ></NoticeTypeCheckboxes>
         <ButtonGroup>
           <Link
             to=".."

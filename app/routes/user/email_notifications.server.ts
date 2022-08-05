@@ -105,6 +105,7 @@ export class EmailNotificationVendingMachine {
         created: notification.created,
         active: notification.active,
         topics: notification.topics,
+        uuid: notification.uuid,
       })
     )
 

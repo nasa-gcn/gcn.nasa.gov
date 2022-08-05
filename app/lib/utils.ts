@@ -20,3 +20,14 @@ export function topicToFormatAndNoticeType(topic: string): {
   const splitString = topic.split('.')
   return { noticeFormat: splitString[2], noticeType: splitString[3] }
 }
+
+export function getFormDataString(formData: FormData, key: string) {
+  const value = formData.get(key)
+  if (typeof value === 'string') {
+    return value
+  } else if (value === null) {
+    return undefined
+  } else {
+    throw new Response(`expected ${key} to be a string`, { status: 400 })
+  }
+}
