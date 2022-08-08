@@ -38,7 +38,7 @@ export async function action({ request }: DataFunctionArgs) {
     name: name.toString(),
     recipient: recipient.toString(),
     created: 0,
-    active: active.toString() == 'on',
+    active: active?.toString() == 'on',
     topics: topics,
     uuid: uuid?.toString(),
   }

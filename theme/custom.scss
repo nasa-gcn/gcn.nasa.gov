@@ -521,3 +521,9 @@ a {
 .display-flex {
   display: flex;
 }
+
+.notice-types-overflow {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
