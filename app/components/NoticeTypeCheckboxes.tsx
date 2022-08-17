@@ -46,6 +46,7 @@ const NoticeTypes = {
     'FERMI_POINTDIR',
     'FERMI_SC_SLEW',
   ],
+  GECAM: ['GECAM_FLT', 'GECAM_GND'],
   'HETE-2': [
     'HETE_ALERT_SRC',
     'HETE_FINAL_SRC',
