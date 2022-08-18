@@ -79,7 +79,7 @@ export function Header({ email }: { email?: string }) {
                     isOpen={userMenuIsOpen}
                     items={[
                       <Link
-                        key="account"
+                        key="user"
                         to="/user"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                       >
