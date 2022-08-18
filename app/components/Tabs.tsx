@@ -6,29 +6,28 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 
-export type Tab = {
-  label: string
-  Component: React.ReactNode
+export interface TabProps {
+  label: React.ReactNode
+  children: React.ReactNode
 }
 
-type TabsContainerProps = {
-  tabs: Tab[]
+export function Tab({ children }: TabProps) {
+  return <>{children}</>
 }
 
-/**
- * Avalible Props
- * @param tabs Array of Tab objects with properties label: string and a Component: React.ReactNode
- */
-let Tabs: React.FC<TabsContainerProps> = ({ tabs = [] }) => {
+export function Tabs({
+  children,
+}: {
+  children: React.ReactElement<TabProps>[]
+}) {
   const [selectedTab, setSelectedTab] = useState(0)
-  const Panel = tabs && tabs[selectedTab]
 
   return (
     <div className="tabs-component">
       <div role="tablist">
-        {tabs.map((tab, index) => (
+        {children.map((tab, index) => (
           <button
             className={selectedTab === index ? 'active' : ''}
             onClick={() => setSelectedTab(index)}
@@ -40,7 +39,7 @@ let Tabs: React.FC<TabsContainerProps> = ({ tabs = [] }) => {
             tabIndex={selectedTab === index ? 0 : -1}
             id={`btn-${index}`}
           >
-            {tab.label}
+            {tab.props.label}
           </button>
         ))}
       </div>
@@ -49,9 +48,8 @@ let Tabs: React.FC<TabsContainerProps> = ({ tabs = [] }) => {
         aria-labelledby={`btn-${selectedTab}`}
         id={`tabpanel-${selectedTab}`}
       >
-        {Panel && Panel.Component}
+        {children && children[selectedTab]}
       </div>
     </div>
   )
 }
-export default Tabs
