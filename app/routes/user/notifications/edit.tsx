@@ -100,7 +100,7 @@ export default function Edit() {
             />
           </>
         ) : (
-          <input type="hidden" name="active" value={'on'} defaultChecked />
+          <input type="hidden" name="active" value="on" defaultChecked />
         )}
         <Label htmlFor="name">
           Name
