@@ -41,4 +41,4 @@ http://gcn.gsfc.nasa.gov/gcn/sock_pkt_def_doc.html
 
 </div>
 
-REAL notices will have Trigger_Number values starting with "1", TEST notices will have Trigger_Number values starting with 100000000.
+Real notices will have Trigger_Number values between 1 and 99999999. Test notices will have Trigger_Number values greater than or equal to 100000000.
