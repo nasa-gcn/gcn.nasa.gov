@@ -95,7 +95,7 @@ export default function Edit() {
             <Checkbox
               id="active"
               name="active"
-              label={'Set Active'}
+              label="Set Active"
               defaultChecked={notification.active}
             />
           </>
