@@ -12,7 +12,6 @@ image here?
 **End of Operations:** No specific requirement
 
 **Data Archives:** http://gcn.gsfc.nasa.gov/gecam_events.html
-http://gcn.gsfc.nasa.gov/gcn/sock_pkt_def_doc.html
 
 | Instruments | Energy Range | Field of View |
 | ----------- | ------------ | ------------- |
