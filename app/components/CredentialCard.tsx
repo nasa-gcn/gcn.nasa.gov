@@ -52,7 +52,7 @@ export default function CredentialCard({
             disabled={disabled}
             modalRef={ref}
             type="button"
-            className="usa-button--secondary"
+            className="usa-button--secondary margin-right-0"
           >
             <Icon.Delete className="bottom-aligned margin-right-05" />
             Delete

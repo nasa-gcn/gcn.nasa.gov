@@ -39,7 +39,7 @@ export default function Index() {
   const data = useLoaderData<typeof loader>()
   return (
     <>
-      <div className="tablet:grid-col-2 flex-auto flex-align-self-center display-flex">
+      <div className="tablet:grid-col-2 flex-auto flex-align-self-center display-flex tablet:margin-right-2">
         <Link
           className="usa-button margin-left-auto margin-right-0 flex-auto"
           to="edit"
