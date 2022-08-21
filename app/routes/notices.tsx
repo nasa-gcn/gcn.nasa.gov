@@ -222,10 +222,10 @@ export default function Notices() {
         <NoticeCard
           name="Counterpart"
           href="https://gcn.gsfc.nasa.gov/counterpart_tbl.html"
-          tags={['gw']}
+          tags={['gamma', 'gw', 'x-ray', 'uv', 'optical']}
           selectedTags={tagNames}
         >
-          Counterpart candidates of LVK events.
+          Counterpart candidates of GRB or GW events.
         </NoticeCard>
         <NoticeCard
           name="INTEGRAL GRBs"
