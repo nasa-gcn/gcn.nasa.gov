@@ -126,9 +126,9 @@ function Document({ children }: { children?: React.ReactNode }) {
             !
           </GridContainer>
         </div>
-        <section className="usa-section main-content">
-          <GridContainer>{children}</GridContainer>
-        </section>
+        <main id="main-content">
+          <>{children}</>
+        </main>
         <Footer />
         <ScrollRestoration />
         <Scripts />
