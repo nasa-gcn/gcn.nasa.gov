@@ -8,10 +8,11 @@
 
 import { NavLink, Outlet } from '@remix-run/react'
 import { SideNav } from '@trussworks/react-uswds'
+import SectionWrapper from '~/components/SectionWrapper'
 
 export default function User() {
   return (
-    <>
+    <SectionWrapper>
       <div className="grid-row grid-gap">
         <div className="desktop:grid-col-3">
           <SideNav
@@ -35,6 +36,6 @@ export default function User() {
           <Outlet />
         </div>
       </div>
-    </>
+    </SectionWrapper>
   )
 }
