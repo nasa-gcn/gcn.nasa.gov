@@ -11,6 +11,7 @@ import type { SendEmailCommandInput } from '@aws-sdk/client-ses'
 import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
+import crypto from 'node:crypto'
 
 // db model
 export type EmailNotification = {
