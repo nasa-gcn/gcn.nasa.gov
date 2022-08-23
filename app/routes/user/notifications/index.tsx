@@ -15,16 +15,24 @@ import TimeAgo from '~/components/TimeAgo'
 import { getFormDataString } from '~/lib/utils'
 import { EmailNotificationVendingMachine } from '../email_notifications.server'
 
-function sendTestEmail(id?: string): void {
-  console.log(id)
-}
-
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const uuid = getFormDataString(data, 'uuid')
-  if (uuid) {
-    const machine = await EmailNotificationVendingMachine.create(request)
-    await machine.deleteEmailNotification(uuid)
+  const intent = getFormDataString(data, 'intent')
+  console.log(intent)
+  switch (intent) {
+    case 'delete':
+      if (uuid) {
+        const machine = await EmailNotificationVendingMachine.create(request)
+        await machine.deleteEmailNotification(uuid)
+      }
+    case 'sendTest':
+      const recipient = getFormDataString(data, 'recipient')
+      console.log(recipient)
+      if (recipient) {
+        const machine = await EmailNotificationVendingMachine.create(request)
+        await machine.sendTestEmail(recipient)
+      }
   }
   return redirect('/user/notifications')
 }
@@ -73,14 +81,18 @@ export default function Index() {
                 </div>
                 <div className="tablet:grid-col flex-auto">
                   <ButtonGroup>
-                    <Button
-                      type="button"
-                      onClick={() => sendTestEmail(alert.uuid)}
-                      outline
-                    >
-                      <Icon.MailOutline className="bottom-aligned margin-right-05" />
-                      Test Message
-                    </Button>
+                    <Form method="post">
+                      <input
+                        type="hidden"
+                        name="recipient"
+                        value={alert.recipient}
+                      />
+                      <input type="hidden" name="intent" value="sendTest" />
+                      <Button type="submit" outline>
+                        <Icon.MailOutline className="bottom-aligned margin-right-05" />
+                        Test Message
+                      </Button>
+                    </Form>
                     <Link
                       to={`edit?uuid=${alert.uuid}`}
                       className="usa-button usa-button--outline"
@@ -90,6 +102,7 @@ export default function Index() {
                     </Link>
                     <Form method="post">
                       <input type="hidden" name="uuid" value={alert.uuid} />
+                      <input type="hidden" name="intent" value="delete" />
                       <Button type="submit" secondary>
                         <Icon.Delete className="bottom-aligned margin-right-05" />
                         Delete
