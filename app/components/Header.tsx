@@ -78,6 +78,13 @@ export function Header({ email }: { email?: string }) {
                     id="user"
                     isOpen={userMenuIsOpen}
                     items={[
+                      <Link
+                        key="user"
+                        to="/user"
+                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      >
+                        Account
+                      </Link>,
                       <Link key="logout" to="/logout">
                         Sign Out
                       </Link>,

@@ -13,21 +13,11 @@ import { Button, Dropdown, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { getEnvOrDieInProduction } from '~/lib/env'
+import { getFormDataString } from '~/lib/utils'
 import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
 
 export async function loader(args: DataFunctionArgs) {
   return await handleCredentialLoader(args)
-}
-
-export function getFormDataString(formData: FormData, key: string) {
-  const value = formData.get(key)
-  if (typeof value === 'string') {
-    return value
-  } else if (value === null) {
-    return undefined
-  } else {
-    throw new Response(`expected ${key} to be a string`, { status: 400 })
-  }
 }
 
 export async function verifyRecaptcha(response?: string) {

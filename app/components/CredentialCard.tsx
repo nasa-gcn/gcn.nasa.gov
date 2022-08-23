@@ -52,14 +52,9 @@ export default function CredentialCard({
             disabled={disabled}
             modalRef={ref}
             type="button"
-            className="usa-button--secondary"
+            className="usa-button--secondary margin-right-0"
           >
-            <span
-              className="display-inline-block position-relative margin-right-05 height-0"
-              style={{ width: '1em' }}
-            >
-              <Icon.Delete className="left-0 bottom-0 position-absolute" />
-            </span>
+            <Icon.Delete className="bottom-aligned margin-right-05" />
             Delete
           </ModalToggleButton>
           <Form method="get" action="../alerts" className="display-inline">

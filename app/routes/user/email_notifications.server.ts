@@ -7,6 +7,8 @@
  */
 
 import { tables } from '@architect/functions'
+import type { SendEmailCommandInput } from '@aws-sdk/client-ses'
+import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
 
@@ -105,6 +107,7 @@ export class EmailNotificationVendingMachine {
         created: notification.created,
         active: notification.active,
         topics: notification.topics,
+        uuid: notification.uuid,
       })
     )
 
@@ -209,5 +212,39 @@ export class EmailNotificationVendingMachine {
         })
       )
     )
+  }
+
+  // Send Test Email
+  async sendTestEmail(destination: string) {
+    var domain = ''
+    if (process.env.NODE_ENV === 'production') {
+      domain = 'gcn.nasa.gov'
+    } else if (process.env.NODE_ENV === 'test') {
+      domain = 'test.gcn.nasa.gov'
+    } else {
+      domain = 'dev.gcn.nasa.gov'
+    }
+
+    const client = new SESClient({ region: 'us-east-1' })
+
+    const input: SendEmailCommandInput = {
+      Source: 'alerts@' + domain,
+      Destination: {
+        ToAddresses: [destination],
+      },
+      Message: {
+        Subject: {
+          Data: 'Test Alert for GCN Notice Subscription',
+        },
+        Body: {
+          Text: {
+            Data: 'This is a test message from the GCN notice system.',
+          },
+        },
+      },
+    }
+
+    const command = new SendEmailCommand(input)
+    await client.send(command)
   }
 }

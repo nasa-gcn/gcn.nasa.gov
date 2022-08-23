@@ -157,7 +157,13 @@ const NoticeTypes = {
   ],
 }
 
-export function NoticeTypeCheckboxes() {
+interface NoticeTypeCheckboxeProps {
+  defaultSelected?: string[]
+}
+
+export function NoticeTypeCheckboxes({
+  defaultSelected,
+}: NoticeTypeCheckboxeProps) {
   return (
     <NestedCheckboxes
       nodes={Object.entries(NoticeTypes).map(([mission, noticeTypes]) => ({
@@ -169,6 +175,9 @@ export function NoticeTypeCheckboxes() {
           label: noticeType,
           name: noticeType,
           className: 'sub-option',
+          defaultChecked: defaultSelected
+            ? defaultSelected.indexOf(noticeType) > -1
+            : false,
         })),
       }))}
     />

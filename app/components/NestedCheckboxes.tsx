@@ -34,7 +34,7 @@ function NestedCheckboxNode({
   )
   const [topLevelValue, setTopLevelValue] = useState(false)
   const [childValues, setChildValues] = useState(
-    new Array<boolean>(nodes.length).fill(false)
+    nodes.map((node) => node.defaultChecked || false)
   )
 
   function updateParent() {
