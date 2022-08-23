@@ -1,4 +1,5 @@
 import moment from 'moment'
+import SectionWrapper from './SectionWrapper'
 
 export interface NewsProps {
   Date: number
@@ -40,16 +41,18 @@ export default function NewsSection({ news }: { news?: NewsProps[] }) {
   return (
     <>
       <div className="usa-section usa-section--light usa-prose">
-        <h2 className="">Upcoming events and News</h2>
-        {testContent?.map((article) => (
-          <div key={article.Title}>
-            <p className="">
-              {moment.utc(article.Date).format('MMMM DD, YYYY')}
-            </p>
-            <h4 className="">{article.Title}</h4>
-            <p>{article.BodyText}</p>
-          </div>
-        ))}
+        <SectionWrapper>
+          <h2 className="">Upcoming events and News</h2>
+          {testContent?.map((article) => (
+            <div key={article.Title}>
+              <p className="">
+                {moment.utc(article.Date).format('MMMM DD, YYYY')}
+              </p>
+              <h4 className="">{article.Title}</h4>
+              <p>{article.BodyText}</p>
+            </div>
+          ))}
+        </SectionWrapper>
       </div>
     </>
   )

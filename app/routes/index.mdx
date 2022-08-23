@@ -15,6 +15,7 @@ import {
   Icon,
 } from '@trussworks/react-uswds'
 import NewsSection from '~/components/NewsSection.tsx'
+import SectionWrapper from '~/components/SectionWrapper.tsx'
 
 <section
   className="usa-hero margin-0 padding-0 bg-base-darkest"
@@ -44,10 +45,15 @@ import NewsSection from '~/components/NewsSection.tsx'
   </GridContainer>
 </section>
 
+<SectionWrapper>
+
 The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. For more information, see [What is GCN?](/docs/#what-is-gcn)
+
+</SectionWrapper>
 
 <NewsSection />
 
+<SectionWrapper>
 There are three ways to stream GCN Notices in real time:
 
 <CardGroup>
@@ -114,10 +120,12 @@ There are three ways to stream GCN Notices in real time:
     </CardBody>
   </Card>
 </CardGroup>
+</SectionWrapper>
 
-## Why switch from GCN Classic to [Kafka](docs/faq#what-is-kafka)?
+<SectionWrapper>
+  ## Why switch from GCN Classic to [Kafka](docs/faq#what-is-kafka)?
 
-<div className="overflow-table">
+  <div className="overflow-table">
 
 |                                                                      | GCN Classic                                                                                                                           | GCN Classic over Kafka                                                                                                                    |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
@@ -127,10 +135,13 @@ There are three ways to stream GCN Notices in real time:
 | <div><Icon.Cloud size="3"/></div> **Highly available**               | <span className="text-red text-bold">NO.</span> Notices are broadcast by a single server                                              | <span className="text-green text-bold">YES.</span> Notices are broadcast by a cluster of highly-available Kafka brokers in the cloud      |
 | <div><Icon.Security size="3"/></div> **Secure**                      | <span className="text-red text-bold">NO.</span> Notices are sent as plaintext                                                         | <span className="text-green text-bold">YES.</span> Notices are protected with SSL/TLS                                                     |
 
-</div>
-
-## Coming Soon
+  </div>
+</SectionWrapper>
+<SectionWrapper>
+  ## Coming Soon
 
 The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn) is an interactive, searchable, filterable index of all GCN Notices and Circulars, updated in real time. In the near future, it will be integrated with this web site.
 
 See the [GCN Road Map](docs/roadmap) for more features that are coming soon to GCN.
+
+</SectionWrapper>

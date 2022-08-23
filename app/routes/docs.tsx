@@ -8,37 +8,40 @@
 
 import { SideNav } from '@trussworks/react-uswds'
 import { NavLink, Outlet } from '@remix-run/react'
+import SectionWrapper from '~/components/SectionWrapper'
 
 export default function Docs() {
   return (
-    <div className="grid-row grid-gap">
-      <div className="desktop:grid-col-3">
-        <SideNav
-          items={[
-            <NavLink key="." to="." end>
-              About GCN
-            </NavLink>,
-            <NavLink key="client" to="client">
-              Client Configuration
-            </NavLink>,
-            <NavLink key="styleguide" to="styleguide">
-              Circulars Style Guide
-            </NavLink>,
-            <NavLink key="contributing" to="contributing">
-              Contributing
-            </NavLink>,
-            <NavLink key="roadmap" to="roadmap">
-              Road Map
-            </NavLink>,
-            <NavLink key="faq" to="faq">
-              Frequently Asked Questions
-            </NavLink>,
-          ]}
-        />
+    <SectionWrapper>
+      <div className="grid-row grid-gap">
+        <div className="desktop:grid-col-3">
+          <SideNav
+            items={[
+              <NavLink key="." to="." end>
+                About GCN
+              </NavLink>,
+              <NavLink key="client" to="client">
+                Client Configuration
+              </NavLink>,
+              <NavLink key="styleguide" to="styleguide">
+                Circulars Style Guide
+              </NavLink>,
+              <NavLink key="contributing" to="contributing">
+                Contributing
+              </NavLink>,
+              <NavLink key="roadmap" to="roadmap">
+                Road Map
+              </NavLink>,
+              <NavLink key="faq" to="faq">
+                Frequently Asked Questions
+              </NavLink>,
+            ]}
+          />
+        </div>
+        <div className="desktop:grid-col-9 usa-prose">
+          <Outlet />
+        </div>
       </div>
-      <div className="desktop:grid-col-9 usa-prose">
-        <Outlet />
-      </div>
-    </div>
+    </SectionWrapper>
   )
 }

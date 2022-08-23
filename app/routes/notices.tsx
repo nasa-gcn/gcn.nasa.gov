@@ -16,6 +16,7 @@ import type {
 } from 'react-tag-autocomplete'
 import ReactTags from 'react-tag-autocomplete'
 import type { MetaFunction } from '@remix-run/node'
+import SectionWrapper from '~/components/SectionWrapper'
 
 export const meta: MetaFunction = () => ({
   title: 'GCN - Notices',
@@ -92,7 +93,7 @@ export default function Notices() {
   useEffect(() => ref.current?.focusInput())
 
   return (
-    <>
+    <SectionWrapper>
       <h1>GCN Notices</h1>
       <p>
         GCN Notices are real-time, machine-readable alerts that are submitted by
@@ -408,6 +409,6 @@ export default function Notices() {
           Status of the CGRO spacecraft.
         </NoticeCard>
       </CardGroup>
-    </>
+    </SectionWrapper>
   )
 }
