@@ -7,8 +7,7 @@
  */
 
 import { tables } from '@architect/functions'
-import type { SendEmailCommandInput } from '@aws-sdk/client-ses'
-import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses'
+import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
 import crypto from 'crypto'
@@ -226,26 +225,25 @@ export class EmailNotificationVendingMachine {
       domain = 'dev.gcn.nasa.gov'
     }
 
-    const client = new SESClient({ region: 'us-east-1' })
+    const client = new SESv2Client({})
 
-    const input: SendEmailCommandInput = {
-      Source: `no-reply@${domain}`,
+    const command = new SendEmailCommand({
+      FromEmailAddress: `no-reply@${domain}`,
       Destination: {
         ToAddresses: [destination],
       },
-      Message: {
-        Subject: {
-          Data: 'Test Alert for GCN Notice Subscription',
-        },
-        Body: {
-          Text: {
-            Data: 'This is a test message from the GCN notice system.',
+      Content: {
+        Simple: {
+          Subject: { Data: 'Test Alert for GCN Notice Subscription' },
+          Body: {
+            Text: {
+              Data: 'This is a test message from the GCN notice system.',
+            },
           },
         },
       },
-    }
+    })
 
-    const command = new SendEmailCommand(input)
     await client.send(command)
   }
 }
