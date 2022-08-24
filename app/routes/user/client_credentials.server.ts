@@ -12,7 +12,7 @@ import {
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
-import type { SmithyException } from '@aws-sdk/types'
+import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
 import { tables } from '@architect/functions'
 import { generate } from 'generate-password'
 import { getUser } from '~/routes/__auth/user.server'
@@ -24,7 +24,7 @@ function maybeThrow(e: any, warning: string) {
     'ExpiredTokenException',
     'UnrecognizedClientException',
   ]
-  const { name } = e as SmithyException
+  const { name } = e as CognitoIdentityProviderServiceException
 
   if (
     !errorsAllowedInDev.includes(name) ||
