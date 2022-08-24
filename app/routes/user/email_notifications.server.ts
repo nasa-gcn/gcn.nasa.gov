@@ -31,16 +31,24 @@ export interface EmailNotificationVM extends EmailNotification {
 
 export class EmailNotificationVendingMachine {
   #sub: string
+  #domain: string
 
-  private constructor(sub: string) {
+  private constructor(sub: string, domain: string) {
     this.#sub = sub
+    this.#domain = domain
   }
 
   // Init machine
   static async create(request: Request) {
     const user = await getUser(request)
+    let domain = new URL(request.url).hostname
+    // If we are in local development, assume test.gcn.nasa.gov
+    if (!domain.endsWith('gcn.nasa.gov')) {
+      domain = 'test.gcn.nasa.gov'
+    }
+
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub)
+    return new this(user.sub, domain)
   }
 
   // Create
@@ -217,19 +225,10 @@ export class EmailNotificationVendingMachine {
 
   // Send Test Email
   async sendTestEmail(destination: string) {
-    var domain = ''
-    if (process.env.NODE_ENV === 'production') {
-      domain = 'gcn.nasa.gov'
-    } else if (process.env.NODE_ENV === 'test') {
-      domain = 'test.gcn.nasa.gov'
-    } else {
-      domain = 'dev.gcn.nasa.gov'
-    }
-
     const client = new SESClient({ region: 'us-east-1' })
 
     const input: SendEmailCommandInput = {
-      Source: `no-reply@${domain}`,
+      Source: `no-reply@${this.#domain}`,
       Destination: {
         ToAddresses: [destination],
       },
