@@ -229,7 +229,7 @@ export class EmailNotificationVendingMachine {
     const client = new SESClient({ region: 'us-east-1' })
 
     const input: SendEmailCommandInput = {
-      Source: 'alerts@' + domain,
+      Source: `no-reply@${domain}`,
       Destination: {
         ToAddresses: [destination],
       },
