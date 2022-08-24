@@ -68,23 +68,25 @@ export default function NewsSection({ news }: { news?: NewsProps[] }) {
           </Grid>
           <Grid tablet={{ col: 6 }}>
             <h2 className="">Upcoming Events</h2>
-            {testContent?.map((article) => (
-              <Grid row key={article.Title}>
-                <Grid col={1}>
-                  <div className="border-right-1px border-base-light">
-                    <p className="margin-bottom-0 text-center">
-                      {moment.utc(article.Date).format('MMM')}
-                    </p>
-                    <p className="margin-top-0 text-center">
-                      {moment.utc(article.Date).format('DD')}
-                    </p>
-                  </div>
-                </Grid>
-                <Grid col={11}>
-                  <h4 className="margin-left-1">{article.Title}</h4>
-                </Grid>
-              </Grid>
-            ))}
+            <Collection>
+              {testContent?.map((article) => (
+                <CollectionItem
+                  key={article.Title}
+                  variantComponent={
+                    <CollectionCalendarDate
+                      datetime={moment.utc(article.Date).toString()}
+                    />
+                  }
+                >
+                  <CollectionHeading headingLevel="h3">
+                    {article.Title}
+                  </CollectionHeading>
+                  <CollectionDescription>
+                    {article.BodyText}
+                  </CollectionDescription>
+                </CollectionItem>
+              ))}
+            </Collection>
           </Grid>
         </Grid>
       </SectionWrapper>
