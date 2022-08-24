@@ -16,7 +16,7 @@ export interface NewsProps {
 }
 
 export default function NewsSection({ news }: { news?: NewsProps[] }) {
-  const testContent: NewsProps[] = [
+  const newsList: NewsProps[] = [
     {
       Date: Date.now(),
       Title: 'Article 1 Something new ',
@@ -39,7 +39,29 @@ export default function NewsSection({ news }: { news?: NewsProps[] }) {
       congue molestie, orci diam pharetra ipsum, eu laoreet justo magna vel dui. Sed ut mattis dui. Ut id commodo dui.',
     },
   ]
-
+  const eventsList: NewsProps[] = [
+    {
+      Date: Date.now(),
+      Title: 'Article 1 Something new ',
+      BodyText:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus, orci sed \
+      congue molestie, orci diam pharetra ipsum, eu laoreet justo magna vel dui. Sed ut mattis dui. Ut id commodo dui.',
+    },
+    {
+      Date: Date.now(),
+      Title: 'Article 2 Another',
+      BodyText:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus, orci sed \
+      congue molestie, orci diam pharetra ipsum, eu laoreet justo magna vel dui. Sed ut mattis dui. Ut id commodo dui.',
+    },
+    {
+      Date: Date.now(),
+      Title: 'Article 3, This could be a link too',
+      BodyText:
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse cursus, orci sed \
+      congue molestie, orci diam pharetra ipsum, eu laoreet justo magna vel dui. Sed ut mattis dui. Ut id commodo dui.',
+    },
+  ]
   return (
     <>
       <SectionWrapper className="usa-section--light">
@@ -47,7 +69,7 @@ export default function NewsSection({ news }: { news?: NewsProps[] }) {
           <Grid tablet={{ col: 6 }}>
             <h2 className="">News</h2>
             <Collection>
-              {testContent?.map((article) => (
+              {newsList?.map((article) => (
                 <CollectionItem
                   key={article.Title}
                   variantComponent={
@@ -69,7 +91,7 @@ export default function NewsSection({ news }: { news?: NewsProps[] }) {
           <Grid tablet={{ col: 6 }}>
             <h2 className="">Upcoming Events</h2>
             <Collection>
-              {testContent?.map((article) => (
+              {eventsList?.map((article) => (
                 <CollectionItem
                   key={article.Title}
                   variantComponent={
