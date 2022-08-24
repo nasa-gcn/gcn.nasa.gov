@@ -112,7 +112,7 @@ export default function Index() {
                 </div>
               </Grid>
               <Grid row>
-                <div className="tablet:maxw-tablet mobile:maxw-card-lg display-flex height-205 overflow-hidden">
+                <div className="tablet:maxw-tablet maxw-card-lg display-flex height-205 overflow-hidden">
                   <small className="notice-types-overflow">
                     Notice Types: {alert.noticeTypes.join(', ')}
                   </small>
