@@ -7,15 +7,21 @@
  */
 
 import { GridContainer } from '@trussworks/react-uswds'
+import React from 'react'
 
-export default function SectionWrapper({
-  children,
-}: {
-  children?: React.ReactNode
-}) {
+interface SectionWrapperProps {
+  children: React.ReactNode
+  className?: string
+}
+
+export default function SectionWrapper(props: SectionWrapperProps) {
   return (
-    <section className="usa-section">
-      <GridContainer>{children}</GridContainer>
+    <section
+      className={
+        props.className ? 'usa-section ' + props.className : 'usa-section'
+      }
+    >
+      <GridContainer>{props.children}</GridContainer>
     </section>
   )
 }
