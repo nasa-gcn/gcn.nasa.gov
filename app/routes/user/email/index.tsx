@@ -8,8 +8,8 @@
 
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
-import { Icon } from '@trussworks/react-uswds'
+import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
+import { Alert, Icon } from '@trussworks/react-uswds'
 import EmailNotificationCard from '~/components/EmailNotificationCard'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
@@ -19,7 +19,6 @@ export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const uuid = getFormDataString(data, 'uuid')
   const intent = getFormDataString(data, 'intent')
-  console.log(intent)
   switch (intent) {
     case 'delete':
       if (uuid) {
@@ -28,11 +27,12 @@ export async function action({ request }: DataFunctionArgs) {
       }
     case 'sendTest':
       const recipient = getFormDataString(data, 'recipient')
-      console.log(recipient)
+      var result
       if (recipient) {
         const machine = await EmailNotificationVendingMachine.create(request)
         await machine.sendTestEmail(recipient)
       }
+      return result
   }
   return redirect('/user/email')
 }
@@ -45,8 +45,14 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export default function Index() {
   const data = useLoaderData<typeof loader>()
+  const actionData = useActionData<typeof action>()
   return (
     <>
+      {actionData ? (
+        <Alert type="success" heading="Success status" headingLevel="h4">
+          "Test"
+        </Alert>
+      ) : null}
       <div className="tablet:grid-col-2 flex-auto flex-align-self-center display-flex tablet:margin-right-2">
         <Link
           className="usa-button margin-left-auto margin-right-0 flex-auto"
