@@ -24,7 +24,9 @@ export default function Alerts() {
     <Form method="get" action="../code">
       <p>
         Choose how you would like your results returned. Select a Format and
-        Notice type for each alert you would like to subscribe to.
+        Notice type for each alert you would like to subscribe to. More details
+        on the Notice Types can be found their respective pages under the
+        Missions tab above.
       </p>
       <Label htmlFor="noticeFormat">Notice Format</Label>
       <NoticeFormat name="noticeFormat" value="text" />
