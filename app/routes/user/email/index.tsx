@@ -49,9 +49,13 @@ export default function Index() {
   return (
     <>
       {actionData ? (
-        <Alert type="success" heading="Success status" headingLevel="h4">
-          "Test"
-        </Alert>
+        <Alert
+          type="success"
+          slim
+          className="page-alert"
+          heading="A test message has been sent, please check your inbox"
+          headingLevel="h4"
+        />
       ) : null}
       <div className="tablet:grid-col-2 flex-auto flex-align-self-center display-flex tablet:margin-right-2">
         <Link

@@ -521,3 +521,12 @@ a {
   white-space: nowrap;
   overflow: hidden;
 }
+
+/*
+  Puts the alert on the top of the page
+*/
+.page-alert {
+  position: absolute;
+  z-index: 100;
+  top: -4em;
+}
