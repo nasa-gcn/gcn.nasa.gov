@@ -85,6 +85,20 @@ export function Header({ email }: { email?: string }) {
                       >
                         Account
                       </Link>,
+                      <Link
+                        key="credentials"
+                        to="/user/credentials"
+                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      >
+                        Credentials
+                      </Link>,
+                      <Link
+                        key="email"
+                        to="/user/email"
+                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      >
+                        Email Notifications
+                      </Link>,
                       <Link key="logout" to="/logout">
                         Sign Out
                       </Link>,

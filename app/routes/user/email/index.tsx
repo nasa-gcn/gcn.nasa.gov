@@ -34,7 +34,7 @@ export async function action({ request }: DataFunctionArgs) {
         await machine.sendTestEmail(recipient)
       }
   }
-  return redirect('/user/notifications')
+  return redirect('/user/email')
 }
 
 export async function loader({ request }: DataFunctionArgs) {

@@ -22,7 +22,7 @@ export default function User() {
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,
-              <NavLink key="notifications" to="notifications">
+              <NavLink key="email" to="email">
                 Email Notifications
               </NavLink>,
               <NavLink key="logout" to="/logout">

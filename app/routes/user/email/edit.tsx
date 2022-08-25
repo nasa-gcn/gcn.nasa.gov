@@ -46,10 +46,10 @@ export async function action({ request }: DataFunctionArgs) {
   switch (intent) {
     case 'create':
       await machine.createEmailNotification(emailNotification)
-      return redirect('/user/notifications')
+      return redirect('/user/email')
     case 'update':
       await machine.updateEmailNotification(emailNotification)
-      return redirect('/user/notifications')
+      return redirect('/user/email')
     case 'delete':
       return null
     default:
