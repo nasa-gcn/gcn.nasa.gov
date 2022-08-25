@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import { Link } from '@remix-run/react'
 import { Checkbox } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
 
@@ -13,6 +14,7 @@ type CheckboxArgs = Parameters<typeof Checkbox>
 type CheckboxProps = CheckboxArgs[0]
 interface NestedCheckboxProps extends CheckboxProps {
   nodes: CheckboxProps[]
+  link: string
 }
 
 function allTrue(values: boolean[]) {
@@ -25,6 +27,7 @@ function allSame([first, ...rest]: any[]) {
 
 function NestedCheckboxNode({
   nodes,
+  link,
   ...topLevelNodeProps
 }: NestedCheckboxProps) {
   const [expanded, setExpanded] = useState(false)
@@ -56,6 +59,12 @@ function NestedCheckboxNode({
       <Checkbox
         className="display-inline-block"
         {...topLevelNodeProps}
+        label={
+          <>
+            <span className="padding-right-1">{topLevelNodeProps.label}</span>(
+            <Link to={link}>Details</Link>)
+          </>
+        }
         inputRef={topLevelRef}
         onClick={() => {
           const checked = !topLevelValue
@@ -71,6 +80,7 @@ function NestedCheckboxNode({
           })
         }}
       />
+
       <ul hidden={!expanded} className="nested-checkboxes__leaf">
         {nodes.map((node, index) => (
           <li role="treeitem" key={index}>
