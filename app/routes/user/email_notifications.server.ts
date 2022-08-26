@@ -7,7 +7,11 @@
  */
 
 import { tables } from '@architect/functions'
-import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2'
+import {
+  SendEmailCommand,
+  SESv2Client,
+  SESv2ServiceException,
+} from '@aws-sdk/client-sesv2'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
 import crypto from 'crypto'
@@ -243,6 +247,22 @@ export class EmailNotificationVendingMachine {
       },
     })
 
-    await client.send(command)
+    try {
+      await client.send(command)
+    } catch (e) {
+      if (
+        !(
+          e instanceof SESv2ServiceException &&
+          e.name === 'InvalidClientTokenId'
+        ) ||
+        process.env.NODE_ENV === 'production'
+      ) {
+        throw e
+      } else {
+        console.warn(
+          `SES threw ${e.name}. This would be an error in production.`
+        )
+      }
+    }
   }
 }
