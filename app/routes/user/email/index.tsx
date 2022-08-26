@@ -111,12 +111,10 @@ export default function Index() {
                   </ButtonGroup>
                 </div>
               </Grid>
-              <Grid row>
-                <div className="tablet:maxw-tablet mobile:maxw-card-lg display-flex height-205 overflow-hidden">
-                  <small className="notice-types-overflow">
-                    Notice Types: {alert.noticeTypes.join(', ')}
-                  </small>
-                </div>
+              <Grid row className="width-full">
+                <small className="notice-types-overflow">
+                  Notice Types: {alert.noticeTypes.join(', ')}
+                </small>
               </Grid>
             </Grid>
           ))}
