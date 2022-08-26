@@ -8,10 +8,10 @@
 
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
-import { Form, Link, useLoaderData } from '@remix-run/react'
-import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
+import { Link, useLoaderData } from '@remix-run/react'
+import { Icon } from '@trussworks/react-uswds'
+import EmailNotificationCard from '~/components/EmailNotificationCard'
 import SegmentedCards from '~/components/SegmentedCards'
-import TimeAgo from '~/components/TimeAgo'
 import { getFormDataString } from '~/lib/utils'
 import { EmailNotificationVendingMachine } from '../email_notifications.server'
 
@@ -69,64 +69,7 @@ export default function Index() {
       {data ? (
         <SegmentedCards>
           {data.map((alert) => (
-            <Grid key={alert.uuid} row>
-              <Grid row className="full-width-span">
-                <div className="tablet:grid-col flex-fill">
-                  <div className="segmented-card-headline">
-                    <h3 className="usa-card__heading margin-right-1">
-                      {alert.name}
-                    </h3>
-                    <p>
-                      <small className="text-base-light">
-                        Created <TimeAgo time={alert.created}></TimeAgo>
-                      </small>
-                    </p>
-                  </div>
-                  <div className="display-flex">
-                    <small>Recipient: {alert.recipient}</small>
-                  </div>
-                  <div className="display-flex">
-                    <small>Notice Format: {alert.format}</small>
-                  </div>
-                </div>
-                <div className="tablet:grid-col flex-auto">
-                  <ButtonGroup>
-                    <Form method="post">
-                      <input
-                        type="hidden"
-                        name="recipient"
-                        value={alert.recipient}
-                      />
-                      <input type="hidden" name="intent" value="sendTest" />
-                      <Button type="submit" outline>
-                        <Icon.MailOutline className="bottom-aligned margin-right-05" />
-                        Test Message
-                      </Button>
-                    </Form>
-                    <Link
-                      to={`edit?uuid=${alert.uuid}`}
-                      className="usa-button usa-button--outline"
-                    >
-                      <Icon.Edit className="bottom-aligned margin-right-05" />
-                      Edit
-                    </Link>
-                    <Form method="post">
-                      <input type="hidden" name="uuid" value={alert.uuid} />
-                      <input type="hidden" name="intent" value="delete" />
-                      <Button type="submit" secondary>
-                        <Icon.Delete className="bottom-aligned margin-right-05" />
-                        Delete
-                      </Button>
-                    </Form>
-                  </ButtonGroup>
-                </div>
-              </Grid>
-              <Grid row className="width-full">
-                <small className="notice-types-overflow">
-                  Notice Types: {alert.noticeTypes.join(', ')}
-                </small>
-              </Grid>
-            </Grid>
+            <EmailNotificationCard key={alert.uuid} {...alert} />
           ))}
         </SegmentedCards>
       ) : null}
