@@ -57,14 +57,14 @@ export default function Index() {
         </Link>
       </div>
       <div>
-        This page is for managing your GCN Email subscriptions. You can create
-        as many alerts as you like! Each alert will have a corresponding Name,
-        Email (the recipient), notice type, and a list of selectable notices.
-        The Email field will default to the one used to sign in, but can be
-        changed. To create a new alert, click the "Add" button above. Once an
-        alert has been created, you can click the "Test Message" button to send
-        a test email to the listed recipient, to verify that the emails will
-        make it into their inbox.
+        Create and manage your GCN Email subscriptions here. You can create as
+        many subscriptions as you like! Each alert will have a corresponding
+        Name, Email (the recipient), notice type, and a list of selectable
+        notices. The Email field will default to the one associated to your
+        account, but can be changed. To create a new alert, click the "Add"
+        button. Once an alert has been created, you can click the "Test Message"
+        button to send a test email to the listed recipient, to verify that the
+        emails will make it into your inbox.
       </div>
       {data ? (
         <SegmentedCards>
