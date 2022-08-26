@@ -224,28 +224,19 @@ export class EmailNotificationVendingMachine {
 
   // Send Test Email
   async sendTestEmail(destination: string) {
-    var domain = ''
-    if (process.env.NODE_ENV === 'production') {
-      domain = 'gcn.nasa.gov'
-    } else if (process.env.NODE_ENV === 'test') {
-      domain = 'test.gcn.nasa.gov'
-    } else {
-      domain = 'dev.gcn.nasa.gov'
-    }
-
     const client = new SESv2Client({})
 
     const command = new SendEmailCommand({
-      FromEmailAddress: `no-reply@${domain}`,
+      FromEmailAddress: `GCN Notices <no-reply@${this.#domain}>`,
       Destination: {
         ToAddresses: [destination],
       },
       Content: {
         Simple: {
-          Subject: { Data: 'Test Alert for GCN Notice Subscription' },
+          Subject: { Data: 'GCN Notices test' },
           Body: {
             Text: {
-              Data: 'This is a test message from the GCN notice system.',
+              Data: 'This is a test message from the GCN Notices.',
             },
           },
         },
