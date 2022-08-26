@@ -61,6 +61,14 @@ export default function Index() {
           Add
         </Link>
       </div>
+      <div>
+        This page is for managing your generated User Credentials. The
+        Credentials are necessary for any programmatic access you want to set up
+        for receiving GCN Notification through the Kafka client. These
+        credentials are the same as those generated through the{' '}
+        <Link to="/quickstart">quickstart</Link>. For an example of how to use
+        these, see the <Link to="/docs/client">client docs</Link> page.
+      </div>
       <SegmentedCards>
         {client_credentials.map((credential) => (
           <CredentialCard key={credential.client_id} {...credential} />
