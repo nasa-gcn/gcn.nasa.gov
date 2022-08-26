@@ -20,6 +20,7 @@ import { useState } from 'react'
 import { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
+import { getUser } from '~/routes/__auth/user.server'
 import type {
   EmailNotification,
   EmailNotificationVM,
@@ -60,11 +61,14 @@ export async function action({ request }: DataFunctionArgs) {
 export async function loader({ request }: DataFunctionArgs) {
   const { uuid } = Object.fromEntries(new URL(request.url).searchParams)
   let intent = 'create'
+  const user = await getUser(request)
+  const email = user?.email
+
   let notification: EmailNotificationVM = {
     format: 'text',
     noticeTypes: [],
     name: '',
-    recipient: '',
+    recipient: email ?? '',
     created: 0,
     active: false,
     topics: [],
