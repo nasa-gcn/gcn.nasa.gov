@@ -52,7 +52,7 @@ export default function CredentialCard({
             disabled={disabled}
             modalRef={ref}
             type="button"
-            className="usa-button--secondary margin-right-0"
+            className="usa-button--secondary"
           >
             <Icon.Delete className="bottom-aligned margin-right-05" />
             Delete
@@ -62,6 +62,7 @@ export default function CredentialCard({
             {selectable ? (
               <Button disabled={disabled} type="submit">
                 Select
+                <Icon.ArrowForward className="bottom-aligned margin-left-05" />
               </Button>
             ) : null}
           </Form>
