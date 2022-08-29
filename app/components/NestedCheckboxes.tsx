@@ -56,9 +56,6 @@ function NestedCheckboxNode({
       <Checkbox
         className="display-inline-block"
         {...topLevelNodeProps}
-        label={
-          <span className="padding-right-1">{topLevelNodeProps.label}</span>
-        }
         inputRef={topLevelRef}
         onClick={() => {
           const checked = !topLevelValue
