@@ -71,7 +71,6 @@ function NestedCheckboxNode({
           })
         }}
       />
-
       <ul hidden={!expanded} className="nested-checkboxes__leaf">
         {nodes.map((node, index) => (
           <li role="treeitem" key={index}>
