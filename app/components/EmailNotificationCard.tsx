@@ -1,4 +1,4 @@
-import { useFetcher, Form, Link } from '@remix-run/react'
+import { useFetcher, Link } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import { Modal, ModalFooter, ModalHeading } from '@trussworks/react-uswds'
 import {
@@ -8,7 +8,7 @@ import {
   Icon,
   ModalToggleButton,
 } from '@trussworks/react-uswds'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import type { EmailNotificationVM } from '~/routes/user/email_notifications.server'
 import TimeAgo from './TimeAgo'
 
@@ -20,9 +20,19 @@ export default function EmailNotificationCard({
   format,
   noticeTypes,
 }: EmailNotificationVM) {
-  const ref = useRef<ModalRef>(null)
-  const fetcher = useFetcher()
-  const disabled = fetcher.state !== 'idle'
+  const deleteModalRef = useRef<ModalRef>(null)
+  const testModalRef = useRef<ModalRef>(null)
+  const deleteFetcher = useFetcher()
+  const testFetcher = useFetcher()
+  const disabled =
+    deleteFetcher.state !== 'idle' || testFetcher.state !== 'idle'
+
+  useEffect(() => {
+    if (testFetcher.type === 'done' && testModalRef.current) {
+      testModalRef.current.toggleModal(undefined, true)
+    }
+  }, [testFetcher.type, testModalRef])
+
   return (
     <>
       <Grid key={uuid} row>
@@ -45,14 +55,14 @@ export default function EmailNotificationCard({
           </div>
           <div className="tablet:grid-col flex-auto">
             <ButtonGroup>
-              <Form method="post">
+              <testFetcher.Form method="post">
                 <input type="hidden" name="recipient" value={recipient} />
                 <input type="hidden" name="intent" value="sendTest" />
                 <Button type="submit" outline>
                   <Icon.MailOutline className="bottom-aligned margin-right-05" />
                   Test Message
                 </Button>
-              </Form>
+              </testFetcher.Form>
               <Link
                 to={`edit?uuid=${uuid}`}
                 className="usa-button usa-button--outline"
@@ -63,7 +73,7 @@ export default function EmailNotificationCard({
               <ModalToggleButton
                 opener
                 disabled={disabled}
-                modalRef={ref}
+                modalRef={deleteModalRef}
                 type="button"
                 className="usa-button--secondary margin-right-0"
               >
@@ -81,12 +91,12 @@ export default function EmailNotificationCard({
       </Grid>
       <Modal
         id="modal-delete"
-        ref={ref}
+        ref={deleteModalRef}
         aria-labelledby="modal-delete-heading"
         aria-describedby="modal-delete-description"
         renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
       >
-        <fetcher.Form method="post">
+        <deleteFetcher.Form method="post">
           <input type="hidden" name="uuid" value={uuid} />
           <input type="hidden" name="intent" value="delete" />
           <ModalHeading id="modal-delete-heading">
@@ -100,14 +110,35 @@ export default function EmailNotificationCard({
             <p>This action cannot be undone.</p>
           </div>
           <ModalFooter>
-            <ModalToggleButton modalRef={ref} closer outline>
+            <ModalToggleButton modalRef={deleteModalRef} closer outline>
               Cancel
             </ModalToggleButton>
             <Button data-close-modal type="submit">
               Delete
             </Button>
           </ModalFooter>
-        </fetcher.Form>
+        </deleteFetcher.Form>
+      </Modal>
+      <Modal
+        id="modal-test"
+        ref={testModalRef}
+        aria-labelledby="modal-test-heading"
+        aria-describedby="modal-test-description"
+        renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
+      >
+        <ModalHeading id="modal-test-heading">
+          Test Email Notification
+        </ModalHeading>
+        <div className="usa-prose">
+          <p id="modal-test-description">
+            A test message has been sent to {recipient}.
+          </p>
+        </div>
+        <ModalFooter>
+          <ModalToggleButton data-close-modal modalRef={testModalRef} closer>
+            OK
+          </ModalToggleButton>
+        </ModalFooter>
       </Modal>
     </>
   )
