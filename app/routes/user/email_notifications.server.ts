@@ -253,7 +253,9 @@ export class EmailNotificationVendingMachine {
       if (
         !(
           e instanceof SESv2ServiceException &&
-          e.name === 'InvalidClientTokenId'
+          ['InvalidClientTokenId', 'UnrecognizedClientException'].includes(
+            e.name
+          )
         ) ||
         process.env.NODE_ENV === 'production'
       ) {
