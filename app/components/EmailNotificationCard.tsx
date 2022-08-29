@@ -1,4 +1,4 @@
-import { useFetcher, Form, Link } from '@remix-run/react'
+import { useFetcher, Link } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import { Modal, ModalFooter, ModalHeading } from '@trussworks/react-uswds'
 import {
@@ -23,6 +23,7 @@ export default function EmailNotificationCard({
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
   const disabled = fetcher.state !== 'idle'
+
   return (
     <>
       <Grid key={uuid} row>
@@ -45,14 +46,14 @@ export default function EmailNotificationCard({
           </div>
           <div className="tablet:grid-col flex-auto">
             <ButtonGroup>
-              <Form method="post">
+              <fetcher.Form method="post">
                 <input type="hidden" name="recipient" value={recipient} />
                 <input type="hidden" name="intent" value="sendTest" />
                 <Button type="submit" outline>
                   <Icon.MailOutline className="bottom-aligned margin-right-05" />
                   Test Message
                 </Button>
-              </Form>
+              </fetcher.Form>
               <Link
                 to={`edit?uuid=${uuid}`}
                 className="usa-button usa-button--outline"

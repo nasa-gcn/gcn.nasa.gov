@@ -45,9 +45,9 @@ export class EmailNotificationVendingMachine {
   static async create(request: Request) {
     const user = await getUser(request)
     let domain = new URL(request.url).hostname
-    // If we are in local development, assume test.gcn.nasa.gov
+    // If we are in local development, assume dev.gcn.nasa.gov
     if (!domain.endsWith('gcn.nasa.gov')) {
-      domain = 'test.gcn.nasa.gov'
+      domain = 'dev.gcn.nasa.gov'
     }
 
     if (!user) throw new Response('not signed in', { status: 403 })

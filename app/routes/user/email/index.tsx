@@ -8,8 +8,9 @@
 
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
-import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
-import { Alert, Icon } from '@trussworks/react-uswds'
+import { Link, useFetchers, useLoaderData } from '@remix-run/react'
+import { Alert, Button, Icon } from '@trussworks/react-uswds'
+import { useEffect, useState } from 'react'
 import EmailNotificationCard from '~/components/EmailNotificationCard'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
@@ -27,12 +28,11 @@ export async function action({ request }: DataFunctionArgs) {
       }
     case 'sendTest':
       const recipient = getFormDataString(data, 'recipient')
-      var result
       if (recipient) {
         const machine = await EmailNotificationVendingMachine.create(request)
         await machine.sendTestEmail(recipient)
       }
-      return result
+      return 'success'
   }
   return redirect('/user/email')
 }
@@ -45,15 +45,49 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export default function Index() {
   const data = useLoaderData<typeof loader>()
-  const actionData = useActionData<typeof action>()
+  const fetchers = useFetchers()
+  const [showAlert, setShowAlert] = useState(false)
+
+  useEffect(() => {
+    const myFetchers = new Map()
+    for (const f of fetchers) {
+      if (f.submission && f.submission.formData.has('intent')) {
+        if (f.submission.formData.get('intent') == 'sendTest') {
+          myFetchers.set('showAlert', f.data)
+        }
+      }
+    }
+    if (myFetchers.has('showAlert')) {
+      if (myFetchers.get('showAlert') == 'success') {
+        setShowAlert(true)
+      }
+    }
+  }, [fetchers])
+
+  function dismissAlert() {
+    setShowAlert(false)
+  }
+
   return (
     <>
-      {actionData ? (
+      {showAlert ? (
         <Alert
           type="success"
           slim
           className="page-alert"
-          heading="A test message has been sent, please check your inbox"
+          heading={
+            <>
+              A test message has been sent, please check your inbox
+              <Button
+                unstyled
+                type="button"
+                className="padding-left-1"
+                onClick={dismissAlert}
+              >
+                <Icon.Close />
+              </Button>
+            </>
+          }
           headingLevel="h4"
         />
       ) : null}
