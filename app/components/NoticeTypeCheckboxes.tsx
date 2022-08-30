@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import { useState } from 'react'
+import { triggerRate } from '~/lib/prometheus'
 import { NestedCheckboxes } from './NestedCheckboxes'
 
 const NoticeTypes = {
@@ -155,32 +157,121 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
   Other: undefined,
 }
 
-interface NoticeTypeCheckboxeProps {
+type DataRow = {
+  topic: string
+  latestRate: number
+}
+
+type FormattedData = {
+  text: DataRow[]
+  binary: DataRow[]
+  voevent: DataRow[]
+}
+
+interface NoticeTypeCheckboxProps {
   defaultSelected?: string[]
+  selectedFormat?: 'binary' | 'text' | 'voevent'
+  validationFunction?: (arg: any) => void
 }
 
 export function NoticeTypeCheckboxes({
   defaultSelected,
-}: NoticeTypeCheckboxeProps) {
-  return (
-    <NestedCheckboxes
-      nodes={Object.entries(NoticeTypes).map(([mission, noticeTypes]) => ({
-        id: mission,
-        label: mission,
-        name: '',
-        link: NoticeTypeLinks[mission]
-          ? '/missions/' + NoticeTypeLinks[mission]
-          : undefined,
-        nodes: noticeTypes.map((noticeType) => ({
-          id: noticeType,
-          label: noticeType,
-          name: noticeType,
-          className: 'sub-option',
-          defaultChecked: defaultSelected
-            ? defaultSelected.indexOf(noticeType) > -1
-            : false,
-        })),
-      }))}
-    />
+  selectedFormat = 'text',
+  validationFunction,
+}: NoticeTypeCheckboxProps) {
+  const [userSelected, setUserSelected] = useState<{ [key: string]: boolean }>(
+    {}
   )
+  const [selectedCounter, setSelectedCounter] = useState(0)
+  const [alertEstimate, setAlertEstimate] = useState(0)
+
+  const metrics: FormattedData = {
+    text: getMetricsByFormat('.text.'),
+    binary: getMetricsByFormat('.binary.'),
+    voevent: getMetricsByFormat('.voevent.'),
+  }
+
+  const counterfunction = (childRef: HTMLInputElement) => {
+    userSelected[childRef.name] = childRef.checked
+    setUserSelected(userSelected)
+
+    let selectedTotal = 0
+    for (const key of Object.keys(userSelected)) {
+      if (userSelected[key]) {
+        selectedTotal++
+      }
+    }
+    setSelectedCounter(selectedTotal)
+
+    if (metrics) {
+      setAlertEstimate(getSum(metrics))
+    }
+
+    if (validationFunction) {
+      validationFunction(selectedCounter)
+    }
+  }
+
+  function getSum(metrics: FormattedData) {
+    return metrics[selectedFormat]
+      .filter((item) => userSelected[item.topic])
+      .map((item) => item.latestRate)
+      .reduce((partialSum, a) => partialSum + a, 0)
+  }
+
+  return (
+    <>
+      <NestedCheckboxes
+        nodes={Object.entries(NoticeTypes).map(([mission, noticeTypes]) => ({
+          id: mission,
+          label: mission,
+          name: '',
+          link: NoticeTypeLinks[mission]
+            ? '/missions/' + NoticeTypeLinks[mission]
+            : undefined,
+          nodes: noticeTypes.map((noticeType) => ({
+            id: noticeType,
+            label: (
+              <>
+                {noticeType}
+                {metrics ? (
+                  <div className="padding-left-1 display-inline">
+                    <small className="text-base-light">
+                      ~{' '}
+                      {metrics[selectedFormat].find(
+                        (item) => item.topic == noticeType
+                      )?.latestRate ?? 0}{' '}
+                      alerts / day
+                    </small>
+                  </div>
+                ) : null}
+              </>
+            ),
+            name: noticeType,
+            className: 'sub-option',
+            defaultChecked: defaultSelected
+              ? defaultSelected.indexOf(noticeType) > -1
+              : false,
+          })),
+        }))}
+        childoncheckhandler={counterfunction}
+      />
+      <div className="text-bold text-ink">
+        {selectedCounter} selected alert{selectedCounter == 1 ? '' : 's'} for an
+        estimated total of {alertEstimate} alert
+        {alertEstimate == 1 ? '' : 's'} per day
+      </div>
+    </>
+  )
+}
+function getMetricsByFormat(format: string): DataRow[] {
+  return triggerRate.result
+    .filter(
+      (item: { metric: { topic: string } }) =>
+        item.metric.topic.indexOf(format) != -1
+    )
+    .map((item: { metric: { topic: any }; values: string | any[] }) => ({
+      topic: item.metric.topic.split('.')[3],
+      latestRate: Math.ceil(item.values[item.values.length - 1][1]),
+    }))
 }

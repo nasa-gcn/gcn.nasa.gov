@@ -88,6 +88,7 @@ export default function Edit() {
   const [nameValid, setNameValid] = useState(defaultNameValid)
   const defaultRecipientValid = !!notification.recipient
   const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
+  const [alertsValid, setAlertsValid] = useState(false)
   return (
     <div className="tablet:grid-col-12">
       <Form method="post">
@@ -145,6 +146,7 @@ export default function Edit() {
         <Label htmlFor="noticeTypes">Types</Label>
         <NoticeTypeCheckboxes
           defaultSelected={notification.noticeTypes}
+          validationFunction={setAlertsValid}
         ></NoticeTypeCheckboxes>
         <ButtonGroup>
           <Link
@@ -154,7 +156,10 @@ export default function Edit() {
           >
             Cancel
           </Link>
-          <Button disabled={!(nameValid && recipientValid)} type="submit">
+          <Button
+            disabled={!(nameValid && recipientValid && alertsValid)}
+            type="submit"
+          >
             Save
           </Button>
         </ButtonGroup>
