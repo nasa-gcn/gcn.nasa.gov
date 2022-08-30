@@ -1,4 +1,4 @@
-import { useFetcher, Link } from '@remix-run/react'
+import { useFetcher, Form } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import { Modal, ModalFooter, ModalHeading } from '@trussworks/react-uswds'
 import {
@@ -24,8 +24,7 @@ export default function EmailNotificationCard({
   const testModalRef = useRef<ModalRef>(null)
   const deleteFetcher = useFetcher()
   const testFetcher = useFetcher()
-  const disabled =
-    deleteFetcher.state !== 'idle' || testFetcher.state !== 'idle'
+  const disabled = deleteFetcher.state !== 'idle'
 
   useEffect(() => {
     if (testFetcher.type === 'done' && testModalRef.current) {
@@ -35,7 +34,7 @@ export default function EmailNotificationCard({
 
   return (
     <>
-      <Grid key={uuid} row>
+      <Grid key={uuid} row style={disabled ? { opacity: '50%' } : undefined}>
         <Grid row className="full-width-span">
           <div className="tablet:grid-col flex-fill">
             <div className="segmented-card-headline">
@@ -58,18 +57,18 @@ export default function EmailNotificationCard({
               <testFetcher.Form method="post">
                 <input type="hidden" name="recipient" value={recipient} />
                 <input type="hidden" name="intent" value="sendTest" />
-                <Button type="submit" outline>
+                <Button type="submit" outline disabled={disabled}>
                   <Icon.MailOutline className="bottom-aligned margin-right-05" />
                   Test Message
                 </Button>
               </testFetcher.Form>
-              <Link
-                to={`edit?uuid=${uuid}`}
-                className="usa-button usa-button--outline"
-              >
-                <Icon.Edit className="bottom-aligned margin-right-05" />
-                Edit
-              </Link>
+              <Form method="get" action="edit">
+                <input type="hidden" name="uuid" value={uuid} />
+                <Button type="submit" outline disabled={disabled}>
+                  <Icon.Edit className="bottom-aligned margin-right-05" />
+                  Edit
+                </Button>
+              </Form>
               <ModalToggleButton
                 opener
                 disabled={disabled}
