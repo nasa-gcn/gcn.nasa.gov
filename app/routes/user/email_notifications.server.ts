@@ -15,6 +15,7 @@ import {
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
 import crypto from 'crypto'
+import { validate } from 'email-validator'
 
 // db model
 export type EmailNotification = {
@@ -54,14 +55,20 @@ export class EmailNotificationVendingMachine {
     return new this(user.sub, domain)
   }
 
-  // Create
-  async createEmailNotification(notification: EmailNotification) {
+  #validateEmailNotification(notification: EmailNotification) {
     if (!notification.name)
       throw new Response('name must not be empty', { status: 400 })
     if (!notification.recipient)
       throw new Response('recipient must not be empty', { status: 400 })
     if (!notification.topics)
       throw new Response('topics must not be empty', { status: 400 })
+    if (!validate(notification.recipient))
+      throw new Response('email address is invalid', { status: 400 })
+  }
+
+  // Create
+  async createEmailNotification(notification: EmailNotification) {
+    this.#validateEmailNotification(notification)
 
     const created = Date.now()
     const uuid = crypto.randomUUID()
@@ -147,7 +154,10 @@ export class EmailNotificationVendingMachine {
 
   // Update
   async updateEmailNotification(email_notification: EmailNotification) {
-    if (!email_notification.uuid) return null
+    if (!email_notification.uuid)
+      throw new Response('uuid must not be empty', { status: 400 })
+    this.#validateEmailNotification(email_notification)
+
     const db = await tables()
     await db.email_notification.update({
       Key: { sub: this.#sub, uuid: email_notification.uuid },
