@@ -143,7 +143,7 @@ const NoticeTypes = {
 }
 const NoticeTypeLinks: { [key: string]: string | undefined } = {
   Agile: 'agile',
-  AMON: undefined,
+  AMON: 'icecube',
   Calet: 'calet',
   Fermi: 'fermi',
   IceCube: 'icecube',
