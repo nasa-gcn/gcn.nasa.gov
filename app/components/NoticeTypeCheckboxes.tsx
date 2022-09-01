@@ -24,7 +24,6 @@ const NoticeTypes = {
     'AMON_ICECUBE_HESE',
     'AMON_NU_EM_COINC',
   ],
-  BeppoSAX: ['SAX_NFI_ALERT', 'SAX_NFI_SRC', 'SAX_WFC_ALERT', 'SAX_WFC_SRC'],
   Calet: ['CALET_GBM_FLT_LC', 'CALET_GBM_GND_LC'],
   Fermi: [
     'FERMI_GBM_ALERT',
@@ -45,13 +44,6 @@ const NoticeTypes = {
     'FERMI_LAT_TRANS',
     'FERMI_POINTDIR',
     'FERMI_SC_SLEW',
-  ],
-  'HETE-2': [
-    'HETE_ALERT_SRC',
-    'HETE_FINAL_SRC',
-    'HETE_GNDANA_SRC',
-    'HETE_TEST',
-    'HETE_UPDATE_SRC',
   ],
   IceCube: [
     'ICECUBE_ASTROTRACK_BRONZE',
@@ -77,13 +69,6 @@ const NoticeTypes = {
     'LVC_UPDATE',
   ],
   MAXI: ['MAXI_KNOWN', 'MAXI_TEST', 'MAXI_UNKNOWN'],
-  RXTE: [
-    'XTE_ASM_ALERT',
-    'XTE_ASM_SRC',
-    'XTE_ASM_TRANS',
-    'XTE_PCA_ALERT',
-    'XTE_PCA_SRC',
-  ],
   Swift: [
     'SWIFT_ACTUAL_POINTDIR',
     'SWIFT_BAT_ALARM_LONG',
@@ -156,6 +141,19 @@ const NoticeTypes = {
     'TEST_COORDS',
   ],
 }
+const NoticeTypeLinks: { [key: string]: string | undefined } = {
+  Agile: 'agile',
+  AMON: 'icecube',
+  Calet: 'calet',
+  Fermi: 'fermi',
+  IceCube: 'icecube',
+  INTEGRAL: 'integral',
+  IPN: '',
+  LVC: 'lvk',
+  MAXI: 'maxi',
+  Swift: 'swift',
+  Other: undefined,
+}
 
 interface NoticeTypeCheckboxeProps {
   defaultSelected?: string[]
@@ -170,6 +168,9 @@ export function NoticeTypeCheckboxes({
         id: mission,
         label: mission,
         name: '',
+        link: NoticeTypeLinks[mission]
+          ? '/missions/' + NoticeTypeLinks[mission]
+          : undefined,
         nodes: noticeTypes.map((noticeType) => ({
           id: noticeType,
           label: noticeType,
