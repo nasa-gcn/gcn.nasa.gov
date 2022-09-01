@@ -64,7 +64,16 @@ function NestedCheckboxNode({
             <span className="padding-right-1">{topLevelNodeProps.label}</span>
             {link ? (
               <>
-                (<Link to={link}>Details</Link>)
+                (
+                <Link
+                  to={link}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                >
+                  Details
+                </Link>
+                )
               </>
             ) : null}
           </>
