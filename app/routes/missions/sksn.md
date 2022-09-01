@@ -14,7 +14,7 @@ meta:
 
 **Start:** 1996
 
-**Upgrade:** 2018 to Hyper-Kamiokande
+**Upgrade:** 2028 to Hyper-Kamiokande
 
 **Data Archives:**
 https://www-sk.icrr.u-tokyo.ac.jp/sk/publications/result-e.html
