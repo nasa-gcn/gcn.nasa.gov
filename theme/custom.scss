@@ -7,7 +7,7 @@
  */
 
 @import 'styles';
-@import '_uswds-theme-color';
+
 /*
  * Size and position the NASA meatball logo in the header. 
  */
@@ -520,24 +520,4 @@ a {
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
-}
-
-.pill-undefined {
-  border-color: color($theme-color-disabled);
-  background-color: color($theme-color-disabled-light);
-}
-
-.pill-low-rate {
-  border-color: color($theme-color-success);
-  background-color: color($theme-color-success-light);
-}
-
-.pill-med-rate {
-  border-color: color($theme-color-warning);
-  background-color: color($theme-color-warning-lighter);
-}
-
-.pill-high-rate {
-  border-color: color($theme-color-error);
-  background-color: color($theme-color-error-light);
 }
