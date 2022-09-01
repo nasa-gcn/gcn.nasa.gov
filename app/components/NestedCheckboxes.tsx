@@ -15,6 +15,7 @@ type CheckboxProps = CheckboxArgs[0]
 interface NestedCheckboxProps extends CheckboxProps {
   nodes: CheckboxProps[]
   link?: string
+  childoncheckhandler?: (arg: HTMLInputElement) => void
 }
 
 function allTrue(values: boolean[]) {
@@ -28,6 +29,7 @@ function allSame([first, ...rest]: any[]) {
 function NestedCheckboxNode({
   nodes,
   link,
+  childoncheckhandler = () => null,
   ...topLevelNodeProps
 }: NestedCheckboxProps) {
   const [expanded, setExpanded] = useState(false)
@@ -48,7 +50,14 @@ function NestedCheckboxNode({
   }
 
   useEffect(updateParent)
-
+  useEffect(() => {
+    for (const ref in childRefs.current) {
+      let childRef = childRefs.current[ref]
+      if (childRef != null) {
+        childoncheckhandler(childRef)
+      }
+    }
+  })
   return (
     <li
       role="treeitem"
@@ -105,11 +114,23 @@ function NestedCheckboxNode({
   )
 }
 
-export function NestedCheckboxes({ nodes }: { nodes: NestedCheckboxProps[] }) {
+interface NestedCheckboxesProps {
+  nodes: NestedCheckboxProps[]
+  childoncheckhandler?: (arg: HTMLInputElement) => void
+}
+
+export function NestedCheckboxes({
+  nodes,
+  childoncheckhandler,
+}: NestedCheckboxesProps) {
   return (
     <ul role="tree" aria-multiselectable>
       {nodes.map((node, index) => (
-        <NestedCheckboxNode key={index} {...node} />
+        <NestedCheckboxNode
+          key={index}
+          {...node}
+          childoncheckhandler={childoncheckhandler}
+        />
       ))}
     </ul>
   )
