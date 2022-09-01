@@ -9,13 +9,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import {
-  Button,
-  ButtonGroup,
-  Checkbox,
-  Label,
-  TextInput,
-} from '@trussworks/react-uswds'
+import { Button, ButtonGroup, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
@@ -29,7 +23,7 @@ import { EmailNotificationVendingMachine } from '../email_notifications.server'
 
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
-  const { uuid, intent, name, recipient, noticeFormat, active, ...rest } =
+  const { uuid, intent, name, recipient, noticeFormat, ...rest } =
     Object.fromEntries(data)
   const noticeTypes = Object.keys(rest)
   const topics = noticeTypes.map((noticeType) =>
@@ -39,7 +33,6 @@ export async function action({ request }: DataFunctionArgs) {
     name: name.toString(),
     recipient: recipient.toString(),
     created: 0,
-    active: active?.toString() == 'on',
     topics: topics,
     uuid: uuid?.toString(),
   }
@@ -70,7 +63,6 @@ export async function loader({ request }: DataFunctionArgs) {
     name: '',
     recipient: email ?? '',
     created: 0,
-    active: false,
     topics: [],
   }
   if (uuid != undefined) {
@@ -94,19 +86,6 @@ export default function Edit() {
       <Form method="post">
         <input type="hidden" name="uuid" value={notification.uuid} />
         <input type="hidden" name="intent" value={intent} />
-        {intent == 'update' ? (
-          <>
-            <Label htmlFor="active">Status</Label>
-            <Checkbox
-              id="active"
-              name="active"
-              label="Set Active"
-              defaultChecked={notification.active}
-            />
-          </>
-        ) : (
-          <input type="hidden" name="active" value="on" defaultChecked />
-        )}
         <Label htmlFor="name">
           Name
           <abbr title="required" className="usa-label--required">

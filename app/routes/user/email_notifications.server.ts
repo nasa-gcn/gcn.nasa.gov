@@ -22,7 +22,6 @@ export type EmailNotification = {
   name: string
   recipient: string
   created: number
-  active: boolean
   uuid?: string
   topics: string[]
 }
@@ -80,7 +79,6 @@ export class EmailNotificationVendingMachine {
       name: notification.name,
       created,
       topics: notification.topics,
-      active: true,
       recipient: notification.recipient,
     })
     const subscriptionPromises = notification.topics.map((topic) =>
@@ -106,13 +104,11 @@ export class EmailNotificationVendingMachine {
         '#created': 'created',
         '#topics': 'topics',
         '#recipient': 'recipient',
-        '#active': 'active',
       },
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression:
-        '#uuid, #created, #name, #topics, #recipient, #active',
+      ProjectionExpression: '#uuid, #created, #name, #topics, #recipient',
     })
     const items = results.Items as EmailNotification[]
     const emailNotifications: EmailNotificationVM[] = items.map(
@@ -124,7 +120,6 @@ export class EmailNotificationVendingMachine {
         name: notification.name,
         recipient: notification.recipient,
         created: notification.created,
-        active: notification.active,
         topics: notification.topics,
         uuid: notification.uuid,
       })
@@ -162,18 +157,16 @@ export class EmailNotificationVendingMachine {
     await db.email_notification.update({
       Key: { sub: this.#sub, uuid: email_notification.uuid },
       UpdateExpression:
-        'set #name = :name, #recipient = :recipient, #topics = :topics, #active = :active ',
+        'set #name = :name, #recipient = :recipient, #topics = :topics',
       ExpressionAttributeNames: {
         '#name': 'name',
         '#topics': 'topics',
         '#recipient': 'recipient',
-        '#active': 'active',
       },
       ExpressionAttributeValues: {
         ':name': email_notification.name,
         ':recipient': email_notification.recipient,
         ':topics': email_notification.topics,
-        ':active': email_notification.active,
       },
     })
 
@@ -195,17 +188,15 @@ export class EmailNotificationVendingMachine {
         })
       })
     )
-    if (email_notification.active) {
-      await Promise.all(
-        email_notification.topics.map((topic) =>
-          db.email_notification_subscription.put({
-            uuid: email_notification.uuid,
-            topic,
-            recipient: email_notification.recipient,
-          })
-        )
+    await Promise.all(
+      email_notification.topics.map((topic) =>
+        db.email_notification_subscription.put({
+          uuid: email_notification.uuid,
+          topic,
+          recipient: email_notification.recipient,
+        })
       )
-    }
+    )
   }
 
   // Delete
