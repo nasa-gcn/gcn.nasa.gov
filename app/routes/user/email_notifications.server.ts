@@ -7,15 +7,21 @@
  */
 
 import { tables } from '@architect/functions'
+import {
+  SendEmailCommand,
+  SESv2Client,
+  SESv2ServiceException,
+} from '@aws-sdk/client-sesv2'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
+import crypto from 'crypto'
+import { validate } from 'email-validator'
 
 // db model
 export type EmailNotification = {
   name: string
   recipient: string
   created: number
-  active: boolean
   uuid?: string
   topics: string[]
 }
@@ -28,26 +34,40 @@ export interface EmailNotificationVM extends EmailNotification {
 
 export class EmailNotificationVendingMachine {
   #sub: string
+  #domain: string
 
-  private constructor(sub: string) {
+  private constructor(sub: string, domain: string) {
     this.#sub = sub
+    this.#domain = domain
   }
 
   // Init machine
   static async create(request: Request) {
     const user = await getUser(request)
+    let domain = new URL(request.url).hostname
+    // If we are in local development, assume test.gcn.nasa.gov
+    if (!domain.endsWith('gcn.nasa.gov')) {
+      domain = 'test.gcn.nasa.gov'
+    }
+
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub)
+    return new this(user.sub, domain)
   }
 
-  // Create
-  async createEmailNotification(notification: EmailNotification) {
+  #validateEmailNotification(notification: EmailNotification) {
     if (!notification.name)
       throw new Response('name must not be empty', { status: 400 })
     if (!notification.recipient)
       throw new Response('recipient must not be empty', { status: 400 })
     if (!notification.topics)
       throw new Response('topics must not be empty', { status: 400 })
+    if (!validate(notification.recipient))
+      throw new Response('email address is invalid', { status: 400 })
+  }
+
+  // Create
+  async createEmailNotification(notification: EmailNotification) {
+    this.#validateEmailNotification(notification)
 
     const created = Date.now()
     const uuid = crypto.randomUUID()
@@ -59,7 +79,6 @@ export class EmailNotificationVendingMachine {
       name: notification.name,
       created,
       topics: notification.topics,
-      active: true,
       recipient: notification.recipient,
     })
     const subscriptionPromises = notification.topics.map((topic) =>
@@ -85,13 +104,11 @@ export class EmailNotificationVendingMachine {
         '#created': 'created',
         '#topics': 'topics',
         '#recipient': 'recipient',
-        '#active': 'active',
       },
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression:
-        '#uuid, #created, #name, #topics, #recipient, #active',
+      ProjectionExpression: '#uuid, #created, #name, #topics, #recipient',
     })
     const items = results.Items as EmailNotification[]
     const emailNotifications: EmailNotificationVM[] = items.map(
@@ -103,8 +120,8 @@ export class EmailNotificationVendingMachine {
         name: notification.name,
         recipient: notification.recipient,
         created: notification.created,
-        active: notification.active,
         topics: notification.topics,
+        uuid: notification.uuid,
       })
     )
 
@@ -132,23 +149,24 @@ export class EmailNotificationVendingMachine {
 
   // Update
   async updateEmailNotification(email_notification: EmailNotification) {
-    if (!email_notification.uuid) return null
+    if (!email_notification.uuid)
+      throw new Response('uuid must not be empty', { status: 400 })
+    this.#validateEmailNotification(email_notification)
+
     const db = await tables()
     await db.email_notification.update({
       Key: { sub: this.#sub, uuid: email_notification.uuid },
       UpdateExpression:
-        'set #name = :name, #recipient = :recipient, #topics = :topics, #active = :active ',
+        'set #name = :name, #recipient = :recipient, #topics = :topics',
       ExpressionAttributeNames: {
         '#name': 'name',
         '#topics': 'topics',
         '#recipient': 'recipient',
-        '#active': 'active',
       },
       ExpressionAttributeValues: {
         ':name': email_notification.name,
         ':recipient': email_notification.recipient,
         ':topics': email_notification.topics,
-        ':active': email_notification.active,
       },
     })
 
@@ -170,17 +188,15 @@ export class EmailNotificationVendingMachine {
         })
       })
     )
-    if (email_notification.active) {
-      await Promise.all(
-        email_notification.topics.map((topic) =>
-          db.email_notification_subscription.put({
-            uuid: email_notification.uuid,
-            topic,
-            recipient: email_notification.recipient,
-          })
-        )
+    await Promise.all(
+      email_notification.topics.map((topic) =>
+        db.email_notification_subscription.put({
+          uuid: email_notification.uuid,
+          topic,
+          recipient: email_notification.recipient,
+        })
       )
-    }
+    )
   }
 
   // Delete
@@ -209,5 +225,47 @@ export class EmailNotificationVendingMachine {
         })
       )
     )
+  }
+
+  // Send Test Email
+  async sendTestEmail(destination: string) {
+    const client = new SESv2Client({})
+
+    const command = new SendEmailCommand({
+      FromEmailAddress: `GCN Notices <no-reply@${this.#domain}>`,
+      Destination: {
+        ToAddresses: [destination],
+      },
+      Content: {
+        Simple: {
+          Subject: { Data: 'GCN Notices test' },
+          Body: {
+            Text: {
+              Data: 'This is a test message from the GCN Notices.',
+            },
+          },
+        },
+      },
+    })
+
+    try {
+      await client.send(command)
+    } catch (e) {
+      if (
+        !(
+          e instanceof SESv2ServiceException &&
+          ['InvalidClientTokenId', 'UnrecognizedClientException'].includes(
+            e.name
+          )
+        ) ||
+        process.env.NODE_ENV === 'production'
+      ) {
+        throw e
+      } else {
+        console.warn(
+          `SES threw ${e.name}. This would be an error in production.`
+        )
+      }
+    }
   }
 }

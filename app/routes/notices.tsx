@@ -220,12 +220,12 @@ export default function Notices() {
           Monitoring of known sources by the BAT instrument on Swift.
         </NoticeCard>
         <NoticeCard
-          name="Swift Counterpart"
+          name="Counterpart"
           href="https://gcn.gsfc.nasa.gov/counterpart_tbl.html"
-          tags={['x-ray', 'gw']}
+          tags={['gamma', 'gw', 'x-ray', 'uv', 'optical']}
           selectedTags={tagNames}
         >
-          Swift counterpart candidates of LVK events.
+          Counterpart candidates of GRB or GW events.
         </NoticeCard>
         <NoticeCard
           name="INTEGRAL GRBs"

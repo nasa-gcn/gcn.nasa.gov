@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import { Link } from '@remix-run/react'
 import { Checkbox } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
 
@@ -13,6 +14,8 @@ type CheckboxArgs = Parameters<typeof Checkbox>
 type CheckboxProps = CheckboxArgs[0]
 interface NestedCheckboxProps extends CheckboxProps {
   nodes: CheckboxProps[]
+  link?: string
+  childoncheckhandler?: (arg: HTMLInputElement) => void
 }
 
 function allTrue(values: boolean[]) {
@@ -25,6 +28,8 @@ function allSame([first, ...rest]: any[]) {
 
 function NestedCheckboxNode({
   nodes,
+  link,
+  childoncheckhandler = () => null,
   ...topLevelNodeProps
 }: NestedCheckboxProps) {
   const [expanded, setExpanded] = useState(false)
@@ -34,7 +39,7 @@ function NestedCheckboxNode({
   )
   const [topLevelValue, setTopLevelValue] = useState(false)
   const [childValues, setChildValues] = useState(
-    new Array<boolean>(nodes.length).fill(false)
+    nodes.map((node) => node.defaultChecked || false)
   )
 
   function updateParent() {
@@ -45,7 +50,14 @@ function NestedCheckboxNode({
   }
 
   useEffect(updateParent)
-
+  useEffect(() => {
+    for (const ref in childRefs.current) {
+      let childRef = childRefs.current[ref]
+      if (childRef != null) {
+        childoncheckhandler(childRef)
+      }
+    }
+  })
   return (
     <li
       role="treeitem"
@@ -56,6 +68,25 @@ function NestedCheckboxNode({
       <Checkbox
         className="display-inline-block"
         {...topLevelNodeProps}
+        label={
+          <>
+            <span className="padding-right-1">{topLevelNodeProps.label}</span>
+            {link ? (
+              <>
+                (
+                <Link
+                  to={link}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                  }}
+                >
+                  Details
+                </Link>
+                )
+              </>
+            ) : null}
+          </>
+        }
         inputRef={topLevelRef}
         onClick={() => {
           const checked = !topLevelValue
@@ -92,11 +123,23 @@ function NestedCheckboxNode({
   )
 }
 
-export function NestedCheckboxes({ nodes }: { nodes: NestedCheckboxProps[] }) {
+interface NestedCheckboxesProps {
+  nodes: NestedCheckboxProps[]
+  childoncheckhandler?: (arg: HTMLInputElement) => void
+}
+
+export function NestedCheckboxes({
+  nodes,
+  childoncheckhandler,
+}: NestedCheckboxesProps) {
   return (
     <ul role="tree" aria-multiselectable>
       {nodes.map((node, index) => (
-        <NestedCheckboxNode key={index} {...node} />
+        <NestedCheckboxNode
+          key={index}
+          {...node}
+          childoncheckhandler={childoncheckhandler}
+        />
       ))}
     </ul>
   )

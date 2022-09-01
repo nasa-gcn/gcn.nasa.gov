@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import Tabs from '~/components/Tabs'
+import { Tab, Tabs } from '~/components/Tabs'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Form, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
@@ -42,32 +42,22 @@ export default function Code() {
 
   const listTopics = false
 
-  const tabs = [
-    {
-      label: 'Python',
-      Component: ClientSampleCode({
-        clientId,
-        clientSecret,
-        topics,
-        listTopics,
-        language: 'py',
-      }),
-    },
-    {
-      label: 'JavaScript',
-      Component: ClientSampleCode({
-        clientId,
-        clientSecret,
-        topics,
-        listTopics,
-        language: 'js',
-      }),
-    },
-  ]
-
   return (
     <>
-      <Tabs tabs={tabs} />
+      <Tabs>
+        <Tab label="Python">
+          <ClientSampleCode
+            {...{ clientId, clientSecret, topics, listTopics }}
+            language="py"
+          />
+        </Tab>
+        <Tab label="JavaScript">
+          <ClientSampleCode
+            {...{ clientId, clientSecret, topics, listTopics }}
+            language="js"
+          />
+        </Tab>
+      </Tabs>
       <Form method="get" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
         <Button type="submit" className="usa-button--outline">
