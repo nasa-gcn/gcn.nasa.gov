@@ -6,7 +6,8 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { DataFunctionArgs} from '@remix-run/node';
+import { json } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Label, TextInput } from '@trussworks/react-uswds'
@@ -21,6 +22,20 @@ import type {
 } from '../email_notifications.server'
 import { EmailNotificationVendingMachine } from '../email_notifications.server'
 
+type ActionData = {
+  formError?: string
+  fieldErrors?: {
+    name: string | undefined
+    content: string | undefined
+  }
+  fields?: {
+    name: string
+    content: string
+  }
+}
+
+const badRequest = (data: ActionData) => json(data, { status: 400 })
+
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const { uuid, intent, name, recipient, noticeFormat, ...rest } =
@@ -29,6 +44,13 @@ export async function action({ request }: DataFunctionArgs) {
   const topics = noticeTypes.map((noticeType) =>
     formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
   )
+
+  if (topics.length == 0) {
+    return badRequest({
+      formError: 'Topics are required',
+    })
+  }
+
   const emailNotification: EmailNotification = {
     name: name.toString(),
     recipient: recipient.toString(),
