@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import type { DataFunctionArgs} from '@remix-run/node';
+import type { DataFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
@@ -24,14 +24,6 @@ import { EmailNotificationVendingMachine } from '../email_notifications.server'
 
 type ActionData = {
   formError?: string
-  fieldErrors?: {
-    name: string | undefined
-    content: string | undefined
-  }
-  fields?: {
-    name: string
-    content: string
-  }
 }
 
 const badRequest = (data: ActionData) => json(data, { status: 400 })
