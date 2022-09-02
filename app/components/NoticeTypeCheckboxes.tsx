@@ -10,6 +10,29 @@ import { useState } from 'react'
 import { triggerRate } from '~/lib/prometheus'
 import { NestedCheckboxes } from './NestedCheckboxes'
 
+function humanizedCount(count: number, singular: string, plural?: string) {
+  const noun = count === 1 ? singular : plural ?? `${singular}s`
+  return `${count} ${noun}`
+}
+
+function humanizedRate(rate: number, singular: string, plural?: string) {
+  let unit = 'day'
+  if (rate) {
+    for (const { factor, unit: proposedUnit } of [
+      { factor: 1, unit: 'day' },
+      { factor: 7, unit: 'week' },
+      { factor: 4, unit: 'month' },
+      { factor: 12, unit: 'year' },
+    ]) {
+      rate *= factor
+      console.log('rate', rate)
+      unit = proposedUnit
+      if (rate > 0.5) break
+    }
+  }
+  return `${humanizedCount(Math.round(rate), singular, plural)} per ${unit}`
+}
+
 const NoticeTypes = {
   Agile: [
     'AGILE_GRB_GROUND',
@@ -214,8 +237,8 @@ export function NoticeTypeCheckboxes({
 
   function getSum(metrics: FormattedData) {
     return metrics[selectedFormat]
-      .filter((item) => userSelected[item.topic])
-      .map((item) => item.latestRate)
+      .filter(({ topic }) => userSelected[topic])
+      .map(({ latestRate }) => latestRate)
       .reduce((partialSum, a) => partialSum + a, 0)
   }
 
@@ -237,11 +260,12 @@ export function NoticeTypeCheckboxes({
                 {metrics ? (
                   <div className="padding-left-1 display-inline">
                     <small className="text-base-light">
-                      ~{' '}
-                      {metrics[selectedFormat].find(
-                        (item) => item.topic == noticeType
-                      )?.latestRate ?? 0}{' '}
-                      alerts / day
+                      {humanizedRate(
+                        metrics[selectedFormat].find(
+                          ({ topic }) => topic == noticeType
+                        )?.latestRate ?? 0,
+                        'alert'
+                      )}
                     </small>
                   </div>
                 ) : null}
@@ -257,9 +281,8 @@ export function NoticeTypeCheckboxes({
         childoncheckhandler={counterfunction}
       />
       <div className="text-bold text-ink">
-        {selectedCounter} selected alert{selectedCounter == 1 ? '' : 's'} for an
-        estimated total of {alertEstimate} alert
-        {alertEstimate == 1 ? '' : 's'} per day
+        {humanizedCount(selectedCounter, 'notice type')} selected for about{' '}
+        {humanizedRate(alertEstimate, 'alert')}
       </div>
     </>
   )
@@ -272,6 +295,6 @@ function getMetricsByFormat(format: string): DataRow[] {
     )
     .map((item: { metric: { topic: any }; values: string | any[] }) => ({
       topic: item.metric.topic.split('.')[3],
-      latestRate: Math.ceil(item.values[item.values.length - 1][1]),
+      latestRate: parseFloat(item.values[item.values.length - 1][1]),
     }))
 }
