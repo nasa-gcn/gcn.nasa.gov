@@ -63,6 +63,13 @@ export default function Index() {
         "Test Message" button to send a test email to the listed recipient, to
         verify that the emails will make it into your inbox.
       </p>
+      <p>
+        To unsubscribe from your GCN Classic Notice subscriptions, please{' '}
+        <a href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic">
+          send us a message
+        </a>
+        .
+      </p>
       {data ? (
         <SegmentedCards>
           {data.map((alert) => (
