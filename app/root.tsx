@@ -120,7 +120,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         <div className="bg-gold padding-x-2 desktop:padding-x-4 padding-y-1 line-height-sans-3 font-lang-4 text-bold">
           <GridContainer>
             Self-Service email alerts are available{' '}
-            <Link to="/user/email" className=" hover:text-no-underline">
+            <Link to="/news" className=" hover:text-no-underline">
               here
             </Link>
             !
