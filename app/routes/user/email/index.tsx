@@ -64,8 +64,16 @@ export default function Index() {
         verify that the emails will make it into your inbox.
       </p>
       <p>
-        To unsubscribe from your GCN Classic Notice subscriptions, please{' '}
-        <a href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic">
+        Note that signing up here does not affect prior subscriptions on the old
+        web site,{' '}
+        <a rel="external" href="https://gcn.gsfc.nasa.gov/">
+          https://gcn.gsfc.nasa.gov/
+        </a>
+        . To unsubscribe from your GCN Classic Notice subscriptions, please{' '}
+        <a
+          rel="external"
+          href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic"
+        >
           send us a message
         </a>
         .
