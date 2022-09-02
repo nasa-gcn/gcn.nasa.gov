@@ -38,11 +38,10 @@ export default function NewsSection({ news }: { news?: NewsProps[] }) {
         <>
           GCN held three public webinars to introduce the new GCN, the GCN
           Classic over Kafka service, and plans for new features and feedback.
-          The{' '}
+          See the {' '}
           <Link href="https://nasa-gcn.github.io/gcn-presentation/">
             slides
-          </Link>{' '}
-          and a recording are available.
+          </Link>.
         </>
       ),
     },
