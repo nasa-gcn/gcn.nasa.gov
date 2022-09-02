@@ -1,0 +1,59 @@
+---
+meta:
+  title: GCN - News
+---
+
+import {
+  Collection,
+  CollectionCalendarDate,
+  CollectionDescription,
+  CollectionHeading,
+  CollectionItem,
+  Link,
+} from '@trussworks/react-uswds'
+
+# GCN News
+
+<h2 className="">News and Events</h2>
+<Collection>
+  <CollectionItem
+    variantComponent={<CollectionCalendarDate datetime={'September 2, 2022'} />}
+  >
+    <CollectionHeading headingLevel="h3">
+      Self-Service Configuration of Email Notifications for GCN Notices
+    </CollectionHeading>
+    <CollectionDescription>
+      Have GCN Notices delivered to your email inbox by signing up and managing
+      your subscriptions through this web site. To get started, sign in or sign
+      up and then select "Email Notifications" from the account dropdown menu.
+      Note that signing up here does not affect prior subscriptions on the old
+      web site, https://gcn.gsfc.nasa.gov. To unsubscribe from the old web site,
+      please [contact
+      us](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic).
+    </CollectionDescription>
+  </CollectionItem>
+  <CollectionItem
+    variantComponent={<CollectionCalendarDate datetime={'August 1, 2022'} />}
+  >
+    <CollectionHeading headingLevel="h3">New GCN Webinars</CollectionHeading>
+    <CollectionDescription>
+      GCN held three public webinars to introduce the new GCN, the GCN Classic
+      over Kafka service, and plans for new features and feedback. See the
+      [slides](https://nasa-gcn.github.io/gcn-presentation/).
+    </CollectionDescription>
+  </CollectionItem>
+  <CollectionItem
+    variantComponent={<CollectionCalendarDate datetime={'July 20, 2022'} />}
+  >
+    <CollectionHeading headingLevel="h3">
+      GCN Classic over Kafka Now Available
+    </CollectionHeading>
+    <CollectionDescription>
+      All three classic GCN Notice formats (text, VOEvent, 160-byte binary
+      packet) are now also available over Kafka. This new Kafka streaming
+      service can be used as a drop-in replacement for GCN Classic socket and
+      VOEvent subscribers, with an upcoming release serving email subscribers.
+      See [GCN Circular 32419](https://gcn.gsfc.nasa.gov/gcn3/32419.gcn3).
+    </CollectionDescription>
+  </CollectionItem>
+</Collection>
