@@ -27,7 +27,7 @@ export default function NewsSection({ news }: { news?: NewsProps[] }) {
     {
       Date: 'September 2, 2022',
       Title:
-        ' Self-Service Configuration of GCN Notices over Email for Transient Alerts',
+        'Self-Service Configuration of GCN Notices over Email for Transient Alerts',
       BodyText:
         'This new feature will greatly simplify and enhance the user experience for subscribing to GCN Notices.  Using the same accounts on https://gcn.nasa.gov as GCN Classic Over Kafka, users can now sign up to subscribe to any of the public GCN Notice types in any of the 3 legacy formats (text, binary, VOEvent), and edit their settings at will.',
     },
