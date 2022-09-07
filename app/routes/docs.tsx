@@ -24,6 +24,9 @@ export default function Docs() {
             <NavLink key="styleguide" to="styleguide">
               Circulars Style Guide
             </NavLink>,
+            <NavLink key="samples" to="samples">
+              Code Samples
+            </NavLink>,
             <NavLink key="contributing" to="contributing">
               Contributing
             </NavLink>,
