@@ -113,45 +113,49 @@ export function ClientSampleCode({
             code={dedent`
               const { Kafka } = require('gcn-kafka')
 
-              // Create a client.
-              // Warning: don't share the client secret with others.
-              const kafka = new Kafka({
-                client_id: '${clientId}',
-                client_secret: '${clientSecret}',${
+              async function main() {
+                // Create a client.
+                // Warning: don't share the client secret with others.
+                const kafka = new Kafka({
+                  client_id: '${clientId}',
+                  client_secret: '${clientSecret}',${
               domain
                 ? `
-                domain: '${domain}',`
+                  domain: '${domain}',`
                 : ''
             }
-              })
+                })
             ${
               listTopics
                 ? `
-              // List topics
-              const admin = kafka.admin()
-              const topics = await admin.listTopics()
-              console.log(topics)
-              `
+                // List topics
+                const admin = kafka.admin()
+                const topics = await admin.listTopics()
+                console.log(topics)
+                `
                 : ''
             }
-              // Subscribe to topics and receive alerts
-              const consumer = kafka.consumer()
-              await consumer.subscribe({
-                topics: [${topics
-                  .map(
-                    (topic) => `
-                  '${topic}',`
-                  )
-                  .join('')}
-                ],
-              })
+                // Subscribe to topics and receive alerts
+                const consumer = kafka.consumer()
+                await consumer.subscribe({
+                  topics: [${topics
+                    .map(
+                      (topic) => `
+                    '${topic}',`
+                    )
+                    .join('')}
+                  ],
+                })
 
-              await consumer.run({
-                eachMessage: async (payload) => {
-                  const value = payload.message.value
-                  console.log(value?.toString())
-                },
-              })
+                await consumer.run({
+                  eachMessage: async (payload) => {
+                    const value = payload.message.value
+                    console.log(value?.toString())
+                  },
+                })
+              }
+
+              main()
               `}
           />
           Run the code by typing this command in the terminal:
