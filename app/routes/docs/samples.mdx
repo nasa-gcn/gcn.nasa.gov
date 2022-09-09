@@ -19,16 +19,6 @@ import email
 def parse_text_alert_to_dict(message):
 return email.message_from_bytes(message.value())
 
-def get_coordinates_from_text_alert(message):
-alert_dict = parse_text_alert_to_dict(message)
-raw_ra = alert_dict['GRB_RA'].split(",")[0]
-raw_dec = alert_dict['GRB_DEC'].split(",")[0]
-return {
-'ra': float(raw_ra[0:raw_ra.index('d')]),
-'dec' : float(raw_dec[0:raw_dec.index('d')]),
-'radius' : alert_dict['GRB_ERROR']
-}
-
 ````
   </Tab>
   <Tab label="JavaScript">
@@ -52,26 +42,65 @@ function parseMessageValueToJSON(messageValue){
   </Tab>
 </Tabs>
 
-Since voevent messages are essentially xml, the [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html) module should be used.
+Since voevent messages are essentially xml, the [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html) module can be used for python. There are multiple NPM packages to handle parsing XML, for example [fast-xml-parser](https://www.npmjs.com/package/fast-xml-parser)
 
+<Tabs>
+  <Tab label="Python">
 ```python
 import xml.etree.ElementTree as ET
 
-
 def parse_voevent_alert_to_xml_root(message):
-    return ET.fromstring(message.value())
+return ET.fromstring(message.value())
 
+````
+  </Tab>
+  <Tab label="JavaScript">
+```javascript
+const { XMLParser } = require("fast-xml-parser");
+
+function parseXMLMessageValue(messageValue){
+  const parser = new XMLParser();
+  let jObj = parser.parse(messageValue);
+  return jObj;
+}
+````
+
+  </Tab>
+</Tabs>
+
+It is important to know they keys that will be specific to the topic of message that you are receiving. For example, the coordinates in gcn.classic.text.FERMI_LAT_POS_TEST topic are in the fields GRB_RA, GRB_DEC, and GRB_ERROR.
+
+<Tabs>
+  <Tab label="Python">
+```python
+def get_coordinates_from_text_alert(message):
+    alert_dict = parse_text_alert_to_dict(message)
+    return {
+        'ra': alert_dict['GRB_RA'],
+        'dec' : alert_dict['GRB_DEC'],
+        'radius' : alert_dict['GRB_ERROR']
+    }
 
 def get_coordinates_from_parsed_voevent_alert(message):
-    parsed_message = parse_voevent_alert_to_xml_root(message)
-    pos2d = parsed_message.find('.//{*}Position2D')
-    ra = float(pos2d.find('.//{*}C1').text)
-    dec = float(pos2d.find('.//{*}C2').text)
-    radius = float(pos2d.find('.//{*}Error2Radius').text)
-    print('ra = {:g}, dec={:g}, radius={:g}'.format(ra, dec, radius))
-    return {
-        'ra':ra,
-        'dec':dec,
-        'radius':radius
-    }
-```
+parsed_message = parse_voevent_alert_to_xml_root(message)
+pos2d = parsed_message.find('.//{_}Position2D')
+ra = float(pos2d.find('.//{_}C1').text)
+dec = float(pos2d.find('.//{_}C2').text)
+radius = float(pos2d.find('.//{_}Error2Radius').text)
+print('ra = {:g}, dec={:g}, radius={:g}'.format(ra, dec, radius))
+return {
+'ra':ra,
+'dec':dec,
+'radius':radius
+}
+
+````
+  </Tab>
+  <Tab label="JavaScript">
+
+```javascript
+
+````
+
+  </Tab>
+</Tabs>
