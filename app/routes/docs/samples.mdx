@@ -1,0 +1,77 @@
+---
+meta:
+  title: GCN - Kafka Client Code Samples
+---
+
+import { Tab, Tabs } from '~/components/Tabs'
+
+# Code Samples
+
+## Parsing
+
+Parsing the messages is fairly straight-forward. With text alerts, Python's [email](https://docs.python.org/3/library/email.html#module-email) package can parse these directly. Some alert types have multiple COMMENTS fields, which may cause the value of the parsed object to overwrite the other previous values, or make the data otherwise inaccessible. The Javascript example shows a way around this.
+
+<Tabs>
+  <Tab label="Python">
+```python
+import email
+
+def parse_text_alert_to_dict(message):
+return email.message_from_bytes(message.value())
+
+def get_coordinates_from_text_alert(message):
+alert_dict = parse_text_alert_to_dict(message)
+raw_ra = alert_dict['GRB_RA'].split(",")[0]
+raw_dec = alert_dict['GRB_DEC'].split(",")[0]
+return {
+'ra': float(raw_ra[0:raw_ra.index('d')]),
+'dec' : float(raw_dec[0:raw_dec.index('d')]),
+'radius' : alert_dict['GRB_ERROR']
+}
+
+````
+  </Tab>
+  <Tab label="JavaScript">
+```javascript
+function parseMessageValueToJSON(messageValue){
+  var splitArray = messageValue.split('\n')
+  var result = {}
+  for (const row of splitArray){
+    let items = row.split(':')
+    if(Object.keys(result).indexOf(items[0]) == -1){
+      result[items[0]] = items[1].trim()
+    }
+    else {
+      result[items[0]] = [ ...result[items[0]], items[1].trim()]
+    }
+  }
+  return result
+}
+````
+
+  </Tab>
+</Tabs>
+
+Since voevent messages are essentially xml, the [xml.etree.ElementTree](https://docs.python.org/3/library/xml.etree.elementtree.html) module should be used.
+
+```python
+import xml.etree.ElementTree as ET
+
+
+def parse_voevent_alert_to_xml_root(message):
+    return ET.fromstring(message.value())
+
+
+def get_coordinates_from_parsed_voevent_alert(message):
+    parsed_message = parse_voevent_alert_to_xml_root(message)
+    pos2d = parsed_message.find('.//{*}Position2D')
+    ra = float(pos2d.find('.//{*}C1').text)
+    dec = float(pos2d.find('.//{*}C2').text)
+    radius = float(pos2d.find('.//{*}Error2Radius').text)
+    print('ra = {:g}, dec={:g}, radius={:g}'.format(ra, dec, radius))
+    return {
+        'ra':ra,
+        'dec':dec,
+        'radius':radius
+    }
+```
