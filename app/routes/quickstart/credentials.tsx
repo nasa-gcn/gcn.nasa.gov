@@ -43,11 +43,7 @@ export default function Credentials() {
           </p>
           <SegmentedCards>
             {client_credentials.map((credential) => (
-              <CredentialCard
-                key={credential.client_id}
-                {...credential}
-                selectable
-              />
+              <CredentialCard key={credential.client_id} {...credential} />
             ))}
           </SegmentedCards>
           <div className="padding-2" key="new">

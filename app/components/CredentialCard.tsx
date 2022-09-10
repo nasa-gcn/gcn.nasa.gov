@@ -25,8 +25,7 @@ export default function CredentialCard({
   name,
   client_id,
   created,
-  selectable,
-}: RedactedClientCredential & { selectable?: boolean }) {
+}: RedactedClientCredential) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
   const disabled = fetcher.state !== 'idle'
@@ -57,14 +56,16 @@ export default function CredentialCard({
             <Icon.Delete className="bottom-aligned margin-right-05" />
             Delete
           </ModalToggleButton>
-          <Form method="get" action="../alerts" className="display-inline">
+          <Form
+            method="get"
+            action="/quickstart/alerts"
+            className="display-inline"
+          >
             <input type="hidden" name="clientId" value={client_id} />
-            {selectable ? (
-              <Button disabled={disabled} type="submit">
-                Select
-                <Icon.ArrowForward className="bottom-aligned margin-left-05" />
-              </Button>
-            ) : null}
+            <Button disabled={disabled} type="submit">
+              Select
+              <Icon.ArrowForward className="bottom-aligned margin-left-05" />
+            </Button>
           </Form>
         </div>
       </Grid>

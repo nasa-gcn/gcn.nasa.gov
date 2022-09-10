@@ -8,7 +8,7 @@
 
 import { Tab, Tabs } from '~/components/Tabs'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
-import { Form, useLoaderData } from '@remix-run/react'
+import { Form, Link, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
 import { Button } from '@trussworks/react-uswds'
@@ -63,6 +63,9 @@ export default function Code() {
         <Button type="submit" className="usa-button--outline">
           Back
         </Button>
+        <Link to="/user/credentials">
+          <Button type="button">Done</Button>
+        </Link>
       </Form>
     </>
   )
