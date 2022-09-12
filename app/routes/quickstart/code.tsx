@@ -54,7 +54,7 @@ export default function Code() {
         <Tab label="JavaScript">
           <ClientSampleCode
             {...{ clientId, clientSecret, topics, listTopics }}
-            language="js"
+            language="mjs"
           />
         </Tab>
       </Tabs>

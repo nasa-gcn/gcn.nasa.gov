@@ -37,7 +37,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'js'
+  language: 'py' | 'mjs'
 }) {
   const domain = useDomain()
 
@@ -97,7 +97,7 @@ export function ClientSampleCode({
           <Highlight language="sh" code="python example.py" />
         </>
       )
-    case 'js':
+    case 'mjs':
       return (
         <>
           Open a terminal and run this command to install with{' '}
@@ -111,7 +111,7 @@ export function ClientSampleCode({
             language={language}
             filename={`example.${language}`}
             code={dedent`
-              const { Kafka } = require('gcn-kafka')
+            import { Kafka } from 'gcn-kafka'
 
               async function main() {
                 // Create a client.
@@ -159,7 +159,7 @@ export function ClientSampleCode({
               `}
           />
           Run the code by typing this command in the terminal:
-          <Highlight language="sh" code="node example.js" />
+          <Highlight language="sh" code="node example.mjs" />
         </>
       )
   }
