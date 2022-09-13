@@ -17,6 +17,9 @@ sessions
   _idx *String
   _ttl TTL
 
+user_data
+  sub *String
+
 email_notification
   sub *String
   uuid **String
@@ -25,11 +28,39 @@ email_notification_subscription
   uuid *String
   topic **String
 
+circular_permission_requests
+  sub *String
+  uuid **String
+
+circular_email_subscriptions
+  sub *String
+
+gcn_circulars
+  id *String
+  created **String
+
 @tables-indexes
 email_notification_subscription
   topic *String
   name byTopic
+
+circular_permission_requests
+  endorserEmail *String
+  name byEndorserEmail
+
+circular_permission_requests
+  uuid *String
+  name byUUID
   
+gcn_circulars
+  sub *String
+  name byUserSub
+
+@tables-streams
+gcn_circulars
+
+circular_permission_requests
+
 @aws
 runtime nodejs16.x
 region us-east-1

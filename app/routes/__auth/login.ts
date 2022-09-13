@@ -13,23 +13,22 @@ import { generators } from 'openid-client'
 import { getOpenIDClient, oidcStorage, storage } from './auth.server'
 import type { getUser } from './user.server'
 
-function userFromTokenSet(
+export function userFromTokenSet(
   tokenSet: TokenSet
 ): NonNullable<Awaited<ReturnType<typeof getUser>>> {
   const claims = tokenSet.claims()
   const sub = claims.sub
   const email = claims.email as string
-
+  const refreshToken = tokenSet.refresh_token as string
   const idp =
     claims.identities instanceof Array && claims.identities.length > 0
       ? (claims.identities[0].providerName as string)
       : null
-
+  const cognitoUserName = claims['cognito:username'] as string
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
     (group) => group.startsWith('gcn.nasa.gov')
   )
-
-  return { sub, email, groups, idp }
+  return { sub, email, groups, idp, refreshToken, cognitoUserName }
 }
 
 export const loader: LoaderFunction = async ({ request: { headers, url } }) => {

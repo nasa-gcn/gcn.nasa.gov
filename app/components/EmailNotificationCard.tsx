@@ -1,3 +1,11 @@
+/*!
+ * Copyright © 2022 United States Government as represented by the Administrator
+ * of the National Aeronautics and Space Administration. No copyright is claimed
+ * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ *
+ * SPDX-License-Identifier: NASA-1.3
+ */
+
 import { useFetcher, Form } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import { Modal, ModalFooter, ModalHeading } from '@trussworks/react-uswds'

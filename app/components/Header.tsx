@@ -60,6 +60,52 @@ export function Header({ email }: { email?: string }) {
               >
                 Circulars
               </NavLink>,
+              // <>
+              //   <NavDropDownButton
+              //     className={pathMatches('/circulars') ? 'active' : undefined}
+              //     type="button"
+              //     key="user"
+              //     label="Circulars"
+              //     isOpen={circularsMenuIsOpen}
+              //     onToggle={() => setCircularsMenuIsOpen(!circularsMenuIsOpen)}
+              //     menuId="user"
+              //   />
+              //   <Menu
+              //     id="circ"
+              //     isOpen={circularsMenuIsOpen}
+              //     items={[
+              //       <Link
+              //         key="info"
+              //         to="/circulars"
+              //         onClick={() =>
+              //           setCircularsMenuIsOpen(!circularsMenuIsOpen)
+              //         }
+              //       >
+              //         Info
+              //       </Link>,
+              //       <Link
+              //         key="search"
+              //         to="/circulars/search"
+              //         onClick={() =>
+              //           setCircularsMenuIsOpen(!circularsMenuIsOpen)
+              //         }
+              //       >
+              //         Search
+              //       </Link>,
+              //       email ? (
+              //         <Link
+              //           key="submit"
+              //           to="/circulars/submit"
+              //           onClick={() =>
+              //             setCircularsMenuIsOpen(!circularsMenuIsOpen)
+              //           }
+              //         >
+              //           Submit
+              //         </Link>
+              //       ) : null,
+              //     ]}
+              //   />
+              // </>,
               <NavLink className="usa-nav__link" to="/docs" key="/docs">
                 Documentation
               </NavLink>,
@@ -84,6 +130,13 @@ export function Header({ email }: { email?: string }) {
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                       >
                         Account
+                      </Link>,
+                      <Link
+                        key="circulars"
+                        to="/user/circulars"
+                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      >
+                        GCN Circulars
                       </Link>,
                       <Link
                         key="credentials"

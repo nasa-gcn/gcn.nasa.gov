@@ -14,8 +14,9 @@ export async function getUser({ headers }: Request) {
   const email = session.get('email') as string
   const groups = session.get('groups') as string[]
   const idp = session.get('idp') as string | null
-
+  const refreshToken = session.get('refreshToken') as string
+  const cognitoUserName = session.get('cognitoUserName') as string
   if (!sub) return null
 
-  return { sub, email, groups, idp }
+  return { sub, email, groups, idp, refreshToken, cognitoUserName }
 }

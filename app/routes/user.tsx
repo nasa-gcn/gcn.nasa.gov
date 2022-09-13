@@ -19,6 +19,9 @@ export default function User() {
               <NavLink key="." to="." end>
                 Account Info
               </NavLink>,
+              <NavLink key="circulars" to="circulars">
+                GCN Circulars
+              </NavLink>,
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,

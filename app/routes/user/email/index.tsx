@@ -13,24 +13,22 @@ import { Icon } from '@trussworks/react-uswds'
 import EmailNotificationCard from '~/components/EmailNotificationCard'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
-import { EmailNotificationVendingMachine } from '../email_notifications.server'
+import { EmailNotificationsServer } from '../email_notifications.server'
 
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const uuid = getFormDataString(data, 'uuid')
   const intent = getFormDataString(data, 'intent')
-  console.log(intent)
   switch (intent) {
     case 'delete':
       if (uuid) {
-        const machine = await EmailNotificationVendingMachine.create(request)
+        const machine = await EmailNotificationsServer.create(request)
         await machine.deleteEmailNotification(uuid)
       }
     case 'sendTest':
       const recipient = getFormDataString(data, 'recipient')
-      console.log(recipient)
       if (recipient) {
-        const machine = await EmailNotificationVendingMachine.create(request)
+        const machine = await EmailNotificationsServer.create(request)
         await machine.sendTestEmail(recipient)
       }
   }
@@ -38,8 +36,9 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export async function loader({ request }: DataFunctionArgs) {
-  const machine = await EmailNotificationVendingMachine.create(request)
+  const machine = await EmailNotificationsServer.create(request)
   const data = await machine.getEmailNotifications()
+
   return data
 }
 
@@ -57,11 +56,11 @@ export default function Index() {
         </Link>
       </div>
       <p>
-        Create and manage email subscriptions to GCN Notices here. You can
-        create as many subscriptions as you like. To create a new alert, click
-        the "Add" button. Once an alert has been created, you can click the
-        "Test Message" button to send a test email to the listed recipient, to
-        verify that the emails will make it into your inbox.
+        Create and manage email subscriptions to GCN Notices and Circulars here.
+        You can create as many subscriptions as you like. To create a new alert,
+        click the "Add" button. Once an alert has been created, you can click
+        the "Test Message" button to send a test email to the listed recipient,
+        to verify that the emails will make it into your inbox.
       </p>
       <p>
         Note that signing up here does not affect prior subscriptions on the old

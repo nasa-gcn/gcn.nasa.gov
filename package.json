@@ -36,6 +36,7 @@
     "moment": "^2.29.3",
     "openid-client": "^5.1.10",
     "react": "^17.0.2",
+    "react-autocomplete-hint": "^2.0.0",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.2",
     "react-google-recaptcha": "^2.1.0",

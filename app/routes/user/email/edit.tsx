@@ -19,12 +19,14 @@ import type {
   EmailNotification,
   EmailNotificationVM,
 } from '../email_notifications.server'
-import { EmailNotificationVendingMachine } from '../email_notifications.server'
+import { EmailNotificationsServer } from '../email_notifications.server'
 
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const { uuid, intent, name, recipient, noticeFormat, ...rest } =
     Object.fromEntries(data)
+
+  const machine = await EmailNotificationsServer.create(request)
   const noticeTypes = Object.keys(rest)
   const topics = noticeTypes.map((noticeType) =>
     formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
@@ -36,7 +38,6 @@ export async function action({ request }: DataFunctionArgs) {
     topics: topics,
     uuid: uuid?.toString(),
   }
-  const machine = await EmailNotificationVendingMachine.create(request)
   switch (intent) {
     case 'create':
       await machine.createEmailNotification(emailNotification)
@@ -66,7 +67,7 @@ export async function loader({ request }: DataFunctionArgs) {
     topics: [],
   }
   if (uuid != undefined) {
-    const machine = await EmailNotificationVendingMachine.create(request)
+    const machine = await EmailNotificationsServer.create(request)
     notification = await machine.getEmailNotification(uuid)
     intent = 'update'
   }
@@ -81,8 +82,10 @@ export default function Edit() {
   const defaultRecipientValid = !!notification.recipient
   const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
+
   return (
     <div className="tablet:grid-col-12">
+      <Label htmlFor="type">Select Type of Email listener</Label>
       <Form method="post">
         <input type="hidden" name="uuid" value={notification.uuid} />
         <input type="hidden" name="intent" value={intent} />
@@ -143,6 +146,24 @@ export default function Edit() {
           </Button>
         </ButtonGroup>
       </Form>
+      {/* <Radio
+        id="notice-radio"
+        name="type"
+        label="GCN Notices"
+        defaultChecked
+        onClick={() => setFormView('notice')}
+      />
+      <Radio
+        id="circular-radio"
+        name="type"
+        label="Circulars"
+        onClick={() => setFormView('circular')}
+      />
+      {formView == 'notice' ? (
+        
+      ) : (
+        
+      )} */}
     </div>
   )
 }
