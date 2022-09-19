@@ -57,7 +57,7 @@ export default function Code() {
             language="mjs"
           />
         </Tab>
-        <Tab label="CommonJs">
+        <Tab label="Node.js (CommonJS)">
           <ClientSampleCode
             {...{ clientId, clientSecret, topics, listTopics }}
             language="cjs"
