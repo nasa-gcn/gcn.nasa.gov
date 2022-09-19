@@ -180,7 +180,7 @@ export function ClientSampleCode({
             language={language}
             filename={`example.${language}`}
             code={dedent`
-            var gcn_kafka = require('gcn-kafka');
+            const { Kafka } = require('gcn-kafka')
 
             (async () => {  
               // Create a client.
