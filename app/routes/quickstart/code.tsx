@@ -57,6 +57,12 @@ export default function Code() {
             language="mjs"
           />
         </Tab>
+        <Tab label="CommonJs">
+          <ClientSampleCode
+            {...{ clientId, clientSecret, topics, listTopics }}
+            language="cjs"
+          />
+        </Tab>
       </Tabs>
       <Form method="get" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />

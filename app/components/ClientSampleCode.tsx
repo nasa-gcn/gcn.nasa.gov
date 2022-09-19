@@ -37,7 +37,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs'
+  language: 'py' | 'mjs' | 'cjs'
 }) {
   const domain = useDomain()
 
@@ -164,6 +164,79 @@ export function ClientSampleCode({
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="node example.mjs" />
+        </>
+      )
+    case 'cjs':
+      return (
+        <>
+          Open a terminal and run this command to install with{' '}
+          <Link rel="external" href="https://www.npmjs.com">
+            npm
+          </Link>
+          :
+          <Highlight language="sh" code="npm install gcn-kafka" />
+          Sample code:
+          <Highlight
+            language={language}
+            filename={`example.${language}`}
+            code={dedent`
+            var gcn_kafka = require('gcn-kafka')
+
+            async function main() {  
+              // Create a client.
+              // Warning: don't share the client secret with others.
+              const kafka = new Kafka({
+                client_id: '${clientId}',
+                client_secret: '${clientSecret}',${
+              domain
+                ? `
+                domain: '${domain}',`
+                : ''
+            }
+              })
+            ${
+              listTopics
+                ? `
+              // List topics
+              const admin = kafka.admin()
+              const topics = await admin.listTopics()
+              console.log(topics)
+              `
+                : ''
+            }
+              // Subscribe to topics and receive alerts
+              const consumer = kafka.consumer()
+              try {
+                await consumer.subscribe({
+                  topics: [${topics
+                    .map(
+                      (topic) => `
+                      '${topic}',`
+                    )
+                    .join('')}
+                  ],
+                })
+              }
+              
+              // Some topics may not be available, catch the error and continue running
+              catch (err) {
+                console.log("There was an error subscribing to all listed topics. 
+                  The consumer is listening to the topics listed under 'memberAssignment'")
+              }
+
+              await consumer.run({
+                eachMessage: async (payload) => {
+                  const value = payload.message.value
+                  console.log(value?.toString())
+                },
+              })
+            }
+
+            main()
+            `}
+          />
+          Run the code by typing this command in the terminal:
+          <Highlight language="sh" code="node example.cjs" />
         </>
       )
   }
