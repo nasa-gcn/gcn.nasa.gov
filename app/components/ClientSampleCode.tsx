@@ -185,7 +185,7 @@ export function ClientSampleCode({
             (async () => {  
               // Create a client.
               // Warning: don't share the client secret with others.
-              const kafka = new gcn_kafka.Kafka({
+              const kafka = new Kafka({
                 client_id: '${clientId}',
                 client_secret: '${clientSecret}',${
               domain
