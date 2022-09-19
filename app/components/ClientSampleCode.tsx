@@ -180,12 +180,12 @@ export function ClientSampleCode({
             language={language}
             filename={`example.${language}`}
             code={dedent`
-            var gcn_kafka = require('gcn-kafka')
+            var gcn_kafka = require('gcn-kafka');
 
-            async function main() {  
+            (async () => {  
               // Create a client.
               // Warning: don't share the client secret with others.
-              const kafka = new Kafka({
+              const kafka = new gcn_kafka.Kafka({
                 client_id: '${clientId}',
                 client_secret: '${clientSecret}',${
               domain
@@ -220,7 +220,7 @@ export function ClientSampleCode({
               
               // Some topics may not be available, catch the error and continue running
               catch (err) {
-                console.log("There was an error subscribing to all listed topics. 
+                console.log("There was an error subscribing to all listed topics. \
                   The consumer is listening to the topics listed under 'memberAssignment'")
               }
 
@@ -230,10 +230,7 @@ export function ClientSampleCode({
                   console.log(value?.toString())
                 },
               })
-            }
-
-            main()
-            `}
+            })()`}
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="node example.cjs" />
