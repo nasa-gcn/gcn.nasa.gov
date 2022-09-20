@@ -154,7 +154,7 @@ export function ClientSampleCode({
               } else {
                 throw error
               }
-            }            
+            }
 
             await consumer.run({
               eachMessage: async (payload) => {
@@ -184,7 +184,7 @@ export function ClientSampleCode({
             code={dedent`
             const { Kafka } = require('gcn-kafka');
 
-            (async () => {  
+            (async () => {
               // Create a client.
               // Warning: don't share the client secret with others.
               const kafka = new Kafka({
@@ -226,7 +226,7 @@ export function ClientSampleCode({
                   throw error
                 }
               }
-              
+
               await consumer.run({
                 eachMessage: async (payload) => {
                   const value = payload.message.value
