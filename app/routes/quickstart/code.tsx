@@ -51,10 +51,16 @@ export default function Code() {
             language="py"
           />
         </Tab>
-        <Tab label="JavaScript">
+        <Tab label="Node.js (ESM)">
           <ClientSampleCode
             {...{ clientId, clientSecret, topics, listTopics }}
-            language="js"
+            language="mjs"
+          />
+        </Tab>
+        <Tab label="Node.js (CommonJS)">
+          <ClientSampleCode
+            {...{ clientId, clientSecret, topics, listTopics }}
+            language="cjs"
           />
         </Tab>
       </Tabs>
