@@ -7,7 +7,7 @@
  */
 
 import { Link } from '@trussworks/react-uswds'
-import dedent from 'dedent'
+import { dedent } from 'ts-dedent'
 import { useHostname } from '~/root'
 import { Highlight } from './Highlight'
 
@@ -37,7 +37,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs' | 'cjs'
+  language: 'py' | 'mjs' | 'cjs' | 'c'
 }) {
   const domain = useDomain()
 
@@ -64,7 +64,7 @@ export function ClientSampleCode({
           <Highlight
             language={language}
             filename={`example.${language}`}
-            code={dedent`
+            code={dedent(`
               from gcn_kafka import Consumer
 
               # Connect as a consumer.
@@ -91,7 +91,7 @@ export function ClientSampleCode({
                   for message in consumer.consume():
                       value = message.value()
                       print(value)
-              `}
+              `)}
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="python example.py" />
@@ -111,7 +111,7 @@ export function ClientSampleCode({
           <Highlight
             language={language}
             filename={`example.${language}`}
-            code={dedent`
+            code={dedent(`
             import { Kafka } from 'gcn-kafka'
 
             // Create a client.
@@ -161,7 +161,7 @@ export function ClientSampleCode({
                 const value = payload.message.value
                 console.log(value?.toString())
               },
-            })`}
+            })`)}
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="node example.mjs" />
@@ -181,7 +181,7 @@ export function ClientSampleCode({
           <Highlight
             language={language}
             filename={`example.${language}`}
-            code={dedent`
+            code={dedent(`
             const { Kafka } = require('gcn-kafka');
 
             (async () => {
@@ -233,10 +233,169 @@ export function ClientSampleCode({
                   console.log(value?.toString())
                 },
               })
-            })()`}
+            })()`)}
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="node example.cjs" />
+        </>
+      )
+    case 'c':
+      return (
+        <>
+          First,{' '}
+          <Link
+            rel="external"
+            href="https://github.com/edenhill/librdkafka#installation"
+          >
+            install librdkafka
+          </Link>{' '}
+          version 1.9.2 or newer . Then, save the C code below to a file called{' '}
+          <code>example.c</code>:
+          <Highlight
+            language={language}
+            filename={`example.${language}`}
+            code={dedent(String.raw`
+              #include <openssl/bio.h>
+              #include <openssl/evp.h>
+              #include <openssl/rand.h>
+              #include <librdkafka/rdkafka.h>
+              #include <stdio.h>
+
+
+              int main(int argc, char **argv)
+              {
+                char errstr[512];
+                int err;
+
+                // Generate random group ID
+                char rand_bytes[256], group_id[2 * sizeof(rand_bytes)] = {'\0'};
+                RAND_bytes(rand_bytes, sizeof(rand_bytes));
+                BIO *b64 = BIO_new(BIO_f_base64());
+                BIO *mem = BIO_new(BIO_s_mem());
+                BIO_set_flags(b64, BIO_FLAGS_BASE64_NO_NL);
+                BIO_push(b64, mem);
+                BIO_write(b64, rand_bytes, sizeof(rand_bytes) - 1);
+                BIO_flush(b64);
+                BIO_read(mem, group_id, sizeof(group_id) - 1);
+                BIO_free_all(b64);
+
+                char *conf_kv[][2] = {
+                  {"bootstrap.servers", "kafka.${domain ?? 'gcn.nasa.gov'}"},
+                  {"group.id", group_id},
+                  {"sasl.mechanisms", "OAUTHBEARER"},
+                  // Warning: don't share the client secret with others.
+                  {"sasl.oauthbearer.client.id", "${clientId}"},
+                  {"sasl.oauthbearer.client.secret", "${clientSecret}"},
+                  {"sasl.oauthbearer.method", "oidc"},
+                  {"sasl.oauthbearer.token.endpoint.url", "https://auth.${
+                    domain ?? 'gcn.nasa.gov'
+                  }/oauth2/token"},
+                  {"security.protocol", "sasl_ssl"}
+                };
+
+                static const char *topics[] = {
+                  ${topics.map((topic) => `"${topic}"`).join(`,
+                  `)}
+                };
+
+                static const int num_conf_kv = sizeof(conf_kv) / sizeof(*conf_kv);
+                static const int num_topics = sizeof(topics) / sizeof(*topics);
+
+                // Assemble configuration
+                rd_kafka_conf_t *conf = rd_kafka_conf_new();
+                for (int i = 0; i < num_conf_kv; i ++)
+                {
+                  if (rd_kafka_conf_set(conf, conf_kv[i][0], conf_kv[i][1],
+                                        errstr, sizeof(errstr)))
+                  {
+                    fprintf(stderr, "%s\n", errstr);
+                    rd_kafka_conf_destroy(conf);
+                    return 1;
+                  }
+                }
+
+                // Create consumer
+                rd_kafka_t *rk = rd_kafka_new(RD_KAFKA_CONSUMER, conf, errstr, sizeof(errstr));
+                if (!rk) {
+                  fprintf(stderr, "%s\n", errstr);
+                  return 1;
+                }
+                ${
+                  listTopics
+                    ? String.raw`
+                // List topics
+                const rd_kafka_metadata_t *metadata;
+                err = rd_kafka_metadata(rk, 0, NULL, &metadata, -1);
+                if (err) {
+                  fprintf(stderr, "%s\n", rd_kafka_err2str(err));
+                  rd_kafka_destroy(rk);
+                  return 1;
+                }
+                for (int i = 0; i < metadata->topic_cnt; i ++)
+                {
+                  printf("%s\n", metadata->topics[i].topic);
+                }
+                rd_kafka_metadata_destroy(metadata);
+                `
+                    : ''
+                }
+                // Subscribe to topics
+                rd_kafka_topic_partition_list_t *topics_partitions =
+                  rd_kafka_topic_partition_list_new(num_topics);
+                for (int i = 0; i < num_topics; i ++)
+                  rd_kafka_topic_partition_list_add(topics_partitions, topics[i],
+                                                    RD_KAFKA_PARTITION_UA);
+                err = rd_kafka_subscribe(rk, topics_partitions);
+                rd_kafka_topic_partition_list_destroy(topics_partitions);
+                if (err)
+                {
+                  rd_kafka_destroy(rk);
+                  fprintf(stderr, "%s\n", rd_kafka_err2str(err));
+                  return 1;
+                }
+
+                // Consume messages
+                while (1)
+                {
+                  rd_kafka_message_t *message = rd_kafka_consumer_poll(rk, -1);
+
+                  if (!message)
+                  {
+                    continue;
+                  } else if (message->err == RD_KAFKA_RESP_ERR__PARTITION_EOF) {
+                    // Ignore this error; it just means that we are at the end of the stream
+                    // and need to wait for more data.
+                  } else if (message->err == RD_KAFKA_RESP_ERR_UNKNOWN_TOPIC_OR_PART) {
+                    // Unknown topic or partition; print warning and continue.
+                    fprintf(stderr, "%s\n", rd_kafka_message_errstr(message));
+                  } else if (message->err) {
+                    fprintf(stderr, "%s\n", message->err, rd_kafka_message_errstr(message));
+                    rd_kafka_consumer_close(rk);
+                    rd_kafka_destroy(rk);
+                    return 1;
+                  } else {
+                    printf("%.*s\n", message->len, message->payload);
+                  }
+
+                  rd_kafka_message_destroy(message);
+                }
+
+                rd_kafka_consumer_close(rk);
+                rd_kafka_destroy(rk);
+
+                return 0;
+              }
+            `)}
+          />
+          Compile the code. The command will vary slightly depending on your
+          operating system and compiler. For GCC on Linux or macOS, run the
+          following command:
+          <Highlight
+            language="sh"
+            code="gcc $(pkg-config --cflags libcrypto) example.c $(pkg-config --libs libcrypto) -lrdkafka"
+          />
+          Run the program. On Linux or macOS, run the following command:
+          <Highlight language="sh" code="./a.out" />
         </>
       )
   }

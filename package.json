@@ -30,7 +30,6 @@
     "@trussworks/react-uswds": "^3.1.0",
     "color-convert": "^2.0.1",
     "cross-env": "^7.0.3",
-    "dedent": "^0.7.0",
     "email-validator": "^2.0.4",
     "highlight.js": "^11.4.0",
     "memoizee": "^0.4.15",
@@ -43,7 +42,8 @@
     "react-router": "^6.3.0",
     "react-tag-autocomplete": "^6.3.0",
     "react-topbar-progress-indicator": "^4.1.1",
-    "spin-delay": "^1.1.0"
+    "spin-delay": "^1.1.0",
+    "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
     "@architect/architect": "^10.4.1",
@@ -51,7 +51,6 @@
     "@remix-run/eslint-config": "^1.6.8",
     "@types/architect__functions": "^3.13.6",
     "@types/color-convert": "^2.0.0",
-    "@types/dedent": "^0.7.0",
     "@types/grecaptcha": "^3.0.4",
     "@types/memoizee": "^0.4.7",
     "@types/react": "^17.0.45",
