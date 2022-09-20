@@ -106,14 +106,14 @@ export function ClientSampleCode({
           </Link>
           :
           <Highlight language="sh" code="npm install gcn-kafka" />
-          Sample code:
+          Save the JavaScript code below to a file called{' '}
+          <code>example.mjs</code>:
           <Highlight
             language={language}
             filename={`example.${language}`}
             code={dedent`
             import { Kafka } from 'gcn-kafka'
 
-              
             // Create a client.
             // Warning: don't share the client secret with others.
             const kafka = new Kafka({
@@ -147,13 +147,14 @@ export function ClientSampleCode({
                   .join('')}
                 ],
               })
-            }
-            
-            // Some topics may not be available, catch the error and continue running
-            catch (err) {
-              console.log("There was an error subscribing to all listed topics. 
-                The consumer is listening to the topics listed under 'memberAssignment'")
-            }
+            } catch (error) {
+              if (error.type === 'TOPIC_AUTHORIZATION_FAILED')
+              {
+                console.warn('Not all subscribed topics are available')
+              } else {
+                throw error
+              }
+            }            
 
             await consumer.run({
               eachMessage: async (payload) => {
@@ -175,12 +176,13 @@ export function ClientSampleCode({
           </Link>
           :
           <Highlight language="sh" code="npm install gcn-kafka" />
-          Sample code:
+          Save the JavaScript code below to a file called{' '}
+          <code>example.cjs</code>:
           <Highlight
             language={language}
             filename={`example.${language}`}
             code={dedent`
-            const { Kafka } = require('gcn-kafka')
+            const { Kafka } = require('gcn-kafka');
 
             (async () => {  
               // Create a client.
@@ -216,14 +218,15 @@ export function ClientSampleCode({
                     .join('')}
                   ],
                 })
+              } catch (error) {
+                if (error.type === 'TOPIC_AUTHORIZATION_FAILED')
+                {
+                  console.warn('Not all subscribed topics are available')
+                } else {
+                  throw error
+                }
               }
               
-              // Some topics may not be available, catch the error and continue running
-              catch (err) {
-                console.log("There was an error subscribing to all listed topics. \
-                  The consumer is listening to the topics listed under 'memberAssignment'")
-              }
-
               await consumer.run({
                 eachMessage: async (payload) => {
                   const value = payload.message.value
