@@ -249,7 +249,7 @@ export function ClientSampleCode({
           >
             install librdkafka
           </Link>{' '}
-          version 1.9.2 or newer . Then, save the C code below to a file called{' '}
+          version 1.9.2 or newer. Then, save the C code below to a file called{' '}
           <code>example.c</code>:
           <Highlight
             language={language}
