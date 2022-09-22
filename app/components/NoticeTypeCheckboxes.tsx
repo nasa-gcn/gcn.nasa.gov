@@ -70,6 +70,7 @@ const NoticeTypes = {
     'FERMI_POINTDIR',
     'FERMI_SC_SLEW',
   ],
+  GECAM: ['GECAM_FLT', 'GECAM_GND'],
   IceCube: [
     'ICECUBE_ASTROTRACK_BRONZE',
     'ICECUBE_ASTROTRACK_GOLD',

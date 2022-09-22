@@ -57,6 +57,9 @@ export default function Missions() {
             <NavLink key="sksn" to="sksn">
               Super-Kamiokande
             </NavLink>,
+            <NavLink key="gecam" to="gecam">
+              GECAM
+            </NavLink>,
           ]}
         />
       </div>
