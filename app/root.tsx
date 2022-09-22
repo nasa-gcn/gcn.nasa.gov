@@ -119,7 +119,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         <Header email={email} />
         <div className="bg-gold padding-x-2 desktop:padding-x-4 padding-y-1 line-height-sans-3 font-lang-4 text-bold">
           <GridContainer>
-            Self-service email notifications for GCN Notices are here! See{' '}
+            GECAM Notices are here! Receive them via Kafka or email. See{' '}
             <Link to="/news" className="hover:text-no-underline">
               news and announcements
             </Link>
