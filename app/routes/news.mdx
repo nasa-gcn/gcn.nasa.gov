@@ -17,6 +17,26 @@ import {
 <h2 className="">News and Events</h2>
 <Collection>
   <CollectionItem
+    variantComponent={
+      <CollectionCalendarDate datetime={'September 22, 2022'} />
+    }
+  >
+    <CollectionHeading headingLevel="h3">
+      GECAM New Notice Type Available
+    </CollectionHeading>
+    <CollectionDescription>
+      The GCN system has been modified to incorporate the distribution of the
+      [GECAM Notices](https://gcn.nasa.gov/missions/gecam). GECAM notices are
+      available via GCN Classic Over Kafka, and the newly released [self-service
+      configuration of GCN Notices over
+      email](#Self-Service-Configuration-of-Email-Notifications-for-GCN-Notices)
+      as well as GCN Classic distribution methods and formats (binary socket,
+      VOEvent xml socket, text via email and SMS). To unsubscribe or edit GCN
+      Classic subscriptions, please [contact
+      us](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic).
+    </CollectionDescription>
+  </CollectionItem>
+  <CollectionItem
     variantComponent={<CollectionCalendarDate datetime={'September 2, 2022'} />}
   >
     <CollectionHeading headingLevel="h3">
