@@ -175,6 +175,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
   IceCube: 'icecube',
   INTEGRAL: 'integral',
   IPN: '',
+  GECAM: 'gecam',
   LVC: 'lvk',
   MAXI: 'maxi',
   Swift: 'swift',
