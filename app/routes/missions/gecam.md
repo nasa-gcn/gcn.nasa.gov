@@ -3,10 +3,10 @@ meta:
   title: GCN - GECAM
 ---
 
-# Gravitational Wave High-energy Electromagnetic Counterpart All-sky Monitor
+# Gravitational Wave High-energy Electromagnetic Counterpart All-sky Monitor (GECAM)
 
 <img 
-  src="/_static/img/gecam.png"
+  src="/_static/img/gecam.jpg"
   align="right"
   alt="GECAM logo"
   className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
@@ -28,7 +28,7 @@ GECAM is a constellation of two small X-ray and gamma-ray all-sky observatories.
 </div>
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
-[Detailed Descriptions and Examples](http://www.nssc.cas.cn/gecam_en/)
+[Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/gecam_events.html)
 
 <div className="overflow-table">
 
