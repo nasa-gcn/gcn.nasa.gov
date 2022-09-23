@@ -295,6 +295,14 @@ export default function Notices() {
           Supernova neutrinos detected by Super-Kamiokande.
         </NoticeCard>
         <NoticeCard
+          name="GECAM"
+          href="https://gcn.gsfc.nasa.gov/gecam_events.html"
+          tags={['gamma']}
+          selectedTags={tagNames}
+        >
+          Gamma-ray transients detected by GECAM.
+        </NoticeCard>
+        <NoticeCard
           name="IPN GRB Positions"
           href="https://gcn.gsfc.nasa.gov/ipn/gcn_ipn_pos.html"
           tags={['gamma', 'discontinued']}
