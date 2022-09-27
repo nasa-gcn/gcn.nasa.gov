@@ -24,7 +24,7 @@
     "@aws-sdk/client-cognito-identity-provider": "^3.164.0",
     "@aws-sdk/client-sesv2": "^3.154.0",
     "@octokit/rest": "^19.0.4",
-    "@remix-run/architect": "^1.6.8",
+    "@remix-run/architect": "^1.7.2",
     "@remix-run/node": "^1.6.8",
     "@remix-run/react": "^1.6.8",
     "@trussworks/react-uswds": "^3.1.0",
