@@ -39,7 +39,7 @@
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.2",
     "react-google-recaptcha": "^2.1.0",
-    "react-router": "^6.3.0",
+    "react-router": "^6.4.1",
     "react-tag-autocomplete": "^6.3.0",
     "react-topbar-progress-indicator": "^4.1.1",
     "spin-delay": "^1.1.0",
