@@ -44,7 +44,6 @@ import TopBarProgress from 'react-topbar-progress-indicator'
 import { DevBanner } from './components/DevBanner'
 import { useSpinDelay } from 'spin-delay'
 import { getUser } from './routes/__auth/user.server'
-import React from 'react'
 
 TopBarProgress.config({
   barColors: {

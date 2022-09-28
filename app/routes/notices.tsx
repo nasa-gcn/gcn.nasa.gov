@@ -8,13 +8,13 @@ import {
   Tag,
 } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
+import { ReactTags } from 'react-tag-autocomplete'
 import type {
-  SuggestionComponentProps,
   Tag as ReactTag,
-  TagComponentProps,
+  OptionRendererProps,
+  TagRendererProps,
 } from 'react-tag-autocomplete'
-import ReactTags from 'react-tag-autocomplete'
 import type { MetaFunction } from '@remix-run/node'
 
 export const meta: MetaFunction = () => ({
@@ -57,39 +57,44 @@ function NoticeCard({
   ) : null
 }
 
-function ReactTagComponent({
-  tag,
-  removeButtonText,
-  onDelete,
-}: TagComponentProps) {
+function renderTag({
+  classNames,
+  tag: { label },
+  ...tagProps
+}: TagRendererProps) {
   return (
-    <Tag>
-      {tag.name}{' '}
-      <Button
-        type="button"
-        unstyled
-        title={removeButtonText}
-        onClick={onDelete}
-      >
-        <Icon.Close className="margin-left-1 text-bottom" color={'white'} />
-      </Button>
+    <Tag className={classNames.tag} {...tagProps}>
+      <span className={classNames.tagName}>
+        {label}{' '}
+        <Button type="button" unstyled>
+          <Icon.Close className="margin-left-1 text-bottom" color={'white'} />
+        </Button>
+      </span>
     </Tag>
   )
 }
 
-function ReactSuggestionComponent({ item }: SuggestionComponentProps) {
-  return <Tag>{item.name}</Tag>
+function renderOption({
+  children,
+  classNames,
+  option,
+  ...optionProps
+}: OptionRendererProps) {
+  const classes = [classNames.option]
+
+  if (option.active) classes.push(classNames.optionIsActive)
+
+  return (
+    <div className={classes.join(' ')} {...optionProps}>
+      {option.disabled ? children : <Tag>{children}</Tag>}
+    </div>
+  )
 }
 
 export default function Notices() {
-  const ref = useRef<ReactTags>(null)
   const [tags, setTags] = useState<ReactTag[]>([])
   const suggestions = ['gw', 'gamma', 'nu', 'x-ray', 'uv', 'optical']
-  const tagNames = tags.map((tag) => tag.name)
-
-  /// @ts-expect-error: focusInput method is present, but not documented in
-  // module definition from @types/react-tag-autocomplete
-  useEffect(() => ref.current?.focusInput())
+  const tagNames = tags.map(({ label }) => label)
 
   return (
     <>
@@ -100,7 +105,7 @@ export default function Notices() {
       </p>
       <div className="margin-bottom-2">
         <ReactTags
-          onAddition={(tag) => setTags((prevTags) => [...prevTags, tag])}
+          onAdd={(tag) => setTags((prevTags) => [...prevTags, tag])}
           onDelete={(i) =>
             setTags((prevTags) => {
               const newTags = prevTags.slice(0)
@@ -108,15 +113,13 @@ export default function Notices() {
               return newTags
             })
           }
-          suggestions={suggestions.map((name) => ({ name, id: name }))}
-          tags={tags}
-          tagComponent={ReactTagComponent}
-          suggestionComponent={ReactSuggestionComponent}
-          autoresize={false}
-          minQueryLength={1}
-          ref={ref}
+          delimiterKeys={[' ', ',', 'Enter', 'Tab']}
+          closeOnSelect={true}
+          suggestions={suggestions.map((label) => ({ label, value: label }))}
+          selected={tags}
+          renderTag={renderTag}
+          renderOption={renderOption}
           placeholderText="Filter by tag"
-          delimiters={['Enter', 'Tab', ' ', ',']}
         />
       </div>
       <CardGroup>

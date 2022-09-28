@@ -170,40 +170,30 @@ a[rel~='external'] {
   cursor: text;
 }
 
-.react-tags.is-focused {
+.react-tags.is-active {
   @include focus-outline;
 }
 
-.react-tags__selected {
+.react-tags__label {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.react-tags__list {
   display: inline;
+  padding: 0;
 }
 
-.react-tags__selected-tag {
-  display: inline-block;
-  box-sizing: border-box;
+.react-tags__list-item {
+  display: inline;
   margin: 0 6px 6px 0;
-  padding: 6px 8px;
-  border: 1px solid #d1d1d1;
-  border-radius: 2px;
-  background: #f1f1f1;
-
-  /* match the font styles */
-  font-size: inherit;
-  line-height: inherit;
 }
 
-.react-tags__selected-tag:after {
-  content: '\2715';
-  color: #aaa;
-  margin-left: 8px;
-}
-
-.react-tags__selected-tag:hover,
-.react-tags__selected-tag:focus {
-  border-color: #b1b1b1;
-}
-
-.react-tags__search {
+.react-tags__combobox {
   display: inline-block;
 
   /* match tag layout */
@@ -214,15 +204,8 @@ a[rel~='external'] {
   max-width: 100%;
 }
 
-@media screen and (min-width: 30em) {
-  .react-tags__search {
-    /* this will become the offsetParent for suggestions */
-    position: relative;
-  }
-}
-
-.react-tags__search-input,
-input.react-tags__search-input:focus {
+.react-tags__combobox-input,
+input.react-tags__combobox-input:focus {
   /* prevent autoresize overflowing the container */
   max-width: 100%;
 
@@ -237,26 +220,18 @@ input.react-tags__search-input:focus {
   line-height: inherit;
 }
 
-.react-tags__search-input::-ms-clear {
-  display: none;
-}
-
-.react-tags__suggestions {
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  z-index: z-index(100);
-}
-
 @media screen and (min-width: 30em) {
-  .react-tags__suggestions {
+  .react-tags__listbox {
     width: 240px;
   }
 }
 
-.react-tags__suggestions ul {
-  margin: 4px -1px;
+.react-tags__listbox {
+  position: absolute;
+  z-index: 1;
+  top: calc(100% + 5px);
+  left: -2px;
+  right: -2px;
   padding: 0;
   list-style: none;
   background: white;
@@ -265,27 +240,21 @@ input.react-tags__search-input:focus {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.react-tags__suggestions li {
+.react-tags__listbox-option {
   border-bottom: 1px solid #ddd;
   padding: 6px 8px;
 }
 
-.react-tags__suggestions li mark {
-  text-decoration: underline;
-  background: none;
-  font-weight: 600;
-}
-
-.react-tags__suggestions li:hover {
+.react-tags__listbox-option:hover {
   cursor: pointer;
   background: #eee;
 }
 
-.react-tags__suggestions li.is-active {
+.react-tags__listbox-option.is-active {
   background: #b7cfe0;
 }
 
-.react-tags__suggestions li.is-disabled {
+.react-tags__listbox-option.is-disabled {
   opacity: 0.5;
   cursor: auto;
 }
