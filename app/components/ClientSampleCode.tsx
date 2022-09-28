@@ -65,33 +65,34 @@ export function ClientSampleCode({
             language={language}
             filename={`example.${language}`}
             code={dedent(`
-              from gcn_kafka import Consumer
+            from gcn_kafka import Consumer
 
-              # Connect as a consumer.
-              # Warning: don't share the client secret with others.
-              consumer = Consumer(client_id='${clientId}',
-                                  client_secret='${clientSecret}'${
+            # Connect as a consumer.
+            # Warning: don't share the client secret with others.
+            consumer = Consumer(client_id='${clientId}',
+                                client_secret='${clientSecret}'${
               domain
                 ? `,
-                                  domain='${domain}'`
+                                domain='${domain}'`
                 : ''
             })
             ${
               listTopics
                 ? `
-              # List all topics
-              print(consumer.list_topics().topics)
-              `
+            # List all topics
+            print(consumer.list_topics().topics)
+            `
                 : ''
             }
-              # Subscribe to topics and receive alerts
-              consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
-                                  `)}])
-              while True:
-                  for message in consumer.consume():
-                      value = message.value()
-                      print(value)
-              `)}
+            # Subscribe to topics and receive alerts
+            consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
+                                `)}])
+            while True:
+                for message in consumer.consume():
+                    value = message.value()
+                    print(value)
+
+            `)}
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="python example.py" />
@@ -125,16 +126,16 @@ export function ClientSampleCode({
                 : ''
             }
             })
-          ${
-            listTopics
-              ? `
+            ${
+              listTopics
+                ? `
             // List topics
             const admin = kafka.admin()
             const topics = await admin.listTopics()
             console.log(topics)
             `
-              : ''
-          }
+                : ''
+            }
             // Subscribe to topics and receive alerts
             const consumer = kafka.consumer()
             try {
@@ -161,7 +162,9 @@ export function ClientSampleCode({
                 const value = payload.message.value
                 console.log(value?.toString())
               },
-            })`)}
+            })
+
+            `)}
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="node example.mjs" />
@@ -233,7 +236,9 @@ export function ClientSampleCode({
                   console.log(value?.toString())
                 },
               })
-            })()`)}
+            })()
+
+            `)}
           />
           Run the code by typing this command in the terminal:
           <Highlight language="sh" code="node example.cjs" />
