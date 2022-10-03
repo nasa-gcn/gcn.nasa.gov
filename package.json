@@ -34,7 +34,7 @@
     "highlight.js": "^11.4.0",
     "memoizee": "^0.4.15",
     "moment": "^2.29.3",
-    "openid-client": "^5.1.9",
+    "openid-client": "^5.1.10",
     "react": "^17.0.2",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^17.0.2",
@@ -71,7 +71,7 @@
     "lint-staged": "^13.0.3",
     "nasawds": "^3.0.338-beta.1",
     "npm-run-all": "^4.1.5",
-    "postcss": "^8.4.16",
+    "postcss": "^8.4.17",
     "postcss-csso": "^6.0.1",
     "prettier": "2.7.1",
     "rehype-add-classes": "^1.0.0",
@@ -81,7 +81,7 @@
     "rehype-slug": "^5.0.1",
     "remark-gfm": "^3.0.1",
     "sass": "^1.55.0",
-    "typescript": "^4.8.3",
+    "typescript": "^4.8.4",
     "uswds": "2.13.3"
   },
   "engines": {
