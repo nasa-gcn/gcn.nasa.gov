@@ -37,7 +37,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs' | 'cjs' | 'c'
+  language: 'py' | 'mjs' | 'cjs' | 'c' | 'c#'
 }) {
   const domain = useDomain()
 
@@ -401,6 +401,67 @@ export function ClientSampleCode({
           />
           Run the program. On Linux or macOS, run the following command:
           <Highlight language="sh" code="./a.out" />
+        </>
+      )
+    case 'c#':
+      return (
+        <>
+          In Visual Studio, create a new C# Console App under File {'>'} New{' '}
+          {'>'} Project. After the project initializes, right click the solution
+          in the Solution Explorer and click Manage NuGet packages for solution.
+          Browse for and install Confluent.Kafka. Copy the following into your
+          Progam.cs file.
+          <Highlight
+            language="cs"
+            code={dedent(String.raw`
+            using Confluent.Kafka;
+
+
+            var config = new ConsumerConfig
+            {
+              SecurityProtocol = SecurityProtocol.SaslSsl,
+              BootstrapServers = "kafka.${domain ?? 'gcn.nasa.gov'}",
+              GroupId = Guid.NewGuid().ToString(),
+              AutoOffsetReset = AutoOffsetReset.Earliest,
+              SaslMechanism = SaslMechanism.OAuthBearer,
+              SaslOauthbearerMethod = SaslOauthbearerMethod.Oidc,
+              SaslOauthbearerTokenEndpointUrl = "https://auth.gcn.nasa.gov/oauth2/token",
+              // Warning: don't share the client secret with others
+              SaslOauthbearerClientId = "${clientId}",
+              SaslOauthbearerClientSecret = "${clientSecret}"
+
+            };
+
+            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+            {
+              var topics = new List<string> {
+                ${topics.map((topic) => `"${topic}"`).join(`,
+                `)}
+              };
+
+              consumer.Subscribe(topics);
+
+              while (true)
+              {
+                try
+                {
+                  var consumeResult = consumer.Consume();
+                  Console.WriteLine(consumeResult.Message.Value);
+                }
+                catch (Exception ex)
+                {
+                  if (!ex.Message.Contains("Subscribed topic not available"))
+                  {
+                    throw;
+                  }
+                }
+              }
+            }
+            `)}
+          />
+          Build the solution from the build menu, or Ctrl + Shift + B. The
+          resulting executable can be found in the bin folder within the
+          project.
         </>
       )
   }

@@ -69,6 +69,12 @@ export default function Code() {
             language="c"
           />
         </Tab>
+        <Tab label="C#">
+          <ClientSampleCode
+            {...{ clientId, clientSecret, topics, listTopics }}
+            language="c#"
+          />
+        </Tab>
       </Tabs>
       <Form method="get" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
