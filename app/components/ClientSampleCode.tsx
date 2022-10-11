@@ -37,7 +37,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs' | 'cjs' | 'c' | 'c#'
+  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs'
 }) {
   const domain = useDomain()
 
@@ -403,7 +403,7 @@ export function ClientSampleCode({
           <Highlight language="sh" code="./a.out" />
         </>
       )
-    case 'c#':
+    case 'cs':
       return (
         <>
           In Visual Studio, create a new C# Console App under File {'>'} New{' '}
@@ -413,6 +413,7 @@ export function ClientSampleCode({
           Progam.cs file.
           <Highlight
             language="cs"
+            filename={`example.${language}`}
             code={dedent(String.raw`
             using Confluent.Kafka;
 
@@ -422,24 +423,29 @@ export function ClientSampleCode({
               SecurityProtocol = SecurityProtocol.SaslSsl,
               BootstrapServers = "kafka.${domain ?? 'gcn.nasa.gov'}",
               GroupId = Guid.NewGuid().ToString(),
-              AutoOffsetReset = AutoOffsetReset.Earliest,
               SaslMechanism = SaslMechanism.OAuthBearer,
               SaslOauthbearerMethod = SaslOauthbearerMethod.Oidc,
-              SaslOauthbearerTokenEndpointUrl = "https://auth.gcn.nasa.gov/oauth2/token",
+              SaslOauthbearerTokenEndpointUrl = "https://auth.${
+                domain ?? 'gcn.nasa.gov'
+              }/oauth2/token",
               // Warning: don't share the client secret with others
               SaslOauthbearerClientId = "${clientId}",
               SaslOauthbearerClientSecret = "${clientSecret}"
             };
 
+            // Create a client.
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
-              var topics = new List<string> {
+              // Subscribe to topics
+              consumer.Subscribe(new List<string> {
                 ${topics.map((topic) => `"${topic}"`).join(`,
                 `)}
-              };
+              });
 
-              consumer.Subscribe(topics);
+              // List all topics
+	             consumer.Subscription.ForEach(topic => Console.WriteLine(topic));
 
+              // Consume Messages
               while (true)
               {
                 try

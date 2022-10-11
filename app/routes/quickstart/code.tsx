@@ -72,7 +72,7 @@ export default function Code() {
         <Tab label="C#">
           <ClientSampleCode
             {...{ clientId, clientSecret, topics, listTopics }}
-            language="c#"
+            language="cs"
           />
         </Tab>
       </Tabs>
