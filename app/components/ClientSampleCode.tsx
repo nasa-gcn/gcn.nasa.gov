@@ -457,6 +457,7 @@ export function ClientSampleCode({
                 }
               }
             }
+
             `)}
           />
           Build the solution from the build menu, or Ctrl + Shift + B. The
