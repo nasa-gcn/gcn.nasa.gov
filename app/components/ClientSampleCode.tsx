@@ -429,7 +429,6 @@ export function ClientSampleCode({
               // Warning: don't share the client secret with others
               SaslOauthbearerClientId = "${clientId}",
               SaslOauthbearerClientSecret = "${clientSecret}"
-
             };
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
