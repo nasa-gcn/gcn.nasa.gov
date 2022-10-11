@@ -443,7 +443,7 @@ export function ClientSampleCode({
               });
 
               // List all topics
-	          consumer.Subscription.ForEach(topic => Console.WriteLine(topic));
+              consumer.Subscription.ForEach(topic => Console.WriteLine(topic));
 
               // Consume Messages
               while (true)
