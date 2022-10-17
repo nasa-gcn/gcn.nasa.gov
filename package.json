@@ -77,7 +77,7 @@
     "rehype-add-classes": "^1.0.0",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-external-links": "^2.0.1",
-    "rehype-highlight": "^5.0.2",
+    "rehype-highlight": "^6.0.0",
     "rehype-slug": "^5.0.1",
     "remark-gfm": "^3.0.1",
     "sass": "^1.55.0",
