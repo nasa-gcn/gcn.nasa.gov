@@ -449,7 +449,7 @@ export function ClientSampleCode({
               `
               : ''
           }
-              // Consume Messages
+              // Consume messages
               while (true)
               {
                 try
