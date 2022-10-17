@@ -22,7 +22,7 @@
   "dependencies": {
     "@architect/functions": "^5.2.2",
     "@aws-sdk/client-cognito-identity-provider": "^3.188.0",
-    "@aws-sdk/client-sesv2": "^3.186.0",
+    "@aws-sdk/client-sesv2": "^3.188.0",
     "@octokit/rest": "^19.0.4",
     "@remix-run/architect": "^1.6.8",
     "@remix-run/node": "^1.6.8",
