@@ -25,7 +25,6 @@ function humanizedRate(rate: number, singular: string, plural?: string) {
       { factor: 12, unit: 'year' },
     ]) {
       rate *= factor
-      console.log('rate', rate)
       unit = proposedUnit
       if (rate > 0.5) break
     }

@@ -19,7 +19,6 @@ export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const uuid = getFormDataString(data, 'uuid')
   const intent = getFormDataString(data, 'intent')
-  console.log(intent)
   switch (intent) {
     case 'delete':
       if (uuid) {
@@ -28,7 +27,6 @@ export async function action({ request }: DataFunctionArgs) {
       }
     case 'sendTest':
       const recipient = getFormDataString(data, 'recipient')
-      console.log(recipient)
       if (recipient) {
         const machine = await EmailNotificationVendingMachine.create(request)
         await machine.sendTestEmail(recipient)
