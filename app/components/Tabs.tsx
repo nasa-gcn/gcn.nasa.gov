@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 
 export interface TabProps {
   label: React.ReactNode
