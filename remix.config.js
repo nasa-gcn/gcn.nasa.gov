@@ -56,7 +56,7 @@ const mdx = async () => {
 module.exports = {
   serverBuildTarget: 'arc',
   server: './server.js',
-  ignoredRouteFiles: ['.*'],
+  ignoredRouteFiles: ['**/.*'],
   mdx: mdx,
   // appDirectory: "app",
   // assetsBuildDirectory: "public/build",
