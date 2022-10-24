@@ -25,6 +25,10 @@ email_notification_subscription
   uuid *String
   topic **String
 
+circular_endorsements
+  requestorSub *String
+  endorserSub **String
+
 @tables-indexes
 email_notification_subscription
   topic *String
@@ -33,6 +37,10 @@ email_notification_subscription
 sessions
   sub *String
   name sessionsBySub
+
+circular_endorsements
+  endorserSub *String
+  name circularEndorsementsByEndorserSub
 
 @aws
 runtime nodejs18.x
