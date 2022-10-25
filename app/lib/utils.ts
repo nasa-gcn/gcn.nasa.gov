@@ -6,6 +6,12 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
+import { getOpenIDClient } from '~/routes/__auth/auth.server'
+import { userFromTokenSet } from '~/routes/__auth/login'
+import type { getUser } from '~/routes/__auth/user.server'
+import { updateSession } from '~/routes/__auth/user.server'
+
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
@@ -29,5 +35,34 @@ export function getFormDataString(formData: FormData, key: string) {
     return undefined
   } else {
     throw new Response(`expected ${key} to be a string`, { status: 400 })
+  }
+}
+
+export async function getLatestUserGroups(
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+) {
+  const client = await getOpenIDClient()
+  const refreshedTokenSet = await client.refresh(user.refreshToken)
+  const user_new = userFromTokenSet(refreshedTokenSet)
+  await updateSession(user_new)
+  user.groups = user_new.groups
+}
+
+export function maybeThrow(e: any, warning: string) {
+  const errorsAllowedInDev = [
+    'ExpiredTokenException',
+    'UnrecognizedClientException',
+  ]
+  const { name } = e as CognitoIdentityProviderServiceException
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(
+      `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+    )
   }
 }
