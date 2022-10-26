@@ -30,6 +30,12 @@ circular_endorsements
   requestorSub *String
   endorserSub **String
 
+gcn_circulars
+  circularId *Number
+
+auto_increment_metadata
+  tableName *String
+
 @tables-indexes
 email_notification_subscription
   topic *String

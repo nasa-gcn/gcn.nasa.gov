@@ -23,7 +23,6 @@ export const handle = { breadcrumb: 'Profile', getSitemapEntries: () => null }
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
-
   const { email, idp, name, affiliation } = user
   return { email, idp, name, affiliation }
 }
