@@ -13,7 +13,7 @@ import { Icon } from '@trussworks/react-uswds'
 import EmailNotificationCard from '~/components/EmailNotificationCard'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
-import { EmailNotificationVendingMachine } from '../email_notifications.server'
+import { EmailNotificationServer } from '../email_notifications.server'
 
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
@@ -22,13 +22,13 @@ export async function action({ request }: DataFunctionArgs) {
   switch (intent) {
     case 'delete':
       if (uuid) {
-        const machine = await EmailNotificationVendingMachine.create(request)
+        const machine = await EmailNotificationServer.create(request)
         await machine.deleteEmailNotification(uuid)
       }
     case 'sendTest':
       const recipient = getFormDataString(data, 'recipient')
       if (recipient) {
-        const machine = await EmailNotificationVendingMachine.create(request)
+        const machine = await EmailNotificationServer.create(request)
         await machine.sendTestEmail(recipient)
       }
   }
@@ -36,7 +36,7 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export async function loader({ request }: DataFunctionArgs) {
-  const machine = await EmailNotificationVendingMachine.create(request)
+  const machine = await EmailNotificationServer.create(request)
   const data = await machine.getEmailNotifications()
   return data
 }

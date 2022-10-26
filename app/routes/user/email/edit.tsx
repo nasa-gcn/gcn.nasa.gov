@@ -19,7 +19,7 @@ import type {
   EmailNotification,
   EmailNotificationVM,
 } from '../email_notifications.server'
-import { EmailNotificationVendingMachine } from '../email_notifications.server'
+import { EmailNotificationServer } from '../email_notifications.server'
 
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
@@ -36,7 +36,7 @@ export async function action({ request }: DataFunctionArgs) {
     topics: topics,
     uuid: uuid?.toString(),
   }
-  const machine = await EmailNotificationVendingMachine.create(request)
+  const machine = await EmailNotificationServer.create(request)
   switch (intent) {
     case 'create':
       await machine.createEmailNotification(emailNotification)
@@ -66,7 +66,7 @@ export async function loader({ request }: DataFunctionArgs) {
     topics: [],
   }
   if (uuid != undefined) {
-    const machine = await EmailNotificationVendingMachine.create(request)
+    const machine = await EmailNotificationServer.create(request)
     notification = await machine.getEmailNotification(uuid)
     intent = 'update'
   }

@@ -32,7 +32,7 @@ export interface EmailNotificationVM extends EmailNotification {
   noticeTypes: string[]
 }
 
-export class EmailNotificationVendingMachine {
+export class EmailNotificationServer {
   #sub: string
   #domain: string
 
