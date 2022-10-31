@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@architect/architect": "^10.7.1",
-    "@remix-run/dev": "^1.7.3",
+    "@remix-run/dev": "^1.7.4",
     "@remix-run/eslint-config": "^1.7.3",
     "@types/architect__functions": "^3.13.6",
     "@types/color-convert": "^2.0.0",
