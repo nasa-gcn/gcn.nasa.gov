@@ -491,6 +491,12 @@ a {
   overflow: hidden;
 }
 
-#landing-hero {
+.landing-hero {
   background-image: url('/_static/img/hero-graphic-full-width.jpg');
+  background-size: contain;
+  background-repeat: round;
+}
+
+#landing-hero-primary-div {
+  background-image: none;
 }

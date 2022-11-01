@@ -127,9 +127,10 @@ function Document({ children }: { children?: React.ReactNode }) {
             </Link>
           </GridContainer>
         </div>
-        <section className="usa-section main-content">
+        {children}
+        {/* <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
-        </section>
+        </section> */}
         <Footer />
         <ScrollRestoration />
         <Scripts />
