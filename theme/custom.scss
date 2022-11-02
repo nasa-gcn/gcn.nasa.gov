@@ -491,10 +491,24 @@ a {
   overflow: hidden;
 }
 
+/*
+  Updates for the new hero image with star field, and adjust postion based on layout
+*/
 .landing-hero {
   background-image: url('/_static/img/hero-graphic-full-width.jpg');
-  background-size: contain;
-  background-repeat: round;
+  background-size: cover;
+}
+
+@media screen and (min-width: 37.5em) {
+  .landing-hero {
+    background-position: center;
+  }
+}
+
+@media screen and (max-width: 37.5em) {
+  .landing-hero {
+    background-position: default;
+  }
 }
 
 #landing-hero-primary-div {
