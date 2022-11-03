@@ -32,4 +32,4 @@ This warning means that there have not been any recent alerts on that topic.
 
 ## How do I receive GCN Notices via email from GCN Classic over Kafka?
 
-This feature is under development and will be released in the near future. Currently GCN Classic over Kafka serves GCN notices only via the Kafka broker, which you can setup via the [Start Streaming GCN Notices](https://gcn.nasa.gov/quickstart) quick start guide.
+This feature has been implemented now, please see [GCN Circular 32517](https://gcn.gsfc.nasa.gov/gcn3/32517.gcn3). To get started, sign in or sign up at [GCN classic over Kafka](https://gcn.nasa.gov/quickstart) and then select 'Email notifications' from account dropdown menu.
