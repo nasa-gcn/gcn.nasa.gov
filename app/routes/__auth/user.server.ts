@@ -6,11 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import {
-  CognitoIdentityProviderClient,
-  AdminAddUserToGroupCommand,
-} from '@aws-sdk/client-cognito-identity-provider'
-import { getLatestUserGroups, maybeThrow } from '~/lib/utils'
+import { getLatestUserGroups } from '~/lib/utils'
 import { storage } from './auth.server'
 
 export async function getUser({ headers }: Request) {
@@ -33,25 +29,4 @@ export async function updateSession(user: any) {
     session.set(key, value)
   })
   await storage.commitSession(session)
-}
-
-export async function addUserToCircularSubmitterGroup(user: {
-  sub: string
-  email: string
-  groups: string[]
-  idp: string | null
-  refreshToken: string
-  cognitoUserName: string
-}) {
-  try {
-    const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
-    const command = new AdminAddUserToGroupCommand({
-      Username: user.cognitoUserName,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-      GroupName: 'gcn.nasa.gov/circular-submitter',
-    })
-    await cognitoIdentityProviderClient.send(command)
-  } catch (error) {
-    maybeThrow(error, 'no group added, yet.')
-  }
 }
