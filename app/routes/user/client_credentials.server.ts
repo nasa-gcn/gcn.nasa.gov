@@ -12,12 +12,31 @@ import {
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
+import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
 import { tables } from '@architect/functions'
 import { generate } from 'generate-password'
 import { getUser } from '~/routes/__auth/user.server'
-import { maybeThrow } from '~/lib/utils'
 
 const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
+
+function maybeThrow(e: any, warning: string) {
+  const errorsAllowedInDev = [
+    'ExpiredTokenException',
+    'UnrecognizedClientException',
+  ]
+  const { name } = e as CognitoIdentityProviderServiceException
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(
+      `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+    )
+  }
+}
 
 export interface RedactedClientCredential {
   name: string
