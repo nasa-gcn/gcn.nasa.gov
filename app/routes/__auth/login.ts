@@ -26,7 +26,7 @@ export function userFromTokenSet(
       : null
   const cognitoUserName = claims['cognito:username'] as string
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
-    (group) => group.split('/')[0] == 'gcn.nasa.gov'
+    (group) => group.startsWith('gcn.nasa.gov/')
   )
 
   return { sub, email, groups, idp, refreshToken, cognitoUserName }
