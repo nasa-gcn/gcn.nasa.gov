@@ -21,6 +21,9 @@ export default function User() {
               <NavLink key="." to="." end>
                 Profile
               </NavLink>,
+              <NavLink key="permissions" to="permissions">
+                Permissions
+              </NavLink>,
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,
