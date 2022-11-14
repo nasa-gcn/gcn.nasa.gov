@@ -37,7 +37,7 @@ export function getFormDataString(formData: FormData, key: string) {
   }
 }
 
-export async function getLatestUserGroups(
+export async function refreshUser(
   user: NonNullable<Awaited<ReturnType<typeof getUser>>>
 ) {
   const client = await getOpenIDClient()
@@ -45,4 +45,5 @@ export async function getLatestUserGroups(
   const user_new = userFromTokenSet(refreshedTokenSet)
   await updateSession(user_new)
   user.groups = user_new.groups
+  user.token = user_new.token
 }

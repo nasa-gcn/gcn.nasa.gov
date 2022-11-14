@@ -6,7 +6,8 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { getLatestUserGroups } from '~/lib/utils'
+import { tables } from '@architect/functions'
+import { refreshUser } from '~/lib/utils'
 import { storage } from './auth.server'
 
 export async function getUser({ headers }: Request) {
@@ -17,9 +18,12 @@ export async function getUser({ headers }: Request) {
   const idp = session.get('idp') as string | null
   const refreshToken = session.get('refreshToken') as string
   const cognitoUserName = session.get('cognitoUserName') as string
+  const token = session.get('token') as string
   if (!sub) return null
-  const user = { sub, email, groups, idp, refreshToken, cognitoUserName }
-  await getLatestUserGroups(user)
+  const user = { sub, email, groups, idp, refreshToken, cognitoUserName, token }
+  if (!token) {
+    await refreshUser(user)
+  }
   return user
 }
 
@@ -29,4 +33,38 @@ export async function updateSession(user: any) {
     session.set(key, value)
   })
   await storage.commitSession(session)
+}
+
+export async function clearUserToken(sub: string) {
+  const db = await tables()
+  const targetSessionResults = await db.sessions.query({
+    IndexName: 'bySub',
+    KeyConditionExpression: '#sub = :sub',
+    ExpressionAttributeNames: {
+      '#sub': 'sub',
+      '#token': 'token',
+      '#idx': '_idx',
+      '#ttl': '_ttl',
+    },
+    ExpressionAttributeValues: {
+      ':sub': sub,
+    },
+    ProjectionExpression: '#token, #sub, #idx, #ttl',
+  })
+
+  if (!targetSessionResults.Items) return
+
+  const targetSession = targetSessionResults.Items[0]
+  console.log(targetSession['_idx'])
+  console.log(targetSession['_ttl'])
+  await db.sessions.update({
+    Key: { _idx: targetSession['_idx'] as string },
+    UpdateExpression: 'set #token = :nullToken',
+    ExpressionAttributeNames: {
+      '#token': 'token',
+    },
+    ExpressionAttributeValues: {
+      ':nullToken': '',
+    },
+  })
 }
