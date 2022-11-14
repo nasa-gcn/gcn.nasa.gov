@@ -24,6 +24,7 @@ module.exports.deploy = {
           {
             Effect: 'Allow',
             Action: [
+              'cognito-idp:AdminAddUserToGroup',
               'cognito-idp:AdminListGroupsForUser',
               'cognito-idp:CreateUserPoolClient',
               'cognito-idp:DeleteUserPoolClient',

@@ -7,14 +7,16 @@
  */
 
 import { tables } from '@architect/functions'
+import type { UserType } from '@aws-sdk/client-cognito-identity-provider'
 import {
+  AdminAddUserToGroupCommand,
   AdminListGroupsForUserCommand,
   ListUsersCommand,
   ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { getUser } from '../__auth/user.server'
-import { client } from './cognito.server'
+import { clearUserToken, getUser } from '../__auth/user.server'
+import { client, maybeThrow } from './cognito.server'
 
 // models
 export type EndorsementRequest = {
@@ -68,18 +70,7 @@ export class EndorsementsServer {
       )
 
     const escapedEndorserString = endorserSub.replaceAll('"', '\\"')
-    const user = (
-      await client.send(
-        new ListUsersCommand({
-          UserPoolId: process.env.COGNITO_USER_POOL_ID,
-          Filter: `sub = "${escapedEndorserString}"`,
-        })
-      )
-    )?.Users?.[0]
-    if (!user)
-      throw new Response('Requested user does not exist', {
-        status: 400,
-      })
+    const user = await this.#getCognitoUsernameForSub(escapedEndorserString)
 
     const getGroupsCommand = new AdminListGroupsForUserCommand({
       Username: user.Username,
@@ -130,6 +121,8 @@ export class EndorsementsServer {
   /**
    * Updates the Status of an existing Endorsement Request
    *
+   * On approval, will clear out the requestor's token, and add them to the submitters group
+   *
    * Throws an HTTP error if:
    *    - The current user is not in the submitters group
    *    - There is not an existing endorsement request with a key matching the provided requestorSub, the sub of the current
@@ -141,9 +134,7 @@ export class EndorsementsServer {
     status: EndorsementState,
     requestorSub: string
   ) {
-    if (
-      this.#currentUserGroups.indexOf('gcn.nasa.gov/circular-submitter') == -1
-    )
+    if (!this.#currentUserGroups.includes('gcn.nasa.gov/circular-submitter'))
       throw new Response(
         'The user is not a verified submitter, and therefore can not approve requests',
         {
@@ -163,9 +154,16 @@ export class EndorsementsServer {
       },
       ExpressionAttributeValues: {
         ':status': status,
+        ':pending': 'pending',
       },
-      ConditionExpression: "#status = 'pending'",
+      ConditionExpression: '#status = :pending',
     })
+
+    if (status == 'approved')
+      await Promise.all([
+        this.#addUserToGroup(requestorSub, 'gcn.nasa.gov/circular-submitter'),
+        clearUserToken(requestorSub),
+      ])
   }
 
   /**
@@ -247,7 +245,77 @@ export class EndorsementsServer {
       GroupName: 'gcn.nasa.gov/circular-submitter',
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
-    const result = await client.send(command)
-    return result.Users
+
+    let response
+    try {
+      response = await client.send(command)
+    } catch (error) {
+      maybeThrow(error, 'returning fake users')
+      const fakeUsers: UserType[] = [
+        {
+          Attributes: [
+            { Name: 'sub', Value: crypto.randomUUID() },
+            { Name: 'email', Value: 'a.einstein@example.com' },
+            { Name: 'name', Value: 'Albert Einstein' },
+          ],
+        },
+        {
+          Attributes: [
+            { Name: 'sub', Value: crypto.randomUUID() },
+            { Name: 'email', Value: 'c.sagan@example.com' },
+            { Name: 'name', Value: 'Carl Sagan' },
+          ],
+        },
+      ]
+      response = {
+        Users: fakeUsers,
+      }
+    }
+    return response.Users
+  }
+
+  /**
+   * Gets another user from cognito
+   *
+   * @param escapedEndorserString - the sub of another user
+   * @returns a user if found, otherwise undefined
+   */
+  async #getCognitoUsernameForSub(sub: string) {
+    const user = (
+      await client.send(
+        new ListUsersCommand({
+          UserPoolId: process.env.COGNITO_USER_POOL_ID,
+          Filter: `sub = "${sub}"`,
+        })
+      )
+    )?.Users?.[0]
+
+    if (!user)
+      throw new Response('Requested user does not exist', {
+        status: 400,
+      })
+
+    return user
+  }
+
+  /**
+   * Adds a user to a group
+   *
+   * Throws an HTTP error if:
+   *  - The provided sub does not correspond to an existing user
+   *
+   * @param sub - sub of another user
+   * @param group - group to which the user corresponding to the given sub should be added
+   */
+  async #addUserToGroup(sub: string, group: string) {
+    const cognitoUser = await this.#getCognitoUsernameForSub(sub)
+
+    await client.send(
+      new AdminAddUserToGroupCommand({
+        Username: cognitoUser.Username,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+        GroupName: group,
+      })
+    )
   }
 }

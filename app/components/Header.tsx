@@ -83,6 +83,13 @@ export function Header({ email }: { email?: string }) {
                         Profile
                       </Link>,
                       <Link
+                        key="permissions"
+                        to="/user/permissions"
+                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                      >
+                        Permissions
+                      </Link>,
+                      <Link
                         key="credentials"
                         to="/user/credentials"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
