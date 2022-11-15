@@ -25,6 +25,9 @@ email_notification_subscription
   uuid *String
   topic **String
 
+user
+  sub *String
+
 circular_endorsements
   requestorSub *String
   endorserSub **String
