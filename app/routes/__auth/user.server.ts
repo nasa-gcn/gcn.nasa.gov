@@ -21,7 +21,12 @@ export async function getUser({ headers }: Request) {
   const token = session.get('token') as string
   if (!sub) return null
   const user = { sub, email, groups, idp, refreshToken, cognitoUserName, token }
-  if (!token) {
+  if (
+    !token ||
+    JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).exp *
+      1000 <
+      Date.now()
+  ) {
     await refreshUser(user)
   }
   return user
