@@ -19,7 +19,7 @@ export function userFromTokenSet(
   const claims = tokenSet.claims()
   const sub = claims.sub
   const email = claims.email as string
-  const token = tokenSet.access_token as string
+  const accessToken = tokenSet.access_token as string
   const refreshToken = tokenSet.refresh_token as string
   const idp =
     claims.identities instanceof Array && claims.identities.length > 0
@@ -30,7 +30,7 @@ export function userFromTokenSet(
     (group) => group.startsWith('gcn.nasa.gov/')
   )
 
-  return { sub, email, groups, idp, refreshToken, cognitoUserName, token }
+  return { sub, email, groups, idp, refreshToken, cognitoUserName, accessToken }
 }
 
 export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
@@ -106,7 +106,7 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
 
     const user = userFromTokenSet(tokenSet)
     const session = await sessionPromise
-    session.set('token', tokenSet.access_token)
+    session.set('accessToken', tokenSet.access_token)
     Object.entries(user).forEach(([key, value]) => {
       session.set(key, value)
     })

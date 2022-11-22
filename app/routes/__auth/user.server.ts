@@ -7,6 +7,7 @@
  */
 
 import { tables } from '@architect/functions'
+import { TokenSet } from 'openid-client'
 import { refreshUser } from '~/lib/utils'
 import { storage } from './auth.server'
 
@@ -18,17 +19,24 @@ export async function getUser({ headers }: Request) {
   const idp = session.get('idp') as string | null
   const refreshToken = session.get('refreshToken') as string
   const cognitoUserName = session.get('cognitoUserName') as string
-  const token = session.get('token') as string
+  const accessToken = session.get('accessToken') as string
   if (!sub) return null
-  const user = { sub, email, groups, idp, refreshToken, cognitoUserName, token }
-  if (
-    !token ||
-    JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString()).exp *
-      1000 <
-      Date.now()
-  ) {
-    await refreshUser(user)
+  const user = {
+    sub,
+    email,
+    groups,
+    idp,
+    refreshToken,
+    cognitoUserName,
+    accessToken,
   }
+  if (!accessToken) await refreshUser(user)
+
+  const tokenSet = new TokenSet(
+    JSON.parse(Buffer.from(accessToken.split('.')[1], 'base64').toString())
+  )
+  if (tokenSet.expired()) await refreshUser(user)
+
   return user
 }
 
@@ -40,6 +48,7 @@ export async function updateSession(user: any) {
   await storage.commitSession(session)
 }
 
+// Clear the access tokens from all sessions belonging to the user with the given sub, to force them to get new access tokens.
 export async function clearUserToken(sub: string) {
   const db = await tables()
   const targetSessionResults = await db.sessions.query({
@@ -60,12 +69,9 @@ export async function clearUserToken(sub: string) {
   const promises = targetSessionResults.Items.map((item) =>
     db.sessions.update({
       Key: { _idx: item['_idx'] as string },
-      UpdateExpression: 'set #token = :nullToken',
+      UpdateExpression: 'REMOVE #token',
       ExpressionAttributeNames: {
         '#token': 'token',
-      },
-      ExpressionAttributeValues: {
-        ':nullToken': null,
       },
     })
   )
