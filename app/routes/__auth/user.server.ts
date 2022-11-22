@@ -42,29 +42,28 @@ export async function clearUserToken(sub: string) {
     KeyConditionExpression: '#sub = :sub',
     ExpressionAttributeNames: {
       '#sub': 'sub',
-      '#token': 'token',
       '#idx': '_idx',
-      '#ttl': '_ttl',
     },
     ExpressionAttributeValues: {
       ':sub': sub,
     },
-    ProjectionExpression: '#token, #sub, #idx, #ttl',
+    ProjectionExpression: '#idx',
   })
 
   if (!targetSessionResults.Items) return
 
-  const targetSession = targetSessionResults.Items[0]
-  console.log(targetSession['_idx'])
-  console.log(targetSession['_ttl'])
-  await db.sessions.update({
-    Key: { _idx: targetSession['_idx'] as string },
-    UpdateExpression: 'set #token = :nullToken',
-    ExpressionAttributeNames: {
-      '#token': 'token',
-    },
-    ExpressionAttributeValues: {
-      ':nullToken': '',
-    },
-  })
+  const promises = targetSessionResults.Items.map((item) =>
+    db.sessions.update({
+      Key: { _idx: item['_idx'] as string },
+      UpdateExpression: 'set #token = :nullToken',
+      ExpressionAttributeNames: {
+        '#token': 'token',
+      },
+      ExpressionAttributeValues: {
+        ':nullToken': null,
+      },
+    })
+  )
+
+  await Promise.all(promises)
 }
