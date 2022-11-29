@@ -69,10 +69,7 @@ export async function clearUserToken(sub: string) {
   const promises = targetSessionResults.Items.map((item) =>
     db.sessions.update({
       Key: { _idx: item['_idx'] as string },
-      UpdateExpression: 'REMOVE #token',
-      ExpressionAttributeNames: {
-        '#token': 'token',
-      },
+      UpdateExpression: 'REMOVE accessToken',
     })
   )
 
