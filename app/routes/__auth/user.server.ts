@@ -51,9 +51,7 @@ export async function updateSession(
   Object.entries(user).forEach(([key, value]) => {
     session.set(key, value)
   })
-
-  const setCookie = await storage.commitSession(session)
-  return setCookie
+  return await storage.commitSession(session)
 }
 
 // Clear the access tokens from all sessions belonging to the user with the given sub, to force them to get new access tokens.
