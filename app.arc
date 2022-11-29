@@ -32,7 +32,7 @@ email_notification_subscription
   
 sessions
   sub *String
-  name bySub
+  name sessionsBySub
 
 @aws
 runtime nodejs16.x
