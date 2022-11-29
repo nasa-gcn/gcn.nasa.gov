@@ -27,15 +27,14 @@ export async function getUser({ headers }: Request) {
     email,
     groups,
     idp,
-    refreshToken,
     cognitoUserName,
     accessToken,
   }
-  if (!accessToken) await refreshUser(user)
+  if (!accessToken) await refreshUser(user, refreshToken)
 
   const tokenSet = new TokenSet(jose.decodeJwt(accessToken))
 
-  if (tokenSet.expired()) await refreshUser(user)
+  if (tokenSet.expired()) await refreshUser(user, refreshToken)
 
   return user
 }
@@ -44,9 +43,11 @@ export async function getUser({ headers }: Request) {
  * Gets the current session, sets the value for each key in provided user, and returns the Set-Cookie header
  */
 export async function updateSession(
-  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>,
+  refreshToken: string
 ) {
   const session = await storage.getSession()
+  session.set('refreshToken', refreshToken)
   Object.entries(user).forEach(([key, value]) => {
     session.set(key, value)
   })
@@ -85,12 +86,13 @@ export async function clearUserToken(sub: string) {
 
 // Refreshes a given users groups and access token
 export async function refreshUser(
-  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>,
+  refreshToken: string
 ) {
   const client = await getOpenIDClient()
-  const refreshedTokenSet = await client.refresh(user.refreshToken)
-  const user_new = userFromTokenSet(refreshedTokenSet)
-  await updateSession(user_new)
-  user.groups = user_new.groups
-  user.accessToken = user_new.accessToken
+  const refreshedTokenSet = await client.refresh(refreshToken)
+  const updatedData = userFromTokenSet(refreshedTokenSet)
+  await updateSession(updatedData.user, updatedData.refreshToken)
+  user.groups = updatedData.user.groups
+  user.accessToken = updatedData.user.accessToken
 }

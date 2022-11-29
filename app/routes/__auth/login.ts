@@ -14,9 +14,10 @@ import { getOpenIDClient, oidcStorage } from './auth.server'
 import type { getUser } from './user.server'
 import { updateSession } from './user.server'
 
-export function userFromTokenSet(
-  tokenSet: TokenSet
-): NonNullable<Awaited<ReturnType<typeof getUser>>> {
+export function userFromTokenSet(tokenSet: TokenSet): {
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+  refreshToken: string
+} {
   const claims = tokenSet.claims()
   const sub = claims.sub
   const email = claims.email as string
@@ -31,7 +32,10 @@ export function userFromTokenSet(
     (group) => group.startsWith('gcn.nasa.gov/')
   )
 
-  return { sub, email, groups, idp, refreshToken, cognitoUserName, accessToken }
+  return {
+    user: { sub, email, groups, idp, cognitoUserName, accessToken },
+    refreshToken,
+  }
 }
 
 export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
@@ -103,10 +107,10 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     const params = client.callbackParams(parsedUrl.search)
     parsedUrl.search = ''
     const tokenSet = await client.callback(parsedUrl.toString(), params, checks)
-    const user = userFromTokenSet(tokenSet)
+    const { user, refreshToken } = userFromTokenSet(tokenSet)
 
     const [cookie] = await Promise.all([
-      updateSession(user),
+      updateSession(user, refreshToken),
       oidcSessionDestroyPromise,
     ])
 
