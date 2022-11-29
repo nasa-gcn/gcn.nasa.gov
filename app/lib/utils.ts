@@ -6,11 +6,6 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { getOpenIDClient } from '~/routes/__auth/auth.server'
-import { userFromTokenSet } from '~/routes/__auth/login'
-import type { getUser } from '~/routes/__auth/user.server'
-import { updateSession } from '~/routes/__auth/user.server'
-
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
@@ -35,16 +30,4 @@ export function getFormDataString(formData: FormData, key: string) {
   } else {
     throw new Response(`expected ${key} to be a string`, { status: 400 })
   }
-}
-
-// Refreshes a given users groups and access token
-export async function refreshUser(
-  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
-) {
-  const client = await getOpenIDClient()
-  const refreshedTokenSet = await client.refresh(user.refreshToken)
-  const user_new = userFromTokenSet(refreshedTokenSet)
-  await updateSession(user_new)
-  user.groups = user_new.groups
-  user.accessToken = user_new.accessToken
 }

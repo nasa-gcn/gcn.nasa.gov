@@ -10,8 +10,9 @@ import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import type { TokenSet } from 'openid-client'
 import { generators } from 'openid-client'
-import { getOpenIDClient, oidcStorage, storage } from './auth.server'
+import { getOpenIDClient, oidcStorage } from './auth.server'
 import type { getUser } from './user.server'
+import { updateSession } from './user.server'
 
 export function userFromTokenSet(
   tokenSet: TokenSet
@@ -72,7 +73,6 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
 
     return redirect(authorizationUrl, { headers: { 'Set-Cookie': cookie } })
   } else {
-    const sessionPromise = storage.getSession()
     const [client, { localRedirect, oidcSessionDestroyPromise, ...checks }] =
       await Promise.all([
         getOpenIDClient(),
@@ -103,16 +103,10 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     const params = client.callbackParams(parsedUrl.search)
     parsedUrl.search = ''
     const tokenSet = await client.callback(parsedUrl.toString(), params, checks)
-
     const user = userFromTokenSet(tokenSet)
-    const session = await sessionPromise
-    session.set('accessToken', tokenSet.access_token)
-    Object.entries(user).forEach(([key, value]) => {
-      session.set(key, value)
-    })
 
     const [cookie] = await Promise.all([
-      storage.commitSession(session),
+      updateSession(user),
       oidcSessionDestroyPromise,
     ])
 

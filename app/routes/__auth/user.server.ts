@@ -8,8 +8,9 @@
 
 import { tables } from '@architect/functions'
 import { TokenSet } from 'openid-client'
-import { refreshUser } from '~/lib/utils'
-import { storage } from './auth.server'
+import { getOpenIDClient, storage } from './auth.server'
+import { userFromTokenSet } from './login'
+import * as jose from 'jose'
 
 export async function getUser({ headers }: Request) {
   const session = await storage.getSession(headers.get('Cookie'))
@@ -19,7 +20,7 @@ export async function getUser({ headers }: Request) {
   const idp = session.get('idp') as string | null
   const refreshToken = session.get('refreshToken') as string
   const cognitoUserName = session.get('cognitoUserName') as string
-  const accessToken = session.get('accessToken') as string
+  const accessToken = session.get('accessToken')
   if (!sub) return null
   const user = {
     sub,
@@ -32,20 +33,26 @@ export async function getUser({ headers }: Request) {
   }
   if (!accessToken) await refreshUser(user)
 
-  const tokenSet = new TokenSet(
-    JSON.parse(Buffer.from(accessToken.split('.')[1], 'base64').toString())
-  )
+  const tokenSet = new TokenSet(jose.decodeJwt(accessToken))
+
   if (tokenSet.expired()) await refreshUser(user)
 
   return user
 }
 
-export async function updateSession(user: any) {
+/**
+ * Gets the current session, sets the value for each key in provided user, and returns the Set-Cookie header
+ */
+export async function updateSession(
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+) {
   const session = await storage.getSession()
   Object.entries(user).forEach(([key, value]) => {
     session.set(key, value)
   })
-  await storage.commitSession(session)
+
+  const setCookie = await storage.commitSession(session)
+  return setCookie
 }
 
 // Clear the access tokens from all sessions belonging to the user with the given sub, to force them to get new access tokens.
@@ -74,4 +81,16 @@ export async function clearUserToken(sub: string) {
   )
 
   await Promise.all(promises)
+}
+
+// Refreshes a given users groups and access token
+export async function refreshUser(
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+) {
+  const client = await getOpenIDClient()
+  const refreshedTokenSet = await client.refresh(user.refreshToken)
+  const user_new = userFromTokenSet(refreshedTokenSet)
+  await updateSession(user_new)
+  user.groups = user_new.groups
+  user.accessToken = user_new.accessToken
 }
