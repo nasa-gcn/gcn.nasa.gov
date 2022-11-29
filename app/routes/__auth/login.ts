@@ -10,26 +10,32 @@ import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import type { TokenSet } from 'openid-client'
 import { generators } from 'openid-client'
-import { getOpenIDClient, oidcStorage, storage } from './auth.server'
+import { getOpenIDClient, oidcStorage } from './auth.server'
 import type { getUser } from './user.server'
+import { updateSession } from './user.server'
 
-function userFromTokenSet(
-  tokenSet: TokenSet
-): NonNullable<Awaited<ReturnType<typeof getUser>>> {
+export function userFromTokenSet(tokenSet: TokenSet): {
+  user: NonNullable<Awaited<ReturnType<typeof getUser>>>
+  refreshToken: string
+} {
   const claims = tokenSet.claims()
   const sub = claims.sub
   const email = claims.email as string
-
+  const accessToken = tokenSet.access_token as string
+  const refreshToken = tokenSet.refresh_token as string
   const idp =
     claims.identities instanceof Array && claims.identities.length > 0
       ? (claims.identities[0].providerName as string)
       : null
-
+  const cognitoUserName = claims['cognito:username'] as string
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
-    (group) => group.startsWith('gcn.nasa.gov')
+    (group) => group.startsWith('gcn.nasa.gov/')
   )
 
-  return { sub, email, groups, idp }
+  return {
+    user: { sub, email, groups, idp, cognitoUserName, accessToken },
+    refreshToken,
+  }
 }
 
 export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
@@ -71,7 +77,6 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
 
     return redirect(authorizationUrl, { headers: { 'Set-Cookie': cookie } })
   } else {
-    const sessionPromise = storage.getSession()
     const [client, { localRedirect, oidcSessionDestroyPromise, ...checks }] =
       await Promise.all([
         getOpenIDClient(),
@@ -102,15 +107,10 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     const params = client.callbackParams(parsedUrl.search)
     parsedUrl.search = ''
     const tokenSet = await client.callback(parsedUrl.toString(), params, checks)
-
-    const user = userFromTokenSet(tokenSet)
-    const session = await sessionPromise
-    Object.entries(user).forEach(([key, value]) => {
-      session.set(key, value)
-    })
+    const { user, refreshToken } = userFromTokenSet(tokenSet)
 
     const [cookie] = await Promise.all([
-      storage.commitSession(session),
+      updateSession(user, refreshToken),
       oidcSessionDestroyPromise,
     ])
 

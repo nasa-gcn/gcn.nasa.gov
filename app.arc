@@ -30,6 +30,10 @@ email_notification_subscription
   topic *String
   name byTopic
   
+sessions
+  sub *String
+  name sessionsBySub
+
 @aws
 runtime nodejs16.x
 region us-east-1
