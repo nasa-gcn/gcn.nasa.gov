@@ -52,7 +52,7 @@ export async function updateSession(user: any) {
 export async function clearUserToken(sub: string) {
   const db = await tables()
   const targetSessionResults = await db.sessions.query({
-    IndexName: 'bySub',
+    IndexName: 'sessionsBySub',
     KeyConditionExpression: '#sub = :sub',
     ExpressionAttributeNames: {
       '#sub': 'sub',
