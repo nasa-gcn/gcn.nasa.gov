@@ -12,6 +12,22 @@ import { getOpenIDClient, storage } from './auth.server'
 import { userFromTokenSet } from './login'
 import * as jose from 'jose'
 
+/**
+ * Serialize OIDC `sub` and `iss` claims as a string.
+ *
+ * The returned string is suitable for use as a primary key or partition key in
+ * a database to uniquely identify the end user.
+ *
+ * @see {@link https://openid.net/specs/openid-connect-core-1_0.html#ClaimStability}
+ * @example
+ * // returns 'eyJhbGciOiJub25lIn0.eyJzdWIiOiJmb28iLCJpc3MiOiJiYXIifQ.'
+ * subiss({sub: 'foo', iss: 'bar'})
+ *
+ */
+export function subiss(params: { sub: string; iss: string }) {
+  return new jose.UnsecuredJWT(params).encode()
+}
+
 export async function getUser({ headers }: Request) {
   const session = await storage.getSession(headers.get('Cookie'))
   const sub = session.get('sub') as string | null
