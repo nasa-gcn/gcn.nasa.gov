@@ -12,6 +12,7 @@ import type { TokenSet } from 'openid-client'
 import { generators } from 'openid-client'
 import { getOpenIDClient, oidcStorage } from './auth.server'
 import type { getUser } from './user.server'
+import { subiss } from './user.server'
 import { updateSession } from './user.server'
 
 export function userFromTokenSet(tokenSet: TokenSet): {
@@ -19,7 +20,7 @@ export function userFromTokenSet(tokenSet: TokenSet): {
   refreshToken: string
 } {
   const claims = tokenSet.claims()
-  const sub = claims.sub
+  const sub = subiss({ sub: claims.sub, iss: claims.iss })
   const email = claims.email as string
   const accessToken = tokenSet.access_token as string
   const refreshToken = tokenSet.refresh_token as string
