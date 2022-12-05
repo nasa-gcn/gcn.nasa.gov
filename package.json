@@ -46,7 +46,7 @@
     "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
-    "@architect/architect": "^10.7.3",
+    "@architect/architect": "^10.8.0",
     "@remix-run/dev": "^1.8.0",
     "@remix-run/eslint-config": "^1.8.0",
     "@types/architect__functions": "^3.13.6",
