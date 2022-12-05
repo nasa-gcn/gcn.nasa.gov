@@ -54,18 +54,18 @@ export interface UnRedactedClientCredential extends RedactedClientCredential {
 }
 
 export class ClientCredentialVendingMachine {
-  #sub: string
+  #subiss: string
   #groups: string[]
 
-  private constructor(sub: string, groups: string[]) {
-    this.#sub = sub
+  private constructor(subiss: string, groups: string[]) {
+    this.#subiss = subiss
     this.#groups = groups
   }
 
   static async create(request: Request) {
     const user = await getUser(request)
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub, user.groups)
+    return new this(user.subiss, user.groups)
   }
 
   get groups() {
@@ -75,14 +75,14 @@ export class ClientCredentialVendingMachine {
   async getClientCredentials() {
     const db = await tables()
     const results = await db.client_credentials.query({
-      KeyConditionExpression: '#sub = :sub',
+      KeyConditionExpression: '#subiss = :subiss',
       ExpressionAttributeNames: {
         '#name': 'name',
         '#scope': 'scope',
-        '#sub': 'sub',
+        '#subiss': 'subiss',
       },
       ExpressionAttributeValues: {
-        ':sub': this.#sub,
+        ':subiss': this.#subiss,
       },
       ProjectionExpression: 'client_id, #name, #scope, created',
     })
@@ -99,12 +99,12 @@ export class ClientCredentialVendingMachine {
     // Make sure that the user actually owns the given client ID before
     // we try to get its client secret
     const item = (await db.client_credentials.get({
-      sub: this.#sub,
+      subiss: this.#subiss,
       client_id,
-    })) as ({ sub: string } & RedactedClientCredential) | null
+    })) as ({ subiss: string } & RedactedClientCredential) | null
     if (!item) throw new Response(null, { status: 404 })
 
-    const { sub, ...client_credential } = item
+    const { subiss, ...client_credential } = item
     const client_secret = await this.#getClientSecretInternal(client_id)
 
     return {
@@ -119,14 +119,14 @@ export class ClientCredentialVendingMachine {
     // Make sure that the user actually owns the given client ID before
     // we try to delete it
     const item = await db.client_credentials.get({
-      sub: this.#sub,
+      subiss: this.#subiss,
       client_id,
     })
     if (!item) throw new Response(null, { status: 404 })
 
     await Promise.all([
       this.#deleteClientCredentialInternal(client_id),
-      db.client_credentials.delete({ sub: this.#sub, client_id }),
+      db.client_credentials.delete({ subiss: this.#subiss, client_id }),
     ])
   }
 
@@ -151,7 +151,7 @@ export class ClientCredentialVendingMachine {
       created,
       client_id,
       scope,
-      sub: this.#sub,
+      subiss: this.#subiss,
     })
 
     return { name, created, client_id, client_secret, scope }

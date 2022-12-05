@@ -10,7 +10,7 @@ remix-gcn
 
 @tables
 client_credentials
-  sub *String
+  subiss *String
   client_id **String
 
 sessions
@@ -18,7 +18,7 @@ sessions
   _ttl TTL
 
 email_notification
-  sub *String
+  subiss *String
   uuid **String
 
 email_notification_subscription
@@ -31,8 +31,8 @@ email_notification_subscription
   name byTopic
   
 sessions
-  sub *String
-  name sessionsBySub
+  subiss *String
+  name sessionsBySubiss
 
 @aws
 runtime nodejs16.x

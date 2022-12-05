@@ -30,16 +30,16 @@ export function subiss(params: { sub: string; iss: string }) {
 
 export async function getUser({ headers }: Request) {
   const session = await storage.getSession(headers.get('Cookie'))
-  const sub = session.get('sub') as string | null
+  const subiss = session.get('subiss') as string | null
   const email = session.get('email') as string
   const groups = session.get('groups') as string[]
   const idp = session.get('idp') as string | null
   const refreshToken = session.get('refreshToken') as string
   const cognitoUserName = session.get('cognitoUserName') as string
   const accessToken = session.get('accessToken')
-  if (!sub) return null
+  if (!subiss) return null
   const user = {
-    sub,
+    subiss,
     email,
     groups,
     idp,
@@ -71,17 +71,17 @@ export async function updateSession(
 }
 
 // Clear the access tokens from all sessions belonging to the user with the given sub, to force them to get new access tokens.
-export async function clearUserToken(sub: string) {
+export async function clearUserToken(subiss: string) {
   const db = await tables()
   const targetSessionResults = await db.sessions.query({
-    IndexName: 'sessionsBySub',
-    KeyConditionExpression: '#sub = :sub',
+    IndexName: 'sessionsBySubiss',
+    KeyConditionExpression: '#subiss = :subiss',
     ExpressionAttributeNames: {
-      '#sub': 'sub',
+      '#subiss': 'subiss',
       '#idx': '_idx',
     },
     ExpressionAttributeValues: {
-      ':sub': sub,
+      ':subiss': subiss,
     },
     ProjectionExpression: '#idx',
   })

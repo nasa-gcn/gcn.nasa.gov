@@ -20,7 +20,7 @@ export function userFromTokenSet(tokenSet: TokenSet): {
   refreshToken: string
 } {
   const claims = tokenSet.claims()
-  const sub = subiss({ sub: claims.sub, iss: claims.iss })
+  const subIss = subiss({ sub: claims.sub, iss: claims.iss })
   const email = claims.email as string
   const accessToken = tokenSet.access_token as string
   const refreshToken = tokenSet.refresh_token as string
@@ -34,7 +34,7 @@ export function userFromTokenSet(tokenSet: TokenSet): {
   )
 
   return {
-    user: { sub, email, groups, idp, cognitoUserName, accessToken },
+    user: { subiss: subIss, email, groups, idp, cognitoUserName, accessToken },
     refreshToken,
   }
 }

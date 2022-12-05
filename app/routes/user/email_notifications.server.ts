@@ -33,11 +33,11 @@ export interface EmailNotificationVM extends EmailNotification {
 }
 
 export class EmailNotificationServer {
-  #sub: string
+  #subiss: string
   #domain: string
 
-  private constructor(sub: string, domain: string) {
-    this.#sub = sub
+  private constructor(subiss: string, domain: string) {
+    this.#subiss = subiss
     this.#domain = domain
   }
 
@@ -51,7 +51,7 @@ export class EmailNotificationServer {
     }
 
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub, domain)
+    return new this(user.subiss, domain)
   }
 
   #validateEmailNotification(notification: EmailNotification) {
@@ -74,7 +74,7 @@ export class EmailNotificationServer {
 
     const db = await tables()
     const main = db.email_notification.put({
-      sub: this.#sub,
+      subiss: this.#subiss,
       uuid,
       name: notification.name,
       created,
@@ -96,9 +96,9 @@ export class EmailNotificationServer {
   async getEmailNotifications() {
     const db = await tables()
     const results = await db.email_notification.query({
-      KeyConditionExpression: '#sub = :sub',
+      KeyConditionExpression: '#subiss = :subiss',
       ExpressionAttributeNames: {
-        '#sub': 'sub',
+        '#subiss': 'subiss',
         '#uuid': 'uuid',
         '#name': 'name',
         '#created': 'created',
@@ -106,7 +106,7 @@ export class EmailNotificationServer {
         '#recipient': 'recipient',
       },
       ExpressionAttributeValues: {
-        ':sub': this.#sub,
+        ':subiss': this.#subiss,
       },
       ProjectionExpression: '#uuid, #created, #name, #topics, #recipient',
     })
@@ -132,15 +132,15 @@ export class EmailNotificationServer {
   async getEmailNotification(uuid: string): Promise<EmailNotificationVM> {
     const db = await tables()
     const item = (await db.email_notification.get({
-      sub: this.#sub,
+      subiss: this.#subiss,
       uuid,
-    })) as ({ sub: string } & EmailNotificationVM) | null
+    })) as ({ subiss: string } & EmailNotificationVM) | null
     if (!item) throw new Response(null, { status: 404 })
     item.noticeTypes = item.topics.map(
       (topic) => topicToFormatAndNoticeType(topic).noticeType
     )
     item.format = topicToFormatAndNoticeType(item.topics[0]).noticeFormat
-    const { sub, ...notification } = item
+    const { subiss, ...notification } = item
     return {
       uuid,
       ...notification,
@@ -155,7 +155,7 @@ export class EmailNotificationServer {
 
     const db = await tables()
     await db.email_notification.update({
-      Key: { sub: this.#sub, uuid: email_notification.uuid },
+      Key: { subiss: this.#subiss, uuid: email_notification.uuid },
       UpdateExpression:
         'set #name = :name, #recipient = :recipient, #topics = :topics',
       ExpressionAttributeNames: {
@@ -203,11 +203,11 @@ export class EmailNotificationServer {
   async deleteEmailNotification(uuid: string) {
     const db = await tables()
     const item = await db.email_notification.get({
-      sub: this.#sub,
+      subiss: this.#subiss,
       uuid,
     })
     if (!item) throw new Response(null, { status: 404 })
-    await db.email_notification.delete({ sub: this.#sub, uuid })
+    await db.email_notification.delete({ subiss: this.#subiss, uuid })
     const subscriptions = await db.email_notification_subscription.query({
       KeyConditionExpression: '#uuid = :uuid',
       ExpressionAttributeNames: {
