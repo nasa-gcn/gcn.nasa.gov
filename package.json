@@ -20,7 +20,7 @@
     "prepare": "run-p prepare:*"
   },
   "dependencies": {
-    "@architect/functions": "^5.3.0",
+    "@architect/functions": "^5.3.1",
     "@aws-sdk/client-cognito-identity-provider": "^3.223.0",
     "@aws-sdk/client-sesv2": "^3.223.0",
     "@octokit/rest": "^19.0.5",
