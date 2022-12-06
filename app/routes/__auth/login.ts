@@ -19,6 +19,23 @@ export function userFromTokenSet(tokenSet: TokenSet): {
   refreshToken: string
 } {
   const claims = tokenSet.claims()
+  // NOTE: The OpenID Connect spec cautions that `sub` and `iss` together are
+  // required to uniquely identify an end user.
+  //
+  // However, we are using a single identity provider (Cognito) which will
+  // always return the same `iss` claim (identifying the Cognito user pool).
+  // So it is safe in our application to use `sub` alone to identify users in
+  // in our database.
+  //
+  // It does not matter that Cognito is federating several third-party IdPs;
+  // Cognito returns the same `iss` for every single user.
+  //
+  // If we ever switched from Cognito to a different IdP, or if we ever
+  // directly supported multiple IdPs at the application level, then we would
+  // need to revisit this design decision and consider using a concatenation of
+  // `sub` and `iss` to identify users.
+  //
+  // See https://openid.net/specs/openid-connect-core-1_0.html#ClaimStability
   const sub = claims.sub
   const email = claims.email as string
   const accessToken = tokenSet.access_token as string
