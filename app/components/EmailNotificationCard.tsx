@@ -41,7 +41,7 @@ export default function EmailNotificationCard({
               <h3 className="usa-card__heading margin-right-1">{name}</h3>
               <p>
                 <small className="text-base-light">
-                  Created <TimeAgo time={created}></TimeAgo>
+                  Created <TimeAgo time={created} />
                 </small>
               </p>
             </div>

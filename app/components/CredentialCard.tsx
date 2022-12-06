@@ -17,9 +17,9 @@ import {
   ModalHeading,
   ModalFooter,
 } from '@trussworks/react-uswds'
-import moment from 'moment'
 import { useRef } from 'react'
 import type { RedactedClientCredential } from '~/routes/user/client_credentials.server'
+import TimeAgo from './TimeAgo'
 
 export default function CredentialCard({
   name,
@@ -36,7 +36,7 @@ export default function CredentialCard({
           <div>
             <strong>{name}</strong>{' '}
             <small className="text-base">
-              (created {moment.utc(created).fromNow()})
+              (created <TimeAgo time={created} />)
             </small>
           </div>
           <div>
