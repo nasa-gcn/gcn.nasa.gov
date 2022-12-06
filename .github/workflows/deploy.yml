@@ -27,7 +27,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16'
+          node-version: '18'
       - name: Install Architect
         run: npm i -g @architect/architect@10.8.2
       - name: NPM Install
