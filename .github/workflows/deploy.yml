@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: '16'
       - name: Install Architect
-        run: npm i -g @architect/architect@10.8.0 aws-sdk
+        run: npm i -g @architect/architect@10.8.2
       - name: NPM Install
         run: npm ci
       - name: Build
