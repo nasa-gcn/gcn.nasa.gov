@@ -35,7 +35,7 @@ sessions
   name sessionsBySub
 
 @aws
-runtime nodejs16.x
+runtime nodejs18.x
 region us-east-1
 architecture arm64
 memory 256
