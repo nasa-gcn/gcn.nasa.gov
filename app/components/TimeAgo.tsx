@@ -8,9 +8,18 @@
 
 import dayjs from 'dayjs'
 import RelativeTime from 'dayjs/plugin/relativeTime'
+import locale from 'dayjs/locale/en'
 
+dayjs.locale(locale)
 dayjs.extend(RelativeTime)
+const dateTimeFormat = new Intl.DateTimeFormat(locale.name, {
+  dateStyle: 'full',
+  timeStyle: 'long',
+  timeZone: 'utc',
+})
 
 export default function TimeAgo({ time }: { time: number }) {
-  return <>{dayjs(time).fromNow()}</>
+  return (
+    <span title={dateTimeFormat.format(time)}>{dayjs(time).fromNow()}</span>
+  )
 }
