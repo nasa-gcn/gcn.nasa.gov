@@ -6,8 +6,11 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import moment from 'moment'
+import dayjs from 'dayjs'
+import RelativeTime from 'dayjs/plugin/relativeTime'
+
+dayjs.extend(RelativeTime)
 
 export default function TimeAgo({ time }: { time: number }) {
-  return <>{moment.utc(time).fromNow()}</>
+  return <>{dayjs(time).fromNow()}</>
 }
