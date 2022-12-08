@@ -9,7 +9,7 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { generators } from 'openid-client'
-import { getOpenIDClient, oidcStorage } from './auth.server'
+import { getOpenIDClient, oidcStorage, storage } from './auth.server'
 import { parseTokenSet, updateSession } from './user.server'
 
 export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
@@ -84,7 +84,9 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     const parsedTokenSet = parseTokenSet(tokenSet)
 
     const [cookie] = await Promise.all([
-      updateSession(parsedTokenSet),
+      (async () => {
+        return await updateSession(parsedTokenSet, await storage.getSession())
+      })(),
       oidcSessionDestroyPromise,
     ])
 
