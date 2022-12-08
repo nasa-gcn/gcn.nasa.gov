@@ -84,9 +84,8 @@ Here are instructions for getting the GCN site set up and running on your own co
     # Fill in with a long, random string.
     SESSION_SECRET=fill-me-in
 
-    # (Optional) OIDC provider info for Cognito.
-    # For parts of the site that require authentication,
-    # these lines must be uncommented and filled in.
+    # (Optional) OpenID Connect identity provider configuration for Cognito.
+    # If omitted, then we will use a built-in sandbox identity provider.
     # COGNITO_USER_POOL_ID=fill-me-in
     # OIDC_CLIENT_ID=fill-me-in
     # OIDC_CLIENT_SECRET=fill-me-in
