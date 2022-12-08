@@ -22,7 +22,7 @@ export async function loader({ request }: DataFunctionArgs) {
   return {
     email: user.email,
     idp: user.idp,
-    displayName: addlUserData?.displayName,
+    displayName: addlUserData?.displayName ?? user.name,
     affiliation: addlUserData?.affiliation,
   }
 }
@@ -50,6 +50,15 @@ export default function User() {
       <p>You signed in with {idp || 'username and password'}.</p>
       <h2>Profile Info</h2>
       <Form method="post">
+        <p>
+          These fields will be displayed as the Submitter for any GCN Circulars
+          you submit. They will follow the format of "&lt;Display Name&gt; at
+          &lt;Affiliation&gt; &lt;Email&gt;".
+        </p>
+        <p>
+          For example, "A. E. Einstein at Pennsylvania State University
+          example@example.com"
+        </p>
         <Label htmlFor="displayName">Display Name</Label>
         <small className="text-base">
           How would you like your name to appear in GCN Circulars? For example:
