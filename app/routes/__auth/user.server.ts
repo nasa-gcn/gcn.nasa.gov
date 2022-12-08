@@ -9,48 +9,95 @@
 import { tables } from '@architect/functions'
 import { TokenSet } from 'openid-client'
 import { getOpenIDClient, storage } from './auth.server'
-import { userFromTokenSet } from './login'
-import * as jose from 'jose'
+
+export interface User {
+  sub: string
+  email: string
+  idp: string | null
+  groups: string[]
+  cognitoUserName: string
+}
+
+export function parseTokenSet(tokenSet: TokenSet): {
+  user: User
+  refreshToken: string | undefined
+  expiresAt: number | undefined
+} {
+  const claims = tokenSet.claims()
+  // NOTE: The OpenID Connect spec cautions that `sub` and `iss` together are
+  // required to uniquely identify an end user.
+  //
+  // However, we are using a single identity provider (Cognito) which will
+  // always return the same `iss` claim (identifying the Cognito user pool).
+  // So it is safe in our application to use `sub` alone to identify users in
+  // in our database.
+  //
+  // It does not matter that Cognito is federating several third-party IdPs;
+  // Cognito returns the same `iss` for every single user.
+  //
+  // If we ever switched from Cognito to a different IdP, or if we ever
+  // directly supported multiple IdPs at the application level, then we would
+  // need to revisit this design decision and consider using a concatenation of
+  // `sub` and `iss` to identify users.
+  //
+  // See https://openid.net/specs/openid-connect-core-1_0.html#ClaimStability
+  const { sub, email, 'cognito:username': cognitoUserName } = claims
+  const idp =
+    claims.identities instanceof Array && claims.identities.length > 0
+      ? (claims.identities[0].providerName as string)
+      : null
+  const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
+    (group) => group.startsWith('gcn.nasa.gov/')
+  )
+  const refreshToken = tokenSet.refresh_token
+  const expiresAt = tokenSet.expires_at
+
+  if (!email) throw new Error('email claim must be present')
+  if (typeof cognitoUserName !== 'string')
+    throw new Error('cognito:username claim must be a string')
+
+  const user = { sub, email, groups, idp, cognitoUserName }
+  return { user, refreshToken, expiresAt }
+}
 
 export async function getUser({ headers }: Request) {
   const session = await storage.getSession(headers.get('Cookie'))
-  const sub = session.get('sub') as string | null
-  const email = session.get('email') as string
-  const groups = session.get('groups') as string[]
-  const idp = session.get('idp') as string | null
-  const refreshToken = session.get('refreshToken') as string
-  const cognitoUserName = session.get('cognitoUserName') as string
-  const accessToken = session.get('accessToken')
-  if (!sub) return null
-  const user = {
-    sub,
-    email,
-    groups,
-    idp,
-    cognitoUserName,
-    accessToken,
+  const expires_at = session.get('expiresAt')
+
+  if (new TokenSet({ expires_at }).expired()) {
+    const refreshToken = session.get('refreshToken')
+    if (!refreshToken)
+      throw new Error('No refresh token, cannot refresh session')
+    return await refreshUser(refreshToken)
+  } else {
+    const user = Object.fromEntries(
+      ['sub', 'email', 'groups', 'idp', 'cognitoUserName'].map((key) => [
+        key,
+        session.get(key),
+      ])
+    )
+    if (user.sub) return user as User
   }
-  if (!accessToken || new TokenSet(jose.decodeJwt(accessToken)).expired())
-    await refreshUser(user, refreshToken)
-  return user
 }
 
 /**
  * Gets the current session, sets the value for each key in provided user, and returns the Set-Cookie header
  */
-export async function updateSession(
-  user: NonNullable<Awaited<ReturnType<typeof getUser>>>,
-  refreshToken: string
-) {
+export async function updateSession({
+  user,
+  refreshToken,
+  expiresAt,
+}: ReturnType<typeof parseTokenSet>) {
   const session = await storage.getSession()
-  session.set('refreshToken', refreshToken)
+  if (refreshToken) session.set('refreshToken', refreshToken)
+  if (expiresAt) session.set('expiresAt', expiresAt)
   Object.entries(user).forEach(([key, value]) => {
     session.set(key, value)
   })
   return await storage.commitSession(session)
 }
 
-// Clear the access tokens from all sessions belonging to the user with the given sub, to force them to get new access tokens.
+// Expire tokens from all sessions belonging to the user with the given sub, to force them to get new tokens.
 export async function clearUserToken(sub: string) {
   const db = await tables()
   const targetSessionResults = await db.sessions.query({
@@ -71,22 +118,21 @@ export async function clearUserToken(sub: string) {
   const promises = targetSessionResults.Items.map((item) =>
     db.sessions.update({
       Key: { _idx: item['_idx'] as string },
-      UpdateExpression: 'REMOVE accessToken',
+      UpdateExpression: 'SET expiresAt = :expiresAtValue',
+      ExpressionAttributeValues: {
+        ':expiresAtValue': null,
+      },
     })
   )
 
   await Promise.all(promises)
 }
 
-// Refreshes a given users groups and access token
-export async function refreshUser(
-  user: NonNullable<Awaited<ReturnType<typeof getUser>>>,
-  refreshToken: string
-) {
+// Refreshes a given users groups and tokens
+export async function refreshUser(refreshToken: string) {
   const client = await getOpenIDClient()
-  const refreshedTokenSet = await client.refresh(refreshToken)
-  const updatedData = userFromTokenSet(refreshedTokenSet)
-  await updateSession(updatedData.user, updatedData.refreshToken)
-  user.groups = updatedData.user.groups
-  user.accessToken = updatedData.user.accessToken
+  const tokenSet = await client.refresh(refreshToken)
+  const parsedTokenSet = parseTokenSet(tokenSet)
+  await updateSession(parsedTokenSet)
+  return parsedTokenSet.user
 }
