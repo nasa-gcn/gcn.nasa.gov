@@ -30,12 +30,8 @@ export async function getUser({ headers }: Request) {
     cognitoUserName,
     accessToken,
   }
-  if (!accessToken) await refreshUser(user, refreshToken)
-
-  const tokenSet = new TokenSet(jose.decodeJwt(accessToken))
-
-  if (tokenSet.expired()) await refreshUser(user, refreshToken)
-
+  if (!accessToken || new TokenSet(jose.decodeJwt(accessToken)).expired())
+    await refreshUser(user, refreshToken)
   return user
 }
 
