@@ -165,15 +165,17 @@ export function CatchBoundary() {
       </Document>
     )
   } else {
-    ;<Document>
-      <h1>Unexpected error (HTTP {status}</h1>
-      <p className="usa-intro">An unexpected error occurred.</p>
-      <ButtonGroup>
-        <Link to="/" className="usa-button">
-          Go home
-        </Link>
-      </ButtonGroup>
-    </Document>
+    return (
+      <Document>
+        <h1>Unexpected error (HTTP {status})</h1>
+        <p className="usa-intro">An unexpected error occurred.</p>
+        <ButtonGroup>
+          <Link to="/" className="usa-button">
+            Go home
+          </Link>
+        </ButtonGroup>
+      </Document>
+    )
   }
 }
 
