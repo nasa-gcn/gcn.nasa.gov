@@ -50,11 +50,20 @@ export const storage = createArcTableSessionStorage({
 
 export const getOpenIDClient = memoizee(
   async function () {
-    const user_pool_id = getEnvOrDie('COGNITO_USER_POOL_ID')
+    const user_pool_id = process.env.COGNITO_USER_POOL_ID
 
-    const providerUrl = `https://cognito-idp.${
-      user_pool_id.split('_')[0]
-    }.amazonaws.com/${user_pool_id}/`
+    let providerUrl
+    if (user_pool_id) {
+      providerUrl = `https://cognito-idp.${
+        user_pool_id.split('_')[0]
+      }.amazonaws.com/${user_pool_id}/`
+    } else if (process.env.ARC_ENV === 'testing') {
+      providerUrl = `http://localhost:${process.env.ARC_OIDC_IDP_PORT}/`
+    } else {
+      throw new Error(
+        'Environment variable COGNITO_USER_POOL_ID must be defined in production'
+      )
+    }
 
     const issuer = await Issuer.discover(providerUrl)
 

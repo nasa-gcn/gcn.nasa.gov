@@ -19,19 +19,32 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     })(),
   ])
 
-  // Determine the Cognito logout URI endpoint
-  const auth_endpoint = client.issuer.metadata.authorization_endpoint
-  if (!auth_endpoint)
-    throw new Error(
-      'client.issuer.metadata.authorization_endpoint must be present'
-    )
-  const logoutUrl = new URL(auth_endpoint)
-  logoutUrl.pathname = '/logout'
+  const post_logout_redirect_uri = new URL(url).origin
 
-  logoutUrl.searchParams.set('client_id', client.metadata.client_id)
-  logoutUrl.searchParams.set('logout_uri', new URL(url).origin)
+  let logoutUrl
+  if (!process.env.COGNITO_USER_POOL_ID) {
+    logoutUrl = client.endSessionUrl({ post_logout_redirect_uri })
+    if (!logoutUrl) {
+      throw new Error('Cannot discover end session url')
+    }
+  } else {
+    // FIXME: Cognito does not advertise a discoverable end session endpoint.
+    // Worse, its /logout URI endpoint does not behave exactly like the
+    // standard OpenID Connect end session endpoint; it accepts a query string
+    // parameter called "logout_uri" instead of "post_logout_redirect_uri"
+    const auth_endpoint = client.issuer.metadata.authorization_endpoint
+    if (!auth_endpoint)
+      throw new Error(
+        'client.issuer.metadata.authorization_endpoint must be present'
+      )
+    const newUrl = new URL(auth_endpoint)
+    newUrl.pathname = '/logout'
+    newUrl.searchParams.set('client_id', client.metadata.client_id)
+    newUrl.searchParams.set('logout_uri', post_logout_redirect_uri)
+    logoutUrl = newUrl.toString()
+  }
 
-  return redirect(logoutUrl.toString(), {
+  return redirect(logoutUrl, {
     headers: {
       'Set-Cookie': cookie,
     },
