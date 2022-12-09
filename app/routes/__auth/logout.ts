@@ -8,18 +8,12 @@
 
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
-import { getOpenIDClient, storage } from './auth.server'
+import { getOpenIDClient } from './auth.server'
 
-export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
-  const [client, cookie] = await Promise.all([
-    getOpenIDClient(),
-    (async () => {
-      const session = await storage.getSession(headers.get('Cookie'))
-      return await storage.destroySession(session)
-    })(),
-  ])
+export const loader: LoaderFunction = async ({ request: { url } }) => {
+  const client = await getOpenIDClient()
 
-  const post_logout_redirect_uri = new URL(url).origin
+  const post_logout_redirect_uri = `${new URL(url).origin}/post_logout`
 
   let logoutUrl
   if (!process.env.COGNITO_USER_POOL_ID) {
@@ -44,9 +38,5 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     logoutUrl = newUrl.toString()
   }
 
-  return redirect(logoutUrl, {
-    headers: {
-      'Set-Cookie': cookie,
-    },
-  })
+  return redirect(logoutUrl)
 }

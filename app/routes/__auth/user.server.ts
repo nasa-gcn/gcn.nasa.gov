@@ -23,6 +23,7 @@ export function parseTokenSet(tokenSet: TokenSet): {
   user: User
   refreshToken: string | undefined
   expiresAt: number | undefined
+  existingIdp: string | undefined
 } {
   const claims = tokenSet.claims()
   // NOTE: The OpenID Connect spec cautions that `sub` and `iss` together are
@@ -52,13 +53,14 @@ export function parseTokenSet(tokenSet: TokenSet): {
   )
   const refreshToken = tokenSet.refresh_token
   const expiresAt = tokenSet.expires_at
+  const existingIdp = claims.existingIdp as string | undefined
 
   if (!email) throw new Error('email claim must be present')
   if (typeof cognitoUserName !== 'string')
     throw new Error('cognito:username claim must be a string')
 
   const user = { sub, email, groups, idp, cognitoUserName }
-  return { user, refreshToken, expiresAt }
+  return { user, refreshToken, expiresAt, existingIdp }
 }
 
 export async function getUser({ headers }: Request) {
