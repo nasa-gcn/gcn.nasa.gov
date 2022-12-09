@@ -42,10 +42,14 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
       })(),
     ])
 
+    const identity_provider = parsedUrl.searchParams.get('identity_provider')
+    parsedUrl.searchParams.delete('identity_provider')
+
     const authorizationUrl = client.authorizationUrl({
       scope: 'openid',
       code_challenge_method: 'S256',
       redirect_uri: parsedUrl.toString(),
+      identity_provider,
       ...props,
     })
 
@@ -82,6 +86,19 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     parsedUrl.search = ''
     const tokenSet = await client.callback(parsedUrl.toString(), params, checks)
     const parsedTokenSet = parseTokenSet(tokenSet)
+
+    const { existingIdp } = parsedTokenSet
+    if (existingIdp) {
+      const [cookie] = await Promise.all([
+        (async () => {
+          const session = await oidcStorage.getSession()
+          session.set('existingIdp', existingIdp)
+          return await oidcStorage.commitSession(session)
+        })(),
+        oidcSessionDestroyPromise,
+      ])
+      return redirect('/logout', { headers: { 'Set-Cookie': cookie } })
+    }
 
     const [cookie] = await Promise.all([
       updateSession(parsedTokenSet),
