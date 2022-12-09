@@ -7,6 +7,7 @@
  */
 
 import { tables } from '@architect/functions'
+import type { Session } from '@remix-run/node'
 import { TokenSet } from 'openid-client'
 import { getOpenIDClient, storage } from './auth.server'
 
@@ -68,7 +69,7 @@ export async function getUser({ headers }: Request) {
     const refreshToken = session.get('refreshToken')
     if (!refreshToken)
       throw new Error('No refresh token, cannot refresh session')
-    return await refreshUser(refreshToken)
+    return await refreshUser(refreshToken, session)
   } else {
     const user = Object.fromEntries(
       ['sub', 'email', 'groups', 'idp', 'cognitoUserName'].map((key) => [
@@ -83,12 +84,10 @@ export async function getUser({ headers }: Request) {
 /**
  * Gets the current session, sets the value for each key in provided user, and returns the Set-Cookie header
  */
-export async function updateSession({
-  user,
-  refreshToken,
-  expiresAt,
-}: ReturnType<typeof parseTokenSet>) {
-  const session = await storage.getSession()
+export async function updateSession(
+  { user, refreshToken, expiresAt }: ReturnType<typeof parseTokenSet>,
+  session: Session
+) {
   if (refreshToken) session.set('refreshToken', refreshToken)
   if (expiresAt) session.set('expiresAt', expiresAt)
   Object.entries(user).forEach(([key, value]) => {
@@ -129,10 +128,10 @@ export async function clearUserToken(sub: string) {
 }
 
 // Refreshes a given users groups and tokens
-export async function refreshUser(refreshToken: string) {
+export async function refreshUser(refreshToken: string, session: Session) {
   const client = await getOpenIDClient()
   const tokenSet = await client.refresh(refreshToken)
   const parsedTokenSet = parseTokenSet(tokenSet)
-  await updateSession(parsedTokenSet)
+  await updateSession(parsedTokenSet, session)
   return parsedTokenSet.user
 }
