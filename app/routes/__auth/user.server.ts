@@ -21,6 +21,7 @@ export interface User {
 
 export function parseTokenSet(tokenSet: TokenSet): {
   user: User
+  accessToken: string | undefined
   refreshToken: string | undefined
   expiresAt: number | undefined
   existingIdp: string | undefined
@@ -51,6 +52,7 @@ export function parseTokenSet(tokenSet: TokenSet): {
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
     (group) => group.startsWith('gcn.nasa.gov/')
   )
+  const accessToken = tokenSet.access_token
   const refreshToken = tokenSet.refresh_token
   const expiresAt = tokenSet.expires_at
   const existingIdp = claims.existingIdp as string | undefined
@@ -60,7 +62,7 @@ export function parseTokenSet(tokenSet: TokenSet): {
     throw new Error('cognito:username claim must be a string')
 
   const user = { sub, email, groups, idp, cognitoUserName }
-  return { user, refreshToken, expiresAt, existingIdp }
+  return { user, accessToken, refreshToken, expiresAt, existingIdp }
 }
 
 export async function getUser({ headers }: Request) {
@@ -87,9 +89,15 @@ export async function getUser({ headers }: Request) {
  * Gets the current session, sets the value for each key in provided user, and returns the Set-Cookie header
  */
 export async function updateSession(
-  { user, refreshToken, expiresAt }: ReturnType<typeof parseTokenSet>,
+  {
+    user,
+    accessToken,
+    refreshToken,
+    expiresAt,
+  }: ReturnType<typeof parseTokenSet>,
   session: Session
 ) {
+  if (accessToken) session.set('accessToken', accessToken)
   if (refreshToken) session.set('refreshToken', refreshToken)
   if (expiresAt) session.set('expiresAt', expiresAt)
   Object.entries(user).forEach(([key, value]) => {
