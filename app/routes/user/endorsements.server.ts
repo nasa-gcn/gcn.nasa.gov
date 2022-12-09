@@ -113,25 +113,20 @@ export class EndorsementsServer {
         endorserSub: escapedEndorserString,
       },
       UpdateExpression:
-        'set #status = :status, #endorserEmail = :endorserEmail, #requestorEmail = :requestorEmail, #created = :created',
+        'set #status = :status, endorserEmail = :endorserEmail, requestorEmail = :requestorEmail, created = :created',
       ExpressionAttributeNames: {
         '#status': 'status',
-        '#endorserEmail': 'endorserEmail',
-        '#requestorEmail': 'requestorEmail',
-        '#created': 'created',
-        '#requestorSub': 'requestorSub',
-        '#endorserSub': 'endorserSub',
       },
       ExpressionAttributeValues: {
         ':status': 'pending',
         ':endorserEmail': endorserEmail,
         ':requestorEmail': this.#currentUserEmail,
         ':created': Date.now(),
-        ':endorserSub': escapedEndorserString,
+        ':endorserSub': endorserSub,
         ':requestorSub': this.#sub,
       },
       ConditionExpression:
-        'NOT (#endorserSub = :endorserSub and #requestorSub = :requestorSub)',
+        'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub)',
     })
   }
 
@@ -219,16 +214,11 @@ export class EndorsementsServer {
         role == 'requestor' ? undefined : 'circularEndorsementsByEndorserSub',
       KeyConditionExpression:
         role == 'requestor'
-          ? '#requestorSub = :sub'
-          : '#endorserSub = :endorserSub',
+          ? 'requestorSub = :sub'
+          : 'endorserSub = :endorserSub',
       FilterExpression: role == 'requestor' ? undefined : '#status = :status',
       ExpressionAttributeNames: {
-        '#requestorSub': 'requestorSub',
-        '#requestorEmail': 'requestorEmail',
-        '#endorserSub': 'endorserSub',
-        '#endorserEmail': 'endorserEmail',
         '#status': 'status',
-        '#created': 'created',
       },
       ExpressionAttributeValues:
         role == 'requestor'
@@ -240,7 +230,7 @@ export class EndorsementsServer {
               ':status': 'pending',
             },
       ProjectionExpression:
-        '#requestorSub, #requestorEmail, #endorserSub, #endorserEmail, #status, #created',
+        'requestorSub, requestorEmail, endorserSub, endorserEmail, #status, created',
     }
 
     const db = await tables()
