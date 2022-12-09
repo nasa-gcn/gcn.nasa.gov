@@ -14,13 +14,16 @@ let server
 module.exports = {
   set: {
     env({ inventory }) {
-      const orig_env = inventory.inv._project.env.local[process.env.ARC_ENV]
+      const orig_env = inventory.inv._project.env.local?.[process.env.ARC_ENV]
       let env = {}
-      if (process.env.ARC_ENV === 'testing' && !orig_env.COGNITO_USER_POOL_ID) {
-        if (!orig_env.OIDC_CLIENT_ID) {
+      if (
+        process.env.ARC_ENV === 'testing' &&
+        !orig_env?.COGNITO_USER_POOL_ID
+      ) {
+        if (!orig_env?.OIDC_CLIENT_ID) {
           env.OIDC_CLIENT_ID = generate({ length: 26 })
         }
-        if (!orig_env.OIDC_CLIENT_SECRET) {
+        if (!orig_env?.OIDC_CLIENT_SECRET) {
           env.OIDC_CLIENT_SECRET = generate({ length: 51 })
         }
         if (!process.env.ARC_OIDC_IDP_PORT) {
