@@ -8,7 +8,7 @@
 
 // Add required permissions boundary for working on the Mission Cloud Platform
 module.exports.deploy = {
-  start: ({ cloudformation }) => {
+  start({ cloudformation }) {
     cloudformation.Resources.Role.Properties.PermissionsBoundary = {
       // eslint-disable-next-line no-template-curly-in-string
       'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:policy/mcp-tenantOperator',

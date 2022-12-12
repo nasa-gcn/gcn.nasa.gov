@@ -8,7 +8,7 @@
 
 // Grant the Lambda function permission to send email.
 module.exports.deploy = {
-  start: ({ cloudformation }) => {
+  start({ cloudformation }) {
     cloudformation.Resources.Role.Properties.Policies.push({
       PolicyName: 'ArcSesPolicy',
       PolicyDocument: {

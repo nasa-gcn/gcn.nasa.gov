@@ -9,7 +9,7 @@
 // Mission Cloud Platform does not support user-defined bucket policies;
 // they must be set manually by an administrator
 module.exports.deploy = {
-  start: ({ cloudformation }) => {
+  start({ cloudformation }) {
     delete cloudformation.Resources.StaticBucketPolicy
     return cloudformation
   },
