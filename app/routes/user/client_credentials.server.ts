@@ -11,6 +11,7 @@ import {
   CreateUserPoolClientCommand,
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
+  ListGroupsCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
 import { tables } from '@architect/functions'
@@ -52,6 +53,8 @@ export interface ClientCredential extends RedactedClientCredential {
 export interface UnRedactedClientCredential extends RedactedClientCredential {
   client_secret: string
 }
+
+export const defaultGroup = 'gcn.nasa.gov/kafka-public-consumer'
 
 export class ClientCredentialVendingMachine {
   #sub: string
@@ -215,5 +218,35 @@ export class ClientCredentialVendingMachine {
     } catch (e) {
       maybeThrow(e, 'deleting fake client credentials')
     }
+  }
+
+  /**
+   * Get the names and descriptions of the groups to which the current user
+   * belongs. The groups are sorted such that the default group is first,
+   * followed by the remaining group sin alphabetical order.
+   */
+  async getGroupDescriptions(): Promise<[string, string | undefined][]> {
+    const command = new ListGroupsCommand({
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    })
+
+    let response
+    try {
+      response = await cognitoIdentityProviderClient.send(command)
+    } catch (e) {
+      maybeThrow(e, 'not getting group descriptions')
+    }
+
+    const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(
+      response?.Groups?.map(({ GroupName, Description }) => [
+        GroupName,
+        Description,
+      ])?.filter(([GroupName]) => GroupName) ?? []
+    )
+
+    return [...this.groups]
+      .sort()
+      .sort((a, b) => +(b === defaultGroup) - +(a === defaultGroup))
+      .map((key) => [key, groupsMap[key]])
   }
 }

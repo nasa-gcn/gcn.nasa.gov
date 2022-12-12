@@ -28,6 +28,7 @@ module.exports.deploy = {
               'cognito-idp:CreateUserPoolClient',
               'cognito-idp:DeleteUserPoolClient',
               'cognito-idp:DescribeUserPoolClient',
+              'cognito-idp:ListGroupsCommand',
               'cognito-idp:ListUsersCommand',
               'cognito-idp:ListUsersInGroupCommand',
             ],
