@@ -9,7 +9,13 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import { Button, Dropdown, Label, TextInput } from '@trussworks/react-uswds'
+import {
+  Button,
+  Fieldset,
+  Label,
+  Radio,
+  TextInput,
+} from '@trussworks/react-uswds'
 import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
 import { getEnvOrDieInProduction } from '~/lib/env'
@@ -79,7 +85,7 @@ export async function handleCredentialActions(
 export async function handleCredentialLoader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
-  const groups = machine.groups
+  const groups = await machine.getGroupDescriptions()
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
   return { client_credentials, recaptchaSiteKey, groups }
 }
@@ -110,17 +116,19 @@ export function NewCredentialForm() {
         onChange={(e) => setNameValid(!!e.target.value)}
       />
       <Label htmlFor="scope">Scope</Label>
-      <Dropdown
-        id="scope"
-        name="scope"
-        defaultValue="gcn.nasa.gov/kafka-public-consumer"
-      >
-        {groups.map((group) => (
-          <option value={group} key={group}>
-            {group}
-          </option>
+      <Fieldset id="scope">
+        {groups.map(([key, description], index) => (
+          <Radio
+            name="scope"
+            id={key}
+            key={key}
+            value={key}
+            defaultChecked={index === 0}
+            label={key}
+            labelDescription={description}
+          />
         ))}
-      </Dropdown>
+      </Fieldset>
       {recaptchaSiteKey ? (
         <p>
           <ReCAPTCHA
