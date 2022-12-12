@@ -9,18 +9,11 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import {
   handleCredentialActions,
+  handleCredentialLoader,
   NewCredentialForm,
 } from '~/components/NewCredentialForm'
-import { getEnvOrDieInProduction } from '~/lib/env'
-import { ClientCredentialVendingMachine } from '../client_credentials.server'
 
-export async function loader({ request }: DataFunctionArgs) {
-  const machine = await ClientCredentialVendingMachine.create(request)
-  const client_credentials = await machine.getClientCredentials()
-  const groups = machine.groups
-  const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
-  return { client_credentials, recaptchaSiteKey, groups }
-}
+export const loader = handleCredentialLoader
 
 export async function action({ request }: DataFunctionArgs) {
   return handleCredentialActions(request, 'user')
