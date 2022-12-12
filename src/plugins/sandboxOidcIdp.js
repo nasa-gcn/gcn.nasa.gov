@@ -64,7 +64,9 @@ module.exports = {
             client_secret: process.env.OIDC_CLIENT_SECRET,
             grant_types: ['authorization_code', 'refresh_token'],
             redirect_uris: [`http://localhost:${http_port}/login`],
-            post_logout_redirect_uris: [`http://localhost:${http_port}`],
+            post_logout_redirect_uris: [
+              `http://localhost:${http_port}/post_logout`,
+            ],
           },
         ],
         cookies: { keys: [generate({ length: 32 })] },
