@@ -46,7 +46,7 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
     parsedUrl.searchParams.delete('identity_provider')
 
     const authorizationUrl = client.authorizationUrl({
-      scope: 'openid',
+      scope: 'openid profile aws.cognito.signin.user.admin',
       code_challenge_method: 'S256',
       redirect_uri: parsedUrl.toString(),
       identity_provider,

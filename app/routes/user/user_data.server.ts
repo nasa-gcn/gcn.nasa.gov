@@ -6,39 +6,45 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { tables } from '@architect/functions'
-import { getUser } from '../__auth/user.server'
+import {
+  CognitoIdentityProviderClient,
+  UpdateUserAttributesCommand,
+} from '@aws-sdk/client-cognito-identity-provider'
+import { storage } from '../__auth/auth.server'
+import { getUser, refreshUser } from '../__auth/user.server'
 
 export class UserDataServer {
   #sub: string
+  #cookie: string
 
-  private constructor(sub: string) {
+  private constructor(sub: string, cookie: string) {
     this.#sub = sub
+    this.#cookie = cookie
   }
 
   static async create(request: Request) {
     const user = await getUser(request)
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub)
+    return new this(user.sub, request.headers.get('Cookie') ?? '')
   }
 
   async updateUserData(displayName: string, affiliation: string) {
-    const db = await tables()
-
-    await db.user.update({
-      Key: { sub: this.#sub },
-      UpdateExpression:
-        'set displayName = :displayName, affiliation = :affiliation',
-      ExpressionAttributeValues: {
-        ':displayName': displayName,
-        ':affiliation': affiliation,
-      },
+    const session = await storage.getSession(this.#cookie)
+    const client = new CognitoIdentityProviderClient({})
+    const command = new UpdateUserAttributesCommand({
+      UserAttributes: [
+        {
+          Name: 'name',
+          Value: displayName,
+        },
+        {
+          Name: 'custom:affiliation',
+          Value: affiliation,
+        },
+      ],
+      AccessToken: session.get('accessToken'),
     })
-  }
-
-  async getUserData() {
-    const db = await tables()
-    const results = await db.user.get({ sub: this.#sub })
-    return results
+    await client.send(command)
+    await refreshUser(session.get('refreshToken'), session)
   }
 }
