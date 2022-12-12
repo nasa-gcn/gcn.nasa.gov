@@ -24,10 +24,10 @@ module.exports.deploy = {
           {
             Effect: 'Allow',
             Action: [
+              'cognito-idp:AdminListGroupsForUserCommand',
               'cognito-idp:CreateUserPoolClient',
               'cognito-idp:DeleteUserPoolClient',
               'cognito-idp:DescribeUserPoolClient',
-              'cognito-idp:AdminListGroupsForUserCommand',
               'cognito-idp:ListUsersCommand',
               'cognito-idp:ListUsersInGroupCommand',
             ],
