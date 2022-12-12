@@ -121,23 +121,21 @@ export function NewCredentialForm() {
           </option>
         ))}
       </Dropdown>
-      <p>
-        {recaptchaSiteKey ? (
+      {recaptchaSiteKey ? (
+        <p>
           <ReCAPTCHA
             sitekey={recaptchaSiteKey}
             onChange={(value) => {
               setRecaptchaValid(!!value)
             }}
           />
-        ) : (
-          <div className="usa-prose">
-            <p className="text-base">
-              You are working in a development environment, the ReCaptcha is
-              currently hidden
-            </p>
-          </div>
-        )}
-      </p>
+        </p>
+      ) : (
+        <p className="usa-prose text-base">
+          You are working in a development environment, the ReCaptcha is
+          currently hidden
+        </p>
+      )}
       <Link to=".." type="button" className="usa-button usa-button--outline">
         Back
       </Link>
