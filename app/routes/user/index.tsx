@@ -17,13 +17,11 @@ import { UserDataServer } from './user_data.server'
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
-  const server = await UserDataServer.create(request)
-  const addlUserData = await server.getUserData()
   return {
     email: user.email,
     idp: user.idp,
-    displayName: addlUserData?.displayName ?? user.name,
-    affiliation: addlUserData?.affiliation,
+    displayName: user.name,
+    affiliation: user.affiliation,
   }
 }
 
