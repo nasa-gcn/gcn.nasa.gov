@@ -51,6 +51,7 @@ concurrency 100
 provisionedConcurrency 5
 
 @plugins
+remixLiveReload  # Workaround for Remix live reload bug, https://github.com/remix-run/remix/issues/198
 sandboxOidcIdp  # Sandbox identity provider
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
 lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
