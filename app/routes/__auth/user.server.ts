@@ -55,7 +55,7 @@ export function parseTokenSet(tokenSet: TokenSet): {
   const accessToken = tokenSet.access_token
   const refreshToken = tokenSet.refresh_token
   const expiresAt = tokenSet.expires_at
-  const existingIdp = claims.existingIdp as string | undefined
+  const existingIdp = claims['dev:custom:existingIdp'] as string | undefined
 
   if (!email) throw new Error('email claim must be present')
   if (typeof cognitoUserName !== 'string')
