@@ -54,7 +54,7 @@ export function parseTokenSet(tokenSet: TokenSet): {
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
     (group) => group.startsWith('gcn.nasa.gov/')
   )
-  const name = claims.name
+  const name = claims.name ?? ''
   const affiliation = (claims['custom:affiliation'] ?? '') as string
   const accessToken = tokenSet.access_token
   const refreshToken = tokenSet.refresh_token
