@@ -27,7 +27,7 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
-  const displayName = getFormDataString(data, 'displayName')
+  const displayName = getFormDataString(data, 'name')
   const affiliation = getFormDataString(data, 'affiliation')
 
   if (!displayName) throw new Response('displayName not set', { status: 400 })
