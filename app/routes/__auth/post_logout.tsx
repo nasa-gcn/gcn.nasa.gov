@@ -48,6 +48,13 @@ export default function PostLogout() {
           time that you signed in, you used <b>{friendlyExistingIdp}</b>. Would
           you like to try signing in that way again?
         </p>
+        <p className="text-base">
+          To change your sign-in method,{' '}
+          <a href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn">
+            contact us for help
+          </a>
+          .
+        </p>
       </div>
       <ModalFooter>
         <Form action="/login">
