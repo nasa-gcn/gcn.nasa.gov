@@ -57,7 +57,7 @@ export default function User() {
           For example, "A. E. Einstein at Pennsylvania State University
           example@example.com"
         </p>
-        <Label htmlFor="displayName">Display Name</Label>
+        <Label htmlFor="Name">Name</Label>
         <small className="text-base">
           How would you like your name to appear in GCN Circulars? For example:
           A. E. Einstein, A. Einstein, Albert Einstein
