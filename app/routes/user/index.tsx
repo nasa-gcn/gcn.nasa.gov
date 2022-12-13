@@ -20,7 +20,7 @@ export async function loader({ request }: DataFunctionArgs) {
   return {
     email: user.email,
     idp: user.idp,
-    displayName: user.name,
+    name: user.name,
     affiliation: user.affiliation,
   }
 }
