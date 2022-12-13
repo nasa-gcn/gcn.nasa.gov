@@ -28,7 +28,7 @@ export class UserDataServer {
     return new this(user.sub, request.headers.get('Cookie') ?? '')
   }
 
-  async updateUserData(displayName: string, affiliation: string) {
+  async updateUserData(name: string, affiliation: string) {
     const session = await storage.getSession(this.#cookie)
     const client = new CognitoIdentityProviderClient({})
     const command = new UpdateUserAttributesCommand({
