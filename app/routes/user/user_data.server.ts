@@ -35,7 +35,7 @@ export class UserDataServer {
       UserAttributes: [
         {
           Name: 'name',
-          Value: displayName,
+          Value: name,
         },
         {
           Name: 'custom:affiliation',
