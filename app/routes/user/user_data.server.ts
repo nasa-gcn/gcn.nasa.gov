@@ -14,21 +14,19 @@ import { storage } from '../__auth/auth.server'
 import { getUser, refreshUser } from '../__auth/user.server'
 
 export class UserDataServer {
-  #sub: string
   #cookie: string
 
-  private constructor(sub: string, cookie: string) {
-    this.#sub = sub
+  private constructor(cookie: string) {
     this.#cookie = cookie
   }
 
   static async create(request: Request) {
     const user = await getUser(request)
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub, request.headers.get('Cookie') ?? '')
+    return new this(request.headers.get('Cookie') ?? '')
   }
 
-  async updateUserData(name: string, affiliation: string) {
+  async updateUserData(name?: string, affiliation?: string) {
     const session = await storage.getSession(this.#cookie)
     const client = new CognitoIdentityProviderClient({})
     const command = new UpdateUserAttributesCommand({

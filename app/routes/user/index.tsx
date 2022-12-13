@@ -27,21 +27,16 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
-  const displayName = getFormDataString(data, 'name')
+  const name = getFormDataString(data, 'name')
   const affiliation = getFormDataString(data, 'affiliation')
-
-  if (!displayName) throw new Response('displayName not set', { status: 400 })
-  if (!affiliation) throw new Response('affiliation not set', { status: 400 })
-
   const server = await UserDataServer.create(request)
-  await server.updateUserData(displayName, affiliation)
+  await server.updateUserData(name, affiliation)
 
   return redirect('/user')
 }
 
 export default function User() {
-  const { email, idp, displayName, affiliation } =
-    useLoaderData<typeof loader>()
+  const { email, idp, name, affiliation } = useLoaderData<typeof loader>()
   return (
     <>
       <h1>Welcome, {email}!</h1>
@@ -62,13 +57,7 @@ export default function User() {
           How would you like your name to appear in GCN Circulars? For example:
           A. E. Einstein, A. Einstein, Albert Einstein
         </small>
-        <TextInput
-          id="displayName"
-          name="displayName"
-          type="text"
-          defaultValue={displayName}
-          required
-        />
+        <TextInput id="name" name="name" type="text" defaultValue={name} />
         <Label htmlFor="affiliation">Affiliation</Label>
         <small className="text-base">
           For example: Pennsylvania State University, Ioffe Institute, DESY,
@@ -79,7 +68,6 @@ export default function User() {
           name="affiliation"
           type="text"
           defaultValue={affiliation}
-          required
         />
         <Button className="usa-button margin-top-2" type="submit">
           Update
