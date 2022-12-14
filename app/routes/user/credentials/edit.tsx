@@ -13,6 +13,8 @@ import {
   NewCredentialForm,
 } from '~/components/NewCredentialForm'
 
+export const handle = { breadcrumb: 'New' }
+
 export const loader = handleCredentialLoader
 
 export async function action({ request }: DataFunctionArgs) {

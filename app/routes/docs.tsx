@@ -9,6 +9,10 @@
 import { SideNav } from '@trussworks/react-uswds'
 import { NavLink, Outlet } from '@remix-run/react'
 
+export const handle = {
+  breadcrumb: 'Documentation',
+}
+
 export default function Docs() {
   return (
     <div className="grid-row grid-gap">

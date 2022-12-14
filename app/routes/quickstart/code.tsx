@@ -14,6 +14,10 @@ import { ClientCredentialVendingMachine } from '../user/client_credentials.serve
 import { Button } from '@trussworks/react-uswds'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 
+export const handle = {
+  breadcrumb: 'Get Sample Code',
+}
+
 export async function loader({ request }: DataFunctionArgs) {
   const { clientId, noticeFormat, ...rest } = Object.fromEntries(
     new URL(request.url).searchParams

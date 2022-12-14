@@ -8,6 +8,8 @@
 
 import UserPageContainer from '~/components/UserPageContainer'
 
+export const handle = { breadcrumb: 'Client Credentials' }
+
 export default function Credentials() {
   return <UserPageContainer header="Client Credentials" />
 }

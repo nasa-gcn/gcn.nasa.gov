@@ -12,6 +12,10 @@ import { Button, Label } from '@trussworks/react-uswds'
 import { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 
+export const handle = {
+  breadcrumb: 'GCN - Start Streaming GCN Notices - Customize Alerts',
+}
+
 export function loader({ request: { url } }: DataFunctionArgs) {
   const clientId = new URL(url).searchParams.get('clientId')
   if (!clientId) throw new Response('clientId expected', { status: 400 })
