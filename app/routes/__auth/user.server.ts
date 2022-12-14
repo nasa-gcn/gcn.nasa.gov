@@ -23,10 +23,10 @@ export interface User {
 
 export function parseTokenSet(tokenSet: TokenSet): {
   user: User
-  accessToken: string | undefined
-  refreshToken: string | undefined
-  expiresAt: number | undefined
-  existingIdp: string | undefined
+  accessToken?: string
+  refreshToken?: string
+  expiresAt?: number
+  existingIdp?: string
 } {
   const claims = tokenSet.claims()
   // NOTE: The OpenID Connect spec cautions that `sub` and `iss` together are
@@ -54,8 +54,8 @@ export function parseTokenSet(tokenSet: TokenSet): {
   const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
     (group) => group.startsWith('gcn.nasa.gov/')
   )
-  const name = claims.name ?? ''
-  const affiliation = (claims['custom:affiliation'] ?? '') as string
+  const name = claims.name
+  const affiliation = claims['custom:affiliation'] as string | undefined
   const accessToken = tokenSet.access_token
   const refreshToken = tokenSet.refresh_token
   const expiresAt = tokenSet.expires_at
@@ -88,7 +88,9 @@ export async function getUser({ headers }: Request) {
         'cognitoUserName',
         'name',
         'affiliation',
-      ].map((key) => [key, session.get(key)])
+      ]
+        .map((key) => [key, session.get(key)])
+        .filter(([, value]) => value !== undefined)
     )
     if (user.sub) return user as User
   }
@@ -110,7 +112,7 @@ export async function updateSession(
   if (refreshToken) session.set('refreshToken', refreshToken)
   if (expiresAt) session.set('expiresAt', expiresAt)
   Object.entries(user).forEach(([key, value]) => {
-    session.set(key, value)
+    if (value !== undefined) session.set(key, value)
   })
   return await storage.commitSession(session)
 }

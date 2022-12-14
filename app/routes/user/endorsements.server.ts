@@ -9,11 +9,11 @@
 import { tables } from '@architect/functions'
 import {
   AdminListGroupsForUserCommand,
-  CognitoIdentityProviderClient,
   ListUsersCommand,
   ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { getUser } from '../__auth/user.server'
+import { client } from './cognito.server'
 
 // models
 export type EndorsementRequest = {
@@ -26,8 +26,6 @@ export type EndorsementRequest = {
 }
 
 export type EndorsementState = 'approved' | 'pending' | 'rejected' | 'reported'
-
-const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
 
 export class EndorsementsServer {
   #sub: string
@@ -70,7 +68,7 @@ export class EndorsementsServer {
 
     const escapedEndorserString = endorserSub.replaceAll('"', '\\"')
     const user = (
-      await cognitoIdentityProviderClient.send(
+      await client.send(
         new ListUsersCommand({
           UserPoolId: process.env.COGNITO_USER_POOL_ID,
           Filter: `sub = "${escapedEndorserString}"`,
@@ -86,9 +84,7 @@ export class EndorsementsServer {
       Username: user.Username,
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
-    const groupsResponse = await cognitoIdentityProviderClient.send(
-      getGroupsCommand
-    )
+    const groupsResponse = await client.send(getGroupsCommand)
 
     if (
       !groupsResponse.Groups?.find(
@@ -249,7 +245,7 @@ export class EndorsementsServer {
       GroupName: 'gcn.nasa.gov/circular-submitter',
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
-    const result = await cognitoIdentityProviderClient.send(command)
+    const result = await client.send(command)
     return result.Users
   }
 }
