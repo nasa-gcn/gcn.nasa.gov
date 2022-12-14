@@ -21,6 +21,8 @@ import type {
 } from '../email_notifications.server'
 import { EmailNotificationServer } from '../email_notifications.server'
 
+export const handle = { breadcrumb: 'Edit' }
+
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const { uuid, intent, name, recipient, noticeFormat, ...rest } =

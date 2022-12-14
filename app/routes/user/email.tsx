@@ -8,6 +8,8 @@
 
 import UserPageContainer from '~/components/UserPageContainer'
 
+export const handle = { breadcrumb: 'Email Notifications' }
+
 export default function Notifications() {
   return <UserPageContainer header="Email Notifications" />
 }

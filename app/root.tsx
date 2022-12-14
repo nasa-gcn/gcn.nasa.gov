@@ -53,11 +53,14 @@ TopBarProgress.config({
   },
 })
 
+export const handle = {
+  breadcrumb: 'GCN',
+}
+
 export const meta: MetaFunction = () => {
   return {
     charset: 'utf-8',
     viewport: 'width=device-width,initial-scale=1',
-    title: 'GCN - General Coordinates Network',
   }
 }
 
@@ -97,16 +100,22 @@ export function useHostname() {
 }
 
 function Document({ children }: { children?: React.ReactNode }) {
-  const [{ data }] = useMatches()
+  const matches = useMatches()
+  const [{ data }] = matches
   const { email } = data as Awaited<ReturnType<typeof loader>>
   const transition = useTransition()
   const showProgress = useSpinDelay(transition.state !== 'idle')
+  const breadcrumbs = matches
+    .map(({ handle }) => handle?.breadcrumb)
+    .filter(Boolean)
+  const title = breadcrumbs.join(' - ')
 
   return (
     <html lang="en-US">
       <head>
         <Meta />
         <Links />
+        <title>{title}</title>
       </head>
       <body>
         <a className="usa-skipnav" href="#main-content">

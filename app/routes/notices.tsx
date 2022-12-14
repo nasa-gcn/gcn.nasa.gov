@@ -15,11 +15,8 @@ import type {
   OptionRendererProps,
   TagRendererProps,
 } from 'react-tag-autocomplete'
-import type { MetaFunction } from '@remix-run/node'
 
-export const meta: MetaFunction = () => ({
-  title: 'GCN - Notices',
-})
+export const handle = { breadcrumb: 'Notices' }
 
 function NoticeCard({
   children,

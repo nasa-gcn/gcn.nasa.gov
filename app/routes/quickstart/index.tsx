@@ -10,6 +10,10 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { getUser } from '~/routes/__auth/user.server'
 
+export const handle = {
+  breadcrumb: 'Sign in / Sign up',
+}
+
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   return { email: user?.email, idp: user?.idp, url: request.url }

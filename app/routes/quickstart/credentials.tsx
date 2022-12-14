@@ -16,6 +16,10 @@ import {
 } from '~/components/NewCredentialForm'
 import CredentialCard from '~/components/CredentialCard'
 
+export const handle = {
+  breadcrumb: 'Select Credentials',
+}
+
 export const loader = handleCredentialLoader
 
 export async function action({ request }: DataFunctionArgs) {
