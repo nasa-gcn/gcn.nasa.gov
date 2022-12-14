@@ -7,37 +7,15 @@
  */
 
 import {
-  CognitoIdentityProviderClient,
   CreateUserPoolClientCommand,
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
   ListGroupsCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
-import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
 import { tables } from '@architect/functions'
 import { generate } from 'generate-password'
 import { getUser } from '~/routes/__auth/user.server'
-
-const cognitoIdentityProviderClient = new CognitoIdentityProviderClient({})
-
-function maybeThrow(e: any, warning: string) {
-  const errorsAllowedInDev = [
-    'ExpiredTokenException',
-    'UnrecognizedClientException',
-  ]
-  const { name } = e as CognitoIdentityProviderServiceException
-
-  if (
-    !errorsAllowedInDev.includes(name) ||
-    process.env.NODE_ENV === 'production'
-  ) {
-    throw e
-  } else {
-    console.warn(
-      `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
-    )
-  }
-}
+import { client, maybeThrow } from './cognito.server'
 
 export interface RedactedClientCredential {
   name: string
@@ -172,7 +150,7 @@ export class ClientCredentialVendingMachine {
 
     let response
     try {
-      response = await cognitoIdentityProviderClient.send(command)
+      response = await client.send(command)
     } catch (e) {
       maybeThrow(e, 'creating fake client credentials')
       const client_id = generate({ length: 26 })
@@ -195,7 +173,7 @@ export class ClientCredentialVendingMachine {
 
     let response
     try {
-      response = await cognitoIdentityProviderClient.send(command)
+      response = await client.send(command)
     } catch (e) {
       maybeThrow(e, 'creating fake client secret')
       const client_secret = generate({ length: 51 })
@@ -214,7 +192,7 @@ export class ClientCredentialVendingMachine {
     })
 
     try {
-      await cognitoIdentityProviderClient.send(command)
+      await client.send(command)
     } catch (e) {
       maybeThrow(e, 'deleting fake client credentials')
     }
@@ -232,7 +210,7 @@ export class ClientCredentialVendingMachine {
 
     let response
     try {
-      response = await cognitoIdentityProviderClient.send(command)
+      response = await client.send(command)
     } catch (e) {
       maybeThrow(e, 'not getting group descriptions')
     }

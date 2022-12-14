@@ -17,7 +17,7 @@ export default function User() {
           <SideNav
             items={[
               <NavLink key="." to="." end>
-                Account Info
+                Profile
               </NavLink>,
               <NavLink key="credentials" to="credentials">
                 Client Credentials

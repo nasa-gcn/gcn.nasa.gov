@@ -83,7 +83,7 @@ export function Header({ email }: { email?: string }) {
                         to="/user"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                       >
-                        Account
+                        Profile
                       </Link>,
                       <Link
                         key="credentials"

@@ -6,58 +6,110 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
-import { Form, useLoaderData } from '@remix-run/react'
-import { Button, Label, TextInput } from '@trussworks/react-uswds'
+import { useFetcher, useLoaderData } from '@remix-run/react'
+import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
+import { useState } from 'react'
+import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
-import { getUser } from '../__auth/user.server'
-import { UserDataServer } from './user_data.server'
+import { storage } from '../__auth/auth.server'
+import { getUser, updateSession } from '../__auth/user.server'
+import { client, maybeThrow } from './cognito.server'
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
-  return {
-    email: user.email,
-    idp: user.idp,
-    name: user.name,
-    affiliation: user.affiliation,
-  }
+
+  const { email, idp, name, affiliation } = user
+  return { email, idp, name, affiliation }
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  const data = await request.formData()
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+
+  const [session, data] = await Promise.all([
+    storage.getSession(request.headers.get('Cookie')),
+    request.formData(),
+  ])
   const name = getFormDataString(data, 'name')
   const affiliation = getFormDataString(data, 'affiliation')
-  const server = await UserDataServer.create(request)
-  await server.updateUserData(name, affiliation)
 
-  return redirect('/user')
+  const command = new UpdateUserAttributesCommand({
+    UserAttributes: [
+      {
+        Name: 'name',
+        Value: name,
+      },
+      {
+        Name: 'custom:affiliation',
+        Value: affiliation,
+      },
+    ],
+    AccessToken: session.get('accessToken'),
+  })
+
+  try {
+    await client.send(command)
+  } catch (e) {
+    maybeThrow(e, 'not saving name and affiliation permanently')
+  }
+
+  user.name = name
+  user.affiliation = affiliation
+  await updateSession({ user }, session)
+  return null
+}
+
+function formatAuthor({
+  name,
+  affiliation,
+  email,
+}: {
+  name?: string
+  affiliation?: string
+  email: string
+}) {
+  if (!name) return email
+  else if (!affiliation) return `${name} <${email}>`
+  else return `${name} at ${affiliation} <${email}>`
 }
 
 export default function User() {
   const { email, idp, name, affiliation } = useLoaderData<typeof loader>()
+  const fetcher = useFetcher<typeof action>()
+  const [dirty, setDirty] = useState(false)
+  const [currentName, setCurrentName] = useState(name)
+  const [currentAffiliation, setCurrentAffiliation] = useState(affiliation)
+  const disabled = fetcher.state !== 'idle'
+
   return (
     <>
       <h1>Welcome, {email}!</h1>
       <p>You signed in with {idp || 'username and password'}.</p>
-      <h2>Profile Info</h2>
-      <Form method="post">
+      <h2>Profile</h2>
+      <fetcher.Form method="post" onSubmit={() => setDirty(false)}>
         <p>
-          These fields will be displayed as the Submitter for any GCN Circulars
-          you submit. They will follow the format of "&lt;Display Name&gt; at
-          &lt;Affiliation&gt; &lt;Email&gt;".
-        </p>
-        <p>
-          For example, "A. E. Einstein at Pennsylvania State University
-          example@example.com"
+          Your profile affects how your name appears in GCN Circulars that you
+          submit.
         </p>
         <Label htmlFor="Name">Name</Label>
         <small className="text-base">
           How would you like your name to appear in GCN Circulars? For example:
           A. E. Einstein, A. Einstein, Albert Einstein
         </small>
-        <TextInput id="name" name="name" type="text" defaultValue={name} />
+        <TextInput
+          id="name"
+          name="name"
+          type="text"
+          defaultValue={name}
+          disabled={disabled}
+          onChange={(e) => {
+            setDirty(true)
+            setCurrentName(e.target.value)
+          }}
+        />
         <Label htmlFor="affiliation">Affiliation</Label>
         <small className="text-base">
           For example: Pennsylvania State University, Ioffe Institute, DESY,
@@ -68,11 +120,42 @@ export default function User() {
           name="affiliation"
           type="text"
           defaultValue={affiliation}
+          disabled={disabled}
+          onChange={(e) => {
+            setDirty(true)
+            setCurrentAffiliation(e.target.value)
+          }}
         />
-        <Button className="usa-button margin-top-2" type="submit">
-          Update
+        <Label htmlFor="preview">Preview</Label>
+        <small className="text-base">
+          This is how the "From" field will be showin in GCN Circulars that you
+          submit.
+        </small>
+        <div id="preview">
+          {formatAuthor({
+            name: currentName,
+            affiliation: currentAffiliation,
+            email,
+          })}
+        </div>
+        <Button
+          className="usa-button margin-top-2"
+          type="submit"
+          disabled={disabled}
+        >
+          Save
         </Button>
-      </Form>
+        {fetcher.state !== 'idle' && (
+          <>
+            <Spinner /> Saving...
+          </>
+        )}
+        {fetcher.type === 'done' && !dirty && (
+          <>
+            <Icon.Check color="green" /> Saved
+          </>
+        )}
+      </fetcher.Form>
     </>
   )
 }
