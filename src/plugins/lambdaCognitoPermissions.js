@@ -24,13 +24,13 @@ module.exports.deploy = {
           {
             Effect: 'Allow',
             Action: [
-              'cognito-idp:AdminListGroupsForUserCommand',
+              'cognito-idp:AdminListGroupsForUser',
               'cognito-idp:CreateUserPoolClient',
               'cognito-idp:DeleteUserPoolClient',
               'cognito-idp:DescribeUserPoolClient',
-              'cognito-idp:ListGroupsCommand',
-              'cognito-idp:ListUsersCommand',
-              'cognito-idp:ListUsersInGroupCommand',
+              'cognito-idp:ListGroups',
+              'cognito-idp:ListUsers',
+              'cognito-idp:ListUsersInGroup',
             ],
             Resource: {
               'Fn::Sub': `arn:aws:cognito-idp:${region}:\${AWS::AccountId}:userpool/${user_pool_id}`,
