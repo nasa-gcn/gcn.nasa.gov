@@ -10,7 +10,7 @@
   "scripts": {
     "build:remix": "remix build",
     "build:sass": "gulp build-sass",
-    "build": "run-p build:*",
+    "build": "run-s build:sass build:remix",
     "dev:remix": "remix watch",
     "dev:arc": "cross-env NODE_ENV=development arc sandbox",
     "dev:sass": "gulp watch",
@@ -95,7 +95,10 @@
     "singleQuote": true
   },
   "eslintConfig": {
-    "ignorePatterns": "*.mdx",
+    "ignorePatterns": [
+      "app/theme/**",
+      "*.mdx"
+    ],
     "extends": [
       "@remix-run/eslint-config",
       "@remix-run/eslint-config/node",

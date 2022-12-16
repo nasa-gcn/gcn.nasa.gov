@@ -39,16 +39,16 @@ PATHS
 const PROJECT_SASS_SRC = "./theme";
 
 // Images destination
-const IMG_DEST = "./public/theme/img";
+const IMG_DEST = "./app/theme/img";
 
 // Fonts destination
-const FONTS_DEST = "./public/theme/fonts";
+const FONTS_DEST = "./app/theme/fonts";
 
 // Javascript destination
-const JS_DEST = "./public/theme/js";
+const JS_DEST = "./app/theme/js";
 
 // Compiled CSS destination
-const CSS_DEST = "./public/theme/css";
+const CSS_DEST = "./app/theme/css";
 
 // Site CSS destination
 // Like the _site/assets/css directory in Jekyll, if necessary.
