@@ -18,6 +18,7 @@ import CredentialCard from '~/components/CredentialCard'
 
 export const handle = {
   breadcrumb: 'Select Credentials',
+  getSitemapEntries: () => null,
 }
 
 export const loader = handleCredentialLoader

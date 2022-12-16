@@ -14,6 +14,7 @@ import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 
 export const handle = {
   breadcrumb: 'GCN - Start Streaming GCN Notices - Customize Alerts',
+  getSitemapEntries: () => null,
 }
 
 export function loader({ request: { url } }: DataFunctionArgs) {
