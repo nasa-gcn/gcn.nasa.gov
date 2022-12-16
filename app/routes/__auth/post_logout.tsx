@@ -17,6 +17,10 @@ import {
 } from '@trussworks/react-uswds'
 import { storage } from './auth.server'
 
+export const handle = {
+  getSitemapEntries: () => null,
+}
+
 export async function loader({ request: { headers } }: LoaderArgs) {
   const session = await storage.getSession(headers.get('Cookie'))
   const existingIdp = session.get('existingIdp')

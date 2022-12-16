@@ -16,6 +16,7 @@ import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 
 export const handle = {
   breadcrumb: 'Get Sample Code',
+  getSitemapEntries: () => null,
 }
 
 export async function loader({ request }: DataFunctionArgs) {

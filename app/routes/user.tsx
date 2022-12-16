@@ -9,7 +9,7 @@
 import { NavLink, Outlet } from '@remix-run/react'
 import { SideNav } from '@trussworks/react-uswds'
 
-export const handle = { breadcrumb: 'User' }
+export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
 export default function User() {
   return (
