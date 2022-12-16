@@ -10,6 +10,10 @@ import {
   CardMedia,
   Icon,
 } from '@trussworks/react-uswds'
+import gcn_diagram from '~/img/gcn-diagram.jpg'
+import gcn_classic from '~/img/gcn-classic.svg'
+import gcn_classic_over_kafka from '~/img/gcn-classic-over-kafka.svg'
+import gcn_kafka from '~/img/gcn-kafka.svg'
 
 <div
   className="grid-row usa-hero margin-0 padding-0 bg-base-darkest"
@@ -29,7 +33,7 @@ import {
     </Link>
   </div>
   <img
-    src="/_static/img/gcn-diagram.jpg"
+    src={gcn_diagram}
     className="hero-image-right tablet:grid-col-7 padding-4"
     alt="GCN Diagram"
   />
@@ -46,10 +50,7 @@ There are three ways to stream GCN Notices in real time:
       <h4 className="usa-card__heading">GCN Classic</h4>
     </CardHeader>
     <CardMedia imageClass="bg-white padding-2">
-      <img
-        src="/_static/img/gcn-classic.svg"
-        alt="Data flow diagram for GCN Classic"
-      />
+      <img src={gcn_classic} alt="Data flow diagram for GCN Classic" />
     </CardMedia>
     <CardBody>
       <p>Three formats, three protocols.</p>
@@ -74,7 +75,7 @@ There are three ways to stream GCN Notices in real time:
     </CardHeader>
     <CardMedia imageClass="bg-white padding-2">
       <img
-        src="/_static/img/gcn-classic-over-kafka.svg"
+        src={gcn_classic_over_kafka}
         alt="Data flow diagram for GCN Classic over Kafka"
       />
     </CardMedia>
@@ -93,10 +94,7 @@ There are three ways to stream GCN Notices in real time:
       <h4 className="usa-card__heading">GCN Kafka</h4>
     </CardHeader>
     <CardMedia imageClass="bg-white padding-2">
-      <img
-        src="/_static/img/gcn-kafka.svg"
-        alt="Data flow diagram for GCN Kafka"
-      />
+      <img src={gcn_kafka} alt="Data flow diagram for GCN Kafka" />
     </CardMedia>
     <CardBody>
       <p>One format, one protocol.</p>

@@ -39,11 +39,38 @@ import type {
 import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import highlightStyle from 'highlight.js/styles/github.css'
-import TopBarProgress from 'react-topbar-progress-indicator'
 import { DevBanner } from './components/DevBanner'
 import { useSpinDelay } from 'spin-delay'
 import { getUser } from './routes/__auth/user.server'
+import themeStyle from './theme/css/custom.css'
+import highlightStyle from 'highlight.js/styles/github.css'
+import TopBarProgress from 'react-topbar-progress-indicator'
+
+// FIXME: no top-level await, no import function
+// const favicons = Object.fromEntries(
+//   await Promise.all(
+//     [16, 40, 57, 72, 114, 144, 192].map(async (size) => [
+//       size,
+//       await import(`~/theme/img/favicons/favicon-${size}.png`),
+//     ])
+//   )
+// )
+import favicon_16 from '~/theme/img/favicons/favicon-16.png'
+import favicon_40 from '~/theme/img/favicons/favicon-40.png'
+import favicon_57 from '~/theme/img/favicons/favicon-57.png'
+import favicon_72 from '~/theme/img/favicons/favicon-72.png'
+import favicon_114 from '~/theme/img/favicons/favicon-114.png'
+import favicon_144 from '~/theme/img/favicons/favicon-144.png'
+import favicon_192 from '~/theme/img/favicons/favicon-192.png'
+const favicons = {
+  16: favicon_16,
+  40: favicon_40,
+  57: favicon_57,
+  72: favicon_72,
+  114: favicon_114,
+  144: favicon_144,
+  192: favicon_192,
+}
 
 TopBarProgress.config({
   barColors: {
@@ -67,15 +94,15 @@ export const meta: MetaFunction = () => {
 export const links: LinksFunction = () => [
   {
     rel: 'stylesheet',
-    href: '/_static/theme/css/custom.css',
+    href: themeStyle,
   },
   {
     rel: 'stylesheet',
     href: highlightStyle,
   },
-  ...[16, 40, 57, 72, 114, 144, 192].map((size) => ({
+  ...Object.entries(favicons).map(([size, href]) => ({
     rel: 'icon',
-    href: `/_static/theme/img/favicons/favicon-${size}.png`,
+    href: href,
     sizes: `${size}x${size}`,
   })),
 ]

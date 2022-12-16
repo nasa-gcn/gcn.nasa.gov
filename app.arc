@@ -7,6 +7,7 @@ remix-gcn
   src server
 
 @static
+fingerprint external
 
 @tables
 client_credentials

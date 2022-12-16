@@ -16,6 +16,7 @@ import {
   NavDropDownButton,
   Menu,
 } from '@trussworks/react-uswds'
+import logo from '~/img/logo.svg'
 
 export function Header({ email }: { email?: string }) {
   const { pathname } = useLocation()
@@ -34,11 +35,7 @@ export function Header({ email }: { email?: string }) {
           <div className="usa-navbar">
             <Title>
               <Link to="/">
-                <img
-                  id="site-logo"
-                  src="/_static/img/logo.svg"
-                  alt="NASA logo"
-                />
+                <img id="site-logo" src={logo} alt="NASA logo" />
                 <span id="site-title">General Coordinates Network</span>
               </Link>
             </Title>

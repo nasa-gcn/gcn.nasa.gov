@@ -1,3 +1,7 @@
+import lsc_logo from '~/img/lsc-logo.png'
+import virgo_logo from '~/img/virgo-logo.png'
+import kagra_logo from '~/img/kagra-logo.png'
+
 export const handle = { breadcrumb: 'LIGO/Virgo/KAGRA' }
 
 # Gravitational Wave Network
@@ -6,9 +10,9 @@ export const handle = { breadcrumb: 'LIGO/Virgo/KAGRA' }
   align="right"
   className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 >
-  <img src="/_static/img/lsc-logo.png" alt="LIGO logo" />
-  <img src="/_static/img/virgo-logo.png" alt="Virgo logo" />
-  <img src="/_static/img/kagra-logo.png" alt="KAGRA logo" />
+  <img src={lsc_logo} alt="LIGO logo" />
+  <img src={virgo_logo} alt="Virgo logo" />
+  <img src={kagra_logo} alt="KAGRA logo" />
 </div>
 
 **Planned Lifetime:** 2028+
