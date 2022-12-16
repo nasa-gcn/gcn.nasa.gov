@@ -15,6 +15,8 @@ import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 import { EmailNotificationServer } from '../email_notifications.server'
 
+export const handle = { getSitemapEntries: () => null }
+
 export async function action({ request }: DataFunctionArgs) {
   const [data] = await Promise.all([request.formData()])
   const uuid = getFormDataString(data, 'uuid')

@@ -17,7 +17,7 @@ import { storage } from '../__auth/auth.server'
 import { getUser, updateSession } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'
 
-export const handle = { breadcrumb: 'Profile' }
+export const handle = { breadcrumb: 'Profile', getSitemapEntries: () => null }
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)

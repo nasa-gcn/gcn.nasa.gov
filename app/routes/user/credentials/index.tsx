@@ -13,6 +13,8 @@ import { ClientCredentialVendingMachine } from '../client_credentials.server'
 import { Icon } from '@trussworks/react-uswds'
 import CredentialCard from '~/components/CredentialCard'
 
+export const handle = { getSitemapEntries: () => null }
+
 export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()

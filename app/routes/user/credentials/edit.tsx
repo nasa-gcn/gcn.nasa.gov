@@ -13,7 +13,7 @@ import {
   NewCredentialForm,
 } from '~/components/NewCredentialForm'
 
-export const handle = { breadcrumb: 'New' }
+export const handle = { breadcrumb: 'New', getSitemapEntries: () => null }
 
 export const loader = handleCredentialLoader
 
