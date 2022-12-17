@@ -12,6 +12,7 @@ import {
   ListUsersCommand,
   ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { getUser } from '../__auth/user.server'
 import { client } from './cognito.server'
 
@@ -191,7 +192,8 @@ export class EndorsementsServer {
       },
     }
 
-    await db._doc.delete(param).promise()
+    // FIXME: https://github.com/architect/functions/issues/540
+    await (db._doc as unknown as DynamoDBDocument).delete(param)
   }
 
   /**
