@@ -65,7 +65,7 @@
     "generate-password": "^1.7.0",
     "gulp": "^4.0.2",
     "gulp-postcss": "^9.0.1",
-    "gulp-replace": "^1.1.3",
+    "gulp-replace": "github:lpsinger/gulp-replace#permit-any-version-of-types-node",
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0.0",
     "husky": "^8.0.2",
