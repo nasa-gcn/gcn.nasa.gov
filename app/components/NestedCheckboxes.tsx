@@ -57,6 +57,9 @@ function NestedCheckboxNode({
       }
     }
   })
+
+  const isExternalLink = link && link.startsWith('http')
+
   return (
     <li
       role="treeitem"
@@ -70,20 +73,25 @@ function NestedCheckboxNode({
         label={
           <>
             <span className="padding-right-1">{topLevelNodeProps.label}</span>
-            {link && (
-              <>
-                (
-                <Link
-                  to={link}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                  }}
-                >
-                  Details
-                </Link>
-                )
-              </>
-            )}
+            {link &&
+              (isExternalLink ? (
+                <>
+                  <a href={link} target="_blank" rel="noreferrer">
+                    Details
+                  </a>
+                </>
+              ) : (
+                <>
+                  <Link
+                    to={link}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                    }}
+                  >
+                    Details
+                  </Link>
+                </>
+              ))}
           </>
         }
         inputRef={topLevelRef}

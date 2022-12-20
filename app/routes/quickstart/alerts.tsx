@@ -21,6 +21,9 @@ export default function () {
   const [params] = useSearchParams()
   const [alertsValid, setAlertsValid] = useState(false)
   const clientId = params.get('clientId') || undefined
+  const [format, setFormat] = useState<'text' | 'voevent' | 'binary' | 'json'>(
+    'text'
+  )
 
   return (
     <Form method="GET" action="../code">
@@ -31,9 +34,16 @@ export default function () {
         <Link to="/missions">Missions</Link>.
       </p>
       <Label htmlFor="noticeFormat">Notice Format</Label>
-      <NoticeFormatInput name="noticeFormat" value="text" />
+      <NoticeFormatInput
+        name="noticeFormat"
+        value={format}
+        stateFunction={setFormat}
+      />
       <Label htmlFor="noticeTypes">Notice Type</Label>
-      <NoticeTypeCheckboxes validationFunction={setAlertsValid} />
+      <NoticeTypeCheckboxes
+        selectedFormat={format}
+        validationFunction={setAlertsValid}
+      />
       <input type="hidden" name="clientId" value={clientId} />
       <Link
         to="../credentials"

@@ -181,9 +181,17 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
   Other: undefined,
 }
 
+const JsonNoticeTypes = {
+  LVK: ['igwn.gwalert'],
+}
+
+const ExternalNoticeTypeLinks: { [key: string]: string | undefined } = {
+  LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
+}
+
 interface NoticeTypeCheckboxProps {
   defaultSelected?: string[]
-  selectedFormat?: 'binary' | 'text' | 'voevent'
+  selectedFormat?: 'binary' | 'text' | 'voevent' | 'json'
   validationFunction?: (arg: any) => void
 }
 
@@ -221,13 +229,18 @@ export function NoticeTypeCheckboxes({
   return (
     <>
       <NestedCheckboxes
-        nodes={Object.entries(NoticeTypes).map(([mission, noticeTypes]) => ({
+        nodes={Object.entries(
+          selectedFormat == 'json' ? JsonNoticeTypes : NoticeTypes
+        ).map(([mission, noticeTypes]) => ({
           id: mission,
           label: mission,
           name: '',
-          link: NoticeTypeLinks[mission]
-            ? '/missions/' + NoticeTypeLinks[mission]
-            : undefined,
+          link:
+            selectedFormat !== 'json'
+              ? NoticeTypeLinks[mission]
+                ? '/missions/' + NoticeTypeLinks[mission]
+                : undefined
+              : ExternalNoticeTypeLinks[mission],
           nodes: noticeTypes.map((noticeType) => ({
             id: noticeType,
             label: (

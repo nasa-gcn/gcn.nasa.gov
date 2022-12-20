@@ -8,14 +8,16 @@
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-export type NoticeFormat = 'text' | 'voevent' | 'binary'
+export type NoticeFormat = 'text' | 'voevent' | 'binary' | 'json'
 
 export function NoticeFormatInput({
   name,
   value,
+  stateFunction,
 }: {
   name: string
   value?: NoticeFormat
+  stateFunction?: (arg: any) => void
 }) {
   const [currentValue, setCurrentValue] = useState(value)
   const [hover, setHover] = useState<NoticeFormat | undefined>(undefined)
@@ -61,11 +63,26 @@ export function NoticeFormatInput({
         </>
       ),
     },
+    {
+      value: 'json' as ValueType,
+      label: 'JSON',
+      description: (
+        <>
+          Preliminary new notice types available only via JSON (other notice
+          types under development).
+        </>
+      ),
+    },
   ]
 
   return (
     <>
-      <input type="hidden" name={name} value={currentValue} />
+      <input
+        type="hidden"
+        name={name}
+        value={currentValue}
+        onChange={(e) => (stateFunction ? stateFunction(e) : null)}
+      />
       <ButtonGroup role="radiogroup" type="segmented">
         {options.map(({ value, label }) => {
           function setHoverToSelf() {
@@ -82,7 +99,10 @@ export function NoticeFormatInput({
               aria-checked={currentValue === value}
               aria-describedby={`${value}-label`}
               outline={currentValue !== value}
-              onClick={() => setCurrentValue(value)}
+              onClick={() => {
+                setCurrentValue(value)
+                if (stateFunction) stateFunction(value)
+              }}
               onMouseEnter={setHoverToSelf}
               onMouseOver={setHoverToSelf}
               onFocus={setHoverToSelf}

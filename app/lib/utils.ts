@@ -10,7 +10,9 @@ export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
 ) {
-  return `gcn.classic.${noticeFormat}.${noticeType}`
+  return noticeFormat == 'json'
+    ? noticeType
+    : `gcn.classic.${noticeFormat}.${noticeType}`
 }
 
 export function topicToFormatAndNoticeType(topic: string): {
