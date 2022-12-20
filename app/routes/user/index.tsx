@@ -11,6 +11,7 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
+import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { storage } from '../__auth/auth.server'
@@ -96,12 +97,13 @@ export default function User() {
           Your profile affects how your name appears in GCN Circulars that you
           submit.
         </p>
-        <Label htmlFor="Name">Name</Label>
-        <small className="text-base">
+        <Label htmlFor="name">Name</Label>
+        <Hint id="nameHint">
           How would you like your name to appear in GCN Circulars? For example:
           A. E. Einstein, A. Einstein, Albert Einstein
-        </small>
+        </Hint>
         <TextInput
+          aria-describedby="nameHint"
           id="name"
           name="name"
           type="text"
@@ -113,11 +115,12 @@ export default function User() {
           }}
         />
         <Label htmlFor="affiliation">Affiliation</Label>
-        <small className="text-base">
+        <Hint id="affiliationHint">
           For example: Pennsylvania State University, Ioffe Institute, DESY,
           Fermi-GBM Team, or AAVSO
-        </small>
+        </Hint>
         <TextInput
+          aria-describedby="affiliationHint"
           id="affiliation"
           name="affiliation"
           type="text"
@@ -129,11 +132,11 @@ export default function User() {
           }}
         />
         <Label htmlFor="preview">Preview</Label>
-        <small className="text-base">
+        <Hint id="previewHint">
           This is how the "From" field will be showin in GCN Circulars that you
           submit.
-        </small>
-        <div id="preview">
+        </Hint>
+        <div aria-describedby="previewHint" id="preview">
           {formatAuthor({
             name: currentName,
             affiliation: currentAffiliation,
