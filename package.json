@@ -39,6 +39,7 @@
     "memoizee": "^0.4.15",
     "openid-client": "^5.3.1",
     "react": "^18.2.0",
+    "react-autocomplete-hint": "^2.0.0",
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
