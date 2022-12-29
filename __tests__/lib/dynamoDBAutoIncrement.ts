@@ -1,9 +1,14 @@
-import { DynamoDB } from '@aws-sdk/client-dynamodb'
+import {
+  ConditionalCheckFailedException,
+  DynamoDB,
+} from '@aws-sdk/client-dynamodb'
 import { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import type { dynamoDBAutoIncrementProps } from '../../app/lib/dynamoDBAutoIncrement'
 import { dynamoDBAutoIncrement } from '../../app/lib/dynamoDBAutoIncrement'
 
 let doc: DynamoDBDocument
 let autoincrement: ReturnType<typeof dynamoDBAutoIncrement>
+let autoincrementDangerously: ReturnType<typeof dynamoDBAutoIncrement>
 
 beforeAll(async () => {
   doc = DynamoDBDocument.from(
@@ -13,7 +18,7 @@ beforeAll(async () => {
       region: '-',
     })
   )
-  autoincrement = dynamoDBAutoIncrement({
+  const options: dynamoDBAutoIncrementProps = {
     doc,
     counterTableName: 'autoincrement',
     counterTableKey: { tableName: 'widgets' },
@@ -21,6 +26,11 @@ beforeAll(async () => {
     tableName: 'widgets',
     tableAttributeName: 'widgetID',
     initialValue: 1,
+  }
+  autoincrement = dynamoDBAutoIncrement(options)
+  autoincrementDangerously = dynamoDBAutoIncrement({
+    ...options,
+    dangerously: true,
   })
 })
 
@@ -80,4 +90,28 @@ describe('dynamoDBAutoIncrement', () => {
       ])
     }
   )
+
+  test('correctly handles a large number of parallel puts', async () => {
+    const ids = Array.from(Array(20).keys()).map((i) => i + 1)
+    const result = await Promise.all(ids.map(() => autoincrement({})))
+    expect(result.sort()).toEqual(ids.sort())
+  })
+})
+
+describe('dynamoDBAutoIncrement dangerously', () => {
+  test('correctly handles a large number of serial puts', async () => {
+    const ids = Array.from(Array(20).keys()).map((i) => i + 1)
+    const result: number[] = []
+    for (const item of ids) {
+      result.push(await autoincrementDangerously({ widgetName: item }))
+    }
+    expect(result.sort()).toEqual(ids.sort())
+  })
+
+  test('fails on a large number of parallel puts', async () => {
+    const ids = Array.from(Array(20).keys()).map((i) => i + 1)
+    await expect(
+      async () => await Promise.all(ids.map(() => autoincrementDangerously({})))
+    ).rejects.toThrow(ConditionalCheckFailedException)
+  })
 })
