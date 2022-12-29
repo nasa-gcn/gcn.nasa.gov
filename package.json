@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@architect/architect": "^10.8.2",
-    "@aws-sdk/client-dynamodb": "^3.188.0",
+    "@aws-sdk/client-dynamodb": "^3.238.0",
     "@aws-sdk/lib-dynamodb": "^3.188.0",
     "@babel/core": "^7.20.5",
     "@babel/preset-env": "^7.20.2",
