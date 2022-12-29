@@ -17,7 +17,8 @@
     "dev": "remix build && run-p dev:*",
     "prepare:sass": "gulp init",
     "prepare:husky": "husky install",
-    "prepare": "run-p prepare:*"
+    "prepare": "run-p prepare:*",
+    "test": "(test -e dynamodb_local_latest || (mkdir -p dynamodb_local_latest && curl https://s3.us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz | tar -C dynamodb_local_latest -xz)) && jest"
   },
   "dependencies": {
     "@architect/functions": "^5.3.3",
@@ -51,17 +52,23 @@
     "@architect/architect": "^10.8.2",
     "@aws-sdk/client-dynamodb": "^3.188.0",
     "@aws-sdk/lib-dynamodb": "^3.188.0",
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
     "@remix-run/dev": "^1.9.0",
     "@remix-run/eslint-config": "^1.9.0",
+    "@shelf/jest-dynamodb": "^3.3.1",
     "@types/architect__functions": "^3.13.6",
     "@types/color-convert": "^2.0.0",
     "@types/grecaptcha": "^3.0.4",
+    "@types/jest": "^29.2.4",
     "@types/memoizee": "^0.4.7",
     "@types/react": "^18.0.26",
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^18.0.9",
     "@types/react-google-recaptcha": "^2.1.5",
     "autoprefixer": "^10.4.13",
+    "babel-jest": "^29.3.1",
+    "dynamodb-local": "github:lpsinger/dynamodb-local#stdio",
     "eslint": "^8.30.0",
     "eslint-config-prettier": "^8.3.0",
     "generate-password": "^1.7.0",
@@ -71,6 +78,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0.0",
     "husky": "^8.0.2",
+    "jest": "^29.3.1",
     "lint-staged": "^13.1.0",
     "nasawds": "^3.0.338-beta.1",
     "npm-run-all": "^4.1.5",
@@ -106,5 +114,21 @@
       "@remix-run/eslint-config/node",
       "prettier"
     ]
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
+  },
+  "jest": {
+    "preset": "@shelf/jest-dynamodb"
   }
 }
