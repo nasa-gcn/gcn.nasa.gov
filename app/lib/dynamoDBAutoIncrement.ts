@@ -5,6 +5,32 @@ import type {
   UpdateCommandInput,
 } from '@aws-sdk/lib-dynamodb'
 
+export interface dynamoDBAutoIncrementProps {
+  /** a DynamoDB document client instance */
+  doc: DynamoDBDocument
+
+  /** the name of the table in which to store the last value of the counter */
+  counterTableName: string
+
+  /** the partition key in the table in which to store the last value of the counter */
+  counterTableKey: any
+
+  /** the name of the attribute in the table in which to store the last value of the counter */
+  counterTableAttributeName: string
+
+  /** the name of the table in which to store items */
+  tableName: string
+
+  /** the name of the attribute used as the auto-incrementing partition key in the table in which to store items */
+  tableAttributeName: string
+
+  /** the initial value of the counter */
+  initialValue: number
+
+  /** if true, then do not perform any locking (suitable only for testing) */
+  dangerously?: boolean
+}
+
 /**
  * Update an auto-incrementing partition key in DynamoDB.
  *
@@ -33,16 +59,6 @@ import type {
  *   costDollars: 99.99,
  * })
  * ```
- *
- * @param doc a DynamoDB document client instance
- * @param counterTableName the name of the table in which to store the last value of the counter
- * @param counterTableKey the partition key in the table in which to store the last value of the counter
- * @param counterTableAttributeName the name of the attribute in the table in which to store the last value of the counter
- * @param tableName the name of the table in which to store items
- * @param tableAttributeName the name of the attribute used as the auto-incrementing partition key in the table in which to store items
- * @param initialValue the initial value of the counter
- * @param dangerously if true, then do not perform any locking (suitable only for testing)
- * @returns an asynchronous function that, when called with an item for the table, puts the item into the table and returns the new value of the counter
  */
 export function dynamoDBAutoIncrement({
   doc,
@@ -53,16 +69,7 @@ export function dynamoDBAutoIncrement({
   tableAttributeName,
   initialValue,
   dangerously,
-}: {
-  doc: DynamoDBDocument
-  counterTableName: string
-  counterTableKey: any
-  counterTableAttributeName: string
-  tableName: string
-  tableAttributeName: string
-  initialValue: number
-  dangerously?: boolean
-}) {
+}: dynamoDBAutoIncrementProps) {
   return async (item: any) => {
     while (true) {
       const counter =
