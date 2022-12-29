@@ -65,7 +65,7 @@ export async function action({ request }: DataFunctionArgs) {
   return null
 }
 
-function formatAuthor({
+export function formatAuthor({
   name,
   affiliation,
   email,

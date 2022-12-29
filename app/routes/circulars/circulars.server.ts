@@ -9,10 +9,11 @@
 import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { dynamoDBAutoIncrement } from '~/lib/dynamoDBAutoIncrement'
+import { formatAuthor } from '../user/index'
 import { getUser } from '../__auth/user.server'
 
 export type CircularModel = {
-  circularId?: number
+  circularId: number
   sub?: string
   createdOn: number
   subject: string
@@ -73,12 +74,12 @@ export class CircularsServer {
       )
       items = [...items, ...result.Items]
     }
-    return items.sort((a, b) => (b.circularId ?? 0) - (a.circularId ?? 0))
+    return items.sort((a, b) => b.circularId - a.circularId)
   }
 
   async #scanCircularsTable(searchString?: string, lastEvaluatedKey?: any) {
     const db = await tables()
-    const result = await db.gcn_circulars.scan({
+    const result = await db.circulars.scan({
       ExclusiveStartKey: lastEvaluatedKey,
       ExpressionAttributeValues: searchString
         ? {
@@ -103,7 +104,7 @@ export class CircularsServer {
    */
   async get(circularId: number): Promise<CircularModel> {
     const db = await tables()
-    const result = await db.gcn_circulars.get({
+    const result = await db.circulars.get({
       circularId: circularId,
     })
     if (!result)
@@ -136,18 +137,19 @@ export class CircularsServer {
     const db = await tables()
     const doc = db._doc as unknown as DynamoDBDocument
 
-    const tableName = db.name('gcn_circulars')
+    const tableName = db.name('circulars')
     const indexTableName = db.name('auto_increment_metadata')
 
-    const submitter =
-      this.#name +
-      (this.#affiliation ? ` at ${this.#affiliation} ` : ' ') +
-      this.#email
+    const submitter = formatAuthor({
+      name: this.#name,
+      affiliation: this.#affiliation,
+      email: this.#email ?? '',
+    })
 
     await dynamoDBAutoIncrement({
       doc,
       counterTableName: indexTableName,
-      counterTableKey: { tableName: 'gcn_circulars' },
+      counterTableKey: { tableName: 'circulars' },
       counterTableAttributeName: 'circularsIDCounter',
       tableName: tableName,
       tableAttributeName: 'circularId',
@@ -174,7 +176,7 @@ export class CircularsServer {
     if (!this.#sub) throw new Response('User is not signed in', { status: 403 })
 
     const db = await tables()
-    const result = await db.gcn_circulars.scan({
+    const result = await db.circulars.scan({
       ExpressionAttributeNames: {
         '#sub': 'sub',
       },
@@ -207,6 +209,6 @@ export class CircularsServer {
       })
 
     const db = await tables()
-    await db.gcn_circulars.delete({ circularId: circularId })
+    await db.circulars.delete({ circularId: circularId })
   }
 }
