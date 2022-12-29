@@ -30,7 +30,7 @@ circular_endorsements
   requestorSub *String
   endorserSub **String
 
-gcn_circulars
+circulars
   circularId *Number
 
 auto_increment_metadata
