@@ -121,7 +121,7 @@ export class CircularsServer {
    * @param subject - the title/subject line of the Circular
    */
   async createNewCircular(body: string, subject: string) {
-    if (!this.#sub || !this.#groups)
+    if (!this.#sub || !this.#groups || !this.#email)
       throw new Response('User is not signed in', { status: 403 })
     if (!this.#groups.includes('gcn.nasa.gov/circular-submitter'))
       throw new Response('User is not in the submitters group', {
@@ -139,7 +139,7 @@ export class CircularsServer {
     const submitter = formatAuthor({
       name: this.#name,
       affiliation: this.#affiliation,
-      email: this.#email ?? '',
+      email: this.#email,
     })
 
     const useDangerous =
