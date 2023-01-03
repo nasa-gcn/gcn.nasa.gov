@@ -7,6 +7,7 @@
  */
 
 import { tables } from '@architect/functions'
+import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { dynamoDBAutoIncrement } from '~/lib/dynamoDBAutoIncrement'
 import { formatAuthor } from '../user/index'
@@ -27,10 +28,8 @@ export class CircularsServer {
   #groups?: string[]
   #name?: string
   #affiliation?: string
-  #isLocal: boolean
 
   private constructor(
-    isLocal: boolean,
     sub?: string,
     email?: string,
     groups?: string[],
@@ -42,14 +41,11 @@ export class CircularsServer {
     this.#groups = groups
     this.#name = name
     this.#sub = sub
-    this.#isLocal = isLocal
   }
 
   static async create(request: Request) {
     const user = await getUser(request)
-    const isLocal = new URL(request.url).hostname == 'localhost'
     return new this(
-      isLocal,
       user?.sub,
       user?.email,
       user?.groups,
@@ -146,6 +142,10 @@ export class CircularsServer {
       email: this.#email ?? '',
     })
 
+    const useDangerous =
+      (await (db._db as unknown as DynamoDB).config.endpoint?.())?.hostname ==
+      'localhost'
+
     await dynamoDBAutoIncrement({
       doc,
       counterTableName: indexTableName,
@@ -154,7 +154,7 @@ export class CircularsServer {
       tableName: tableName,
       tableAttributeName: 'circularId',
       initialValue: 1,
-      dangerously: this.#isLocal,
+      dangerously: useDangerous,
     })({
       createdOn: Date.now(),
       subject,
