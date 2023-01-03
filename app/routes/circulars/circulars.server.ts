@@ -9,7 +9,7 @@
 import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { dynamoDBAutoIncrement } from '~/lib/dynamoDBAutoIncrement'
+import { dynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { formatAuthor } from '../user/index'
 import { getUser } from '../__auth/user.server'
 
