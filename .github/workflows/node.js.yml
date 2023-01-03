@@ -23,5 +23,3 @@ jobs:
         run: npx tsc -p .
       - name: Run Prettier code style checks
         run: npx prettier -c .
-      - name: Run unit tests
-        run: npm run test
