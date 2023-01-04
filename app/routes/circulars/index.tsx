@@ -86,7 +86,7 @@ export default function Index() {
         distributed to community members worldwide. For more information, see{' '}
         <Link to="">docs</Link>
       </p>
-      <div id="sticky-header" className="sticky margin-bottom-1 padding-top-1">
+      <div className="sticky margin-bottom-1 padding-top-1">
         <div className="usa-search">
           <Hint options={options} allowTabFill allowEnterFill>
             <input
