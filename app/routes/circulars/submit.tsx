@@ -1,8 +1,11 @@
 import type { DataFunctionArgs } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import { Link, Form } from '@remix-run/react'
 import { Label, TextInput, Textarea, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
+import { getFormDataString } from '~/lib/utils'
 import { getUser } from '../__auth/user.server'
+import { CircularsServer } from './circulars.server'
 
 interface FormProps {
   id?: string
@@ -12,9 +15,20 @@ interface FormProps {
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
-  if (!user) throw new Response('', { status: 403 })
-  // If user is not in gcn.nasa.gov/circular-submitter group, error? or message?
+  if (!user || !user.groups.includes('gcn.nasa.gov/circular-submitter'))
+    throw new Response('', { status: 403 })
   return { user }
+}
+
+export async function action({ request }: DataFunctionArgs) {
+  const data = await request.formData()
+  const body = getFormDataString(data, 'body')
+  const subject = getFormDataString(data, 'subject')
+  if (!body || !subject) throw new Response('', { status: 403 })
+  const server = await CircularsServer.create(request)
+  await server.createNewCircular(body, subject)
+
+  return redirect('/circulars')
 }
 
 export default function Submit(props: FormProps) {
@@ -30,7 +44,7 @@ export default function Submit(props: FormProps) {
   return (
     <>
       <h1>Submit a Circular</h1>
-      <Form method="post" action="/api/circulars">
+      <Form method="post">
         <input type="hidden" name="id" value={props.id} />
         <div>
           <p>Create and submit a new GCN Circular</p>
