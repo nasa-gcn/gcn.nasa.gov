@@ -7,17 +7,16 @@
  */
 
 import {
-  Button,
   Grid,
   GridContainer,
   Pagination,
+  Search,
 } from '@trussworks/react-uswds'
 import { Link, useLoaderData, useSubmit } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useEffect, useState } from 'react'
 import { getUser } from '../__auth/user.server'
 import { CircularsServer } from './circulars.server'
-import { Hint } from 'react-autocomplete-hint'
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
@@ -25,7 +24,7 @@ export async function loader({ request }: DataFunctionArgs) {
   const data = await machine.getCirculars('')
   const searchParams = new URL(request.url).searchParams
   const pageStr = searchParams.get('page')
-  const searchTerm = searchParams.get('searchTerm')
+  const searchTerm = searchParams.get('search')
   let filteredDataItems = data
   if (searchTerm) {
     filteredDataItems = filteredDataItems.filter(
@@ -42,34 +41,28 @@ export async function loader({ request }: DataFunctionArgs) {
     page: page,
     searchTerm,
     items: filteredDataItems.slice(limit * (page - 1), page * limit - 1),
-    pageCount: Math.ceil(data.length / limit),
+    pageCount: Math.ceil(filteredDataItems.length / limit),
   }
 }
 
 export default function Index() {
   const { page, searchTerm, items, pageCount } = useLoaderData<typeof loader>()
   const [circulars, setCirculars] = useState(items)
-  const [term, setTerm] = useState(searchTerm ?? '')
-  const options = [...new Set(circulars.map((x) => x.subject))]
   const submit = useSubmit()
 
-  function searchTermUpdate(term: string) {
-    setTerm(term)
-  }
-
-  function keyboardTriggerSearch(event: React.KeyboardEvent<HTMLInputElement>) {
-    if (event.key == 'Tab' || event.key == 'Enter') {
-      triggerSearch()
-    }
-  }
-
-  function triggerSearch() {
+  function triggerSearch(pageNumber: number) {
     const params = new URLSearchParams()
-    params.set('searchTerm', term)
-    submit(new URLSearchParams({ searchTerm: term }), {
-      action: '/circulars',
-      replace: true,
-    })
+    params.set('page', pageNumber.toString())
+    submit(
+      new URLSearchParams({
+        page: pageNumber.toString(),
+        search: searchTerm ?? '',
+      }),
+      {
+        action: '/circulars',
+        replace: true,
+      }
+    )
   }
 
   useEffect(() => {
@@ -88,25 +81,7 @@ export default function Index() {
       </p>
       <div className="sticky margin-bottom-1 padding-top-1">
         <div className="usa-search">
-          <Hint options={options} allowTabFill allowEnterFill>
-            <input
-              id="searchTerm"
-              name="searchTerm"
-              className="usa-input"
-              defaultValue={term ?? ''}
-              type="search"
-              onChange={(e) => searchTermUpdate(e.target.value)}
-              onKeyDown={(e) => keyboardTriggerSearch(e)}
-            />
-          </Hint>
-          <Button className="usa-button" type="submit" onClick={triggerSearch}>
-            <span className="usa-search__submit-text">Search </span>
-            <img
-              src="/assets/img/usa-icons-bg/search--white.svg"
-              className="usa-search__submit-icon"
-              alt="Search"
-            />
-          </Button>
+          <Search defaultValue={searchTerm ?? ''} onSubmit={() => {}} />
         </div>
       </div>
       <div>
@@ -118,15 +93,19 @@ export default function Index() {
           </Grid>
         ))}
       </div>
-      <div id="pagination">
+      <div>
         <Pagination
           pathname={''}
           totalPages={pageCount}
           currentPage={page}
-          onClickNext={() => console.log('next')}
-          onClickPrevious={() => console.log('prev')}
+          onClickNext={() => triggerSearch(page + 1)}
+          onClickPrevious={() => triggerSearch(page - 1)}
           onClickPageNumber={(e) => {
-            console.log(e)
+            if (
+              e.currentTarget.textContent &&
+              parseInt(e.currentTarget.textContent)
+            )
+              triggerSearch(parseInt(e.currentTarget.textContent))
           }}
         />
       </div>

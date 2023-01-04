@@ -24,7 +24,8 @@ export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
-  if (!body || !subject) throw new Response('Body and subject are required', { status: 400 })
+  if (!body || !subject)
+    throw new Response('Body and subject are required', { status: 400 })
   const server = await CircularsServer.create(request)
   await server.createNewCircular(body, subject)
 
@@ -63,8 +64,9 @@ export default function Submit(props: FormProps) {
         </Label>
         <small className="text-base maxw-full">
           The subject line should start with the name of the transient which
-          must be one of the <Link to="">known keywords</Link>. (Contact us for
-          new keyword requests)
+          must be one of the{' '}
+          <Link to="/circulars/info#submission-process">known keywords</Link>.
+          (Contact us for new keyword requests)
         </small>
         <TextInput
           name="subject"
