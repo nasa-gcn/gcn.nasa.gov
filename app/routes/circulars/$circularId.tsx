@@ -24,6 +24,7 @@ export default function $circularId() {
   return (
     <>
       <h2>{circular.subject}</h2>
+      <h4>{circular.submitter}</h4>
       <small className="text-base-light">
         <TimeAgo time={circular.createdOn}></TimeAgo>
       </small>
