@@ -9,26 +9,24 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import TimeAgo from '~/components/TimeAgo'
-import { CircularsServer } from './circulars.server'
+import { get } from './circulars.server'
 
-export async function loader({ request, params }: DataFunctionArgs) {
-  const id = params.circularId
-  if (!id) throw new Response('Id is required', { status: 404 })
-  const server = await CircularsServer.create(request)
-  const circular = await server.get(parseInt(id))
-  return { circular }
+export async function loader({ params: { circularId } }: DataFunctionArgs) {
+  if (!circularId)
+    throw new Response('circularId must be defined', { status: 400 })
+  return get(parseInt(circularId))
 }
 
 export default function $circularId() {
-  const { circular } = useLoaderData<typeof loader>()
+  const { subject, submitter, createdOn, body } = useLoaderData<typeof loader>()
   return (
     <>
-      <h2>{circular.subject}</h2>
-      <h4>{circular.submitter}</h4>
+      <h2>{subject}</h2>
+      <h4>{submitter}</h4>
       <small className="text-base-light">
-        <TimeAgo time={circular.createdOn}></TimeAgo>
+        <TimeAgo time={createdOn}></TimeAgo>
       </small>
-      <div className="text-pre-wrap ">{circular.body}</div>
+      <div className="text-pre-wrap ">{body}</div>
     </>
   )
 }
