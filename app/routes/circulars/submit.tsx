@@ -24,7 +24,7 @@ export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
-  if (!body || !subject) throw new Response('', { status: 403 })
+  if (!body || !subject) throw new Response('Body and subject are required', { status: 400 })
   const server = await CircularsServer.create(request)
   await server.createNewCircular(body, subject)
 
