@@ -79,14 +79,14 @@ export default function Index() {
         distributed to community members worldwide. For more information, see{' '}
         <Link to="">docs</Link>
       </p>
-      <div className="sticky margin-bottom-1 padding-top-1">
+      <div className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <div className="usa-search">
           <Search defaultValue={searchTerm ?? ''} onSubmit={() => {}} />
         </div>
       </div>
       <div>
         {circulars?.map((circular) => (
-          <Grid row key={circular.circularId}>
+          <Grid row key={circular.circularId} className="padding-y-1">
             <Link to={`./${circular.circularId}`}>
               {circular.circularId} - {circular.subject}
             </Link>
