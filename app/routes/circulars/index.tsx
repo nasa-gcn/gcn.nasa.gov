@@ -7,25 +7,22 @@
  */
 
 import {
-  Accordion,
   Button,
-  //ButtonGroup,
   Grid,
+  GridContainer,
   Pagination,
 } from '@trussworks/react-uswds'
 import { Link, useLoaderData, useSubmit } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useEffect, useState } from 'react'
 import { getUser } from '../__auth/user.server'
-// import { CircularsServer } from '../api/circulars.server'
+import { CircularsServer } from './circulars.server'
 import { Hint } from 'react-autocomplete-hint'
-import { DemoData } from '~/lib/demoData'
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
-  // const machine = await CircularsServer.create()
-  // const data = await machine.getCirculars('')
-  const data = DemoData()
+  const machine = await CircularsServer.create(request)
+  const data = await machine.getCirculars('')
   const searchParams = new URL(request.url).searchParams
   const pageStr = searchParams.get('page')
   const searchTerm = searchParams.get('searchTerm')
@@ -39,7 +36,6 @@ export async function loader({ request }: DataFunctionArgs) {
   }
   const limit = 10 // searchParams.get('limit')
   const page = pageStr ? parseInt(pageStr) : 1
-  const filter = searchParams.get('filter') ?? 'date'
 
   return {
     email: user?.email,
@@ -47,17 +43,12 @@ export async function loader({ request }: DataFunctionArgs) {
     searchTerm,
     items: filteredDataItems.slice(limit * (page - 1), page * limit - 1),
     pageCount: Math.ceil(data.length / limit),
-    filter,
   }
 }
 
 export default function Index() {
-  const { page, searchTerm, items, pageCount, filter } =
-    useLoaderData<typeof loader>()
-  console.log(filter)
+  const { page, searchTerm, items, pageCount } = useLoaderData<typeof loader>()
   const [circulars, setCirculars] = useState(items)
-  //const [displayLimit, setDisplayLimit] = useState(10)
-  //const [currentFilter, setCurrentFilter] = useState(filter)
   const [term, setTerm] = useState(searchTerm ?? '')
   const options = [...new Set(circulars.map((x) => x.subject))]
   const submit = useSubmit()
@@ -75,30 +66,20 @@ export default function Index() {
   function triggerSearch() {
     const params = new URLSearchParams()
     params.set('searchTerm', term)
-    submit(new URLSearchParams({ searchTerm: term, filter: 'date' }), {
+    submit(new URLSearchParams({ searchTerm: term }), {
       action: '/circulars',
       replace: true,
     })
   }
-
-  // function updateFilterAndTriggerSearch(value: string) {
-  //   setCurrentFilter(value)
-  //   triggerSearch()
-  // }
 
   useEffect(() => {
     setCirculars(items)
   }, [items])
 
   return (
-    <Grid row>
-      <div className="tablet:grid-col-9 flex-fill usa-prose">
+    <GridContainer>
+      <div className="usa-prose">
         <h1>GCN Circulars</h1>
-      </div>
-      <div className="tablet:grid-col-3 flex-auto flex-align-self-center display-flex">
-        <Link to="" className="usa-button text-middle margin-left-auto">
-          Subscribe
-        </Link>
       </div>
       <p>
         GCN Circulars are rapid astronomical bulletins submitted by and
@@ -106,64 +87,37 @@ export default function Index() {
         <Link to="">docs</Link>
       </p>
       <div id="sticky-header" className="sticky margin-bottom-1 padding-top-1">
-        <div className="grid-row">
-          <div className="tablet:grid-col-10">
-            <Hint options={options} allowTabFill allowEnterFill>
-              <input
-                id="searchTerm"
-                name="searchTerm"
-                className="usa-input margin-top-0 flex-fill"
-                defaultValue={term ?? ''}
-                type="text"
-                onChange={(e) => searchTermUpdate(e.target.value)}
-                onKeyDown={(e) => keyboardTriggerSearch(e)}
-              />
-            </Hint>
-          </div>
-          <div className="tablet:grid-col-2 flex-auto display-flex flex-justify-end">
-            <Button
-              type="button"
-              onClick={triggerSearch}
-              className="usa-button margin-right-0 tablet:margin-top-0 margin-top-1"
-            >
-              Search
-            </Button>
-          </div>
+        <div className="usa-search">
+          <Hint options={options} allowTabFill allowEnterFill>
+            <input
+              id="searchTerm"
+              name="searchTerm"
+              className="usa-input"
+              defaultValue={term ?? ''}
+              type="search"
+              onChange={(e) => searchTermUpdate(e.target.value)}
+              onKeyDown={(e) => keyboardTriggerSearch(e)}
+            />
+          </Hint>
+          <Button className="usa-button" type="submit" onClick={triggerSearch}>
+            <span className="usa-search__submit-text">Search </span>
+            <img
+              src="/assets/img/usa-icons-bg/search--white.svg"
+              className="usa-search__submit-icon"
+              alt="Search"
+            />
+          </Button>
         </div>
-        {/* <div className="grid-row padding-top-05">
-          <ButtonGroup type="segmented" className="flex-fill">
-            <Button
-              type="button"
-              outline={currentFilter != 'date'}
-              onClick={() => updateFilterAndTriggerSearch('date')}
-            >
-              By Date
-            </Button>
-            <Button
-              type="button"
-              outline={currentFilter != 'event'}
-              onClick={() => updateFilterAndTriggerSearch('event')}
-            >
-              By Event
-            </Button>
-          </ButtonGroup>
-        </div> */}
       </div>
-      <Accordion
-        items={circulars.map((circular) => ({
-          title: circular.id + ' - ' + circular.subject,
-          content: (
-            <div key={circular.id} className="text-pre-wrap">
-              {circular.body}
-            </div>
-          ),
-          expanded: false,
-          id: circular.id?.toString() ?? '',
-          headingLevel: 'h4',
-        }))}
-        multiselectable
-        bordered
-      />
+      <div>
+        {circulars?.map((circular) => (
+          <Grid row key={circular.circularId}>
+            <Link to={`./${circular.circularId}`}>
+              {circular.circularId} - {circular.subject}
+            </Link>
+          </Grid>
+        ))}
+      </div>
       <div id="pagination">
         <Pagination
           pathname={''}
@@ -176,6 +130,6 @@ export default function Index() {
           }}
         />
       </div>
-    </Grid>
+    </GridContainer>
   )
 }
