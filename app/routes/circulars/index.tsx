@@ -12,7 +12,7 @@ import {
   Pagination,
   Search,
 } from '@trussworks/react-uswds'
-import { Link, useLoaderData, useSubmit } from '@remix-run/react'
+import { Form, Link, useLoaderData, useSubmit } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useEffect, useState } from 'react'
 import { getUser } from '../__auth/user.server'
@@ -81,7 +81,9 @@ export default function Index() {
       </p>
       <div className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <div className="usa-search">
-          <Search defaultValue={searchTerm ?? ''} onSubmit={() => {}} />
+          <Form>
+            <Search defaultValue={searchTerm ?? ''} onSubmit={() => {}} />
+          </Form>
         </div>
       </div>
       <div>
