@@ -52,7 +52,7 @@ export function Header({ email }: { email?: string }) {
               </NavLink>,
               <NavLink
                 className="usa-nav__link"
-                to="/circulars/info"
+                to="/circulars"
                 key="/circulars"
               >
                 Circulars

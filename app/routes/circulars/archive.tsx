@@ -19,7 +19,8 @@ import { getUser } from '../__auth/user.server'
 import { CircularsServer } from './circulars.server'
 
 export async function loader({ request }: DataFunctionArgs) {
-  if (!process.env['FEATURE']) throw new Response('', { status: 404 })
+  if (!process.env['GCN_CIRCULARS_ENABLE'])
+    throw new Response('', { status: 404 })
   const user = await getUser(request)
   const machine = await CircularsServer.create(request)
   const data = await machine.getCirculars('')

@@ -14,7 +14,8 @@ interface FormProps {
 }
 
 export async function loader({ request }: DataFunctionArgs) {
-  if (!process.env['FEATURE']) throw new Response('', { status: 404 })
+  if (!process.env['GCN_CIRCULARS_ENABLE'])
+    throw new Response('', { status: 404 })
   const user = await getUser(request)
   if (!user || !user.groups.includes('gcn.nasa.gov/circular-submitter'))
     throw new Response('', { status: 403 })
@@ -66,7 +67,7 @@ export default function Submit(props: FormProps) {
         <small className="text-base maxw-full">
           The subject line should start with the name of the transient which
           must be one of the{' '}
-          <Link to="/circulars/info#submission-process">known keywords</Link>.
+          <Link to="/circulars#submission-process">known keywords</Link>.
           (Contact us for new keyword requests)
         </small>
         <TextInput
