@@ -1,81 +1,44 @@
 import type { DataFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
-// import { redirect } from '@remix-run/node'
-//import { getFormDataString } from '~/lib/utils'
-// import type { CircularModel } from './circulars.server'
-// import { CircularsServer } from './circulars.server'
+import { redirect } from '@remix-run/node'
+import { getFormDataString } from '~/lib/utils'
+import { CircularsServer } from '../circulars/circulars.server'
 
-export async function loader({ request }: DataFunctionArgs) {
-  // const machine = await CircularsServer.create()
-  // const data = await machine.getCirculars('')
-  // const pageStr = new URL(request.url).searchParams.get('page')
-  // const limit = 10 // new URL(request.url).searchParams.get('limit')
-  // const page = pageStr ? parseInt(pageStr) : 1
+export async function loader(args: DataFunctionArgs) {
+  return await handleCircularsLoader(args)
+}
 
-  // return json({
-  //   page: page,
-  //   items: data.items.slice(limit * (page - 1), page * limit - 1),
-  //   pageCount: Math.ceil(data.items.length / limit),
-  // })
-
-  console.log('testing')
-  return json({})
+export async function handleCircularsLoader({ request }: DataFunctionArgs) {
+  const machine = await CircularsServer.create(request)
+  const data = await machine.getCirculars('')
+  const searchParams = new URL(request.url).searchParams
+  const pageStr = searchParams.get('page')
+  const searchTerm = searchParams.get('search')
+  let filteredDataItems = data
+  if (searchTerm) {
+    filteredDataItems = filteredDataItems.filter(
+      (x) =>
+        x.subject.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 ||
+        x.body.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1
+    )
+  }
+  const limit = 10 // searchParams.get('limit')
+  const page = pageStr ? parseInt(pageStr) : 1
+  return {
+    page: page,
+    searchTerm,
+    items: filteredDataItems.slice(limit * (page - 1), page * limit - 1),
+    pageCount: Math.ceil(filteredDataItems.length / limit),
+  }
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  // try {
-  //   const [data] = await Promise.all([request.formData()])
-  //   if (dataIsValid(data)) {
-  //     const circularModel: CircularModel = {
-  //       subject: getFormDataString(data, 'subject') ?? '',
-  //       body: getFormDataString(data, 'body') ?? '',
-  //       linkedEvent: getFormDataString(data, 'linkedEvent'),
-  //     }
-  //     const hostname = new URL(request.url).hostname
-  //     const production_hostname = 'gcn.nasa.gov'
-  //     if (hostname == production_hostname || hostname == 'localhost') {
-  //       // Internal request
-  //       const machine = await CircularsServer.create(request)
-  //       await machine.createNewCircular(circularModel)
-
-  //       return redirect('/circulars')
-  //     } else {
-  //       // Validate user and create stuff, maybe issue new creds for programatic access?
-  //       console.log(getFormDataString(data, 'clientId'))
-  //       console.log(getFormDataString(data, 'clientSecret'))
-
-  //       if (false) {
-  //         const machine = await CircularsServer.create(request)
-  //         await machine.createNewCircular(circularModel)
-  //       }
-
-  //       return new Response('success')
-  //     }
-  //   } else {
-  //     return {
-  //       error: 'bad data',
-  //       status: 400,
-  //       data: data,
-  //     }
-  //   }
-  // } catch (error: any) {
-  //   console.log('Error: ')
-  //   console.log(error)
-
-  //   return {
-  //     error: error.statusText ?? 'bad request',
-  //     status: error.status ?? 400,
-  //   }
-  // }
-  console.log('Action Route')
   const data = await request.formData()
-  console.log(data)
-  return json({})
-}
+  const body = getFormDataString(data, 'body')
+  const subject = getFormDataString(data, 'subject')
+  if (!body || !subject)
+    throw new Response('Body and subject are required', { status: 400 })
+  const server = await CircularsServer.create(request)
+  await server.createNewCircular(body, subject)
 
-// function dataIsValid(data: FormData) {
-//   return (
-//     !!getFormDataString(data, 'body') && !!getFormDataString(data, 'subject') // &&
-//     //!!getFormDataString(data, 'linkedEvent')
-//   )
-// }
+  return redirect('/circulars')
+}

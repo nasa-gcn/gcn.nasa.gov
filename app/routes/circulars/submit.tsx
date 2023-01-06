@@ -1,9 +1,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
 import { Link, Form } from '@remix-run/react'
 import { Label, TextInput, Textarea, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { getFormDataString } from '~/lib/utils'
 import { getUser } from '../__auth/user.server'
 import { subjectIsValid } from './circulars.lib'
 import { put } from './circulars.server'
@@ -46,7 +44,7 @@ export default function Submit(props: FormProps) {
   return (
     <>
       <h1>Submit a Circular</h1>
-      <Form method="post">
+      <Form method="post" action="/api/circulars">
         <input type="hidden" name="id" value={props.id} />
         <div>
           <p>Create and submit a new GCN Circular</p>
