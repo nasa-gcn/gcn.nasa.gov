@@ -1,26 +1,36 @@
-import { NavLink } from '@remix-run/react'
+import { NavLink, useLoaderData } from '@remix-run/react'
 import { SideNav } from '@trussworks/react-uswds'
 import { Outlet } from 'react-router'
 
+export async function loader() {
+  const GCN_CIRCULARS_ENABLE = process.env['GCN_CIRCULARS_ENABLE']
+  return { GCN_CIRCULARS_ENABLE }
+}
+
 export default function Circulars() {
+  const { GCN_CIRCULARS_ENABLE } = useLoaderData<typeof loader>()
   return (
     <div className="grid-row grid-gap">
-      <div className="desktop:grid-col-3">
-        <SideNav
-          items={[
-            <NavLink key="." to="." end>
-              Archive
-            </NavLink>,
-            <NavLink key="info" to="info">
-              Info
-            </NavLink>,
-            <NavLink key="submit" to="submit">
-              Submit
-            </NavLink>,
-          ]}
-        />
-      </div>
-      <div className="desktop:grid-col-9 usa-prose">
+      {GCN_CIRCULARS_ENABLE ? (
+        <div className="desktop:grid-col-3">
+          <SideNav
+            items={[
+              <NavLink key="archive" to="archive" end>
+                Archive
+              </NavLink>,
+              <NavLink key="." to=".">
+                Info
+              </NavLink>,
+              <NavLink key="submit" to="submit">
+                Submit
+              </NavLink>,
+            ]}
+          />
+        </div>
+      ) : null}
+      <div
+        className={GCN_CIRCULARS_ENABLE ? 'desktop:grid-col-9 usa-prose' : ''}
+      >
         <Outlet />
       </div>
     </div>
