@@ -15,10 +15,10 @@ export default function Circulars() {
         <div className="desktop:grid-col-3">
           <SideNav
             items={[
-              <NavLink key="archive" to="archive" end>
+              <NavLink key="archive" to="archive">
                 Archive
               </NavLink>,
-              <NavLink key="." to=".">
+              <NavLink key="." to="." end>
                 Info
               </NavLink>,
               <NavLink key="submit" to="submit">
