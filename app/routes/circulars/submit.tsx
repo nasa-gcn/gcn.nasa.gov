@@ -14,6 +14,7 @@ interface FormProps {
 }
 
 export async function loader({ request }: DataFunctionArgs) {
+  if (!process.env['FEATURE']) throw new Response('', { status: 404 })
   const user = await getUser(request)
   if (!user || !user.groups.includes('gcn.nasa.gov/circular-submitter'))
     throw new Response('', { status: 403 })
