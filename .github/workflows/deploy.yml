@@ -28,8 +28,6 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - name: Install Architect
-        run: npm i -g @architect/architect@10.8.2
       - name: NPM Install
         run: npm ci
       - name: Build
@@ -40,4 +38,4 @@ jobs:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           aws-region: us-east-1
       - name: Deploy
-        run: arc deploy --prune --production
+        run: npx arc deploy --prune --production
