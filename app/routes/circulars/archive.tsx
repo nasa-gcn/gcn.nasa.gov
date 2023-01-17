@@ -6,73 +6,33 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import {
-  Grid,
-  GridContainer,
-  Pagination,
-  Search,
-} from '@trussworks/react-uswds'
-import { Form, Link, useLoaderData, useSubmit } from '@remix-run/react'
+import { Icon, Search } from '@trussworks/react-uswds'
+import { Link, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { useEffect, useState } from 'react'
-import { getUser } from '../__auth/user.server'
-import { CircularsServer } from './circulars.server'
+import { list } from './circulars.server'
+import classNames from 'classnames'
+import { usePagination } from '~/lib/pagination'
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request: { url } }: DataFunctionArgs) {
   if (!process.env['GCN_CIRCULARS_ENABLE'])
     throw new Response('', { status: 404 })
-  const user = await getUser(request)
-  const machine = await CircularsServer.create(request)
-  const data = await machine.getCirculars('')
-  const searchParams = new URL(request.url).searchParams
-  const pageStr = searchParams.get('page')
-  const searchTerm = searchParams.get('search')
-  let filteredDataItems = data
-  if (searchTerm) {
-    filteredDataItems = filteredDataItems.filter(
-      (x) =>
-        x.subject.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1 ||
-        x.body.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1
-    )
-  }
-  const limit = 10 // searchParams.get('limit')
-  const page = pageStr ? parseInt(pageStr) : 1
+
+  const { searchParams } = new URL(url)
+  const page = parseInt(searchParams.get('page') ?? '1')
+  const results = await list({ page, limit: 100 })
 
   return {
-    email: user?.email,
-    page: page,
-    searchTerm,
-    items: filteredDataItems.slice(limit * (page - 1), page * limit - 1),
-    pageCount: Math.ceil(filteredDataItems.length / limit),
+    page,
+    ...results,
   }
 }
 
 export default function Index() {
-  const { page, searchTerm, items, pageCount } = useLoaderData<typeof loader>()
-  const [circulars, setCirculars] = useState(items)
-  const submit = useSubmit()
-
-  function triggerSearch(pageNumber: number) {
-    const params = new URLSearchParams()
-    params.set('page', pageNumber.toString())
-    submit(
-      new URLSearchParams({
-        page: pageNumber.toString(),
-        search: searchTerm ?? '',
-      }),
-      {
-        action: '/circulars',
-        replace: true,
-      }
-    )
-  }
-
-  useEffect(() => {
-    setCirculars(items)
-  }, [items])
+  const { page, totalPages, items } = useLoaderData<typeof loader>()
+  const pages = usePagination({ currentPage: page, totalPages })
 
   return (
-    <GridContainer>
+    <>
       <div className="usa-prose">
         <h1>GCN Circulars</h1>
       </div>
@@ -83,36 +43,89 @@ export default function Index() {
       </p>
       <div className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <div className="usa-search">
-          <Form>
-            <Search defaultValue={searchTerm ?? ''} onSubmit={() => {}} />
-          </Form>
+          <Search defaultValue="" onSubmit={() => {}} />
         </div>
       </div>
-      <div>
-        {circulars?.map((circular) => (
-          <Grid row key={circular.circularId} className="padding-y-1">
-            <Link to={`./${circular.circularId}`}>
-              {circular.circularId} - {circular.subject}
-            </Link>
-          </Grid>
+      <ol>
+        {items.map(({ circularId, subject }) => (
+          <li key={circularId} value={circularId}>
+            <Link to={`/circulars/${circularId}`}>{subject}</Link>
+          </li>
         ))}
-      </div>
+      </ol>
       <div>
-        <Pagination
-          pathname={''}
-          totalPages={pageCount}
-          currentPage={page}
-          onClickNext={() => triggerSearch(page + 1)}
-          onClickPrevious={() => triggerSearch(page - 1)}
-          onClickPageNumber={(e) => {
-            if (
-              e.currentTarget.textContent &&
-              parseInt(e.currentTarget.textContent)
-            )
-              triggerSearch(parseInt(e.currentTarget.textContent))
-          }}
-        />
+        <nav aria-label="Pagination" className="usa-pagination">
+          <ul className="usa-pagination__list">
+            {pages.map(({ type, number, isCurrent }, i) => {
+              switch (type) {
+                case 'prev':
+                  return (
+                    <li
+                      className="usa-pagination__item usa-pagination__arrow"
+                      key={i}
+                    >
+                      <Link
+                        to={`?page=${number}`}
+                        className="usa-pagination__link usa-pagination__previous-page"
+                        aria-label="Previous page"
+                      >
+                        <Icon.NavigateBefore aria-hidden />
+                        <span className="usa-pagination__link-text">
+                          Previous
+                        </span>
+                      </Link>
+                    </li>
+                  )
+                case 'overflow':
+                  return (
+                    <li
+                      className="usa-pagination__item usa-pagination__overflow"
+                      role="presentation"
+                      key={i}
+                    >
+                      <span>…</span>
+                    </li>
+                  )
+                case 'next':
+                  return (
+                    <li
+                      className="usa-pagination__item usa-pagination__arrow"
+                      key={i}
+                    >
+                      <Link
+                        to={`?page=${number}`}
+                        className="usa-pagination__link usa-pagination__next-page"
+                        aria-label="Next page"
+                      >
+                        <Icon.NavigateNext aria-hidden />
+                        <span className="usa-pagination__link-text">Next</span>
+                      </Link>
+                    </li>
+                  )
+                default:
+                  return (
+                    <li
+                      className="usa-pagination__item usa-pagination__page-no"
+                      key={i}
+                    >
+                      <Link
+                        to={`?page=${number}`}
+                        className={classNames('usa-pagination__button', {
+                          'usa-current': isCurrent,
+                        })}
+                        prefetch="render"
+                        aria-label={`Page ${number}`}
+                        aria-current={isCurrent}
+                      >
+                        {number}
+                      </Link>
+                    </li>
+                  )
+              }
+            })}
+          </ul>
+        </nav>
       </div>
-    </GridContainer>
+    </>
   )
 }

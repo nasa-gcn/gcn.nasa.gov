@@ -31,7 +31,8 @@ circular_endorsements
   endorserSub **String
 
 circulars
-  circularId *Number
+  dummy *Number  # dummy partition key so that all records are stored in one partition
+  circularId **Number
 
 auto_increment_metadata
   tableName *String
