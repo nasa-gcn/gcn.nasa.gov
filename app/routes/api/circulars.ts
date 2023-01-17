@@ -1,7 +1,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { getFormDataString } from '~/lib/utils'
-import { list, put } from '../../circulars/circulars.server'
+import { list, put } from '../circulars/circulars.server'
 
 export async function loader(args: DataFunctionArgs) {
   return await handleCircularsLoader(args)
