@@ -30,7 +30,10 @@ module.exports.deploy = {
 module.exports.set = {
   env() {
     return {
-      AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
+      production: {
+        AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
+        NODE_OPTIONS: '--require /var/task/tracing.js',
+      },
     }
   },
 }
