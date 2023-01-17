@@ -9,22 +9,15 @@
 import { Icon, Search } from '@trussworks/react-uswds'
 import { Link, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { list } from './circulars.server'
 import classNames from 'classnames'
 import { usePagination } from '~/lib/pagination'
+import { handleCircularsLoader } from '../api/circulars'
 
-export async function loader({ request: { url } }: DataFunctionArgs) {
+export async function loader(args: DataFunctionArgs) {
   if (!process.env['GCN_CIRCULARS_ENABLE'])
     throw new Response('', { status: 404 })
 
-  const { searchParams } = new URL(url)
-  const page = parseInt(searchParams.get('page') ?? '1')
-  const results = await list({ page, limit: 100 })
-
-  return {
-    page,
-    ...results,
-  }
+  return await handleCircularsLoader(args)
 }
 
 export default function Index() {

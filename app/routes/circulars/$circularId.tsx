@@ -9,12 +9,10 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import TimeAgo from '~/components/TimeAgo'
-import { get } from './circulars.server'
+import { handleCircularLoader } from '../api/circulars/$circularId'
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
-  if (!circularId)
-    throw new Response('circularId must be defined', { status: 400 })
-  return get(parseInt(circularId))
+  return await handleCircularLoader(circularId)
 }
 
 export default function $circularId() {

@@ -4,7 +4,6 @@ import { Label, TextInput, Textarea, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import { getUser } from '../__auth/user.server'
 import { subjectIsValid } from './circulars.lib'
-import { put } from './circulars.server'
 
 interface FormProps {
   id?: string
@@ -19,16 +18,6 @@ export async function loader({ request }: DataFunctionArgs) {
   if (!user || !user.groups.includes('gcn.nasa.gov/circular-submitter'))
     throw new Response('', { status: 403 })
   return null
-}
-
-export async function action({ request }: DataFunctionArgs) {
-  const data = await request.formData()
-  const body = getFormDataString(data, 'body')
-  const subject = getFormDataString(data, 'subject')
-  if (!body || !subject)
-    throw new Response('Body and subject are required', { status: 400 })
-  await put(subject, body, request)
-  return redirect('/circulars')
 }
 
 export default function Submit(props: FormProps) {
