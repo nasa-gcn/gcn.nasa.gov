@@ -63,12 +63,12 @@ export async function list({
 
   // Calculate pagination assuming that last === the number of records.
   const totalPages = Math.ceil(last / limit)
-  const firstIdOnPage = Math.max(last - page * limit + 1, 1)
+  const circularId = last - (page - 1) * limit + 1
 
   const { Items } = await db.circulars.query({
     Limit: limit,
     ScanIndexForward: false,
-    ExclusiveStartKey: { dummy: 0, circularId: firstIdOnPage },
+    ExclusiveStartKey: { dummy: 0, circularId },
     ProjectionExpression: 'circularId, subject',
     KeyConditionExpression: 'dummy = :dummy',
     ExpressionAttributeValues: { ':dummy': 0 },
