@@ -29,7 +29,7 @@ import {
   ScrollRestoration,
   useCatch,
   useMatches,
-  useTransition,
+  useNavigation,
 } from '@remix-run/react'
 import type {
   MetaFunction,
@@ -130,8 +130,8 @@ function Document({ children }: { children?: React.ReactNode }) {
   const matches = useMatches()
   const [{ data }] = matches
   const { email } = data as Awaited<ReturnType<typeof loader>>
-  const transition = useTransition()
-  const showProgress = useSpinDelay(transition.state !== 'idle')
+  const navigation = useNavigation()
+  const showProgress = useSpinDelay(navigation.state !== 'idle')
   const breadcrumbs = matches
     .map(({ handle }) => handle?.breadcrumb)
     .filter(Boolean)
