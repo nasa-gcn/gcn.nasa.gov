@@ -6,6 +6,10 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+export const publicStaticCacheControlHeaders = {
+  'Cache-Control': 'public, max-age=315360000',
+}
+
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
