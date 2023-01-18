@@ -33,7 +33,7 @@ export function getFormDataString(formData: FormData, key: string) {
 }
 
 export function subjectLineIsValid(subject: string) {
-  return validSubjectKeywords.some((x) => subject.indexOf(x) > -1)
+  return validSubjectKeywords.some((x) => subject.startsWith(x))
 }
 
 export const validSubjectKeywords = [
