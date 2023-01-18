@@ -3,9 +3,9 @@ import { redirect } from '@remix-run/node'
 import { Link, Form } from '@remix-run/react'
 import { Label, TextInput, Textarea, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { getFormDataString, subjectLineIsValid } from '~/lib/utils'
+import { getFormDataString } from '~/lib/utils'
 import { getUser } from '../__auth/user.server'
-import { put } from './circulars.server'
+import { put, subjectIsValid } from './circulars.server'
 
 interface FormProps {
   id?: string
@@ -33,13 +33,13 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Submit(props: FormProps) {
-  const defaultSubjectValid = subjectLineIsValid(props.subject ?? '')
+  const defaultSubjectValid = subjectIsValid(props.subject ?? '')
   const [subjectValid, setSubjectValid] = useState(defaultSubjectValid)
   const defaultBodyValid = !!props.body
   const [bodyValid, setBodyValid] = useState(defaultBodyValid)
 
   function checkSubject(value: string) {
-    setSubjectValid(subjectLineIsValid(value))
+    setSubjectValid(subjectIsValid(value))
   }
 
   return (
