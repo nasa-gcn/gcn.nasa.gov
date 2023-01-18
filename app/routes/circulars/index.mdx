@@ -5,6 +5,7 @@ import {
   SummaryBoxContent,
   SummaryBoxHeading,
 } from '@trussworks/react-uswds'
+import { validSubjectKeywords } from '~/lib/utils'
 
 # GCN Circulars
 
@@ -41,36 +42,11 @@ Please follow the [style guidelines](/docs/styleguide). In particular, the email
 
 <a name="subject-word-list" />
 <ul className="grid-row usa-list usa-list--unstyled">
-  <li className="grid-col-2">AGILE</li>
-  <li className="grid-col-2">ANTARES</li>
-  <li className="grid-col-2">AXP</li>
-  <li className="grid-col-2">Chandra</li>
-  <li className="grid-col-2">Fermi</li>
-  <li className="grid-col-2">FXT</li>
-  <li className="grid-col-2">grb</li>
-  <li className="grid-col-2">GRB</li>
-  <li className="grid-col-2">GW</li>
-  <li className="grid-col-2">HAWC</li>
-  <li className="grid-col-2">HST</li>
-  <li className="grid-col-2">IBAS</li>
-  <li className="grid-col-2">IceCube</li>
-  <li className="grid-col-2">ICECUBE</li>
-  <li className="grid-col-2">INTEGRAL</li>
-  <li className="grid-col-2">IPN</li>
-  <li className="grid-col-2">KONUS</li>
-  <li className="grid-col-2">LIGO</li>
-  <li className="grid-col-2">LVC</li>
-  <li className="grid-col-2">MAXI</li>
-  <li className="grid-col-2">RATIR</li>
-  <li className="grid-col-2">SDSS</li>
-  <li className="grid-col-2">SGR</li>
-  <li className="grid-col-2">Swift</li>
-  <li className="grid-col-2">SWIFT</li>
-  <li className="grid-col-2">Virgo</li>
-  <li className="grid-col-2">VLA</li>
-  <li className="grid-col-2">VLBI</li>
-  <li className="grid-col-2">XRB</li>
-  <li className="grid-col-2">XTR</li>
+  {validSubjectKeywords?.map((keyword) => (
+    <li key={keyword} className="grid-col-2">
+      {keyword}
+    </li>
+  ))}
 </ul>
 
 A copy of the body of your email will be distributed along with the following header:

@@ -31,3 +31,40 @@ export function getFormDataString(formData: FormData, key: string) {
     throw new Response(`expected ${key} to be a string`, { status: 400 })
   }
 }
+
+export function subjectLineIsValid(subject: string) {
+  return validSubjectKeywords.some((x) => subject.indexOf(x) > -1)
+}
+
+export const validSubjectKeywords = [
+  'AGILE',
+  'ANTARES',
+  'AXP',
+  'Chandra',
+  'Fermi',
+  'FXT',
+  'grb',
+  'GRB',
+  'GW',
+  'HAWC',
+  'HST',
+  'IBAS',
+  'IceCube',
+  'ICECUBE',
+  'INTEGRAL',
+  'IPN',
+  'KONUS',
+  'LIGO',
+  'LVC',
+  'MAXI',
+  'RATIR',
+  'SDSS',
+  'SGR',
+  'Swift',
+  'SWIFT',
+  'Virgo',
+  'VLA',
+  'VLBI',
+  'XRB',
+  'XTR',
+]

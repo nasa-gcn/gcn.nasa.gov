@@ -3,7 +3,7 @@ import { redirect } from '@remix-run/node'
 import { Link, Form } from '@remix-run/react'
 import { Label, TextInput, Textarea, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { getFormDataString } from '~/lib/utils'
+import { getFormDataString, subjectLineIsValid } from '~/lib/utils'
 import { getUser } from '../__auth/user.server'
 import { put } from './circulars.server'
 
@@ -33,13 +33,13 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Submit(props: FormProps) {
-  const defaultSubjectValid = subjectIsValid(props.subject ?? '')
+  const defaultSubjectValid = subjectLineIsValid(props.subject ?? '')
   const [subjectValid, setSubjectValid] = useState(defaultSubjectValid)
   const defaultBodyValid = !!props.body
   const [bodyValid, setBodyValid] = useState(defaultBodyValid)
 
   function checkSubject(value: string) {
-    setSubjectValid(subjectIsValid(value))
+    setSubjectValid(subjectLineIsValid(value))
   }
 
   return (
@@ -74,6 +74,7 @@ export default function Submit(props: FormProps) {
           type="text"
           className="maxw-full"
           placeholder="Subject"
+          validationStatus={subjectValid ? 'success' : 'error'}
           defaultValue={props.subject}
           required={true}
           onChange={(e) => checkSubject(e.target.value)}
@@ -118,9 +119,4 @@ export default function Submit(props: FormProps) {
       </Form>
     </>
   )
-}
-
-function subjectIsValid(value: string) {
-  // Full subject rules,
-  return true
 }
