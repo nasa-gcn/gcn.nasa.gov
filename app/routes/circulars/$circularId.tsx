@@ -9,7 +9,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 import TimeAgo from '~/components/TimeAgo'
-import { get } from './circulars.lib'
+import { get } from './circulars.server'
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
