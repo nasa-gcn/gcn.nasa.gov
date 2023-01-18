@@ -6,16 +6,17 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Icon, Search } from '@trussworks/react-uswds'
+import { Button, ButtonGroup, Icon, Search } from '@trussworks/react-uswds'
 import { Link, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { list } from './circulars.server'
+import { redirect } from '@remix-run/node'
+import { list, put } from './circulars.server'
 import classNames from 'classnames'
 import { usePagination } from '~/lib/pagination'
+import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
-  if (!process.env['GCN_CIRCULARS_ENABLE'])
-    throw new Response('', { status: 404 })
+  if (!process.env['GCN_CIRCULARS_ENABLE']) throw redirect('/circulars/classic')
 
   const { searchParams } = new URL(url)
   const page = parseInt(searchParams.get('page') ?? '1')
@@ -27,25 +28,46 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   }
 }
 
+export async function action({ request }: DataFunctionArgs) {
+  const data = await request.formData()
+  const body = getFormDataString(data, 'body')
+  const subject = getFormDataString(data, 'subject')
+  if (!body || !subject)
+    throw new Response('Body and subject are required', { status: 400 })
+  await put(subject, body, request)
+  return null
+}
+
 export default function Index() {
   const { page, totalPages, items } = useLoaderData<typeof loader>()
   const pages = usePagination({ currentPage: page, totalPages })
 
   return (
     <>
-      <div className="usa-prose">
-        <h1>GCN Circulars</h1>
-      </div>
+      <h1>GCN Circulars</h1>
       <p>
         GCN Circulars are rapid astronomical bulletins submitted by and
         distributed to community members worldwide. For more information, see{' '}
         <Link to="">docs</Link>
       </p>
-      <div className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
-        <div className="usa-search">
-          <Search defaultValue="" onSubmit={() => {}} />
+      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
+        <div className="usa-search display-inline-block">
+          <Search
+            defaultValue=""
+            size="small"
+            placeholder="Search"
+            onSubmit={() => {}}
+          />
         </div>
-      </div>
+        <Link to="/circulars/new">
+          <Button
+            type="button"
+            className="height-4 padding-top-0 padding-bottom-0"
+          >
+            <Icon.Edit /> New
+          </Button>
+        </Link>
+      </ButtonGroup>
       <ol>
         {items.map(({ circularId, subject }) => (
           <li key={circularId} value={circularId}>
