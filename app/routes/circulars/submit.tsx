@@ -5,7 +5,7 @@ import { Label, TextInput, Textarea, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import { getFormDataString } from '~/lib/utils'
 import { getUser } from '../__auth/user.server'
-import { put } from './circulars.server'
+import { put, subjectIsValid } from './circulars.server'
 
 interface FormProps {
   id?: string
@@ -74,6 +74,7 @@ export default function Submit(props: FormProps) {
           type="text"
           className="maxw-full"
           placeholder="Subject"
+          validationStatus={subjectValid ? 'success' : 'error'}
           defaultValue={props.subject}
           required={true}
           onChange={(e) => checkSubject(e.target.value)}
@@ -118,9 +119,4 @@ export default function Submit(props: FormProps) {
       </Form>
     </>
   )
-}
-
-function subjectIsValid(value: string) {
-  // Full subject rules,
-  return true
 }

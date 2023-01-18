@@ -138,3 +138,40 @@ export async function put(subject: string, body: string, request: Request) {
     submitter: formatAuthor(user),
   })
 }
+
+export function subjectIsValid(subject: string) {
+  return validSubjectKeywords.some((x) => subject.startsWith(x))
+}
+
+export const validSubjectKeywords = [
+  'AGILE',
+  'ANTARES',
+  'AXP',
+  'Chandra',
+  'Fermi',
+  'FXT',
+  'grb',
+  'GRB',
+  'GW',
+  'HAWC',
+  'HST',
+  'IBAS',
+  'IceCube',
+  'ICECUBE',
+  'INTEGRAL',
+  'IPN',
+  'KONUS',
+  'LIGO',
+  'LVC',
+  'MAXI',
+  'RATIR',
+  'SDSS',
+  'SGR',
+  'Swift',
+  'SWIFT',
+  'Virgo',
+  'VLA',
+  'VLBI',
+  'XRB',
+  'XTR',
+]
