@@ -9,7 +9,7 @@
 import { Icon, Search } from '@trussworks/react-uswds'
 import { Link, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { list } from './circulars.server'
+import { list } from './circulars.lib'
 import classNames from 'classnames'
 import { usePagination } from '~/lib/pagination'
 

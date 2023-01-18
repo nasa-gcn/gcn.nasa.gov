@@ -5,7 +5,7 @@ import { Label, TextInput, Textarea, Button } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import { getFormDataString } from '~/lib/utils'
 import { getUser } from '../__auth/user.server'
-import { put, subjectIsValid } from './circulars.server'
+import { put, subjectIsValid } from './circulars.lib'
 
 interface FormProps {
   id?: string

@@ -33,4 +33,4 @@ export async function mdx() {
 
 export const serverBuildTarget = 'arc'
 export const server = './server.js'
-export const ignoredRouteFiles = ['**/.*']
+export const ignoredRouteFiles = ['**/.*', '**/*.lib.*']
