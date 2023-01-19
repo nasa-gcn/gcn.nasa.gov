@@ -1,4 +1,7 @@
-export const handle = { breadcrumb: 'Missions' }
+---
+handle:
+  breadcrumb: Missions
+---
 
 # Missions, Instruments, and Facilities
 
