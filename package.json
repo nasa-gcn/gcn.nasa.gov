@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "@architect/architect": "^10.8.3",
-    "@aws-sdk/lib-dynamodb": "^3.188.0",
+    "@aws-sdk/lib-dynamodb": "^3.252.0",
     "@aws-sdk/util-dynamodb": "^3.188.0",
     "@remix-run/dev": "^1.11.0",
     "@remix-run/eslint-config": "^1.11.0",
