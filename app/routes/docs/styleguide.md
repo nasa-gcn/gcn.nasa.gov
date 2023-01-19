@@ -1,4 +1,7 @@
-export const handle = { breadcrumb: 'Circulars Style Guide' }
+---
+handle:
+  breadcrumb: Circulars Style Guide
+---
 
 # Circulars Style Guide
 

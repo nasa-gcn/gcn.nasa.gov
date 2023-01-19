@@ -1,4 +1,7 @@
-export const handle = { breadcrumb: 'Frequently Asked Questions' }
+---
+handle:
+  breadcrumb: Frequently Asked Questions
+---
 
 # Frequently Asked Questions
 
