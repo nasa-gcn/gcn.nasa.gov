@@ -83,11 +83,11 @@ export function Header({ email }: { email?: string }) {
                         Profile
                       </Link>,
                       <Link
-                        key="permissions"
-                        to="/user/permissions"
+                        key="endorsements"
+                        to="/user/endorsements"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                       >
-                        Permissions
+                        Endorsements
                       </Link>,
                       <Link
                         key="credentials"

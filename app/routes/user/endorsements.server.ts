@@ -69,8 +69,7 @@ export class EndorsementsServer {
         }
       )
 
-    const escapedEndorserString = endorserSub.replaceAll('"', '\\"')
-    const user = await this.#getCognitoUsernameForSub(escapedEndorserString)
+    const user = await this.#getCognitoUsernameForSub(endorserSub)
 
     const getGroupsCommand = new AdminListGroupsForUserCommand({
       Username: user.Username,
@@ -93,6 +92,7 @@ export class EndorsementsServer {
         status: 400,
       })
 
+    const escapedEndorserString = endorserSub.replaceAll('"', '\\"')
     const db = await tables()
 
     await db.circular_endorsements.update({
@@ -281,11 +281,12 @@ export class EndorsementsServer {
    * @returns a user if found, otherwise undefined
    */
   async #getCognitoUsernameForSub(sub: string) {
+    const escapedSub = sub.replaceAll('"', '\\"')
     const user = (
       await client.send(
         new ListUsersCommand({
           UserPoolId: process.env.COGNITO_USER_POOL_ID,
-          Filter: `sub = "${sub}"`,
+          Filter: `sub = "${escapedSub}"`,
         })
       )
     )?.Users?.[0]
