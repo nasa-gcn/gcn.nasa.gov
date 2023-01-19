@@ -116,7 +116,7 @@ export default function Index() {
   return (
     <Grid row>
       <div className="tablet:grid-col-10 flex-fill usa-prose">
-        <h1 className="margin-y-0">Permissions</h1>
+        <h1 className="margin-y-0">Endorsements</h1>
       </div>
       {user?.groups.includes('gcn.nasa.gov/circular-submitter') ? (
         <>
@@ -324,15 +324,16 @@ export function EndorsementRequestForm() {
         defaultValue={''}
         inputProps={{ onChange: handleInputChange }}
       />
-      <Button
-        className="margin-top-2"
-        type="submit"
-        name="intent"
-        value="create"
-        disabled={!endorserSub}
-      >
-        Submit
-      </Button>
+      <ButtonGroup>
+        <Button
+          type="submit"
+          name="intent"
+          value="create"
+          disabled={!endorserSub}
+        >
+          Submit
+        </Button>
+      </ButtonGroup>
     </Form>
   )
 }
