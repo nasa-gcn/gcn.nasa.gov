@@ -7,6 +7,7 @@
  */
 
 import classnames from 'classnames'
+import loaderImage from 'app/theme/img/loader.gif'
 
 // Adapted from https://github.com/trussworks/react-uswds/blob/main/src/components/Icon/Icon.tsx
 export default function Spinner({
@@ -16,7 +17,7 @@ export default function Spinner({
 }: { size?: 3 | 4 | 5 | 6 | 7 | 8 | 9 } & JSX.IntrinsicElements['img']) {
   return (
     <img
-      src="/_static/theme/img/loader.gif"
+      src={loaderImage}
       alt=""
       {...props}
       className={classnames([
