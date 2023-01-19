@@ -101,8 +101,8 @@ export async function action({ request }: DataFunctionArgs) {
       await endorsementServer.deleteEndorsementRequest(endorserSub)
       break
     default:
-      throw new Response('An error has occured, unreachable code', {
-        status: 404,
+      throw new Response('unknown intent', {
+        status: 400,
       })
   }
 
