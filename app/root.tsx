@@ -112,8 +112,37 @@ export async function loader({ request }: DataFunctionArgs) {
 
   const user = await getUser(request)
   const email = user?.email
+  const features = getFeatures()
 
-  return { url, email }
+  return { url, email, features }
+}
+
+function getFeatures() {
+  return process.env.GCN_FEATURES?.split(',') ?? []
+}
+
+/**
+ * Return true if the given feature flag is enabled.
+ *
+ * Feature flags are configured by the environment variable GCN_FEATURES, which
+ * is a comma-separated list of enabled features.
+ */
+export function feature(feature: string) {
+  return getFeatures().includes(feature)
+}
+
+/**
+ * Return true if the given feature flag is enabled.
+ *
+ * This is a React hook version of {@link feature}.
+ *
+ * Feature flags are configured by the environment variable GCN_FEATURES, which
+ * is a comma-separated list of enabled features.
+ */
+export function useFeature(feature: string) {
+  const [{ data }] = useMatches()
+  const { features } = data as Awaited<ReturnType<typeof loader>>
+  return features.includes(feature)
 }
 
 export function useUrl() {
