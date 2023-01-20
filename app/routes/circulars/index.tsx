@@ -14,9 +14,10 @@ import { list, put } from './circulars.server'
 import classNames from 'classnames'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
+import { feature } from '~/root'
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
-  if (!process.env['GCN_CIRCULARS_ENABLE']) throw redirect('/circulars/classic')
+  if (!feature('circulars')) throw redirect('/circulars/classic')
 
   const { searchParams } = new URL(url)
   const page = parseInt(searchParams.get('page') ?? '1')
