@@ -8,10 +8,12 @@
 
 import { NavLink, Outlet } from '@remix-run/react'
 import { SideNav } from '@trussworks/react-uswds'
+import { useFeature } from '~/root'
 
 export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
 export default function User() {
+  const enableCirculars = useFeature('circulars')
   return (
     <>
       <div className="grid-row grid-gap">
@@ -21,9 +23,11 @@ export default function User() {
               <NavLink key="." to="." end>
                 Profile
               </NavLink>,
-              <NavLink key="endorsements" to="endorsements">
-                Endorsements
-              </NavLink>,
+              enableCirculars && (
+                <NavLink key="endorsements" to="endorsements">
+                  Endorsements
+                </NavLink>
+              ),
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,

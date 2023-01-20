@@ -17,8 +17,10 @@ import {
   Menu,
 } from '@trussworks/react-uswds'
 import logo from '~/img/logo.svg'
+import { useFeature } from '~/root'
 
 export function Header({ email }: { email?: string }) {
+  const enableCirculars = useFeature('circulars')
   const { pathname } = useLocation()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
@@ -82,13 +84,15 @@ export function Header({ email }: { email?: string }) {
                       >
                         Profile
                       </Link>,
-                      <Link
-                        key="endorsements"
-                        to="/user/endorsements"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                      >
-                        Endorsements
-                      </Link>,
+                      enableCirculars && (
+                        <Link
+                          key="endorsements"
+                          to="/user/endorsements"
+                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                        >
+                          Endorsements
+                        </Link>
+                      ),
                       <Link
                         key="credentials"
                         to="/user/credentials"
