@@ -29,6 +29,25 @@ export type EndorsementRequest = {
 }
 
 export type EndorsementState = 'approved' | 'pending' | 'rejected' | 'reported'
+export type EndorsementRole = 'endorser' | 'requestor'
+
+export interface EndorsementUser {
+  sub: string
+  email: string
+  name?: string
+  affiliation?: string
+}
+
+function extractAttribute({ Attributes }: UserType, key: string) {
+  return Attributes?.find(({ Name }) => key === Name)?.Value
+}
+
+function extractAttributeRequired(user: UserType, key: string) {
+  const value = extractAttribute(user, key)
+  if (value === undefined)
+    throw new Error(`required user attribute ${key} is missing`)
+  return value
+}
 
 export class EndorsementsServer {
   #sub: string
@@ -39,6 +58,10 @@ export class EndorsementsServer {
     this.#sub = sub
     this.#currentUserEmail = requestorEmail
     this.#currentUserGroups = groups
+  }
+
+  userIsSubmitter() {
+    return this.#currentUserGroups.includes('gcn.nasa.gov/circular-submitter')
   }
 
   static async create(request: Request) {
@@ -69,16 +92,17 @@ export class EndorsementsServer {
         }
       )
 
-    const user = await this.#getCognitoUsernameForSub(endorserSub)
+    const user = await this.#getCognitoUserForSub(endorserSub)
 
-    const getGroupsCommand = new AdminListGroupsForUserCommand({
-      Username: user.Username,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
-    const groupsResponse = await client.send(getGroupsCommand)
+    const { Groups } = await client.send(
+      new AdminListGroupsForUserCommand({
+        Username: user.Username,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+      })
+    )
 
     if (
-      !groupsResponse.Groups?.find(
+      !Groups?.find(
         ({ GroupName }) => GroupName === 'gcn.nasa.gov/circular-submitter'
       )
     )
@@ -86,19 +110,14 @@ export class EndorsementsServer {
         status: 400,
       })
 
-    const endorserEmail = user.Attributes?.find((x) => x.Name == 'email')?.Value
-    if (!endorserEmail)
-      throw new Response('Requested user does not have an email', {
-        status: 400,
-      })
+    const endorserEmail = extractAttributeRequired(user, 'email')
 
-    const escapedEndorserString = endorserSub.replaceAll('"', '\\"')
     const db = await tables()
 
     await db.circular_endorsements.update({
       Key: {
         requestorSub: this.#sub,
-        endorserSub: escapedEndorserString,
+        endorserSub: endorserSub,
       },
       UpdateExpression:
         'set #status = :status, endorserEmail = :endorserEmail, requestorEmail = :requestorEmail, created = :created',
@@ -134,7 +153,7 @@ export class EndorsementsServer {
     status: EndorsementState,
     requestorSub: string
   ) {
-    if (!this.#currentUserGroups.includes('gcn.nasa.gov/circular-submitter'))
+    if (!this.userIsSubmitter())
       throw new Response(
         'The user is not a verified submitter, and therefore can not approve requests',
         {
@@ -159,7 +178,7 @@ export class EndorsementsServer {
       ConditionExpression: '#status = :pending',
     })
 
-    if (status == 'approved')
+    if (status === 'approved')
       await Promise.all([
         this.#addUserToGroup(requestorSub, 'gcn.nasa.gov/circular-submitter'),
         clearUserToken(requestorSub),
@@ -202,22 +221,20 @@ export class EndorsementsServer {
    * @param role - the role of the current user to set the context of the query
    * @returns an array of the EndorsementRequest object
    */
-  async getEndorsements(
-    role: 'endorser' | 'requestor'
-  ): Promise<EndorsementRequest[]> {
+  async getEndorsements(role: EndorsementRole): Promise<EndorsementRequest[]> {
     const queryParams = {
       IndexName:
-        role == 'requestor' ? undefined : 'circularEndorsementsByEndorserSub',
+        role === 'requestor' ? undefined : 'circularEndorsementsByEndorserSub',
       KeyConditionExpression:
-        role == 'requestor'
+        role === 'requestor'
           ? 'requestorSub = :sub'
           : 'endorserSub = :endorserSub',
-      FilterExpression: role == 'requestor' ? undefined : '#status = :status',
+      FilterExpression: role === 'requestor' ? undefined : '#status = :status',
       ExpressionAttributeNames: {
         '#status': 'status',
       },
       ExpressionAttributeValues:
-        role == 'requestor'
+        role === 'requestor'
           ? {
               ':sub': this.#sub,
             }
@@ -230,17 +247,18 @@ export class EndorsementsServer {
     }
 
     const db = await tables()
-    const result = await db.circular_endorsements.query(queryParams)
-    return result.Items as EndorsementRequest[]
+    const { Items } = await db.circular_endorsements.query(queryParams)
+    return Items
   }
 
   /**
    * This should be used in future updates to create a list of valid users for
    * the current user to select from when creating a new endorsement request.
    *
-   * @returns a list of users in the circular-submitter group.
+   * @returns a list of users in the circular-submitter group,
+   * not including the current user.
    */
-  async getSubmitterUsers() {
+  async getSubmitterUsers(): Promise<EndorsementUser[]> {
     const command = new ListUsersInGroupCommand({
       GroupName: 'gcn.nasa.gov/circular-submitter',
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
@@ -251,27 +269,28 @@ export class EndorsementsServer {
       response = await client.send(command)
     } catch (error) {
       maybeThrow(error, 'returning fake users')
-      const fakeUsers: UserType[] = [
+      return [
         {
-          Attributes: [
-            { Name: 'sub', Value: crypto.randomUUID() },
-            { Name: 'email', Value: 'a.einstein@example.com' },
-            { Name: 'name', Value: 'Albert Einstein' },
-          ],
+          sub: crypto.randomUUID(),
+          email: 'a.einstein@example.com',
+          name: 'Albert Einstein',
         },
         {
-          Attributes: [
-            { Name: 'sub', Value: crypto.randomUUID() },
-            { Name: 'email', Value: 'c.sagan@example.com' },
-            { Name: 'name', Value: 'Carl Sagan' },
-          ],
+          sub: crypto.randomUUID(),
+          email: 'c.sagan@example.com',
+          name: 'Carl Sagan',
         },
       ]
-      response = {
-        Users: fakeUsers,
-      }
     }
-    return response.Users
+
+    return (
+      response.Users?.map((user) => ({
+        sub: extractAttributeRequired(user, 'sub'),
+        email: extractAttributeRequired(user, 'email'),
+        name: extractAttribute(user, 'name'),
+        affiliation: extractAttribute(user, 'custom:affiliation'),
+      })).filter(({ sub }) => sub !== this.#sub) ?? []
+    )
   }
 
   /**
@@ -280,7 +299,7 @@ export class EndorsementsServer {
    * @param escapedEndorserString - the sub of another user
    * @returns a user if found, otherwise undefined
    */
-  async #getCognitoUsernameForSub(sub: string) {
+  async #getCognitoUserForSub(sub: string) {
     const escapedSub = sub.replaceAll('"', '\\"')
     const user = (
       await client.send(
@@ -309,11 +328,11 @@ export class EndorsementsServer {
    * @param group - group to which the user corresponding to the given sub should be added
    */
   async #addUserToGroup(sub: string, group: string) {
-    const cognitoUser = await this.#getCognitoUsernameForSub(sub)
+    const { Username } = await this.#getCognitoUserForSub(sub)
 
     await client.send(
       new AdminAddUserToGroupCommand({
-        Username: cognitoUser.Username,
+        Username,
         UserPoolId: process.env.COGNITO_USER_POOL_ID,
         GroupName: group,
       })
