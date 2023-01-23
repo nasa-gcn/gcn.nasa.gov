@@ -52,7 +52,7 @@
     "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
-    "@architect/architect": "^10.8.3",
+    "@architect/architect": "^10.9.1",
     "@aws-sdk/lib-dynamodb": "^3.188.0",
     "@aws-sdk/util-dynamodb": "^3.188.0",
     "@remix-run/dev": "^1.11.0",
