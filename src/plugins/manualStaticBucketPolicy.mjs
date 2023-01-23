@@ -6,13 +6,11 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-// Add required permissions boundary for working on the Mission Cloud Platform
-module.exports.deploy = {
+// Mission Cloud Platform does not support user-defined bucket policies;
+// they must be set manually by an administrator
+export const deploy = {
   start({ cloudformation }) {
-    cloudformation.Resources.Role.Properties.PermissionsBoundary = {
-      // eslint-disable-next-line no-template-curly-in-string
-      'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:policy/mcp-tenantOperator',
-    }
+    delete cloudformation.Resources.StaticBucketPolicy
     return cloudformation
   },
 }

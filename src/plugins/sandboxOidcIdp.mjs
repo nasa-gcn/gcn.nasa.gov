@@ -6,12 +6,13 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-const { generate } = require('generate-password')
+import { generate } from 'generate-password'
 
 let server
 
 // Sandbox identity provider
-module.exports.set = {
+
+export const set = {
   env({ inventory }) {
     const orig_env = inventory.inv._project.env.local?.[process.env.ARC_ENV]
     let env = {}
@@ -30,7 +31,7 @@ module.exports.set = {
   },
 }
 
-module.exports.sandbox = {
+export const sandbox = {
   async start() {
     if (!process.env.ARC_OIDC_IDP_PORT) return
     const { default: Provider } = await import('oidc-provider')

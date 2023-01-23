@@ -7,7 +7,7 @@
  */
 
 // Grant the Lambda function access to Cognito to run the credential vending machine.
-module.exports.deploy = {
+export const deploy = {
   start({ cloudformation }) {
     // FIXME: Is there a better way to look up an arc env variable in a macro?
     const user_pool_id =

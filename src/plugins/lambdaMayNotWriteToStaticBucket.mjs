@@ -7,7 +7,7 @@
  */
 
 // The Lambda function should not be able to modify the static bucket.
-module.exports.deploy = {
+export const deploy = {
   start({ cloudformation }) {
     cloudformation.Resources.Role.Properties.Policies =
       cloudformation.Resources.Role.Properties.Policies.map((policy) => {
