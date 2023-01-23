@@ -9,7 +9,7 @@
 // Enable AWS X-Ray distributed tracing.
 // See https://aws-otel.github.io/docs/getting-started/lambda/lambda-js#enable-auto-instrumentation-for-your-lambda-function
 
-module.exports.deploy = {
+export const deploy = {
   start({ cloudformation }) {
     const lambdaProps =
       cloudformation.Resources.AnyCatchallHTTPLambda.Properties
@@ -27,7 +27,7 @@ module.exports.deploy = {
   },
 }
 
-module.exports.set = {
+export const set = {
   env() {
     return {
       production: {
