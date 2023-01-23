@@ -33,6 +33,7 @@ module.exports.set = {
       production: {
         AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
         NODE_OPTIONS: '--require /var/task/tracing.js',
+        OTEL_EXPORTER_OTLP_ENDPOINT: 'localhost:4317',
       },
     }
   },
