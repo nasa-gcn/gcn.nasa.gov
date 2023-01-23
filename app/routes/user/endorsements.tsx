@@ -8,77 +8,46 @@
 
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Form, useFetcher, useLoaderData } from '@remix-run/react'
-import {
-  Button,
-  ButtonGroup,
-  ComboBox,
-  Grid,
-  Label,
-} from '@trussworks/react-uswds'
+import { Button, ButtonGroup, Grid, Label } from '@trussworks/react-uswds'
 import { useEffect, useState } from 'react'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
-import { getUser } from '../__auth/user.server'
-import type { EndorsementRequest } from './endorsements.server'
+import type {
+  EndorsementRequest,
+  EndorsementRole,
+  EndorsementUser,
+} from './endorsements.server'
 import { EndorsementsServer } from './endorsements.server'
-
-type IntermediateMappedUser = {
-  sub: string
-  email: string
-  name: string
-}
+import { formatAuthor } from './index'
+import { useCombobox } from 'downshift'
+import type { UseComboboxProps } from 'downshift'
+import classnames from 'classnames'
 
 export async function loader({ request }: DataFunctionArgs) {
   const endorsementServer = await EndorsementsServer.create(request)
-  const user = await getUser(request)
-  const parsedUrl = new URL(request.url)
-  const filterString = parsedUrl.searchParams.get('filter')
+  const [requestedEndorsements, awaitingEndorsements] = await Promise.all([
+    endorsementServer.getEndorsements('requestor'),
+    endorsementServer.getEndorsements('endorser'),
+  ])
 
-  // Maps the retrived users to an object that can be used in the ComboBox
-  const submitterUsers = await endorsementServer.getSubmitterUsers()
-  const validUsers = filterString
-    ? (
-        submitterUsers
-          ?.filter(
-            (user) =>
-              user.Attributes?.find(
-                (attr) => attr.Name == 'name'
-              )?.Value?.includes(filterString) ||
-              user.Attributes?.find(
-                (attr) => attr.Name == 'email'
-              )?.Value?.includes(filterString)
-          )
-          .map((user) =>
-            user.Attributes?.filter((attr) =>
-              ['sub', 'email', 'name'].includes(attr.Name as string)
-            ).reduce(
-              (obj, item) =>
-                Object.assign(obj, { [item.Name as string]: item.Value }),
-              {}
-            )
-          ) as IntermediateMappedUser[]
-      ).map((user) => ({
-        value: user.sub,
-        label: `${user.name} - ${user.email}`,
-      }))
-    : []
-
-  const requestedEndorsements = await endorsementServer.getEndorsements(
-    'requestor'
-  )
-  const awaitingEndorsements = await endorsementServer.getEndorsements(
-    'endorser'
-  )
-
-  return { validUsers, requestedEndorsements, awaitingEndorsements, user }
+  const userIsSubmitter = endorsementServer.userIsSubmitter()
+  return {
+    requestedEndorsements,
+    awaitingEndorsements,
+    userIsSubmitter,
+  }
 }
 
 export async function action({ request }: DataFunctionArgs) {
-  const data = await request.formData()
+  const [data, endorsementServer] = await Promise.all([
+    request.formData(),
+    EndorsementsServer.create(request),
+  ])
   const intent = getFormDataString(data, 'intent')
   const endorserSub = getFormDataString(data, 'endorserSub')
   const requestorSub = getFormDataString(data, 'requestorSub')
-  const endorsementServer = await EndorsementsServer.create(request)
+  const filter = getFormDataString(data, 'filter')
+
   switch (intent) {
     case 'create':
       if (!endorserSub)
@@ -100,6 +69,16 @@ export async function action({ request }: DataFunctionArgs) {
         throw new Response('Valid endorser is required', { status: 403 })
       await endorsementServer.deleteEndorsementRequest(endorserSub)
       break
+    case 'filter':
+      if (filter?.length) {
+        const submitters = (await endorsementServer.getSubmitterUsers())
+          .filter(
+            ({ name, email }) =>
+              name?.includes(filter) || email.includes(filter)
+          )
+          .slice(0, 5)
+        return { submitters }
+      }
     default:
       throw new Response('unknown intent', {
         status: 400,
@@ -110,7 +89,7 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function Index() {
-  const { awaitingEndorsements, requestedEndorsements, user } =
+  const { awaitingEndorsements, requestedEndorsements, userIsSubmitter } =
     useLoaderData<typeof loader>()
 
   return (
@@ -118,7 +97,7 @@ export default function Index() {
       <div className="tablet:grid-col-10 flex-fill usa-prose">
         <h1 className="margin-y-0">Endorsements</h1>
       </div>
-      {user?.groups.includes('gcn.nasa.gov/circular-submitter') ? (
+      {userIsSubmitter ? (
         <>
           <p>
             As an approved submitter, you may submit new GCN Circulars. Other
@@ -172,7 +151,7 @@ export function EndorsementRequestCard({
   role,
 }: {
   endorsementRequest: EndorsementRequest
-  role: 'endorser' | 'requestor'
+  role: EndorsementRole
 }) {
   const approvalFetcher = useFetcher()
   const rejectFetcher = useFetcher()
@@ -183,7 +162,7 @@ export function EndorsementRequestCard({
     rejectFetcher.state !== 'idle' ||
     reportFetcher.state !== 'idle'
 
-  if (role == 'endorser') {
+  if (role === 'endorser') {
     return (
       <Grid row style={disabled ? { opacity: '50%' } : undefined}>
         <div className="tablet:grid-col flex-fill">
@@ -282,28 +261,125 @@ export function EndorsementRequestCard({
   }
 }
 
-export function EndorsementRequestForm() {
-  const [options, setOptions] = useState<{ value: string; label: string }[]>([])
-  const [endorserSub, setEndorserSub] = useState('')
-  const fetcher = useFetcher<typeof loader>()
+function EndorserComboBox({
+  disabled,
+  className,
+  ...props
+}: { disabled?: boolean; className?: string } & Omit<
+  UseComboboxProps<EndorsementUser>,
+  'items' | 'onInputValueChange' | 'itemToString'
+>) {
+  const fetcher = useFetcher<typeof action>()
+  const [items, setItems] = useState<EndorsementUser[]>([])
 
   useEffect(() => {
-    const users = fetcher.data?.validUsers
-    if (users !== undefined) {
-      const test = [
-        ...new Map(users.map((item) => [item['value'], item])).values(),
-      ]
-      setOptions(test)
-    }
+    setItems(fetcher.data?.submitters ?? [])
   }, [fetcher.data])
 
-  const handleInputChange = ({
-    target: { value },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    const data = new FormData()
-    data.set('filter', value)
-    fetcher.submit(data)
-  }
+  const {
+    reset,
+    isOpen,
+    highlightedIndex,
+    selectedItem,
+    getMenuProps,
+    getInputProps,
+    getItemProps,
+    getToggleButtonProps,
+  } = useCombobox<EndorsementUser>({
+    items,
+    onInputValueChange({ inputValue }) {
+      if (inputValue?.length) {
+        const data = new FormData()
+        data.set('filter', inputValue.split(' ')[0])
+        data.set('intent', 'filter')
+        fetcher.submit(data, { method: 'post' })
+      } else {
+        setItems([])
+      }
+    },
+    itemToString(item) {
+      return item ? formatAuthor(item) : ''
+    },
+    ...props,
+  })
+
+  const pristine = Boolean(selectedItem)
+
+  return (
+    <div
+      data-testid="combo-box"
+      data-enhanced="true"
+      className={classnames('usa-combo-box', className, {
+        'usa-combo-box--pristine': pristine,
+      })}
+    >
+      <input
+        autoCapitalize="off"
+        autoComplete="off"
+        className="usa-combo-box__input"
+        {...getInputProps()}
+        // Funky escape sequence is a zero-width character to prevent Safari
+        // from attempting to autofill the user's own email address, which
+        // would be triggered by the presence of the string "email" in the
+        // placeholder.
+        placeholder="Name or em&#8203;ail address of endorser"
+      />
+      <span className="usa-combo-box__clear-input__wrapper" tabIndex={-1}>
+        <button
+          type="button"
+          className="usa-combo-box__clear-input"
+          aria-label="Clear the select contents"
+          onClick={() => reset()}
+          hidden={!pristine || disabled}
+          disabled={disabled}
+        >
+          &nbsp;
+        </button>
+      </span>
+      <span className="usa-combo-box__input-button-separator">&nbsp;</span>
+      <span className="usa-combo-box__toggle-list__wrapper" tabIndex={-1}>
+        <button
+          type="button"
+          className="usa-combo-box__toggle-list"
+          {...getToggleButtonProps()}
+        >
+          &nbsp;
+        </button>
+      </span>
+      <ul
+        {...getMenuProps()}
+        className="usa-combo-box__list"
+        role="listbox"
+        hidden={!isOpen}
+      >
+        {isOpen &&
+          (items.length ? (
+            items.map((item, index) => (
+              <li
+                key={item.sub}
+                className={classnames('usa-combo-box__list-option', {
+                  'usa-combo-box__list-option--focused':
+                    index === highlightedIndex,
+                  'usa-combo-box__list-option--selected':
+                    selectedItem?.sub === item.sub,
+                })}
+                {...getItemProps({ item, index })}
+              >
+                {formatAuthor(item)}
+              </li>
+            ))
+          ) : (
+            <li className="usa-combo-box__list-option--no-results">
+              No results found
+            </li>
+          ))}
+      </ul>
+    </div>
+  )
+}
+
+export function EndorsementRequestForm() {
+  const [endorserSub, setEndorserSub] = useState<string | undefined>()
 
   return (
     <Form method="post">
@@ -314,26 +390,31 @@ export function EndorsementRequestForm() {
         email of the individual you want to be endorsed by. They will receive a
         notification alerting them to this request.
       </div>
-      <Label htmlFor="endorserSubSelect">Endorser</Label>
       <input type="hidden" name="endorserSub" value={endorserSub} />
-      <ComboBox
-        id="endorserSubSelect"
-        name="endorserSubSelect"
-        options={options}
-        onChange={(e) => setEndorserSub(e ?? '')}
-        defaultValue={''}
-        inputProps={{ onChange: handleInputChange }}
-      />
-      <ButtonGroup>
-        <Button
-          type="submit"
-          name="intent"
-          value="create"
-          disabled={!endorserSub}
-        >
-          Submit
-        </Button>
-      </ButtonGroup>
+      <Grid row>
+        <Grid col="fill">
+          <Label htmlFor="endorserSubSelect" className="usa-sr-only">
+            Endorser
+          </Label>
+          <EndorserComboBox
+            className="maxw-full"
+            onSelectedItemChange={({ selectedItem }) =>
+              setEndorserSub(selectedItem?.sub)
+            }
+          />
+        </Grid>
+        <Grid col="auto">
+          <Button
+            type="submit"
+            name="intent"
+            value="create"
+            disabled={!endorserSub?.length}
+            className="margin-top-1 margin-left-1"
+          >
+            Submit
+          </Button>
+        </Grid>
+      </Grid>
     </Form>
   )
 }
