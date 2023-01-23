@@ -21,7 +21,7 @@ import dedent from 'ts-dedent'
 import Spinner from '~/components/Spinner'
 import { formatAuthor } from '../user/index'
 import { getUser } from '../__auth/user.server'
-import { subjectIsValid } from './circulars.lib'
+import { bodyIsValid, subjectIsValid } from './circulars.lib'
 import { feature } from '~/root'
 
 export async function loader({ request }: DataFunctionArgs) {
@@ -94,7 +94,7 @@ export default function New() {
             placeholder={useSubjectPlaceholder()}
             required={true}
             onChange={({ target: { value } }) => {
-              setSubjectValid(value.length ? subjectIsValid(value) : undefined)
+              setSubjectValid(subjectIsValid(value))
             }}
           />
         </div>
@@ -122,7 +122,7 @@ export default function New() {
             'usa-input--success': bodyValid,
           })}
           onChange={({ target: { value } }) => {
-            setBodyValid(value.length ? true : undefined)
+            setBodyValid(bodyIsValid(value))
           }}
         />
         <div className="text-base margin-bottom-1" id="bodyDescription">
