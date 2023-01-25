@@ -12,6 +12,7 @@ import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { formatAuthor } from '../user/index'
 import { getUser } from '../__auth/user.server'
+import { bodyIsValid, subjectIsValid } from './circulars.lib'
 
 async function getDynamoDBAutoIncrement() {
   const db = await tables()
@@ -126,8 +127,9 @@ export async function put(subject: string, body: string, request: Request) {
     throw new Response('User is not in the submitters group', {
       status: 403,
     })
-  if (!body || !subject)
-    throw new Response('Subject and Body cannot be blank', { status: 400 })
+  if (!subjectIsValid(subject))
+    throw new Response('subject is invalid', { status: 400 })
+  if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
 
   await autoincrement.put({
     dummy: 0,

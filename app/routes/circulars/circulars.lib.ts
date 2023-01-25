@@ -6,8 +6,15 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+/** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
-  return validSubjectKeywords.some((x) => subject.startsWith(x))
+  if (subject.length)
+    return validSubjectKeywords.some((x) => subject.startsWith(x))
+}
+
+/** Return true if the body is valid, false if it is invalid, or undefined if it is an empty string */
+export function bodyIsValid(body: string) {
+  if (body.length) return true
 }
 
 export const validSubjectKeywords = [
