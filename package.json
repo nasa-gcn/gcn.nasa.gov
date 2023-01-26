@@ -52,7 +52,7 @@
   },
   "devDependencies": {
     "@architect/architect": "^10.9.1",
-    "@aws-sdk/client-cognito-identity-provider": "^3.223.0",
+    "@aws-sdk/client-cognito-identity-provider": "^3.258.0",
     "@aws-sdk/client-sesv2": "^3.223.0",
     "@aws-sdk/lib-dynamodb": "^3.188.0",
     "@aws-sdk/util-dynamodb": "^3.188.0",
