@@ -38,4 +38,4 @@ jobs:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           aws-region: us-east-1
       - name: Deploy
-        run: npx arc deploy --prune --production
+        run: npm run deploy
