@@ -7,10 +7,8 @@
  */
 
 // Workaround for Remix live reload bug, https://github.com/remix-run/remix/issues/198
-module.exports = {
-  set: {
-    env() {
-      return { testing: { NODE_ENV: 'development' } }
-    },
+module.exports.set = {
+  env() {
+    return { testing: { NODE_ENV: 'development' } }
   },
 }
