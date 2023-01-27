@@ -18,7 +18,7 @@
     "prepare:sass": "gulp init",
     "prepare:husky": "husky install",
     "prepare": "run-p prepare:*",
-    "deploy:hydrate": "arc hydrate && rimraf server/node_modules/@uswds/uswds && modclean -p server -n default:safe,default:caution -a '*.ts,*.map,*.scss' -r",
+    "deploy:hydrate": "arc hydrate && rimraf server/node_modules/@uswds/uswds && modclean -p server -n default:safe,default:caution -a '*.ts,*.map,*.scss,Makefile' --ignore 'makefile.* -r",
     "deploy:no-hydrate": "arc deploy --no-hydrate --prune --production",
     "deploy": "run-s deploy:hydrate deploy:no-hydrate"
   },
