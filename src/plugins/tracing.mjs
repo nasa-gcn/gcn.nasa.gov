@@ -19,7 +19,7 @@ export const deploy = {
     ;(lambdaProps.Layers ?? (lambdaProps.Layers = [])).push({
       'Fn::Sub':
         // eslint-disable-next-line no-template-curly-in-string
-        'arn:aws:lambda:${AWS::Region}:901920570463:layer:aws-otel-nodejs-arm64-ver-1-8-0:2',
+        'arn:aws:lambda:${AWS::Region}:901920570463:layer:aws-otel-nodejs-arm64-ver-1-9-1:1',
     })
     ;(roleProps.ManagedPolicyArns ?? (roleProps.ManagedPolicyArns = [])).push(
       'arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess'
@@ -28,7 +28,6 @@ export const deploy = {
     Object.assign(lambdaProps.Environment.Variables, {
       AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
       NODE_OPTIONS: '--require /var/task/tracing.js',
-      OPENTELEMETRY_COLLECTOR_CONFIG_FILE: '/var/task/collector.yaml',
     })
 
     return cloudformation
