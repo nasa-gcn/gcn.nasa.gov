@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import type { UserType } from '@aws-sdk/client-cognito-identity-provider'
-
 export const publicStaticCacheControlHeaders = {
   'Cache-Control': 'public, max-age=315360000',
 }
@@ -36,15 +34,4 @@ export function getFormDataString(formData: FormData, key: string) {
   } else {
     throw new Response(`expected ${key} to be a string`, { status: 400 })
   }
-}
-
-export function extractAttribute({ Attributes }: UserType, key: string) {
-  return Attributes?.find(({ Name }) => key === Name)?.Value
-}
-
-export function extractAttributeRequired(user: UserType, key: string) {
-  const value = extractAttribute(user, key)
-  if (value === undefined)
-    throw new Error(`required user attribute ${key} is missing`)
-  return value
 }
