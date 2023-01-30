@@ -57,7 +57,7 @@
     "@architect/architect": "^10.9.2",
     "@aws-sdk/client-cognito-identity-provider": "^3.223.0",
     "@aws-sdk/client-sesv2": "^3.223.0",
-    "@aws-sdk/lib-dynamodb": "^3.188.0",
+    "@aws-sdk/lib-dynamodb": "^3.259.0",
     "@aws-sdk/util-dynamodb": "^3.188.0",
     "@remix-run/dev": "^1.11.1",
     "@remix-run/eslint-config": "^1.11.1",
