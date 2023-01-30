@@ -7,7 +7,6 @@
  */
 
 import { tables } from '@architect/functions'
-import type { UserType } from '@aws-sdk/client-cognito-identity-provider'
 import {
   AdminAddUserToGroupCommand,
   AdminListGroupsForUserCommand,
@@ -15,6 +14,7 @@ import {
   ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { extractAttribute, extractAttributeRequired } from '~/lib/utils'
 import { clearUserToken, getUser } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'
 
@@ -36,17 +36,6 @@ export interface EndorsementUser {
   email: string
   name?: string
   affiliation?: string
-}
-
-function extractAttribute({ Attributes }: UserType, key: string) {
-  return Attributes?.find(({ Name }) => key === Name)?.Value
-}
-
-function extractAttributeRequired(user: UserType, key: string) {
-  const value = extractAttribute(user, key)
-  if (value === undefined)
-    throw new Error(`required user attribute ${key} is missing`)
-  return value
 }
 
 export class EndorsementsServer {
