@@ -21,16 +21,6 @@ to enable these accounts and topics are setup on the GCN Kafka broker,
 and we are happy to work together to help you define schema utilizing our
 core JSON schema.
 
-## Accounts and Scope
-
-Make sure that all of the producer users (who will enable GCN notices in your pipelines)
-have signed in (at least once) to
-https://test.gcn.nasa.gov and https://gcn.nasa.gov.
-
-Please send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-a list of email addresses of all the people who should have the
-producer access to the MissionName.\* topics.
-
 ## Defining Kafka Topics and JSON Schema
 
 The preferred format for formatting of the data sent via GCN Kafka is JSON.
@@ -46,10 +36,15 @@ in the following process.
 
 ## Steps to Start Publishing Alerts
 
-1. Log out and log back in.
-2. Go through the "Start Streaming GCN Notices" process.
-3. On Step 2 of "Start Streaming GCN Notices", choose the scope gcn.nasa.gov/kafka-MissionName-producer.
-4. Your producer code will look very similar to the client example code.
+1. Make sure that all of the producer users (who will enable GCN notices in your pipelines)
+   have signed in (at least once) to https://test.gcn.nasa.gov and https://gcn.nasa.gov.
+2. Please send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
+   a list of email addresses of all the people who should have the
+   producer access to the MissionName.\* topics.
+3. Log out and log back in.
+4. Go through the "Start Streaming GCN Notices" process.
+5. On Step 2 of "Start Streaming GCN Notices", choose the scope gcn.nasa.gov/kafka-MissionName-producer.
+6. Your producer code will look very similar to the client example code.
    Start from this and adjust as you see fit:
 
 ```sh
