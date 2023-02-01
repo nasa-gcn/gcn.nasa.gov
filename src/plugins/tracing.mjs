@@ -18,7 +18,7 @@ export const deploy = {
     ;(lambdaProps.Layers ?? (lambdaProps.Layers = [])).push({
       'Fn::Sub':
         // eslint-disable-next-line no-template-curly-in-string
-        'arn:aws:lambda:${AWS::Region}:901920570463:layer:aws-otel-nodejs-arm64-ver-1-8-0:1',
+        'arn:aws:lambda:${AWS::Region}:901920570463:layer:aws-otel-nodejs-arm64-ver-1-8-0:2',
     })
     ;(roleProps.ManagedPolicyArns ?? (roleProps.ManagedPolicyArns = [])).push(
       'arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess'
