@@ -36,15 +36,17 @@ in the following process.
 
 ## Steps to Start Publishing Alerts
 
-1. Make sure that all of the producer users (who will enable GCN notices in your pipelines)
-   have signed in (at least once) to https://test.gcn.nasa.gov and https://gcn.nasa.gov.
-2. Please send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-   a list of email addresses of all the people who should have the
-   producer access to the MissionName.\* topics.
-3. Log out and log back in.
-4. Go through the "Start Streaming GCN Notices" process.
-5. On Step 2 of "Start Streaming GCN Notices", choose the scope gcn.nasa.gov/kafka-MissionName-producer.
-6. Your producer code will look very similar to the client example code.
+1. Make sure that the user(s) on your team who will implement GCN notices in your pipelines
+   has signed in (at least once) to https://test.gcn.nasa.gov and https://gcn.nasa.gov.
+2. Send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
+   a list of email address(es) of all the people who should have the
+   producer access to the <code><i>mission_name</i>.\*</code> topics.
+3. Decide on a topic name or prefix for several topic names.
+4. Log out and log back in.
+5. Go through the "Start Streaming GCN Notices" process.
+6. On Step 2 of ["Start Streaming GCN Notices"](../quickstart),
+   choose the `scope gcn.nasa.gov/kafka-MissionName-producer`.
+7. Your producer code will look very similar to the [client example code](docs/client).
    Start from this and adjust as you see fit:
 
 ```python
@@ -52,8 +54,9 @@ from gcn_kafka import Producer
 # Connect as a producer.
 # Warning: don't share the client secret with others.
 producer = Producer(client_id='fill me in', client_secret='fill me in')
-topic = 'MissionName.example'
-# anything starting with 'MissionName'
+# Your client ID and client secret can be found in Step 4 of ["Start Streaming GCN Notices"](../quickstart)
+topic = 'mission_name.example'
+# any topic starting with 'mission_name'
 data = b'...'  # any bytes
 producer.produce(topic, data)
 ```
@@ -65,6 +68,7 @@ or by emailing text to the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feed
 
 ## Announce New Notices Type is Available
 
-GCN Team will add notice type to Kafka [Quick Start](../quickstart)
-and Email Notification configuration. Please work with GCN Team on drafting
-a community announcement.
+The GCN Team will add your new notice type to the Kafka [Quick Start](../quickstart)
+and Email Notification configuration. Please work with the
+[GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
+on drafting a community announcement.
