@@ -54,12 +54,13 @@ from gcn_kafka import Producer
 # Connect as a producer.
 # Warning: don't share the client secret with others.
 producer = Producer(client_id='fill me in', client_secret='fill me in')
-# Your client ID and client secret can be found in Step 4 of ["Start Streaming GCN Notices"](../quickstart)
 topic = 'mission_name.example'
 # any topic starting with 'mission_name'
 data = b'...'  # any bytes
 producer.produce(topic, data)
 ```
+
+Your client ID and client secret can be found in Step 4 of ["Start Streaming GCN Notices"](../quickstart)
 
 ## Mission page
 
