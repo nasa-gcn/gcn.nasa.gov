@@ -36,17 +36,19 @@ in the following process.
 
 ## Steps to Start Publishing Alerts
 
-1. Make sure that the user(s) on your team who will implement GCN notices in your pipelines
+1. Make sure that your team member(s) who will implement GCN notices in your pipeline
    has signed in (at least once) to https://test.gcn.nasa.gov and https://gcn.nasa.gov.
 2. Send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-   a list of email address(es) of all the people who should have the
+   a list of email address(es) of all the team members who should have the
    producer access to the <code><i>mission_name</i>.\*</code> topics.
 3. Decide on a topic name or prefix for several topic names.
 4. Log out and log back in.
 5. Go through the "Start Streaming GCN Notices" process.
 6. On Step 2 of ["Start Streaming GCN Notices"](../quickstart),
    choose the `scope gcn.nasa.gov/kafka-MissionName-producer`.
-7. Your producer code will look very similar to the [client example code](docs/client).
+7. Your producer code will look very similar to the [client example code](docs/client) and
+   Step 4 of ["Start Streaming GCN Notices"](../quickstart). `client_id` and `client_secret`
+   can be found in Step 4 client example code.
    Start from this and adjust as you see fit:
 
 ```python
@@ -59,8 +61,6 @@ topic = 'mission_name.example'
 data = b'...'  # any bytes
 producer.produce(topic, data)
 ```
-
-Your client ID and client secret can be found in Step 4 of ["Start Streaming GCN Notices"](../quickstart)
 
 ## Mission page
 
