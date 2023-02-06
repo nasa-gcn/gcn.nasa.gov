@@ -54,7 +54,7 @@
     "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
-    "@architect/architect": "^10.9.2",
+    "@architect/architect": "^10.10.0",
     "@aws-sdk/client-cognito-identity-provider": "^3.223.0",
     "@aws-sdk/client-sesv2": "^3.223.0",
     "@aws-sdk/lib-dynamodb": "^3.188.0",
