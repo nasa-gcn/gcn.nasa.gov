@@ -24,7 +24,7 @@ import { EmailNotificationServer } from '../email_notifications.server'
 export const handle = { breadcrumb: 'Edit', getSitemapEntries: () => null }
 
 export async function action({ request }: DataFunctionArgs) {
-  const [data] = await Promise.all([request.formData()])
+  const data = await request.formData()
   const { uuid, intent, name, recipient, noticeFormat, ...rest } =
     Object.fromEntries(data)
   const noticeTypes = Object.keys(rest)
