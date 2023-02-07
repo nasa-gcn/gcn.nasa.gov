@@ -12,6 +12,7 @@ import SegmentedCards from '~/components/SegmentedCards'
 import { ClientCredentialVendingMachine } from '../client_credentials.server'
 import { Icon } from '@trussworks/react-uswds'
 import CredentialCard from '~/components/CredentialCard'
+import { getFormDataString } from '~/lib/utils'
 
 export const handle = { getSitemapEntries: () => null }
 
@@ -19,17 +20,6 @@ export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
   return { client_credentials }
-}
-
-function getFormDataString(formData: FormData, key: string) {
-  const value = formData.get(key)
-  if (typeof value === 'string') {
-    return value
-  } else if (value === null) {
-    return undefined
-  } else {
-    throw new Response(`expected ${key} to be a string`, { status: 400 })
-  }
 }
 
 export async function action({ request }: DataFunctionArgs) {
