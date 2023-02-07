@@ -18,7 +18,7 @@ import { EmailNotificationServer } from '../email_notifications.server'
 export const handle = { getSitemapEntries: () => null }
 
 export async function action({ request }: DataFunctionArgs) {
-  const [data] = await Promise.all([request.formData()])
+  const data = await request.formData()
   const uuid = getFormDataString(data, 'uuid')
   const intent = getFormDataString(data, 'intent')
   switch (intent) {
