@@ -98,7 +98,7 @@ export function Header({ email }: { email?: string }) {
                         to="/user/credentials"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                       >
-                        Credentials
+                        Client Credentials
                       </Link>,
                       <Link
                         key="email"

@@ -55,11 +55,11 @@ export default function Index() {
       </div>
       <p>
         Manage your client credentials here. Client credentials allow your
-        scripts to interact with GCN on your behalf. These credentials are the
-        same as those generated through the{' '}
-        <Link to="/quickstart">Start Streaming GCN Notices</Link>. For an
-        example of how to use these, see the{' '}
-        <Link to="/docs/client">client docs</Link>.
+        scripts to interact with GCN on your behalf. You can also create client
+        credentials through the{' '}
+        <Link to="/quickstart">Start Streaming GCN Notices</Link> quick start
+        guide. For sample code demonstrating usage of client credentials, see
+        the <Link to="/docs/client">client documentation</Link>.
       </p>
       <SegmentedCards>
         {client_credentials.map((credential) => (
