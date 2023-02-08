@@ -28,6 +28,7 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLocation,
   useMatches,
   useNavigation,
 } from '@remix-run/react'
@@ -109,13 +110,13 @@ export const links: LinksFunction = () => [
 ]
 
 export async function loader({ request }: DataFunctionArgs) {
-  const { url } = request
+  const { origin } = new URL(request.url)
 
   const user = await getUser(request)
   const email = user?.email
   const features = getFeatures()
 
-  return { url, email, features }
+  return { origin, email, features }
 }
 
 function getFeatures() {
@@ -149,11 +150,17 @@ export function useFeature(feature: string) {
 }
 
 export function useUrl() {
-  return useLoaderDataRoot().url
+  const { origin } = useLoaderDataRoot()
+  const { pathname, search, hash } = useLocation()
+  const url = new URL(origin)
+  url.pathname = pathname
+  url.search = search
+  url.hash = hash
+  return url.toString()
 }
 
 export function useHostname() {
-  return new URL(useUrl()).hostname
+  return new URL(useLoaderDataRoot().origin).hostname
 }
 
 function Title() {
@@ -213,9 +220,8 @@ function Document({ children }: { children?: React.ReactNode }) {
 
 export function CatchBoundary() {
   const { status } = useCatch()
-  const [{ data }] = useMatches()
+  const url = useUrl()
   if (status == 403) {
-    const { url } = data as Awaited<ReturnType<typeof loader>>
     return (
       <Document>
         <h1>Unauthorized</h1>
