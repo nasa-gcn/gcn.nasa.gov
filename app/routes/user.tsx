@@ -25,7 +25,7 @@ export default function User() {
               </NavLink>,
               enableCirculars && (
                 <NavLink key="endorsements" to="endorsements">
-                  Endorsements
+                  Peer Endorsements
                 </NavLink>
               ),
               <NavLink key="credentials" to="credentials">

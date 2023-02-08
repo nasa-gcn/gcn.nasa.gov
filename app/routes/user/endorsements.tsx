@@ -23,6 +23,11 @@ import { useCombobox } from 'downshift'
 import type { UseComboboxProps } from 'downshift'
 import classnames from 'classnames'
 
+export const handle = {
+  breadcrumb: 'Peer Endorsements',
+  getSitemapEntries: () => null,
+}
+
 export async function loader({ request }: DataFunctionArgs) {
   const endorsementServer = await EndorsementsServer.create(request)
   const [requestedEndorsements, awaitingEndorsements] = await Promise.all([
@@ -95,7 +100,7 @@ export default function Index() {
   return (
     <Grid row>
       <div className="tablet:grid-col-10 flex-fill usa-prose">
-        <h1 className="margin-y-0">Endorsements</h1>
+        <h1 className="margin-y-0">Peer Endorsements</h1>
       </div>
       {userIsSubmitter ? (
         <>
