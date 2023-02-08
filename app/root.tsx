@@ -62,6 +62,7 @@ import favicon_72 from '~/theme/img/favicons/favicon-72.png'
 import favicon_114 from '~/theme/img/favicons/favicon-114.png'
 import favicon_144 from '~/theme/img/favicons/favicon-144.png'
 import favicon_192 from '~/theme/img/favicons/favicon-192.png'
+import { useRouteLoaderData } from './lib/remix'
 const favicons = {
   16: favicon_16,
   40: favicon_40,
@@ -131,6 +132,10 @@ export function feature(feature: string) {
   return getFeatures().includes(feature)
 }
 
+function useLoaderDataRoot() {
+  return useRouteLoaderData<typeof loader>('root')
+}
+
 /**
  * Return true if the given feature flag is enabled.
  *
@@ -140,15 +145,11 @@ export function feature(feature: string) {
  * is a comma-separated list of enabled features.
  */
 export function useFeature(feature: string) {
-  const [{ data }] = useMatches()
-  const { features } = data as Awaited<ReturnType<typeof loader>>
-  return features.includes(feature)
+  return useLoaderDataRoot().features.includes(feature)
 }
 
 export function useUrl() {
-  const [{ data }] = useMatches()
-  const { url } = data as Awaited<ReturnType<typeof loader>>
-  return url
+  return useLoaderDataRoot().url
 }
 
 export function useHostname() {
@@ -156,9 +157,8 @@ export function useHostname() {
 }
 
 function Document({ children }: { children?: React.ReactNode }) {
+  const { email } = useLoaderDataRoot()
   const matches = useMatches()
-  const [{ data }] = matches
-  const { email } = data as Awaited<ReturnType<typeof loader>>
   const navigation = useNavigation()
   const showProgress = useSpinDelay(navigation.state !== 'idle')
   const breadcrumbs = matches
