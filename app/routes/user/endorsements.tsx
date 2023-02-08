@@ -18,11 +18,11 @@ import type {
   EndorsementUser,
 } from './endorsements.server'
 import { EndorsementsServer } from './endorsements.server'
-import { formatAuthor } from './index'
 import { useCombobox } from 'downshift'
 import type { UseComboboxProps } from 'downshift'
 import classnames from 'classnames'
 import loaderImage from 'app/theme/img/loader.gif'
+import { formatAuthor } from '../circulars/circulars.lib'
 
 export const handle = {
   breadcrumb: 'Peer Endorsements',

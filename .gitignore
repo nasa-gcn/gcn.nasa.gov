@@ -20,3 +20,5 @@ theme/_uswds-theme-*.scss
 
 .env
 .eslintcache
+
+/email-incoming

@@ -10,9 +10,8 @@ import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
-import { formatAuthor } from '../user/index'
 import { getUser } from '../__auth/user.server'
-import { bodyIsValid, subjectIsValid } from './circulars.lib'
+import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 
 async function getDynamoDBAutoIncrement() {
   const db = await tables()
