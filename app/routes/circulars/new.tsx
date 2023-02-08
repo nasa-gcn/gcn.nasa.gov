@@ -19,9 +19,8 @@ import {
 import { useState } from 'react'
 import dedent from 'ts-dedent'
 import Spinner from '~/components/Spinner'
-import { formatAuthor } from '../user/index'
 import { getUser } from '../__auth/user.server'
-import { bodyIsValid, subjectIsValid } from './circulars.lib'
+import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import { feature } from '~/root'
 
 export async function loader({ request }: DataFunctionArgs) {

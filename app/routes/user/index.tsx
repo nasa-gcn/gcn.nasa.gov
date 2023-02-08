@@ -14,6 +14,7 @@ import { useState } from 'react'
 import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
+import { formatAuthor } from '../circulars/circulars.lib'
 import { storage } from '../__auth/auth.server'
 import { getUser, updateSession } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'
@@ -63,20 +64,6 @@ export async function action({ request }: DataFunctionArgs) {
   user.affiliation = affiliation
   await updateSession({ user }, session)
   return null
-}
-
-export function formatAuthor({
-  name,
-  affiliation,
-  email,
-}: {
-  name?: string
-  affiliation?: string
-  email: string
-}) {
-  if (!name) return email
-  else if (!affiliation) return `${name} <${email}>`
-  else return `${name} at ${affiliation} <${email}>`
 }
 
 export default function User() {
