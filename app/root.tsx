@@ -156,28 +156,35 @@ export function useHostname() {
   return new URL(useUrl()).hostname
 }
 
-function Document({ children }: { children?: React.ReactNode }) {
-  const { email } = useLoaderDataRoot()
-  const matches = useMatches()
-  const navigation = useNavigation()
-  const showProgress = useSpinDelay(navigation.state !== 'idle')
-  const breadcrumbs = matches
+function Title() {
+  const title = useMatches()
     .map(({ handle }) => handle?.breadcrumb)
     .filter(Boolean)
-  const title = breadcrumbs.join(' - ')
+    .join(' - ')
+  return <title>{title}</title>
+}
+
+function Progress() {
+  const { state } = useNavigation()
+  const showProgress = useSpinDelay(state !== 'idle')
+  return <>{showProgress && <TopBarProgress />}</>
+}
+
+function Document({ children }: { children?: React.ReactNode }) {
+  const { email } = useLoaderDataRoot()
 
   return (
     <html lang="en-US">
       <head>
         <Meta />
         <Links />
-        <title>{title}</title>
+        <Title />
       </head>
       <body>
         <a className="usa-skipnav" href="#main-content">
           Skip to main content
         </a>
-        {showProgress && <TopBarProgress />}
+        <Progress />
         <GovBanner />
         <DevBanner />
         <Header email={email} />
