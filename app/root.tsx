@@ -257,6 +257,20 @@ export function CatchBoundary() {
   }
 }
 
+export function ErrorBoundary() {
+  return (
+    <Document>
+      <h1>Unexpected error</h1>
+      <p className="usa-intro">An unexpected error occurred.</p>
+      <ButtonGroup>
+        <Link to="/" className="usa-button">
+          Go home
+        </Link>
+      </ButtonGroup>
+    </Document>
+  )
+}
+
 export default function App() {
   return (
     <Document>
