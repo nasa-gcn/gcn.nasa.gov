@@ -181,17 +181,6 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
   Other: undefined,
 }
 
-type DataRow = {
-  topic: string
-  latestRate: number
-}
-
-type FormattedData = {
-  text: DataRow[]
-  binary: DataRow[]
-  voevent: DataRow[]
-}
-
 interface NoticeTypeCheckboxProps {
   defaultSelected?: string[]
   selectedFormat?: 'binary' | 'text' | 'voevent'
@@ -203,44 +192,30 @@ export function NoticeTypeCheckboxes({
   selectedFormat = 'text',
   validationFunction,
 }: NoticeTypeCheckboxProps) {
-  const [userSelected, setUserSelected] = useState<{ [key: string]: boolean }>(
-    {}
-  )
+  const [userSelected, setUserSelected] = useState(new Set<string>())
   const [selectedCounter, setSelectedCounter] = useState(0)
   const [alertEstimate, setAlertEstimate] = useState(0)
 
-  const metrics: FormattedData = {
-    text: getMetricsByFormat('.text.'),
-    binary: getMetricsByFormat('.binary.'),
-    voevent: getMetricsByFormat('.voevent.'),
-  }
-
   const counterfunction = (childRef: HTMLInputElement) => {
-    userSelected[childRef.name] = childRef.checked
+    if (childRef.checked) {
+      userSelected.add(childRef.name)
+    } else {
+      userSelected.delete(childRef.name)
+    }
     setUserSelected(userSelected)
 
-    let selectedTotal = 0
-    for (const key of Object.keys(userSelected)) {
-      if (userSelected[key]) {
-        selectedTotal++
-      }
-    }
-    setSelectedCounter(selectedTotal)
+    setSelectedCounter(userSelected.size)
 
-    if (metrics) {
-      setAlertEstimate(getSum(metrics))
+    let estimate = 0
+    for (const noticeType of userSelected) {
+      estimate +=
+        triggerRate[`gcn.classic.${selectedFormat}.${noticeType}`] ?? 0
     }
+    setAlertEstimate(estimate)
 
     if (validationFunction) {
       validationFunction(selectedCounter)
     }
-  }
-
-  function getSum(metrics: FormattedData) {
-    return metrics[selectedFormat]
-      .filter(({ topic }) => userSelected[topic])
-      .map(({ latestRate }) => latestRate)
-      .reduce((partialSum, a) => partialSum + a, 0)
   }
 
   return (
@@ -258,18 +233,16 @@ export function NoticeTypeCheckboxes({
             label: (
               <>
                 {noticeType}
-                {metrics ? (
-                  <div className="padding-left-1 display-inline">
-                    <small className="text-base-light">
-                      {humanizedRate(
-                        metrics[selectedFormat].find(
-                          ({ topic }) => topic == noticeType
-                        )?.latestRate ?? 0,
-                        'alert'
-                      )}
-                    </small>
-                  </div>
-                ) : null}
+                <div className="padding-left-1 display-inline">
+                  <small className="text-base-light">
+                    {humanizedRate(
+                      triggerRate[
+                        `gcn.classic.${selectedFormat}.${noticeType}`
+                      ] ?? 0,
+                      'alert'
+                    )}
+                  </small>
+                </div>
               </>
             ),
             name: noticeType,
@@ -287,15 +260,4 @@ export function NoticeTypeCheckboxes({
       </div>
     </>
   )
-}
-function getMetricsByFormat(format: string): DataRow[] {
-  return triggerRate.result
-    .filter(
-      (item: { metric: { topic: string } }) =>
-        item.metric.topic.indexOf(format) != -1
-    )
-    .map((item: { metric: { topic: any }; values: string | any[] }) => ({
-      topic: item.metric.topic.split('.')[3],
-      latestRate: parseFloat(item.values[item.values.length - 1][1]),
-    }))
 }
