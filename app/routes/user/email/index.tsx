@@ -78,13 +78,13 @@ export default function Index() {
         </a>
         .
       </p>
-      {data ? (
+      {data && (
         <SegmentedCards>
           {data.map((alert) => (
             <EmailNotificationCard key={alert.uuid} {...alert} />
           ))}
         </SegmentedCards>
-      ) : null}
+      )}
     </>
   )
 }

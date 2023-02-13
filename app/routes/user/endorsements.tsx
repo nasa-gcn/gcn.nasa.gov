@@ -110,7 +110,7 @@ export default function Index() {
             users may also request an endorsement from you, which you may
             approve, deny, or report in the case of spam.
           </p>
-          {awaitingEndorsements.length > 0 ? (
+          {awaitingEndorsements.length > 0 && (
             <Grid row>
               <h2>Requests awaiting your review</h2>
               <SegmentedCards>
@@ -123,7 +123,7 @@ export default function Index() {
                 ))}
               </SegmentedCards>
             </Grid>
-          ) : null}
+          )}
         </>
       ) : (
         <div>
@@ -132,7 +132,7 @@ export default function Index() {
             approved user.
           </p>
           <EndorsementRequestForm />
-          {requestedEndorsements.length > 0 ? (
+          {requestedEndorsements.length > 0 && (
             <div>
               <h2>Your Pending Requests</h2>
               <SegmentedCards>
@@ -145,7 +145,7 @@ export default function Index() {
                 ))}
               </SegmentedCards>
             </div>
-          ) : null}
+          )}
         </div>
       )}
     </Grid>
@@ -217,14 +217,14 @@ export function EndorsementRequestCard({
               {endorsementRequest.status}
             </div>
           </div>
-          {endorsementRequest.status ? (
+          {endorsementRequest.status && (
             <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
               <input
                 type="hidden"
                 name="endorserSub"
                 value={endorsementRequest.endorserSub}
               />
-              {endorsementRequest.status !== 'reported' ? (
+              {endorsementRequest.status !== 'reported' && (
                 <Button
                   type="submit"
                   secondary
@@ -234,9 +234,9 @@ export function EndorsementRequestCard({
                 >
                   Delete
                 </Button>
-              ) : null}
+              )}
             </ButtonGroup>
-          ) : null}
+          )}
         </Grid>
       )}
     </fetcher.Form>
