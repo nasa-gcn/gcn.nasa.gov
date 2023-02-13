@@ -70,10 +70,12 @@ async function handleRecord(
   }
 
   // Check if submitter is in the submitters group
-  const data = await client.send(new ListUsersInGroupCommand({
-    GroupName: 'gcn.nasa.gov/circular-submitter',
-    UserPoolId: process.env.COGNITO_USER_POOL_ID,
-  }))
+  const data = await cognito.send(
+    new ListUsersInGroupCommand({
+      GroupName: 'gcn.nasa.gov/circular-submitter',
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    })
+  )
 
   const userTypeData = data.Users?.find(
     (user) => extractAttributeRequired(user, 'email') == userEmail
@@ -165,5 +167,5 @@ async function sendEmail(recipient: string, subject: string, body: string) {
     },
   })
 
-  await sesClient.send(sendEmailCommand)
+  await sesv2.send(sendEmailCommand)
 }
