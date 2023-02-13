@@ -22,6 +22,7 @@ import { formatAuthor } from './index'
 import { useCombobox } from 'downshift'
 import type { UseComboboxProps } from 'downshift'
 import classnames from 'classnames'
+import loaderImage from 'app/theme/img/loader.gif'
 
 export const handle = {
   breadcrumb: 'Peer Endorsements',
@@ -292,8 +293,8 @@ function EndorserComboBox({
     getToggleButtonProps,
   } = useCombobox<EndorsementUser>({
     items,
-    onInputValueChange({ inputValue }) {
-      if (inputValue?.length) {
+    onInputValueChange({ inputValue, isOpen }) {
+      if (inputValue && isOpen) {
         const data = new FormData()
         data.set('filter', inputValue.split(' ')[0])
         data.set('intent', 'filter')
@@ -308,6 +309,7 @@ function EndorserComboBox({
     ...props,
   })
 
+  const loading = fetcher.state === 'submitting'
   const pristine = Boolean(selectedItem)
 
   return (
@@ -315,7 +317,7 @@ function EndorserComboBox({
       data-testid="combo-box"
       data-enhanced="true"
       className={classnames('usa-combo-box', className, {
-        'usa-combo-box--pristine': pristine,
+        'usa-combo-box--pristine': pristine || loading,
       })}
     >
       <input
@@ -334,8 +336,11 @@ function EndorserComboBox({
           type="button"
           className="usa-combo-box__clear-input"
           aria-label="Clear the select contents"
+          style={
+            loading ? { backgroundImage: `url('${loaderImage}')` } : undefined
+          }
           onClick={() => reset()}
-          hidden={!pristine || disabled}
+          hidden={(!pristine || disabled) && !loading}
           disabled={disabled}
         >
           &nbsp;
