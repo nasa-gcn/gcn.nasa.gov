@@ -55,7 +55,7 @@ export const validSubjectKeywords = [
   'XTR',
 ]
 
-export const emailAutoReplyChecklist = [
+const emailAutoReplyChecklist = [
   'this is an automatic reply',
   'automatic reply: ',
   'auto reply',
