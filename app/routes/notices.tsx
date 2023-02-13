@@ -34,26 +34,26 @@ function NoticeCard({
   const tagSet = new Set(tags)
   return (
     <>
-      {selectedTags.length == 0 ||
-        (selectedTags.every((tag) => tagSet.has(tag)) && (
-          <a
-            href={href}
-            className="tablet:grid-col-4 usa-card notice-card"
-            data-testid="Card"
-          >
-            <div className="usa-card__container">
-              <CardHeader>
-                <h3>{name}</h3>
-              </CardHeader>
-              <CardBody>{children}</CardBody>
-              <CardFooter>
-                {tags?.map((tag) => (
-                  <Tag key={tag}>{tag}</Tag>
-                ))}
-              </CardFooter>
-            </div>
-          </a>
-        ))}
+      {(selectedTags.length == 0 ||
+        selectedTags.every((tag) => tagSet.has(tag))) && (
+        <a
+          href={href}
+          className="tablet:grid-col-4 usa-card notice-card"
+          data-testid="Card"
+        >
+          <div className="usa-card__container">
+            <CardHeader>
+              <h3>{name}</h3>
+            </CardHeader>
+            <CardBody>{children}</CardBody>
+            <CardFooter>
+              {tags?.map((tag) => (
+                <Tag key={tag}>{tag}</Tag>
+              ))}
+            </CardFooter>
+          </div>
+        </a>
+      )}
     </>
   )
 }
