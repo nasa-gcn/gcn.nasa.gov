@@ -41,9 +41,8 @@ async function handleRecord(
   record: SNSEventRecord,
   autoIncrement: DynamoDBAutoIncrement
 ) {
-  // Get data from S3
   const message = JSON.parse(record.Sns.Message)
-  if (!message.mail) throw new Error('Object has no body')
+  if (!message.content) throw new Error('Object has no body')
 
   const parsed = await simpleParser(
     Buffer.from(message.content, 'base64').toString()
