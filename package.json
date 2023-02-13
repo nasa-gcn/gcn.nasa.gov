@@ -78,7 +78,7 @@
     "gulp-sass": "^5.1.0",
     "gulp-sourcemaps": "^3.0.0",
     "husky": "^8.0.3",
-    "lint-staged": "^13.1.0",
+    "lint-staged": "^13.1.1",
     "modclean": "^3.0.0-beta.1",
     "nasawds": "^3.0.338-beta.1",
     "npm-run-all": "^4.1.5",
