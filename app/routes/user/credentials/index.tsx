@@ -53,7 +53,7 @@ export default function Index() {
           Add
         </Link>
       </div>
-      <p>
+      <p className="usa-paragraph">
         Manage your client credentials here. Client credentials allow your
         scripts to interact with GCN on your behalf. You can also create client
         credentials through the{' '}

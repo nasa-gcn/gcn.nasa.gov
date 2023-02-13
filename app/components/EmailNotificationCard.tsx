@@ -101,13 +101,11 @@ export default function EmailNotificationCard({
           <ModalHeading id="modal-delete-heading">
             Delete Email Notification
           </ModalHeading>
-          <div className="usa-prose">
-            <p id="modal-delete-description">
-              Are you sure that you want to delete the email notification named
-              “{name}”?
-            </p>
-            <p>This action cannot be undone.</p>
-          </div>
+          <p id="modal-delete-description">
+            Are you sure that you want to delete the email notification named “
+            {name}”?
+          </p>
+          <p>This action cannot be undone.</p>
           <ModalFooter>
             <ModalToggleButton modalRef={deleteModalRef} closer outline>
               Cancel
@@ -128,11 +126,9 @@ export default function EmailNotificationCard({
         <ModalHeading id="modal-test-heading">
           Test Email Notification
         </ModalHeading>
-        <div className="usa-prose">
-          <p id="modal-test-description">
-            A test message has been sent to {recipient}.
-          </p>
-        </div>
+        <p id="modal-test-description">
+          A test message has been sent to {recipient}.
+        </p>
         <ModalFooter>
           <ModalToggleButton data-close-modal modalRef={testModalRef} closer>
             OK

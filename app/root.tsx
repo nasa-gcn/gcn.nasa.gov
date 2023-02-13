@@ -228,7 +228,7 @@ export function CatchBoundary() {
         <p className="usa-intro">
           We're sorry, you must log in to access the page you're looking for.
         </p>
-        <p>Log in to access that page, or go home.</p>
+        <p className="usa-paragraph">Log in to access that page, or go home.</p>
         <ButtonGroup>
           <Link
             to={`/login?redirect=${encodeURIComponent(url)}`}

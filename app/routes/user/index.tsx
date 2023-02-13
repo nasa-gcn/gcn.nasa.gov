@@ -90,10 +90,12 @@ export default function User() {
   return (
     <>
       <h1>Welcome, {email}!</h1>
-      <p>You signed in with {idp || 'username and password'}.</p>
+      <p className="usa-paragraph">
+        You signed in with {idp || 'username and password'}.
+      </p>
       <h2>Profile</h2>
       <fetcher.Form method="post" onSubmit={() => setDirty(false)}>
-        <p>
+        <p className="usa-paragraph">
           Your profile affects how your name appears in GCN Circulars that you
           submit.
         </p>

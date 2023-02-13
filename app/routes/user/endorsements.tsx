@@ -100,12 +100,12 @@ export default function Index() {
 
   return (
     <Grid row>
-      <div className="tablet:grid-col-10 flex-fill usa-prose">
+      <div className="tablet:grid-col-10 flex-fill">
         <h1 className="margin-y-0">Peer Endorsements</h1>
       </div>
       {userIsSubmitter ? (
         <>
-          <p>
+          <p className="usa-paragraph">
             As an approved submitter, you may submit new GCN Circulars. Other
             users may also request an endorsement from you, which you may
             approve, deny, or report in the case of spam.
@@ -127,7 +127,7 @@ export default function Index() {
         </>
       ) : (
         <div>
-          <p>
+          <p className="usa-paragraph">
             In order to submit GCN Circulars, you must be endorsed by an already
             approved user.
           </p>
@@ -370,12 +370,12 @@ export function EndorsementRequestForm() {
   return (
     <Form method="post">
       <h2 id="modal-request-heading">Request Endorsement</h2>
-      <div className="usa-prose">
+      <p className="usa-paragraph">
         Requesting an endorsement from another user will share your email with
         that individual. Please keep this in mind when submitting. Enter the
         email of the individual you want to be endorsed by. They will receive a
         notification alerting them to this request.
-      </div>
+      </p>
       <input type="hidden" name="endorserSub" value={endorserSub} />
       <Grid row>
         <Grid col="fill">

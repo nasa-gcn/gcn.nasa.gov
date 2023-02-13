@@ -9,6 +9,22 @@
 @import 'styles';
 
 /*
+ * USWDS prose fix ups:
+ * - Unset max-width for paragraphs and list items in a grid container because
+ *   the intended maximum width is already provided by the grid container
+ *   itself.
+ * - No top margin for h1 if it is the first element in the containing element.
+ */
+.grid-container .usa-paragraph,
+.grid-container .usa-list > li {
+  max-width: none;
+}
+
+h1:first-child {
+  margin-top: 0;
+}
+
+/*
  * Size and position the NASA meatball logo in the header. 
  */
 

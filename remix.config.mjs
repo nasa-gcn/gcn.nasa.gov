@@ -20,8 +20,11 @@ export const mdx = {
       }),
     (options) =>
       rehypeAddClasses({
-        table: 'usa-table',
         a: 'usa-link',
+        ol: 'usa-list',
+        p: 'usa-paragraph',
+        table: 'usa-table',
+        ul: 'usa-list',
         ...options,
       }),
     (options) => rehypeAutolinkHeadings({ behavior: 'wrap', ...options }),

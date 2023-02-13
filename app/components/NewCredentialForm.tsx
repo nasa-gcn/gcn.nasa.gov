@@ -98,14 +98,14 @@ export function NewCredentialForm() {
   return (
     <Form method="post">
       <input type="hidden" name="intent" value="create" />
-      <div className="usa-prose">
-        <p>Choose a name for your new client credential.</p>
-        <p className="text-base">
-          The name should help you remember what you use the client credential
-          for, or where you use it. Examples: “My Laptop”, “Lab Desktop”, “GRB
-          Pipeline”.
-        </p>
-      </div>
+      <p className="usa-paragraph">
+        Choose a name for your new client credential.
+      </p>
+      <p className="usa-paragraph text-base">
+        The name should help you remember what you use the client credential
+        for, or where you use it. Examples: “My Laptop”, “Lab Desktop”, “GRB
+        Pipeline”.
+      </p>
       <Label htmlFor="name">Name</Label>
       <TextInput
         data-focus
@@ -130,7 +130,7 @@ export function NewCredentialForm() {
         ))}
       </Fieldset>
       {recaptchaSiteKey ? (
-        <p>
+        <p className="usa-paragraph">
           <ReCAPTCHA
             sitekey={recaptchaSiteKey}
             onChange={(value) => {
@@ -139,7 +139,7 @@ export function NewCredentialForm() {
           />
         </p>
       ) : (
-        <p className="usa-prose text-base">
+        <p className="text-base">
           You are working in a development environment, the ReCaptcha is
           currently hidden
         </p>
