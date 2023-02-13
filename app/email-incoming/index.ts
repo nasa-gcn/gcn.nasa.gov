@@ -27,8 +27,8 @@ import {
 import { tables } from '@architect/functions'
 import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
 
-const client = new CognitoIdentityProviderClient({})
-const sesClient = new SESv2Client({})
+const cognito = new CognitoIdentityProviderClient({})
+const sesv2 = new SESv2Client({})
 
 const domain = process.env.DOMAIN
 
