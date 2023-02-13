@@ -93,7 +93,7 @@
     "rehype-slug": "^5.1.0",
     "remark-gfm": "^3.0.1",
     "rimraf": "^4.1.2",
-    "sass": "^1.57.0",
+    "sass": "^1.58.0",
     "typescript": "^4.8.4",
     "uswds": "2.13.3"
   },
