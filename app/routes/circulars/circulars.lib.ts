@@ -8,8 +8,8 @@
 
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
-  if (subject.length && !emailIsAutoReply(subject))
-    return validSubjectKeywords.some((x) => subject.startsWith(x))
+  if (subject.length)
+    return !emailIsAutoReply(subject) && validSubjectKeywords.some((x) => subject.startsWith(x))
 }
 
 /** Return true if the body is valid, false if it is invalid, or undefined if it is an empty string */
