@@ -70,12 +70,10 @@ async function handleRecord(
   }
 
   // Check if submitter is in the submitters group
-  var listUsersParams = {
+  const data = await client.send(new ListUsersInGroupCommand({
     GroupName: 'gcn.nasa.gov/circular-submitter',
     UserPoolId: process.env.COGNITO_USER_POOL_ID,
-  }
-
-  const data = await client.send(new ListUsersInGroupCommand(listUsersParams))
+  }))
 
   const userTypeData = data.Users?.find(
     (user) => extractAttributeRequired(user, 'email') == userEmail
