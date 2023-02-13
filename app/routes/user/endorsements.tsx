@@ -159,25 +159,19 @@ export function EndorsementRequestCard({
   endorsementRequest: EndorsementRequest
   role: EndorsementRole
 }) {
-  const approvalFetcher = useFetcher()
-  const rejectFetcher = useFetcher()
-  const reportFetcher = useFetcher()
+  const fetcher = useFetcher()
+  const disabled = fetcher.state !== 'idle'
 
-  const disabled =
-    approvalFetcher.state !== 'idle' ||
-    rejectFetcher.state !== 'idle' ||
-    reportFetcher.state !== 'idle'
-
-  if (role === 'endorser') {
-    return (
-      <Grid row style={disabled ? { opacity: '50%' } : undefined}>
-        <div className="tablet:grid-col flex-fill">
-          <div className="margin-y-0">
-            <strong>{endorsementRequest.requestorEmail}</strong>
+  return (
+    <fetcher.Form method="post">
+      {role === 'endorser' ? (
+        <Grid row style={disabled ? { opacity: '50%' } : undefined}>
+          <div className="tablet:grid-col flex-fill">
+            <div className="margin-y-0">
+              <strong>{endorsementRequest.requestorEmail}</strong>
+            </div>
           </div>
-        </div>
-        <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
-          <approvalFetcher.Form method="post">
+          <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
             <input
               type="hidden"
               name="requestorSub"
@@ -191,13 +185,6 @@ export function EndorsementRequestCard({
             >
               Approve
             </Button>
-          </approvalFetcher.Form>
-          <rejectFetcher.Form method="post">
-            <input
-              type="hidden"
-              name="requestorSub"
-              value={endorsementRequest.requestorSub}
-            />
             <Button
               type="submit"
               outline
@@ -207,13 +194,6 @@ export function EndorsementRequestCard({
             >
               Reject
             </Button>
-          </rejectFetcher.Form>
-          <reportFetcher.Form method="post">
-            <input
-              type="hidden"
-              name="requestorSub"
-              value={endorsementRequest.requestorSub}
-            />
             <Button
               type="submit"
               secondary
@@ -223,26 +203,22 @@ export function EndorsementRequestCard({
             >
               Reject and Report
             </Button>
-          </reportFetcher.Form>
-        </ButtonGroup>
-      </Grid>
-    )
-  } else {
-    return (
-      <Grid row style={disabled ? { opacity: '50%' } : undefined}>
-        <div className="tablet:grid-col flex-fill">
-          <div className="margin-y-0">
-            <strong>Requested Endorser: </strong>
-            {endorsementRequest.endorserEmail}
+          </ButtonGroup>
+        </Grid>
+      ) : (
+        <Grid row style={disabled ? { opacity: '50%' } : undefined}>
+          <div className="tablet:grid-col flex-fill">
+            <div className="margin-y-0">
+              <strong>Requested Endorser: </strong>
+              {endorsementRequest.endorserEmail}
+            </div>
+            <div className="margin-y-0">
+              <strong>Status: </strong>
+              {endorsementRequest.status}
+            </div>
           </div>
-          <div className="margin-y-0">
-            <strong>Status: </strong>
-            {endorsementRequest.status}
-          </div>
-        </div>
-        {endorsementRequest.status ? (
-          <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
-            <reportFetcher.Form method="post">
+          {endorsementRequest.status ? (
+            <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
               <input
                 type="hidden"
                 name="endorserSub"
@@ -259,12 +235,12 @@ export function EndorsementRequestCard({
                   Delete
                 </Button>
               ) : null}
-            </reportFetcher.Form>
-          </ButtonGroup>
-        ) : null}
-      </Grid>
-    )
-  }
+            </ButtonGroup>
+          ) : null}
+        </Grid>
+      )}
+    </fetcher.Form>
+  )
 }
 
 function EndorserComboBox({
