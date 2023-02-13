@@ -46,7 +46,7 @@ export default function PostLogout() {
       <ModalHeading id="modal-existing-idp-heading">
         That email address is already registered
       </ModalHeading>
-      <div className="usa-prose" id="modal-existing-idp-description">
+      <div id="modal-existing-idp-description">
         <p>
           You already have an existing account with the same email address. Last
           time that you signed in, you used <b>{friendlyExistingIdp}</b>. Would

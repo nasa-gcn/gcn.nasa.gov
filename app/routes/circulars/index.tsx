@@ -46,7 +46,7 @@ export default function Index() {
   return (
     <>
       <h1>GCN Circulars</h1>
-      <p>
+      <p className="usa-paragraph">
         GCN Circulars are rapid astronomical bulletins submitted by and
         distributed to community members worldwide. For more information, see{' '}
         <Link to="">docs</Link>

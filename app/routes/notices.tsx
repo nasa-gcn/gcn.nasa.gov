@@ -100,7 +100,7 @@ export default function Notices() {
   return (
     <>
       <h1>GCN Notices</h1>
-      <p>
+      <p className="usa-paragraph">
         GCN Notices are real-time, machine-readable alerts that are submitted by
         participating facilities and redistributed publicly.
       </p>

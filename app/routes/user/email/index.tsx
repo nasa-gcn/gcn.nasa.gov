@@ -56,14 +56,14 @@ export default function Index() {
           Add
         </Link>
       </div>
-      <p>
+      <p className="usa-paragraph">
         Create and manage email subscriptions to GCN Notices here. You can
         create as many subscriptions as you like. To create a new alert, click
         the "Add" button. Once an alert has been created, you can click the
         "Test Message" button to send a test email to the listed recipient, to
         verify that the emails will make it into your inbox.
       </p>
-      <p>
+      <p className="usa-paragraph">
         Note that signing up here does not affect prior subscriptions on the old
         web site,{' '}
         <a rel="external" href="https://gcn.gsfc.nasa.gov/">

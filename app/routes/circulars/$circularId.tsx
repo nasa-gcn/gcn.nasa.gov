@@ -30,7 +30,7 @@ export default function $circularId() {
     <>
       <Link to="/circulars">back to archive</Link>
       <h1>GCN Circular {circularId}</h1>
-      <p className="usa-prose">
+      <p className="usa-paragraph">
         <Grid row>
           <Grid col={1}>
             <b>Subject</b>

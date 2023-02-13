@@ -12,7 +12,7 @@ import { Grid } from '@trussworks/react-uswds'
 export default function UserPageContainer({ header }: { header: string }) {
   return (
     <Grid row>
-      <div className="tablet:grid-col-10 flex-fill usa-prose">
+      <div className="tablet:grid-col-10 flex-fill">
         <h1 className="margin-y-0">{header}</h1>
       </div>
       <Outlet />

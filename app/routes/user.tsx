@@ -40,7 +40,7 @@ export default function User() {
             ]}
           />
         </div>
-        <div className="desktop:grid-col-9 usa-prose">
+        <div className="desktop:grid-col-9">
           <Outlet />
         </div>
       </div>

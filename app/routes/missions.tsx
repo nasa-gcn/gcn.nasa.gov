@@ -65,7 +65,7 @@ export default function Missions() {
           ]}
         />
       </div>
-      <div className="desktop:grid-col-8 usa-prose grid-col-12">
+      <div className="desktop:grid-col-8 grid-col-12">
         <Outlet />
       </div>
     </div>
