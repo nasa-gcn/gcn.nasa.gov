@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@architect/functions": "^5.3.3",
-    "@architect/plugin-lambda-invoker": "^0.1.1",
     "@balavishnuvj/remix-seo": "^1.0.2",
     "@nasa-gcn/dynamodb-autoincrement": "^0.0.5",
     "@octokit/rest": "^19.0.7",
@@ -60,6 +59,7 @@
   },
   "devDependencies": {
     "@architect/architect": "^10.10.0",
+    "@architect/plugin-lambda-invoker": "github:dakota002/plugin-lambda-invoker#Null-Prop",
     "@aws-sdk/client-cognito-identity-provider": "3.188.0",
     "@aws-sdk/client-sesv2": "3.188.0",
     "@aws-sdk/lib-dynamodb": "3.188.0",
