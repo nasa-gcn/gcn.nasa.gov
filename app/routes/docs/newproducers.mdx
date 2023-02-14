@@ -21,55 +21,77 @@ to enable these accounts and topics are setup on the GCN Kafka broker,
 and we are happy to work together to help you define schema utilizing our
 core JSON schema.
 
-## Defining Kafka Topics and JSON Schema
-
-The preferred format for formatting of the data sent via GCN Kafka is JSON.
-We have designed a set of [core schema](https://github.com/nasa-gcn/gcn-schema/tree/master/core-schema)
-which serves as the building blocks for your Notices.
-You can also define instrument-specific quantities in your
-schema, but we request that you utilize the core schema as much as possible.
-Please add your schema to the [GCN repository](https://github.com/nasa-gcn/gcn-schema).
-
-The GCN team is happy to iterate with the producers on their schema contents and format.
-Your pipeline will generate JSON files following these schema and send to GCN
-in the following process.
-
 ## Steps to Start Publishing Alerts
 
-1. Make sure that your team member(s) who will implement GCN notices in your pipeline
+<ProcessList>
+   <ProcessListItem>
+     <ProcessListHeading type="h3">
+       Team Member Accounts
+     </ProcessListHeading>
+   - Make sure that your team member(s) who will implement GCN notices in your pipeline
    has signed in (at least once) to https://test.gcn.nasa.gov and https://gcn.nasa.gov.
-2. Send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
+   - Send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
    a list of email address(es) of all the team members who should have the
    producer access to the <code><i>mission_name</i>.\*</code> topics.
-3. Decide on a topic name or prefix for several topic names.
-4. Log out and log back in.
-5. Go through the "Start Streaming GCN Notices" process.
-6. On Step 2 of ["Start Streaming GCN Notices"](../quickstart),
-   choose the `scope gcn.nasa.gov/kafka-MissionName-producer`.
-7. Your producer code will look very similar to the [client example code](docs/client) and
-   Step 4 of ["Start Streaming GCN Notices"](../quickstart). `client_id` and `client_secret`
-   can be found in Step 4 client example code.
-   Start from this and adjust as you see fit:
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Defining Kafka Topics and JSON Schema
+      </ProcessListHeading>
+      The preferred format for formatting of the data sent via GCN Kafka is JSON.
+      We have designed a set of [core schema](https://github.com/nasa-gcn/gcn-schema/tree/master/core-schema)
+      which serves as the building blocks for your Notices.
+      You can also define instrument-specific quantities in your
+      schema, but we request that you utilize the core schema as much as possible.
+      Please add your schema to the [GCN repository](https://github.com/nasa-gcn/gcn-schema).
 
-```python
-from gcn_kafka import Producer
-# Connect as a producer.
-# Warning: don't share the client secret with others.
-producer = Producer(client_id='fill me in', client_secret='fill me in')
-topic = 'mission_name.example'
-# any topic starting with 'mission_name'
-data = b'...'  # any bytes
-producer.produce(topic, data)
-```
+      The GCN team is happy to iterate with the producers on their schema contents and format.
+      Your pipeline will generate JSON files following these schema and send to GCN
+      in the following process.
 
-## Mission page
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Producer Example Code
+      </ProcessListHeading>
+      - Log out and log back in.
+      - Go through the "Start Streaming GCN Notices" process.
+      - On Step 2 of ["Start Streaming GCN Notices"](../quickstart),
+      choose the `scope gcn.nasa.gov/kafka-MissionName-producer`.
+      - Your producer code will look very similar to the [client example code](docs/client) and
+      Step 4 of ["Start Streaming GCN Notices"](../quickstart). `client_id` and `client_secret`
+      can be found in Step 4 client example code.
+      - Start from this and adjust as you see fit:
 
-Please create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls)
+      ```python
+      from gcn_kafka import Producer
+      # Connect as a producer.
+      # Warning: don't share the client secret with others.
+      producer = Producer(client_id='fill me in', client_secret='fill me in')
+      topic = 'mission_name.example'
+      # any topic starting with 'mission_name'
+      data = b'...'  # any bytes
+      producer.produce(topic, data)
+      ```
+
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Mission Page
+      </ProcessListHeading>
+      Please create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls)
 or by emailing text to the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
+   </ProcessListItem>
 
-## Announce New Notices Type is Available
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Announce New Notices Type is Available
+      </ProcessListHeading>
 
-The GCN Team will add your new notice type to the Kafka [Quick Start](../quickstart)
-and Email Notification configuration. Please work with the
-[GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-on drafting a community announcement.
+      The GCN Team will add your new notice type to the Kafka [Quick Start](../quickstart)
+      and Email Notification configuration. Please work with the
+      [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
+      on drafting a community announcement.
+
+   </ProcessListItem>
+</ProcessList>
