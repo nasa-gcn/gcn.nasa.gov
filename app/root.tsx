@@ -28,6 +28,7 @@ import {
   Scripts,
   ScrollRestoration,
   useCatch,
+  useLocation,
   useMatches,
   useNavigation,
 } from '@remix-run/react'
@@ -62,6 +63,8 @@ import favicon_72 from '~/theme/img/favicons/favicon-72.png'
 import favicon_114 from '~/theme/img/favicons/favicon-114.png'
 import favicon_144 from '~/theme/img/favicons/favicon-144.png'
 import favicon_192 from '~/theme/img/favicons/favicon-192.png'
+import { useRouteLoaderData } from './lib/remix'
+import { getOrigin } from './lib/env'
 const favicons = {
   16: favicon_16,
   40: favicon_40,
@@ -108,13 +111,13 @@ export const links: LinksFunction = () => [
 ]
 
 export async function loader({ request }: DataFunctionArgs) {
-  const { url } = request
+  const origin = getOrigin()
 
   const user = await getUser(request)
   const email = user?.email
   const features = getFeatures()
 
-  return { url, email, features }
+  return { origin, email, features }
 }
 
 function getFeatures() {
@@ -131,6 +134,10 @@ export function feature(feature: string) {
   return getFeatures().includes(feature)
 }
 
+function useLoaderDataRoot() {
+  return useRouteLoaderData<typeof loader>('root')
+}
+
 /**
  * Return true if the given feature flag is enabled.
  *
@@ -140,44 +147,52 @@ export function feature(feature: string) {
  * is a comma-separated list of enabled features.
  */
 export function useFeature(feature: string) {
-  const [{ data }] = useMatches()
-  const { features } = data as Awaited<ReturnType<typeof loader>>
-  return features.includes(feature)
+  return useLoaderDataRoot().features.includes(feature)
 }
 
 export function useUrl() {
-  const [{ data }] = useMatches()
-  const { url } = data as Awaited<ReturnType<typeof loader>>
-  return url
+  const { origin } = useLoaderDataRoot()
+  const { pathname, search, hash } = useLocation()
+  const url = new URL(origin)
+  url.pathname = pathname
+  url.search = search
+  url.hash = hash
+  return url.toString()
 }
 
 export function useHostname() {
-  return new URL(useUrl()).hostname
+  return new URL(useLoaderDataRoot().origin).hostname
+}
+
+function Title() {
+  const title = useMatches()
+    .map(({ handle }) => handle?.breadcrumb)
+    .filter(Boolean)
+    .join(' - ')
+  return <title>{title}</title>
+}
+
+function Progress() {
+  const { state } = useNavigation()
+  const showProgress = useSpinDelay(state !== 'idle')
+  return <>{showProgress && <TopBarProgress />}</>
 }
 
 function Document({ children }: { children?: React.ReactNode }) {
-  const matches = useMatches()
-  const [{ data }] = matches
-  const { email } = data as Awaited<ReturnType<typeof loader>>
-  const navigation = useNavigation()
-  const showProgress = useSpinDelay(navigation.state !== 'idle')
-  const breadcrumbs = matches
-    .map(({ handle }) => handle?.breadcrumb)
-    .filter(Boolean)
-  const title = breadcrumbs.join(' - ')
+  const { email } = useLoaderDataRoot()
 
   return (
     <html lang="en-US">
       <head>
         <Meta />
         <Links />
-        <title>{title}</title>
+        <Title />
       </head>
       <body>
         <a className="usa-skipnav" href="#main-content">
           Skip to main content
         </a>
-        {showProgress && <TopBarProgress />}
+        <Progress />
         <GovBanner />
         <DevBanner />
         <Header email={email} />
@@ -206,16 +221,15 @@ function Document({ children }: { children?: React.ReactNode }) {
 
 export function CatchBoundary() {
   const { status } = useCatch()
-  const [{ data }] = useMatches()
+  const url = useUrl()
   if (status == 403) {
-    const { url } = data as Awaited<ReturnType<typeof loader>>
     return (
       <Document>
         <h1>Unauthorized</h1>
         <p className="usa-intro">
           We're sorry, you must log in to access the page you're looking for.
         </p>
-        <p>Log in to access that page, or go home.</p>
+        <p className="usa-paragraph">Log in to access that page, or go home.</p>
         <ButtonGroup>
           <Link
             to={`/login?redirect=${encodeURIComponent(url)}`}
@@ -242,6 +256,20 @@ export function CatchBoundary() {
       </Document>
     )
   }
+}
+
+export function ErrorBoundary() {
+  return (
+    <Document>
+      <h1>Unexpected error</h1>
+      <p className="usa-intro">An unexpected error occurred.</p>
+      <ButtonGroup>
+        <Link to="/" className="usa-button">
+          Go home
+        </Link>
+      </ButtonGroup>
+    </Document>
+  )
 }
 
 export default function App() {

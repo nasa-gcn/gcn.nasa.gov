@@ -50,14 +50,14 @@ circular_endorsements
   endorserSub *String
   name circularEndorsementsByEndorserSub
 
+@sandbox
+invoker events
+
 @aws
 runtime nodejs18.x
 region us-east-1
 architecture arm64
 memory 256
-concurrency 100
-provisionedConcurrency 5
-timeout 10  # Allow extra time because Cognito's .well-known/openid-configuration endpoint can take several seconds.
 
 @plugins
 tracing  # Enable AWS X-Ray distributed tracing
@@ -68,3 +68,5 @@ lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to mod
 manualStaticBucketPolicy  # Mission Cloud Platform requires bucket policies to be set manually
 permissionsBoundary  # configure IAM Role permissions boundaries required by Mission Cloud Platform
 sendEmailPermissions  # Grant the Lambda function permission to send email.
+emailIncoming  # Add a custom Lambda to process events for incoming emails
+architect/plugin-lambda-invoker

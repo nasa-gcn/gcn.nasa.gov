@@ -14,6 +14,7 @@ import { useState } from 'react'
 import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
+import { formatAuthor } from '../circulars/circulars.lib'
 import { storage } from '../__auth/auth.server'
 import { getUser, updateSession } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'
@@ -65,21 +66,7 @@ export async function action({ request }: DataFunctionArgs) {
   return null
 }
 
-export function formatAuthor({
-  name,
-  affiliation,
-  email,
-}: {
-  name?: string
-  affiliation?: string
-  email: string
-}) {
-  if (!name) return email
-  else if (!affiliation) return `${name} <${email}>`
-  else return `${name} at ${affiliation} <${email}>`
-}
-
-export default function User() {
+export default function () {
   const { email, idp, name, affiliation } = useLoaderData<typeof loader>()
   const fetcher = useFetcher<typeof action>()
   const [dirty, setDirty] = useState(false)
@@ -90,10 +77,12 @@ export default function User() {
   return (
     <>
       <h1>Welcome, {email}!</h1>
-      <p>You signed in with {idp || 'username and password'}.</p>
+      <p className="usa-paragraph">
+        You signed in with {idp || 'username and password'}.
+      </p>
       <h2>Profile</h2>
       <fetcher.Form method="post" onSubmit={() => setDirty(false)}>
-        <p>
+        <p className="usa-paragraph">
           Your profile affects how your name appears in GCN Circulars that you
           submit.
         </p>

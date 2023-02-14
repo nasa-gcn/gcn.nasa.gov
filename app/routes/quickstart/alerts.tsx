@@ -23,11 +23,11 @@ export function loader({ request: { url } }: DataFunctionArgs) {
   return clientId
 }
 
-export default function Alerts() {
+export default function () {
   const clientId = useLoaderData<typeof loader>()
   return (
     <Form method="get" action="../code">
-      <p>
+      <p className="usa-paragraph">
         Choose how you would like your results returned. Select a Format and
         Notice type for each alert you would like to subscribe to. More details
         on the Notice Types can be found their respective pages under{' '}

@@ -33,7 +33,7 @@ export async function loader({ request }: DataFunctionArgs) {
   }
 }
 
-export default function Code() {
+export default function () {
   const {
     client_id: clientId,
     client_secret: clientSecret,

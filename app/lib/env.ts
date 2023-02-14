@@ -24,3 +24,18 @@ export function getEnvOrDieInProduction(key: string) {
   }
   return result
 }
+
+function getOriginSandbox() {
+  const {
+    ports: { http },
+  } = JSON.parse(getEnvOrDie('ARC_SANDBOX'))
+  return `http://localhost:${http}`
+}
+
+export function getOrigin() {
+  return getEnvOrDieInProduction('ORIGIN') || getOriginSandbox()
+}
+
+export function getHostname() {
+  return new URL(getOrigin()).hostname
+}

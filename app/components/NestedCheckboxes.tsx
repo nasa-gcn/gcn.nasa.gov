@@ -71,7 +71,7 @@ function NestedCheckboxNode({
         label={
           <>
             <span className="padding-right-1">{topLevelNodeProps.label}</span>
-            {link ? (
+            {link && (
               <>
                 (
                 <Link
@@ -84,7 +84,7 @@ function NestedCheckboxNode({
                 </Link>
                 )
               </>
-            ) : null}
+            )}
           </>
         }
         inputRef={topLevelRef}

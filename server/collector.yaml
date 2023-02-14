@@ -20,3 +20,6 @@ service:
     traces:
       receivers: [otlp]
       exporters: [logging, awsxray]
+  telemetry:
+    metrics:
+      address: localhost:8888

@@ -19,24 +19,24 @@ export async function loader({ request }: DataFunctionArgs) {
   return { email: user?.email, idp: user?.idp, url: request.url }
 }
 
-export default function StreamingSteps() {
+export default function () {
   const { email, idp, url } = useLoaderData<typeof loader>()
   return (
     <>
       <div className="maxw-tablet">
         {email ? (
-          <p>
+          <p className="usa-paragraph">
             Congratulations! You are signed in as <strong>{email}</strong> using{' '}
             <strong>{idp ?? 'username and password'}</strong>.
           </p>
         ) : (
-          <p>
+          <p className="usa-paragraph">
             To begin, click the button below to sign up or sign in with a
             username and password, Google, Facebook, or (for NASA employees and
             affiliates) LaunchPad.
           </p>
         )}
-        <p>
+        <p className="usa-paragraph">
           <strong>
             Important: make sure you sign in the same way each time.
           </strong>{' '}

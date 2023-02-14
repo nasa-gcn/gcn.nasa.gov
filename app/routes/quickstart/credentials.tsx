@@ -27,7 +27,7 @@ export async function action({ request }: DataFunctionArgs) {
   return handleCredentialActions(request, 'quickstart')
 }
 
-export default function Credentials() {
+export default function () {
   const { client_credentials } = useLoaderData<typeof loader>()
 
   const explanation = (
@@ -40,7 +40,7 @@ export default function Credentials() {
     <>
       {client_credentials.length > 0 ? (
         <>
-          <p>
+          <p className="usa-paragraph">
             {explanation} Select one of your existing client credentials, or
             create a new one.
           </p>
@@ -56,7 +56,7 @@ export default function Credentials() {
         </>
       ) : (
         <>
-          <p>{explanation}</p>
+          <p className="usa-paragraph">{explanation}</p>
           <NewCredentialForm />
         </>
       )}

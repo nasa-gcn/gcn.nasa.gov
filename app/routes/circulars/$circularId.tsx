@@ -23,14 +23,14 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
   })
 }
 
-export default function $circularId() {
+export default function () {
   const { circularId, subject, submitter, createdOn, body } =
     useLoaderData<typeof loader>()
   return (
     <>
       <Link to="/circulars">back to archive</Link>
       <h1>GCN Circular {circularId}</h1>
-      <p className="usa-prose">
+      <p className="usa-paragraph">
         <Grid row>
           <Grid col={1}>
             <b>Subject</b>

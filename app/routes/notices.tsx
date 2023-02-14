@@ -32,26 +32,30 @@ function NoticeCard({
   href: string
 }) {
   const tagSet = new Set(tags)
-  return selectedTags.length == 0 ||
-    selectedTags.every((tag) => tagSet.has(tag)) ? (
-    <a
-      href={href}
-      className="tablet:grid-col-4 usa-card notice-card"
-      data-testid="Card"
-    >
-      <div className="usa-card__container">
-        <CardHeader>
-          <h3>{name}</h3>
-        </CardHeader>
-        <CardBody>{children}</CardBody>
-        <CardFooter>
-          {tags?.map((tag) => (
-            <Tag key={tag}>{tag}</Tag>
-          ))}
-        </CardFooter>
-      </div>
-    </a>
-  ) : null
+  return (
+    <>
+      {(selectedTags.length == 0 ||
+        selectedTags.every((tag) => tagSet.has(tag))) && (
+        <a
+          href={href}
+          className="tablet:grid-col-4 usa-card notice-card"
+          data-testid="Card"
+        >
+          <div className="usa-card__container">
+            <CardHeader>
+              <h3>{name}</h3>
+            </CardHeader>
+            <CardBody>{children}</CardBody>
+            <CardFooter>
+              {tags?.map((tag) => (
+                <Tag key={tag}>{tag}</Tag>
+              ))}
+            </CardFooter>
+          </div>
+        </a>
+      )}
+    </>
+  )
 }
 
 function renderTag({
@@ -88,7 +92,7 @@ function renderOption({
   )
 }
 
-export default function Notices() {
+export default function () {
   const [tags, setTags] = useState<ReactTag[]>([])
   const suggestions = ['gw', 'gamma', 'nu', 'x-ray', 'uv', 'optical']
   const tagNames = tags.map(({ label }) => label)
@@ -96,7 +100,7 @@ export default function Notices() {
   return (
     <>
       <h1>GCN Notices</h1>
-      <p>
+      <p className="usa-paragraph">
         GCN Notices are real-time, machine-readable alerts that are submitted by
         participating facilities and redistributed publicly.
       </p>

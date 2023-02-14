@@ -19,7 +19,7 @@ export function CatchBoundary() {
         We're sorry, we can't find the page you're looking for. It might have
         been removed, changed its name, or is otherwise unavailable.
       </p>
-      <p>
+      <p className="usa-paragraph">
         Visit our homepage for helpful tools and resources, or contact us and
         we'll point you in the right direction.
       </p>

@@ -6,29 +6,30 @@ import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 
 /**
- * @type {import('@remix-run/dev/config').RemixMdxConfigFunction}
+ * @type {import('@remix-run/dev/config').RemixMdxConfig}
  */
-export async function mdx() {
-  return {
-    rehypePlugins: [
-      rehypeHighlight,
-      rehypeSlug,
-      (options) =>
-        rehypeExternalLinks({
-          rel: 'external',
-          target: false,
-          ...options,
-        }),
-      (options) =>
-        rehypeAddClasses({
-          table: 'usa-table',
-          a: 'usa-link',
-          ...options,
-        }),
-      (options) => rehypeAutolinkHeadings({ behavior: 'wrap', ...options }),
-    ],
-    remarkPlugins: [remarkGfm],
-  }
+export const mdx = {
+  rehypePlugins: [
+    rehypeHighlight,
+    rehypeSlug,
+    (options) =>
+      rehypeExternalLinks({
+        rel: 'external',
+        target: false,
+        ...options,
+      }),
+    (options) =>
+      rehypeAddClasses({
+        a: 'usa-link',
+        ol: 'usa-list',
+        p: 'usa-paragraph',
+        table: 'usa-table',
+        ul: 'usa-list',
+        ...options,
+      }),
+    (options) => rehypeAutolinkHeadings({ behavior: 'wrap', ...options }),
+  ],
+  remarkPlugins: [remarkGfm],
 }
 
 export const serverBuildTarget = 'arc'

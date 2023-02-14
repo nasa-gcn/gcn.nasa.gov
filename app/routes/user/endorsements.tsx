@@ -18,10 +18,16 @@ import type {
   EndorsementUser,
 } from './endorsements.server'
 import { EndorsementsServer } from './endorsements.server'
-import { formatAuthor } from './index'
 import { useCombobox } from 'downshift'
 import type { UseComboboxProps } from 'downshift'
 import classnames from 'classnames'
+import loaderImage from 'app/theme/img/loader.gif'
+import { formatAuthor } from '../circulars/circulars.lib'
+
+export const handle = {
+  breadcrumb: 'Peer Endorsements',
+  getSitemapEntries: () => null,
+}
 
 export async function loader({ request }: DataFunctionArgs) {
   const endorsementServer = await EndorsementsServer.create(request)
@@ -88,24 +94,22 @@ export async function action({ request }: DataFunctionArgs) {
   return null
 }
 
-export default function Index() {
+export default function () {
   const { awaitingEndorsements, requestedEndorsements, userIsSubmitter } =
     useLoaderData<typeof loader>()
 
   return (
-    <Grid row>
-      <div className="tablet:grid-col-10 flex-fill usa-prose">
-        <h1 className="margin-y-0">Endorsements</h1>
-      </div>
+    <>
+      <h1>Peer Endorsements</h1>
       {userIsSubmitter ? (
         <>
-          <p>
+          <p className="usa-paragraph">
             As an approved submitter, you may submit new GCN Circulars. Other
             users may also request an endorsement from you, which you may
             approve, deny, or report in the case of spam.
           </p>
-          {awaitingEndorsements.length > 0 ? (
-            <Grid row>
+          {awaitingEndorsements.length > 0 && (
+            <>
               <h2>Requests awaiting your review</h2>
               <SegmentedCards>
                 {awaitingEndorsements.map((request) => (
@@ -116,17 +120,17 @@ export default function Index() {
                   />
                 ))}
               </SegmentedCards>
-            </Grid>
-          ) : null}
+            </>
+          )}
         </>
       ) : (
         <div>
-          <p>
+          <p className="usa-paragraph">
             In order to submit GCN Circulars, you must be endorsed by an already
             approved user.
           </p>
           <EndorsementRequestForm />
-          {requestedEndorsements.length > 0 ? (
+          {requestedEndorsements.length > 0 && (
             <div>
               <h2>Your Pending Requests</h2>
               <SegmentedCards>
@@ -139,10 +143,10 @@ export default function Index() {
                 ))}
               </SegmentedCards>
             </div>
-          ) : null}
+          )}
         </div>
       )}
-    </Grid>
+    </>
   )
 }
 
@@ -153,25 +157,19 @@ export function EndorsementRequestCard({
   endorsementRequest: EndorsementRequest
   role: EndorsementRole
 }) {
-  const approvalFetcher = useFetcher()
-  const rejectFetcher = useFetcher()
-  const reportFetcher = useFetcher()
+  const fetcher = useFetcher()
+  const disabled = fetcher.state !== 'idle'
 
-  const disabled =
-    approvalFetcher.state !== 'idle' ||
-    rejectFetcher.state !== 'idle' ||
-    reportFetcher.state !== 'idle'
-
-  if (role === 'endorser') {
-    return (
-      <Grid row style={disabled ? { opacity: '50%' } : undefined}>
-        <div className="tablet:grid-col flex-fill">
-          <div className="margin-y-0">
-            <strong>{endorsementRequest.requestorEmail}</strong>
+  return (
+    <fetcher.Form method="post">
+      {role === 'endorser' ? (
+        <Grid row style={disabled ? { opacity: '50%' } : undefined}>
+          <div className="tablet:grid-col flex-fill">
+            <div className="margin-y-0">
+              <strong>{endorsementRequest.requestorEmail}</strong>
+            </div>
           </div>
-        </div>
-        <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
-          <approvalFetcher.Form method="post">
+          <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
             <input
               type="hidden"
               name="requestorSub"
@@ -185,13 +183,6 @@ export function EndorsementRequestCard({
             >
               Approve
             </Button>
-          </approvalFetcher.Form>
-          <rejectFetcher.Form method="post">
-            <input
-              type="hidden"
-              name="requestorSub"
-              value={endorsementRequest.requestorSub}
-            />
             <Button
               type="submit"
               outline
@@ -201,13 +192,6 @@ export function EndorsementRequestCard({
             >
               Reject
             </Button>
-          </rejectFetcher.Form>
-          <reportFetcher.Form method="post">
-            <input
-              type="hidden"
-              name="requestorSub"
-              value={endorsementRequest.requestorSub}
-            />
             <Button
               type="submit"
               secondary
@@ -217,32 +201,28 @@ export function EndorsementRequestCard({
             >
               Reject and Report
             </Button>
-          </reportFetcher.Form>
-        </ButtonGroup>
-      </Grid>
-    )
-  } else {
-    return (
-      <Grid row style={disabled ? { opacity: '50%' } : undefined}>
-        <div className="tablet:grid-col flex-fill">
-          <div className="margin-y-0">
-            <strong>Requested Endorser: </strong>
-            {endorsementRequest.endorserEmail}
+          </ButtonGroup>
+        </Grid>
+      ) : (
+        <Grid row style={disabled ? { opacity: '50%' } : undefined}>
+          <div className="tablet:grid-col flex-fill">
+            <div className="margin-y-0">
+              <strong>Requested Endorser: </strong>
+              {endorsementRequest.endorserEmail}
+            </div>
+            <div className="margin-y-0">
+              <strong>Status: </strong>
+              {endorsementRequest.status}
+            </div>
           </div>
-          <div className="margin-y-0">
-            <strong>Status: </strong>
-            {endorsementRequest.status}
-          </div>
-        </div>
-        {endorsementRequest.status ? (
-          <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
-            <reportFetcher.Form method="post">
+          {endorsementRequest.status && (
+            <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
               <input
                 type="hidden"
                 name="endorserSub"
                 value={endorsementRequest.endorserSub}
               />
-              {endorsementRequest.status !== 'reported' ? (
+              {endorsementRequest.status !== 'reported' && (
                 <Button
                   type="submit"
                   secondary
@@ -252,13 +232,13 @@ export function EndorsementRequestCard({
                 >
                   Delete
                 </Button>
-              ) : null}
-            </reportFetcher.Form>
-          </ButtonGroup>
-        ) : null}
-      </Grid>
-    )
-  }
+              )}
+            </ButtonGroup>
+          )}
+        </Grid>
+      )}
+    </fetcher.Form>
+  )
 }
 
 function EndorserComboBox({
@@ -287,8 +267,8 @@ function EndorserComboBox({
     getToggleButtonProps,
   } = useCombobox<EndorsementUser>({
     items,
-    onInputValueChange({ inputValue }) {
-      if (inputValue?.length) {
+    onInputValueChange({ inputValue, isOpen }) {
+      if (inputValue && isOpen) {
         const data = new FormData()
         data.set('filter', inputValue.split(' ')[0])
         data.set('intent', 'filter')
@@ -303,6 +283,7 @@ function EndorserComboBox({
     ...props,
   })
 
+  const loading = fetcher.state === 'submitting'
   const pristine = Boolean(selectedItem)
 
   return (
@@ -310,7 +291,7 @@ function EndorserComboBox({
       data-testid="combo-box"
       data-enhanced="true"
       className={classnames('usa-combo-box', className, {
-        'usa-combo-box--pristine': pristine,
+        'usa-combo-box--pristine': pristine || loading,
       })}
     >
       <input
@@ -329,8 +310,11 @@ function EndorserComboBox({
           type="button"
           className="usa-combo-box__clear-input"
           aria-label="Clear the select contents"
+          style={
+            loading ? { backgroundImage: `url('${loaderImage}')` } : undefined
+          }
           onClick={() => reset()}
-          hidden={!pristine || disabled}
+          hidden={(!pristine || disabled) && !loading}
           disabled={disabled}
         >
           &nbsp;
@@ -384,12 +368,12 @@ export function EndorsementRequestForm() {
   return (
     <Form method="post">
       <h2 id="modal-request-heading">Request Endorsement</h2>
-      <div className="usa-prose">
+      <p className="usa-paragraph">
         Requesting an endorsement from another user will share your email with
         that individual. Please keep this in mind when submitting. Enter the
         email of the individual you want to be endorsed by. They will receive a
         notification alerting them to this request.
-      </div>
+      </p>
       <input type="hidden" name="endorserSub" value={endorserSub} />
       <Grid row>
         <Grid col="fill">

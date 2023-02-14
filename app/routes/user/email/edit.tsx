@@ -24,7 +24,7 @@ import { EmailNotificationServer } from '../email_notifications.server'
 export const handle = { breadcrumb: 'Edit', getSitemapEntries: () => null }
 
 export async function action({ request }: DataFunctionArgs) {
-  const [data] = await Promise.all([request.formData()])
+  const data = await request.formData()
   const { uuid, intent, name, recipient, noticeFormat, ...rest } =
     Object.fromEntries(data)
   const noticeTypes = Object.keys(rest)
@@ -76,7 +76,7 @@ export async function loader({ request }: DataFunctionArgs) {
   return { notification, intent, format }
 }
 
-export default function Edit() {
+export default function () {
   const { notification, intent, format } = useLoaderData<typeof loader>()
   const defaultNameValid = !!notification.name
   const [nameValid, setNameValid] = useState(defaultNameValid)
@@ -84,67 +84,62 @@ export default function Edit() {
   const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
   return (
-    <div className="tablet:grid-col-12">
-      <Form method="post">
-        <input type="hidden" name="uuid" value={notification.uuid} />
-        <input type="hidden" name="intent" value={intent} />
-        <Label htmlFor="name">
-          Name
-          <abbr title="required" className="usa-label--required">
-            *
-          </abbr>
-        </Label>
-        <TextInput
-          id="name"
-          name="name"
-          type="text"
-          inputSize="small"
-          autoCapitalize="off"
-          autoCorrect="off"
-          defaultValue={notification.name}
-          required={true}
-          onChange={(e) => setNameValid(!!e.target.value)}
-        />
-        <Label htmlFor="recipient">
-          Recipient
-          <abbr title="required" className="usa-label--required">
-            *
-          </abbr>
-        </Label>
-        <TextInput
-          id="recipient"
-          name="recipient"
-          type="email"
-          autoCapitalize="off"
-          autoCorrect="off"
-          required={true}
-          placeholder="email"
-          defaultValue={notification.recipient}
-          onChange={(e) => setrecipientValid(!!e.target.value)}
-        />
-        <Label htmlFor="format">Format</Label>
-        <NoticeFormat name="noticeFormat" value={format} />
-        <Label htmlFor="noticeTypes">Types</Label>
-        <NoticeTypeCheckboxes
-          defaultSelected={notification.noticeTypes}
-          validationFunction={setAlertsValid}
-        ></NoticeTypeCheckboxes>
-        <ButtonGroup>
-          <Link
-            to=".."
-            type="button"
-            className="usa-button usa-button--outline"
-          >
-            Cancel
-          </Link>
-          <Button
-            disabled={!(nameValid && recipientValid && alertsValid)}
-            type="submit"
-          >
-            Save
-          </Button>
-        </ButtonGroup>
-      </Form>
-    </div>
+    <Form method="post">
+      <h1>Edit Email Notification</h1>
+      <input type="hidden" name="uuid" value={notification.uuid} />
+      <input type="hidden" name="intent" value={intent} />
+      <Label htmlFor="name">
+        Name
+        <abbr title="required" className="usa-label--required">
+          *
+        </abbr>
+      </Label>
+      <TextInput
+        id="name"
+        name="name"
+        type="text"
+        inputSize="small"
+        autoCapitalize="off"
+        autoCorrect="off"
+        defaultValue={notification.name}
+        required={true}
+        onChange={(e) => setNameValid(!!e.target.value)}
+      />
+      <Label htmlFor="recipient">
+        Recipient
+        <abbr title="required" className="usa-label--required">
+          *
+        </abbr>
+      </Label>
+      <TextInput
+        id="recipient"
+        name="recipient"
+        type="email"
+        autoCapitalize="off"
+        autoCorrect="off"
+        required={true}
+        placeholder="email"
+        defaultValue={notification.recipient}
+        onChange={(e) => setrecipientValid(!!e.target.value)}
+      />
+      <Label htmlFor="format">Format</Label>
+      <NoticeFormat name="noticeFormat" value={format} />
+      <Label htmlFor="noticeTypes">Types</Label>
+      <NoticeTypeCheckboxes
+        defaultSelected={notification.noticeTypes}
+        validationFunction={setAlertsValid}
+      ></NoticeTypeCheckboxes>
+      <ButtonGroup>
+        <Link to=".." type="button" className="usa-button usa-button--outline">
+          Cancel
+        </Link>
+        <Button
+          disabled={!(nameValid && recipientValid && alertsValid)}
+          type="submit"
+        >
+          Save
+        </Button>
+      </ButtonGroup>
+    </Form>
   )
 }

@@ -90,7 +90,7 @@ export function Header({ email }: { email?: string }) {
                           to="/user/endorsements"
                           onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                         >
-                          Endorsements
+                          Peer Endorsements
                         </Link>
                       ),
                       <Link
@@ -98,7 +98,7 @@ export function Header({ email }: { email?: string }) {
                         to="/user/credentials"
                         onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                       >
-                        Credentials
+                        Client Credentials
                       </Link>,
                       <Link
                         key="email"

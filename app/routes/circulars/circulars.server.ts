@@ -10,31 +10,36 @@ import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
-import { formatAuthor } from '../user/index'
+import memoizee from 'memoizee'
 import { getUser } from '../__auth/user.server'
-import { bodyIsValid, subjectIsValid } from './circulars.lib'
+import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 
-async function getDynamoDBAutoIncrement() {
-  const db = await tables()
-  const doc = db._doc as unknown as DynamoDBDocument
+export const group = 'gcn.nasa.gov/circular-submitter'
 
-  const tableName = db.name('circulars')
-  const counterTableName = db.name('auto_increment_metadata')
-  const dangerously =
-    (await (db._db as unknown as DynamoDB).config.endpoint?.())?.hostname ==
-    'localhost'
+export const getDynamoDBAutoIncrement = memoizee(
+  async function () {
+    const db = await tables()
+    const doc = db._doc as unknown as DynamoDBDocument
 
-  return new DynamoDBAutoIncrement({
-    doc,
-    counterTableName,
-    counterTableKey: { tableName: 'circulars' },
-    counterTableAttributeName: 'circularId',
-    tableName: tableName,
-    tableAttributeName: 'circularId',
-    initialValue: 1,
-    dangerously,
-  })
-}
+    const tableName = db.name('circulars')
+    const counterTableName = db.name('auto_increment_metadata')
+    const dangerously =
+      (await (db._db as unknown as DynamoDB).config.endpoint?.())?.hostname ==
+      'localhost'
+
+    return new DynamoDBAutoIncrement({
+      doc,
+      counterTableName,
+      counterTableKey: { tableName: 'circulars' },
+      counterTableAttributeName: 'circularId',
+      tableName: tableName,
+      tableAttributeName: 'circularId',
+      initialValue: 1,
+      dangerously,
+    })
+  },
+  { promise: true }
+)
 
 export interface CircularMetadata {
   circularId: number
@@ -123,7 +128,7 @@ export async function put(subject: string, body: string, request: Request) {
     getUser(request),
     getDynamoDBAutoIncrement(),
   ])
-  if (!user?.groups.includes('gcn.nasa.gov/circular-submitter'))
+  if (!user?.groups.includes(group))
     throw new Response('User is not in the submitters group', {
       status: 403,
     })

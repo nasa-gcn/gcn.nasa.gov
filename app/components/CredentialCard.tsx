@@ -82,13 +82,11 @@ export default function CredentialCard({
           <ModalHeading id="modal-delete-heading">
             Delete Client Credential
           </ModalHeading>
-          <div className="usa-prose">
-            <p id="modal-delete-description">
-              Are you sure that you want to delete the client credential named “
-              {name}” with client ID <code>{client_id}</code>?
-            </p>
-            <p>This action cannot be undone.</p>
-          </div>
+          <p id="modal-delete-description">
+            Are you sure that you want to delete the client credential named “
+            {name}” with client ID <code>{client_id}</code>?
+          </p>
+          <p>This action cannot be undone.</p>
           <ModalFooter>
             <ModalToggleButton modalRef={ref} closer outline>
               Cancel

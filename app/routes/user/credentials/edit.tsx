@@ -21,6 +21,11 @@ export async function action({ request }: DataFunctionArgs) {
   return handleCredentialActions(request, 'user')
 }
 
-export default function Edit() {
-  return <NewCredentialForm />
+export default function () {
+  return (
+    <>
+      <h1>New Client Credentials</h1>
+      <NewCredentialForm />
+    </>
+  )
 }

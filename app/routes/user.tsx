@@ -12,7 +12,7 @@ import { useFeature } from '~/root'
 
 export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
-export default function User() {
+export default function () {
   const enableCirculars = useFeature('circulars')
   return (
     <>
@@ -25,7 +25,7 @@ export default function User() {
               </NavLink>,
               enableCirculars && (
                 <NavLink key="endorsements" to="endorsements">
-                  Endorsements
+                  Peer Endorsements
                 </NavLink>
               ),
               <NavLink key="credentials" to="credentials">
@@ -40,7 +40,7 @@ export default function User() {
             ]}
           />
         </div>
-        <div className="desktop:grid-col-9 usa-prose">
+        <div className="desktop:grid-col-9">
           <Outlet />
         </div>
       </div>

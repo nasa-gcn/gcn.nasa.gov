@@ -11,7 +11,7 @@ import { NavLink, Outlet } from '@remix-run/react'
 
 export const handle = { breadcrumb: 'Missions' }
 
-export default function Missions() {
+export default function () {
   return (
     <div className="grid-row grid-gap">
       <div className="desktop:grid-col-4">
@@ -65,7 +65,7 @@ export default function Missions() {
           ]}
         />
       </div>
-      <div className="desktop:grid-col-8 usa-prose grid-col-12">
+      <div className="desktop:grid-col-8 grid-col-12">
         <Outlet />
       </div>
     </div>

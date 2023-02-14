@@ -14,6 +14,7 @@ export const deploy = {
     const lambdaProps =
       cloudformation.Resources.AnyCatchallHTTPLambda.Properties
     const roleProps = cloudformation.Resources.Role.Properties
+
     lambdaProps.Tracing = 'Active'
     ;(lambdaProps.Layers ?? (lambdaProps.Layers = [])).push({
       'Fn::Sub':
@@ -23,18 +24,13 @@ export const deploy = {
     ;(roleProps.ManagedPolicyArns ?? (roleProps.ManagedPolicyArns = [])).push(
       'arn:aws:iam::aws:policy/AWSXRayDaemonWriteAccess'
     )
-    return cloudformation
-  },
-}
 
-export const set = {
-  env() {
-    return {
-      production: {
-        AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
-        NODE_OPTIONS: '--require /var/task/tracing.js',
-        OPENTELEMETRY_COLLECTOR_CONFIG_FILE: '/var/task/collector.yaml',
-      },
-    }
+    Object.assign(lambdaProps.Environment.Variables, {
+      AWS_LAMBDA_EXEC_WRAPPER: '/opt/otel-handler',
+      NODE_OPTIONS: '--require /var/task/tracing.js',
+      OPENTELEMETRY_COLLECTOR_CONFIG_FILE: '/var/task/collector.yaml',
+    })
+
+    return cloudformation
   },
 }

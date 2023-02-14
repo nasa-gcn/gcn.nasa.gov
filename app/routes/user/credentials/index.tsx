@@ -10,8 +10,9 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import SegmentedCards from '~/components/SegmentedCards'
 import { ClientCredentialVendingMachine } from '../client_credentials.server'
-import { Icon } from '@trussworks/react-uswds'
 import CredentialCard from '~/components/CredentialCard'
+import { getFormDataString } from '~/lib/utils'
+import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 
 export const handle = { getSitemapEntries: () => null }
 
@@ -19,17 +20,6 @@ export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
   return { client_credentials }
-}
-
-function getFormDataString(formData: FormData, key: string) {
-  const value = formData.get(key)
-  if (typeof value === 'string') {
-    return value
-  } else if (value === null) {
-    return undefined
-  } else {
-    throw new Response(`expected ${key} to be a string`, { status: 400 })
-  }
 }
 
 export async function action({ request }: DataFunctionArgs) {
@@ -52,24 +42,19 @@ export async function action({ request }: DataFunctionArgs) {
   }
 }
 
-export default function Index() {
+export default function () {
   const { client_credentials } = useLoaderData<typeof loader>()
 
   return (
     <>
-      <div className="tablet:grid-col-2 flex-auto flex-align-self-center display-flex tablet:margin-right-2">
-        <Link className="usa-button margin-left-auto flex-auto" to="edit">
-          <Icon.Add className="bottom-aligned margin-right-05" />
-          Add
-        </Link>
-      </div>
-      <p>
+      <HeadingWithAddButton>Client Credentials</HeadingWithAddButton>
+      <p className="usa-paragraph">
         Manage your client credentials here. Client credentials allow your
-        scripts to interact with GCN on your behalf. These credentials are the
-        same as those generated through the{' '}
-        <Link to="/quickstart">Start Streaming GCN Notices</Link>. For an
-        example of how to use these, see the{' '}
-        <Link to="/docs/client">client docs</Link>.
+        scripts to interact with GCN on your behalf. You can also create client
+        credentials through the{' '}
+        <Link to="/quickstart">Start Streaming GCN Notices</Link> quick start
+        guide. For sample code demonstrating usage of client credentials, see
+        the <Link to="/docs/client">client documentation</Link>.
       </p>
       <SegmentedCards>
         {client_credentials.map((credential) => (

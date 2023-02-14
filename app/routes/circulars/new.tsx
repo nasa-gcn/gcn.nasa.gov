@@ -19,16 +19,15 @@ import {
 import { useState } from 'react'
 import dedent from 'ts-dedent'
 import Spinner from '~/components/Spinner'
-import { formatAuthor } from '../user/index'
 import { getUser } from '../__auth/user.server'
-import { bodyIsValid, subjectIsValid } from './circulars.lib'
+import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import { feature } from '~/root'
+import { group } from './circulars.server'
 
 export async function loader({ request }: DataFunctionArgs) {
   if (!feature('circulars')) throw new Response(null, { status: 404 })
   const user = await getUser(request)
-  if (!user || !user.groups.includes('gcn.nasa.gov/circular-submitter'))
-    throw new Response(null, { status: 403 })
+  if (!user?.groups.includes(group)) throw new Response(null, { status: 403 })
   const formattedAuthor = formatAuthor(user)
   return { formattedAuthor }
 }
@@ -51,7 +50,7 @@ function useBodyPlaceholder() {
     `)
 }
 
-export default function New() {
+export default function () {
   const { formattedAuthor } = useLoaderData<typeof loader>()
   const [subjectValid, setSubjectValid] = useState<boolean | undefined>()
   const [bodyValid, setBodyValid] = useState<boolean | undefined>()
