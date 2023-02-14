@@ -130,14 +130,14 @@ export default function () {
           )}
         </>
       ) : (
-        <div>
+        <>
           <p className="usa-paragraph">
             In order to submit GCN Circulars, you must be endorsed by an already
             approved user.
           </p>
           <EndorsementRequestForm />
           {requestedEndorsements.length > 0 && (
-            <div>
+            <>
               <h2>Your Pending Requests</h2>
               <SegmentedCards>
                 {requestedEndorsements.map((request) => (
@@ -148,9 +148,9 @@ export default function () {
                   />
                 ))}
               </SegmentedCards>
-            </div>
+            </>
           )}
-        </div>
+        </>
       )}
     </>
   )
