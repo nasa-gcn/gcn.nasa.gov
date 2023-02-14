@@ -21,7 +21,10 @@ import {
 } from '../routes/circulars/circulars.lib'
 
 import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
-import { getDynamoDBAutoIncrement } from '~/routes/circulars/circulars.server'
+import {
+  getDynamoDBAutoIncrement,
+  group,
+} from '~/routes/circulars/circulars.server'
 import { sendEmail } from '~/lib/email'
 import { getOrigin } from '~/lib/env'
 
@@ -66,7 +69,7 @@ async function handleRecord(record: SNSEventRecord) {
   // Check if submitter is in the submitters group
   const data = await cognito.send(
     new ListUsersInGroupCommand({
-      GroupName: 'gcn.nasa.gov/circular-submitter',
+      GroupName: group,
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
   )

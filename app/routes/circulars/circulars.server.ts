@@ -14,6 +14,8 @@ import memoizee from 'memoizee'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 
+export const group = 'gcn.nasa.gov/circular-submitter'
+
 export const getDynamoDBAutoIncrement = memoizee(
   async function () {
     const db = await tables()
@@ -126,7 +128,7 @@ export async function put(subject: string, body: string, request: Request) {
     getUser(request),
     getDynamoDBAutoIncrement(),
   ])
-  if (!user?.groups.includes('gcn.nasa.gov/circular-submitter'))
+  if (!user?.groups.includes(group))
     throw new Response('User is not in the submitters group', {
       status: 403,
     })
