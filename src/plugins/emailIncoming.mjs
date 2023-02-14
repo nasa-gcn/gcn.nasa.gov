@@ -31,16 +31,18 @@ export const deploy = {
         Type: 'AWS::SES::ReceiptRule',
         Properties: {
           RuleSetName: { Ref: 'EmailIncomingReceiptRuleSet' },
-          Enabled: true,
-          Recipients: [`circulars@${hostname}`],
-          Actions: [
-            {
-              SNSAction: {
-                Encoding: 'Base64',
-                TopicArn: { Ref: 'EmailIncomingEventTopic' },
+          Rule: {
+            Enabled: true,
+            Recipients: [`circulars@${hostname}`],
+            Actions: [
+              {
+                SNSAction: {
+                  Encoding: 'Base64',
+                  TopicArn: { Ref: 'EmailIncomingEventTopic' },
+                },
               },
-            },
-          ],
+            ],
+          },
         },
       },
     })
