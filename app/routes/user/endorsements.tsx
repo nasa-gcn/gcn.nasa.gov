@@ -7,7 +7,7 @@
  */
 
 import type { DataFunctionArgs } from '@remix-run/node'
-import { useFetcher, useLoaderData } from '@remix-run/react'
+import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Label } from '@trussworks/react-uswds'
 import {
   forwardRef,
@@ -107,6 +107,22 @@ export default function () {
   return (
     <>
       <h1>Peer Endorsements</h1>
+      <p className="usa-intro">
+        Anyone can become a <Link to="/circulars">GCN Circulars</Link> submitter
+        by receiving a <i>peer endorsement</i> from an existing submitter. An
+        endorsement vouches that the user is in good standing with the astronomy
+        community.
+      </p>
+      <p className="usa-paragraph">
+        Peer endorsements (inspired by{' '}
+        <a rel="external" href="https://info.arxiv.org/help/endorsement.html">
+          arXiv
+        </a>
+        ) help us to grow the GCN community sustainably while protecting the
+        research integrity of GCN Circulars. We welcome submitters of diverse
+        backgrounds including professional astronomers, amateurs, educators, and
+        students.
+      </p>
       {userIsSubmitter ? (
         <>
           <p className="usa-paragraph">
@@ -131,14 +147,15 @@ export default function () {
         </>
       ) : (
         <>
-          <p className="usa-paragraph">
-            In order to submit GCN Circulars, you must be endorsed by an already
-            approved user.
-          </p>
           <EndorsementRequestForm />
           {requestedEndorsements.length > 0 && (
             <>
-              <h2>Your Pending Requests</h2>
+              <h3>Your Endorsement Requests</h3>
+              <p className="usa-paragraph">
+                You are waiting on pending endorsements. When any of the users
+                below approves your request, you will become a GCN Circulars
+                submitter.
+              </p>
               <SegmentedCards>
                 {requestedEndorsements.map((request) => (
                   <EndorsementRequestCard
@@ -401,12 +418,24 @@ export function EndorsementRequestForm() {
 
   return (
     <fetcher.Form method="post" onSubmit={() => setSubmitting(true)}>
-      <h2 id="modal-request-heading">Request Endorsement</h2>
+      <h2>Request Endorsement</h2>
       <p className="usa-paragraph">
-        Requesting an endorsement from another user will share your email with
-        that individual. Please keep this in mind when submitting. Enter the
-        email of the individual you want to be endorsed by. They will receive a
-        notification alerting them to this request.
+        <b>
+          You are not yet a GCN Circulars submitter. Use the form below to
+          request an endorsement from an existing GCN Circulars user.
+        </b>{' '}
+        This should be someone who you know and who knows you: a fellow
+        researcher, an advisor, or an instructor.
+      </p>
+      <p className="usa-paragraph">
+        If you don't find anyone who you recognize, then{' '}
+        <a
+          rel="external"
+          href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic"
+        >
+          contact us for help
+        </a>
+        .
       </p>
       <input type="hidden" name="endorserSub" value={endorserSub} />
       <Grid row>
