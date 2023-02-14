@@ -10,9 +10,6 @@ import {
   ListUsersInGroupCommand,
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider'
-import type { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2'
 import type { SNSEvent, SNSEventRecord } from 'aws-lambda'
 
@@ -24,8 +21,8 @@ import {
   bodyIsValid,
 } from '../routes/circulars/circulars.lib'
 
-import { tables } from '@architect/functions'
 import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
+import { getDynamoDBAutoIncrement } from '~/routes/circulars/circulars.server'
 
 const cognito = new CognitoIdentityProviderClient({})
 const sesv2 = new SESv2Client({})
@@ -37,10 +34,7 @@ const isRejected = (
   input: PromiseSettledResult<unknown>
 ): input is PromiseRejectedResult => input.status === 'rejected'
 
-async function handleRecord(
-  record: SNSEventRecord,
-  autoIncrement: DynamoDBAutoIncrement
-) {
+async function handleRecord(record: SNSEventRecord) {
   const message = JSON.parse(record.Sns.Message)
   if (!message.content) throw new Error('Object has no body')
 
@@ -105,6 +99,7 @@ async function handleRecord(
     submitter: formatAuthor(userData),
   }
 
+  const autoIncrement = await getDynamoDBAutoIncrement()
   const newCircularId = await autoIncrement.put(circular)
 
   // Send a success email
@@ -116,33 +111,7 @@ async function handleRecord(
 }
 
 export async function handler(event: SNSEvent) {
-  // Get tables for autoincrement
-  const db = await tables()
-  const doc = db._doc as unknown as DynamoDBDocument
-  const tableName = db.name('circulars')
-  const counterTableName = db.name('auto_increment_metadata')
-  if (!tableName || !counterTableName) {
-    throw new Error('Could not find tables')
-  }
-  const dangerously =
-    (await (db._db as unknown as DynamoDB).config.endpoint?.())?.hostname ==
-    'localhost'
-
-  const autoIncrement = new DynamoDBAutoIncrement({
-    doc,
-    counterTableName,
-    counterTableKey: { tableName: 'circulars' },
-    counterTableAttributeName: 'circularId',
-    tableName: tableName,
-    tableAttributeName: 'circularId',
-    initialValue: 1,
-    dangerously,
-  })
-
-  const handlerPromises = event.Records.map((record) =>
-    handleRecord(record, autoIncrement)
-  )
-  const results = await Promise.allSettled(handlerPromises)
+  const results = await Promise.allSettled(event.Records.map(handleRecord))
   const rejections = results.filter(isRejected).map(({ reason }) => reason)
   if (rejections.length) throw rejections
 }
