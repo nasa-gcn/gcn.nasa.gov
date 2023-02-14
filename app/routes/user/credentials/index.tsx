@@ -10,9 +10,9 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import SegmentedCards from '~/components/SegmentedCards'
 import { ClientCredentialVendingMachine } from '../client_credentials.server'
-import { Icon } from '@trussworks/react-uswds'
 import CredentialCard from '~/components/CredentialCard'
 import { getFormDataString } from '~/lib/utils'
+import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 
 export const handle = { getSitemapEntries: () => null }
 
@@ -47,12 +47,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="tablet:grid-col-2 flex-auto flex-align-self-center display-flex tablet:margin-right-2">
-        <Link className="usa-button margin-left-auto flex-auto" to="edit">
-          <Icon.Add className="bottom-aligned margin-right-05" />
-          Add
-        </Link>
-      </div>
+      <HeadingWithAddButton>Client Credentials</HeadingWithAddButton>
       <p className="usa-paragraph">
         Manage your client credentials here. Client credentials allow your
         scripts to interact with GCN on your behalf. You can also create client
