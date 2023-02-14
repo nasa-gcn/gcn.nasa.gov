@@ -10,7 +10,6 @@ import {
   ListUsersInGroupCommand,
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider'
-import { SendEmailCommand, SESv2Client } from '@aws-sdk/client-sesv2'
 import type { SNSEvent, SNSEventRecord } from 'aws-lambda'
 
 import { simpleParser } from 'mailparser'
@@ -23,11 +22,11 @@ import {
 
 import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
 import { getDynamoDBAutoIncrement } from '~/routes/circulars/circulars.server'
+import { sendEmail } from '~/lib/email'
+import { getOrigin } from '~/lib/env'
 
 const cognito = new CognitoIdentityProviderClient({})
-const sesv2 = new SESv2Client({})
-
-const domain = process.env.DOMAIN
+const origin = getOrigin()
 
 // Type guarding to get around an error when trying to access `reason`
 const isRejected = (
@@ -56,9 +55,10 @@ async function handleRecord(record: SNSEventRecord) {
     !bodyIsValid(parsed.text)
   ) {
     await sendEmail(
+      'GCN Circulars',
       userEmail,
       'GCN Circular Submission Warning: Invalid subject or body structure',
-      `The submission of your Circular has been rejected, as the subject line and body do not conform to the appropriate format. Please see https://${domain}gcn.nasa.gov/circulars/classic#submission-process for more information.`
+      `The submission of your Circular has been rejected, as the subject line and body do not conform to the appropriate format. Please see ${origin}/circulars/classic#submission-process for more information.`
     )
     return
   }
@@ -76,6 +76,7 @@ async function handleRecord(record: SNSEventRecord) {
   )
   if (!userTypeData) {
     await sendEmail(
+      'GCN Circulars',
       userEmail,
       'GCN Circular Submission Warning: Missing permissions',
       'You do not have the required permissions to submit GCN Circulars. If you believe this to be a mistake, please fill out the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.'
@@ -104,9 +105,10 @@ async function handleRecord(record: SNSEventRecord) {
 
   // Send a success email
   await sendEmail(
+    'GCN Circulars',
     userEmail,
     `Successfully submitted Circular: ${newCircularId}`,
-    `Your circular has been successfully submitted. You may view it at http://${domain}gcn.nasa.gov/circulars/${newCircularId}`
+    `Your circular has been successfully submitted. You may view it at ${origin}/circulars/${newCircularId}`
   )
 }
 
@@ -114,27 +116,4 @@ export async function handler(event: SNSEvent) {
   const results = await Promise.allSettled(event.Records.map(handleRecord))
   const rejections = results.filter(isRejected).map(({ reason }) => reason)
   if (rejections.length) throw rejections
-}
-
-async function sendEmail(recipient: string, subject: string, body: string) {
-  const sendEmailCommand = new SendEmailCommand({
-    Destination: {
-      ToAddresses: [recipient],
-    },
-    FromEmailAddress: `no-reply@${domain}gcn.nasa.gov`,
-    Content: {
-      Simple: {
-        Subject: {
-          Data: subject,
-        },
-        Body: {
-          Text: {
-            Data: body,
-          },
-        },
-      },
-    },
-  })
-
-  await sesv2.send(sendEmailCommand)
 }
