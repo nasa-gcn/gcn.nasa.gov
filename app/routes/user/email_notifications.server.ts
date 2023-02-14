@@ -7,15 +7,11 @@
  */
 
 import { tables } from '@architect/functions'
-import {
-  SendEmailCommand,
-  SESv2Client,
-  SESv2ServiceException,
-} from '@aws-sdk/client-sesv2'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
+import { sendEmail } from '~/lib/email'
 
 // db model
 export type EmailNotification = {
@@ -34,24 +30,16 @@ export interface EmailNotificationVM extends EmailNotification {
 
 export class EmailNotificationServer {
   #sub: string
-  #domain: string
 
-  private constructor(sub: string, domain: string) {
+  private constructor(sub: string) {
     this.#sub = sub
-    this.#domain = domain
   }
 
   // Init machine
   static async create(request: Request) {
     const user = await getUser(request)
-    let domain = new URL(request.url).hostname
-    // If we are in local development, assume test.gcn.nasa.gov
-    if (!domain.endsWith('gcn.nasa.gov')) {
-      domain = 'test.gcn.nasa.gov'
-    }
-
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub, domain)
+    return new this(user.sub)
   }
 
   #validateEmailNotification(notification: EmailNotification) {
@@ -229,43 +217,11 @@ export class EmailNotificationServer {
 
   // Send Test Email
   async sendTestEmail(destination: string) {
-    const client = new SESv2Client({})
-
-    const command = new SendEmailCommand({
-      FromEmailAddress: `GCN Notices <no-reply@${this.#domain}>`,
-      Destination: {
-        ToAddresses: [destination],
-      },
-      Content: {
-        Simple: {
-          Subject: { Data: 'GCN Notices test' },
-          Body: {
-            Text: {
-              Data: 'This is a test message from the GCN Notices.',
-            },
-          },
-        },
-      },
-    })
-
-    try {
-      await client.send(command)
-    } catch (e) {
-      if (
-        !(
-          e instanceof SESv2ServiceException &&
-          ['InvalidClientTokenId', 'UnrecognizedClientException'].includes(
-            e.name
-          )
-        ) ||
-        process.env.NODE_ENV === 'production'
-      ) {
-        throw e
-      } else {
-        console.warn(
-          `SES threw ${e.name}. This would be an error in production.`
-        )
-      }
-    }
+    await sendEmail(
+      'GCN Notices',
+      destination,
+      'GCN Notices test',
+      'This is a test message from the GCN Notices.'
+    )
   }
 }

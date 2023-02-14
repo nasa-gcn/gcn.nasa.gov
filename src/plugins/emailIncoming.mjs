@@ -19,9 +19,12 @@ export const set = {
 
 export const deploy = {
   start({ cloudformation }) {
-    const { DOMAIN } =
+    const { ORIGIN } =
       cloudformation.Resources.EmailIncomingEventLambda.Properties.Environment
         .Variables
+    if (!ORIGIN) throw new Error('Environment variable ORIGIN must be defined')
+    const hostname = new URL(ORIGIN).hostname
+
     Object.assign(cloudformation.Resources, {
       EmailIncomingReceiptRuleSet: { Type: 'AWS::SES::ReceiptRuleSet' },
       EmailIncomingReceiptRule: {
@@ -29,7 +32,7 @@ export const deploy = {
         Properties: {
           RuleSetName: { Ref: 'EmailIncomingReceiptRuleSet' },
           Enabled: true,
-          Recipients: [`circulars@${DOMAIN}`],
+          Recipients: [`circulars@${hostname}`],
           Actions: [
             {
               SNSAction: {

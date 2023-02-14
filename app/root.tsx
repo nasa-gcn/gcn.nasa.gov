@@ -64,6 +64,7 @@ import favicon_114 from '~/theme/img/favicons/favicon-114.png'
 import favicon_144 from '~/theme/img/favicons/favicon-144.png'
 import favicon_192 from '~/theme/img/favicons/favicon-192.png'
 import { useRouteLoaderData } from './lib/remix'
+import { getOrigin } from './lib/env'
 const favicons = {
   16: favicon_16,
   40: favicon_40,
@@ -110,7 +111,7 @@ export const links: LinksFunction = () => [
 ]
 
 export async function loader({ request }: DataFunctionArgs) {
-  const { origin } = new URL(request.url)
+  const origin = getOrigin()
 
   const user = await getUser(request)
   const email = user?.email
