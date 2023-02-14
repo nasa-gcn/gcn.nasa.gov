@@ -60,7 +60,7 @@
   },
   "devDependencies": {
     "@architect/architect": "^10.10.0",
-    "@architect/plugin-lambda-invoker": "github:dakota002/plugin-lambda-invoker#Null-Prop",
+    "@architect/plugin-lambda-invoker": "^1.0.0",
     "@aws-sdk/client-cognito-identity-provider": "3.188.0",
     "@aws-sdk/client-sesv2": "3.188.0",
     "@aws-sdk/lib-dynamodb": "3.188.0",
