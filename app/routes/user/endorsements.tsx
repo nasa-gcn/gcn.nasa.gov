@@ -7,9 +7,15 @@
  */
 
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Form, useFetcher, useLoaderData } from '@remix-run/react'
+import { useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Label } from '@trussworks/react-uswds'
-import { useEffect, useState } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 import type {
@@ -241,14 +247,23 @@ export function EndorsementRequestCard({
   )
 }
 
-function EndorserComboBox({
-  disabled,
-  className,
-  ...props
-}: { disabled?: boolean; className?: string } & Omit<
-  UseComboboxProps<EndorsementUser>,
-  'items' | 'onInputValueChange' | 'itemToString'
->) {
+interface EndorsementComboBoxProps
+  extends Omit<
+    UseComboboxProps<EndorsementUser>,
+    'items' | 'onInputValueChange' | 'itemToString'
+  > {
+  disabled?: boolean
+  className?: string
+}
+
+interface EndorsementComboBoxHandle {
+  reset: () => void
+}
+
+const EndorserComboBox = forwardRef<
+  EndorsementComboBoxHandle,
+  EndorsementComboBoxProps
+>(({ disabled, className, ...props }, ref) => {
   const fetcher = useFetcher<typeof action>()
   const [items, setItems] = useState<EndorsementUser[]>([])
 
@@ -283,6 +298,14 @@ function EndorserComboBox({
     ...props,
   })
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      reset,
+    }),
+    [reset]
+  )
+
   const loading = fetcher.state === 'submitting'
   const pristine = Boolean(selectedItem)
 
@@ -298,6 +321,7 @@ function EndorserComboBox({
         autoCapitalize="off"
         autoComplete="off"
         className="usa-combo-box__input"
+        disabled={disabled}
         {...getInputProps()}
         // Funky escape sequence is a zero-width character to prevent Safari
         // from attempting to autofill the user's own email address, which
@@ -360,13 +384,23 @@ function EndorserComboBox({
       </ul>
     </div>
   )
-}
+})
 
 export function EndorsementRequestForm() {
-  const [endorserSub, setEndorserSub] = useState<string | undefined>()
+  const ref = useRef<EndorsementComboBoxHandle>(null)
+  const [endorserSub, setEndorserSub] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const fetcher = useFetcher()
+
+  useEffect(() => {
+    if (fetcher.state === 'idle' && submitting) {
+      setSubmitting(false)
+      ref.current?.reset()
+    }
+  }, [ref, fetcher.state, submitting])
 
   return (
-    <Form method="post">
+    <fetcher.Form method="post" onSubmit={() => setSubmitting(true)}>
       <h2 id="modal-request-heading">Request Endorsement</h2>
       <p className="usa-paragraph">
         Requesting an endorsement from another user will share your email with
@@ -382,8 +416,10 @@ export function EndorsementRequestForm() {
           </Label>
           <EndorserComboBox
             className="maxw-full"
+            disabled={submitting}
+            ref={ref}
             onSelectedItemChange={({ selectedItem }) =>
-              setEndorserSub(selectedItem?.sub)
+              setEndorserSub(selectedItem?.sub ?? '')
             }
           />
         </Grid>
@@ -392,13 +428,13 @@ export function EndorsementRequestForm() {
             type="submit"
             name="intent"
             value="create"
-            disabled={!endorserSub?.length}
+            disabled={submitting || !endorserSub}
             className="margin-top-1 margin-left-1"
           >
-            Submit
+            {submitting ? 'Requesting...' : 'Request'}
           </Button>
         </Grid>
       </Grid>
-    </Form>
+    </fetcher.Form>
   )
 }
