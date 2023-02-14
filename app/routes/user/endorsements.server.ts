@@ -119,7 +119,7 @@ export class EndorsementsServer {
         ':requestorSub': this.#sub,
       },
       ConditionExpression:
-        'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub)',
+        'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub and #status <> :status)',
     })
   }
 
