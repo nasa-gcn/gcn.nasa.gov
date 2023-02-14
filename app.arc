@@ -58,9 +58,6 @@ runtime nodejs18.x
 region us-east-1
 architecture arm64
 memory 256
-concurrency 100
-provisionedConcurrency 5
-timeout 10  # Allow extra time because Cognito's .well-known/openid-configuration endpoint can take several seconds.
 
 @plugins
 tracing  # Enable AWS X-Ray distributed tracing
