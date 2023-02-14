@@ -23,7 +23,8 @@
     "prepare": "run-p prepare:*",
     "deploy:hydrate": "arc hydrate && rimraf server/node_modules/@uswds/uswds && modclean -p server -n default:safe,default:caution -a '*.ts,*.map,*.scss,Makefile' --ignore 'makefile*' -r",
     "deploy:no-hydrate": "arc deploy --no-hydrate --prune --production",
-    "deploy": "run-s deploy:hydrate deploy:no-hydrate"
+    "deploy": "run-s deploy:hydrate deploy:no-hydrate",
+    "clean": "rimraf public server/_assets server/index.* server/node_modules email-incoming sam.json sam.yaml .cache"
   },
   "dependencies": {
     "@architect/functions": "^5.3.3",
