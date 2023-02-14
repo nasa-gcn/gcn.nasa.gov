@@ -22,12 +22,12 @@ import Spinner from '~/components/Spinner'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import { feature } from '~/root'
+import { group } from './circulars.server'
 
 export async function loader({ request }: DataFunctionArgs) {
   if (!feature('circulars')) throw new Response(null, { status: 404 })
   const user = await getUser(request)
-  if (!user || !user.groups.includes('gcn.nasa.gov/circular-submitter'))
-    throw new Response(null, { status: 403 })
+  if (!user?.groups.includes(group)) throw new Response(null, { status: 403 })
   const formattedAuthor = formatAuthor(user)
   return { formattedAuthor }
 }

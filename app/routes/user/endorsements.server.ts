@@ -15,6 +15,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
+import { group } from '../circulars/circulars.server'
 import { clearUserToken, getUser } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'
 
@@ -50,7 +51,7 @@ export class EndorsementsServer {
   }
 
   userIsSubmitter() {
-    return this.#currentUserGroups.includes('gcn.nasa.gov/circular-submitter')
+    return this.#currentUserGroups.includes(group)
   }
 
   static async create(request: Request) {
@@ -90,11 +91,7 @@ export class EndorsementsServer {
       })
     )
 
-    if (
-      !Groups?.find(
-        ({ GroupName }) => GroupName === 'gcn.nasa.gov/circular-submitter'
-      )
-    )
+    if (!Groups?.find(({ GroupName }) => GroupName === group))
       throw new Response('User is not in the submitters group', {
         status: 400,
       })
@@ -169,7 +166,7 @@ export class EndorsementsServer {
 
     if (status === 'approved')
       await Promise.all([
-        this.#addUserToGroup(requestorSub, 'gcn.nasa.gov/circular-submitter'),
+        this.#addUserToGroup(requestorSub),
         clearUserToken(requestorSub),
       ])
   }
@@ -249,7 +246,7 @@ export class EndorsementsServer {
    */
   async getSubmitterUsers(): Promise<EndorsementUser[]> {
     const command = new ListUsersInGroupCommand({
-      GroupName: 'gcn.nasa.gov/circular-submitter',
+      GroupName: group,
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
 
@@ -308,15 +305,14 @@ export class EndorsementsServer {
   }
 
   /**
-   * Adds a user to a group
+   * Adds a user to the circulars submitters group
    *
    * Throws an HTTP error if:
    *  - The provided sub does not correspond to an existing user
    *
    * @param sub - sub of another user
-   * @param group - group to which the user corresponding to the given sub should be added
    */
-  async #addUserToGroup(sub: string, group: string) {
+  async #addUserToGroup(sub: string) {
     const { Username } = await this.#getCognitoUserForSub(sub)
 
     await client.send(
