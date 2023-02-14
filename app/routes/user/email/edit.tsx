@@ -76,7 +76,7 @@ export async function loader({ request }: DataFunctionArgs) {
   return { notification, intent, format }
 }
 
-export default function Edit() {
+export default function () {
   const { notification, intent, format } = useLoaderData<typeof loader>()
   const defaultNameValid = !!notification.name
   const [nameValid, setNameValid] = useState(defaultNameValid)

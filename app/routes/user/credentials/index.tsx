@@ -42,7 +42,7 @@ export async function action({ request }: DataFunctionArgs) {
   }
 }
 
-export default function Index() {
+export default function () {
   const { client_credentials } = useLoaderData<typeof loader>()
 
   return (

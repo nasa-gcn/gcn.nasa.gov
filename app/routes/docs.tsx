@@ -13,7 +13,7 @@ export const handle = {
   breadcrumb: 'Documentation',
 }
 
-export default function Docs() {
+export default function () {
   return (
     <div className="grid-row grid-gap">
       <div className="desktop:grid-col-3">

@@ -27,7 +27,7 @@ export async function action({ request }: DataFunctionArgs) {
   return handleCredentialActions(request, 'quickstart')
 }
 
-export default function Credentials() {
+export default function () {
   const { client_credentials } = useLoaderData<typeof loader>()
 
   const explanation = (

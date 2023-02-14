@@ -13,7 +13,7 @@ export const handle = {
   breadcrumb: 'Start Streaming GCN Notices',
 }
 
-export default function Streaming() {
+export default function () {
   return (
     <>
       <h1>Start Streaming GCN Notices</h1>

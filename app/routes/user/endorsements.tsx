@@ -94,7 +94,7 @@ export async function action({ request }: DataFunctionArgs) {
   return null
 }
 
-export default function Index() {
+export default function () {
   const { awaitingEndorsements, requestedEndorsements, userIsSubmitter } =
     useLoaderData<typeof loader>()
 

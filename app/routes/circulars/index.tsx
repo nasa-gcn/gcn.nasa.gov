@@ -39,7 +39,7 @@ export async function action({ request }: DataFunctionArgs) {
   return null
 }
 
-export default function Index() {
+export default function () {
   const { page, totalPages, items } = useLoaderData<typeof loader>()
   const pages = usePagination({ currentPage: page, totalPages })
 

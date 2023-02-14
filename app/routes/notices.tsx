@@ -92,7 +92,7 @@ function renderOption({
   )
 }
 
-export default function Notices() {
+export default function () {
   const [tags, setTags] = useState<ReactTag[]>([])
   const suggestions = ['gw', 'gamma', 'nu', 'x-ray', 'uv', 'optical']
   const tagNames = tags.map(({ label }) => label)
