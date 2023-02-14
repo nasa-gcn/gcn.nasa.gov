@@ -10,30 +10,34 @@ import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
+import memoizee from 'memoizee'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 
-async function getDynamoDBAutoIncrement() {
-  const db = await tables()
-  const doc = db._doc as unknown as DynamoDBDocument
+export const getDynamoDBAutoIncrement = memoizee(
+  async function () {
+    const db = await tables()
+    const doc = db._doc as unknown as DynamoDBDocument
 
-  const tableName = db.name('circulars')
-  const counterTableName = db.name('auto_increment_metadata')
-  const dangerously =
-    (await (db._db as unknown as DynamoDB).config.endpoint?.())?.hostname ==
-    'localhost'
+    const tableName = db.name('circulars')
+    const counterTableName = db.name('auto_increment_metadata')
+    const dangerously =
+      (await (db._db as unknown as DynamoDB).config.endpoint?.())?.hostname ==
+      'localhost'
 
-  return new DynamoDBAutoIncrement({
-    doc,
-    counterTableName,
-    counterTableKey: { tableName: 'circulars' },
-    counterTableAttributeName: 'circularId',
-    tableName: tableName,
-    tableAttributeName: 'circularId',
-    initialValue: 1,
-    dangerously,
-  })
-}
+    return new DynamoDBAutoIncrement({
+      doc,
+      counterTableName,
+      counterTableKey: { tableName: 'circulars' },
+      counterTableAttributeName: 'circularId',
+      tableName: tableName,
+      tableAttributeName: 'circularId',
+      initialValue: 1,
+      dangerously,
+    })
+  },
+  { promise: true }
+)
 
 export interface CircularMetadata {
   circularId: number
