@@ -6,13 +6,9 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import UserPageContainer from '~/components/UserPageContainer'
+export { Outlet as default } from 'react-router'
 
 export const handle = {
   breadcrumb: 'Email Notifications',
   getSitemapEntries: () => null,
-}
-
-export default function Notifications() {
-  return <UserPageContainer header="Email Notifications" />
 }

@@ -99,10 +99,8 @@ export default function Index() {
     useLoaderData<typeof loader>()
 
   return (
-    <Grid row>
-      <div className="tablet:grid-col-10 flex-fill">
-        <h1 className="margin-y-0">Peer Endorsements</h1>
-      </div>
+    <>
+      <h1>Peer Endorsements</h1>
       {userIsSubmitter ? (
         <>
           <p className="usa-paragraph">
@@ -111,7 +109,7 @@ export default function Index() {
             approve, deny, or report in the case of spam.
           </p>
           {awaitingEndorsements.length > 0 && (
-            <Grid row>
+            <>
               <h2>Requests awaiting your review</h2>
               <SegmentedCards>
                 {awaitingEndorsements.map((request) => (
@@ -122,7 +120,7 @@ export default function Index() {
                   />
                 ))}
               </SegmentedCards>
-            </Grid>
+            </>
           )}
         </>
       ) : (
@@ -148,7 +146,7 @@ export default function Index() {
           )}
         </div>
       )}
-    </Grid>
+    </>
   )
 }
 

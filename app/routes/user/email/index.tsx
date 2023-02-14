@@ -8,9 +8,9 @@
 
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
-import { Icon } from '@trussworks/react-uswds'
+import { useLoaderData } from '@remix-run/react'
 import EmailNotificationCard from '~/components/EmailNotificationCard'
+import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 import { EmailNotificationServer } from '../email_notifications.server'
@@ -47,15 +47,7 @@ export default function Index() {
   const data = useLoaderData<typeof loader>()
   return (
     <>
-      <div className="tablet:grid-col-2 flex-auto flex-align-self-center display-flex tablet:margin-right-2">
-        <Link
-          className="usa-button margin-left-auto margin-right-0 flex-auto"
-          to="edit"
-        >
-          <Icon.Add className="bottom-aligned margin-right-05" />
-          Add
-        </Link>
-      </div>
+      <HeadingWithAddButton>Email Notifications</HeadingWithAddButton>
       <p className="usa-paragraph">
         Create and manage email subscriptions to GCN Notices here. You can
         create as many subscriptions as you like. To create a new alert, click
