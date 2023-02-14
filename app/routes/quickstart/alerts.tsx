@@ -23,7 +23,7 @@ export function loader({ request: { url } }: DataFunctionArgs) {
   return clientId
 }
 
-export default function Alerts() {
+export default function () {
   const clientId = useLoaderData<typeof loader>()
   return (
     <Form method="get" action="../code">

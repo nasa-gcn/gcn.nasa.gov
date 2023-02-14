@@ -50,7 +50,7 @@ function useBodyPlaceholder() {
     `)
 }
 
-export default function New() {
+export default function () {
   const { formattedAuthor } = useLoaderData<typeof loader>()
   const [subjectValid, setSubjectValid] = useState<boolean | undefined>()
   const [bodyValid, setBodyValid] = useState<boolean | undefined>()

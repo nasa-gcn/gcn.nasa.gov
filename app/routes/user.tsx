@@ -12,7 +12,7 @@ import { useFeature } from '~/root'
 
 export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
-export default function User() {
+export default function () {
   const enableCirculars = useFeature('circulars')
   return (
     <>

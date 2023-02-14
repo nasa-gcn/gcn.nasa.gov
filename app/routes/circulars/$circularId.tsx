@@ -23,7 +23,7 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
   })
 }
 
-export default function $circularId() {
+export default function () {
   const { circularId, subject, submitter, createdOn, body } =
     useLoaderData<typeof loader>()
   return (

@@ -43,7 +43,7 @@ export async function loader({ request }: DataFunctionArgs) {
   return data
 }
 
-export default function Index() {
+export default function () {
   const data = useLoaderData<typeof loader>()
   return (
     <>

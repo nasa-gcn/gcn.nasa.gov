@@ -66,7 +66,7 @@ export async function action({ request }: DataFunctionArgs) {
   return null
 }
 
-export default function User() {
+export default function () {
   const { email, idp, name, affiliation } = useLoaderData<typeof loader>()
   const fetcher = useFetcher<typeof action>()
   const [dirty, setDirty] = useState(false)

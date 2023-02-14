@@ -19,7 +19,7 @@ export async function loader({ request }: DataFunctionArgs) {
   return { email: user?.email, idp: user?.idp, url: request.url }
 }
 
-export default function StreamingSteps() {
+export default function () {
   const { email, idp, url } = useLoaderData<typeof loader>()
   return (
     <>
