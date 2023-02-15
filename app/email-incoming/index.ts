@@ -27,6 +27,7 @@ import {
 } from '~/routes/circulars/circulars.server'
 import { sendEmail } from '~/lib/email'
 import { getOrigin } from '~/lib/env'
+import { tables } from '@architect/functions'
 
 const cognito = new CognitoIdentityProviderClient({})
 const origin = getOrigin()
@@ -77,7 +78,11 @@ async function handleRecord(record: SNSEventRecord) {
   const userTypeData = data.Users?.find(
     (user) => extractAttributeRequired(user, 'email') == userEmail
   )
-  if (!userTypeData) {
+  const legacyUserData = !userTypeData
+    ? await getLegacyUser(userEmail)
+    : undefined
+
+  if (!userTypeData && !legacyUserData) {
     await sendEmail(
       'GCN Circulars',
       userEmail,
@@ -87,12 +92,19 @@ async function handleRecord(record: SNSEventRecord) {
     return
   }
 
-  const userData = {
-    sub: extractAttributeRequired(userTypeData, 'sub'),
-    email: extractAttributeRequired(userTypeData, 'email'),
-    name: extractAttribute(userTypeData, 'name'),
-    affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
-  }
+  const userData = userTypeData
+    ? {
+        sub: extractAttributeRequired(userTypeData, 'sub'),
+        email: extractAttributeRequired(userTypeData, 'email'),
+        name: extractAttribute(userTypeData, 'name'),
+        affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
+      }
+    : {
+        sub: legacyUserData.email,
+        email: legacyUserData.email,
+        name: legacyUserData.name,
+        affiliation: legacyUserData.affiliation,
+      }
 
   const circular = {
     dummy: 0,
@@ -102,7 +114,6 @@ async function handleRecord(record: SNSEventRecord) {
     sub: userData.sub,
     submitter: formatAuthor(userData),
   }
-
   const autoIncrement = await getDynamoDBAutoIncrement()
   const newCircularId = await autoIncrement.put(circular)
 
@@ -119,4 +130,13 @@ export async function handler(event: SNSEvent) {
   const results = await Promise.allSettled(event.Records.map(handleRecord))
   const rejections = results.filter(isRejected).map(({ reason }) => reason)
   if (rejections.length) throw rejections
+}
+
+/**
+ * Returns an entry from the legacy_users table, or undefined if none exists
+ * @param userEmail
+ */
+async function getLegacyUser(userEmail: string) {
+  const db = await tables()
+  return await db.legacy_users.get({ email: userEmail })
 }

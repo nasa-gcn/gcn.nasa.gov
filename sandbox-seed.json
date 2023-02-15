@@ -2049,5 +2049,12 @@
       "dummy": 0
     }
   ],
-  "auto_increment_metadata": [{ "tableName": "circulars", "circularId": 256 }]
+  "auto_increment_metadata": [{ "tableName": "circulars", "circularId": 256 }],
+  "legacy_users": [
+    {
+      "email": "example.user@example.com",
+      "name": "Firstname Lastname",
+      "affiliation": "NASA"
+    }
+  ]
 }
