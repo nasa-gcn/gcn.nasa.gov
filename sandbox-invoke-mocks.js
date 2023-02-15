@@ -1,9 +1,50 @@
+const testString = `From: "LastName, FirstName"
+    <example.user@example.com>
+To: "circulars@dev.gcn.nasa.gov" <circulars@dev.gcn.nasa.gov>
+Subject: GRB 230207B: Detection by GRBAlpha
+Thread-Topic: GRB 230207B: Detection by GRBAlpha
+Thread-Index: Adk9dI5aYPr6M3WhQFmrIV1eoz5z1A==
+Date: Fri, 10 Feb 2023 17:24:40 +0000
+Accept-Language: en-US
+Content-Language: en-US
+Content-Type: multipart/alternative;
+    boundary="_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_"
+MIME-Version: 1.0
+
+--_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+
+There is no strife, no prejudice, no national conflict in outer space as yet. Its hazards are hostile to us all. Its conquest deserves the best of all mankind, and its opportunity for peaceful cooperation many never come again. But why, some say, the moon? Why choose this as our goal? And they may well ask why climb the highest mountain? Why, 35 years ago, fly the Atlantic? Why does Rice play Texas?
+
+We choose to go to the moon. We choose to go to the moon in this decade and do the other things, not because they are easy, but because they are hard, because that goal will serve to organize and measure the best of our energies and skills, because that challenge is one that we are willing to accept, one we are unwilling to postpone, and one which we intend to win, and the others, too.
+
+It is for these reasons that I regard the decision last year to shift our efforts in space from low to high gear as among the most important decisions that will be made during my incumbency in the office of the Presidency.
+
+In the last 24 hours we have seen facilities now being created for the greatest and most complex exploration in man's history. We have felt the ground shake and the air shattered by the testing of a Saturn C-1 booster rocket, many times as powerful as the Atlas which launched John Glenn, generating power equivalent to 10,000 automobiles with their accelerators on the floor. We have seen the site where the F-1 rocket engines, each one as powerful as all eight engines of the Saturn combined, will be clustered together to make the advanced Saturn missile, assembled in a new building to be built at Cape Canaveral as tall as a 48 story structure, as wide as a city block, and as long as two lengths of this field.
+
+There is no strife, no prejudice, no national conflict in outer space as yet. Its hazards are hostile to us all. Its conquest deserves the best of all mankind, and its opportunity for peaceful cooperation many never come again. But why, some say, the moon? Why choose this as 
+our goal? And they may well ask why climb the highest mountain? Why, 35 years ago, fly the Atlantic? Why does Rice play Texas?
+
+We choose to go to the moon. We choose to go to the moon in this decade and do the other things, not because they are easy, but because they are hard, because that goal will serve to organize and measure the best of our energies and skills, because that challenge is one that 
+we are willing to accept, one we are unwilling to postpone, and one which we intend to win, and the others, too.
+
+It is for these reasons that I regard the decision last year to shift our efforts in space from low to high gear as among the most important decisions that will be made during my incumbency in the office of the Presidency.
+
+In the last 24 hours we have seen facilities now being created for the greatest and most complex exploration in man's history. We have felt the ground shake and the air shattered by the testing of a Saturn C-1 booster rocket, many times as powerful as the Atlas which launched John Glenn, generating power equivalent to 10,000 automobiles with their accelerators on the floor. We have seen the site where the F-1 rocket engines, each one as powerful as all eight engines of the Saturn combined, will be clustered together to make the advanced Saturn missile, assembled in a new building to be built at Cape Canaveral as tall as a 48 story structure, as wide as a city block, and as long as 
+two lengths of this field.
+
+¢ £ ¤ ¥ ¦ § ¨ © ª « ¶ µ À Á Â Ã
+
+--_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
+`
+
 module.exports = {
   events: {
     'email-incoming': {
       main: {
-        content:
-          'RnJvbTogIkxhc3ROYW1lLCBGaXJzdE5hbWUiCiAgICAgICAgPGV4YW1wbGUudXNlckBleGFtcGxlLmNvbT4KVG86ICJjaXJjdWxhcnNAZGV2Lmdjbi5uYXNhLmdvdiIgPGNpcmN1bGFyc0BkZXYuZ2NuLm5hc2EuZ292PgpTdWJqZWN0OiBHUkIgMjMwMjA3QjogRGV0ZWN0aW9uIGJ5IEdSQkFscGhhClRocmVhZC1Ub3BpYzogR1JCIDIzMDIwN0I6IERldGVjdGlvbiBieSBHUkJBbHBoYQpUaHJlYWQtSW5kZXg6IEFkazlkSTVhWVByNk0zV2hRRm1ySVYxZW96NXoxQT09CkRhdGU6IEZyaSwgMTAgRmViIDIwMjMgMTc6MjQ6NDAgKzAwMDAKQWNjZXB0LUxhbmd1YWdlOiBlbi1VUwpDb250ZW50LUxhbmd1YWdlOiBlbi1VUwpDb250ZW50LVR5cGU6IG11bHRpcGFydC9hbHRlcm5hdGl2ZTsKICAgICAgICBib3VuZGFyeT0iXzAwMF9QSDBQUjA5TUI3ODg0MEQ5NjdCRjNBQTNGMTlFNjRBOTZBMURFOVBIMFBSMDlNQjc4ODRuYW1wXyIKTUlNRS1WZXJzaW9uOiAxLjAKCi0tXzAwMF9QSDBQUjA5TUI3ODg0MEQ5NjdCRjNBQTNGMTlFNjRBOTZBMURFOVBIMFBSMDlNQjc4ODRuYW1wXwpDb250ZW50LVR5cGU6IHRleHQvcGxhaW47IGNoYXJzZXQ9InVzLWFzY2lpIgpDb250ZW50LVRyYW5zZmVyLUVuY29kaW5nOiBxdW90ZWQtcHJpbnRhYmxlCgoKVGhlcmUgaXMgbm8gc3RyaWZlLCBubyBwcmVqdWRpY2UsIG5vIG5hdGlvbmFsIGNvbmZsaWN0IGluIG91dGVyIHNwYWNlIGFzIHlldC4gSXRzIGhhemFyZHMgYXJlIGhvc3RpbGUgdG8gdXMgYWxsLiBJdHMgY29ucXVlc3QgZGVzZXJ2ZXMgdGhlIGJlc3Qgb2YgYWxsIG1hbmtpbmQsIGFuZCBpdHMgb3Bwb3J0dW5pdHkgZm9yIHBlYWNlZnVsIGNvb3BlcmF0aW9uIG1hbnkgbmV2ZXIgY29tZSBhZ2Fpbi4gQnV0IHdoeSwgc29tZSBzYXksIHRoZSBtb29uPyBXaHkgY2hvb3NlIHRoaXMgYXMgb3VyIGdvYWw/IEFuZCB0aGV5IG1heSB3ZWxsIGFzayB3aHkgY2xpbWIgdGhlIGhpZ2hlc3QgbW91bnRhaW4/IFdoeSwgMzUgeWVhcnMgYWdvLCBmbHkgdGhlIEF0bGFudGljPyBXaHkgZG9lcyBSaWNlIHBsYXkgVGV4YXM/CgpXZSBjaG9vc2UgdG8gZ28gdG8gdGhlIG1vb24uIFdlIGNob29zZSB0byBnbyB0byB0aGUgbW9vbiBpbiB0aGlzIGRlY2FkZSBhbmQgZG8gdGhlIG90aGVyIHRoaW5ncywgbm90IGJlY2F1c2UgdGhleSBhcmUgZWFzeSwgYnV0IGJlY2F1c2UgdGhleSBhcmUgaGFyZCwgYmVjYXVzZSB0aGF0IGdvYWwgd2lsbCBzZXJ2ZSB0byBvcmdhbml6ZSBhbmQgbWVhc3VyZSB0aGUgYmVzdCBvZiBvdXIgZW5lcmdpZXMgYW5kIHNraWxscywgYmVjYXVzZSB0aGF0IGNoYWxsZW5nZSBpcyBvbmUgdGhhdCB3ZSBhcmUgd2lsbGluZyB0byBhY2NlcHQsIG9uZSB3ZSBhcmUgdW53aWxsaW5nIHRvIHBvc3Rwb25lLCBhbmQgb25lIHdoaWNoIHdlIGludGVuZCB0byB3aW4sIGFuZCB0aGUgb3RoZXJzLCB0b28uCgpJdCBpcyBmb3IgdGhlc2UgcmVhc29ucyB0aGF0IEkgcmVnYXJkIHRoZSBkZWNpc2lvbiBsYXN0IHllYXIgdG8gc2hpZnQgb3VyIGVmZm9ydHMgaW4gc3BhY2UgZnJvbSBsb3cgdG8gaGlnaCBnZWFyIGFzIGFtb25nIHRoZSBtb3N0IGltcG9ydGFudCBkZWNpc2lvbnMgdGhhdCB3aWxsIGJlIG1hZGUgZHVyaW5nIG15IGluY3VtYmVuY3kgaW4gdGhlIG9mZmljZSBvZiB0aGUgUHJlc2lkZW5jeS4KCkluIHRoZSBsYXN0IDI0IGhvdXJzIHdlIGhhdmUgc2VlbiBmYWNpbGl0aWVzIG5vdyBiZWluZyBjcmVhdGVkIGZvciB0aGUgZ3JlYXRlc3QgYW5kIG1vc3QgY29tcGxleCBleHBsb3JhdGlvbiBpbiBtYW4ncyBoaXN0b3J5LiBXZSBoYXZlIGZlbHQgdGhlIGdyb3VuZCBzaGFrZSBhbmQgdGhlIGFpciBzaGF0dGVyZWQgYnkgdGhlIHRlc3Rpbmcgb2YgYSBTYXR1cm4gQy0xIGJvb3N0ZXIgcm9ja2V0LCBtYW55IHRpbWVzIGFzIHBvd2VyZnVsIGFzIHRoZSBBdGxhcyB3aGljaCBsYXVuY2hlZCBKb2huIEdsZW5uLCBnZW5lcmF0aW5nIHBvd2VyIGVxdWl2YWxlbnQgdG8gMTAsMDAwIGF1dG9tb2JpbGVzIHdpdGggdGhlaXIgYWNjZWxlcmF0b3JzIG9uIHRoZSBmbG9vci4gV2UgaGF2ZSBzZWVuIHRoZSBzaXRlIHdoZXJlIHRoZSBGLTEgcm9ja2V0IGVuZ2luZXMsIGVhY2ggb25lIGFzIHBvd2VyZnVsIGFzIGFsbCBlaWdodCBlbmdpbmVzIG9mIHRoZSBTYXR1cm4gY29tYmluZWQsIHdpbGwgYmUgY2x1c3RlcmVkIHRvZ2V0aGVyIHRvIG1ha2UgdGhlIGFkdmFuY2VkIFNhdHVybiBtaXNzaWxlLCBhc3NlbWJsZWQgaW4gYSBuZXcgYnVpbGRpbmcgdG8gYmUgYnVpbHQgYXQgQ2FwZSBDYW5hdmVyYWwgYXMgdGFsbCBhcyBhIDQ4IHN0b3J5IHN0cnVjdHVyZSwgYXMgd2lkZSBhcyBhIGNpdHkgYmxvY2ssIGFuZCBhcyBsb25nIGFzIHR3byBsZW5ndGhzIG9mIHRoaXMgZmllbGQuCgotLV8wMDBfUEgwUFIwOU1CNzg4NDBEOTY3QkYzQUEzRjE5RTY0QTk2QTFERTlQSDBQUjA5TUI3ODg0bmFtcF8=',
+        content: Buffer.from(testString).toString('base64'),
       },
     },
   },

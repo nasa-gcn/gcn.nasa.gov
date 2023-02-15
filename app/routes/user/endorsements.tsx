@@ -7,9 +7,15 @@
  */
 
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Form, useFetcher, useLoaderData } from '@remix-run/react'
+import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Label } from '@trussworks/react-uswds'
-import { useEffect, useState } from 'react'
+import {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 import type {
@@ -101,38 +107,93 @@ export default function () {
   return (
     <>
       <h1>Peer Endorsements</h1>
+      <p className="usa-intro">
+        Anyone can become a <Link to="/circulars">GCN Circulars</Link> submitter
+        by receiving a <i>peer endorsement</i> from an existing submitter. An
+        endorsement vouches that the user is in good standing with the astronomy
+        community.
+      </p>
+      <p className="usa-paragraph">
+        Peer endorsements (inspired by{' '}
+        <a rel="external" href="https://info.arxiv.org/help/endorsement.html">
+          arXiv
+        </a>
+        ) help us to grow the GCN community sustainably while protecting the
+        research integrity of GCN Circulars. We welcome submitters of diverse
+        backgrounds including professional astronomers, amateurs, educators, and
+        students.
+      </p>
       {userIsSubmitter ? (
         <>
+          <h2>Approve Endorsements</h2>
           <p className="usa-paragraph">
-            As an approved submitter, you may submit new GCN Circulars. Other
-            users may also request an endorsement from you, which you may
-            approve, deny, or report in the case of spam.
+            <b>You are a GCN Circulars submitter.</b> You can{' '}
+            <Link to="/circulars/new">submit GCN Circulars</Link>, and other
+            users can request peer endorsements from you. You may take any of
+            the following actions for peer endorsement requests:
           </p>
-          {awaitingEndorsements.length > 0 && (
-            <>
-              <h2>Requests awaiting your review</h2>
-              <SegmentedCards>
-                {awaitingEndorsements.map((request) => (
-                  <EndorsementRequestCard
-                    key={request.requestorSub}
-                    role="endorser"
-                    endorsementRequest={request}
-                  />
-                ))}
-              </SegmentedCards>
-            </>
+          <ol className="usa-list">
+            <li>
+              <b>Approve</b> if you know the user and you can vouch that they
+              are in good standing.
+            </li>
+            <li>
+              <b>Reject</b> if you do not know the user or cannot vouch for
+              them.
+            </li>
+            <li>
+              <b>Reject and Report</b> if you believe that the request is spam
+              or is from a bot.
+            </li>
+          </ol>
+          <h3>Requests awaiting your review</h3>
+          {awaitingEndorsements.length > 0 ? (
+            <SegmentedCards>
+              {awaitingEndorsements.map((request) => (
+                <EndorsementRequestCard
+                  key={request.requestorSub}
+                  role="endorser"
+                  endorsementRequest={request}
+                />
+              ))}
+            </SegmentedCards>
+          ) : (
+            <p className="usa-paragraph">
+              You have no peer endorsement requests right now. When you do, they
+              will appear here.
+            </p>
           )}
         </>
       ) : (
-        <div>
+        <>
+          <h2>Request Endorsements</h2>
           <p className="usa-paragraph">
-            In order to submit GCN Circulars, you must be endorsed by an already
-            approved user.
+            <b>
+              You are not yet a GCN Circulars submitter. Use the form below to
+              request an endorsement from an existing GCN Circulars user.
+            </b>{' '}
+            This should be someone who you know and who knows you: a fellow
+            researcher, an advisor, or an instructor.
+          </p>
+          <p className="usa-paragraph">
+            If you don't find anyone who you recognize, then{' '}
+            <a
+              rel="external"
+              href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic"
+            >
+              contact us for help
+            </a>
+            .
           </p>
           <EndorsementRequestForm />
           {requestedEndorsements.length > 0 && (
-            <div>
-              <h2>Your Pending Requests</h2>
+            <>
+              <h3>Your Endorsement Requests</h3>
+              <p className="usa-paragraph">
+                You are waiting on pending endorsements. When any of the users
+                below approves your request, you will become a GCN Circulars
+                submitter.
+              </p>
               <SegmentedCards>
                 {requestedEndorsements.map((request) => (
                   <EndorsementRequestCard
@@ -142,9 +203,9 @@ export default function () {
                   />
                 ))}
               </SegmentedCards>
-            </div>
+            </>
           )}
-        </div>
+        </>
       )}
     </>
   )
@@ -241,14 +302,23 @@ export function EndorsementRequestCard({
   )
 }
 
-function EndorserComboBox({
-  disabled,
-  className,
-  ...props
-}: { disabled?: boolean; className?: string } & Omit<
-  UseComboboxProps<EndorsementUser>,
-  'items' | 'onInputValueChange' | 'itemToString'
->) {
+interface EndorsementComboBoxProps
+  extends Omit<
+    UseComboboxProps<EndorsementUser>,
+    'items' | 'onInputValueChange' | 'itemToString'
+  > {
+  disabled?: boolean
+  className?: string
+}
+
+interface EndorsementComboBoxHandle {
+  reset: () => void
+}
+
+const EndorserComboBox = forwardRef<
+  EndorsementComboBoxHandle,
+  EndorsementComboBoxProps
+>(({ disabled, className, ...props }, ref) => {
   const fetcher = useFetcher<typeof action>()
   const [items, setItems] = useState<EndorsementUser[]>([])
 
@@ -283,6 +353,14 @@ function EndorserComboBox({
     ...props,
   })
 
+  useImperativeHandle(
+    ref,
+    () => ({
+      reset,
+    }),
+    [reset]
+  )
+
   const loading = fetcher.state === 'submitting'
   const pristine = Boolean(selectedItem)
 
@@ -298,6 +376,7 @@ function EndorserComboBox({
         autoCapitalize="off"
         autoComplete="off"
         className="usa-combo-box__input"
+        disabled={disabled}
         {...getInputProps()}
         // Funky escape sequence is a zero-width character to prevent Safari
         // from attempting to autofill the user's own email address, which
@@ -360,20 +439,23 @@ function EndorserComboBox({
       </ul>
     </div>
   )
-}
+})
 
 export function EndorsementRequestForm() {
-  const [endorserSub, setEndorserSub] = useState<string | undefined>()
+  const ref = useRef<EndorsementComboBoxHandle>(null)
+  const [endorserSub, setEndorserSub] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+  const fetcher = useFetcher()
+
+  useEffect(() => {
+    if (fetcher.state === 'idle' && submitting) {
+      setSubmitting(false)
+      ref.current?.reset()
+    }
+  }, [ref, fetcher.state, submitting])
 
   return (
-    <Form method="post">
-      <h2 id="modal-request-heading">Request Endorsement</h2>
-      <p className="usa-paragraph">
-        Requesting an endorsement from another user will share your email with
-        that individual. Please keep this in mind when submitting. Enter the
-        email of the individual you want to be endorsed by. They will receive a
-        notification alerting them to this request.
-      </p>
+    <fetcher.Form method="post" onSubmit={() => setSubmitting(true)}>
       <input type="hidden" name="endorserSub" value={endorserSub} />
       <Grid row>
         <Grid col="fill">
@@ -382,8 +464,10 @@ export function EndorsementRequestForm() {
           </Label>
           <EndorserComboBox
             className="maxw-full"
+            disabled={submitting}
+            ref={ref}
             onSelectedItemChange={({ selectedItem }) =>
-              setEndorserSub(selectedItem?.sub)
+              setEndorserSub(selectedItem?.sub ?? '')
             }
           />
         </Grid>
@@ -392,13 +476,13 @@ export function EndorsementRequestForm() {
             type="submit"
             name="intent"
             value="create"
-            disabled={!endorserSub?.length}
+            disabled={submitting || !endorserSub}
             className="margin-top-1 margin-left-1"
           >
-            Submit
+            {submitting ? 'Requesting...' : 'Request'}
           </Button>
         </Grid>
       </Grid>
-    </Form>
+    </fetcher.Form>
   )
 }
