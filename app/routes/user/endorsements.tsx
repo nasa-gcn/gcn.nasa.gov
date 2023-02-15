@@ -125,24 +125,43 @@ export default function () {
       </p>
       {userIsSubmitter ? (
         <>
+          <h2>Approve Endorsements</h2>
           <p className="usa-paragraph">
-            As an approved submitter, you may submit new GCN Circulars. Other
-            users may also request an endorsement from you, which you may
-            approve, deny, or report in the case of spam.
+            <b>You are a GCN Circulars submitter.</b> You can{' '}
+            <Link to="/circulars/new">submit GCN Circulars</Link>, and other
+            users can request peer endorsements from you. You may take any of
+            the following actions for peer endorsement requests:
           </p>
-          {awaitingEndorsements.length > 0 && (
-            <>
-              <h2>Requests awaiting your review</h2>
-              <SegmentedCards>
-                {awaitingEndorsements.map((request) => (
-                  <EndorsementRequestCard
-                    key={request.requestorSub}
-                    role="endorser"
-                    endorsementRequest={request}
-                  />
-                ))}
-              </SegmentedCards>
-            </>
+          <ol className="usa-list">
+            <li>
+              <b>Approve</b> if you know the user and you can vouch that they
+              are in good standing.
+            </li>
+            <li>
+              <b>Reject</b> if you do not know the user or cannot vouch for
+              them.
+            </li>
+            <li>
+              <b>Reject and Report</b> if you believe that the request is spam
+              or is from a bot.
+            </li>
+          </ol>
+          <h3>Requests awaiting your review</h3>
+          {awaitingEndorsements.length > 0 ? (
+            <SegmentedCards>
+              {awaitingEndorsements.map((request) => (
+                <EndorsementRequestCard
+                  key={request.requestorSub}
+                  role="endorser"
+                  endorsementRequest={request}
+                />
+              ))}
+            </SegmentedCards>
+          ) : (
+            <p className="usa-paragraph">
+              You have no peer endorsement requests right now. When you do, they
+              will appear here.
+            </p>
           )}
         </>
       ) : (
