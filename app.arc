@@ -37,6 +37,9 @@ circulars
 auto_increment_metadata
   tableName *String
 
+legacy_users
+  email *String
+
 @tables-indexes
 email_notification_subscription
   topic *String
