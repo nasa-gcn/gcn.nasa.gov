@@ -13,11 +13,11 @@ import {
 
 The following steps guide new instrument, mission, or observatory producers
 into setting up new notices streams that are distributed to the user community
-via [Kafka](faq#what-is-kafka). This process requires interactions
+via [Kafka](faq#what-is-kafka). This process requires interaction
 with the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-to enable these accounts and topics are setup on the GCN Kafka broker,
-and we are happy to work together to help you define schema utilizing our
-core JSON schema.
+to enable accounts and kafka topics creation on the GCN Kafka broker. The GCN Team is
+also happy to work with the mission teams to help construct your alert schema
+utilizing our core JSON schema.
 
 ## Steps to Start Publishing Alerts
 
@@ -53,13 +53,12 @@ core JSON schema.
          Producer Example Code
       </ProcessListHeading>
       - Log out and log back in.
-      - Go through the "Start Streaming GCN Notices" process.
-      - On Step 2 of ["Start Streaming GCN Notices"](../quickstart),
-      choose the `scope gcn.nasa.gov/kafka-MissionName-producer`.
+      - Go through the [Start Streaming GCN Notices](/quickstart) process.
+      - On Step 2, choose the scope <code>gcn.nasa.gov/kafka-<i>MissionName</i>-producer</code>.
       - Your producer code will look very similar to the [client example code](docs/client) and
-      Step 4 of ["Start Streaming GCN Notices"](../quickstart). `client_id` and `client_secret`
+      Step 4 of [Start Streaming GCN Notices](/quickstart). `client_id` and `client_secret`
       can be found in Step 4 client example code.
-      - Start from this and adjust as you see fit:
+      - Start from this and adjust the 'client_id', 'client_secret', 'topic' and data content:
 
       ```python
       from gcn_kafka import Producer
@@ -77,7 +76,7 @@ core JSON schema.
       <ProcessListHeading type="h3">
          Mission Page
       </ProcessListHeading>
-      Please create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls)
+      Create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls)
 or by emailing text to the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
    </ProcessListItem>
 
