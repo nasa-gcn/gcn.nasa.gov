@@ -13,6 +13,7 @@ fingerprint external
 client_credentials
   sub *String
   client_id **String
+  PointInTimeRecovery true
 
 sessions
   _idx *String
@@ -21,21 +22,26 @@ sessions
 email_notification
   sub *String
   uuid **String
+  PointInTimeRecovery true
 
 email_notification_subscription
   uuid *String
   topic **String
+  PointInTimeRecovery true
 
 circular_endorsements
   requestorSub *String
   endorserSub **String
+  PointInTimeRecovery true
 
 circulars
   dummy *Number  # dummy partition key so that all records are stored in one partition
   circularId **Number
+  PointInTimeRecovery true
 
 auto_increment_metadata
   tableName *String
+  PointInTimeRecovery true
 
 @tables-indexes
 email_notification_subscription

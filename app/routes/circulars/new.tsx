@@ -15,21 +15,28 @@ import {
   Button,
   ButtonGroup,
   Icon,
+  Modal,
+  ModalHeading,
+  ModalFooter,
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import dedent from 'ts-dedent'
 import Spinner from '~/components/Spinner'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
-import { feature } from '~/root'
+import { feature, useUrl } from '~/root'
 import { group } from './circulars.server'
 
 export async function loader({ request }: DataFunctionArgs) {
   if (!feature('circulars')) throw new Response(null, { status: 404 })
   const user = await getUser(request)
-  if (!user?.groups.includes(group)) throw new Response(null, { status: 403 })
-  const formattedAuthor = formatAuthor(user)
-  return { formattedAuthor }
+  let isAuthenticated, isAuthorized, formattedAuthor
+  if (user) {
+    isAuthenticated = true
+    if (user.groups.includes(group)) isAuthorized = true
+    formattedAuthor = formatAuthor(user)
+  }
+  return { isAuthenticated, isAuthorized, formattedAuthor }
 }
 
 function useSubjectPlaceholder() {
@@ -51,7 +58,8 @@ function useBodyPlaceholder() {
 }
 
 export default function () {
-  const { formattedAuthor } = useLoaderData<typeof loader>()
+  const { isAuthenticated, isAuthorized, formattedAuthor } =
+    useLoaderData<typeof loader>()
   const [subjectValid, setSubjectValid] = useState<boolean | undefined>()
   const [bodyValid, setBodyValid] = useState<boolean | undefined>()
   const sending = Boolean(useNavigation().formData)
@@ -144,6 +152,54 @@ export default function () {
           )}
         </ButtonGroup>
       </Form>
+      {isAuthorized || <ModalUnauthorized isAuthenticated={isAuthenticated} />}
     </>
+  )
+}
+
+function PeerEndorsementButton() {
+  return (
+    <Link to="/user/endorsements">
+      <Button type="button">Get a peer endorsement</Button>
+    </Link>
+  )
+}
+
+function SignInButton() {
+  const url = useUrl()
+  return (
+    <Link to={`/login?redirect=${encodeURIComponent(url)}`}>
+      <Button type="button">Sign in</Button>
+    </Link>
+  )
+}
+
+function ModalUnauthorized({ isAuthenticated }: { isAuthenticated?: boolean }) {
+  return (
+    <Modal
+      id="modal-unauthorized"
+      aria-labelledby="modal-unauthorized-heading"
+      aria-describedby="modal-unauthorized-description"
+      isInitiallyOpen={true}
+      forceAction={true}
+      renderToPortal={false}
+    >
+      <ModalHeading id="modal-unauthorized-heading">
+        Get started submitting GCN Circulars
+      </ModalHeading>
+      <p id="modal-unauthorized-description">
+        In order to submit a GCN Circular, you must{' '}
+        {isAuthenticated || 'sign in and '}
+        get a peer endorsement from an existing GCN Circulars user.
+      </p>
+      <ModalFooter>
+        <Link to="/circulars">
+          <Button type="button" outline>
+            Cancel
+          </Button>
+        </Link>
+        {isAuthenticated ? <PeerEndorsementButton /> : <SignInButton />}
+      </ModalFooter>
+    </Modal>
   )
 }

@@ -119,7 +119,7 @@ export class EndorsementsServer {
         ':requestorSub': this.#sub,
       },
       ConditionExpression:
-        'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub)',
+        'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub and #status <> :status)',
     })
   }
 
@@ -242,41 +242,21 @@ export class EndorsementsServer {
    * the current user to select from when creating a new endorsement request.
    *
    * @returns a list of users in the circular-submitter group,
-   * not including the current user.
+   * not including the current user or an users from which endorsements have
+   * already been requested.
    */
-  async getSubmitterUsers(): Promise<EndorsementUser[]> {
-    const command = new ListUsersInGroupCommand({
-      GroupName: group,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
+  async getSubmitterUsers() {
+    const [users, requests] = await Promise.all([
+      getUsersInGroup(),
+      this.getEndorsements('requestor'),
+    ])
 
-    let response
-    try {
-      response = await client.send(command)
-    } catch (error) {
-      maybeThrow(error, 'returning fake users')
-      return [
-        {
-          sub: crypto.randomUUID(),
-          email: 'a.einstein@example.com',
-          name: 'Albert Einstein',
-        },
-        {
-          sub: crypto.randomUUID(),
-          email: 'c.sagan@example.com',
-          name: 'Carl Sagan',
-        },
-      ]
-    }
+    const excludedSubs = new Set([
+      this.#sub,
+      ...requests.map(({ endorserSub }) => endorserSub),
+    ])
 
-    return (
-      response.Users?.map((user) => ({
-        sub: extractAttributeRequired(user, 'sub'),
-        email: extractAttributeRequired(user, 'email'),
-        name: extractAttribute(user, 'name'),
-        affiliation: extractAttribute(user, 'custom:affiliation'),
-      })).filter(({ sub }) => sub !== this.#sub) ?? []
-    )
+    return users.filter(({ sub }) => !excludedSubs.has(sub))
   }
 
   /**
@@ -323,4 +303,39 @@ export class EndorsementsServer {
       })
     )
   }
+}
+
+async function getUsersInGroup(): Promise<EndorsementUser[]> {
+  const command = new ListUsersInGroupCommand({
+    GroupName: group,
+    UserPoolId: process.env.COGNITO_USER_POOL_ID,
+  })
+
+  let response
+  try {
+    response = await client.send(command)
+  } catch (error) {
+    maybeThrow(error, 'returning fake users')
+    return [
+      {
+        sub: crypto.randomUUID(),
+        email: 'a.einstein@example.com',
+        name: 'Albert Einstein',
+      },
+      {
+        sub: crypto.randomUUID(),
+        email: 'c.sagan@example.com',
+        name: 'Carl Sagan',
+      },
+    ]
+  }
+
+  return (
+    response.Users?.map((user) => ({
+      sub: extractAttributeRequired(user, 'sub'),
+      email: extractAttributeRequired(user, 'email'),
+      name: extractAttribute(user, 'name'),
+      affiliation: extractAttribute(user, 'custom:affiliation'),
+    })) ?? []
+  )
 }
