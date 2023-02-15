@@ -147,6 +147,25 @@ export default function () {
         </>
       ) : (
         <>
+          <h2>Request Endorsements</h2>
+          <p className="usa-paragraph">
+            <b>
+              You are not yet a GCN Circulars submitter. Use the form below to
+              request an endorsement from an existing GCN Circulars user.
+            </b>{' '}
+            This should be someone who you know and who knows you: a fellow
+            researcher, an advisor, or an instructor.
+          </p>
+          <p className="usa-paragraph">
+            If you don't find anyone who you recognize, then{' '}
+            <a
+              rel="external"
+              href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic"
+            >
+              contact us for help
+            </a>
+            .
+          </p>
           <EndorsementRequestForm />
           {requestedEndorsements.length > 0 && (
             <>
@@ -418,25 +437,6 @@ export function EndorsementRequestForm() {
 
   return (
     <fetcher.Form method="post" onSubmit={() => setSubmitting(true)}>
-      <h2>Request Endorsement</h2>
-      <p className="usa-paragraph">
-        <b>
-          You are not yet a GCN Circulars submitter. Use the form below to
-          request an endorsement from an existing GCN Circulars user.
-        </b>{' '}
-        This should be someone who you know and who knows you: a fellow
-        researcher, an advisor, or an instructor.
-      </p>
-      <p className="usa-paragraph">
-        If you don't find anyone who you recognize, then{' '}
-        <a
-          rel="external"
-          href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic"
-        >
-          contact us for help
-        </a>
-        .
-      </p>
       <input type="hidden" name="endorserSub" value={endorserSub} />
       <Grid row>
         <Grid col="fill">
