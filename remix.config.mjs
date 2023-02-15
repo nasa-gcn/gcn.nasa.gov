@@ -36,3 +36,4 @@ export const ignoredRouteFiles = ['**/.*', '**/*.lib.*']
 export const publicPath = '/_static/build/'
 export const server = './server.js'
 export const serverBuildPath = 'server/index.js'
+export const serverMinify = true
