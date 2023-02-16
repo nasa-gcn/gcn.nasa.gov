@@ -134,14 +134,14 @@ async function getCognitoUserData(
   const userTypeData = data.Users?.find(
     (user) => extractAttributeRequired(user, 'email') == userEmail
   )
-  return userTypeData
-    ? {
-        sub: extractAttributeRequired(userTypeData, 'sub'),
-        email: extractAttributeRequired(userTypeData, 'email'),
-        name: extractAttribute(userTypeData, 'name'),
-        affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
-      }
-    : undefined
+  return (
+    userTypeData && {
+      sub: extractAttributeRequired(userTypeData, 'sub'),
+      email: extractAttributeRequired(userTypeData, 'email'),
+      name: extractAttribute(userTypeData, 'name'),
+      affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
+    }
+  )
 }
 
 /**
@@ -154,11 +154,11 @@ async function getLegacyUserData(
 ): Promise<UserData | undefined> {
   const db = await tables()
   const data = await db.legacy_users.get({ email: userEmail })
-  return data
-    ? {
-        email: data.email,
-        name: data.name,
-        affiliation: data.affiliation,
-      }
-    : undefined
+  return (
+    data && {
+      email: data.email,
+      name: data.name,
+      affiliation: data.affiliation,
+    }
+  )
 }
