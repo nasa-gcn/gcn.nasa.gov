@@ -7,6 +7,7 @@
  */
 
 import {
+  MessageRejected,
   SendEmailCommand,
   SESv2Client,
   SESv2ServiceException,
@@ -45,7 +46,11 @@ export async function sendEmail(
   try {
     await client.send(command)
   } catch (e) {
-    if (
+    if (e instanceof MessageRejected && hostname == 'localhost') {
+      console.warn(`Emails will not send if ORIGIN is unset. The following would be sent: 
+      ${body}
+      `)
+    } else if (
       !(
         e instanceof SESv2ServiceException &&
         ['InvalidClientTokenId', 'UnrecognizedClientException'].includes(e.name)
