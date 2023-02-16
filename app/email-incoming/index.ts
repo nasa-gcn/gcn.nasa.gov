@@ -29,6 +29,13 @@ import { sendEmail } from '~/lib/email'
 import { getOrigin } from '~/lib/env'
 import { tables } from '@architect/functions'
 
+interface UserData {
+  email: string
+  sub?: string
+  name?: string
+  affiliation?: string
+}
+
 const cognito = new CognitoIdentityProviderClient({})
 const origin = getOrigin()
 
@@ -67,22 +74,11 @@ async function handleRecord(record: SNSEventRecord) {
     return
   }
 
-  // Check if submitter is in the submitters group
-  const data = await cognito.send(
-    new ListUsersInGroupCommand({
-      GroupName: group,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
-  )
+  const userData =
+    (await getCognitoUserData(userEmail)) ??
+    (await getLegacyUserData(userEmail))
 
-  const userTypeData = data.Users?.find(
-    (user) => extractAttributeRequired(user, 'email') == userEmail
-  )
-  const legacyUserData = !userTypeData
-    ? await getLegacyUser(userEmail)
-    : undefined
-
-  if (!userTypeData && !legacyUserData) {
+  if (!userData) {
     await sendEmail(
       'GCN Circulars',
       userEmail,
@@ -92,20 +88,6 @@ async function handleRecord(record: SNSEventRecord) {
     return
   }
 
-  const userData = userTypeData
-    ? {
-        sub: extractAttributeRequired(userTypeData, 'sub'),
-        email: extractAttributeRequired(userTypeData, 'email'),
-        name: extractAttribute(userTypeData, 'name'),
-        affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
-      }
-    : {
-        sub: legacyUserData.email,
-        email: legacyUserData.email,
-        name: legacyUserData.name,
-        affiliation: legacyUserData.affiliation,
-      }
-
   const circular = {
     dummy: 0,
     createdOn: Date.now(),
@@ -114,6 +96,9 @@ async function handleRecord(record: SNSEventRecord) {
     sub: userData.sub,
     submitter: formatAuthor(userData),
   }
+
+  // Removes sub as a property if it is undefined from the legacy users
+  if (!circular.sub) delete circular.sub
   const autoIncrement = await getDynamoDBAutoIncrement()
   const newCircularId = await autoIncrement.put(circular)
 
@@ -133,10 +118,47 @@ export async function handler(event: SNSEvent) {
 }
 
 /**
- * Returns an entry from the legacy_users table, or undefined if none exists
+ * Returns a UserData object constructed from cognito if the
+ * user is in the Submitters group
  * @param userEmail
  */
-async function getLegacyUser(userEmail: string) {
+async function getCognitoUserData(
+  userEmail: string
+): Promise<UserData | undefined> {
+  const data = await cognito.send(
+    new ListUsersInGroupCommand({
+      GroupName: group,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    })
+  )
+  const userTypeData = data.Users?.find(
+    (user) => extractAttributeRequired(user, 'email') == userEmail
+  )
+  return userTypeData
+    ? {
+        sub: extractAttributeRequired(userTypeData, 'sub'),
+        email: extractAttributeRequired(userTypeData, 'email'),
+        name: extractAttribute(userTypeData, 'name'),
+        affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
+      }
+    : undefined
+}
+
+/**
+ * Returns a UserData object constructed from the legacy_users table
+ * or undefined if none exists
+ * @param userEmail
+ */
+async function getLegacyUserData(
+  userEmail: string
+): Promise<UserData | undefined> {
   const db = await tables()
-  return await db.legacy_users.get({ email: userEmail })
+  const data = await db.legacy_users.get({ email: userEmail })
+  return data
+    ? {
+        email: data.email,
+        name: data.name,
+        affiliation: data.affiliation,
+      }
+    : undefined
 }
