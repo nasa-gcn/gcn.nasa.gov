@@ -24,10 +24,7 @@ import {
   extractAttributeRequired,
   extractAttribute,
 } from '~/lib/cognito.server'
-import {
-  getDynamoDBAutoIncrement,
-  group,
-} from '~/routes/circulars/circulars.server'
+import { group, putRaw } from '~/routes/circulars/circulars.server'
 import { sendEmail } from '~/lib/email.server'
 import { getOrigin } from '~/lib/env.server'
 import { tables } from '@architect/functions'
@@ -92,8 +89,6 @@ async function handleRecord(record: SNSEventRecord) {
   }
 
   const circular = {
-    dummy: 0,
-    createdOn: Date.now(),
     subject: parsed.subject,
     body: parsed.text,
     sub: userData.sub,
@@ -102,8 +97,7 @@ async function handleRecord(record: SNSEventRecord) {
 
   // Removes sub as a property if it is undefined from the legacy users
   if (!circular.sub) delete circular.sub
-  const autoIncrement = await getDynamoDBAutoIncrement()
-  const newCircularId = await autoIncrement.put(circular)
+  const newCircularId = await putRaw(circular)
 
   // Send a success email
   await sendEmail(

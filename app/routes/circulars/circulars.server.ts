@@ -13,6 +13,7 @@ import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import memoizee from 'memoizee'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
+import { search as getSearch } from '~/lib/search.server'
 
 export const group = 'gcn.nasa.gov/circular-submitter'
 
@@ -83,6 +84,62 @@ export async function list({
   return { items: Items, totalPages }
 }
 
+export async function search({
+  query,
+  page,
+  limit,
+}: {
+  query?: string
+  page?: number
+  limit?: number
+}): Promise<{ items: CircularMetadata[]; totalPages: number }> {
+  const client = await getSearch()
+
+  const {
+    body: {
+      hits: {
+        total: { value: totalCount },
+        hits,
+      },
+    },
+  } = await client.search({
+    index: 'circulars',
+    body: {
+      query: query && {
+        multi_match: { query, fields: ['submitter', 'subject', 'body'] },
+      },
+      fields: ['subject'],
+      _source: false,
+      sort: {
+        circularId: {
+          order: 'desc',
+        },
+      },
+      from: page && limit && page * limit,
+      size: limit,
+    },
+  })
+
+  const items = hits.map(
+    ({
+      _id: circularId,
+      fields: {
+        subject: [subject],
+      },
+    }: {
+      _id: string
+      fields: { subject: string[] }
+    }) => ({
+      circularId,
+      subject,
+    })
+  )
+
+  const totalPages = limit ? Math.ceil(totalCount / limit) : 1
+
+  return { items, totalPages }
+}
+
 /** Get a circular by ID. */
 export async function get(circularId: number): Promise<Circular> {
   const db = await tables()
@@ -114,6 +171,24 @@ export async function remove(circularId: number, request: Request) {
 }
 
 /**
+ * Adds a new entry into the GCN Circulars table WITHOUT authentication
+ */
+export async function putRaw<T>(item: T) {
+  const [autoincrement, search] = await Promise.all([
+    getDynamoDBAutoIncrement(),
+    getSearch(),
+  ])
+  const createdOn = Date.now()
+  const circularId = await autoincrement.put({ dummy: 0, createdOn, ...item })
+  await search.index({
+    id: circularId.toString(),
+    index: 'circulars',
+    body: { createdOn, circularId, ...item },
+  })
+  return circularId
+}
+
+/**
  * Adds a new entry into the GCN Circulars table
  *
  * Throws an HTTP error if:
@@ -124,10 +199,7 @@ export async function remove(circularId: number, request: Request) {
  * @param subject - the title/subject line of the Circular
  */
 export async function put(subject: string, body: string, request: Request) {
-  const [user, autoincrement] = await Promise.all([
-    getUser(request),
-    getDynamoDBAutoIncrement(),
-  ])
+  const user = await getUser(request)
   if (!user?.groups.includes(group))
     throw new Response('User is not in the submitters group', {
       status: 403,
@@ -136,9 +208,7 @@ export async function put(subject: string, body: string, request: Request) {
     throw new Response('subject is invalid', { status: 400 })
   if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
 
-  await autoincrement.put({
-    dummy: 0,
-    createdOn: Date.now(),
+  await putRaw({
     subject,
     body,
     sub: user.sub,
