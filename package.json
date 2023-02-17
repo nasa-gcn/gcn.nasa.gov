@@ -29,7 +29,7 @@
     "clean": "rimraf public server/_assets server/index.* server/node_modules email-incoming sam.json sam.yaml .cache"
   },
   "dependencies": {
-    "@architect/functions": "^5.3.3",
+    "@architect/functions": "^5.3.4",
     "@balavishnuvj/remix-seo": "^1.0.2",
     "@nasa-gcn/dynamodb-autoincrement": "^0.0.5",
     "@octokit/rest": "^19.0.7",
