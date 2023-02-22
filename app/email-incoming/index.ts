@@ -20,13 +20,16 @@ import {
   bodyIsValid,
 } from '../routes/circulars/circulars.lib'
 
-import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
+import {
+  extractAttributeRequired,
+  extractAttribute,
+} from '~/lib/cognito.server'
 import {
   getDynamoDBAutoIncrement,
   group,
 } from '~/routes/circulars/circulars.server'
-import { sendEmail } from '~/lib/email'
-import { getOrigin } from '~/lib/env'
+import { sendEmail } from '~/lib/email.server'
+import { getOrigin } from '~/lib/env.server'
 import { tables } from '@architect/functions'
 
 interface UserData {

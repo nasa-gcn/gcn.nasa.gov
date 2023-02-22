@@ -11,7 +11,7 @@ import { topicToFormatAndNoticeType } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
-import { sendEmail } from '~/lib/email'
+import { sendEmail } from '~/lib/email.server'
 
 // db model
 export type EmailNotification = {

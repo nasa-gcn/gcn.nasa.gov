@@ -64,7 +64,7 @@ import favicon_114 from '~/theme/img/favicons/favicon-114.png'
 import favicon_144 from '~/theme/img/favicons/favicon-144.png'
 import favicon_192 from '~/theme/img/favicons/favicon-192.png'
 import { useRouteLoaderData } from './lib/remix'
-import { getOrigin } from './lib/env'
+import { getOrigin } from './lib/env.server'
 const favicons = {
   16: favicon_16,
   40: favicon_40,

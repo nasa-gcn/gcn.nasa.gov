@@ -14,7 +14,10 @@ import {
   ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
+import {
+  extractAttributeRequired,
+  extractAttribute,
+} from '~/lib/cognito.server'
 import { group } from '../circulars/circulars.server'
 import { clearUserToken, getUser } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'

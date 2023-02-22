@@ -18,7 +18,7 @@ import {
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { getEnvOrDieInProduction } from '~/lib/env'
+import { getEnvOrDieInProduction } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
 
