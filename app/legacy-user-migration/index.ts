@@ -14,22 +14,29 @@ import {
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { group } from '~/routes/circulars/circulars.server'
+import type { PostConfirmationConfirmSignUpTriggerEvent } from 'aws-lambda'
 
-export async function handler({
-  request: {
-    userAttributes: { email },
-  },
-  userPoolId: UserPoolId,
-  userName: Username,
-}: any) {
+export async function handler(
+  event: PostConfirmationConfirmSignUpTriggerEvent
+) {
+  let email, username
+  if (typeof event == 'string') {
+    const parsedEvent = JSON.parse(event)
+    email = parsedEvent.request.userAttributes.email
+    username = parsedEvent.userName
+  } else {
+    email = event.request.userAttributes.email
+    username = event.userName
+  }
+  if (!email || !username) throw new Error('Email and username are needed')
   const cognito = new CognitoIdentityProviderClient({})
   const db = await tables()
 
   // 1. Add user to submitters group
   await cognito.send(
     new AdminAddUserToGroupCommand({
-      Username: Username,
-      UserPoolId: UserPoolId,
+      Username: username,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
       GroupName: group,
     })
   )
@@ -39,8 +46,8 @@ export async function handler({
   if (!response) throw new Error('No legacy user found for provided email')
   await cognito.send(
     new AdminUpdateUserAttributesCommand({
-      Username: Username,
-      UserPoolId: UserPoolId,
+      Username: username,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
       UserAttributes: [
         { Name: 'custom:affiliation', Value: response.affiliation },
         { Name: 'name', Value: response.name },
@@ -51,8 +58,8 @@ export async function handler({
   // 3. Circulars they have submitted update their sub field to match the new one
   const getUserCommandResponse = await cognito.send(
     new AdminGetUserCommand({
-      Username: Username,
-      UserPoolId: UserPoolId,
+      Username: username,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
     })
   )
   if (!getUserCommandResponse) throw new Error('User not found')
@@ -63,8 +70,9 @@ export async function handler({
   // Get items without a defined sub and where the submitter has a match to their email
   const circularResults = await db.circulars.scan({
     FilterExpression:
-      'attribute_not_exists(sub) AND contais(submitter, :userEmail)',
+      'attribute_not_exists(#sub) AND contains(submitter, :userEmail)',
     ExpressionAttributeValues: { ':userEmail': email },
+    ExpressionAttributeNames: { '#sub': 'sub' },
   })
   if (!circularResults.Items.length)
     console.log("User's email not found on any existing circulars")

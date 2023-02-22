@@ -14,9 +14,3 @@ export const set = {
     }
   },
 }
-
-export const deploy = {
-  start({ cloudformation }) {
-    return cloudformation
-  },
-}

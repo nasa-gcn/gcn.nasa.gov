@@ -105,7 +105,12 @@ module.exports = {
   customLambdas: {
     'legacy-user-migration': {
       main: {
-        body: 'test',
+        request: {
+          userAttributes: {
+            email: 'example.user@example.com',
+          },
+        },
+        userName: 'userName',
       },
     },
   },
