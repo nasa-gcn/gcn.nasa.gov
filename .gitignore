@@ -22,3 +22,4 @@ theme/_uswds-theme-*.scss
 .eslintcache
 
 /email-incoming
+/legacy-user-migration

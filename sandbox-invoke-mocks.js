@@ -102,4 +102,11 @@ module.exports = {
       },
     },
   },
+  customLambdas: {
+    'legacy-user-migration': {
+      main: {
+        body: 'test',
+      },
+    },
+  },
 }

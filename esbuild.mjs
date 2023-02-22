@@ -5,9 +5,12 @@ const watch = args.includes('--watch')
 
 await build({
   bundle: true,
-  entryPoints: ['./app/email-incoming/index.js'],
+  entryPoints: {
+    'email-incoming/index': './app/email-incoming/index.ts',
+    'legacy-user-migration/index': './app/legacy-user-migration/index.ts',
+  },
   logLevel: 'info',
-  outfile: 'email-incoming/index.js',
+  outdir: '.',
   plugins: [
     {
       name: 'exclude node_modules from bundling',
