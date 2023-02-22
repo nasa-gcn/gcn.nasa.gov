@@ -74,9 +74,8 @@ export async function handler(
     ExpressionAttributeValues: { ':userEmail': email },
     ExpressionAttributeNames: { '#sub': 'sub' },
   })
-  if (!circularResults.Items.length)
-    console.log("User's email not found on any existing circulars")
-  else {
+
+  if (circularResults.Items.length) {
     const updatePromises = circularResults.Items.map((item) => {
       return db.circulars.update({
         Key: { dummy: 0, circularId: item.circularId },
