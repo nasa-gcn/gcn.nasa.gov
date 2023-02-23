@@ -58,6 +58,7 @@ export async function action({ request }: DataFunctionArgs) {
   const intent = getFormDataString(data, 'intent')
   const endorserSub = getFormDataString(data, 'endorserSub')
   const requestorSub = getFormDataString(data, 'requestorSub')
+  const requestorEmail = getFormDataString(data, 'requestorEmail')
   const filter = getFormDataString(data, 'filter')
 
   switch (intent) {
@@ -69,11 +70,12 @@ export async function action({ request }: DataFunctionArgs) {
     case 'approved':
     case 'rejected':
     case 'reported':
-      if (!requestorSub)
+      if (!requestorSub || !requestorEmail)
         throw new Response('Valid requestor is required', { status: 403 })
       await endorsementServer.updateEndorsementRequestStatus(
         intent,
-        requestorSub
+        requestorSub,
+        requestorEmail
       )
       break
     case 'delete':
@@ -235,6 +237,11 @@ export function EndorsementRequestCard({
               type="hidden"
               name="requestorSub"
               value={endorsementRequest.requestorSub}
+            />
+            <input
+              type="hidden"
+              name="requestorEmail"
+              value={endorsementRequest.requestorEmail}
             />
             <Button
               type="submit"
