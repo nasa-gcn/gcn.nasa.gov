@@ -18,9 +18,13 @@ import {
   extractAttributeRequired,
   extractAttribute,
 } from '~/lib/cognito.server'
+import { sendEmail } from '~/lib/email.server'
 import { group } from '../circulars/circulars.server'
 import { clearUserToken, getUser } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'
+import { getOrigin } from '~/lib/env.server'
+
+const origin = getOrigin()
 
 // models
 export type EndorsementRequest = {
@@ -124,6 +128,15 @@ export class EndorsementsServer {
       ConditionExpression:
         'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub and #status <> :status)',
     })
+
+    await sendEmail(
+      'GCN Endorsements',
+      endorserEmail,
+      'New GCN Endorsement Request',
+      `You have a new endorsement request from ${
+        this.#currentUserEmail
+      }. View it here: ${origin}/user/endorsements`
+    )
   }
 
   /**
@@ -140,7 +153,8 @@ export class EndorsementsServer {
    */
   async updateEndorsementRequestStatus(
     status: EndorsementState,
-    requestorSub: string
+    requestorSub: string,
+    requestorEmail: string
   ) {
     if (!this.userIsSubmitter())
       throw new Response(
@@ -167,11 +181,44 @@ export class EndorsementsServer {
       ConditionExpression: '#status = :pending',
     })
 
+    let promiseArray: Promise<void>[] = []
+
     if (status === 'approved')
-      await Promise.all([
+      promiseArray.push(
         this.#addUserToGroup(requestorSub),
-        clearUserToken(requestorSub),
-      ])
+        clearUserToken(requestorSub)
+      )
+
+    if (status === 'reported')
+      promiseArray.push(
+        sendEmail(
+          'GCN Endorsements',
+          'gcnkafka@lists.nasa.gov',
+          'Notice: Endorsement Request Reported',
+          `${
+            this.#currentUserEmail
+          } has reported the endorsement request from ${requestorEmail}.`
+        )
+      )
+
+    promiseArray.push(
+      sendEmail(
+        'GCN Endorsements',
+        requestorEmail,
+        'Endorsment Status Update',
+        `The status of your endorsment requested from ${
+          this.#currentUserEmail
+        } has been updated to ${status}.`
+      ),
+      sendEmail(
+        'GCN Endorsements',
+        this.#currentUserEmail,
+        'Endorsement Status Update',
+        `Your changes to ${requestorEmail}'s endorsement request have been processed.`
+      )
+    )
+
+    await Promise.all(promiseArray)
   }
 
   /**
