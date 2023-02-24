@@ -132,7 +132,7 @@ export class EndorsementsServer {
     await sendEmail(
       'GCN Endorsements',
       endorserEmail,
-      'New GCN Endorsement Request',
+      'New GCN Peer Endorsement Request',
       `You have a new endorsement request for NASA's General Coordinate Network (GCN) from ${
         this.#currentUserEmail
       }. Approval of an endorsement means that the requestor, ${
