@@ -20,13 +20,24 @@ import {
   bodyIsValid,
 } from '../routes/circulars/circulars.lib'
 
-import { extractAttributeRequired, extractAttribute } from '~/lib/cognito'
+import {
+  extractAttributeRequired,
+  extractAttribute,
+} from '~/lib/cognito.server'
 import {
   getDynamoDBAutoIncrement,
   group,
 } from '~/routes/circulars/circulars.server'
-import { sendEmail } from '~/lib/email'
-import { getOrigin } from '~/lib/env'
+import { sendEmail } from '~/lib/email.server'
+import { getOrigin } from '~/lib/env.server'
+import { tables } from '@architect/functions'
+
+interface UserData {
+  email: string
+  sub?: string
+  name?: string
+  affiliation?: string
+}
 
 const cognito = new CognitoIdentityProviderClient({})
 const origin = getOrigin()
@@ -66,18 +77,11 @@ async function handleRecord(record: SNSEventRecord) {
     return
   }
 
-  // Check if submitter is in the submitters group
-  const data = await cognito.send(
-    new ListUsersInGroupCommand({
-      GroupName: group,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
-  )
+  const userData =
+    (await getCognitoUserData(userEmail)) ??
+    (await getLegacyUserData(userEmail))
 
-  const userTypeData = data.Users?.find(
-    (user) => extractAttributeRequired(user, 'email') == userEmail
-  )
-  if (!userTypeData) {
+  if (!userData) {
     await sendEmail(
       'GCN Circulars',
       userEmail,
@@ -85,13 +89,6 @@ async function handleRecord(record: SNSEventRecord) {
       'You do not have the required permissions to submit GCN Circulars. If you believe this to be a mistake, please fill out the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.'
     )
     return
-  }
-
-  const userData = {
-    sub: extractAttributeRequired(userTypeData, 'sub'),
-    email: extractAttributeRequired(userTypeData, 'email'),
-    name: extractAttribute(userTypeData, 'name'),
-    affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
   }
 
   const circular = {
@@ -103,6 +100,8 @@ async function handleRecord(record: SNSEventRecord) {
     submitter: formatAuthor(userData),
   }
 
+  // Removes sub as a property if it is undefined from the legacy users
+  if (!circular.sub) delete circular.sub
   const autoIncrement = await getDynamoDBAutoIncrement()
   const newCircularId = await autoIncrement.put(circular)
 
@@ -119,4 +118,50 @@ export async function handler(event: SNSEvent) {
   const results = await Promise.allSettled(event.Records.map(handleRecord))
   const rejections = results.filter(isRejected).map(({ reason }) => reason)
   if (rejections.length) throw rejections
+}
+
+/**
+ * Returns a UserData object constructed from cognito if the
+ * user is in the Submitters group
+ * @param userEmail
+ */
+async function getCognitoUserData(
+  userEmail: string
+): Promise<UserData | undefined> {
+  const data = await cognito.send(
+    new ListUsersInGroupCommand({
+      GroupName: group,
+      UserPoolId: process.env.COGNITO_USER_POOL_ID,
+    })
+  )
+  const userTypeData = data.Users?.find(
+    (user) => extractAttributeRequired(user, 'email') == userEmail
+  )
+  return (
+    userTypeData && {
+      sub: extractAttributeRequired(userTypeData, 'sub'),
+      email: extractAttributeRequired(userTypeData, 'email'),
+      name: extractAttribute(userTypeData, 'name'),
+      affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
+    }
+  )
+}
+
+/**
+ * Returns a UserData object constructed from the legacy_users table
+ * or undefined if none exists
+ * @param userEmail
+ */
+async function getLegacyUserData(
+  userEmail: string
+): Promise<UserData | undefined> {
+  const db = await tables()
+  const data = await db.legacy_users.get({ email: userEmail })
+  return (
+    data && {
+      email: data.email,
+      name: data.name,
+      affiliation: data.affiliation,
+    }
+  )
 }

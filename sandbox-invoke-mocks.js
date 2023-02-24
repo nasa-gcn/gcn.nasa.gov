@@ -40,11 +40,65 @@ two lengths of this field.
 --_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
 `
 
+const invalidUserTestString = `From: "LastName, FirstName"
+    <invalid.example@example.com>
+To: "circulars@dev.gcn.nasa.gov" <circulars@dev.gcn.nasa.gov>
+Subject: GRB 230207B: Detection by GRBAlpha
+Thread-Topic: GRB 230207B: Detection by GRBAlpha
+Thread-Index: Adk9dI5aYPr6M3WhQFmrIV1eoz5z1A==
+Date: Fri, 10 Feb 2023 17:24:40 +0000
+Accept-Language: en-US
+Content-Language: en-US
+Content-Type: multipart/alternative;
+    boundary="_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_"
+MIME-Version: 1.0
+
+--_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+
+This is a test
+
+¢ £ ¤ ¥ ¦ § ¨ © ª « ¶ µ À Á Â Ã
+
+--_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
+`
+
+const validLegacyUserTestString = `From: "LastName, FirstName"
+    <example.user@example.com>
+To: "circulars@dev.gcn.nasa.gov" <circulars@dev.gcn.nasa.gov>
+Subject: GRB 230207B: Detection by GRBAlpha
+Thread-Topic: GRB 230207B: Detection by GRBAlpha
+Thread-Index: Adk9dI5aYPr6M3WhQFmrIV1eoz5z1A==
+Date: Fri, 10 Feb 2023 17:24:40 +0000
+Accept-Language: en-US
+Content-Language: en-US
+Content-Type: multipart/alternative;
+    boundary="_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_"
+MIME-Version: 1.0
+
+--_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+
+This is a test for legacy user stuff
+
+--_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
+`
+
 module.exports = {
   events: {
     'email-incoming': {
       main: {
         content: Buffer.from(testString).toString('base64'),
+      },
+      legacy_user_fail: {
+        content: Buffer.from(invalidUserTestString).toString('base64'),
+      },
+      legacy_user_success: {
+        content: Buffer.from(validLegacyUserTestString).toString('base64'),
       },
     },
   },

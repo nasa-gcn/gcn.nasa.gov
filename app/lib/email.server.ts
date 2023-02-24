@@ -11,7 +11,7 @@ import {
   SESv2Client,
   SESv2ServiceException,
 } from '@aws-sdk/client-sesv2'
-import { getHostname } from './env'
+import { getHostname } from './env.server'
 
 const client = new SESv2Client({})
 
