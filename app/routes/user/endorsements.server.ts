@@ -137,9 +137,9 @@ export class EndorsementsServer {
         this.#currentUserEmail
       }. Approval of an endorsement means that the requestor, ${
         this.#currentUserEmail
-      } is in good standing with the astronomy community and will permit them to submit GCN circulars. In addition, they will also be able to receive endorsement requests from other users.
+      }, is in good standing with the astronomy community and will permit them to submit GCN circulars. In addition, they will also be able to receive endorsement requests from other users.
 
-Please approve this request if you are familiar with the requester, and agree with the criteria. Thank you for your contributions to the GCN community.
+      Please approve this request if you are familiar with the requester, and agree with the criteria. Thank you for your contributions to the GCN community.
 
       If you are not familiar with this user, or believe it to be spam, you may reject or report the endorsement request.
       
@@ -225,16 +225,16 @@ Please approve this request if you are familiar with the requester, and agree wi
       sendEmail(
         'GCN Endorsements',
         requestorEmail,
-        'Endorsement Status Update',
-        `You are receiving this email because the status of your endorsment requested from ${
+        'GCN Peer Endorsement Status Update',
+        `You are receiving this email because the status of your peer endorsment requested from ${
           this.#currentUserEmail
         } has been updated to ${status}.`
       ),
       sendEmail(
         'GCN Endorsements',
         this.#currentUserEmail,
-        'Endorsement Status Update',
-        `Your changes to ${requestorEmail}'s endorsement request have been processed.`
+        'GCN Peer Endorsement Status Update',
+        `Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.`
       )
     )
 
