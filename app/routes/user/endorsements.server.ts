@@ -133,9 +133,15 @@ export class EndorsementsServer {
       'GCN Endorsements',
       endorserEmail,
       'New GCN Endorsement Request',
-      `You have a new endorsement request from ${
+      `You have a new endorsement request for NASA's General Coordinate Network (GCN) from ${
         this.#currentUserEmail
-      }. View it here: ${origin}/user/endorsements`
+      }. Approval of an endorsement means that the requestor, ${
+        this.#currentUserEmail
+      } is in good standing with the astronomy community and will permit them to submit GCN circulars. In addition, they will also be able to receive endorsement requests from other users.
+
+      If you are not familiar with this user, or believe it to be spam, you may reject or report the endorsement request.
+      
+      View all of your pending endorsement requests here: ${origin}/user/endorsements`
     )
   }
 
@@ -153,8 +159,7 @@ export class EndorsementsServer {
    */
   async updateEndorsementRequestStatus(
     status: EndorsementState,
-    requestorSub: string,
-    requestorEmail: string
+    requestorSub: string
   ) {
     if (!this.userIsSubmitter())
       throw new Response(
@@ -165,6 +170,19 @@ export class EndorsementsServer {
       )
 
     const db = await tables()
+
+    const requestorEmail: string = (
+      await db.circular_endorsements.get({
+        requestorSub: requestorSub,
+        endorserSub: this.#sub,
+      })
+    )?.requestorEmail
+
+    if (!requestorEmail)
+      throw new Error(
+        'Requestor email not found, malformed endorsement request in db'
+      )
+
     await db.circular_endorsements.update({
       Key: {
         requestorSub: requestorSub,
@@ -205,8 +223,8 @@ export class EndorsementsServer {
       sendEmail(
         'GCN Endorsements',
         requestorEmail,
-        'Endorsment Status Update',
-        `The status of your endorsment requested from ${
+        'Endorsement Status Update',
+        `You are receiving this email because the status of your endorsment requested from ${
           this.#currentUserEmail
         } has been updated to ${status}.`
       ),
