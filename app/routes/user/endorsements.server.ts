@@ -139,6 +139,8 @@ export class EndorsementsServer {
         this.#currentUserEmail
       } is in good standing with the astronomy community and will permit them to submit GCN circulars. In addition, they will also be able to receive endorsement requests from other users.
 
+Please approve this request if you are familiar with the requester, and agree with the criteria. Thank you for your contributions to the GCN community.
+
       If you are not familiar with this user, or believe it to be spam, you may reject or report the endorsement request.
       
       View all of your pending endorsement requests here: ${origin}/user/endorsements`
