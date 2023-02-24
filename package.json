@@ -31,7 +31,7 @@
   "dependencies": {
     "@architect/functions": "^5.3.4",
     "@balavishnuvj/remix-seo": "^1.0.2",
-    "@nasa-gcn/dynamodb-autoincrement": "^0.0.5",
+    "@nasa-gcn/dynamodb-autoincrement": "^0.0.6",
     "@octokit/rest": "^19.0.7",
     "@opentelemetry/exporter-trace-otlp-proto": "^0.34.0",
     "@opentelemetry/sdk-trace-base": "^1.9.0",
