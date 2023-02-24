@@ -133,7 +133,7 @@ export class EndorsementsServer {
       'GCN Endorsements',
       endorserEmail,
       'New GCN Peer Endorsement Request',
-      `You have a new endorsement request for NASA's General Coordinate Network (GCN) from ${
+      `You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
         this.#currentUserEmail
       }. Approval of an endorsement means that the requestor, ${
         this.#currentUserEmail
