@@ -236,11 +236,6 @@ export function EndorsementRequestCard({
               name="requestorSub"
               value={endorsementRequest.requestorSub}
             />
-            <input
-              type="hidden"
-              name="requestorEmail"
-              value={endorsementRequest.requestorEmail}
-            />
             <Button
               type="submit"
               disabled={disabled}
