@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: New Producers
+  breadcrumb: New Notice Producers
 ---
 
 import {
@@ -9,7 +9,7 @@ import {
   ProcessListHeading,
 } from '@trussworks/react-uswds'
 
-# Setting up New GCN Notice Producers
+# New Notice Producers
 
 The following steps guide new instrument, mission, or observatory producers
 into setting up new notices streams that are distributed to the user community
@@ -61,8 +61,8 @@ also happy to work with the mission teams to help construct your alerts.
       # Connect as a producer.
       # Warning: don't share the client secret with others.
       producer = Producer(client_id='fill me in', client_secret='fill me in')
+      # any topic starting with 'mission.'
       topic = 'mission.example'
-      # any topic starting with 'mission'
       data = b'...'  # any bytes
       producer.produce(topic, data)
       ```
