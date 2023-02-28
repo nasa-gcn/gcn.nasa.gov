@@ -7,7 +7,7 @@
  */
 
 import { Button, Icon, Tooltip } from '@trussworks/react-uswds'
-import hljs from 'highlight.js'
+import hljs from 'highlight.js/lib/common'
 import { useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
 

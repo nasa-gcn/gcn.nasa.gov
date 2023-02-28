@@ -18,9 +18,13 @@ import {
   extractAttributeRequired,
   extractAttribute,
 } from '~/lib/cognito.server'
+import { sendEmail } from '~/lib/email.server'
 import { group } from '../circulars/circulars.server'
 import { clearUserToken, getUser } from '../__auth/user.server'
 import { client, maybeThrow } from './cognito.server'
+import { getOrigin } from '~/lib/env.server'
+
+const origin = getOrigin()
 
 // models
 export type EndorsementRequest = {
@@ -124,6 +128,23 @@ export class EndorsementsServer {
       ConditionExpression:
         'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub and #status <> :status)',
     })
+
+    await sendEmail(
+      'GCN Endorsements',
+      endorserEmail,
+      'New GCN Peer Endorsement Request',
+      `You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
+        this.#currentUserEmail
+      }. Approval of an endorsement means that the requestor, ${
+        this.#currentUserEmail
+      }, is in good standing with the astronomy community and will permit them to submit GCN circulars. In addition, they will also be able to receive endorsement requests from other users.
+
+      Please approve this request if you are familiar with the requester, and agree with the criteria. Thank you for your contributions to the GCN community.
+
+      If you are not familiar with this user, or believe it to be spam, you may reject or report the endorsement request.
+      
+      View all of your pending endorsement requests here: ${origin}/user/endorsements`
+    )
   }
 
   /**
@@ -151,6 +172,19 @@ export class EndorsementsServer {
       )
 
     const db = await tables()
+
+    const requestorEmail: string = (
+      await db.circular_endorsements.get({
+        requestorSub: requestorSub,
+        endorserSub: this.#sub,
+      })
+    )?.requestorEmail
+
+    if (!requestorEmail)
+      throw new Error(
+        'Requestor email not found, malformed endorsement request in db'
+      )
+
     await db.circular_endorsements.update({
       Key: {
         requestorSub: requestorSub,
@@ -167,11 +201,44 @@ export class EndorsementsServer {
       ConditionExpression: '#status = :pending',
     })
 
+    let promiseArray: Promise<void>[] = []
+
     if (status === 'approved')
-      await Promise.all([
+      promiseArray.push(
         this.#addUserToGroup(requestorSub),
-        clearUserToken(requestorSub),
-      ])
+        clearUserToken(requestorSub)
+      )
+
+    if (status === 'reported')
+      promiseArray.push(
+        sendEmail(
+          'GCN Endorsements',
+          'gcnkafka@lists.nasa.gov',
+          'Notice: Endorsement Request Reported',
+          `${
+            this.#currentUserEmail
+          } has reported the endorsement request from ${requestorEmail}.`
+        )
+      )
+
+    promiseArray.push(
+      sendEmail(
+        'GCN Endorsements',
+        requestorEmail,
+        'GCN Peer Endorsement Status Update',
+        `You are receiving this email because the status of your peer endorsment requested from ${
+          this.#currentUserEmail
+        } has been updated to ${status}.`
+      ),
+      sendEmail(
+        'GCN Endorsements',
+        this.#currentUserEmail,
+        'GCN Peer Endorsement Status Update',
+        `Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.`
+      )
+    )
+
+    await Promise.all(promiseArray)
   }
 
   /**
