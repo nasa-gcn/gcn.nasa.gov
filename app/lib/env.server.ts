@@ -39,3 +39,17 @@ export function getOrigin() {
 export function getHostname() {
   return new URL(getOrigin()).hostname
 }
+
+export function getFeatures() {
+  return process.env.GCN_FEATURES?.split(',') ?? []
+}
+
+/**
+ * Return true if the given feature flag is enabled.
+ *
+ * Feature flags are configured by the environment variable GCN_FEATURES, which
+ * is a comma-separated list of enabled features.
+ */
+export function feature(feature: string) {
+  return getFeatures().includes(feature)
+}

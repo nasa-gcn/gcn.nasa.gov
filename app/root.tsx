@@ -64,7 +64,7 @@ import favicon_114 from '~/theme/img/favicons/favicon-114.png'
 import favicon_144 from '~/theme/img/favicons/favicon-144.png'
 import favicon_192 from '~/theme/img/favicons/favicon-192.png'
 import { useRouteLoaderData } from './lib/remix'
-import { getOrigin } from './lib/env.server'
+import { getFeatures, getOrigin } from './lib/env.server'
 const favicons = {
   16: favicon_16,
   40: favicon_40,
@@ -118,20 +118,6 @@ export async function loader({ request }: DataFunctionArgs) {
   const features = getFeatures()
 
   return { origin, email, features }
-}
-
-function getFeatures() {
-  return process.env.GCN_FEATURES?.split(',') ?? []
-}
-
-/**
- * Return true if the given feature flag is enabled.
- *
- * Feature flags are configured by the environment variable GCN_FEATURES, which
- * is a comma-separated list of enabled features.
- */
-export function feature(feature: string) {
-  return getFeatures().includes(feature)
 }
 
 function useLoaderDataRoot() {
