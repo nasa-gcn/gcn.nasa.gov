@@ -78,4 +78,5 @@ manualStaticBucketPolicy  # Mission Cloud Platform requires bucket policies to b
 permissionsBoundary  # configure IAM Role permissions boundaries required by Mission Cloud Platform
 sendEmailPermissions  # Grant the Lambda function permission to send email.
 emailIncoming  # Add a custom Lambda to process events for incoming emails
+nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 architect/plugin-lambda-invoker
