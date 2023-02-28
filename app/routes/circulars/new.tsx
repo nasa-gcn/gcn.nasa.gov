@@ -24,8 +24,9 @@ import dedent from 'ts-dedent'
 import Spinner from '~/components/Spinner'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
-import { feature, useUrl } from '~/root'
+import { useUrl } from '~/root'
 import { group } from './circulars.server'
+import { feature } from '~/lib/env.server'
 
 export async function loader({ request }: DataFunctionArgs) {
   if (!feature('circulars')) throw new Response(null, { status: 404 })
