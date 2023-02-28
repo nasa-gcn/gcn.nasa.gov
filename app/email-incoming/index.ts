@@ -26,7 +26,7 @@ import {
 } from '~/lib/cognito.server'
 import { group, putRaw } from '~/routes/circulars/circulars.server'
 import { sendEmail } from '~/lib/email.server'
-import { getOrigin } from '~/lib/env.server'
+import { feature, getOrigin } from '~/lib/env.server'
 import { tables } from '@architect/functions'
 
 interface UserData {
@@ -109,6 +109,7 @@ async function handleRecord(record: SNSEventRecord) {
 }
 
 export async function handler(event: SNSEvent) {
+  if (!feature('circulars')) throw new Error('not implemented')
   const results = await Promise.allSettled(event.Records.map(handleRecord))
   const rejections = results.filter(isRejected).map(({ reason }) => reason)
   if (rejections.length) throw rejections
