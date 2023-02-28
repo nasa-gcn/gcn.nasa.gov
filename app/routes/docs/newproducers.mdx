@@ -16,8 +16,7 @@ into setting up new notices streams that are distributed to the user community
 via [Kafka](faq#what-is-kafka). This process requires interaction
 with the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
 to enable accounts and kafka topics creation on the GCN Kafka broker. The GCN Team is
-also happy to work with the mission teams to help construct your alert schema
-utilizing our core JSON schema.
+also happy to work with the mission teams to help construct your alerts.
 
 ## Steps to Start Publishing Alerts
 
@@ -34,18 +33,10 @@ utilizing our core JSON schema.
    </ProcessListItem>
    <ProcessListItem>
       <ProcessListHeading type="h3">
-         Define Kafka Topics and JSON Schema
+         Define Kafka Topics
       </ProcessListHeading>
-      The preferred format for formatting of the data sent via GCN Kafka is JSON.
-      We have designed a set of [core schema](https://github.com/nasa-gcn/gcn-schema/tree/master/core-schema)
-      which serves as the building blocks for your Notices.
-      You can also define instrument-specific quantities in your
-      schema, but we request that you utilize the core schema as much as possible.
-      Please add your schema to the [GCN repository](https://github.com/nasa-gcn/gcn-schema).
-
-      The GCN team is happy to iterate with the producers on their schema contents and format.
-      Your pipeline will generate JSON files following these schema and send to GCN
-      in the following process.
+      Provide your instrument specific kafka topics or topics to the 
+      [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
 
    </ProcessListItem>
    <ProcessListItem>
