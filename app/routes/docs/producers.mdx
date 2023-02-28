@@ -15,7 +15,7 @@ The following steps guide new instrument, mission, or observatory producers
 into setting up new notices streams that are distributed to the user community
 via [Kafka](faq#what-is-kafka). This process requires interaction
 with the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-to enable accounts and kafka topics creation on the GCN Kafka broker. The GCN Team is
+to enable accounts and Kafka topics creation on the GCN Kafka broker. The GCN Team is
 also happy to work with the mission teams to help construct your alerts.
 
 ## Steps to Start Publishing Alerts
@@ -23,21 +23,26 @@ also happy to work with the mission teams to help construct your alerts.
 <ProcessList>
    <ProcessListItem>
      <ProcessListHeading type="h3">
-       Set Up Team Member Accounts
+       Sign in / Sign up 
      </ProcessListHeading>
-   - Make sure that your team member(s) who will implement GCN notices in your pipeline
-   has signed in at least once to https://test.gcn.nasa.gov and https://gcn.nasa.gov.
-   - Send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-   a list of email address(es) of all the team members who should have the
-   producer access to the <code><i>mission_name</i>.\*</code> topics.
+     Decide which of your team members will have programmatic access to produce your alerts. 
+     Make sure that they have all signed in at least once to the [GCN website](https://gcn.nasa.gov/login) 
+     and the [GCN test website](https://test.gcn.nasa.gov/login).
    </ProcessListItem>
    <ProcessListItem>
       <ProcessListHeading type="h3">
-         Define Kafka Topics
+         Name Your Kafka Topics
       </ProcessListHeading>
-      Provide your instrument specific kafka topics or topics to the 
-      [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
-
+      Names of Kafka topics follow the format <code><i>mission</i>.<i>notice_type</i></code>.
+      Pick a prefix for your Kafka topic names, <code><i>mission</i>.\*</code>.
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Contact the GCN Team
+      </ProcessListHeading>
+      Send the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
+   your list of team members from Step 1 and your chosen Kafka topic prefix from Step 2.
+      The GCN Team will reply after they have configured producer permissions for your team.
    </ProcessListItem>
    <ProcessListItem>
       <ProcessListHeading type="h3">
@@ -45,7 +50,7 @@ also happy to work with the mission teams to help construct your alerts.
       </ProcessListHeading>
       - Log out and log back in.
       - Go through the [Start Streaming GCN Notices](/quickstart) process.
-      - On Step 2, choose the scope <code>gcn.nasa.gov/kafka-<i>MissionName</i>-producer</code>.
+      - On Step 2, choose the scope <code>gcn.nasa.gov/kafka-<i>mission</i>-producer</code>.
       - Your producer code will look very similar to the [client example code](docs/client) and
       Step 4 of [Start Streaming GCN Notices](/quickstart). `client_id` and `client_secret`
       can be found in Step 4 client example code.
@@ -56,27 +61,27 @@ also happy to work with the mission teams to help construct your alerts.
       # Connect as a producer.
       # Warning: don't share the client secret with others.
       producer = Producer(client_id='fill me in', client_secret='fill me in')
-      topic = 'mission_name.example'
-      # any topic starting with 'mission_name'
+      topic = 'mission.example'
+      # any topic starting with 'mission'
       data = b'...'  # any bytes
       producer.produce(topic, data)
       ```
+
    </ProcessListItem>
    <ProcessListItem>
       <ProcessListHeading type="h3">
          Create or Update the Mission Page
       </ProcessListHeading>
       Create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls)
-or by emailing text to the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
+or by sending text to the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
    </ProcessListItem>
 
    <ProcessListItem>
       <ProcessListHeading type="h3">
          Announce New Notice Types are Available
       </ProcessListHeading>
-      The GCN Team will add your new notice type to the Kafka [Quick Start](../quickstart)
-      and Email Notification configuration. Please work with the
+      Work with the
       [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
-      on drafting a community announcement.
+      to draft a community announcement, which the GCN Team will circulate. 
    </ProcessListItem>
 </ProcessList>

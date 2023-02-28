@@ -31,7 +31,7 @@ export default function () {
             <NavLink key="contributing" to="contributing">
               Contributing
             </NavLink>,
-            <NavLink key="newproducers" to="newproducers">
+            <NavLink key="producers" to="producers">
               New Notice Producers
             </NavLink>,
             <NavLink key="roadmap" to="roadmap">
