@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { tables } from '@architect/functions'
 import {
   AdminAddUserToGroupCommand,
   AdminGetUserCommand,
@@ -15,6 +14,14 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import { group } from '~/routes/circulars/circulars.server'
 import type { PostConfirmationConfirmSignUpTriggerEvent } from 'aws-lambda'
+import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm'
+import {
+  DynamoDBClient,
+  GetItemCommand,
+  QueryCommand,
+  UpdateItemCommand,
+  DeleteItemCommand,
+} from '@aws-sdk/client-dynamodb'
 
 export async function handler(
   event: PostConfirmationConfirmSignUpTriggerEvent
@@ -29,8 +36,10 @@ export async function handler(
     username = event.userName
   }
   if (!email || !username) throw new Error('Email and username are needed')
+
   const cognito = new CognitoIdentityProviderClient({})
-  const db = await tables()
+  const ssm = new SSMClient({})
+  const dynamo = new DynamoDBClient({})
 
   // 1. Add user to submitters group
   await cognito.send(
@@ -42,15 +51,31 @@ export async function handler(
   )
 
   // 2. Their info gets migrated into the corresponding fields in their cognito account
-  const response = await db.legacy_users.get({ email: email })
-  if (!response) throw new Error('No legacy user found for provided email')
+  const legacyTableName = (
+    await ssm.send(
+      new GetParameterCommand({
+        Name: '/RemixGcnProduction/tables/legacy_users',
+      })
+    )
+  ).Parameter?.Value
+  if (!legacyTableName) throw new Error('Legacy User table does not exist')
+
+  const response = await dynamo.send(
+    new GetItemCommand({
+      TableName: legacyTableName,
+      Key: { email: { S: email } },
+    })
+  )
+
+  if (!response.Item) throw new Error('No legacy user found for provided email')
+
   await cognito.send(
     new AdminUpdateUserAttributesCommand({
       Username: username,
       UserPoolId: process.env.COGNITO_USER_POOL_ID,
       UserAttributes: [
-        { Name: 'custom:affiliation', Value: response.affiliation },
-        { Name: 'name', Value: response.name },
+        { Name: 'custom:affiliation', Value: response.Item.affiliation.S },
+        { Name: 'name', Value: response.Item.name.S },
       ],
     })
   )
@@ -67,30 +92,54 @@ export async function handler(
     (attr) => attr.Name == 'sub'
   )?.Value
   if (!sub) throw new Error('Sub not found')
-  // Get items without a defined sub and where the submitter has a match to their email
-  const circularResults = await db.circulars.scan({
-    FilterExpression:
-      'attribute_not_exists(#sub) AND contains(submitter, :userEmail)',
-    ExpressionAttributeValues: { ':userEmail': email },
-    ExpressionAttributeNames: { '#sub': 'sub' },
-  })
 
-  if (circularResults.Items.length) {
-    const updatePromises = circularResults.Items.map((item) => {
-      return db.circulars.update({
-        Key: { dummy: 0, circularId: item.circularId },
-        UpdateExpression: 'set #sub = :sub',
-        ExpressionAttributeNames: {
-          '#sub': 'sub',
-        },
-        ExpressionAttributeValues: {
-          ':sub': sub,
-        },
+  const circularsTableName = (
+    await ssm.send(
+      new GetParameterCommand({
+        Name: '/RemixGcnProduction/tables/circulars',
       })
+    )
+  ).Parameter?.Value
+  if (!circularsTableName) throw new Error('Circular table not found')
+
+  const circularResults = await dynamo.send(
+    new QueryCommand({
+      TableName: circularsTableName,
+      IndexName: 'circularsByEmail',
+      KeyConditionExpression: 'email = :email',
+      ExpressionAttributeValues: {
+        ':email': email,
+      },
+    })
+  )
+
+  if (circularResults.Items?.length) {
+    const updatePromises = circularResults.Items.map((item) => {
+      return dynamo.send(
+        new UpdateItemCommand({
+          TableName: circularsTableName,
+          Key: {
+            dummy: { N: '0' },
+            circularId: { N: `${item.circularId}` },
+          },
+          UpdateExpression: 'set #sub = :sub',
+          ExpressionAttributeNames: {
+            '#sub': 'sub',
+          },
+          ExpressionAttributeValues: {
+            ':sub': { S: sub },
+          },
+        })
+      )
     })
     await Promise.all(updatePromises)
   }
 
   // 4. Their info is removed from the legacy table
-  await db.legacy_users.delete({ email: email })
+  await dynamo.send(
+    new DeleteItemCommand({
+      TableName: legacyTableName,
+      Key: { email: { S: email } },
+    })
+  )
 }

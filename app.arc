@@ -59,6 +59,10 @@ circular_endorsements
   endorserSub *String
   name circularEndorsementsByEndorserSub
 
+circulars
+  email *String
+  name circularsByEmail
+
 @aws
 runtime nodejs18.x
 region us-east-1
