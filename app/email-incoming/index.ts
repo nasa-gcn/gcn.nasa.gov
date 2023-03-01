@@ -12,6 +12,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { SNSEvent, SNSEventRecord } from 'aws-lambda'
 
+import type { ParsedMail } from 'mailparser'
 import { simpleParser } from 'mailparser'
 
 import {
@@ -51,6 +52,9 @@ async function handleRecord(record: SNSEventRecord) {
   const parsed = await simpleParser(
     Buffer.from(message.content, 'base64').toString()
   )
+
+  validateMessageIsNotSpam(parsed)
+
   if (!parsed.from) throw new Error('Email has no sender')
 
   const userEmail = parsed.from.value[0].address
@@ -159,4 +163,12 @@ async function getLegacyUserData(
       affiliation: data.affiliation,
     }
   )
+}
+
+function validateMessageIsNotSpam(parsed: ParsedMail) {
+  if (
+    parsed.headers.get('x-ses-spam-verdict') != 'PASS' ||
+    parsed.headers.get('x-ses-virus-verdict') != 'PASS'
+  )
+    throw new Error('Message caught in virus/spam detection.')
 }
