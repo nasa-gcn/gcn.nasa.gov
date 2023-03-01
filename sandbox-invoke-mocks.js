@@ -102,16 +102,4 @@ module.exports = {
       },
     },
   },
-  customLambdas: {
-    'legacy-user-migration': {
-      main: {
-        request: {
-          userAttributes: {
-            email: 'example.user@example.com',
-          },
-        },
-        userName: 'userName',
-      },
-    },
-  },
 }

@@ -2047,14 +2047,6 @@
       "subject": "GRB 221230A: CALET Gamma-Ray Burst Monitor detection",
       "body": "K. Yamaoka (Nagoya U), A. Yoshida, T. Sakamoto,\nS. Sugita (AGU), Y. Kawakubo (LSU), \nS. Nakahira (RIKEN), Y. Asaoka (ICRR),\nS. Torii, Y. Akaike, K. Kobayashi (Waseda U),\nY. Shimizu, T. Tamura (Kanagawa U), N. Cannady (GSFC/UMBC),\nM. L. Cherry (LSU), S. Ricciarini (U of Florence),\nP. S. Marrocchesi (U of Siena),\nand the CALET collaboration:\n\nThe long GRB 221230A (Wind-KONUS Notice at 03:34:17.508 on 30 December) \ntriggered the CALET Gamma-ray Burst Monitor (CGBM) at 03:34:17.34 UTC \non December 30, 2022\n(http://cgbm.calet.jp/cgbm_trigger/flight/1356406433/index.html).\nThe burst signal was seen by all CGBM detectors.\n\nThe burst light curve shows a multi-peaked structure that starts\nat T+0.6 sec, and peaks at T+16.0 sec and ends at T+21.7 sec.\nThe T90 and T50 durations measured by the SGM data are 18.6 +/- 0.9 sec\nand 13.5 +/- 0.5 sec (40-1000 keV), respectively.\n\nThe ground-processed light curve is available at\n\n http://cgbm.calet.jp/cgbm_trigger/ground/1356406433/index.html\n\nThe CALET data used in this analysis are provided by\nthe Waseda CALET Operation Center located at Waseda University.",
       "dummy": 0
-    },
-    {
-      "circularId": 257,
-      "createdOn": 1672806515000,
-      "submitter": "Firstname Lastname at NASA <example.user@example.com>",
-      "subject": "GRB 12345: Test",
-      "body": "All's fine here, how are you?",
-      "dummy": 0
     }
   ],
   "auto_increment_metadata": [{ "tableName": "circulars", "circularId": 256 }],
