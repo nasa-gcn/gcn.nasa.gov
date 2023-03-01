@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-import { Button, Icon, Tooltip } from '@trussworks/react-uswds'
+import { Icon, Tooltip } from '@trussworks/react-uswds'
 import hljs from 'highlight.js/lib/common'
 import { useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
@@ -49,9 +49,9 @@ export function Highlight({
           className="margin-top-1 margin-right-1 usa-button--unstyled"
         >
           <CopyToClipboard text={code} onCopy={copyTooltipTextHandler}>
-            <Button type="button" className="radius-0" unstyled>
+            <span>
               <Icon.ContentCopy />
-            </Button>
+            </span>
           </CopyToClipboard>
         </Tooltip>
       </div>
