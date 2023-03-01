@@ -143,7 +143,7 @@ function Pagination({
 }
 
 export default function () {
-  const { page, totalPages, items } = useLoaderData<typeof loader>()
+  const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
 
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
@@ -199,7 +199,7 @@ export default function () {
         <>
           {query && (
             <h3>
-              {items.length} result{items.length != 1 && 's'} found.
+              {totalItems} result{totalItems != 1 && 's'} found.
             </h3>
           )}
           <ol>

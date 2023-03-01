@@ -92,13 +92,17 @@ export async function search({
   query?: string
   page?: number
   limit?: number
-}): Promise<{ items: CircularMetadata[]; totalPages: number }> {
+}): Promise<{
+  items: CircularMetadata[]
+  totalPages: number
+  totalItems: number
+}> {
   const client = await getSearch()
 
   const {
     body: {
       hits: {
-        total: { value: totalCount },
+        total: { value: totalItems },
         hits,
       },
     },
@@ -135,9 +139,9 @@ export async function search({
     })
   )
 
-  const totalPages = limit ? Math.ceil(totalCount / limit) : 1
+  const totalPages = limit ? Math.ceil(totalItems / limit) : 1
 
-  return { items, totalPages }
+  return { items, totalPages, totalItems }
 }
 
 /** Get a circular by ID. */
