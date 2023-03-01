@@ -5,7 +5,7 @@ const watch = args.includes('--watch')
 
 await build({
   bundle: true,
-  entryPoints: ['./app/email-incoming/index.js'],
+  entryPoints: ['./app/email-incoming/index.ts'],
   logLevel: 'info',
   outfile: 'email-incoming/index.js',
   plugins: [

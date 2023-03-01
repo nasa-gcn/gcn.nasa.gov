@@ -59,8 +59,9 @@ circular_endorsements
   endorserSub *String
   name circularEndorsementsByEndorserSub
 
-@sandbox
-invoker events
+circulars
+  email *String
+  name circularsByEmail
 
 @aws
 runtime nodejs18.x
