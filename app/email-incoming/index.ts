@@ -12,7 +12,6 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { SNSEvent, SNSEventRecord } from 'aws-lambda'
 
-import type { ParsedMail } from 'mailparser'
 import { simpleParser } from 'mailparser'
 
 import {
@@ -47,13 +46,15 @@ const isRejected = (
 
 async function handleRecord(record: SNSEventRecord) {
   const message = JSON.parse(record.Sns.Message)
+
+  if (!message.receipt) throw new Error('Message Receipt content missing')
+  validateMessageIsNotSpam(message.receipt)
+
   if (!message.content) throw new Error('Object has no body')
 
   const parsed = await simpleParser(
     Buffer.from(message.content, 'base64').toString()
   )
-
-  validateMessageIsNotSpam(parsed)
 
   if (!parsed.from) throw new Error('Email has no sender')
 
@@ -165,10 +166,10 @@ async function getLegacyUserData(
   )
 }
 
-function validateMessageIsNotSpam(parsed: ParsedMail) {
+function validateMessageIsNotSpam(messageReceipt: any) {
   if (
-    parsed.headers.get('x-ses-spam-verdict') != 'PASS' ||
-    parsed.headers.get('x-ses-virus-verdict') != 'PASS'
+    messageReceipt.spamVerdict.status != 'PASS' ||
+    messageReceipt.virusVerdict.status != 'PASS'
   )
     throw new Error('Message caught in virus/spam detection.')
 }
