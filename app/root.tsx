@@ -36,10 +36,12 @@ import type {
   MetaFunction,
   LinksFunction,
   DataFunctionArgs,
+  ErrorBoundaryComponent,
 } from '@remix-run/node'
 import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
+import { Highlight } from './components/Highlight'
 import { DevBanner } from './components/DevBanner'
 import { useSpinDelay } from 'spin-delay'
 import { getUser } from './routes/__auth/user.server'
@@ -244,11 +246,13 @@ export function CatchBoundary() {
   }
 }
 
-export function ErrorBoundary() {
+export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
+  console.error(error)
   return (
     <Document>
       <h1>Unexpected error</h1>
-      <p className="usa-intro">An unexpected error occurred.</p>
+      <p className="usa-intro">An unexpected error occurred:</p>
+      <Highlight language="text" code={error.stack || error.toString()} />
       <ButtonGroup>
         <Link to="/" className="usa-button">
           Go home
