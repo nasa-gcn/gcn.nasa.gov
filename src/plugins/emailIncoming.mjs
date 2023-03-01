@@ -42,6 +42,7 @@ export const deploy = {
                 },
               },
             ],
+            ScanEnabled: true,
           },
         },
       },
