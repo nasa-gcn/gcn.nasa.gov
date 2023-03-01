@@ -87,7 +87,7 @@ This is a test for legacy user stuff
 
 --_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
 `
-const emailScanSpamPassVirusFail = `From: "LastName, FirstName"
+const emailSpamAndVirusScan = `From: "LastName, FirstName"
     <example.user@example.com>
 To: "circulars@dev.gcn.nasa.gov" <circulars@dev.gcn.nasa.gov>
 Subject: GRB 230207B: Detection by GRBAlpha
@@ -99,33 +99,6 @@ Content-Language: en-US
 Content-Type: multipart/alternative;
     boundary="_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_"
 MIME-Version: 1.0
-X-SES-Spam-Verdict: PASS
-X-SES-Virus-Verdict: FAIL
-
---_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-
-
-This is a test for Spam/Virus
-
---_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
-`
-
-const emailScanVirusPassSpamFail = `From: "LastName, FirstName"
-<example.user@example.com>
-To: "circulars@dev.gcn.nasa.gov" <circulars@dev.gcn.nasa.gov>
-Subject: GRB 230207B: Detection by GRBAlpha
-Thread-Topic: GRB 230207B: Detection by GRBAlpha
-Thread-Index: Adk9dI5aYPr6M3WhQFmrIV1eoz5z1A==
-Date: Fri, 10 Feb 2023 17:24:40 +0000
-Accept-Language: en-US
-Content-Language: en-US
-Content-Type: multipart/alternative;
-boundary="_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_"
-MIME-Version: 1.0
-X-SES-Spam-Verdict: FAIL
-X-SES-Virus-Verdict: PASS
 
 --_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
 Content-Type: text/plain; charset="us-ascii"
@@ -142,18 +115,93 @@ module.exports = {
     'email-incoming': {
       main: {
         content: Buffer.from(testString).toString('base64'),
+        receipt: {
+          timestamp: '2023-03-01T19:59:12.905Z',
+          processingTimeMillis: 1052,
+          recipients: ['circulars@dev.gcn.nasa.gov'],
+          spamVerdict: { status: 'PASS' },
+          virusVerdict: { status: 'PASS' },
+          spfVerdict: { status: 'PASS' },
+          dkimVerdict: { status: 'PASS' },
+          dmarcVerdict: { status: 'PASS' },
+          action: {
+            type: 'SNS',
+            topicArn: 'fake-string-here',
+            encoding: 'BASE64',
+          },
+        },
       },
       legacy_user_fail: {
         content: Buffer.from(invalidUserTestString).toString('base64'),
+        receipt: {
+          timestamp: '2023-03-01T19:59:12.905Z',
+          processingTimeMillis: 1052,
+          recipients: ['circulars@dev.gcn.nasa.gov'],
+          spamVerdict: { status: 'PASS' },
+          virusVerdict: { status: 'PASS' },
+          spfVerdict: { status: 'PASS' },
+          dkimVerdict: { status: 'PASS' },
+          dmarcVerdict: { status: 'PASS' },
+          action: {
+            type: 'SNS',
+            topicArn: 'fake-string-here',
+            encoding: 'BASE64',
+          },
+        },
       },
       legacy_user_success: {
         content: Buffer.from(validLegacyUserTestString).toString('base64'),
+        receipt: {
+          timestamp: '2023-03-01T19:59:12.905Z',
+          processingTimeMillis: 1052,
+          recipients: ['circulars@dev.gcn.nasa.gov'],
+          spamVerdict: { status: 'PASS' },
+          virusVerdict: { status: 'PASS' },
+          spfVerdict: { status: 'PASS' },
+          dkimVerdict: { status: 'PASS' },
+          dmarcVerdict: { status: 'PASS' },
+          action: {
+            type: 'SNS',
+            topicArn: 'fake-string-here',
+            encoding: 'BASE64',
+          },
+        },
       },
       spam_pass_virus_fail: {
-        content: Buffer.from(emailScanSpamPassVirusFail).toString('base64'),
+        content: Buffer.from(emailSpamAndVirusScan).toString('base64'),
+        receipt: {
+          timestamp: '2023-03-01T19:59:12.905Z',
+          processingTimeMillis: 1052,
+          recipients: ['circulars@dev.gcn.nasa.gov'],
+          spamVerdict: { status: 'PASS' },
+          virusVerdict: { status: 'FAIL' },
+          spfVerdict: { status: 'PASS' },
+          dkimVerdict: { status: 'PASS' },
+          dmarcVerdict: { status: 'PASS' },
+          action: {
+            type: 'SNS',
+            topicArn: 'fake-string-here',
+            encoding: 'BASE64',
+          },
+        },
       },
       spam_fail_virus_pass: {
-        content: Buffer.from(emailScanVirusPassSpamFail).toString('base64'),
+        content: Buffer.from(emailSpamAndVirusScan).toString('base64'),
+        receipt: {
+          timestamp: '2023-03-01T19:59:12.905Z',
+          processingTimeMillis: 1052,
+          recipients: ['circulars@dev.gcn.nasa.gov'],
+          spamVerdict: { status: 'FAIL' },
+          virusVerdict: { status: 'PASS' },
+          spfVerdict: { status: 'PASS' },
+          dkimVerdict: { status: 'PASS' },
+          dmarcVerdict: { status: 'PASS' },
+          action: {
+            type: 'SNS',
+            topicArn: 'fake-string-here',
+            encoding: 'BASE64',
+          },
+        },
       },
     },
   },
