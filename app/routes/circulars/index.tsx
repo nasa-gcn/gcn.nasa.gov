@@ -27,7 +27,7 @@ import classNames from 'classnames'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 import { feature } from '~/lib/env.server'
-import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg' // '@uswds/uswds/src/img/usa-icons-bg/search--white.svg'
+import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 import { useState } from 'react'
 
 const limit = 100
