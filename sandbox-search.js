@@ -11,11 +11,8 @@ const { readFile } = require('fs/promises')
 module.exports = async function () {
   const text = await readFile('sandbox-seed.json', { encoding: 'utf-8' })
   const { circulars } = JSON.parse(text)
-  return circulars.flatMap((item) => {
-    delete item.dummy
-    return [
-      { index: { _index: 'circulars', _id: item.circularId.toString() } },
-      item,
-    ]
-  })
+  return circulars.flatMap((item) => [
+    { index: { _index: 'circulars', _id: item.circularId.toString() } },
+    item,
+  ])
 }
