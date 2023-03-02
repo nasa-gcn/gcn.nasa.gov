@@ -36,6 +36,8 @@ interface UserData {
   affiliation?: string
 }
 
+const fromName = 'GCN Circulars'
+
 const cognito = new CognitoIdentityProviderClient({})
 const origin = getOrigin()
 
@@ -80,12 +82,13 @@ async function handleRecord(record: SNSEventRecord) {
     !parsed.text ||
     !bodyIsValid(parsed.text)
   ) {
-    await sendEmail(
-      'GCN Circulars',
-      userEmail,
-      'GCN Circular Submission Warning: Invalid subject or body structure',
-      `The submission of your Circular has been rejected, as the subject line and body do not conform to the appropriate format. Please see ${origin}/circulars/classic#submission-process for more information.`
-    )
+    await sendEmail({
+      fromName,
+      recipient: userEmail,
+      subject:
+        'GCN Circular Submission Warning: Invalid subject or body structure',
+      body: `The submission of your Circular has been rejected, as the subject line and body do not conform to the appropriate format. Please see ${origin}/circulars/classic#submission-process for more information.`,
+    })
     return
   }
 
@@ -94,12 +97,12 @@ async function handleRecord(record: SNSEventRecord) {
     (await getLegacyUserData(userEmail))
 
   if (!userData) {
-    await sendEmail(
-      'GCN Circulars',
-      userEmail,
-      'GCN Circular Submission Warning: Missing permissions',
-      'You do not have the required permissions to submit GCN Circulars. If you believe this to be a mistake, please fill out the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.'
-    )
+    await sendEmail({
+      fromName,
+      recipient: userEmail,
+      subject: 'GCN Circular Submission Warning: Missing permissions',
+      body: 'You do not have the required permissions to submit GCN Circulars. If you believe this to be a mistake, please fill out the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.',
+    })
     return
   }
 
@@ -115,12 +118,12 @@ async function handleRecord(record: SNSEventRecord) {
   const newCircularId = await putRaw(circular)
 
   // Send a success email
-  await sendEmail(
-    'GCN Circulars',
-    userEmail,
-    `Successfully submitted Circular: ${newCircularId}`,
-    `Your circular has been successfully submitted. You may view it at ${origin}/circulars/${newCircularId}`
-  )
+  await sendEmail({
+    fromName: 'GCN Circulars',
+    recipient: userEmail,
+    subject: `Successfully submitted Circular: ${newCircularId}`,
+    body: `Your circular has been successfully submitted. You may view it at ${origin}/circulars/${newCircularId}`,
+  })
 }
 
 export async function handler(event: SNSEvent) {
