@@ -121,6 +121,7 @@ export async function search({
       },
       from: page && limit && page * limit,
       size: limit,
+      track_total_hits: true,
     },
   })
 
