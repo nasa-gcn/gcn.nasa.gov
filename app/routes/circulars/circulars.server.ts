@@ -54,36 +54,6 @@ export interface Circular extends CircularMetadata {
   submitter: string
 }
 
-/** List circulars in order of descending ID. */
-export async function list({
-  page,
-  limit,
-}: {
-  /** Page in results to retrieve. Note that indexing is 1-based. */
-  page: number
-  /** Number of results per page. */
-  limit: number
-}): Promise<{ items: CircularMetadata[]; totalPages: number }> {
-  const db = await tables()
-  const autoincrement = await getDynamoDBAutoIncrement()
-  const last = (await autoincrement.getLast()) ?? 1
-
-  // Calculate pagination assuming that last === the number of records.
-  const totalPages = Math.ceil(last / limit)
-  const circularId = last - (page - 1) * limit + 1
-
-  const { Items } = await db.circulars.query({
-    Limit: limit,
-    ScanIndexForward: false,
-    ExclusiveStartKey: { dummy: 0, circularId },
-    ProjectionExpression: 'circularId, subject',
-    KeyConditionExpression: 'dummy = :dummy',
-    ExpressionAttributeValues: { ':dummy': 0 },
-  })
-
-  return { items: Items, totalPages }
-}
-
 export async function search({
   query,
   page,
@@ -149,7 +119,6 @@ export async function search({
 export async function get(circularId: number): Promise<Circular> {
   const db = await tables()
   const result = await db.circulars.get({
-    dummy: 0,
     circularId,
   })
   if (!result)
@@ -172,7 +141,7 @@ export async function remove(circularId: number, request: Request) {
     })
 
   const db = await tables()
-  await db.circulars.delete({ dummy: 0, circularId: circularId })
+  await db.circulars.delete({ circularId })
 }
 
 /**
@@ -184,7 +153,7 @@ export async function putRaw<T>(item: T) {
     getSearch(),
   ])
   const createdOn = Date.now()
-  const circularId = await autoincrement.put({ dummy: 0, createdOn, ...item })
+  const circularId = await autoincrement.put({ createdOn, ...item })
   await search.index({
     id: circularId.toString(),
     index: 'circulars',

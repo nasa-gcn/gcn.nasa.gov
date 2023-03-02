@@ -35,8 +35,7 @@ circular_endorsements
   PointInTimeRecovery true
 
 circulars
-  dummy *Number  # dummy partition key so that all records are stored in one partition
-  circularId **Number
+  circularId *Number
   PointInTimeRecovery true
 
 auto_increment_metadata
