@@ -74,8 +74,7 @@ remixLiveReload  # Workaround for Remix live reload bug, https://github.com/remi
 sandboxOidcIdp  # Sandbox identity provider
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
 lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
-manualStaticBucketPolicy  # Mission Cloud Platform requires bucket policies to be set manually
-permissionsBoundary  # configure IAM Role permissions boundaries required by Mission Cloud Platform
+missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
 sendEmailPermissions  # Grant the Lambda function permission to send email.
 emailIncoming  # Add a custom Lambda to process events for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
