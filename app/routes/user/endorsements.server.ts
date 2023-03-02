@@ -26,6 +26,8 @@ import { getOrigin } from '~/lib/env.server'
 
 const origin = getOrigin()
 
+const fromName = 'GCN Endorsements'
+
 // models
 export type EndorsementRequest = {
   endorserEmail: string
@@ -129,11 +131,11 @@ export class EndorsementsServer {
         'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub and #status <> :status)',
     })
 
-    await sendEmail(
-      'GCN Endorsements',
-      endorserEmail,
-      'New GCN Peer Endorsement Request',
-      `You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
+    await sendEmail({
+      fromName,
+      recipient: endorserEmail,
+      subject: 'New GCN Peer Endorsement Request',
+      body: `You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
         this.#currentUserEmail
       }. Approval of an endorsement means that the requestor, ${
         this.#currentUserEmail
@@ -143,8 +145,8 @@ export class EndorsementsServer {
 
       If you are not familiar with this user, or believe it to be spam, you may reject or report the endorsement request.
       
-      View all of your pending endorsement requests here: ${origin}/user/endorsements`
-    )
+      View all of your pending endorsement requests here: ${origin}/user/endorsements`,
+    })
   }
 
   /**
@@ -211,31 +213,31 @@ export class EndorsementsServer {
 
     if (status === 'reported')
       promiseArray.push(
-        sendEmail(
-          'GCN Endorsements',
-          'gcnkafka@lists.nasa.gov',
-          'Notice: Endorsement Request Reported',
-          `${
+        sendEmail({
+          fromName,
+          recipient: 'gcnkafka@lists.nasa.gov',
+          subject: 'Notice: Endorsement Request Reported',
+          body: `${
             this.#currentUserEmail
-          } has reported the endorsement request from ${requestorEmail}.`
-        )
+          } has reported the endorsement request from ${requestorEmail}.`,
+        })
       )
 
     promiseArray.push(
-      sendEmail(
-        'GCN Endorsements',
-        requestorEmail,
-        'GCN Peer Endorsement Status Update',
-        `You are receiving this email because the status of your peer endorsment requested from ${
+      sendEmail({
+        fromName,
+        recipient: requestorEmail,
+        subject: 'GCN Peer Endorsement Status Update',
+        body: `You are receiving this email because the status of your peer endorsment requested from ${
           this.#currentUserEmail
-        } has been updated to ${status}.`
-      ),
-      sendEmail(
-        'GCN Endorsements',
-        this.#currentUserEmail,
-        'GCN Peer Endorsement Status Update',
-        `Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.`
-      )
+        } has been updated to ${status}.`,
+      }),
+      sendEmail({
+        fromName,
+        recipient: this.#currentUserEmail,
+        subject: 'GCN Peer Endorsement Status Update',
+        body: `Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.`,
+      })
     )
 
     await Promise.all(promiseArray)

@@ -6,28 +6,36 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import type { SendEmailCommandInput } from '@aws-sdk/client-sesv2'
 import {
   SendEmailCommand,
   SESv2Client,
   SESv2ServiceException,
 } from '@aws-sdk/client-sesv2'
+import { chunk } from 'lodash'
 import { getHostname } from './env.server'
 
 const client = new SESv2Client({})
 
-export async function sendEmail(
-  fromName: string,
-  recipient: string,
-  subject: string,
-  body: string
-) {
-  const hostname = getHostname()
+// https://docs.aws.amazon.com/ses/latest/dg/quotas.html
+const maxRecipientsPerMessage = 50
 
-  const command = new SendEmailCommand({
-    Destination: {
-      ToAddresses: [recipient],
-    },
-    FromEmailAddress: `${fromName} <no-reply@${hostname}>`,
+interface BaseMessageProps {
+  /** The name to show in the From: address. */
+  fromName: string
+  /** The subject of the email. */
+  subject: string
+  /** The body of the email. */
+  body: string
+}
+
+function getBaseMessage({
+  fromName,
+  subject,
+  body,
+}: BaseMessageProps): Omit<SendEmailCommandInput, 'Destination'> {
+  return {
+    FromEmailAddress: `${fromName} <no-reply@${getHostname()}>`,
     Content: {
       Simple: {
         Subject: {
@@ -40,8 +48,11 @@ export async function sendEmail(
         },
       },
     },
-  })
+  }
+}
 
+async function send(sendCommandInput: SendEmailCommandInput) {
+  const command = new SendEmailCommand(sendCommandInput)
   try {
     await client.send(command)
   } catch (e) {
@@ -57,4 +68,33 @@ export async function sendEmail(
       console.warn(`SES threw ${e.name}. This would be an error in production.`)
     }
   }
+}
+
+/** Send an email to many Bcc: recipients. */
+export async function sendEmailBulk({
+  recipients,
+  ...props
+}: BaseMessageProps & { recipients: string[] }) {
+  const message = getBaseMessage(props)
+  await Promise.all(
+    chunk(recipients, maxRecipientsPerMessage).map(async (BccAddresses) => {
+      await send({
+        Destination: { BccAddresses },
+        ...message,
+      })
+    })
+  )
+}
+
+/** Send an email to one To: recipient. */
+export async function sendEmail({
+  recipient,
+  ...props
+}: BaseMessageProps & { recipient: string }) {
+  await send({
+    Destination: {
+      ToAddresses: [recipient],
+    },
+    ...getBaseMessage(props),
+  })
 }

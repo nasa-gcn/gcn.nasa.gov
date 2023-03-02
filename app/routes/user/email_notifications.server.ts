@@ -216,12 +216,12 @@ export class EmailNotificationServer {
   }
 
   // Send Test Email
-  async sendTestEmail(destination: string) {
-    await sendEmail(
-      'GCN Notices',
-      destination,
-      'GCN Notices test',
-      'This is a test message from the GCN Notices.'
-    )
+  async sendTestEmail(recipient: string) {
+    await sendEmail({
+      fromName: 'GCN Notices',
+      recipient,
+      subject: 'GCN Notices test',
+      body: 'This is a test message from the GCN Notices.',
+    })
   }
 }
