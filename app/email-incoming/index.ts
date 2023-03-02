@@ -48,7 +48,17 @@ async function handleRecord(record: SNSEventRecord) {
   const message = JSON.parse(record.Sns.Message)
 
   if (!message.receipt) throw new Error('Message Receipt content missing')
-  validateMessageIsNotSpam(message.receipt)
+
+  if (
+    ![
+      message.receipt.spamVerdict,
+      message.receipt.virusVerdict,
+      message.receipt.spfVerdict,
+      message.receipt.dkimVerdict,
+      message.receipt.dmarcVerdict,
+    ].every((verdict) => verdict.status === 'PASS')
+  )
+    throw new Error('Message caught in virus/spam detection.')
 
   if (!message.content) throw new Error('Object has no body')
 
@@ -164,12 +174,4 @@ async function getLegacyUserData(
       affiliation: data.affiliation,
     }
   )
-}
-
-function validateMessageIsNotSpam(messageReceipt: any) {
-  if (
-    messageReceipt.spamVerdict.status != 'PASS' ||
-    messageReceipt.virusVerdict.status != 'PASS'
-  )
-    throw new Error('Message caught in virus/spam detection.')
 }
