@@ -126,7 +126,9 @@ async function handleRecord(record: SNSEventRecord) {
   })
 }
 
-export async function handler(event: SNSEvent) {
+// FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
+// See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
+module.exports.handler = async (event: SNSEvent) => {
   if (!feature('circulars')) throw new Error('not implemented')
   const results = await Promise.allSettled(event.Records.map(handleRecord))
   const rejections = results.filter(isRejected).map(({ reason }) => reason)

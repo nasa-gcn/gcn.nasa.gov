@@ -68,6 +68,7 @@
     "@aws-sdk/lib-dynamodb": "3.188.0",
     "@aws-sdk/util-dynamodb": "3.188.0",
     "@nasa-gcn/architect-plugin-search": "^0.0.2",
+    "@nasa-gcn/architect-plugin-tracing": "^0.0.1",
     "@remix-run/dev": "^1.14.0",
     "@remix-run/eslint-config": "^1.14.0",
     "@types/color-convert": "^2.0.0",
