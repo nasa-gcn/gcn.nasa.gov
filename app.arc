@@ -67,9 +67,9 @@ runtime nodejs18.x
 region us-east-1
 architecture arm64
 memory 256
+tracing true
 
 @plugins
-tracing  # Enable AWS X-Ray distributed tracing
 remixLiveReload  # Workaround for Remix live reload bug, https://github.com/remix-run/remix/issues/198
 sandboxOidcIdp  # Sandbox identity provider
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
@@ -79,4 +79,5 @@ permissionsBoundary  # configure IAM Role permissions boundaries required by Mis
 sendEmailPermissions  # Grant the Lambda function permission to send email.
 emailIncoming  # Add a custom Lambda to process events for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
+nasa-gcn/architect-plugin-tracing  # Enable AWS X-Ray distributed tracing
 architect/plugin-lambda-invoker
