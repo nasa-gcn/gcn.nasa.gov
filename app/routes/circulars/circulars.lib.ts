@@ -6,6 +6,49 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
+import dedent from 'ts-dedent'
+
+export interface CircularMetadata {
+  circularId: number
+  subject: string
+}
+
+export interface Circular extends CircularMetadata {
+  sub?: string
+  createdOn: number
+  body: string
+  submitter: string
+}
+
+/** Format a Circular as plain text. */
+export function formatCircular({
+  circularId,
+  subject,
+  createdOn,
+  body,
+  submitter,
+}: Circular) {
+  const d = new Date(createdOn)
+  const [YY, MM, DD, hh, mm, ss] = [
+    d.getUTCFullYear() % 100,
+    d.getUTCMonth() + 1,
+    d.getUTCDate(),
+    d.getUTCHours(),
+    d.getUTCMinutes(),
+    d.getUTCSeconds(),
+  ].map((i) => i.toString().padStart(2, '0'))
+
+  return dedent`
+  TITLE:   GCN CIRCULAR
+  NUMBER:  ${circularId}
+  SUBJECT: ${subject}
+  DATE:    ${YY}/${MM}/${DD} ${hh}:${mm}:${ss} GMT
+  FROM:    ${submitter}
+
+  ${body}
+  `
+}
+
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
   if (subject.length)

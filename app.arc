@@ -10,6 +10,10 @@ remix-gcn
 email-incoming
   src build/events/email-incoming
 
+@table-streams
+circulars
+  src build/table-streams/circulars
+
 @static
 fingerprint external
 folder build/static
@@ -23,6 +27,11 @@ client_credentials
 sessions
   _idx *String
   _ttl TTL
+
+circulars_subscriptions
+  email *String
+  sub **String
+  PointInTimeRecovery true
 
 email_notification
   sub *String
@@ -67,6 +76,11 @@ circular_endorsements
 circulars
   email *String
   name circularsByEmail
+
+circulars_subscriptions
+  sub *String
+  email **String
+  name circularsSubscriptionsBySub
 
 @aws
 runtime nodejs18.x

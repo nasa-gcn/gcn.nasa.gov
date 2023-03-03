@@ -13,6 +13,7 @@ import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import memoizee from 'memoizee'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
+import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
 export const group = 'gcn.nasa.gov/circular-submitter'
@@ -41,18 +42,6 @@ export const getDynamoDBAutoIncrement = memoizee(
   },
   { promise: true }
 )
-
-export interface CircularMetadata {
-  circularId: number
-  subject: string
-}
-
-export interface Circular extends CircularMetadata {
-  sub?: string
-  createdOn: number
-  body: string
-  submitter: string
-}
 
 export async function search({
   query,
@@ -148,17 +137,9 @@ export async function remove(circularId: number, request: Request) {
  * Adds a new entry into the GCN Circulars table WITHOUT authentication
  */
 export async function putRaw<T>(item: T) {
-  const [autoincrement, search] = await Promise.all([
-    getDynamoDBAutoIncrement(),
-    getSearch(),
-  ])
+  const autoincrement = await getDynamoDBAutoIncrement()
   const createdOn = Date.now()
   const circularId = await autoincrement.put({ createdOn, ...item })
-  await search.index({
-    id: circularId.toString(),
-    index: 'circulars',
-    body: { createdOn, circularId, ...item },
-  })
   return circularId
 }
 

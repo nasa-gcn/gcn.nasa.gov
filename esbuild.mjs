@@ -1,11 +1,13 @@
 import { build } from 'esbuild'
+import { glob } from 'glob'
 
 const args = process.argv.slice(2)
 const watch = args.includes('--watch')
+const entryPoints = await glob('./app/{events,table-streams}/*/index.ts')
 
 await build({
   bundle: true,
-  entryPoints: ['./app/events/email-incoming/index.ts'],
+  entryPoints,
   logLevel: 'info',
   outdir: 'build',
   outbase: 'app',
