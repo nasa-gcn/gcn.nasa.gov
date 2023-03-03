@@ -5,9 +5,10 @@ const watch = args.includes('--watch')
 
 await build({
   bundle: true,
-  entryPoints: ['./app/email-incoming/index.ts'],
+  entryPoints: ['./app/events/email-incoming/index.ts'],
   logLevel: 'info',
-  outfile: 'email-incoming/index.js',
+  outdir: 'build',
+  outbase: 'app',
   plugins: [
     {
       name: 'exclude node_modules from bundling',

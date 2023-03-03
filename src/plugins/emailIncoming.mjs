@@ -6,17 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-// Add a custom Lambda to process events for incoming emails
-export const set = {
-  events() {
-    return {
-      name: 'email-incoming',
-      src: 'email-incoming',
-      required: true,
-    }
-  },
-}
-
+// Enable notifications from SES to SNS to trigger email-incoming Lambda
 export const deploy = {
   start({ cloudformation }) {
     const { ORIGIN } =

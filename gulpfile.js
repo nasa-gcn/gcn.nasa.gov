@@ -36,7 +36,7 @@ PATHS
 */
 
 // Project Sass source directory
-const PROJECT_SASS_SRC = "./theme";
+const PROJECT_SASS_SRC = "./build/theme";
 
 // Images destination
 const IMG_DEST = "./app/theme/img";
