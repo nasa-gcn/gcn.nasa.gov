@@ -49,6 +49,7 @@ auto_increment_metadata
 
 legacy_users
   email *String
+  PointInTimeRecovery true
 
 @tables-indexes
 email_notification_subscription
