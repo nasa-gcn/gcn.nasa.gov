@@ -10,7 +10,7 @@ import {
   ListUsersInGroupCommand,
   CognitoIdentityProviderClient,
 } from '@aws-sdk/client-cognito-identity-provider'
-import type { SNSEvent, SNSEventRecord } from 'aws-lambda'
+import type { SNSEventRecord } from 'aws-lambda'
 
 import { simpleParser } from 'mailparser'
 
@@ -28,6 +28,7 @@ import { group, putRaw } from '~/routes/circulars/circulars.server'
 import { sendEmail } from '~/lib/email.server'
 import { feature, getOrigin } from '~/lib/env.server'
 import { tables } from '@architect/functions'
+import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 
 interface UserData {
   email: string
@@ -41,99 +42,90 @@ const fromName = 'GCN Circulars'
 const cognito = new CognitoIdentityProviderClient({})
 const origin = getOrigin()
 
-// Type guarding to get around an error when trying to access `reason`
-const isRejected = (
-  input: PromiseSettledResult<unknown>
-): input is PromiseRejectedResult => input.status === 'rejected'
-
-async function handleRecord(record: SNSEventRecord) {
-  const message = JSON.parse(record.Sns.Message)
-
-  if (!message.receipt) throw new Error('Message Receipt content missing')
-
-  if (
-    ![
-      message.receipt.spamVerdict,
-      message.receipt.virusVerdict,
-      message.receipt.spfVerdict,
-      message.receipt.dkimVerdict,
-      message.receipt.dmarcVerdict,
-    ].every((verdict) => verdict.status === 'PASS')
-  )
-    throw new Error('Message caught in virus/spam detection.')
-
-  if (!message.content) throw new Error('Object has no body')
-
-  const parsed = await simpleParser(
-    Buffer.from(message.content, 'base64').toString()
-  )
-
-  if (!parsed.from) throw new Error('Email has no sender')
-
-  const userEmail = parsed.from.value[0].address
-  if (!userEmail)
-    throw new Error(
-      'Error parsing sender email from model: ' + JSON.stringify(parsed.from)
-    )
-
-  if (
-    !parsed.subject ||
-    !subjectIsValid(parsed.subject) ||
-    !parsed.text ||
-    !bodyIsValid(parsed.text)
-  ) {
-    await sendEmail({
-      fromName,
-      recipient: userEmail,
-      subject:
-        'GCN Circular Submission Warning: Invalid subject or body structure',
-      body: `The submission of your Circular has been rejected, as the subject line and body do not conform to the appropriate format. Please see ${origin}/circulars/classic#submission-process for more information.`,
-    })
-    return
-  }
-
-  const userData =
-    (await getCognitoUserData(userEmail)) ??
-    (await getLegacyUserData(userEmail))
-
-  if (!userData) {
-    await sendEmail({
-      fromName,
-      recipient: userEmail,
-      subject: 'GCN Circular Submission Warning: Missing permissions',
-      body: 'You do not have the required permissions to submit GCN Circulars. If you believe this to be a mistake, please fill out the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.',
-    })
-    return
-  }
-
-  const circular = {
-    subject: parsed.subject,
-    body: parsed.text,
-    sub: userData.sub,
-    submitter: formatAuthor(userData),
-  }
-
-  // Removes sub as a property if it is undefined from the legacy users
-  if (!circular.sub) delete circular.sub
-  const newCircularId = await putRaw(circular)
-
-  // Send a success email
-  await sendEmail({
-    fromName: 'GCN Circulars',
-    recipient: userEmail,
-    subject: `Successfully submitted Circular: ${newCircularId}`,
-    body: `Your circular has been successfully submitted. You may view it at ${origin}/circulars/${newCircularId}`,
-  })
-}
-
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-module.exports.handler = async (event: SNSEvent) => {
-  if (!feature('circulars')) throw new Error('not implemented')
-  const results = await Promise.allSettled(event.Records.map(handleRecord))
-  const rejections = results.filter(isRejected).map(({ reason }) => reason)
-  if (rejections.length) throw rejections
-}
+module.exports.handler = createTriggerHandler(
+  async (record: SNSEventRecord) => {
+    if (!feature('circulars')) throw new Error('not implemented')
+    const message = JSON.parse(record.Sns.Message)
+
+    if (!message.receipt) throw new Error('Message Receipt content missing')
+
+    if (
+      ![
+        message.receipt.spamVerdict,
+        message.receipt.virusVerdict,
+        message.receipt.spfVerdict,
+        message.receipt.dkimVerdict,
+        message.receipt.dmarcVerdict,
+      ].every((verdict) => verdict.status === 'PASS')
+    )
+      throw new Error('Message caught in virus/spam detection.')
+
+    if (!message.content) throw new Error('Object has no body')
+
+    const parsed = await simpleParser(
+      Buffer.from(message.content, 'base64').toString()
+    )
+
+    if (!parsed.from) throw new Error('Email has no sender')
+
+    const userEmail = parsed.from.value[0].address
+    if (!userEmail)
+      throw new Error(
+        'Error parsing sender email from model: ' + JSON.stringify(parsed.from)
+      )
+
+    if (
+      !parsed.subject ||
+      !subjectIsValid(parsed.subject) ||
+      !parsed.text ||
+      !bodyIsValid(parsed.text)
+    ) {
+      await sendEmail({
+        fromName,
+        recipient: userEmail,
+        subject:
+          'GCN Circular Submission Warning: Invalid subject or body structure',
+        body: `The submission of your Circular has been rejected, as the subject line and body do not conform to the appropriate format. Please see ${origin}/circulars/classic#submission-process for more information.`,
+      })
+      return
+    }
+
+    const userData =
+      (await getCognitoUserData(userEmail)) ??
+      (await getLegacyUserData(userEmail))
+
+    if (!userData) {
+      await sendEmail({
+        fromName,
+        recipient: userEmail,
+        subject: 'GCN Circular Submission Warning: Missing permissions',
+        body: 'You do not have the required permissions to submit GCN Circulars. If you believe this to be a mistake, please fill out the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.',
+      })
+      return
+    }
+
+    const circular = {
+      subject: parsed.subject,
+      body: parsed.text,
+      sub: userData.sub,
+      submitter: formatAuthor(userData),
+    }
+
+    // Removes sub as a property if it is undefined from the legacy users
+    if (!circular.sub) delete circular.sub
+    const newCircularId = await putRaw(circular)
+
+    // Send a success email
+    await sendEmail({
+      fromName: 'GCN Circulars',
+      recipient: userEmail,
+      subject: `Successfully submitted Circular: ${newCircularId}`,
+      body: `Your circular has been successfully submitted. You may view it at ${origin}/circulars/${newCircularId}`,
+    })
+  }
+)
 
 /**
  * Returns a UserData object constructed from cognito if the
