@@ -4,10 +4,15 @@ remix-gcn
 @http
 /*
   method any
-  src server
+  src build/server
+
+@events
+email-incoming
+  src build/events/email-incoming
 
 @static
 fingerprint external
+folder build/static
 
 @tables
 client_credentials
@@ -76,7 +81,7 @@ lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run t
 lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
 missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
 sendEmailPermissions  # Grant the Lambda function permission to send email.
-emailIncoming  # Add a custom Lambda to process events for incoming emails
+emailIncoming  # // Enable notifications from SES to SNS to trigger email-incoming Lambda
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-tracing  # Enable AWS X-Ray distributed tracing
 architect/plugin-lambda-invoker

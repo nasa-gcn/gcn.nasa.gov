@@ -18,7 +18,7 @@ import {
   subjectIsValid,
   formatAuthor,
   bodyIsValid,
-} from '../routes/circulars/circulars.lib'
+} from '../../routes/circulars/circulars.lib'
 
 import {
   extractAttributeRequired,
