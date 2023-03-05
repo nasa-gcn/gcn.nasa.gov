@@ -88,7 +88,7 @@ export function ClientSampleCode({
             consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
                                 `)}])
             while True:
-                for message in consumer.consume():
+                for message in consumer.consume(timeout=1):
                     value = message.value()
                     print(value)
 
