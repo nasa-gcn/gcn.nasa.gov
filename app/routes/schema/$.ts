@@ -39,5 +39,3 @@ export async function loader({ params: { '*': subPath } }: DataFunctionArgs) {
 
   return new Response(body, { headers: { 'Content-Type': 'application/json' } })
 }
-
-export default function () {}
