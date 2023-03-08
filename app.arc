@@ -89,6 +89,12 @@ architecture arm64
 memory 256
 tracing true
 
+@search
+instanceType t3.small.search
+instanceCount 2
+availabilityZoneCount 2
+volumeSize 10
+
 @plugins
 remixLiveReload  # Workaround for Remix live reload bug, https://github.com/remix-run/remix/issues/198
 sandboxOidcIdp  # Sandbox identity provider
