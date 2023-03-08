@@ -20,6 +20,29 @@ export interface Circular extends CircularMetadata {
   submitter: string
 }
 
+type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
+
+const subjectMatchers: SubjectMatcher[] = [
+  [/GRB[.\s_-]*(\d{6}[a-z|.]\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
+  [
+    /SGR[.\s_-]*Swift[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i,
+    ([, id]) => `SGR Swift ${id.toUpperCase()}`,
+  ],
+  [/IceCube[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `IceCube-${id.toUpperCase()}`],
+  [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
+  [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
+  [
+    /LIGO\/Virgo[.\s_-]*([S|G|GW])(\d{6}[a-z]+)/i,
+    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
+  ],
+  [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id}`.toUpperCase()],
+  [
+    /Baksan\sNeutrino\sObservatory\sAlert[.\s_-]*(\d{6}.\d{2})/i,
+    ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
+  ],
+]
+
 /** Format a Circular as plain text. */
 export function formatCircular({
   circularId,
@@ -72,6 +95,7 @@ export const validSubjectKeywords = [
   'AGILE',
   'ANTARES',
   'AXP',
+  'Baksan Neutrino Observatory Alert',
   'Chandra',
   'Fermi',
   'FXT',
@@ -86,7 +110,7 @@ export const validSubjectKeywords = [
   'INTEGRAL',
   'IPN',
   'KONUS',
-  'LIGO',
+  'LIGO/Virgo',
   'LVC',
   'MAXI',
   'RATIR',
@@ -99,6 +123,7 @@ export const validSubjectKeywords = [
   'VLBI',
   'XRB',
   'XTR',
+  'ZTF',
 ]
 
 const emailAutoReplyChecklist = [
@@ -142,4 +167,15 @@ export function formatAuthor({
   if (!name) return email
   else if (!affiliation) return `${name} <${email}>`
   else return `${name} at ${affiliation} <${email}>`
+}
+
+export function parseEventFromSubject(value: string) {
+  for (const [regexp, normalize] of subjectMatchers) {
+    const startsWithMatch = RegExp('^' + regexp.source).exec(value)
+    if (startsWithMatch) return normalize(startsWithMatch)
+  }
+  for (const [regexp, normalize] of subjectMatchers) {
+    const match = regexp.exec(value)
+    if (match) return normalize(match)
+  }
 }
