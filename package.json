@@ -118,7 +118,7 @@
     "uswds": "2.13.3"
   },
   "overrides": {
-    "@architect/deploy": "github:lpsinger/deploy#pluginName"
+    "@architect/sandbox": "^5.5.3"
   },
   "engines": {
     "node": ">=18"
