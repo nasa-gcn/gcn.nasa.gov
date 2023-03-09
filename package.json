@@ -27,7 +27,8 @@
     "deploy:arc": "arc deploy --no-hydrate --prune --production",
     "deploy": "run-s deploy:hydrate deploy:remove-uswds deploy:modclean deploy:arc",
     "clean": "rimraf build/static build/server/_assets build/server/index.* build/server/node_modules build/events build/table-streams sam.json sam.yaml .cache",
-    "test": "jest"
+    "test": "jest",
+    "test-coverage": "jest --coverage"
   },
   "dependencies": {
     "@architect/functions": "^5.3.4",
@@ -154,7 +155,10 @@
   },
   "jest": {
     "preset": "ts-jest",
-    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "app/**/*.{t,j}s{,x}",
+      "!app/theme/**"
+    ],
     "coverageReporters": [
       "text",
       "cobertura"
