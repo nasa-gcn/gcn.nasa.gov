@@ -25,3 +25,5 @@ jobs:
         run: npx prettier -c .
       - name: Run unit tests
         run: npm run test
+      - name: Upload to Codecov.io
+        uses: codecov/codecov-action@v3
