@@ -5,11 +5,11 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Link } from '@trussworks/react-uswds'
 import { dedent } from 'ts-dedent'
-import { useHostname } from '~/root'
+
 import { Highlight } from './Highlight'
+import { useHostname } from '~/root'
 
 function useDomain() {
   const hostname = useHostname()

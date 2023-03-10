@@ -5,21 +5,21 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { NoticeFormat } from '~/components/NoticeFormat'
-import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
-import { formatAndNoticeTypeToTopic } from '~/lib/utils'
-import { getUser } from '~/routes/__auth/user.server'
+
 import type {
   EmailNotification,
   EmailNotificationVM,
 } from '../email_notifications.server'
 import { EmailNotificationServer } from '../email_notifications.server'
+import { NoticeFormat } from '~/components/NoticeFormat'
+import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
+import { formatAndNoticeTypeToTopic } from '~/lib/utils'
+import { getUser } from '~/routes/__auth/user.server'
 
 export const handle = { breadcrumb: 'Edit', getSitemapEntries: () => null }
 

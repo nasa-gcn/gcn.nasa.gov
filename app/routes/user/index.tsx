@@ -5,19 +5,19 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
+
+import { storage } from '../__auth/auth.server'
+import { getUser, updateSession } from '../__auth/user.server'
+import { formatAuthor } from '../circulars/circulars.lib'
+import { client, maybeThrow } from './cognito.server'
 import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
-import { formatAuthor } from '../circulars/circulars.lib'
-import { storage } from '../__auth/auth.server'
-import { getUser, updateSession } from '../__auth/user.server'
-import { client, maybeThrow } from './cognito.server'
 
 export const handle = { breadcrumb: 'Profile', getSitemapEntries: () => null }
 

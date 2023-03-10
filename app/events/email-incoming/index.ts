@@ -5,30 +5,27 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
+import { tables } from '@architect/functions'
 import {
-  ListUsersInGroupCommand,
   CognitoIdentityProviderClient,
+  ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { SNSEventRecord } from 'aws-lambda'
-
 import { simpleParser } from 'mailparser'
 
 import {
-  subjectIsValid,
-  formatAuthor,
   bodyIsValid,
+  formatAuthor,
+  subjectIsValid,
 } from '../../routes/circulars/circulars.lib'
-
 import {
-  extractAttributeRequired,
   extractAttribute,
+  extractAttributeRequired,
 } from '~/lib/cognito.server'
-import { group, putRaw } from '~/routes/circulars/circulars.server'
 import { sendEmail } from '~/lib/email.server'
 import { feature, getOrigin } from '~/lib/env.server'
-import { tables } from '@architect/functions'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
+import { group, putRaw } from '~/routes/circulars/circulars.server'
 
 interface UserData {
   email: string

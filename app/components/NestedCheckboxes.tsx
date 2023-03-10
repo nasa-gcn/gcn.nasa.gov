@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Link } from '@remix-run/react'
 import { Checkbox } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'

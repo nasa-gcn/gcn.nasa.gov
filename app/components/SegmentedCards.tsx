@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { ReactNode } from 'react'
 
 export default function SegmentedCards({

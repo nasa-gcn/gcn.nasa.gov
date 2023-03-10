@@ -5,9 +5,9 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
+
 import { getOpenIDClient } from './auth.server'
 
 export const loader: LoaderFunction = async ({ request: { url } }) => {

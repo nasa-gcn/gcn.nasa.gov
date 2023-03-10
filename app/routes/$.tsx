@@ -1,6 +1,6 @@
-import { ButtonGroup } from '@trussworks/react-uswds'
 import type { LoaderFunction } from '@remix-run/node'
 import { Link } from '@remix-run/react'
+import { ButtonGroup } from '@trussworks/react-uswds'
 
 export const handle = {
   breadcrumb: 'Page Not Found',

@@ -5,14 +5,14 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { SendEmailCommandInput } from '@aws-sdk/client-sesv2'
 import {
-  SendEmailCommand,
   SESv2Client,
   SESv2ServiceException,
+  SendEmailCommand,
 } from '@aws-sdk/client-sesv2'
 import { chunk } from 'lodash'
+
 import { getHostname } from './env.server'
 
 const client = new SESv2Client({})

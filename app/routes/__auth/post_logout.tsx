@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
@@ -15,6 +14,7 @@ import {
   ModalFooter,
   ModalHeading,
 } from '@trussworks/react-uswds'
+
 import { storage } from './auth.server'
 
 export const handle = {

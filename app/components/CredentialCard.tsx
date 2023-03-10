@@ -5,21 +5,21 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import { useFetcher, Form } from '@remix-run/react'
+import { Form, useFetcher } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import { Icon } from '@trussworks/react-uswds'
 import {
-  Grid,
-  ModalToggleButton,
   Button,
+  Grid,
   Modal,
-  ModalHeading,
   ModalFooter,
+  ModalHeading,
+  ModalToggleButton,
 } from '@trussworks/react-uswds'
 import { useRef } from 'react'
-import type { RedactedClientCredential } from '~/routes/user/client_credentials.server'
+
 import TimeAgo from './TimeAgo'
+import type { RedactedClientCredential } from '~/routes/user/client_credentials.server'
 
 export default function CredentialCard({
   name,

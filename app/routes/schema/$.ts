@@ -5,11 +5,10 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import { readFile } from 'node:fs/promises'
-import { extname, join, dirname } from 'node:path'
-import type { DataFunctionArgs } from '@remix-run/node'
 import '@nasa-gcn/schema'
+import type { DataFunctionArgs } from '@remix-run/node'
+import { readFile } from 'node:fs/promises'
+import { dirname, extname, join } from 'node:path'
 
 function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
   return e instanceof Error && 'code' in e && 'errno' in e

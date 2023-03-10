@@ -5,19 +5,20 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Link, NavLink, useLocation } from '@remix-run/react'
-import { useState } from 'react'
 import {
-  Header as USWDSHeader,
+  Menu,
+  NavDropDownButton,
   NavMenuButton,
   PrimaryNav,
   Title,
-  NavDropDownButton,
-  Menu,
+  Header as USWDSHeader,
 } from '@trussworks/react-uswds'
-import logo from '~/img/logo.svg'
+import { useState } from 'react'
+
 import { useFeature } from '~/root'
+
+import logo from '~/img/logo.svg'
 
 export function Header({ email }: { email?: string }) {
   const enableCirculars = useFeature('circulars')

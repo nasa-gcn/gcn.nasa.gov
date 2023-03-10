@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { feature, getEnvOrDie, getFeatures } from '../app/lib/env.server'
 
 let oldEnv: typeof process.env

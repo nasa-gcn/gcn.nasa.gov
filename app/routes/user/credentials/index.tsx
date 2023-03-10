@@ -5,14 +5,14 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import SegmentedCards from '~/components/SegmentedCards'
+
 import { ClientCredentialVendingMachine } from '../client_credentials.server'
 import CredentialCard from '~/components/CredentialCard'
-import { getFormDataString } from '~/lib/utils'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
+import SegmentedCards from '~/components/SegmentedCards'
+import { getFormDataString } from '~/lib/utils'
 
 export const handle = { getSitemapEntries: () => null }
 

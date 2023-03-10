@@ -5,15 +5,15 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
+
+import { EmailNotificationServer } from '../email_notifications.server'
 import EmailNotificationCard from '~/components/EmailNotificationCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
-import { EmailNotificationServer } from '../email_notifications.server'
 
 export const handle = { getSitemapEntries: () => null }
 

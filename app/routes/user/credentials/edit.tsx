@@ -5,12 +5,12 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { DataFunctionArgs } from '@remix-run/node'
+
 import {
+  NewCredentialForm,
   handleCredentialActions,
   handleCredentialLoader,
-  NewCredentialForm,
 } from '~/components/NewCredentialForm'
 
 export const handle = { breadcrumb: 'New', getSitemapEntries: () => null }

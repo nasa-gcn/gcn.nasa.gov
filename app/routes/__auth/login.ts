@@ -5,10 +5,10 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { generators } from 'openid-client'
+
 import { getOpenIDClient, oidcStorage, storage } from './auth.server'
 import { parseTokenSet, updateSession } from './user.server'
 

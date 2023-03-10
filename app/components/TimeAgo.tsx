@@ -5,10 +5,9 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import dayjs from 'dayjs'
-import RelativeTime from 'dayjs/plugin/relativeTime'
 import locale from 'dayjs/locale/en'
+import RelativeTime from 'dayjs/plugin/relativeTime'
 
 dayjs.locale(locale)
 dayjs.extend(RelativeTime)

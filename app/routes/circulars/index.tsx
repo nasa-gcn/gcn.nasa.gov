@@ -5,14 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import {
-  Button,
-  ButtonGroup,
-  Icon,
-  Label,
-  TextInput,
-} from '@trussworks/react-uswds'
+import type { DataFunctionArgs } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import {
   Form,
   Link,
@@ -20,15 +14,22 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
-import type { DataFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
-import { put, search } from './circulars.server'
+import {
+  Button,
+  ButtonGroup,
+  Icon,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
 import classNames from 'classnames'
+import { useState } from 'react'
+
+import { put, search } from './circulars.server'
+import { feature } from '~/lib/env.server'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
-import { feature } from '~/lib/env.server'
+
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
-import { useState } from 'react'
 
 const limit = 100
 

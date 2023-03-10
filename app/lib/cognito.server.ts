@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { UserType } from '@aws-sdk/client-cognito-identity-provider'
 
 /**

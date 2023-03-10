@@ -5,13 +5,13 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import { Tab, Tabs } from '~/components/Tabs'
-import { ClientSampleCode } from '~/components/ClientSampleCode'
-import { Form, Link, useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
+import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button } from '@trussworks/react-uswds'
+
+import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
+import { ClientSampleCode } from '~/components/ClientSampleCode'
+import { Tab, Tabs } from '~/components/Tabs'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 
 export const handle = {

@@ -5,10 +5,12 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Label } from '@trussworks/react-uswds'
+import classnames from 'classnames'
+import { useCombobox } from 'downshift'
+import type { UseComboboxProps } from 'downshift'
 import {
   forwardRef,
   useEffect,
@@ -16,19 +18,18 @@ import {
   useRef,
   useState,
 } from 'react'
-import SegmentedCards from '~/components/SegmentedCards'
-import { getFormDataString } from '~/lib/utils'
+
+import { formatAuthor } from '../circulars/circulars.lib'
 import type {
   EndorsementRequest,
   EndorsementRole,
   EndorsementUser,
 } from './endorsements.server'
 import { EndorsementsServer } from './endorsements.server'
-import { useCombobox } from 'downshift'
-import type { UseComboboxProps } from 'downshift'
-import classnames from 'classnames'
+import SegmentedCards from '~/components/SegmentedCards'
+import { getFormDataString } from '~/lib/utils'
+
 import loaderImage from 'app/theme/img/loader.gif'
-import { formatAuthor } from '../circulars/circulars.lib'
 
 export const handle = {
   breadcrumb: 'Peer Endorsements',

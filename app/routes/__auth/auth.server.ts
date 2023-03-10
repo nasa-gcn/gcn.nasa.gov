@@ -5,10 +5,10 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { createArcTableSessionStorage } from '@remix-run/architect'
 import memoizee from 'memoizee'
 import { Issuer } from 'openid-client'
+
 import { getEnvOrDie } from '~/lib/env.server'
 
 // Short-lived session for storing the OIDC state and PKCE code verifier

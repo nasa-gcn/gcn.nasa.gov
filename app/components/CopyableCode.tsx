@@ -5,9 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Button, Icon } from '@trussworks/react-uswds'
-
 import CopyToClipboard from 'react-copy-to-clipboard'
 
 export interface CopyableCodeProps {
