@@ -8,21 +8,15 @@
 
 import { feature, getFeatures } from '../app/lib/env.server'
 
-describe('features', () => {
-  let old: string | undefined
+let oldEnv: typeof process.env
+beforeEach(() => (oldEnv = process.env))
+afterEach(() => (process.env = { ...oldEnv }))
 
+describe('features', () => {
   function setEnv(value: string | undefined) {
     if (value === undefined) delete process.env.GCN_FEATURES
     else process.env.GCN_FEATURES = value
   }
-
-  beforeAll(() => {
-    old = process.env.GCN_FEATURES
-  })
-
-  afterAll(() => {
-    setEnv(old)
-  })
 
   test.each([undefined, '', ',', ',,,'])(
     'environment variable is %p',
