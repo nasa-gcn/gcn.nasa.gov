@@ -64,7 +64,7 @@
     "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
-    "@architect/architect": "^10.10.2",
+    "@architect/architect": "^10.10.3",
     "@architect/plugin-lambda-invoker": "^1.0.0",
     "@aws-sdk/client-cognito-identity-provider": "3.188.0",
     "@aws-sdk/client-sesv2": "3.188.0",
