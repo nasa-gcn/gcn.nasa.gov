@@ -5,8 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import classnames from 'classnames'
+
 import loaderImage from 'app/theme/img/loader.gif'
 
 // Adapted from https://github.com/trussworks/react-uswds/blob/main/src/components/Icon/Icon.tsx

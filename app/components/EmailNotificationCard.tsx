@@ -1,16 +1,17 @@
-import { useFetcher, Form } from '@remix-run/react'
+import { Form, useFetcher } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import { Modal, ModalFooter, ModalHeading } from '@trussworks/react-uswds'
 import {
-  Grid,
-  ButtonGroup,
   Button,
+  ButtonGroup,
+  Grid,
   Icon,
   ModalToggleButton,
 } from '@trussworks/react-uswds'
 import { useEffect, useRef } from 'react'
-import type { EmailNotificationVM } from '~/routes/user/email_notifications.server'
+
 import TimeAgo from './TimeAgo'
+import type { EmailNotificationVM } from '~/routes/user/email_notifications.server'
 
 export default function EmailNotificationCard({
   uuid,

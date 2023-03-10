@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { useState } from 'react'
 
 export interface TabProps {

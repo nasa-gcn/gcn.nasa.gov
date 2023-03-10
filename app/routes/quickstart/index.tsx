@@ -5,9 +5,9 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+
 import { getUser } from '~/routes/__auth/user.server'
 
 export const handle = {

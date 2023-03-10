@@ -5,8 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Outlet } from '@remix-run/react'
+
 import { NavStepIndicator } from '~/components/NavStepIndicator'
 
 export const handle = {

@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
 import { useState } from 'react'
 

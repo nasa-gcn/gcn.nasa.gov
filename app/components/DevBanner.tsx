@@ -5,8 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { SiteAlert } from '@trussworks/react-uswds'
+
 import { useHostname } from '~/root'
 
 const production_hostname = 'gcn.nasa.gov'

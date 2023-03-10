@@ -18,7 +18,12 @@
  *
  *
  */
-
+import type {
+  DataFunctionArgs,
+  ErrorBoundaryComponent,
+  LinksFunction,
+  MetaFunction,
+} from '@remix-run/node'
 import {
   Link,
   Links,
@@ -32,23 +37,20 @@ import {
   useMatches,
   useNavigation,
 } from '@remix-run/react'
-import type {
-  MetaFunction,
-  LinksFunction,
-  DataFunctionArgs,
-  ErrorBoundaryComponent,
-} from '@remix-run/node'
 import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
+import TopBarProgress from 'react-topbar-progress-indicator'
+import { useSpinDelay } from 'spin-delay'
+
+import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Highlight } from './components/Highlight'
-import { DevBanner } from './components/DevBanner'
-import { useSpinDelay } from 'spin-delay'
+import { getFeatures, getOrigin } from './lib/env.server'
+import { useRouteLoaderData } from './lib/remix'
 import { getUser } from './routes/__auth/user.server'
+
 import themeStyle from './theme/css/custom.css'
 import highlightStyle from 'highlight.js/styles/github.css'
-import TopBarProgress from 'react-topbar-progress-indicator'
-
 // FIXME: no top-level await, no import function
 // const favicons = Object.fromEntries(
 //   await Promise.all(
@@ -65,8 +67,7 @@ import favicon_72 from '~/theme/img/favicons/favicon-72.png'
 import favicon_114 from '~/theme/img/favicons/favicon-114.png'
 import favicon_144 from '~/theme/img/favicons/favicon-144.png'
 import favicon_192 from '~/theme/img/favicons/favicon-192.png'
-import { useRouteLoaderData } from './lib/remix'
-import { getFeatures, getOrigin } from './lib/env.server'
+
 const favicons = {
   16: favicon_16,
   40: favicon_40,

@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Icon, Tooltip } from '@trussworks/react-uswds'
 import hljs from 'highlight.js/lib/common'
 import { useState } from 'react'

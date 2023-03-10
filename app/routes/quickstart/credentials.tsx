@@ -5,16 +5,16 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import { useLoaderData } from '@remix-run/react'
 import type { DataFunctionArgs } from '@remix-run/node'
-import SegmentedCards from '~/components/SegmentedCards'
+import { useLoaderData } from '@remix-run/react'
+
+import CredentialCard from '~/components/CredentialCard'
 import {
+  NewCredentialForm,
   handleCredentialActions,
   handleCredentialLoader,
-  NewCredentialForm,
 } from '~/components/NewCredentialForm'
-import CredentialCard from '~/components/CredentialCard'
+import SegmentedCards from '~/components/SegmentedCards'
 
 export const handle = {
   breadcrumb: 'Select Credentials',

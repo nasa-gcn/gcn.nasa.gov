@@ -11,8 +11,8 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { ReactTags } from 'react-tag-autocomplete'
 import type {
-  Tag as ReactTag,
   OptionRendererProps,
+  Tag as ReactTag,
   TagRendererProps,
 } from 'react-tag-autocomplete'
 

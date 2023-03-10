@@ -5,20 +5,20 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
+import { tables } from '@architect/functions'
+import type { AttributeValue } from '@aws-sdk/client-dynamodb'
+import { unmarshall } from '@aws-sdk/util-dynamodb'
 import type {
   DynamoDBRecord,
   AttributeValue as LambdaTriggerAttributeValue,
 } from 'aws-lambda'
-import type { AttributeValue } from '@aws-sdk/client-dynamodb'
-import type { Circular } from '~/routes/circulars/circulars.lib'
-import { tables } from '@architect/functions'
-import { formatCircular } from '~/routes/circulars/circulars.lib'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
-import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
-import { search as getSearchClient } from '~/lib/search.server'
+
 import { sendEmailBulk } from '~/lib/email.server'
 import { feature } from '~/lib/env.server'
+import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
+import { search as getSearchClient } from '~/lib/search.server'
+import type { Circular } from '~/routes/circulars/circulars.lib'
+import { formatCircular } from '~/routes/circulars/circulars.lib'
 
 const index = 'circulars'
 const fromName = 'GCN Circulars'

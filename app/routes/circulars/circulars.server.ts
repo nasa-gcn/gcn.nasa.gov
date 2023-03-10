@@ -5,12 +5,12 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import memoizee from 'memoizee'
+
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'

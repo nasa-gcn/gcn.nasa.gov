@@ -5,17 +5,17 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
+import { tables } from '@architect/functions'
 import {
   CreateUserPoolClientCommand,
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
   ListGroupsCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
-import { tables } from '@architect/functions'
 import { generate } from 'generate-password'
-import { getUser } from '~/routes/__auth/user.server'
+
 import { client, maybeThrow } from './cognito.server'
+import { getUser } from '~/routes/__auth/user.server'
 
 export interface RedactedClientCredential {
   name: string

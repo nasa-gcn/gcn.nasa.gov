@@ -5,9 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import { hex } from 'color-convert'
 import { Octokit } from '@octokit/rest'
+import { hex } from 'color-convert'
 import { useEffect, useRef } from 'react'
 
 const octokit = new Octokit()

@@ -5,13 +5,13 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { tables } from '@architect/functions'
-import { topicToFormatAndNoticeType } from '~/lib/utils'
-import { getUser } from '~/routes/__auth/user.server'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
+
 import { sendEmail } from '~/lib/email.server'
+import { topicToFormatAndNoticeType } from '~/lib/utils'
+import { getUser } from '~/routes/__auth/user.server'
 
 // db model
 export type EmailNotification = {

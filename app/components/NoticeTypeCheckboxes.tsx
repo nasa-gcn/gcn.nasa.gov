@@ -5,10 +5,10 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { useState } from 'react'
-import { triggerRate } from '~/lib/prometheus'
+
 import { NestedCheckboxes } from './NestedCheckboxes'
+import { triggerRate } from '~/lib/prometheus'
 
 function humanizedCount(count: number, singular: string, plural?: string) {
   const noun = count === 1 ? singular : plural ?? `${singular}s`

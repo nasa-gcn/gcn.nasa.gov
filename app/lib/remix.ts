@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { AppData, SerializeFrom } from '@remix-run/node'
 import { useRouteLoaderData as useRouteLoaderDataRR } from 'react-router'
 

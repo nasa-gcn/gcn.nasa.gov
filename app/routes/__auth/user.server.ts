@@ -5,10 +5,10 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { tables } from '@architect/functions'
 import type { Session } from '@remix-run/node'
 import { TokenSet } from 'openid-client'
+
 import { getOpenIDClient, storage } from './auth.server'
 
 export interface User {

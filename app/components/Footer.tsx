@@ -5,8 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import type { ReactNode } from 'react'
 import {
   Grid,
   GridContainer,
@@ -15,12 +13,14 @@ import {
   IdentifierGov,
   IdentifierIdentity,
   IdentifierLink,
-  IdentifierLinks,
   IdentifierLinkItem,
+  IdentifierLinks,
   IdentifierLogo,
   IdentifierLogos,
   IdentifierMasthead,
 } from '@trussworks/react-uswds'
+import type { ReactNode } from 'react'
+
 import logo from '~/img/logo.svg'
 
 function ContactLink({

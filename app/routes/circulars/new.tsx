@@ -5,28 +5,28 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
-import classnames from 'classnames'
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Link, Form, useNavigation, useLoaderData } from '@remix-run/react'
+import { Form, Link, useLoaderData, useNavigation } from '@remix-run/react'
 import {
-  TextInput,
-  Textarea,
   Button,
   ButtonGroup,
   Icon,
   Modal,
-  ModalHeading,
   ModalFooter,
+  ModalHeading,
+  TextInput,
+  Textarea,
 } from '@trussworks/react-uswds'
+import classnames from 'classnames'
 import { useState } from 'react'
 import dedent from 'ts-dedent'
-import Spinner from '~/components/Spinner'
+
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
-import { useUrl } from '~/root'
 import { group } from './circulars.server'
+import Spinner from '~/components/Spinner'
 import { feature } from '~/lib/env.server'
+import { useUrl } from '~/root'
 
 export async function loader({ request }: DataFunctionArgs) {
   if (!feature('circulars')) throw new Response(null, { status: 404 })

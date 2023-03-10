@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import { Link } from '@remix-run/react'
 import { Grid, Icon } from '@trussworks/react-uswds'
 

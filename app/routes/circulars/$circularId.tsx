@@ -5,14 +5,14 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-
 import type { DataFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { Grid } from '@trussworks/react-uswds'
+
+import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
 import { publicStaticCacheControlHeaders } from '~/lib/utils'
-import { get } from './circulars.server'
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
