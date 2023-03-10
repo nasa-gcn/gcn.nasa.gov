@@ -41,7 +41,7 @@ export function getHostname() {
 }
 
 export function getFeatures() {
-  return process.env.GCN_FEATURES?.split(',') ?? []
+  return process.env.GCN_FEATURES?.split(',').filter(Boolean) ?? []
 }
 
 /**
