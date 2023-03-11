@@ -11,16 +11,9 @@ await build({
   logLevel: 'info',
   outdir: 'build',
   outbase: 'app',
-  plugins: [
-    {
-      name: 'exclude node_modules from bundling',
-      setup(build) {
-        build.onResolve({ filter: /^(?:[^./~]|~[^/])/ }, () => ({
-          external: true,
-        }))
-      },
-    },
-  ],
+  external: ['@aws-sdk/*'],
   platform: 'node',
+  minify: true,
+  target: ['node18'],
   watch,
 })
