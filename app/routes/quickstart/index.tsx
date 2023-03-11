@@ -8,6 +8,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
+import { useUrl } from '~/root'
 import { getUser } from '~/routes/__auth/user.server'
 
 export const handle = {
@@ -16,11 +17,12 @@ export const handle = {
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
-  return { email: user?.email, idp: user?.idp, url: request.url }
+  return { email: user?.email, idp: user?.idp }
 }
 
 export default function () {
-  const { email, idp, url } = useLoaderData<typeof loader>()
+  const { email, idp } = useLoaderData<typeof loader>()
+  const url = useUrl()
   return (
     <>
       <div className="maxw-tablet">
