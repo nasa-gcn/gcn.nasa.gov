@@ -123,6 +123,11 @@ export async function loader({ request }: DataFunctionArgs) {
   return { origin, email, features }
 }
 
+/** Don't reevaluate this route's loader due to client-side navigations. */
+export function shouldRevalidate() {
+  return false
+}
+
 function useLoaderDataRoot() {
   return useRouteLoaderData<typeof loader>('root')
 }
