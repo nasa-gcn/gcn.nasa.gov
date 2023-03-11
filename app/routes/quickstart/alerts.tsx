@@ -5,8 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { DataFunctionArgs } from '@remix-run/node'
-import { Form, Link, useLoaderData } from '@remix-run/react'
+import { Form, Link, useSearchParams } from '@remix-run/react'
 import { Button, Label } from '@trussworks/react-uswds'
 
 import { NoticeFormat } from '~/components/NoticeFormat'
@@ -17,14 +16,9 @@ export const handle = {
   getSitemapEntries: () => null,
 }
 
-export function loader({ request: { url } }: DataFunctionArgs) {
-  const clientId = new URL(url).searchParams.get('clientId')
-  if (!clientId) throw new Response('clientId expected', { status: 400 })
-  return clientId
-}
-
 export default function () {
-  const clientId = useLoaderData<typeof loader>()
+  const [params] = useSearchParams()
+  const clientId = params.get('clientId') || undefined
   return (
     <Form method="get" action="../code">
       <p className="usa-paragraph">
