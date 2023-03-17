@@ -64,10 +64,26 @@ also happy to work with the mission teams to help construct your alerts.
       producer = Producer(client_id='fill me in', client_secret='fill me in')
       # any topic starting with 'mission.'
       topic = 'mission.example'
-      
-      #Read in an alert sample in json format, that follows your schema, and then dump to a byte-string.
-      with open('alert.example.json') as f:
-         example_notice=json.load(f)
+
+      #Construct a JSON structured notice that follows the GCN Universal Schema, and references your notice's specific schema.
+
+      example_notice =
+      {'$schema': 'https://gcn.nasa.gov/schema/gcn/notices/swift/bat/guano/alert.schema.json',
+      'alert_reporter': {'mission': 'Swift',
+         'instrument': 'BAT-GUANO',
+         'record_number': 1},
+      'alert_info': {'alert_datetime': '2023-01-01T06:08:19.00',
+         'alert_tense': 'current',
+         'alert_type': 'initial'},
+      'datetime': {'trigger_time': '2022-12-31T21:46:05.10'},
+      'statistics': {'rate_snr': 14,
+         'rate_duration': 0.256,
+         'rate_energy_range': {'energy_low': 15, 'energy_high': 350},
+         'classification': {'GRB': 1}},
+      'identifiers': {'data_archive_page': 'https://swift.gsfc.nasa.gov/archive/700000031',
+         'instrument_id': '694216001',
+         'instrument_id_alternate': '694215970'}}
+
       notice_bytestr = json.dumps(example_notice)
 
       #pass the topic and bytestring, and you've published a notice!
