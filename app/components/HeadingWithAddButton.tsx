@@ -9,17 +9,24 @@ import { Link } from '@remix-run/react'
 import { Grid, Icon } from '@trussworks/react-uswds'
 
 export default function HeadingWithAddButton({
+  headingLevel,
   children,
 }: {
+  headingLevel?: 1 | 2 | 3 | 4 | 5 | 6
   children: React.ReactNode
 }) {
+  const CustomTag = `h${headingLevel ?? 1}` as keyof JSX.IntrinsicElements
+
   return (
     <Grid row>
       <Grid tablet={{ col: 'fill' }}>
-        <h1>{children}</h1>
+        <CustomTag>{children}</CustomTag>
       </Grid>
       <Grid tablet={{ col: 'auto' }}>
-        <Link className="usa-button tablet:margin-right-2" to="edit">
+        <Link
+          className="usa-button tablet:margin-right-2 tablet:margin-top-105"
+          to="edit"
+        >
           <Icon.Add className="bottom-aligned margin-right-05" />
           Add
         </Link>
