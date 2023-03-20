@@ -85,10 +85,10 @@ also happy to work with the mission teams to help construct your alerts.
          'instrument_id': '694216001',
          'instrument_id_alternate': '694215970'}}
 
-      notice_bytestr = json.dumps(example_notice)
+      data = json.dumps(example_notice)
 
-      #pass the topic and bytestring, and you've published a notice!
-      producer.produce(topic, notice_bytestr)
+      # Pass the topic and data string, and you've published a notice!
+      producer.produce(topic, data)
       ```
 
    </ProcessListItem>
