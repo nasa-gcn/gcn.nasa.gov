@@ -45,7 +45,7 @@
     "email-validator": "^2.0.4",
     "highlight.js": "^11.7.0",
     "lodash": "^4.17.21",
-    "mailparser": "^3.6.3",
+    "mailparser": "^3.6.4",
     "memoizee": "^0.4.15",
     "openid-client": "^5.4.0",
     "opentelemetry-instrumentation-remix": "^0.3.0",
