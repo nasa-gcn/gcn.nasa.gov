@@ -68,8 +68,8 @@ also happy to work with the mission teams to help construct your alerts.
 
       # Construct a JSON structured notice that follows the GCN Unified Schema, and references your notice's specific schema.
 
-      example_notice =
-      {'$schema': 'https://gcn.nasa.gov/schema/gcn/notices/swift/bat/guano/alert.schema.json',
+      example_notice = {
+          '$schema': 'https://gcn.nasa.gov/schema/gcn/notices/swift/bat/guano/alert.schema.json',
       'alert_reporter': {'mission': 'Swift',
          'instrument': 'BAT-GUANO',
          'record_number': 1},
