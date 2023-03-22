@@ -51,11 +51,7 @@ module.exports.handler = createTriggerHandler(
         throw new Error(`${key} check failed`)
     })
 
-    if (!message.content) throw new Error('Object has no body')
-
-    const parsed = await simpleParser(
-      Buffer.from(message.content, 'base64').toString()
-    )
+    const parsed = await simpleParser(Buffer.from(message.content, 'base64'))
 
     if (!parsed.from) throw new Error('Email has no sender')
 
