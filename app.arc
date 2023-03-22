@@ -14,6 +14,9 @@ email-incoming
 circulars
   src build/table-streams/circulars
 
+synonyms
+  src build/table-streams/synonyms
+
 @static
 fingerprint external
 folder build/static
@@ -60,6 +63,9 @@ legacy_users
   email *String
   PointInTimeRecovery true
 
+synonyms
+  term *String
+
 @tables-indexes
 email_notification_subscription
   topic *String
@@ -85,6 +91,11 @@ legacy_users
   receive *Number
   name legacyReceivers
 
+synonyms
+  uuid *String
+  term **String
+  name synonymsByUuid
+
 @aws
 runtime nodejs18.x
 region us-east-1
@@ -95,6 +106,7 @@ tracing true
 
 @storage-private
 email-incoming
+search
 
 @search
 instanceType t3.small.search
@@ -110,6 +122,7 @@ lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to mod
 missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
 sendEmailPermissions  # Grant the Lambda function permission to send email.
 emailIncoming  # Enable notifications from SES to SNS to trigger email-incoming Lambda
+synonyms  # OpenSearch synonyms file
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-tracing  # Enable AWS X-Ray distributed tracing
 architect/plugin-lambda-invoker

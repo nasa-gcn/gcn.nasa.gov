@@ -12,7 +12,12 @@ import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import memoizee from 'memoizee'
 
 import { getUser } from '../__auth/user.server'
-import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
+import {
+  bodyIsValid,
+  formatAuthor,
+  parseEventFromSubject,
+  subjectIsValid,
+} from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
@@ -141,8 +146,11 @@ export async function putRaw(
 ): Promise<Circular> {
   const autoincrement = await getDynamoDBAutoIncrement()
   const createdOn = Date.now()
-  const circularId = await autoincrement.put({ createdOn, ...item })
-  return { ...item, createdOn, circularId }
+  const circular: Omit<Circular, 'circularId'> = { createdOn, ...item }
+  const event = parseEventFromSubject(item.subject)
+  if (event) circular.event = event
+  const circularId = await autoincrement.put(circular)
+  return { circularId, ...circular }
 }
 
 /**
