@@ -46,18 +46,10 @@ module.exports.handler = createTriggerHandler(
     if (!feature('circulars')) throw new Error('not implemented')
     const message = JSON.parse(record.Sns.Message)
 
-    if (!message.receipt) throw new Error('Message Receipt content missing')
-
-    if (
-      ![
-        message.receipt.spamVerdict,
-        message.receipt.virusVerdict,
-        message.receipt.spfVerdict,
-        message.receipt.dkimVerdict,
-        message.receipt.dmarcVerdict,
-      ].every((verdict) => verdict.status === 'PASS')
-    )
-      throw new Error('Message caught in virus/spam detection.')
+    ;['spam', 'virus', 'spf', 'dkim', 'dmarc'].forEach((key) => {
+      if (message.receipt?.[`${key}Verdict`]?.status !== 'PASS')
+        throw new Error(`${key} check failed`)
+    })
 
     if (!message.content) throw new Error('Object has no body')
 
