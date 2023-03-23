@@ -102,7 +102,7 @@ lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run t
 lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
 missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
 sendEmailPermissions  # Grant the Lambda function permission to send email.
-emailIncoming  # // Enable notifications from SES to SNS to trigger email-incoming Lambda
+emailIncoming  # Enable notifications from SES to SNS to trigger email-incoming Lambda
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-tracing  # Enable AWS X-Ray distributed tracing
 architect/plugin-lambda-invoker
