@@ -46,7 +46,13 @@ async function send(circular: Circular) {
   const { Items } = await db.circulars_subscriptions.scan({
     AttributesToGet: ['email'],
   })
-  const recipients = Items.map(({ email }) => email)
+  const legacyRecipients = (
+    await db.legacy_circular_recipients.scan({
+      AttributesToGet: ['email'],
+    })
+  ).Items
+
+  const recipients = Items.concat(legacyRecipients).map(({ email }) => email)
   await sendEmailBulk({
     fromName,
     recipients,

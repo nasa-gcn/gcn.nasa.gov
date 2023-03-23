@@ -60,6 +60,10 @@ legacy_users
   email *String
   PointInTimeRecovery true
 
+legacy_circular_recipients
+  email *String
+  PointInTimeRecovery true
+
 @tables-indexes
 email_notification_subscription
   topic *String
