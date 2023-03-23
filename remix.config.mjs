@@ -38,4 +38,4 @@ export const publicPath = '/_static/'
 export const server = './server.js'
 export const serverBuildPath = 'build/server/index.js'
 export const serverMinify = true
-export const serverDependenciesToBundle = [/^(?!@aws-sdk\/)/]
+export const serverDependenciesToBundle = [/^(?!@?aws-sdk\/)/]

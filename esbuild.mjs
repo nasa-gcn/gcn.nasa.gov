@@ -11,7 +11,7 @@ await build({
   logLevel: 'info',
   outdir: 'build',
   outbase: 'app',
-  external: ['@aws-sdk/*'],
+  external: ['@aws-sdk/*', 'aws-sdk'],
   platform: 'node',
   minify: true,
   target: ['node18'],
