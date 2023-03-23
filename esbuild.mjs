@@ -14,7 +14,7 @@ await build({
   external: ['@aws-sdk/*', 'aws-sdk'],
   platform: 'node',
   target: ['node18'],
-  minify: dev,
+  minify: !dev,
   sourcemap: dev,
   watch: dev,
 })
