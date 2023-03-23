@@ -11,7 +11,7 @@ import {
   SESv2ServiceException,
   SendEmailCommand,
 } from '@aws-sdk/client-sesv2'
-import { chunk } from 'lodash'
+import chunk from 'lodash/chunk'
 
 import { getHostname } from './env.server'
 
