@@ -10,7 +10,7 @@ remix-gcn
 email-incoming
   src build/events/email-incoming
 
-@table-streams
+@tables-streams
 circulars
   src build/table-streams/circulars
 
