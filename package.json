@@ -16,7 +16,7 @@
     "dev:remix": "remix watch",
     "dev:arc": "cross-env NODE_ENV=development arc sandbox --host localhost",
     "dev:sass": "gulp watch",
-    "dev:esbuild": "node esbuild.mjs --watch",
+    "dev:esbuild": "node esbuild.mjs --dev",
     "dev": "npm-run-all build:remix --parallel \"dev:*\"",
     "prepare:sass": "gulp init",
     "prepare:husky": "husky install",
