@@ -32,6 +32,7 @@ interface UserData {
   sub?: string
   name?: string
   affiliation?: string
+  receiveOnly?: boolean
 }
 
 const fromName = 'GCN Circulars'
@@ -81,7 +82,7 @@ module.exports.handler = createTriggerHandler(
       (await getCognitoUserData(userEmail)) ??
       (await getLegacyUserData(userEmail))
 
-    if (!userData) {
+    if (!userData || userData.receiveOnly) {
       await sendEmail({
         fromName,
         recipient: userEmail,
@@ -181,6 +182,7 @@ async function getLegacyUserData(
       email: data.email,
       name: data.name,
       affiliation: data.affiliation,
+      receiveOnly: data.receiveOnly,
     }
   )
 }
