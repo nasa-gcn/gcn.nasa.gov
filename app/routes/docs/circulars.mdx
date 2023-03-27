@@ -1,0 +1,88 @@
+---
+handle:
+  breadcrumb: Circulars Documentation
+---
+
+import {
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading,
+} from '@trussworks/react-uswds'
+
+import { validSubjectKeywords } from './circulars.lib'
+
+# GCN Circulars
+
+GCN Circulars are rapid astronomical bulletins submitted by and distributed to community members worldwide. Circulars are brief, citeable, and human-readable; they announce discoveries, observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans related to high-energy, multi-messenger, and variable or transient astrophysical events.
+
+## Subscribing
+
+To receive GCN Circulars, [sign up or sign in](login), then select [Email Notifications](email). You can immediately sign up to receive circulars.
+
+If you subscribed to Circulars via the legacy GCN Classic service, your subscription was automatically transferred. To edit your profile or unsubscribe, [sign up or sign in](login).
+
+## Submitter Authorization
+
+To become an authorized Circulars submitter, you need to have either been a Circulars submitter in the legacy GCN Classic service or seek a [peer endorsement](endorsement) from a colleague who is already an authorized Circulars submitter.
+
+## Submission process
+
+Once authorized, Circulars users can submit either via the web form or email. Circulars are then distributed by email to all subscribers after rapid automated vetting and formatting.
+
+### Web Form
+
+Once you are an authorized submitter and have [signed up or signed in](login), you can submit Circulars via the [web form](circulars) by clicking "New".
+
+### Email
+
+Circulars can be submitted by emailing circulars@gcn.nasa.gov. Emails sent to the legacy email address will be accepted and processed by the new Circulars service, but we encourage use of the new address, and will phase out the legacy address.
+
+<SummaryBox heading="Summary">
+  <SummaryBoxHeading headingLevel="h3">Summary</SummaryBoxHeading>
+  <SummaryBoxContent>
+
+    1. Email your submission to gcncirc@capella2.gsfc.nasa.gov.
+
+    2. The email subject line must contain at least one of the strings in the [list of
+      instruments and source types](#subject-word-list).
+
+  </SummaryBoxContent>
+</SummaryBox>
+
+## Style Guide and Required Formatting
+
+Please follow the [style guidelines](/docs/styleguide). In particular, the email subject must contain at least one of the following case-sensitive strings:
+
+<a name="subject-word-list" />
+<ul className="grid-row usa-list usa-list--unstyled">
+  {validSubjectKeywords.map((keyword) => (
+    <li key={keyword} className="grid-col-2">
+      {keyword}
+    </li>
+  ))}
+</ul>
+
+A copy of the body of your email will be distributed along with the following header:
+
+```text
+TITLE:   GCN CIRCULAR
+NUMBER:  <serial number>
+SUBJECT: <exact copy of your email subject>
+DATE:    <date and time>
+FROM:    <the name and email you used to register>
+```
+
+We will verify that you are a valid submitter. Make sure you are submitting your email from the address you used to [sign up](#subscribing).
+
+You will receive either a _success_ or a _problem_ report:
+
+- If you are valid submitter, you will immediately receive an email saying:
+  - Whether or not your submission was a success
+  - In addition, you will receive a copy of the outgoing Circular if you have elected to receive them.
+  - If your submission was rejected, within a minute you will be notified via email along with an explanation of the possible reasons for this and what remedies you can employ to allow a successful resubmission.
+
+## Archive
+
+GCN Circulars are automatically [archived](circulars). The archive contains all past Circulars in reverse chronological order. It is searchable given any enclosed string, and browseable as grouped by event.
+
+The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn), which aumatically ingests and parses GCN Circulars, and fills out a searchable relational database.
