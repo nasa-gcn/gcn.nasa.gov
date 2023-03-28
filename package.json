@@ -162,6 +162,12 @@
     "coverageReporters": [
       "text",
       "cobertura"
-    ]
+    ],
+    "roots": [
+      "<rootDir>"
+    ],
+    "moduleNameMapper": {
+      "~/(.*)": "<rootDir>/app/$1"
+    }
   }
 }
