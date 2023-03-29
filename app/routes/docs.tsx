@@ -22,7 +22,10 @@ export default function () {
               About GCN
             </NavLink>,
             <NavLink key="client" to="client">
-              Client Configuration
+              Kafka Client Configuration
+            </NavLink>,
+            <NavLink key="circulars" to="circulars">
+              Circulars
             </NavLink>,
             <NavLink key="styleguide" to="styleguide">
               Circulars Style Guide
