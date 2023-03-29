@@ -107,9 +107,7 @@ module.exports.handler = createTriggerHandler(
       fromName: 'GCN Circulars',
       recipient: userEmail,
       subject: `Successfully submitted Circular: ${newCircularId}`,
-      body: `Dear Submitter,
-
-      The email message you submitted to the GCN Circular service has been received and is being distributed to the GCN Circulars subscribers, and posted to the GCN Circulars archive (${origin}/circulars/${newCircularId}). If you have selected to receive Circulars, then you will receive your copy shortly.
+      body: `The email message you submitted to the GCN Circular service has been received and is being distributed to the GCN Circulars subscribers, and posted to the GCN Circulars archive (${origin}/circulars/${newCircularId}). If you have selected to receive Circulars, then you will receive your copy shortly.
       
       As of April 12, 2023, GCN Circulars are being administered through the new General Coordinates Network (GCN; ${origin}), and no longer through the GCN Classic service (https://gcn.gsfc.nasa.gov).
       
