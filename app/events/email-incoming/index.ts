@@ -32,7 +32,8 @@ interface UserData {
   sub?: string
   name?: string
   affiliation?: string
-  receiveOnly?: boolean
+  receive?: boolean
+  submit?: boolean
 }
 
 const fromName = 'GCN Circulars'
@@ -82,7 +83,7 @@ module.exports.handler = createTriggerHandler(
       (await getCognitoUserData(userEmail)) ??
       (await getLegacyUserData(userEmail))
 
-    if (!userData || userData.receiveOnly) {
+    if (!userData || !userData.submit) {
       await sendEmail({
         fromName,
         recipient: userEmail,
@@ -163,6 +164,7 @@ async function getCognitoUserData(
       email: extractAttributeRequired(userTypeData, 'email'),
       name: extractAttribute(userTypeData, 'name'),
       affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
+      submit: true,
     }
   )
 }
@@ -182,7 +184,8 @@ async function getLegacyUserData(
       email: data.email,
       name: data.name,
       affiliation: data.affiliation,
-      receiveOnly: data.receiveOnly,
+      receive: data.receive,
+      submit: data.submit,
     }
   )
 }

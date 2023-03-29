@@ -47,8 +47,13 @@ async function send(circular: Circular) {
     AttributesToGet: ['email'],
   })
   const legacyRecipients = (
-    await db.legacy_users.scan({
-      AttributesToGet: ['email'],
+    await db.legacy_users.query({
+      IndexName: 'legacyReceivers',
+      KeyConditionExpression: 'receive = :receive',
+      ExpressionAttributeValues: {
+        ':receive': 1,
+      },
+      ProjectionExpression: 'email',
     })
   ).Items
 

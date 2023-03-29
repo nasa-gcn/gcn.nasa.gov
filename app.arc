@@ -81,6 +81,10 @@ circulars_subscriptions
   sub *String
   name circularsSubscriptionsBySub
 
+legacy_users
+  receive *Number
+  name legacyReceivers
+
 @aws
 runtime nodejs18.x
 region us-east-1
