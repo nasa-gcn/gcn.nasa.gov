@@ -193,7 +193,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         <div className="bg-gold padding-x-2 desktop:padding-x-4 padding-y-1 line-height-sans-3 font-lang-4">
           <GridContainer>
             <span className="text-bold">
-              GECAM Notices are here! Receive them via Kafka or email.
+              New Circulars Service Begins April 12, 2023.
             </span>{' '}
             See{' '}
             <Link to="/news" className="hover:text-no-underline">
