@@ -68,7 +68,7 @@
     "@aws-sdk/util-dynamodb": "3.188.0",
     "@nasa-gcn/architect-plugin-search": "^0.1.0",
     "@nasa-gcn/architect-plugin-tracing": "^0.0.1",
-    "@remix-run/dev": "^1.14.3",
+    "@remix-run/dev": "^1.15.0",
     "@remix-run/eslint-config": "^1.14.3",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/color-convert": "^2.0.0",
