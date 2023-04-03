@@ -8,7 +8,19 @@
 import { Button, Link } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-export default function AnnounceBanner() {
+type announcedEvents = {
+  time: string
+  link: string
+  region: 'Atlantic' | 'Pacific' | 'Asia and Oceania'
+}
+
+export default function AnnounceBanner({
+  message,
+  events,
+}: {
+  message: string
+  events?: announcedEvents[]
+}) {
   const [showFullBanner, setShowFullBanner] = useState(true)
 
   function toggleShowBanner() {
@@ -24,10 +36,7 @@ export default function AnnounceBanner() {
         <header className="usa-banner__header">
           <div className="usa-banner__inner">
             <div className="grid-col-fill tablet:grid-col-auto">
-              <h2 className="usa-banner__header-text">
-                We invite you to join one of our three public Zoom webinars for
-                an overview of the new GCN.
-              </h2>
+              <h2 className="usa-banner__header-text">{message}</h2>
             </div>
             <Button
               type="button"
@@ -46,30 +55,19 @@ export default function AnnounceBanner() {
             className="usa-banner__content usa-accordion__content padding-top-2"
             id="announcement-banner-blue"
           >
-            <div className="grid-row">
-              <div className="mobile-lg:grid-col-4">
-                August 1, 2022 12:00-13:00 UTC
-                <div>(best for Atlantic):</div>
-                <Link rel="external" href="https://bit.ly/3Pt2TH9">
-                  https://bit.ly/3Pt2TH9
-                </Link>
+            {events && (
+              <div className="grid-row">
+                {events.map((event) => (
+                  <div key={event.link} className="mobile-lg:grid-col-4">
+                    {event.time}
+                    <div>(best for {event.region}):</div>
+                    <Link rel="external" href={event.link}>
+                      {event.link}
+                    </Link>
+                  </div>
+                ))}
               </div>
-              <div className="mobile-lg:grid-col-4">
-                August 1, 2022 20:00-21:00 UTC <br /> (best for Pacific):
-                <br />
-                <Link rel="external" href="https://bit.ly/3IT7Qqc">
-                  https://bit.ly/3IT7Qqc
-                </Link>
-              </div>
-              <div className="mobile-lg:grid-col-4">
-                August 2, 2022 04:00-05:00 UTC <br /> (best for Asia and
-                Oceania):
-                <br />
-                <Link rel="external" href="https://bit.ly/3v2pNwV">
-                  https://bit.ly/3v2pNwV
-                </Link>
-              </div>
-            </div>
+            )}
             <p>
               If you cannot attend live, then you can get the{' '}
               <Link
