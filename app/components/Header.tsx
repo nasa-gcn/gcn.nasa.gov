@@ -47,9 +47,6 @@ export function Header({ email }: { email?: string }) {
           <PrimaryNav
             mobileExpanded={expanded}
             items={[
-              <NavLink className="usa-nav__link" to="/news" key="/news">
-                News
-              </NavLink>,
               <NavLink className="usa-nav__link" to="/missions" key="/missions">
                 Missions
               </NavLink>,
