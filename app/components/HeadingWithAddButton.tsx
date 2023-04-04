@@ -25,9 +25,8 @@ export default function HeadingWithAddButton({
       <Grid tablet={{ col: 'auto' }}>
         <Link
           className={
-            'usa-button tablet:margin-right-2' +
-            (headingLevel > 1 ? ' tablet:margin-top-105' : '')
-          }
+            classNames('usa-button', 'tablet:margin-right-2', {'tablet:margin-top-105': headingLevel > 1})
+      }
           to="edit"
         >
           <Icon.Add className="bottom-aligned margin-right-05" />
