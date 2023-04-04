@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { Button, Link } from '@trussworks/react-uswds'
+import { Button, Grid, Link } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 export default function AnnounceBanner({
@@ -73,12 +73,12 @@ export function AnnouncementEvent(props: {
   region: 'Atlantic' | 'Pacific' | 'Asia and Oceania'
 }) {
   return (
-    <Grid mobileLg={{col: 4}}>
+    <Grid mobileLg={{ col: 4 }}>
       {props.time}
       <div>(best for {props.region}):</div>
       <Link rel="external" href={props.link}>
         {props.link}
       </Link>
-    </div>
+    </Grid>
   )
 }
