@@ -53,7 +53,7 @@ export async function action({ request }: DataFunctionArgs) {
       await createCircularEmailNotification(user.sub, user.email)
       break
     case 'unsubscribe':
-      if (!feature('circulars')) break
+      if (!feature('circulars')) throw new Response(null, { status: 400 })
       await deleteCircularEmailNotification(user.sub, user.email)
       break
   }
