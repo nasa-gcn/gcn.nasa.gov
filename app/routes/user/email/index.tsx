@@ -88,7 +88,7 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
 
   return (
     <fetcher.Form method="post">
-      <p>
+      <p className="usa-paragraph">
         {value
           ? 'You are currently subscribed to receive GCN Circulars via Email.'
           : 'You are not currently subscribed to receive GCN Circulars via Email.'}
