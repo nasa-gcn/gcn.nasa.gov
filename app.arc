@@ -79,7 +79,6 @@ circulars
 
 circulars_subscriptions
   sub *String
-  email **String
   name circularsSubscriptionsBySub
 
 @aws
