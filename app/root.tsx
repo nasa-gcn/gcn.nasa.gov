@@ -200,7 +200,7 @@ function Document({ children }: { children?: React.ReactNode }) {
             region={'Asia and Oceania'}
           />
           <AnnouncementEvent
-            time={'April 19, 2023 4:00-5:00 UTC'}
+            time={'April 19, 2023 04:00-05:00 UTC'}
             link={''}
             region={'Pacific'}
           />
