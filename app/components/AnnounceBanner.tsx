@@ -49,7 +49,7 @@ export default function AnnounceBanner({
             className="usa-banner__content usa-accordion__content padding-top-2"
             id="announcement-banner-blue"
           >
-            {children}
+            <Grid row>{children}</Grid>
             <p>
               If you cannot attend live, then you can get the{' '}
               <Link
