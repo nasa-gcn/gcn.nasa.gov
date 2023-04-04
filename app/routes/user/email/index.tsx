@@ -168,7 +168,7 @@ export default function () {
         </>
       )}
       <HeadingWithAddButton headingLevel={2}>Notices</HeadingWithAddButton>
-      <p>
+      <p className="usa-paragraph">
         You can create as many <strong>Notice</strong> subscription alerts as
         you like. To create a new alert, click the "Add" button. Once you have
         created an alert, you can click the "Test Message" button to send a test
