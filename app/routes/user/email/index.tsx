@@ -88,13 +88,23 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
 
   return (
     <fetcher.Form method="post">
-      <p className="usa-paragraph">
-        {value
-          ? 'You are currently subscribed to receive GCN Circulars via Email.'
-          : 'You are not currently subscribed to receive GCN Circulars via Email.'}
-      </p>
       <Grid row className="flex-align-center">
-        <ButtonGroup type="segmented" className="flex-auto">
+        <div className="padding-1 flex-auto">
+          {fetcher.state !== 'idle' && (
+            <>
+              <Spinner /> Saving...
+            </>
+          )}
+          {fetcher.type === 'done' && (
+            <>
+              <Icon.Check color="green" /> Saved
+            </>
+          )}
+        </div>
+        <ButtonGroup
+          type="segmented"
+          className="flex-auto tablet:margin-right-2"
+        >
           <Button
             type={value ? 'button' : 'submit'}
             name="intent"
@@ -112,18 +122,6 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
             Off
           </Button>
         </ButtonGroup>
-        <div className="padding-1 flex-auto">
-          {fetcher.state !== 'idle' && (
-            <>
-              <Spinner /> Saving...
-            </>
-          )}
-          {fetcher.type === 'done' && (
-            <>
-              <Icon.Check color="green" /> Saved
-            </>
-          )}
-        </div>
       </Grid>
     </fetcher.Form>
   )
@@ -158,13 +156,27 @@ export default function () {
       </p>
       {enableCirculars && (
         <>
-          <h2>Circulars</h2>
+          <Grid row>
+            <Grid tablet={{ col: 'fill' }}>
+              <h2>Circulars</h2>
+            </Grid>
+            <Grid tablet={{ col: 'auto' }}>
+              <CircularsSubscriptionForm
+                value={userIsSubscribedToCircularEmails}
+              />
+            </Grid>
+          </Grid>
+          <p className="usa-paragraph">
+            {userIsSubscribedToCircularEmails
+              ? 'You are currently subscribed to receive GCN Circulars via Email.'
+              : 'You are not currently subscribed to receive GCN Circulars via Email.'}
+          </p>
+
           <p className="usa-paragraph">
             Subscriptions to <strong>Circulars</strong> are sent from GCN
             Circulars {`<no-reply@${hostname}>`} and are delivered to the email
             associated with your account ({email}).
           </p>
-          <CircularsSubscriptionForm value={userIsSubscribedToCircularEmails} />
         </>
       )}
       <HeadingWithAddButton headingLevel={2}>Notices</HeadingWithAddButton>
