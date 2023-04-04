@@ -159,7 +159,7 @@ export default function () {
       {enableCirculars && (
         <>
           <h2>Circulars</h2>
-          <p>
+          <p className="usa-paragraph">
             Subscriptions to <strong>Circulars</strong> are sent from GCN
             Circulars {`<no-reply@${hostname}>`} and are delivered to the email
             associated with your account ({email}).
