@@ -44,6 +44,7 @@
     "downshift": "^7.2.1",
     "email-validator": "^2.0.4",
     "highlight.js": "^11.7.0",
+    "jest-environment-jsdom": "^29.5.0",
     "lodash": "^4.17.21",
     "mailparser": "^3.6.4",
     "memoizee": "^0.4.15",
@@ -69,10 +70,13 @@
     "@aws-sdk/client-sesv2": "3.188.0",
     "@aws-sdk/lib-dynamodb": "3.188.0",
     "@aws-sdk/util-dynamodb": "3.188.0",
+    "@babel/preset-typescript": "^7.21.4",
     "@nasa-gcn/architect-plugin-search": "^0.2.0",
     "@nasa-gcn/architect-plugin-tracing": "^0.0.1",
     "@remix-run/dev": "^1.15.0",
     "@remix-run/eslint-config": "^1.15.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^14.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/color-convert": "^2.0.0",
     "@types/grecaptcha": "^3.0.4",
@@ -146,6 +150,7 @@
       {
         "files": [
           "**/__tests__/**/*.[jt]s?(x)",
+          "**/__mocks__/*.[jt]s?(x)",
           "**/?(*.)+(spec|test).[jt]s?(x)"
         ],
         "plugins": [
@@ -172,6 +177,12 @@
     ],
     "moduleNameMapper": {
       "~/(.*)": "<rootDir>/app/$1"
-    }
+    },
+    "transform": {
+      "^.+\\.svg$": "<rootDir>/svgTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/openid-client/"
+    ]
   }
 }
