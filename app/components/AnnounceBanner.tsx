@@ -8,7 +8,7 @@
 import { Button, Link } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-type announcedEvents = {
+type AnnouncedEvents = {
   time: string
   link: string
   region: 'Atlantic' | 'Pacific' | 'Asia and Oceania'
@@ -19,7 +19,7 @@ export default function AnnounceBanner({
   events,
 }: {
   message: string
-  events?: announcedEvents[]
+  events?: AnnouncedEvents[]
 }) {
   const [showFullBanner, setShowFullBanner] = useState(true)
 
@@ -58,13 +58,7 @@ export default function AnnounceBanner({
             {events && (
               <div className="grid-row">
                 {events.map((event) => (
-                  <div key={event.link} className="mobile-lg:grid-col-4">
-                    {event.time}
-                    <div>(best for {event.region}):</div>
-                    <Link rel="external" href={event.link}>
-                      {event.link}
-                    </Link>
-                  </div>
+                  <AnnouncementEvent key={event.link} {...event} />
                 ))}
               </div>
             )}
@@ -82,5 +76,17 @@ export default function AnnounceBanner({
         )}
       </div>
     </section>
+  )
+}
+
+export function AnnouncementEvent(event: AnnouncedEvents) {
+  return (
+    <div className="mobile-lg:grid-col-4">
+      {event.time}
+      <div>(best for {event.region}):</div>
+      <Link rel="external" href={event.link}>
+        {event.link}
+      </Link>
+    </div>
   )
 }
