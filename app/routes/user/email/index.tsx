@@ -9,7 +9,6 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
-import { useState } from 'react'
 
 import {
   createCircularEmailNotification,
@@ -72,11 +71,67 @@ export async function loader({ request }: DataFunctionArgs) {
   return { data, userIsSubscribedToCircularEmails, hostname, email: user.email }
 }
 
+function CircularsSubscriptionForm({ value }: { value: boolean }) {
+  const fetcher = useFetcher<typeof action>()
+
+  let valuePending
+  switch (fetcher.submission?.formData.get('intent')?.toString()) {
+    case 'subscribe':
+      valuePending = true
+      break
+    case 'unsubscribe':
+      valuePending = false
+      break
+    default:
+      valuePending = value
+  }
+
+  return (
+    <fetcher.Form method="post">
+      <p>
+        {value
+          ? 'You are currently subscribed to receive GCN Circulars via Email.'
+          : 'You are not currently subscribed to receive GCN Circulars via Email.'}
+      </p>
+      <Grid row className="flex-align-center">
+        <ButtonGroup type="segmented" className="flex-auto">
+          <Button
+            type={value ? 'button' : 'submit'}
+            name="intent"
+            value="subscribe"
+            outline={!valuePending}
+          >
+            On
+          </Button>
+          <Button
+            type={value ? 'submit' : 'button'}
+            name="intent"
+            value="unsubscribe"
+            outline={valuePending}
+          >
+            Off
+          </Button>
+        </ButtonGroup>
+        <div className="padding-1 flex-auto">
+          {fetcher.state !== 'idle' && (
+            <>
+              <Spinner /> Saving...
+            </>
+          )}
+          {fetcher.type === 'done' && (
+            <>
+              <Icon.Check color="green" /> Saved
+            </>
+          )}
+        </div>
+      </Grid>
+    </fetcher.Form>
+  )
+}
+
 export default function () {
   const { data, userIsSubscribedToCircularEmails, hostname, email } =
     useLoaderData<typeof loader>()
-  const fetcher = useFetcher<typeof action>()
-  const [dirty, setDirty] = useState(false)
   const enableCirculars = useFeature('circulars')
 
   return (
@@ -109,48 +164,7 @@ export default function () {
             Circulars {`<no-reply@${hostname}>`} and are delivered to the email
             associated with your account ({email}).
           </p>
-          <fetcher.Form method="post" onSubmit={() => setDirty(false)}>
-            <input
-              type="hidden"
-              name="intent"
-              value={
-                userIsSubscribedToCircularEmails ? 'unsubscribe' : 'subscribe'
-              }
-            />
-            <p>
-              {userIsSubscribedToCircularEmails
-                ? 'You are currently subscribed to receive GCN Circulars via Email.'
-                : 'You are not currently subscribed to receive GCN Circulars via Email.'}
-            </p>
-            <Grid row className="flex-align-center">
-              <ButtonGroup type="segmented" className="flex-auto">
-                <Button
-                  type="submit"
-                  outline={!userIsSubscribedToCircularEmails}
-                >
-                  On
-                </Button>
-                <Button
-                  type="submit"
-                  outline={userIsSubscribedToCircularEmails}
-                >
-                  Off
-                </Button>
-              </ButtonGroup>
-              <div className="padding-1 flex-auto">
-                {fetcher.state !== 'idle' && (
-                  <>
-                    <Spinner /> Saving...
-                  </>
-                )}
-                {fetcher.type === 'done' && !dirty && (
-                  <>
-                    <Icon.Check color="green" /> Saved
-                  </>
-                )}
-              </div>
-            </Grid>
-          </fetcher.Form>
+          <CircularsSubscriptionForm value={userIsSubscribedToCircularEmails} />
         </>
       )}
       <HeadingWithAddButton headingLevel={2}>Notices</HeadingWithAddButton>
