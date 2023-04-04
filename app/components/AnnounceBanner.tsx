@@ -73,7 +73,7 @@ export function AnnouncementEvent(props: {
   region: 'Atlantic' | 'Pacific' | 'Asia and Oceania'
 }) {
   return (
-    <div className="mobile-lg:grid-col-4">
+    <Grid mobileLg={{col: 4}}>
       {props.time}
       <div>(best for {props.region}):</div>
       <Link rel="external" href={props.link}>
