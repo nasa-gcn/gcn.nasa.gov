@@ -8,9 +8,12 @@
 import dedent from 'ts-dedent'
 
 import {
+  bodyIsValid,
+  emailIsAutoReply,
   formatAuthor,
   formatCircular,
   parseEventFromSubject,
+  subjectIsValid,
 } from '../app/routes/circulars/circulars.lib'
 
 describe('formatAuthor', () => {
@@ -163,6 +166,13 @@ describe('parseEventFromSubject', () => {
   test('handles SGR event name with a hyphen in misc positions', () => {
     const sgrSubjectWithHyphen = 'Swift-BAT SGR-1935+2154 refined analysis'
     expect(parseEventFromSubject(sgrSubjectWithHyphen)).toBe(sgrEvent)
+  })
+
+  test('handles SGR event name with Swift', () => {
+    const sgrSubjectWithSwift = 'SGR Swift J1234+5678 refined analysis'
+    expect(parseEventFromSubject(sgrSubjectWithSwift)).toBe(
+      'SGR Swift J1234+5678'
+    )
   })
   //#endregion
 
@@ -456,4 +466,29 @@ describe('parseEventFromSubject', () => {
     expect(parseEventFromSubject(baksanSubjectWithHyphen)).toBe(baksanEvent)
   })
   //#endregion
+})
+
+describe('emailIsAutoReply', () => {
+  const invalidFwdSubject = 'FWD: Check this out'
+  test('detects valid subjectline', () => {
+    expect(emailIsAutoReply(invalidFwdSubject)).toBe(true)
+  })
+})
+
+describe('bodyIsValid', () => {
+  test('returns undefined on empty body', () => {
+    expect(bodyIsValid('')).toBe(undefined)
+  })
+  test('returns true on valid body', () => {
+    expect(bodyIsValid('This is a valid body')).toBe(true)
+  })
+})
+
+describe('subjectIsValid', () => {
+  test('returns nothing when subject is empty', () => {
+    expect(subjectIsValid('')).toBeUndefined()
+  })
+  test('returns true on valid subject', () => {
+    expect(subjectIsValid('GRB ABC000123')).toBe(true)
+  })
 })

@@ -19,12 +19,42 @@ See [Client Configuration](docs/client).
 
 ## What ports do I need to open in order to receive or send GCN notices with Kafka?
 
-Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP connections. The client uses the following ports.
+Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP connections. The client connects to the following hosts and ports.
 
-| Protocol | Direction | Port | Purpose |
-| -------- | --------- | ---- | ------- |
-| TCP      | outbound  | 443  | HTTPS   |
-| TCP      | outbound  | 9092 | Kafka   |
+<table className="usa-table">
+  <thead>
+    <tr>
+      <th>Direction</th>
+      <th>Protocol</th>
+      <th>Purpose</th>
+      <th>Port</th>
+      <th>Host</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowSpan="5">outbound</td>
+      <td rowSpan="5">TCP</td>
+      <td>HTTPS</td>
+      <td>443</td>
+      <td>auth.gcn.nasa.gov</td>
+    </tr>
+    <tr>
+      <td rowSpan="4">Kafka</td>
+      <td rowSpan="4">9092</td>
+      <td>kafka.gcn.nasa.gov</td>
+    </tr>
+    <tr>
+      <td>kafka1.gcn.nasa.gov</td>
+    </tr>
+    <tr>
+      <td>kafka2.gcn.nasa.gov</td>
+    </tr>
+    <tr>
+      <td>kafka3.gcn.nasa.gov</td>
+    </tr>
+  </tbody>
+</table>
 
 ## What does the warning `Subscribed topic not available: gcn.classic.text.AGILE_GRB_GROUND: Broker: Unknown topic or partition'` mean?
 

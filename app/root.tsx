@@ -41,6 +41,7 @@ import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
 
+import AnnounceBanner, { AnnouncementEvent } from './components/AnnounceBanner'
 import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
@@ -187,20 +188,26 @@ function Document({ children }: { children?: React.ReactNode }) {
           Skip to main content
         </a>
         <Progress />
+        <AnnounceBanner message="New GCN Circulars service starts April 17, 2023.  See introductory webinars.">
+          <AnnouncementEvent
+            time={'April 18, 2023 12:00-13:00 UTC'}
+            link={''}
+            region={'Atlantic'}
+          />
+          <AnnouncementEvent
+            time={'April 18, 2023 20:00-21:00 UTC'}
+            link={''}
+            region={'Asia and Oceania'}
+          />
+          <AnnouncementEvent
+            time={'April 19, 2023 4:00-5:00 UTC'}
+            link={''}
+            region={'Pacific'}
+          />
+        </AnnounceBanner>
         <GovBanner />
         <DevBanner />
         <Header email={email} />
-        <div className="bg-gold padding-x-2 desktop:padding-x-4 padding-y-1 line-height-sans-3 font-lang-4">
-          <GridContainer>
-            <span className="text-bold">
-              New Circulars Service Begins April 12, 2023.
-            </span>{' '}
-            See{' '}
-            <Link to="/news" className="hover:text-no-underline">
-              news and announcements
-            </Link>
-          </GridContainer>
-        </div>
         <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
         </section>
