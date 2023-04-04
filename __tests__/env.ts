@@ -5,7 +5,14 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { feature, getEnvOrDie, getFeatures } from '../app/lib/env.server'
+import {
+  feature,
+  getEnvOrDie,
+  getEnvOrDieInProduction,
+  getFeatures,
+  getHostname,
+  getOrigin,
+} from '../app/lib/env.server'
 
 let oldEnv: typeof process.env
 beforeEach(() => {
@@ -71,4 +78,52 @@ describe('getEnvOrDie', () => {
       }).toThrow()
     }
   )
+})
+
+describe('getOrigin', () => {
+  const key = 'ORIGIN'
+
+  test('gets sandbox origin when ORIGIN is not defined', () => {
+    setEnv('ARC_SANDBOX', JSON.stringify({ ports: { http: 1234 } }))
+    expect(getOrigin()).toBe('http://localhost:1234')
+  })
+
+  test('gets env.ORIGIN when ORIGIN is defined', () => {
+    setEnv(key, 'https://gcn.nasa.gov')
+    expect(getOrigin()).toBe('https://gcn.nasa.gov')
+  })
+})
+
+describe('getHostname', () => {
+  test('returns localhost when ORIGIN is not defined', () => {
+    setEnv('ORIGIN', undefined)
+    setEnv('ARC_SANDBOX', JSON.stringify({ ports: { http: 1234 } }))
+    expect(getHostname()).toBe('localhost')
+  })
+
+  test('returns dev.gcn.nasa.gov when ORIGIN is https://dev.gcn.nasa.gov', () => {
+    setEnv('ORIGIN', 'https://dev.gcn.nasa.gov')
+    setEnv('ARC_SANDBOX', JSON.stringify({ ports: { http: 1234 } }))
+    expect(getHostname()).toBe('dev.gcn.nasa.gov')
+  })
+})
+
+describe('getEnvOrDieInProduction', () => {
+  const key = 'FOO'
+
+  test('returns undefined if the variable does not exist', () => {
+    expect(getEnvOrDieInProduction('TEST')).toBe(undefined)
+  })
+
+  test('throws an error in production', () => {
+    setEnv('NODE_ENV', 'production')
+    expect(() => getEnvOrDieInProduction('TEST')).toThrow(
+      'environment variable TEST must be set'
+    )
+  })
+
+  test('returns the value if the environment variable exists', () => {
+    setEnv(key, 'BAR')
+    expect(getEnvOrDieInProduction(key)).toStrictEqual('BAR')
+  })
 })
