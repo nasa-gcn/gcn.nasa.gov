@@ -16,10 +16,10 @@ type AnnouncedEvents = {
 
 export default function AnnounceBanner({
   message,
-  events,
+  children,
 }: {
   message: string
-  events?: AnnouncedEvents[]
+  children?: React.ReactNode
 }) {
   const [showFullBanner, setShowFullBanner] = useState(true)
 
@@ -55,13 +55,7 @@ export default function AnnounceBanner({
             className="usa-banner__content usa-accordion__content padding-top-2"
             id="announcement-banner-blue"
           >
-            {events && (
-              <div className="grid-row">
-                {events.map((event) => (
-                  <AnnouncementEvent key={event.link} {...event} />
-                ))}
-              </div>
-            )}
+            {children}
             <p>
               If you cannot attend live, then you can get the{' '}
               <Link
