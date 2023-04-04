@@ -7,6 +7,7 @@
  */
 import { Link } from '@remix-run/react'
 import { Grid, Icon } from '@trussworks/react-uswds'
+import classNames from 'classnames'
 
 export default function HeadingWithAddButton({
   headingLevel = 1,
@@ -24,9 +25,9 @@ export default function HeadingWithAddButton({
       </Grid>
       <Grid tablet={{ col: 'auto' }}>
         <Link
-          className={
-            classNames('usa-button', 'tablet:margin-right-2', {'tablet:margin-top-105': headingLevel > 1})
-      }
+          className={classNames('usa-button', 'tablet:margin-right-2', {
+            'tablet:margin-top-105': headingLevel > 1,
+          })}
           to="edit"
         >
           <Icon.Add className="bottom-aligned margin-right-05" />
