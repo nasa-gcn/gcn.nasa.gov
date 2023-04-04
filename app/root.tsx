@@ -188,7 +188,7 @@ function Document({ children }: { children?: React.ReactNode }) {
           Skip to main content
         </a>
         <Progress />
-        <AnnounceBanner message="New GCN Circulars service starts April 17, 2023.  See introductory webinars.">
+        <AnnounceBanner message="New GCN Circulars service starts April 17, 2023.  Learn more at one of these introductory webinars.">
           <AnnouncementEvent
             time={'April 18, 2023 12:00-13:00 UTC'}
             link={''}
