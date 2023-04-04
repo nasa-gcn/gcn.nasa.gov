@@ -73,7 +73,7 @@ export default function AnnounceBanner({
   )
 }
 
-export function AnnouncementEvent(event: AnnouncedEvents) {
+export function AnnouncementEvent(props: AnnouncedEvents) {
   return (
     <div className="mobile-lg:grid-col-4">
       {event.time}
