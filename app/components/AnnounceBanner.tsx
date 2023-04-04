@@ -8,12 +8,6 @@
 import { Button, Link } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-type AnnouncedEvents = {
-  time: string
-  link: string
-  region: 'Atlantic' | 'Pacific' | 'Asia and Oceania'
-}
-
 export default function AnnounceBanner({
   message,
   children,
@@ -73,13 +67,17 @@ export default function AnnounceBanner({
   )
 }
 
-export function AnnouncementEvent(props: AnnouncedEvents) {
+export function AnnouncementEvent(props: {
+  time: string
+  link: string
+  region: 'Atlantic' | 'Pacific' | 'Asia and Oceania'
+}) {
   return (
     <div className="mobile-lg:grid-col-4">
-      {event.time}
-      <div>(best for {event.region}):</div>
-      <Link rel="external" href={event.link}>
-        {event.link}
+      {props.time}
+      <div>(best for {props.region}):</div>
+      <Link rel="external" href={props.link}>
+        {props.link}
       </Link>
     </div>
   )
