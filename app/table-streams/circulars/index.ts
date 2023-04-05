@@ -46,15 +46,14 @@ async function send(circular: Circular) {
   const { Items } = await db.circulars_subscriptions.scan({
     AttributesToGet: ['email'],
   })
-  const {Items: LegacyItems} =
-    await db.legacy_users.query({
-      IndexName: 'legacyReceivers',
-      KeyConditionExpression: 'receive = :receive',
-      ExpressionAttributeValues: {
-        ':receive': 1,
-      },
-      ProjectionExpression: 'email',
-    })
+  const { Items: LegacyItems } = await db.legacy_users.query({
+    IndexName: 'legacyReceivers',
+    KeyConditionExpression: 'receive = :receive',
+    ExpressionAttributeValues: {
+      ':receive': 1,
+    },
+    ProjectionExpression: 'email',
+  })
 
   const recipients = [...Items, ...LegacyItems].map(({ email }) => email)
   await sendEmailBulk({
