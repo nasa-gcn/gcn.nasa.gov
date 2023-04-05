@@ -76,7 +76,9 @@ export function subjectIsValid(subject: string) {
   if (subject.length)
     return (
       !emailIsAutoReply(subject) &&
-      validSubjectKeywords.some((x) => subject.startsWith(x))
+      validSubjectKeywords.some((x) =>
+        subject.toLowerCase().startsWith(x.toLowerCase())
+      )
     )
 }
 
@@ -95,6 +97,7 @@ export const validSubjectKeywords = [
   'ANTARES',
   'AXP',
   'Baksan Neutrino Observatory Alert',
+  'CALET',
   'Chandra',
   'Fermi',
   'FXT',
@@ -105,23 +108,35 @@ export const validSubjectKeywords = [
   'HST',
   'IBAS',
   'IceCube',
-  'ICECUBE',
   'INTEGRAL',
   'IPN',
+  'KAGRA',
   'KONUS',
-  'LIGO/Virgo',
+  'LIGO',
+  'LOFAR',
   'LVC',
+  'LVK',
+  'MAGIC',
+  'MASTER',
   'MAXI',
+  'Pan-STARRS',
+  'POLAR',
   'RATIR',
   'SDSS',
+  'SFXT',
   'SGR',
+  'Suzaku',
   'Swift',
-  'SWIFT',
+  'transient',
   'Virgo',
   'VLA',
   'VLBI',
   'XRB',
+  'XRF',
+  'XRT',
   'XTR',
+  'Virgo',
+  'VLA',
   'ZTF',
 ]
 
