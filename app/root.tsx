@@ -190,19 +190,19 @@ function Document({ children }: { children?: React.ReactNode }) {
         <Progress />
         <AnnounceBanner message="New GCN Circulars service starts April 17, 2023. Learn more at one of these introductory webinars.">
           <AnnouncementEvent
-            time={'April 18, 2023 12:00-13:00 UTC'}
-            link={''}
-            region={'Atlantic'}
+            time="April 18, 2023 12:00-13:00 UTC"
+            link="https://nasa-gov.zoomgov.com/webinar/register/WN_lHhwaELgQIympcfQaSOkbg"
+            region="Atlantic"
           />
           <AnnouncementEvent
-            time={'April 18, 2023 20:00-21:00 UTC'}
-            link={''}
-            region={'Asia and Oceania'}
+            time="April 18, 2023 20:00-21:00 UTC"
+            link="https://nasa-gov.zoomgov.com/webinar/register/WN_BiIbwg65Qv2HvhkUSfrmwA"
+            region="Asia and Oceania"
           />
           <AnnouncementEvent
-            time={'April 19, 2023 04:00-05:00 UTC'}
-            link={''}
-            region={'Pacific'}
+            time="April 19, 2023 04:00-05:00 UTC"
+            link="https://nasa-gov.zoomgov.com/webinar/register/WN_KcSEaCU1QFqiaoVcgFQvVA"
+            region="Pacific"
           />
         </AnnounceBanner>
         <GovBanner />
