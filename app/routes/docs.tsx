@@ -42,7 +42,7 @@ export default function () {
                   <NavLink key="styleguide" to="styleguide">
                     Style Guide
                   </NavLink>,
-                  <NavLink key="archive" to="/circulars">
+                  <NavLink key="archive" to="archive">
                     Archive
                   </NavLink>,
                 ]}
