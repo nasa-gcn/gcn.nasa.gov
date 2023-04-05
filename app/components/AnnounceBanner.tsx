@@ -70,6 +70,7 @@ export default function AnnounceBanner({
 export function AnnouncementEvent(props: {
   time: string
   link: string
+  linkstring: string
   region: 'Atlantic' | 'Pacific' | 'Asia and Oceania'
 }) {
   return (
@@ -77,7 +78,7 @@ export function AnnouncementEvent(props: {
       {props.time}
       <div>(best for {props.region}):</div>
       <Link rel="external" href={props.link}>
-        {props.link}
+        {props.linkstring}
       </Link>
     </Grid>
   )

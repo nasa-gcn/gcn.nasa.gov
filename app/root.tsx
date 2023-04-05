@@ -192,16 +192,19 @@ function Document({ children }: { children?: React.ReactNode }) {
           <AnnouncementEvent
             time="April 18, 2023 12:00-13:00 UTC"
             link="https://nasa-gov.zoomgov.com/webinar/register/WN_lHhwaELgQIympcfQaSOkbg"
+            linkstring="Register"
             region="Atlantic"
           />
           <AnnouncementEvent
             time="April 18, 2023 20:00-21:00 UTC"
             link="https://nasa-gov.zoomgov.com/webinar/register/WN_BiIbwg65Qv2HvhkUSfrmwA"
+            linkstring="Register"
             region="Asia and Oceania"
           />
           <AnnouncementEvent
             time="April 19, 2023 04:00-05:00 UTC"
             link="https://nasa-gov.zoomgov.com/webinar/register/WN_KcSEaCU1QFqiaoVcgFQvVA"
+            linkstring="Register"
             region="Pacific"
           />
         </AnnounceBanner>
