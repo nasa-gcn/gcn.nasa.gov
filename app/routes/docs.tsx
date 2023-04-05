@@ -24,13 +24,38 @@ export default function () {
             <NavLink key="client" to="client">
               Kafka Client Configuration
             </NavLink>,
-            <NavLink key="circulars" to="circulars">
-              Circulars
-            </NavLink>,
-            <NavLink key="styleguide" to="styleguide">
-              Circulars Style Guide
-            </NavLink>,
-            <NavLink key="contributing" to="contributing">
+            <>
+              <NavLink key="circulars" to="circulars" end>
+                Circulars
+                <SideNav
+                  isSubnav={true}
+                  items={[
+                    <NavLink key="subscribe" to="circulars#subscribe">
+                      Subscribe
+                    </NavLink>,
+                    <NavLink
+                      key="submitter authorization"
+                      to="circulars#submitter-authorization"
+                    >
+                      Submitter Authorization
+                    </NavLink>,
+                    <NavLink key="submit" to="circulars#submit">
+                      Submit
+                    </NavLink>,
+                    <NavLink
+                      key="styleguide"
+                      to="circulars#style-guide-and-required-formatting"
+                    >
+                      Style Guide
+                    </NavLink>,
+                    <NavLink key="archive" to="circulars#archive">
+                      Archive
+                    </NavLink>,
+                  ]}
+                />
+              </NavLink>
+            </>,
+            <NavLink key="contribute" to="contribute">
               Contributing
             </NavLink>,
             <NavLink key="producers" to="producers">
