@@ -1,0 +1,54 @@
+---
+handle:
+  breadcrumb: Circulars Documentation - Submitting
+---
+
+import {
+  SummaryBox,
+  SummaryBoxContent,
+  SummaryBoxHeading,
+} from '@trussworks/react-uswds'
+
+import { validSubjectKeywords } from '../circulars/circulars.lib.ts'
+import { useFeature } from '~/root'
+
+# Submitting GCN Circulars
+
+## Submitter Authorization
+
+To become an authorized Circulars submitter, you need to have either been a Circulars submitter in the legacy GCN Classic service or seek a [peer endorsement](/user/endorsements) from a colleague who is already an authorized Circulars submitter.
+
+## Submit
+
+Once authorized, Circulars users can submit either via the web form or email. Circulars are then distributed by email to all subscribers after rapid automated vetting and formatting.
+
+### Web Form
+
+Once you are an authorized submitter and have [signed up or signed in](/login), you can submit Circulars via the [web form](/circulars) by clicking [New](/circulars/new).
+
+### Email
+
+Circulars can be submitted by emailing circulars@gcn.nasa.gov. Emails sent to the legacy email address will be accepted and processed by the new Circulars service, but we encourage use of the new address. We will phase out use of the legacy address.
+
+## Style Guide and Required Formatting
+
+Please explore the detailed [style guide](/docs/styleguide). In particular, the email subject must contain at least one of the following strings (not case sensitive):
+
+<a name="subject-word-list" />
+<ul className="grid-row usa-list usa-list--unstyled">
+  {validSubjectKeywords.map((keyword) => (
+    <li key={keyword} className="grid-col-2">
+      {keyword}
+    </li>
+  ))}
+</ul>
+
+A copy of the body of your email will be distributed along with the following header:
+
+```text
+TITLE:   GCN CIRCULAR
+NUMBER:  <serial number>
+SUBJECT: <exact copy of your email subject>
+DATE:    <date and time>
+FROM:    <the name and email you used to register>
+```

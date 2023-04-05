@@ -27,33 +27,24 @@ export default function () {
             <>
               <NavLink key="circulars" to="circulars" end>
                 Circulars
-                <SideNav
-                  isSubnav={true}
-                  items={[
-                    <NavLink key="subscribe" to="circulars#subscribe">
-                      Subscribe
-                    </NavLink>,
-                    <NavLink
-                      key="submitter authorization"
-                      to="circulars#submitter-authorization"
-                    >
-                      Submitter Authorization
-                    </NavLink>,
-                    <NavLink key="submit" to="circulars#submit">
-                      Submit
-                    </NavLink>,
-                    <NavLink
-                      key="styleguide"
-                      to="circulars#style-guide-and-required-formatting"
-                    >
-                      Style Guide
-                    </NavLink>,
-                    <NavLink key="archive" to="circulars#archive">
-                      Archive
-                    </NavLink>,
-                  ]}
-                />
               </NavLink>
+              <SideNav
+                isSubnav={true}
+                items={[
+                  <NavLink key="subscribing" to="subscribing">
+                    Subscribing
+                  </NavLink>,
+                  <NavLink key="submitting" to="submitting">
+                    Submitting
+                  </NavLink>,
+                  <NavLink key="styleguide" to="styleguide">
+                    Style Guide
+                  </NavLink>,
+                  <NavLink key="archive" to="/circulars">
+                    Archive
+                  </NavLink>,
+                ]}
+              />
             </>,
             <NavLink key="contribute" to="contribute">
               Contributing
