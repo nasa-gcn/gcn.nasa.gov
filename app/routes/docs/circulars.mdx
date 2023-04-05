@@ -10,6 +10,7 @@ import {
 } from '@trussworks/react-uswds'
 
 import { validSubjectKeywords } from '../circulars/circulars.lib.ts'
+import { useFeature } from '~/root'
 
 # GCN Circulars
 
@@ -21,53 +22,30 @@ GCN Circulars are rapid astronomical bulletins submitted by and distributed to c
 
 Circulars allow the GRB community to **email** messages to a central queue where they are automatically vetted and distributed to the entire GRB community. These prose-style messages allow the community to coordinate and make optimum use of its limited resources.
 
-<SummaryBox heading="Summary">
-  <SummaryBoxHeading headingLevel="h3">Summary</SummaryBoxHeading>
-  <SummaryBoxContent>
-
-    1. Email your submission to circulars@gcn.nasa.gov or submit via [web form](/.circulars).
-
-    2. The subject line must contain at least one of the strings in the [list of
-      instruments and source types](#subject-word-list).
-
-  </SummaryBoxContent>
-</SummaryBox>
-
-## Subscribing
+## Subscribe
 
 To receive GCN Circulars, [sign up or sign in](/login), then select [Email Notifications](/user/email). You can immediately sign up to receive circulars.
 
-If you subscribed to Circulars via the legacy GCN Classic service, your subscription was automatically transferred. To edit your profile or unsubscribe, [sign up or sign in](login).
+If you subscribed to Circulars via the legacy GCN Classic service, your subscription was automatically transferred. To edit your profile or unsubscribe, [sign up or sign in](/login).
 
 ## Submitter Authorization
 
-To become an authorized Circulars submitter, you need to have either been a Circulars submitter in the legacy GCN Classic service or seek a [peer endorsement](endorsement) from a colleague who is already an authorized Circulars submitter.
+To become an authorized Circulars submitter, you need to have either been a Circulars submitter in the legacy GCN Classic service or seek a [peer endorsement](/user/endorsements) from a colleague who is already an authorized Circulars submitter.
 
-## Submission process
+## Submit
 
 Once authorized, Circulars users can submit either via the web form or email. Circulars are then distributed by email to all subscribers after rapid automated vetting and formatting.
 
 ### Web Form
 
-Once you are an authorized submitter and have [signed up or signed in](login), you can submit Circulars via the [web form](/circulars) by clicking "New".
+Once you are an authorized submitter and have [signed up or signed in](/login), you can submit Circulars via the [web form](/circulars) by clicking "New".
 
 ### Email
 
-Circulars can be submitted by emailing circulars@gcn.nasa.gov. Emails sent to the legacy email address will be accepted and processed by the new Circulars service, but we encourage use of the new address, and will phase out the legacy address.
+Circulars can be submitted by emailing circulars@gcn.nasa.gov. Emails sent to the legacy email address will be accepted and processed by the new Circulars service, but we encourage use of the new address. We will phase out user of the legacy address.
+c
 
-<SummaryBox heading="Summary">
-  <SummaryBoxHeading headingLevel="h3">Summary</SummaryBoxHeading>
-  <SummaryBoxContent>
-
-    1. Email your submission to gcncirc@capella2.gsfc.nasa.gov.
-
-    2. The email subject line must contain at least one of the strings in the [list of
-      instruments and source types](#subject-word-list).
-
-  </SummaryBoxContent>
-</SummaryBox>
-
-## [Style Guide](docs/styleguide) and Required Formatting
+## Style Guide and Required Formatting
 
 Please explore the detailed [style guide](/docs/styleguide). In particular, the email subject must contain at least one of the following case-sensitive strings:
 
@@ -94,4 +72,4 @@ FROM:    <the name and email you used to register>
 
 GCN Circulars are automatically [archived](/circulars). The archive contains all past Circulars in reverse chronological order. It is searchable given any enclosed string, and browseable as grouped by event.
 
-The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn) provides another way to search the notices and circulars arhives sorted by astronomical event.
+The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn) provides another way to search the notices and circulars archives sorted by astronomical event.
