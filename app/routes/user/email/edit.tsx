@@ -14,8 +14,12 @@ import { useState } from 'react'
 import type {
   EmailNotification,
   EmailNotificationVM,
-} from '../email_notifications.server'
-import { EmailNotificationServer } from '../email_notifications.server'
+} from '../email_notices.server'
+import {
+  createEmailNotification,
+  getEmailNotification,
+  updateEmailNotification,
+} from '../email_notices.server'
 import { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
@@ -24,6 +28,8 @@ import { getUser } from '~/routes/__auth/user.server'
 export const handle = { breadcrumb: 'Edit', getSitemapEntries: () => null }
 
 export async function action({ request }: DataFunctionArgs) {
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
   const data = await request.formData()
   const { uuid, intent, name, recipient, noticeFormat, ...rest } =
     Object.fromEntries(data)
@@ -37,14 +43,14 @@ export async function action({ request }: DataFunctionArgs) {
     created: 0,
     topics: topics,
     uuid: uuid?.toString(),
+    sub: user.sub,
   }
-  const machine = await EmailNotificationServer.create(request)
   switch (intent) {
     case 'create':
-      await machine.createEmailNotification(emailNotification)
+      await createEmailNotification(emailNotification)
       return redirect('/user/email')
     case 'update':
-      await machine.updateEmailNotification(emailNotification)
+      await updateEmailNotification(emailNotification)
       return redirect('/user/email')
     case 'delete':
       return null
@@ -57,6 +63,7 @@ export async function loader({ request }: DataFunctionArgs) {
   const { uuid } = Object.fromEntries(new URL(request.url).searchParams)
   let intent = 'create'
   const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
   const email = user?.email
 
   let notification: EmailNotificationVM = {
@@ -66,10 +73,10 @@ export async function loader({ request }: DataFunctionArgs) {
     recipient: email ?? '',
     created: 0,
     topics: [],
+    sub: user.sub,
   }
   if (uuid != undefined) {
-    const machine = await EmailNotificationServer.create(request)
-    notification = await machine.getEmailNotification(uuid)
+    notification = await getEmailNotification(uuid, user.sub)
     intent = 'update'
   }
   const format = notification.format as 'text' | 'voevent' | 'binary'

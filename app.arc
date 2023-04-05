@@ -79,8 +79,11 @@ circulars
 
 circulars_subscriptions
   sub *String
-  email **String
   name circularsSubscriptionsBySub
+
+legacy_users
+  receive *Number
+  name legacyReceivers
 
 @aws
 runtime nodejs18.x
