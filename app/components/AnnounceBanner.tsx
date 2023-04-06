@@ -12,7 +12,7 @@ export default function AnnounceBanner({
   message,
   children,
 }: {
-  message: string
+  message: React.ReactNode
   children?: React.ReactNode
 }) {
   const [showFullBanner, setShowFullBanner] = useState(true)
