@@ -10,6 +10,7 @@ import {
   CognitoIdentityProviderClient,
   ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import type { SNSEventRecord } from 'aws-lambda'
 import { simpleParser } from 'mailparser'
 
@@ -47,6 +48,7 @@ interface EmailProps {
 const fromName = 'GCN Circulars'
 
 const cognito = new CognitoIdentityProviderClient({})
+const s3 = new S3Client({})
 const origin = getOrigin()
 
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
@@ -56,6 +58,15 @@ module.exports.handler = createTriggerHandler(
     if (!feature('circulars')) throw new Error('not implemented')
     const message = JSON.parse(record.Sns.Message)
 
+    // Save a copy of the message in an S3 bucket for debugging.
+    // FIXME: remove this later?
+    await s3.send(
+      new PutObjectCommand({
+        Bucket: process.env.ARC_STORAGE_PRIVATE_EMAIL_INCOMING,
+        Key: `${record.Sns.MessageId}.json`,
+        Body: JSON.stringify(record),
+      })
+    )
     ;['spam', 'virus', 'spf', 'dkim', 'dmarc'].forEach((key) => {
       if (message.receipt?.[`${key}Verdict`]?.status !== 'PASS')
         throw new Error(`${key} check failed`)

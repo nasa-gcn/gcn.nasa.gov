@@ -92,6 +92,9 @@ architecture arm64
 memory 256
 tracing true
 
+@storage-private
+email-incoming
+
 @search
 instanceType t3.small.search
 instanceCount 2
@@ -109,3 +112,4 @@ emailIncoming  # Enable notifications from SES to SNS to trigger email-incoming 
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-tracing  # Enable AWS X-Ray distributed tracing
 architect/plugin-lambda-invoker
+architect/plugin-storage-private
