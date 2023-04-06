@@ -205,11 +205,11 @@ const sharedEmailBody = `
 
 
 
-  --------------------------------
+---
 
 
 
-  As of April 12, 2023, GCN Circulars are being administered through the new General Coordinates Network (GCN; ${origin}), and no longer through the GCN Classic service (https://gcn.gsfc.nasa.gov).
+As of April 12, 2023, GCN Circulars are being administered through the new General Coordinates Network (GCN; ${origin}), and no longer through the GCN Classic service (https://gcn.gsfc.nasa.gov).
       
       The new GCN Circulars allow you to:
       
