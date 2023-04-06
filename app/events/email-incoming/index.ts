@@ -44,14 +44,6 @@ interface EmailProps {
   newCircularId?: number
 }
 
-interface EmailProps {
-  subjectMessage: string
-  userEmail: string
-  body: string
-  parsedSubmissionSubject: string
-  newCircularId?: number
-}
-
 const fromName = 'GCN Circulars'
 
 const cognito = new CognitoIdentityProviderClient({})
