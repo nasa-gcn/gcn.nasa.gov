@@ -240,7 +240,7 @@ async function sendSuccessEmail(props: EmailProps) {
   await sendEmail({
     fromName,
     recipient: props.userEmail,
-    subject: `Successfully submitted Circular: ${props.subjectMessage}`,
+    subject: `GCN Circular Submission Successful: ${props.subjectMessage}`,
     body:
       successMessage(
         props.userEmail,
