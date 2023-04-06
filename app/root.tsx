@@ -41,6 +41,7 @@ import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
 
+import AnnounceBanner, { AnnouncementEvent } from './components/AnnounceBanner'
 import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
@@ -187,6 +188,34 @@ function Document({ children }: { children?: React.ReactNode }) {
           Skip to main content
         </a>
         <Progress />
+        <AnnounceBanner
+          message={
+            <p>
+              New GCN Circulars service starts April 17, 2023. Learn more at one
+              of these introductory webinars and in our{' '}
+              <Link to="/news">news</Link>.
+            </p>
+          }
+        >
+          <AnnouncementEvent
+            time="April 18, 2023 12:00-13:00 UTC"
+            link="https://nasa-gov.zoomgov.com/webinar/register/WN_lHhwaELgQIympcfQaSOkbg"
+            linkstring="Register"
+            region="Atlantic"
+          />
+          <AnnouncementEvent
+            time="April 18, 2023 20:00-21:00 UTC"
+            link="https://nasa-gov.zoomgov.com/webinar/register/WN_BiIbwg65Qv2HvhkUSfrmwA"
+            linkstring="Register"
+            region="Asia and Oceania"
+          />
+          <AnnouncementEvent
+            time="April 19, 2023 04:00-05:00 UTC"
+            link="https://nasa-gov.zoomgov.com/webinar/register/WN_KcSEaCU1QFqiaoVcgFQvVA"
+            linkstring="Register"
+            region="Pacific"
+          />
+        </AnnounceBanner>
         <GovBanner />
         <DevBanner />
         <Header email={email} />
