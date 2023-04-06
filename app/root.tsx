@@ -188,7 +188,15 @@ function Document({ children }: { children?: React.ReactNode }) {
           Skip to main content
         </a>
         <Progress />
-        <AnnounceBanner message={New GCN Circulars service starts April 17, 2023. Learn more at one of these introductory webinars. Read more in our <Link to="/news">news</Link>.}>
+        <AnnounceBanner
+          message={
+            <>
+              New GCN Circulars service starts April 17, 2023. Learn more at one
+              of these introductory webinars. Read more in our{' '}
+              <Link to="/news">news</Link>.
+            </>
+          }
+        >
           <AnnouncementEvent
             time="April 18, 2023 12:00-13:00 UTC"
             link="https://nasa-gov.zoomgov.com/webinar/register/WN_lHhwaELgQIympcfQaSOkbg"
