@@ -190,11 +190,11 @@ function Document({ children }: { children?: React.ReactNode }) {
         <Progress />
         <AnnounceBanner
           message={
-            <>
+            <p>
               New GCN Circulars service starts April 17, 2023. Learn more at one
-              of these introductory webinars. Read more in our{' '}
+              of these introductory webinars and in our{' '}
               <Link to="/news">news</Link>.
-            </>
+            </p>
           }
         >
           <AnnouncementEvent
