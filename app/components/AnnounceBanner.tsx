@@ -30,7 +30,7 @@ export default function AnnounceBanner({
         <header className="usa-banner__header">
           <div className="usa-banner__inner">
             <div className="grid-col-fill tablet:grid-col-auto">
-              <h2 className="">{message}</h2>
+              <h2 className="usa-banner__header-text">{message}</h2>
             </div>
             <Button
               type="button"
