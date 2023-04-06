@@ -196,7 +196,7 @@ function failedMessage(
 ) {
   return `Your GCN Circular from ${userEmail} (subject: ${subject}) was not processed for the following reasons:
   
-  ${explanation}
+${explanation}
 
 If you believe this to be a mistake, please contact us using the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.`
 }
@@ -211,30 +211,30 @@ const sharedEmailBody = `
 
 As of April 12, 2023, GCN Circulars are being administered through the new General Coordinates Network (GCN; ${origin}), and no longer through the GCN Classic service (https://gcn.gsfc.nasa.gov).
       
-      The new GCN Circulars allow you to:
-      
-      - Browse and search Circulars in our all-new archive.
-      - Sign yourself up or manage your own email subscriptions.
-      - Enroll yourself and your colleagues to submit Circulars with arXiv-style peer endorsements for new contributors.
-      - Submit Circulars with our new Web form, or continue to submit by email.
-      
-      If you have not already done so, we encourage you to make an account at ${origin}. Even if you have not yet created a new account, these features provide continuity with the legacy GCN Classic service:
-      
-      - Your Circulars settings have been transferred automatically.
-      - You are able to submit Circulars from the same email addresses registered in the legacy service.
-      - Emails from GCN come from a new address, no-reply@${getHostname()}.
-      - We encourage you to submit Circulars to the new address, circulars@${getHostname()}, but we still support the old address gcncirc@capella2.gsfc.nasa.gov.
-      - The new archive, ${origin}/circulars, includes all past Circulars. We have frozen the old archive, https://gcn.gsfc.nasa.gov/gcn3_archive.html.
-      
-      For more information about the GCN Circulars, please see ${origin}/circulars.
-      
-      For questions, issues, or bug reports, please contact the GCN Team via:
-      
-      HEASARC feedback form:
-      https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn
-      
-      GitHub issue tracker:
-      https://github.com/nasa-gcn/gcn.nasa.gov/issues`
+The new GCN Circulars allow you to:
+
+- Browse and search Circulars in our all-new archive.
+- Sign yourself up or manage your own email subscriptions.
+- Enroll yourself and your colleagues to submit Circulars with arXiv-style peer endorsements for new contributors.
+- Submit Circulars with our new Web form, or continue to submit by email.
+
+If you have not already done so, we encourage you to make an account at ${origin}. Even if you have not yet created a new account, these features provide continuity with the legacy GCN Classic service:
+
+- Your Circulars settings have been transferred automatically.
+- You are able to submit Circulars from the same email addresses registered in the legacy service.
+- Emails from GCN come from a new address, no-reply@${getHostname()}.
+- We encourage you to submit Circulars to the new address, circulars@${getHostname()}, but we still support the old address gcncirc@capella2.gsfc.nasa.gov.
+- The new archive, ${origin}/circulars, includes all past Circulars. We have frozen the old archive, https://gcn.gsfc.nasa.gov/gcn3_archive.html.
+
+For more information about the GCN Circulars, please see ${origin}/circulars.
+
+For questions, issues, or bug reports, please contact the GCN Team via:
+
+HEASARC feedback form:
+https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn
+
+GitHub issue tracker:
+https://github.com/nasa-gcn/gcn.nasa.gov/issues`
 
 async function sendSuccessEmail(props: EmailProps) {
   await sendEmail({
