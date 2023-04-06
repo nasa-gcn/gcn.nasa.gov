@@ -198,7 +198,7 @@ function failedMessage(
   
   ${explanation}
 
-  If you believe this to be a mistake, please fill out the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.`
+If you believe this to be a mistake, please contact us using the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.`
 }
 
 const sharedEmailBody = `
