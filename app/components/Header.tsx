@@ -63,6 +63,9 @@ export function Header({ email }: { email?: string }) {
               <NavLink className="usa-nav__link" to="/docs" key="/docs">
                 Documentation
               </NavLink>,
+              <NavLink className="usa-nav__link" to="/news" key="/news">
+                News
+              </NavLink>,
               email ? (
                 <>
                   <NavDropDownButton
