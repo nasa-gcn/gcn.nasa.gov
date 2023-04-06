@@ -100,7 +100,7 @@ module.exports.handler = createTriggerHandler(
 
     if (!userData || !userData.submit) {
       await sendFailureEmail({
-        subjectMessage: 'Not an Authorized Submitter',
+        subjectMessage: 'Not an authorized submitter',
         userEmail,
         body: `The email address you are submitting this circular from is not approved to submit GCN Circulars. To become an approved submitter, please sign in to ${origin} and see ${origin}/user/endorsements`,
         parsedSubmissionSubject: parsed.subject,
