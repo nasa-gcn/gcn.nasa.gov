@@ -105,14 +105,25 @@ export default function () {
               id="service-gcn"
               name="service"
               value="gcn"
-              label="GCN (this site)"
+              label="GCN"
+              labelDescription="This web site, Kafka, sign-in issues, new GCN Notice types, Unified Schema"
               defaultChecked={defaultService === 'gcn'}
             />
             <Radio
               id="service-gcn-classic"
               name="service"
               value="gcn-classic"
-              label="GCN Classic (https://gcn.gsfc.nasa.gov)"
+              label="GCN Classic"
+              labelDescription={
+                <>
+                  The legacy web site at{' '}
+                  <Link to="https://gcn.gsfc.nasa.gov" rel="external">
+                    https://gcn.gsfc.nasa.gov
+                  </Link>
+                  , legacy GCN Notice and Circular subscriptions, legacy GCN
+                  Notice formats
+                </>
+              }
               defaultChecked={defaultService === 'gcn-classic'}
             />
           </Fieldset>
