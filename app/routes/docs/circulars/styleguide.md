@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: Circulars Style Guide
+  breadcrumb: Circulars - Style Guide
 ---
 
 # Circulars Style Guide
