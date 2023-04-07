@@ -64,7 +64,7 @@ module.exports.handler = createTriggerHandler(
       new PutObjectCommand({
         Bucket: process.env.ARC_STORAGE_PRIVATE_EMAIL_INCOMING,
         Key: `${record.Sns.MessageId}.json`,
-        Body: JSON.stringify(record),
+        Body: record.Sns.Message,
       })
     )
     ;['spam', 'virus', 'spf', 'dkim', 'dmarc'].forEach((key) => {
