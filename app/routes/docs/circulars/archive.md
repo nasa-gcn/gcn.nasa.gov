@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: Circulars Documentation - Archive
+  breadcrumb: Circulars - Archive
 ---
 
 # Circulars Archive

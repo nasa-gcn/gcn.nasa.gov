@@ -33,16 +33,16 @@ export default function () {
               <SideNav
                 isSubnav={true}
                 items={[
-                  <NavLink key="subscribing" to="subscribing">
+                  <NavLink key="subscribing" to="circulars/subscribing">
                     Subscribing
                   </NavLink>,
-                  <NavLink key="submitting" to="submitting">
+                  <NavLink key="submitting" to="circulars/submitting">
                     Submitting
                   </NavLink>,
-                  <NavLink key="styleguide" to="styleguide">
+                  <NavLink key="styleguide" to="circulars/styleguide">
                     Style Guide
                   </NavLink>,
-                  <NavLink key="archive" to="archive">
+                  <NavLink key="archive" to="circulars/archive">
                     Archive
                   </NavLink>,
                 ]}
