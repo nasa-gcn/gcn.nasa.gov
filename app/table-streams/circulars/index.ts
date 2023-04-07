@@ -8,6 +8,7 @@
 import { tables } from '@architect/functions'
 import type { AttributeValue } from '@aws-sdk/client-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { ResponseError } from '@opensearch-project/opensearch/lib/errors'
 import type {
   DynamoDBRecord,
   AttributeValue as LambdaTriggerAttributeValue,
@@ -29,7 +30,13 @@ function unmarshallTrigger(item?: Record<string, LambdaTriggerAttributeValue>) {
 
 async function removeIndex(id: number) {
   const client = await getSearchClient()
-  await client.delete({ index, id: id.toString() })
+  try {
+    await client.delete({ index, id: id.toString() })
+  } catch (e) {
+    if (!(e instanceof ResponseError && e.body.result === 'not_found')) {
+      throw e
+    }
+  }
 }
 
 async function putIndex(circular: Circular) {
