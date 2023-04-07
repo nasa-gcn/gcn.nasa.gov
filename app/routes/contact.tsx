@@ -99,24 +99,24 @@ export default function () {
         </>
       ) : (
         <Form method="post">
-          <Label htmlFor="service-fieldset">What do you need help with?</Label>
+          <Label htmlFor="service-fieldset">Which version of GCN?</Label>
           <Fieldset name="service-fieldset">
             <Radio
               id="service-gcn"
               name="service"
               value="gcn"
-              label="GCN (this site)"
+              label="General Coordinates Network (GCN, this site)"
               defaultChecked={defaultService === 'gcn'}
             />
             <Radio
               id="service-gcn-classic"
               name="service"
               value="gcn-classic"
-              label="GCN Classic (https://gcn.gsfc.nasa.gov)"
+              label="Gamma-ray Coordinates Network (GCN Classic, https://gcn.gsfc.nasa.gov)"
               defaultChecked={defaultService === 'gcn-classic'}
             />
           </Fieldset>
-          <Label htmlFor="email">What is your email address?</Label>
+          <Label htmlFor="email">Your Email Address</Label>
           <TextInput
             id="email"
             name="email"
@@ -127,7 +127,7 @@ export default function () {
               setEmailValid(validate(value))
             }}
           />
-          <Label htmlFor="subject">What is your question about?</Label>
+          <Label htmlFor="subject">Subject Line</Label>
           <TextInput
             id="subject"
             name="subject"
@@ -138,7 +138,7 @@ export default function () {
               setSubjectValid(!!value)
             }}
           />
-          <Label htmlFor="email">What is your question?</Label>
+          <Label htmlFor="email">Please Describe Your Question</Label>
           <Textarea
             id="body"
             name="body"
