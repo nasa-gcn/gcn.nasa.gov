@@ -47,7 +47,7 @@ export async function action({ request }: DataFunctionArgs) {
       recipient = 'gcnkafka@lists.nasa.gov'
       break
     case 'gcn-classic':
-      recipient = 'gcnclassic@lists.nasa.gov'
+      recipient = 'gcn-classic@athena.gsfc.nasa.gov'
       break
     default:
       throw new Response('invalid service', { status: 400 })
