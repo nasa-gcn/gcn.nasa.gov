@@ -4,6 +4,7 @@ handle:
 ---
 
 import {
+  Alert,
   SummaryBox,
   SummaryBoxContent,
   SummaryBoxHeading,
@@ -11,14 +12,11 @@ import {
 
 import { validSubjectKeywords } from './circulars.lib'
 
-<div className="usa-alert usa-alert--warning">
-  <div className="usa-alert__body">
-    <p className="usa-alert__text">
-      This page will be updated on April 17, 2023. See [news and
-      announcements](/news) for more information.
-    </p>
-  </div>
-</div>
+<Alert type="warning" heading="" headingLevel="h4">
+  As part of the transition to the new GCN Circulars Service this page will be
+  updated on April 17, 2023. See [news and announcements](/news) for more
+  information.
+</Alert>
 
 # GCN Circulars
 
