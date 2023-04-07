@@ -73,11 +73,15 @@ export function formatCircular({
 
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
-  if (subject.length)
+  if (subject.length) {
+    const subjectLowerCase = subject.toLowerCase()
     return (
       !emailIsAutoReply(subject) &&
-      validSubjectKeywords.some((x) => subject.startsWith(x))
+      validSubjectKeywords.some((x) =>
+        subjectLowerCase.startsWith(x.toLowerCase())
+      )
     )
+  }
 }
 
 /** Return true if the body is valid, false if it is invalid, or undefined if it is an empty string */
@@ -95,6 +99,7 @@ export const validSubjectKeywords = [
   'ANTARES',
   'AXP',
   'Baksan Neutrino Observatory Alert',
+  'CALET',
   'Chandra',
   'Fermi',
   'FXT',
@@ -105,23 +110,35 @@ export const validSubjectKeywords = [
   'HST',
   'IBAS',
   'IceCube',
-  'ICECUBE',
   'INTEGRAL',
   'IPN',
+  'KAGRA',
   'KONUS',
-  'LIGO/Virgo',
+  'LIGO',
+  'LOFAR',
   'LVC',
+  'LVK',
+  'MAGIC',
+  'MASTER',
   'MAXI',
+  'Pan-STARRS',
+  'POLAR',
   'RATIR',
   'SDSS',
+  'SFXT',
   'SGR',
+  'Suzaku',
   'Swift',
-  'SWIFT',
+  'transient',
   'Virgo',
   'VLA',
   'VLBI',
   'XRB',
+  'XRF',
+  'XRT',
   'XTR',
+  'Virgo',
+  'VLA',
   'ZTF',
 ]
 
