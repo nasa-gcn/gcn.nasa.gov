@@ -178,13 +178,7 @@ export default function () {
           </p>
           <p className="usa-paragraph">
             If you don't find anyone who you recognize, then{' '}
-            <a
-              rel="external"
-              href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic"
-            >
-              contact us for help
-            </a>
-            .
+            <Link to="/contact">contact us for help</Link>.
           </p>
           <EndorsementRequestForm />
           {requestedEndorsements.length > 0 && (

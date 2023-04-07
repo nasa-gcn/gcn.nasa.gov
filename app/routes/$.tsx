@@ -27,12 +27,9 @@ export function CatchBoundary() {
         <Link to="/" className="usa-button">
           Visit homepage
         </Link>
-        <a
-          href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn"
-          className="usa-button usa-button--outline"
-        >
+        <Link to="/contact" className="usa-button usa-button--outline">
           Contact us
-        </a>
+        </Link>
       </ButtonGroup>
     </>
   )

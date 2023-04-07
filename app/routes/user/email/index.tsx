@@ -7,7 +7,7 @@
  */
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
-import { useFetcher, useLoaderData } from '@remix-run/react'
+import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import {
@@ -146,13 +146,7 @@ export default function () {
           https://gcn.gsfc.nasa.gov/
         </a>
         . To unsubscribe from your GCN Classic Notice subscriptions, please{' '}
-        <a
-          rel="external"
-          href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=gcnclassic"
-        >
-          send us a message
-        </a>
-        .
+        <Link to="/contact?service=gcn-classic">send us a message</Link>.
       </p>
       {enableCirculars && (
         <>
