@@ -73,13 +73,15 @@ export function formatCircular({
 
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
-  if (subject.length)
+  if (subject.length) {
+    const subjectLowerCase = subject.toLowerCase()
     return (
       !emailIsAutoReply(subject) &&
       validSubjectKeywords.some((x) =>
-        subject.toLowerCase().startsWith(x.toLowerCase())
+        subjectLowerCase.startsWith(x.toLowerCase())
       )
     )
+  }
 }
 
 /** Return true if the body is valid, false if it is invalid, or undefined if it is an empty string */
