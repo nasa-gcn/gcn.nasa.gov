@@ -46,7 +46,11 @@ import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import { Highlight } from './components/Highlight'
-import { getFeatures, getOrigin } from './lib/env.server'
+import {
+  getEnvOrDieInProduction,
+  getFeatures,
+  getOrigin,
+} from './lib/env.server'
 import { useRouteLoaderData } from './lib/remix'
 import { getUser } from './routes/__auth/user.server'
 
@@ -120,8 +124,9 @@ export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   const email = user?.email
   const features = getFeatures()
+  const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
 
-  return { origin, email, features }
+  return { origin, email, features, recaptchaSiteKey }
 }
 
 /** Don't reevaluate this route's loader due to client-side navigations. */
@@ -131,6 +136,16 @@ export function shouldRevalidate() {
 
 function useLoaderDataRoot() {
   return useRouteLoaderData<typeof loader>('root')
+}
+
+export function useEmail() {
+  const { email } = useLoaderDataRoot()
+  return email
+}
+
+export function useRecaptchaSiteKey() {
+  const { recaptchaSiteKey } = useLoaderDataRoot()
+  return recaptchaSiteKey
 }
 
 /**
@@ -174,8 +189,6 @@ function Progress() {
 }
 
 function Document({ children }: { children?: React.ReactNode }) {
-  const { email } = useLoaderDataRoot()
-
   return (
     <html lang="en-US">
       <head>
@@ -218,7 +231,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         </AnnounceBanner>
         <GovBanner />
         <DevBanner />
-        <Header email={email} />
+        <Header />
         <section className="usa-section main-content">
           <GridContainer>{children}</GridContainer>
         </section>

@@ -190,7 +190,7 @@ function failedMessage(
   
 ${explanation}
 
-If you believe this to be a mistake, please contact us using the form at https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn, and we will look into resolving it as soon as possible.`
+If you believe this to be a mistake, please contact us using the form at ${origin}/contact, and we will look into resolving it as soon as possible.`
 }
 
 const sharedEmailBody = `
@@ -222,8 +222,8 @@ For more information about the GCN Circulars, please see ${origin}/circulars.
 
 For questions, issues, or bug reports, please contact the GCN Team via:
 
-HEASARC feedback form:
-https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn
+Feedback form:
+${origin}/contact
 
 GitHub issue tracker:
 https://github.com/nasa-gcn/gcn.nasa.gov/issues`

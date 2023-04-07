@@ -16,11 +16,12 @@ import {
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-import { useFeature } from '~/root'
+import { useEmail, useFeature } from '~/root'
 
 import logo from '~/img/logo.svg'
 
-export function Header({ email }: { email?: string }) {
+export function Header() {
+  const email = useEmail()
   const enableCirculars = useFeature('circulars')
   const { pathname } = useLocation()
   const [expanded, setExpanded] = useState(false)

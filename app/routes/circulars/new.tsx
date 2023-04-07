@@ -111,10 +111,7 @@ export default function () {
             The subject line must start with the name of the transient, which
             must start with one of the{' '}
             <Link to="/circulars#submission-process">known keywords</Link>. (
-            <a href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn">
-              Contact us
-            </a>{' '}
-            to add new keywords.)
+            <Link to="/contact">Contact us</Link> to add new keywords.)
           </small>
         </div>
         <label hidden htmlFor="body">

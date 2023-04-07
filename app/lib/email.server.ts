@@ -23,6 +23,8 @@ const maxRecipientsPerMessage = 50
 interface BaseMessageProps {
   /** The name to show in the From: address. */
   fromName: string
+  /** The reply-to addresses. */
+  replyTo?: string[]
   /** The subject of the email. */
   subject: string
   /** The body of the email. */
@@ -31,11 +33,13 @@ interface BaseMessageProps {
 
 function getBaseMessage({
   fromName,
+  replyTo,
   subject,
   body,
 }: BaseMessageProps): Omit<SendEmailCommandInput, 'Destination'> {
   return {
     FromEmailAddress: `${fromName} <no-reply@${getHostname()}>`,
+    ReplyToAddresses: replyTo,
     Content: {
       Simple: {
         Subject: {
