@@ -90,6 +90,7 @@ runtime nodejs18.x
 region us-east-1
 architecture arm64
 memory 256
+timeout 10
 tracing true
 
 @storage-private
