@@ -113,7 +113,7 @@ export default function () {
               id="service-gcn-classic"
               name="service"
               value="gcn-classic"
-              label="Gamma-ray Coordinates Netowrk (GCN Classic)"
+              label="Gamma-ray Coordinates Network (GCN Classic)"
               labelDescription={
                 <>
                   The legacy web site at{' '}
