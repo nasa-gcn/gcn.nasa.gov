@@ -105,7 +105,7 @@ export default function () {
               id="service-gcn"
               name="service"
               value="gcn"
-              label="GCN"
+              label="General Coordinates Network (GCN)"
               labelDescription="This web site, Kafka, sign-in issues, new GCN Notice types, Unified Schema"
               defaultChecked={defaultService === 'gcn'}
             />
@@ -113,7 +113,7 @@ export default function () {
               id="service-gcn-classic"
               name="service"
               value="gcn-classic"
-              label="GCN Classic"
+              label="Gamma-ray Coordinates Netowrk (GCN Classic)"
               labelDescription={
                 <>
                   The legacy web site at{' '}
