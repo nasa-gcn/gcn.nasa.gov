@@ -208,10 +208,10 @@ export async function deleteEmailNotification(uuid: string, sub: string) {
 }
 
 // Send Test Email
-export async function sendTestEmail(recipient: string) {
+export async function sendTestEmail(to: string) {
   await sendEmail({
     fromName: 'GCN Notices',
-    recipient,
+    to: [to],
     subject: 'GCN Notices test',
     body: 'This is a test message from the GCN Notices.',
   })

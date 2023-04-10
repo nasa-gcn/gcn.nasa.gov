@@ -14,7 +14,7 @@ import type {
   AttributeValue as LambdaTriggerAttributeValue,
 } from 'aws-lambda'
 
-import { sendEmailBulk } from '~/lib/email.server'
+import { sendEmailBcc } from '~/lib/email.server'
 import { feature } from '~/lib/env.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import { search as getSearchClient } from '~/lib/search.server'
@@ -62,10 +62,10 @@ async function send(circular: Circular) {
     ProjectionExpression: 'email',
   })
 
-  const recipients = [...Items, ...LegacyItems].map(({ email }) => email)
-  await sendEmailBulk({
+  const to = [...Items, ...LegacyItems].map(({ email }) => email)
+  await sendEmailBcc({
     fromName,
-    recipients,
+    to,
     subject: circular.subject,
     body: formatCircular(circular),
   })

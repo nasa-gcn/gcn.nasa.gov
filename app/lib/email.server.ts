@@ -31,6 +31,11 @@ interface BaseMessageProps {
   body: string
 }
 
+interface MessageProps extends BaseMessageProps {
+  /** Email recipients. */
+  to: string[]
+}
+
 function getBaseMessage({
   fromName,
   replyTo,
@@ -75,13 +80,10 @@ async function send(sendCommandInput: SendEmailCommandInput) {
 }
 
 /** Send an email to many Bcc: recipients. */
-export async function sendEmailBulk({
-  recipients,
-  ...props
-}: BaseMessageProps & { recipients: string[] }) {
+export async function sendEmailBcc({ to, ...props }: MessageProps) {
   const message = getBaseMessage(props)
   await Promise.all(
-    chunk(recipients, maxRecipientsPerMessage).map(async (BccAddresses) => {
+    chunk(to, maxRecipientsPerMessage).map(async (BccAddresses) => {
       await send({
         Destination: { BccAddresses },
         ...message,
@@ -91,13 +93,10 @@ export async function sendEmailBulk({
 }
 
 /** Send an email to one To: recipient. */
-export async function sendEmail({
-  recipient,
-  ...props
-}: BaseMessageProps & { recipient: string }) {
+export async function sendEmail({ to, ...props }: MessageProps) {
   await send({
     Destination: {
-      ToAddresses: [recipient],
+      ToAddresses: to,
     },
     ...getBaseMessage(props),
   })

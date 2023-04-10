@@ -41,13 +41,13 @@ export async function action({ request }: DataFunctionArgs) {
     return result
   })
 
-  let recipient
+  let to
   switch (service) {
     case 'gcn':
-      recipient = 'gcnkafka@lists.nasa.gov'
+      to = ['gcnkafka@lists.nasa.gov']
       break
     case 'gcn-classic':
-      recipient = 'gcn-classic@athena.gsfc.nasa.gov'
+      to = ['gcn-classic@athena.gsfc.nasa.gov']
       break
     default:
       throw new Response('invalid service', { status: 400 })
@@ -56,9 +56,9 @@ export async function action({ request }: DataFunctionArgs) {
   await sendEmail({
     body,
     subject,
-    recipient,
+    to,
     fromName: 'GCN Support',
-    replyTo: [email, recipient],
+    replyTo: [email, ...to],
   })
 
   return { email, subject }

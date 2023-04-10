@@ -19,6 +19,7 @@ import {
   formatAuthor,
   subjectIsValid,
 } from '../../routes/circulars/circulars.lib'
+import { getFromAddress } from './parse'
 import {
   extractAttribute,
   extractAttributeRequired,
@@ -40,6 +41,7 @@ interface UserData {
 interface EmailProps {
   subjectMessage: string
   userEmail: string
+  to: string[]
   body: string
   parsedSubmissionSubject: string
   newCircularId?: number
@@ -73,14 +75,11 @@ module.exports.handler = createTriggerHandler(
     })
 
     const parsed = await simpleParser(Buffer.from(message.content, 'base64'))
-
-    if (!parsed.from) throw new Error('Email has no sender')
-
-    const userEmail = parsed.from.value[0].address
-    if (!userEmail)
-      throw new Error(
-        'Error parsing sender email from model: ' + JSON.stringify(parsed.from)
-      )
+    const userEmail = getFromAddress(parsed.from)
+    // const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
+    // FIXME: temporarily send all confirmations to us.
+    // Undo this when we are ready to deploy.
+    const to = ['leo.p.singer@nasa.gov', 'dakota.c.dutko@nasa.gov']
 
     if (
       !parsed.subject ||
@@ -91,6 +90,7 @@ module.exports.handler = createTriggerHandler(
       await sendFailureEmail({
         subjectMessage: 'Invalid subject or body',
         userEmail,
+        to,
         body: `The subject line and body do not conform to the appropriate format. Please see ${origin}/circulars/classic#submission-process for more information.`,
         parsedSubmissionSubject: parsed.subject ?? 'No Subject Provided',
       })
@@ -105,6 +105,7 @@ module.exports.handler = createTriggerHandler(
       await sendFailureEmail({
         subjectMessage: 'Not an authorized submitter',
         userEmail,
+        to,
         body: `The email address you are submitting this circular from is not approved to submit GCN Circulars. To become an approved submitter, please sign in to ${origin} and see ${origin}/user/endorsements`,
         parsedSubmissionSubject: parsed.subject,
       })
@@ -125,6 +126,7 @@ module.exports.handler = createTriggerHandler(
     // Send a success email
     await sendSuccessEmail({
       userEmail,
+      to,
       subjectMessage: `${newCircularId}`,
       body: '',
       parsedSubmissionSubject: parsed.subject,
@@ -242,7 +244,7 @@ https://github.com/nasa-gcn/gcn.nasa.gov/issues`
 async function sendSuccessEmail(props: EmailProps) {
   await sendEmail({
     fromName,
-    recipient: props.userEmail,
+    to: props.to,
     subject: `GCN Circular Submission Successful: ${props.subjectMessage}`,
     body:
       successMessage(
@@ -256,7 +258,7 @@ async function sendSuccessEmail(props: EmailProps) {
 async function sendFailureEmail(props: EmailProps) {
   await sendEmail({
     fromName,
-    recipient: props.userEmail,
+    to: props.to,
     subject: `GCN Circular Submission Failed: ${props.subjectMessage}`,
     body:
       failedMessage(
