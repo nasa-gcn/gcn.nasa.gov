@@ -25,6 +25,7 @@ export default function CredentialCard({
   name,
   client_id,
   created,
+  scope,
 }: RedactedClientCredential) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
@@ -37,6 +38,11 @@ export default function CredentialCard({
             <strong>{name}</strong>{' '}
             <small className="text-base">
               (created <TimeAgo time={created} />)
+            </small>
+          </div>
+          <div>
+            <small>
+              scope: <code>{scope}</code>
             </small>
           </div>
           <div>
