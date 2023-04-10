@@ -38,6 +38,7 @@ import {
   useNavigation,
 } from '@remix-run/react'
 import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
+import type { ReactNode } from 'react'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
 
@@ -157,7 +158,18 @@ export function useRecaptchaSiteKey() {
  * is a comma-separated list of enabled features.
  */
 export function useFeature(feature: string) {
-  return useLoaderDataRoot().features.includes(feature)
+  const featureUppercase = feature.toUpperCase()
+  return useLoaderDataRoot().features.includes(featureUppercase)
+}
+
+export function WithFeature({
+  children,
+  ...features
+}: {
+  children: ReactNode
+} & Record<string, boolean>) {
+  console.log('***', Object.keys(features)[0])
+  return <>{useFeature(Object.keys(features)[0]) && children}</>
 }
 
 export function useUrl() {
