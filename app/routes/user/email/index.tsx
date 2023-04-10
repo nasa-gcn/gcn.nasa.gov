@@ -43,11 +43,13 @@ export async function action({ request }: DataFunctionArgs) {
       if (uuid) {
         await deleteEmailNotification(uuid, user.sub)
       }
+      break
     case 'sendTest':
       const recipient = getFormDataString(data, 'recipient')
       if (recipient) {
         await sendTestEmail(recipient)
       }
+      break
     case 'subscribe':
       if (!feature('circulars')) throw new Response(null, { status: 400 })
       await createCircularEmailNotification(user.sub, user.email)
