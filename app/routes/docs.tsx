@@ -9,6 +9,7 @@ import { NavLink, Outlet } from '@remix-run/react'
 import { SideNav } from '@trussworks/react-uswds'
 
 import { SideNavSub } from '~/components/SideNavSub'
+import { useFeature } from '~/root'
 
 export const handle = {
   breadcrumb: 'Documentation',
@@ -26,28 +27,30 @@ export default function () {
             <NavLink key="client" to="client">
               Kafka Client Configuration
             </NavLink>,
-            <>
-              <NavLink key="circulars" to="circulars" end>
-                Circulars
-              </NavLink>
-              <SideNav
-                isSubnav={true}
-                items={[
-                  <NavLink key="subscribing" to="circulars/subscribing">
-                    Subscribing
-                  </NavLink>,
-                  <NavLink key="submitting" to="circulars/submitting">
-                    Submitting
-                  </NavLink>,
-                  <NavLink key="styleguide" to="circulars/styleguide">
-                    Style Guide
-                  </NavLink>,
-                  <NavLink key="archive" to="circulars/archive">
-                    Archive
-                  </NavLink>,
-                ]}
-              />
-            </>,
+            useFeature('circulars') && (
+              <>
+                <NavLink key="circulars" to="circulars" end>
+                  Circulars
+                </NavLink>
+                <SideNav
+                  isSubnav={true}
+                  items={[
+                    <NavLink key="subscribing" to="circulars/subscribing">
+                      Subscribing
+                    </NavLink>,
+                    <NavLink key="submitting" to="circulars/submitting">
+                      Submitting
+                    </NavLink>,
+                    <NavLink key="styleguide" to="circulars/styleguide">
+                      Style Guide
+                    </NavLink>,
+                    <NavLink key="archive" to="circulars/archive">
+                      Archive
+                    </NavLink>,
+                  ]}
+                />
+              </>
+            ),
             <NavLink key="contribute" to="contribute">
               Contributing
             </NavLink>,
