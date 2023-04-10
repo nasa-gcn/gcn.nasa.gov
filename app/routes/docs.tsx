@@ -32,7 +32,8 @@ export default function () {
                 <NavLink key="circulars" to="circulars" end>
                   Circulars
                 </NavLink>
-                <SideNav
+                <SideNavSub
+                  base="circulars"
                   isSubnav={true}
                   items={[
                     <NavLink key="subscribing" to="circulars/subscribing">
