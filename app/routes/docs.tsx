@@ -8,6 +8,8 @@
 import { NavLink, Outlet } from '@remix-run/react'
 import { SideNav } from '@trussworks/react-uswds'
 
+import { SideNavSub } from '~/components/SideNavSub'
+
 export const handle = {
   breadcrumb: 'Documentation',
 }
@@ -30,6 +32,19 @@ export default function () {
             <NavLink key="contributing" to="contributing">
               Contributing
             </NavLink>,
+            <SideNavSub
+              base="contributing"
+              key="contributing-sub"
+              isSubnav
+              items={[
+                <NavLink key="index" to="contributing" end>
+                  Getting Started
+                </NavLink>,
+                <NavLink key="feature-flags" to="contributing/feature-flags">
+                  Feature Flags
+                </NavLink>,
+              ]}
+            />,
             <NavLink key="producers" to="producers">
               New Notice Producers
             </NavLink>,
