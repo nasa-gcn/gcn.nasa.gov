@@ -24,6 +24,10 @@ import { sendEmail } from '~/lib/email.server'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useRecaptchaSiteKey } from '~/root'
 
+export const handle = {
+  breadcrumb: 'Contact Us',
+}
+
 export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
 
