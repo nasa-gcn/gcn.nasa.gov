@@ -5,15 +5,23 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { SideNav } from '@trussworks/react-uswds'
+import { SideNav as BaseSideNav } from '@trussworks/react-uswds'
 import type { To } from 'react-router'
 
 import { useActiveLink } from '~/lib/remix'
 
+export function SideNav(props: Parameters<typeof BaseSideNav>[0]) {
+  return (
+    <div className="position-sticky top-0">
+      <BaseSideNav {...props} />
+    </div>
+  )
+}
+
 export function SideNavSub({
   base,
   ...props
-}: Omit<Parameters<typeof SideNav>[0], 'isSubNav'> & { base: To }) {
+}: Omit<Parameters<typeof BaseSideNav>[0], 'isSubNav'> & { base: To }) {
   const isActive = useActiveLink({ to: base })
-  return isActive ? <SideNav {...props} isSubnav /> : <></>
+  return isActive ? <BaseSideNav {...props} isSubnav /> : <></>
 }
