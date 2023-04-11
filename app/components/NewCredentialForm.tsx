@@ -78,7 +78,7 @@ export function NewCredentialForm() {
   const [nameValid, setNameValid] = useState(false)
 
   return (
-    <Form method="post">
+    <Form method="POST">
       <input type="hidden" name="intent" value="create" />
       <p className="usa-paragraph">
         Choose a name for your new client credential.

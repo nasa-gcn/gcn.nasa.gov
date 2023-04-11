@@ -217,7 +217,7 @@ export function EndorsementRequestCard({
   const disabled = fetcher.state !== 'idle'
 
   return (
-    <fetcher.Form method="post">
+    <fetcher.Form method="POST">
       {role === 'endorser' ? (
         <Grid row style={disabled ? { opacity: '50%' } : undefined}>
           <div className="tablet:grid-col flex-fill">
@@ -337,7 +337,7 @@ const EndorserComboBox = forwardRef<
         const data = new FormData()
         data.set('filter', inputValue.split(' ')[0])
         data.set('intent', 'filter')
-        fetcher.submit(data, { method: 'post' })
+        fetcher.submit(data, { method: 'POST' })
       } else {
         setItems([])
       }
@@ -450,7 +450,7 @@ export function EndorsementRequestForm() {
   }, [ref, fetcher.state, submitting])
 
   return (
-    <fetcher.Form method="post" onSubmit={() => setSubmitting(true)}>
+    <fetcher.Form method="POST" onSubmit={() => setSubmitting(true)}>
       <input type="hidden" name="endorserSub" value={endorserSub} />
       <Grid row>
         <Grid col="fill">
