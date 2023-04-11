@@ -158,9 +158,16 @@ export default function () {
     <>
       <h1>GCN Circulars</h1>
       <p className="usa-paragraph">
-        GCN Circulars are rapid astronomical bulletins submitted by and
-        distributed to community members worldwide. For more information, see{' '}
-        <Link to="">docs</Link>
+        <b>
+          GCN Circulars are rapid astronomical bulletins submitted by and
+          distributed to community members worldwide.
+        </b>{' '}
+        They are used to share discoveries, observations, quantitative near-term
+        predictions, requests for follow-up observations, or future observing
+        plans related to high-energy, multi-messenger, and variable or transient
+        astrophysical events. See the{' '}
+        <Link to="/docs/circulars">documentation</Link> for help with
+        subscribing to or submitting Circulars.
       </p>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <div className="usa-search display-inline-block">

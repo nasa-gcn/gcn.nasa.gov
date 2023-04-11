@@ -11,7 +11,7 @@ import { dedent } from 'ts-dedent'
 import { Highlight } from './Highlight'
 import { useHostname } from '~/root'
 
-function useDomain() {
+export function useDomain() {
   const hostname = useHostname()
 
   if (hostname === 'gcn.nasa.gov') {

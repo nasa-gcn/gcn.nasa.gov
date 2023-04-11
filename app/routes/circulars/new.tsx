@@ -24,6 +24,7 @@ import dedent from 'ts-dedent'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import { group } from './circulars.server'
+import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
 import { feature } from '~/lib/env.server'
 import { useUrl } from '~/root'
@@ -61,8 +62,13 @@ export default function () {
     useLoaderData<typeof loader>()
   const [subjectValid, setSubjectValid] = useState<boolean | undefined>()
   const [bodyValid, setBodyValid] = useState<boolean | undefined>()
+  const [showKeywords, setShowKeywords] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
+
+  function toggleShowKeywords() {
+    setShowKeywords(!showKeywords)
+  }
 
   return (
     <>
@@ -108,9 +114,22 @@ export default function () {
           <small>
             The subject line must start with the name of the transient, which
             must start with one of the{' '}
-            <Link to="/circulars#submission-process">known keywords</Link>. (
-            <Link to="/contact">Contact us</Link> to add new keywords.)
+            <Button
+              type="button"
+              className="usa-banner__button margin-left-0"
+              aria-expanded={showKeywords}
+              onClick={toggleShowKeywords}
+            >
+              <span className="usa-banner__button-text">known keywords</span>
+            </Button>
+            .
           </small>
+          {showKeywords && (
+            <div className="text-base padding-x-2 padding-bottom-2">
+              <h3>Allowed subject keywords</h3>
+              <CircularsKeywords />
+            </div>
+          )}
         </div>
         <label hidden htmlFor="body">
           Body
@@ -131,7 +150,7 @@ export default function () {
         <div className="text-base margin-bottom-1" id="bodyDescription">
           <small>
             Body text. If this is your first Circular, please review the{' '}
-            <Link to="/docs/styleguide">style guide</Link>.
+            <Link to="/docs/circulars/styleguide">style guide</Link>.
           </small>
         </div>
         <ButtonGroup>
