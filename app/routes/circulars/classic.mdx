@@ -11,6 +11,12 @@ import {
 } from '@trussworks/react-uswds'
 
 import { validSubjectKeywords } from './circulars.lib'
+import { CircularsKeywords } from '~/components/CircularsKeywords'
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  return feature('CIRCULARS') && redirect('/docs/circulars', 301)
+}
 
 <Alert
   type="warning"
@@ -56,13 +62,7 @@ To submit a GCN Circular send an email to gcncirc@capella2.gsfc.nasa.gov.
 Please follow the [style guidelines](/docs/styleguide). In particular, the email subject must contain at least one of the following case-sensitive strings:
 
 <a name="subject-word-list" />
-<ul className="grid-row usa-list usa-list--unstyled">
-  {validSubjectKeywords.map((keyword) => (
-    <li key={keyword} className="grid-col-2">
-      {keyword}
-    </li>
-  ))}
-</ul>
+<CircularsKeywords />
 
 A copy of the body of your email will be distributed along with the following header:
 

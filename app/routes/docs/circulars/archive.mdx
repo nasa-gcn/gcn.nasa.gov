@@ -1,0 +1,32 @@
+---
+handle:
+  breadcrumb: Archive
+---
+
+import { Link } from '@remix-run/react'
+
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  return feature('CIRCULARS') || new Response(null, { status: 404 })
+}
+
+# Circulars Archive
+
+Upon successful submission and distribution, a GCN Circulars is assigned a number and stored permanently in the [GCN Circulars archive](/circulars). The archive lists links to the full text of every GCN Circular in reverse chronological order. The archive has a full-text search feature that you can use to find all Circulars that contain a phrase or keyword.
+
+<Link to="/circulars" className="usa-button">
+  Go to GCN Circulars Archive
+</Link>
+
+## Citing GCN Circulars
+
+The [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu) ingests and indexes all GCN Circulars. You can use ADS to get bibliographic records for GCN Circulars to cite them in a publication.
+
+## GCN Viewer
+
+The [GCN Viewer](https://heasarc.gsfc.nasa.gov/wsgi-scripts/tach/gcn_v2/tach.wsgi/) also automatically ingests and parses GCN Circulars, sorting them by astronomical event, and associates them with their [GCN Notices](/notices).
+
+## Migration of Archive from GCN Classic
+
+The GCN Circulars archive was migrated from the [GCN Classic Circulars archive page](https://gcn.gsfc.nasa.gov/gcn3_archive.html) on April 17, 2023. The [new GCN Circulars archive on this site](/circulars) is the authoritative record of all past Circulars and is updated in real time with new Circulars. The old GCN Classic Circulars archive page is preserved, but is no longer updated.

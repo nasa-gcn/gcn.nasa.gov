@@ -3,6 +3,14 @@ handle:
   breadcrumb: Circulars Style Guide
 ---
 
+import { redirect } from '@remix-run/node'
+
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  return feature('CIRCULARS') && redirect('/docs/circulars/styleguide', 301)
+}
+
 # Circulars Style Guide
 
 Every Circular begins with the header information. In the example below the Title, Number, Date, and From are added automatically by the GCN system. The GCN Circular Subject is taken from the email subject line from the submission process.

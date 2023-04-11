@@ -1,0 +1,72 @@
+---
+handle:
+  breadcrumb: Submitting
+---
+
+import { Link } from '@remix-run/react'
+import { Alert, Button, Icon } from '@trussworks/react-uswds'
+
+import { CircularsEmailAddress } from '~/components/CircularsEmailAddress'
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  return feature('CIRCULARS') || new Response(null, { status: 404 })
+}
+
+# Submitting Circulars
+
+## Become a GCN Circulars Submitter
+
+Anyone can become a GCN Circulars submitter by receiving a <i>peer endorsement</i> from an existing submitter. An endorsement vouches that the user is in good standing with the astronomy community.
+
+Peer endorsements (inspired by [arXiv](https://info.arxiv.org/help/endorsement.html)) help us to grow the GCN community sustainably while protecting the
+research integrity of GCN Circulars. We welcome submitters of diverse
+backgrounds including professional astronomers, amateurs, educators, and
+students.
+
+<Alert type="info" headingLevel="h4" heading="Migrating from GCN Classic">
+  If you were authorized to submit GCN Circulars through the legacy [GCN Classic site](https://gcn.gsfc.nasa.gov), then you are already authorized to submit GCN Circulars through this new site.
+
+Once you have [signed in](/login) to this new web site using the same email address that you used with GCN Classic, you can approve peer endorsement requests from other users.
+
+</Alert>
+
+### To Request a Peer Endorsement
+
+**To become a GCN Circulars submitter**, [sign in or sign up](/login) and then navigate to [Peer Endorsements settings](/user/endorsements) from the user menu in the navigation bar. Enter the name or email address of an existing GCN Circulars submitter to request an endorsement from them. This should be someone who you know and who knows you: a fellow researcher, an advisor, or an instructor. The user that you select will be notified by email and should approve your request shortly.
+
+If you don't know any existing GCN Circulars users, don't worry! Just [contact us for help joining GCN Circulars](/contact).
+
+### To Approve a Peer Endorsement
+
+**Once you are a GCN Circulars submitter, you can approve new users.** Any endorsement requests addressed to you will appear in the Approve Endorsements section of your [Peer Endorsements settings](/user/endorsements).
+
+You may take any one of the following actions for peer endorsement requests addressed to you:
+
+- **Approve** if you know the user and you can vouch that they are in good standing.
+- **Reject** if you do not know the user or cannot vouch for them.
+- **Reject** and Report if you believe that the request is spam or is from a bot.
+
+## Post a GCN Circular
+
+Before you post your first GCN Circular:
+
+- Read the [Style Guide](/docs/circulars/styleguide) for formatting and best practices that have been established by the GCN community.
+- Review your [user profile](/user) to adjust how your name and optional affiliation appear in Circulars that you post.
+
+There are two ways to post a GCN Circular: via web form or via email.
+
+### Post a GCN Circular by Web Form
+
+To post a GCN Circular via the web form, simply go to the [GCN Circulars archive](/circulars), click the <Link to="/circulars/new"><Button type="button" className="usa-button height-4 padding-y-0 padding-x-1 margin-x-05"><Icon.Edit /> New</Button></Link> button, and complete the form.
+
+### Post a GCN Circular by Email
+
+To submit a GCN Circular by email, send a message to _one_ of the following two addresses: <CircularsEmailAddress/> or the legacy address gcncirc@capella2.gsfc.nasa.gov.
+
+We encourage you to use the new address <CircularsEmailAddress/>, as we plan retire the legacy address at some point in the future. Note that the new address is stricter than the old address about the `From:` address matching the sender.
+
+<Alert type="warning" headingLevel="h4">
+  **Do not send your Circular to both email addresses.** If you send it to both
+  addresses, then it will be distributed twice as two different circulars.
+</Alert>
