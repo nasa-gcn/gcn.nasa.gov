@@ -65,7 +65,7 @@ export default function CredentialCard({
             Delete
           </ModalToggleButton>
           <Form
-            method="get"
+            method="GET"
             action="/quickstart/alerts"
             className="display-inline"
           >
@@ -84,7 +84,7 @@ export default function CredentialCard({
         aria-describedby="modal-delete-description"
         renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
       >
-        <fetcher.Form method="post">
+        <fetcher.Form method="POST">
           <input type="hidden" name="intent" value="delete" />
           <input type="hidden" name="clientId" value={client_id} />
           <ModalHeading id="modal-delete-heading">

@@ -20,7 +20,7 @@ export default function () {
   const [params] = useSearchParams()
   const clientId = params.get('clientId') || undefined
   return (
-    <Form method="get" action="../code">
+    <Form method="GET" action="../code">
       <p className="usa-paragraph">
         Choose how you would like your results returned. Select a Format and
         Notice type for each alert you would like to subscribe to. More details

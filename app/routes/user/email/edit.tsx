@@ -91,7 +91,7 @@ export default function () {
   const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
   return (
-    <Form method="post">
+    <Form method="POST">
       <h1>Edit Email Notification</h1>
       <input type="hidden" name="uuid" value={notification.uuid} />
       <input type="hidden" name="intent" value={intent} />

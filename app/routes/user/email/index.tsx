@@ -89,7 +89,7 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
   }
 
   return (
-    <fetcher.Form method="post" className="tablet:margin-top-105">
+    <fetcher.Form method="POST" className="tablet:margin-top-105">
       <Grid row className="flex-align-center">
         <div className="padding-1 flex-auto">
           {fetcher.state !== 'idle' && (

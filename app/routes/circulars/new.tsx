@@ -69,7 +69,7 @@ export default function () {
   return (
     <>
       <h1>New GCN Circular</h1>
-      <Form method="post" action="/circulars">
+      <Form method="POST" action="/circulars">
         <div className="usa-input-group border-0 maxw-full">
           <div className="usa-input-prefix" aria-hidden>
             From

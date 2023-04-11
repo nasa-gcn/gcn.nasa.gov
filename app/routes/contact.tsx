@@ -102,7 +102,7 @@ export default function () {
           </ButtonGroup>
         </>
       ) : (
-        <Form method="post">
+        <Form method="POST">
           <Label htmlFor="service-fieldset">What do you need help with?</Label>
           <Fieldset name="service-fieldset">
             <Radio

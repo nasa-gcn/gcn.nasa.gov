@@ -55,7 +55,7 @@ export default function EmailNotificationCard({
           </div>
           <div className="tablet:grid-col flex-auto">
             <ButtonGroup>
-              <testFetcher.Form method="post">
+              <testFetcher.Form method="POST">
                 <input type="hidden" name="recipient" value={recipient} />
                 <input type="hidden" name="intent" value="sendTest" />
                 <Button type="submit" outline disabled={disabled}>
@@ -63,7 +63,7 @@ export default function EmailNotificationCard({
                   Test Message
                 </Button>
               </testFetcher.Form>
-              <Form method="get" action="edit">
+              <Form method="GET" action="edit">
                 <input type="hidden" name="uuid" value={uuid} />
                 <Button type="submit" outline disabled={disabled}>
                   <Icon.Edit className="bottom-aligned margin-right-05" />
@@ -96,7 +96,7 @@ export default function EmailNotificationCard({
         aria-describedby="modal-delete-description"
         renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
       >
-        <deleteFetcher.Form method="post">
+        <deleteFetcher.Form method="POST">
           <input type="hidden" name="uuid" value={uuid} />
           <input type="hidden" name="intent" value="delete" />
           <ModalHeading id="modal-delete-heading">
