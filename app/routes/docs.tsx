@@ -8,6 +8,7 @@
 import { NavLink, Outlet } from '@remix-run/react'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
+import { useFeature } from '~/root'
 
 export const handle = {
   breadcrumb: 'Documentation',
@@ -25,9 +26,35 @@ export default function () {
             <NavLink key="client" to="client">
               Client Configuration
             </NavLink>,
-            <NavLink key="styleguide" to="styleguide">
-              Circulars Style Guide
-            </NavLink>,
+            useFeature('circulars') ? (
+              <>
+                <NavLink key="circulars" to="circulars" end>
+                  Circulars
+                </NavLink>
+                <SideNavSub
+                  base="circulars"
+                  isSubnav={true}
+                  items={[
+                    <NavLink key="subscribing" to="circulars/subscribing">
+                      Subscribing
+                    </NavLink>,
+                    <NavLink key="submitting" to="circulars/submitting">
+                      Submitting
+                    </NavLink>,
+                    <NavLink key="styleguide" to="circulars/styleguide">
+                      Style Guide
+                    </NavLink>,
+                    <NavLink key="archive" to="circulars/archive">
+                      Archive
+                    </NavLink>,
+                  ]}
+                />
+              </>
+            ) : (
+              <NavLink key="styleguide" to="styleguide">
+                Circulars Style Guide
+              </NavLink>
+            ),
             <NavLink key="contributing" to="contributing">
               Contributing
             </NavLink>,

@@ -133,7 +133,7 @@ export default function () {
         <div className="text-base margin-bottom-1" id="bodyDescription">
           <small>
             Body text. If this is your first Circular, please review the{' '}
-            <Link to="/docs/styleguide">style guide</Link>.
+            <Link to="/docs/circulars/styleguide">style guide</Link>.
           </small>
         </div>
         <ButtonGroup>

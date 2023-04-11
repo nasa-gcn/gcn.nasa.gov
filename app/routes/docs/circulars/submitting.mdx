@@ -1,0 +1,24 @@
+---
+handle:
+  breadcrumb: Submitting
+---
+
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  return feature('CIRCULARS') || new Response(null, { status: 404 })
+}
+
+# Submitting Circulars
+
+## Submitter Authorization
+
+To become an authorized Circulars submitter, you need to have either been a Circulars submitter in the legacy GCN Classic service or seek a [peer endorsement](/user/endorsements) from a colleague who is already an authorized Circulars submitter.
+
+## Submit
+
+Circulars users can submit either via the web form or email. Circulars are then distributed by email to all subscribers after rapid automated vetting and formatting.
+
+Once you are an authorized submitter and have [signed up or signed in](/login), you can submit Circulars via the [web form](/circulars) by clicking [New](/circulars/new).
+
+Circulars can be submitted by emailing circulars@gcn.nasa.gov. Emails sent to the legacy email address will be accepted and processed by the new Circulars service, but we encourage use of the new address. We will discontinue use of the legacy address once users have been given sufficient time to transition.

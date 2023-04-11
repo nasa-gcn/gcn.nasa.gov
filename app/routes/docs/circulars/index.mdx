@@ -1,0 +1,22 @@
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  return feature('CIRCULARS') || new Response(null, { status: 404 })
+}
+
+# GCN Circulars
+
+GCN Circulars are rapid astronomical bulletins submitted by and distributed to community members worldwide.
+
+- Circulars are **brief**, **citeable**, and **human-readable**.
+- Circulars can announce observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
+- Circulars report on high-energy, multi-messenger, and variable or transient astrophysical events.
+
+Circulars allow the GRB community to **email** messages to a central queue where they are automatically vetted and distributed to the entire GRB community. These prose-style messages allow the community to coordinate and make optimum use of its limited resources.
+
+### For more details into the new GCN Circulars Service, see:
+
+- [Subscribing](circulars/subscribing)
+- [Submitting](circulars/submitting)
+- [Style Guide](circulars/styleguide)
+- [Archive](circulars/archive)

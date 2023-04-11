@@ -1,0 +1,22 @@
+---
+handle:
+  breadcrumb: Archive
+---
+
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  return feature('CIRCULARS') || new Response(null, { status: 404 })
+}
+
+# Circulars Archive
+
+All Circulars are archived upon successful submission. They are displayed in reverse chronological order, displayed with circular number as assigned in processing. The archive is fully searchable by any string.
+
+## [Circulars Archive](/circulars)
+
+The [GCN Classic Circulars archive](https://gcn.gsfc.nasa.gov/gcn3_archive.html) was frozen on April 17, 2023 at the time of the system transition.
+
+The [NASA Astrophysics Data System](https://ui.adsabs.harvard.edu) will continue to archive GCN Circulars for citation in publications.
+
+The [GCN Viewer](https://heasarc.gsfc.nasa.gov/wsgi-scripts/tach/gcn_v2/tach.wsgi/) automatically ingests and parses GCN Circulars, sorting them by astronomical event, and associates them with their [GCN Notices](/notices).
