@@ -168,7 +168,6 @@ export function WithFeature({
 }: {
   children: ReactNode
 } & Record<string, boolean>) {
-  console.log('***', Object.keys(features)[0])
   return <>{useFeature(Object.keys(features)[0]) && children}</>
 }
 
