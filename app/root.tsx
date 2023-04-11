@@ -21,7 +21,7 @@
 import type {
   DataFunctionArgs,
   LinksFunction,
-  MetaFunction,
+  V2_MetaFunction,
 } from '@remix-run/node'
 import {
   Link,
@@ -95,11 +95,11 @@ export const handle = {
   breadcrumb: 'GCN',
 }
 
-export const meta: MetaFunction = () => {
-  return {
-    charset: 'utf-8',
-    viewport: 'width=device-width,initial-scale=1',
-  }
+export const meta: V2_MetaFunction = () => {
+  return [
+    { charset: 'utf-8' },
+    { viewport: 'width=device-width,initial-scale=1' },
+  ]
 }
 
 export const links: LinksFunction = () => [
