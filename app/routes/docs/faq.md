@@ -15,7 +15,7 @@ The Kafka platform itself does not care about the format of the records. However
 
 ## How do I start receving GCN notices via Kafka?
 
-See [Client Configuration](/docs/client).
+See [Kafka Client Setup](/docs/client).
 
 ## What ports do I need to open in order to receive or send GCN notices with Kafka?
 
