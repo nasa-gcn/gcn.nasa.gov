@@ -103,7 +103,6 @@ export const validSubjectKeywords = [
   'Chandra',
   'Fermi',
   'FXT',
-  'grb',
   'GRB',
   'GW',
   'HAWC',
