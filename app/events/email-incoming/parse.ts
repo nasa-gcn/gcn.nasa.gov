@@ -5,7 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { AddressObject } from 'mailparser'
+import type { AddressObject, Source } from 'mailparser'
+import { simpleParser } from 'mailparser'
 import addressparser from 'nodemailer/lib/addressparser'
 
 const legacyAddress = 'mailnull@capella2.gsfc.nasa.gov'
@@ -42,4 +43,12 @@ export function getReplyToAddresses(replyTo?: AddressObject) {
     .map(({ address }) => address)
     .filter(Boolean) as string[] | undefined
   return result?.length ? result : undefined
+}
+
+export async function parseEmailContentFromSource(emailContent: Source) {
+  let parsedMail = await simpleParser(emailContent)
+  // sns includes the attachments if there are any.
+  // Remove this if we want to implement some type of behavior for attachments
+  parsedMail.attachments = []
+  return parsedMail
 }

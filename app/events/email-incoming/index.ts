@@ -12,14 +12,13 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import type { SNSEventRecord } from 'aws-lambda'
-import { simpleParser } from 'mailparser'
 
 import {
   bodyIsValid,
   formatAuthor,
   subjectIsValid,
 } from '../../routes/circulars/circulars.lib'
-import { getFromAddress } from './parse'
+import { getFromAddress, parseEmailContentFromSource } from './parse'
 import {
   extractAttribute,
   extractAttributeRequired,
@@ -74,7 +73,9 @@ module.exports.handler = createTriggerHandler(
         throw new Error(`${key} check failed`)
     })
 
-    const parsed = await simpleParser(Buffer.from(message.content, 'base64'))
+    const parsed = await parseEmailContentFromSource(
+      Buffer.from(message.content, 'base64')
+    )
     const userEmail = getFromAddress(parsed.from)
     // const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
     // FIXME: temporarily send all confirmations to us.
