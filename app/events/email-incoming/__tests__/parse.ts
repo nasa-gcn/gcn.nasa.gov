@@ -205,6 +205,29 @@ X-Attachment-Id: f_lgduknnj0
 anVzdCBhIGJsYW5rIGZpbGUsIG5vdGhpbmcgdG8gc2VlIGhlcmU=
 --000.000.000.0006c8d05f928dfcd--`
 
+const testWithOtherCharacters = `Return-Path: <example-to@example.com>
+MIME-Version: 1.0
+From: "Example Person <example@example.com> via gcncirc" <mailnull@capella2.gsfc.nasa.gov>
+Reply-to: Example Person <example@example.com>
+Date: Wed, 12 Apr 2023 08:43:58 -0400
+Message-ID: <CA+if_cXum5DWfs728_BhK-hiz1efcL6QpNvxDOSXOP=QmYsrSg@mail.gmail.com>
+Subject: Test: External email, test_rewrite
+To: example-to@example.com
+Content-Type: multipart/alternative; boundary="000000000000ce53c605f922f684"
+
+--000000000000ce53c605f922f684
+Content-Type: text/plain; charset="UTF-8"
+
+This is an external email (gmail) тест with the тест_rewrite 施
+
+--000000000000ce53c605f922f684
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">This is an external email (gmail) test with the test_rewrite flag</div>
+
+--000000000000ce53c605f922f684--
+`
+
 describe('parseEmailContentFromSource', () => {
   it('should parse the text out', async () => {
     const parsedMail = await parseEmailContentFromSource(testWithRewrite)
@@ -232,5 +255,16 @@ I can try highlighting and maybe event changing the word color?
       testEmailWithAttachment
     )
     expect(parsedMail.attachments.length).toBe(0)
+  })
+
+  it('should return special characters from text as presented', async () => {
+    const parsedMail = await parseEmailContentFromSource(
+      testWithOtherCharacters
+    )
+
+    expect(parsedMail.text).toBe(
+      `This is an external email (gmail) тест with the тест_rewrite 施
+`
+    )
   })
 })
