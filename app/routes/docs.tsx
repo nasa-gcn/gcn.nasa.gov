@@ -28,22 +28,24 @@ export default function () {
             <NavLink key="styleguide" to="styleguide">
               Circulars Style Guide
             </NavLink>,
-            <NavLink key="contributing" to="contributing">
-              Contributing
-            </NavLink>,
-            <SideNavSub
-              base="contributing"
-              key="contributing-sub"
-              isSubnav
-              items={[
-                <NavLink key="index" to="contributing" end>
-                  Getting Started
-                </NavLink>,
-                <NavLink key="feature-flags" to="contributing/feature-flags">
-                  Feature Flags
-                </NavLink>,
-              ]}
-            />,
+            <>
+              <NavLink key="contributing" to="contributing">
+                Contributing
+              </NavLink>
+              <SideNavSub
+                base="contributing"
+                key="contributing-sub"
+                isSubnav
+                items={[
+                  <NavLink key="index" to="contributing" end>
+                    Getting Started
+                  </NavLink>,
+                  <NavLink key="feature-flags" to="contributing/feature-flags">
+                    Feature Flags
+                  </NavLink>,
+                ]}
+              />
+            </>,
             <NavLink key="producers" to="producers">
               New Notice Producers
             </NavLink>,
