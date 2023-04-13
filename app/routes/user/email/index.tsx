@@ -141,15 +141,6 @@ export default function () {
         Create and manage email subscriptions to GCN{' '}
         {enableCirculars && 'Circulars and'} Notices here.
       </p>
-      <p className="usa-paragraph">
-        Note that signing up here does not affect prior subscriptions on the old
-        web site,{' '}
-        <a rel="external" href="https://gcn.gsfc.nasa.gov/">
-          https://gcn.gsfc.nasa.gov/
-        </a>
-        . To unsubscribe from your GCN Classic Notice subscriptions, please{' '}
-        <Link to="/contact?service=gcn-classic">send us a message</Link>.
-      </p>
       {enableCirculars && (
         <>
           <Grid row>
@@ -169,9 +160,9 @@ export default function () {
           </p>
 
           <p className="usa-paragraph">
-            Subscriptions to <strong>Circulars</strong> are sent from GCN
-            Circulars {`<no-reply@${hostname}>`} and are delivered to the email
-            associated with your account ({email}).
+            <strong>Circulars</strong> are sent from GCN Circulars{' '}
+            {`<no-reply@${hostname}>`} and are delivered to the email associated
+            with your account ({email}).
           </p>
         </>
       )}
@@ -182,6 +173,15 @@ export default function () {
         created an alert, you can click the "Test Message" button to send a test
         email to the listed recipient, to verify that the emails will make it
         into your inbox.
+      </p>
+      <p className="usa-paragraph">
+        Note that your preferenes here do not affect prior subscriptions on the
+        old web site,{' '}
+        <a rel="external" href="https://gcn.gsfc.nasa.gov/">
+          https://gcn.gsfc.nasa.gov/
+        </a>
+        . To change your GCN Classic Notice subscriptions, please{' '}
+        <Link to="/contact?service=gcn-classic">send us a message</Link>.
       </p>
       {data.length > 0 && (
         <SegmentedCards>
