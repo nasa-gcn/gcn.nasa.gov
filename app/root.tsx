@@ -38,8 +38,9 @@ import {
   useRouteError,
 } from '@remix-run/react'
 import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
-import type { ReactNode } from 'react'
+import { type ReactNode, useRef } from 'react'
 import TopBarProgress from 'react-topbar-progress-indicator'
+import { useDelegatedAnchors } from 'remix-utils'
 import { useSpinDelay } from 'spin-delay'
 
 import { DevBanner } from './components/DevBanner'
@@ -207,6 +208,11 @@ function Progress() {
 }
 
 function Document({ children }: { children?: React.ReactNode }) {
+  // Use client-side routing for anchors in Markdown content.
+  // See https://github.com/remix-run/remix/discussions/6048.
+  const ref = useRef<HTMLElement | null>(null)
+  useDelegatedAnchors(ref)
+
   return (
     <html lang="en-US">
       <head>
@@ -223,7 +229,9 @@ function Document({ children }: { children?: React.ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner message="GCN Circulars are now part of the new GCN!" />
-        <main id="main-content">{children}</main>
+        <main id="main-content" ref={ref}>
+          {children}
+        </main>
         <Footer />
         <ScrollRestoration />
         <Scripts />
