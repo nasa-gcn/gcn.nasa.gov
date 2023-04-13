@@ -42,12 +42,10 @@ export async function loader({ request }: DataFunctionArgs) {
 
 function useSubjectPlaceholder() {
   const date = new Date()
-  return `GRB ${(date.getUTCFullYear() % 1000)
-    .toString()
-    .padStart(2, '0')}${date.getUTCMonth().toString().padStart(2, '0')}${date
-    .getUTCDay()
-    .toString()
-    .padStart(2, '0')}A: observations of a gamma-ray burst`
+  const YY = (date.getUTCFullYear() % 1000).toString().padStart(2, '0')
+  const MM = (date.getUTCMonth() + 1).toString().padStart(2, '0')
+  const DD = date.getUTCDate().toString().padStart(2, '0')
+  return `GRB ${YY}${MM}${DD}A: observations of a gamma-ray burst`
 }
 
 function useBodyPlaceholder() {
