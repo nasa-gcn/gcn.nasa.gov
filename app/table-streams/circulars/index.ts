@@ -7,6 +7,8 @@
  */
 import { tables } from '@architect/functions'
 import type { AttributeValue } from '@aws-sdk/client-dynamodb'
+import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { ResponseError } from '@opensearch-project/opensearch/lib/errors'
 import type {
@@ -48,21 +50,52 @@ async function putIndex(circular: Circular) {
   })
 }
 
-async function send(circular: Circular) {
+async function getEmails() {
   const db = await tables()
-  const { Items } = await db.circulars_subscriptions.scan({
-    AttributesToGet: ['email'],
-  })
-  const { Items: LegacyItems } = await db.legacy_users.query({
-    IndexName: 'legacyReceivers',
-    KeyConditionExpression: 'receive = :receive',
-    ExpressionAttributeValues: {
-      ':receive': 1,
-    },
-    ProjectionExpression: 'email',
-  })
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('circulars_subscriptions')
+  const pages = paginateScan(
+    { client },
+    { AttributesToGet: ['email'], TableName }
+  )
+  let emails: string[] = []
+  for await (const page of pages) {
+    const newEmails = page.Items?.map(({ email }) => email)
+    if (newEmails) emails.push(...newEmails)
+  }
+  return emails
+}
 
-  const to = [...Items, ...LegacyItems].map(({ email }) => email)
+async function getLegacyEmails() {
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('legacy_users')
+  const pages = paginateQuery(
+    { client },
+    {
+      IndexName: 'legacyReceivers',
+      KeyConditionExpression: 'receive = :receive',
+      ExpressionAttributeValues: {
+        ':receive': 1,
+      },
+      ProjectionExpression: 'email',
+      TableName,
+    }
+  )
+  let emails: string[] = []
+  for await (const page of pages) {
+    const newEmails = page.Items?.map(({ email }) => email)
+    if (newEmails) emails.push(...newEmails)
+  }
+  return emails
+}
+
+async function send(circular: Circular) {
+  const [emails, legacyEmails] = await Promise.all([
+    getEmails(),
+    getLegacyEmails(),
+  ])
+  const to = [...emails, ...legacyEmails]
   await sendEmailBcc({
     fromName,
     to,
