@@ -112,8 +112,8 @@ export default function () {
         </div>
         <div className="text-base margin-bottom-1" id="subjectDescription">
           <small>
-            The subject line must start with the name of the transient, which
-            must start with one of the{' '}
+            The subject line must contain (and should start with) the name of
+            the transient, which must start with one of the{' '}
             <Button
               type="button"
               className="usa-banner__button margin-left-0"
