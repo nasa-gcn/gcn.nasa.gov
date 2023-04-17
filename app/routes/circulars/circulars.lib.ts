@@ -78,7 +78,7 @@ export function subjectIsValid(subject: string) {
     return (
       !emailIsAutoReply(subject) &&
       validSubjectKeywords.some((x) =>
-        subjectLowerCase.startsWith(x.toLowerCase())
+        subjectLowerCase.includes(x.toLowerCase())
       )
     )
   }
