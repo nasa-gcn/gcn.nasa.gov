@@ -18,7 +18,11 @@ import {
   formatAuthor,
   subjectIsValid,
 } from '../../routes/circulars/circulars.lib'
-import { getFromAddress, parseEmailContentFromSource } from './parse'
+import {
+  getFromAddress,
+  getReplyToAddresses,
+  parseEmailContentFromSource,
+} from './parse'
 import {
   extractAttribute,
   extractAttributeRequired,
@@ -77,10 +81,7 @@ module.exports.handler = createTriggerHandler(
       Buffer.from(message.content, 'base64')
     )
     const userEmail = getFromAddress(parsed.from)
-    // const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
-    // FIXME: temporarily send all confirmations to us.
-    // Undo this when we are ready to deploy.
-    const to = ['leo.p.singer@nasa.gov', 'dakota.c.dutko@nasa.gov']
+    const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
 
     if (
       !parsed.subject ||
