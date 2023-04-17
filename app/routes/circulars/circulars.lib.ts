@@ -129,7 +129,6 @@ export const validSubjectKeywords = [
   'Suzaku',
   'Swift',
   'transient',
-  'Virgo',
   'VLA',
   'VLBI',
   'XRB',
