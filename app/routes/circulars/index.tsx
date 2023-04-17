@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
 import {
   Form,
   Link,
@@ -25,7 +24,6 @@ import classNames from 'classnames'
 import { useState } from 'react'
 
 import { put, search } from './circulars.server'
-import { feature } from '~/lib/env.server'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
@@ -34,8 +32,6 @@ import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 const limit = 100
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
-  if (!feature('circulars')) throw redirect('/circulars/classic')
-
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   const page = parseInt(searchParams.get('page') || '1')

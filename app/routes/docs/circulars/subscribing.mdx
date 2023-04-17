@@ -10,12 +10,6 @@ import {
   ProcessListItem,
 } from '@trussworks/react-uswds'
 
-import { feature } from '~/lib/env.server'
-
-export function loader() {
-  return feature('CIRCULARS') || new Response(null, { status: 404 })
-}
-
 # Subscribing to Circulars
 
 Follow these simple steps to receive GCN Circulars via email.

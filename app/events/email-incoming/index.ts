@@ -25,7 +25,7 @@ import {
   listUsersInGroup,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
-import { feature, getHostname, getOrigin } from '~/lib/env.server'
+import { getHostname, getOrigin } from '~/lib/env.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import { group, putRaw } from '~/routes/circulars/circulars.server'
 
@@ -56,7 +56,6 @@ const origin = getOrigin()
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = createTriggerHandler(
   async (record: SNSEventRecord) => {
-    if (!feature('circulars')) throw new Error('not implemented')
     const message = JSON.parse(record.Sns.Message)
 
     // Save a copy of the message in an S3 bucket for debugging.
