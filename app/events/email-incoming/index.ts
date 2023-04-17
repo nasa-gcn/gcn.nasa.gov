@@ -6,10 +6,6 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { tables } from '@architect/functions'
-import {
-  CognitoIdentityProviderClient,
-  ListUsersInGroupCommand,
-} from '@aws-sdk/client-cognito-identity-provider'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import type { SNSEventRecord } from 'aws-lambda'
 
@@ -26,6 +22,7 @@ import {
 import {
   extractAttribute,
   extractAttributeRequired,
+  listUsersInGroup,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { feature, getHostname, getOrigin } from '~/lib/env.server'
@@ -52,7 +49,6 @@ interface EmailProps {
 
 const fromName = 'GCN Circulars'
 
-const cognito = new CognitoIdentityProviderClient({})
 const s3 = new S3Client({})
 const origin = getOrigin()
 
@@ -145,13 +141,8 @@ module.exports.handler = createTriggerHandler(
 async function getCognitoUserData(
   userEmail: string
 ): Promise<UserData | undefined> {
-  const data = await cognito.send(
-    new ListUsersInGroupCommand({
-      GroupName: group,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
-  )
-  const userTypeData = data.Users?.find(
+  const users = await listUsersInGroup(group)
+  const userTypeData = users.find(
     (user) => extractAttributeRequired(user, 'email') == userEmail
   )
   return (

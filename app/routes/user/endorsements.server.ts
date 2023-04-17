@@ -10,7 +10,6 @@ import {
   AdminAddUserToGroupCommand,
   AdminListGroupsForUserCommand,
   ListUsersCommand,
-  ListUsersInGroupCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 
@@ -20,6 +19,7 @@ import { client, maybeThrow } from './cognito.server'
 import {
   extractAttribute,
   extractAttributeRequired,
+  listUsersInGroup,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { getOrigin } from '~/lib/env.server'
@@ -378,14 +378,9 @@ export class EndorsementsServer {
 }
 
 async function getUsersInGroup(): Promise<EndorsementUser[]> {
-  const command = new ListUsersInGroupCommand({
-    GroupName: group,
-    UserPoolId: process.env.COGNITO_USER_POOL_ID,
-  })
-
-  let response
+  let users
   try {
-    response = await client.send(command)
+    users = await listUsersInGroup(group)
   } catch (error) {
     maybeThrow(error, 'returning fake users')
     return [
@@ -402,12 +397,10 @@ async function getUsersInGroup(): Promise<EndorsementUser[]> {
     ]
   }
 
-  return (
-    response.Users?.map((user) => ({
-      sub: extractAttributeRequired(user, 'sub'),
-      email: extractAttributeRequired(user, 'email'),
-      name: extractAttribute(user, 'name'),
-      affiliation: extractAttribute(user, 'custom:affiliation'),
-    })) ?? []
-  )
+  return users.map((user) => ({
+    sub: extractAttributeRequired(user, 'sub'),
+    email: extractAttributeRequired(user, 'email'),
+    name: extractAttribute(user, 'name'),
+    affiliation: extractAttribute(user, 'custom:affiliation'),
+  }))
 }
