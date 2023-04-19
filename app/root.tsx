@@ -98,7 +98,7 @@ export const handle = {
 export const meta: V2_MetaFunction = () => {
   return [
     { charset: 'utf-8' },
-    { viewport: 'width=device-width,initial-scale=1' },
+    { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ]
 }
 
