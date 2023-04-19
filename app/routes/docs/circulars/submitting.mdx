@@ -7,11 +7,6 @@ import { Link } from '@remix-run/react'
 import { Alert, Button, Icon } from '@trussworks/react-uswds'
 
 import { CircularsEmailAddress } from '~/components/CircularsEmailAddress'
-import { feature } from '~/lib/env.server'
-
-export function loader() {
-  return feature('CIRCULARS') || new Response(null, { status: 404 })
-}
 
 # Submitting Circulars
 

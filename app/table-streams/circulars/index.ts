@@ -17,7 +17,6 @@ import type {
 } from 'aws-lambda'
 
 import { sendEmailBcc } from '~/lib/email.server'
-import { feature } from '~/lib/env.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import { search as getSearchClient } from '~/lib/search.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
@@ -108,7 +107,6 @@ async function send(circular: Circular) {
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
-    if (!feature('circulars')) throw new Error('not implemented')
     const id = unmarshallTrigger(dynamodb!.Keys).circularId as number
     const promises = []
 

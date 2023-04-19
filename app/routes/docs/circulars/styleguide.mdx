@@ -4,11 +4,6 @@ handle:
 ---
 
 import { CircularsKeywords } from '~/components/CircularsKeywords'
-import { feature } from '~/lib/env.server'
-
-export function loader() {
-  return feature('CIRCULARS') || new Response(null, { status: 404 })
-}
 
 # Circulars Style Guide
 

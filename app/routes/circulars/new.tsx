@@ -26,11 +26,9 @@ import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import { group } from './circulars.server'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
-import { feature } from '~/lib/env.server'
 import { useUrl } from '~/root'
 
 export async function loader({ request }: DataFunctionArgs) {
-  if (!feature('circulars')) throw new Response(null, { status: 404 })
   const user = await getUser(request)
   let isAuthenticated, isAuthorized, formattedAuthor
   if (user) {

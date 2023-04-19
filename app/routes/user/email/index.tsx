@@ -24,9 +24,8 @@ import EmailNotificationCard from '~/components/EmailNotificationCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
-import { feature, getHostname } from '~/lib/env.server'
+import { getHostname } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
-import { useFeature } from '~/root'
 import { getUser } from '~/routes/__auth/user.server'
 
 export const handle = { getSitemapEntries: () => null }
@@ -51,11 +50,9 @@ export async function action({ request }: DataFunctionArgs) {
       }
       break
     case 'subscribe':
-      if (!feature('circulars')) throw new Response(null, { status: 400 })
       await createCircularEmailNotification(user.sub, user.email)
       break
     case 'unsubscribe':
-      if (!feature('circulars')) throw new Response(null, { status: 400 })
       await deleteCircularEmailNotification(user.sub, user.email)
       break
   }
@@ -132,40 +129,32 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
 export default function () {
   const { data, userIsSubscribedToCircularEmails, hostname, email } =
     useLoaderData<typeof loader>()
-  const enableCirculars = useFeature('circulars')
 
   return (
     <>
       <h1>Email Notifications</h1>
       <p className="usa-paragraph">
-        Create and manage email subscriptions to GCN{' '}
-        {enableCirculars && 'Circulars and'} Notices here.
+        Create and manage email subscriptions to GCN Circulars and Notices here.
       </p>
-      {enableCirculars && (
-        <>
-          <Grid row>
-            <Grid tablet={{ col: 'fill' }}>
-              <h2>Circulars</h2>
-            </Grid>
-            <Grid tablet={{ col: 'auto' }}>
-              <CircularsSubscriptionForm
-                value={userIsSubscribedToCircularEmails}
-              />
-            </Grid>
-          </Grid>
-          <p className="usa-paragraph">
-            {userIsSubscribedToCircularEmails
-              ? 'You are currently subscribed to receive GCN Circulars via Email.'
-              : 'You are not currently subscribed to receive GCN Circulars via Email.'}
-          </p>
+      <Grid row>
+        <Grid tablet={{ col: 'fill' }}>
+          <h2>Circulars</h2>
+        </Grid>
+        <Grid tablet={{ col: 'auto' }}>
+          <CircularsSubscriptionForm value={userIsSubscribedToCircularEmails} />
+        </Grid>
+      </Grid>
+      <p className="usa-paragraph">
+        {userIsSubscribedToCircularEmails
+          ? 'You are currently subscribed to receive GCN Circulars via Email.'
+          : 'You are not currently subscribed to receive GCN Circulars via Email.'}
+      </p>
 
-          <p className="usa-paragraph">
-            <strong>Circulars</strong> are sent from GCN Circulars{' '}
-            {`<no-reply@${hostname}>`} and are delivered to the email associated
-            with your account ({email}).
-          </p>
-        </>
-      )}
+      <p className="usa-paragraph">
+        <strong>Circulars</strong> are sent from GCN Circulars{' '}
+        {`<no-reply@${hostname}>`} and are delivered to the email associated
+        with your account ({email}).
+      </p>
       <HeadingWithAddButton headingLevel={2}>Notices</HeadingWithAddButton>
       <p className="usa-paragraph">
         You can create as many <strong>Notice</strong> subscription alerts as
