@@ -32,7 +32,7 @@
     "@nasa-gcn/architect-functions-search": "^0.2.0",
     "@nasa-gcn/dynamodb-autoincrement": "^0.0.6",
     "@octokit/rest": "^19.0.7",
-    "@opensearch-project/opensearch": "^2.2.0",
+    "@opensearch-project/opensearch": "^2.2.1",
     "@remix-run/architect": "^1.15.0",
     "@remix-run/node": "^1.15.0",
     "@remix-run/react": "^1.15.0",
