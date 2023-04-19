@@ -6,7 +6,8 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { NavLink, Outlet } from '@remix-run/react'
-import { SideNav } from '@trussworks/react-uswds'
+
+import { SideNav } from '~/components/SideNav'
 
 export const handle = { breadcrumb: 'Missions' }
 
