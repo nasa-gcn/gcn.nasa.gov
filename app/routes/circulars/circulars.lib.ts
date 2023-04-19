@@ -140,7 +140,7 @@ export const validSubjectKeywords = [
   'ZTF',
 ]
 
-const emailAutoReplyChecklist = [
+export const emailAutoReplyChecklist = [
   'this is an automatic reply',
   'automatic reply: ',
   'auto reply',
