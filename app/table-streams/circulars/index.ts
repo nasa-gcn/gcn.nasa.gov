@@ -10,7 +10,7 @@ import type { AttributeValue } from '@aws-sdk/client-dynamodb'
 import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
-import { ResponseError } from '@opensearch-project/opensearch/lib/errors'
+import { errors } from '@opensearch-project/opensearch'
 import type {
   DynamoDBRecord,
   AttributeValue as LambdaTriggerAttributeValue,
@@ -35,7 +35,7 @@ async function removeIndex(id: number) {
   try {
     await client.delete({ index, id: id.toString() })
   } catch (e) {
-    if (!(e instanceof ResponseError && e.body.result === 'not_found')) {
+    if (!(e instanceof errors.ResponseError && e.body.result === 'not_found')) {
       throw e
     }
   }
