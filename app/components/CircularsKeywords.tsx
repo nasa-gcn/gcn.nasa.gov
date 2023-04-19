@@ -7,11 +7,15 @@
  */
 import { Link } from '@remix-run/react'
 
-import { validSubjectKeywords } from '~/routes/circulars/circulars.lib'
+import {
+  emailAutoReplyChecklist,
+  validSubjectKeywords,
+} from '~/routes/circulars/circulars.lib'
 
 export function CircularsKeywords() {
   return (
     <>
+      <h3>Allowed subject keywords</h3>
       <ul className="grid-row usa-list usa-list--unstyled">
         {validSubjectKeywords.map((keyword) => (
           /* special case grid length for 'Baksan Neutrino Observatory Alert' */
@@ -19,6 +23,14 @@ export function CircularsKeywords() {
             key={keyword}
             className={keyword.length < 20 ? 'grid-col-2' : 'grid-col-6'}
           >
+            {keyword}
+          </li>
+        ))}
+      </ul>
+      <h3>Disallowed subject keywords</h3>
+      <ul className="grid-row usa-list usa-list--unstyled">
+        {emailAutoReplyChecklist.map((keyword) => (
+          <li key={keyword} className={'grid-col-3'}>
             {keyword}
           </li>
         ))}

@@ -124,7 +124,6 @@ export default function () {
           </small>
           {showKeywords && (
             <div className="text-base padding-x-2 padding-bottom-2">
-              <h3>Allowed subject keywords</h3>
               <CircularsKeywords />
             </div>
           )}
