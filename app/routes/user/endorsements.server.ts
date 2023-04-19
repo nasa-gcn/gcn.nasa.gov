@@ -134,7 +134,7 @@ export class EndorsementsServer {
     await sendEmail({
       fromName,
       to: [endorserEmail],
-      subject: 'New GCN Peer Endorsement Request',
+      subject: 'GCN Peer Endorsements: New Request',
       body: `You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
         this.#currentUserEmail
       }. Approval of an endorsement means that the requestor, ${
@@ -216,7 +216,7 @@ export class EndorsementsServer {
         sendEmail({
           fromName,
           to: ['gcnkafka@lists.nasa.gov'],
-          subject: 'Notice: Endorsement Request Reported',
+          subject: 'GCN Peer Endorsements: Endorsement Request Reported',
           body: `${
             this.#currentUserEmail
           } has reported the endorsement request from ${requestorEmail}.`,
@@ -227,7 +227,7 @@ export class EndorsementsServer {
       sendEmail({
         fromName,
         to: [requestorEmail],
-        subject: 'GCN Peer Endorsement Status Update',
+        subject: 'GCN Peer Endorsements: Status Update',
         body: `You are receiving this email because the status of your peer endorsment requested from ${
           this.#currentUserEmail
         } has been updated to ${status}.`,
@@ -235,7 +235,7 @@ export class EndorsementsServer {
       sendEmail({
         fromName,
         to: [this.#currentUserEmail],
-        subject: 'GCN Peer Endorsement Status Update',
+        subject: 'GCN Peer Endorsements: Status Update',
         body: `Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.`,
       })
     )
