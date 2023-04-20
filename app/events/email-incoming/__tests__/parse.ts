@@ -42,6 +42,16 @@ describe('getFromAddress', () => {
     ).toThrow('From address is missing')
   })
 
+  test("raises if the from address name does not contain ' via '", () => {
+    expect(() =>
+      getFromAddress(
+        parseFrom(
+          '"Example <example@example.com>" <mailnull@capella2.gsfc.nasa.gov>'
+        )
+      )
+    ).toThrow("Expected From name to contain ' via '")
+  })
+
   test('returns the address verbatim for a normal email address', () => {
     expect(getFromAddress(parseFrom('example@example.com'))).toBe(
       'example@example.com'
@@ -53,6 +63,16 @@ describe('getFromAddress', () => {
       getFromAddress(
         parseFrom(
           '"Example <example@example.com> via gcncirc" <mailnull@capella2.gsfc.nasa.gov>'
+        )
+      )
+    ).toBe('example@example.com')
+  })
+
+  test('returns the original address for a rewritten address with an alternative "via" name', () => {
+    expect(
+      getFromAddress(
+        parseFrom(
+          '"Example <example@example.com> via my mind" <mailnull@capella2.gsfc.nasa.gov>'
         )
       )
     ).toBe('example@example.com')
