@@ -30,32 +30,30 @@ export default function () {
     <>
       <Link to="/circulars">back to archive</Link>
       <h1>GCN Circular {circularId}</h1>
-      <p className="usa-paragraph">
-        <Grid row>
-          <Grid col={1}>
-            <b>Subject</b>
-          </Grid>
-          <Grid col="fill">{subject}</Grid>
+      <Grid row>
+        <Grid col={1}>
+          <b>Subject</b>
         </Grid>
-        <Grid row>
-          <Grid col={1}>
-            <b>Date</b>
-          </Grid>
-          <Grid col="fill">
-            {new Date(createdOn).toISOString()}{' '}
-            <small className="text-base-light">
-              (<TimeAgo time={createdOn}></TimeAgo>)
-            </small>
-          </Grid>
+        <Grid col="fill">{subject}</Grid>
+      </Grid>
+      <Grid row>
+        <Grid col={1}>
+          <b>Date</b>
         </Grid>
-        <Grid row>
-          <Grid col={1}>
-            <b>From</b>
-          </Grid>
-          <Grid col="fill">{submitter}</Grid>
+        <Grid col="fill">
+          {new Date(createdOn).toISOString()}{' '}
+          <small className="text-base-light">
+            (<TimeAgo time={createdOn}></TimeAgo>)
+          </small>
         </Grid>
-      </p>
-      <div className="text-pre-wrap">{body}</div>
+      </Grid>
+      <Grid row>
+        <Grid col={1}>
+          <b>From</b>
+        </Grid>
+        <Grid col="fill">{submitter}</Grid>
+      </Grid>
+      <div className="text-pre-wrap margin-top-2">{body}</div>
     </>
   )
 }
