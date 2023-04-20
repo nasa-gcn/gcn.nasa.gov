@@ -31,13 +31,13 @@ export default function () {
       <Link to="/circulars">back to archive</Link>
       <h1>GCN Circular {circularId}</h1>
       <Grid row>
-        <Grid col={1}>
+        <Grid tablet={{ col: 1 }}>
           <b>Subject</b>
         </Grid>
         <Grid col="fill">{subject}</Grid>
       </Grid>
       <Grid row>
-        <Grid col={1}>
+        <Grid tablet={{ col: 1 }}>
           <b>Date</b>
         </Grid>
         <Grid col="fill">
@@ -48,7 +48,7 @@ export default function () {
         </Grid>
       </Grid>
       <Grid row>
-        <Grid col={1}>
+        <Grid tablet={{ col: 1 }}>
           <b>From</b>
         </Grid>
         <Grid col="fill">{submitter}</Grid>
