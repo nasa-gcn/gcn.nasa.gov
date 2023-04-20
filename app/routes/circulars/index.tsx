@@ -166,30 +166,31 @@ export default function () {
         subscribing to or submitting Circulars.
       </p>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
-        <div className="usa-search display-inline-block">
-          <Form className="usa-search usa-search--small" role="search">
-            <Label srOnly={true} htmlFor="query">
-              Search
-            </Label>
-            <TextInput
-              id="query"
-              name="query"
-              type="search"
-              defaultValue={query}
-              onChange={({ target: { form, value } }) => {
-                setInput(value)
-                if (!value) submit(form)
-              }}
+        <Form
+          className="display-inline-block usa-search usa-search--small"
+          role="search"
+        >
+          <Label srOnly={true} htmlFor="query">
+            Search
+          </Label>
+          <TextInput
+            id="query"
+            name="query"
+            type="search"
+            defaultValue={query}
+            onChange={({ target: { form, value } }) => {
+              setInput(value)
+              if (!value) submit(form)
+            }}
+          />
+          <Button type="submit">
+            <img
+              src={searchImg}
+              className="usa-search__submit-icon"
+              alt="Search"
             />
-            <Button type="submit">
-              <img
-                src={searchImg}
-                className="usa-search__submit-icon"
-                alt="Search"
-              />
-            </Button>
-          </Form>
-        </div>
+          </Button>
+        </Form>
         <Link to="/circulars/new">
           <Button
             type="button"
