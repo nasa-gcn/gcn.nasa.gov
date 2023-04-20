@@ -7,7 +7,7 @@
  */
 import { tables } from '@architect/functions'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { SNSEventRecord } from 'aws-lambda'
+import type { SESMessage, SESReceipt, SNSEventRecord } from 'aws-lambda'
 
 import {
   bodyIsValid,
@@ -56,8 +56,6 @@ const origin = getOrigin()
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = createTriggerHandler(
   async (record: SNSEventRecord) => {
-    const message = JSON.parse(record.Sns.Message)
-
     // Save a copy of the message in an S3 bucket for debugging.
     // FIXME: remove this later?
     await s3.send(
@@ -67,11 +65,12 @@ module.exports.handler = createTriggerHandler(
         Body: record.Sns.Message,
       })
     )
-    ;['spam', 'virus', 'spf', 'dkim', 'dmarc'].forEach((key) => {
-      if (message.receipt?.[`${key}Verdict`]?.status !== 'PASS')
-        throw new Error(`${key} check failed`)
-    })
 
+    const message: SESMessage & { content: string } = JSON.parse(
+      record.Sns.Message
+    )
+
+    authenticateReceipt(message.receipt)
     const parsed = await parseEmailContentFromSource(
       Buffer.from(message.content, 'base64')
     )
@@ -131,6 +130,23 @@ module.exports.handler = createTriggerHandler(
     })
   }
 )
+
+/** Check Amazon SES's email authentication verdicts. */
+function authenticateReceipt(receipt: SESReceipt) {
+  if (receipt.spamVerdict.status !== 'PASS')
+    throw new Error('Message failed spam check')
+  if (receipt.virusVerdict.status !== 'PASS')
+    throw new Error('Message failed virus check')
+  const rest = [
+    receipt.spfVerdict.status,
+    receipt.dkimVerdict.status,
+    receipt.dmarcVerdict.status,
+  ]
+  if (!rest.some((value) => value === 'PASS'))
+    throw new Error(
+      'Message failed SPF, DKIM, and DMARC checks; at least one of these checks must pass'
+    )
+}
 
 /**
  * Returns a UserData object constructed from cognito if the
