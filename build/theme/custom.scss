@@ -506,3 +506,12 @@ a {
   white-space: nowrap;
   overflow: hidden;
 }
+
+/*
+ * Suppress vertical margins for nested button groups inside button groups
+ */
+
+.usa-button-group__item .usa-button-group__item {
+  margin-top: 0;
+  margin-bottom: 0;
+}
