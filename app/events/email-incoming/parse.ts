@@ -10,7 +10,7 @@ import { simpleParser } from 'mailparser'
 import addressparser from 'nodemailer/lib/addressparser'
 
 const legacyAddress = 'mailnull@capella2.gsfc.nasa.gov'
-const legacyFromNameSuffix = ' via gcncirc'
+const legacyFromNameSplitter = ' via '
 
 /**
  * Parse rewritten From addresses from capella2.
@@ -25,11 +25,13 @@ const legacyFromNameSuffix = ' via gcncirc'
  */
 export function getFromAddress(fromAddressObject?: AddressObject) {
   let from = fromAddressObject?.value[0]
-  if (
-    from?.address === legacyAddress &&
-    from.name.endsWith(legacyFromNameSuffix)
-  ) {
-    from = addressparser(from.name.slice(0, -legacyFromNameSuffix.length), {
+  if (from?.address === legacyAddress) {
+    const i = from.name.lastIndexOf(legacyFromNameSplitter)
+    if (i === -1)
+      throw new Error(
+        `Expected From name to contain '${legacyFromNameSplitter}'`
+      )
+    from = addressparser(from.name.slice(0, i), {
       flatten: true,
     })[0]
   }
