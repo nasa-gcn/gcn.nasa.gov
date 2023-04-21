@@ -8,7 +8,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { Grid } from '@trussworks/react-uswds'
+import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
@@ -28,7 +28,30 @@ export default function () {
     useLoaderData<typeof loader>()
   return (
     <>
-      <Link to="/circulars">back to archive</Link>
+      <ButtonGroup>
+        <Link to="/circulars" className="usa-button">
+          <div className="position-relative">
+            <Icon.ArrowBack className="position-absolute top-0 left-0" />
+          </div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+        </Link>
+        <ButtonGroup type="segmented">
+          <Link
+            to="raw"
+            className="usa-button usa-button--outline"
+            reloadDocument
+          >
+            Raw
+          </Link>
+          <Link
+            to="json"
+            className="usa-button usa-button--outline"
+            reloadDocument
+          >
+            JSON
+          </Link>
+        </ButtonGroup>
+      </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
       <Grid row>
         <Grid col={1}>
