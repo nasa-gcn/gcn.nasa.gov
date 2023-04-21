@@ -42,6 +42,11 @@ function getBaseMessage({
   subject,
   body,
 }: BaseMessageProps): Omit<SendEmailCommandInput, 'Destination'> {
+  if (getHostname().startsWith('dev') || getHostname().startsWith('test')) {
+    body =
+      `******** This notification is from the internal development version of GCN. For the production version, go to https://gcn.nasa.gov/ ********
+    ` + body
+  }
   return {
     FromEmailAddress: `${fromName} <no-reply@${getHostname()}>`,
     ReplyToAddresses: replyTo,
