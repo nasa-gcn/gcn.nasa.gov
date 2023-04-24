@@ -6,13 +6,11 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Form, Link, useActionData, useSearchParams } from '@remix-run/react'
+import { Form, Link, useActionData } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
-  Fieldset,
   Label,
-  Radio,
   TextInput,
   Textarea,
 } from '@trussworks/react-uswds'
@@ -34,29 +32,13 @@ export async function action({ request }: DataFunctionArgs) {
   const recaptchaResponse = getFormDataString(data, 'g-recaptcha-response')
   await verifyRecaptcha(recaptchaResponse)
 
-  const [email, service, subject, body] = [
-    'email',
-    'service',
-    'subject',
-    'body',
-  ].map((key) => {
+  const [email, subject, body] = ['email', 'subject', 'body'].map((key) => {
     const result = getFormDataString(data, key)
     if (!result) throw new Response(`${key} is undefined`, { status: 400 })
     return result
   })
 
-  let to
-  switch (service) {
-    case 'gcn':
-      to = ['gcnkafka@lists.nasa.gov']
-      break
-    case 'gcn-classic':
-      to = ['gcn-classic@athena.gsfc.nasa.gov']
-      break
-    default:
-      throw new Response('invalid service', { status: 400 })
-  }
-
+  const to = ['gcnkafka@lists.nasa.gov']
   await sendEmail({
     body,
     subject,
@@ -70,11 +52,6 @@ export async function action({ request }: DataFunctionArgs) {
 
 export default function () {
   const defaultEmail = useEmail()
-  const [searchParams] = useSearchParams()
-  let defaultService = searchParams.get('service')
-  if (!(defaultService && ['gcn', 'gcn-classic'].includes(defaultService)))
-    defaultService = 'gcn'
-
   const [emailValid, setEmailValid] = useState(!!defaultEmail)
   const [subjectValid, setSubjectValid] = useState(false)
   const [bodyValid, setBodyValid] = useState(false)
@@ -103,34 +80,6 @@ export default function () {
         </>
       ) : (
         <Form method="POST">
-          <Label htmlFor="service-fieldset">What do you need help with?</Label>
-          <Fieldset name="service-fieldset">
-            <Radio
-              id="service-gcn"
-              name="service"
-              value="gcn"
-              label="General Coordinates Network (GCN)"
-              labelDescription="This web site, Kafka, sign-in issues, new GCN Notice types, Unified Schema"
-              defaultChecked={defaultService === 'gcn'}
-            />
-            <Radio
-              id="service-gcn-classic"
-              name="service"
-              value="gcn-classic"
-              label="Gamma-ray Coordinates Network (GCN Classic)"
-              labelDescription={
-                <>
-                  The legacy web site at{' '}
-                  <Link to="https://gcn.gsfc.nasa.gov" rel="external">
-                    https://gcn.gsfc.nasa.gov
-                  </Link>
-                  , legacy GCN Notice and Circular subscriptions, legacy GCN
-                  Notice formats
-                </>
-              }
-              defaultChecked={defaultService === 'gcn-classic'}
-            />
-          </Fieldset>
           <Label htmlFor="email">What is your email address?</Label>
           <TextInput
             id="email"
