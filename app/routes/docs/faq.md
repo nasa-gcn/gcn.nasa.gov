@@ -63,3 +63,13 @@ This warning means that there have not been any recent alerts on that topic.
 ## How do I receive GCN Notices via email from GCN Classic over Kafka?
 
 This feature has been implemented now. To get started, [sign in or sign up](https://gcn.nasa.gov/login) and then select 'Email Notifications' from account dropdown menu. See also [GCN Circular 32517](https://gcn.gsfc.nasa.gov/gcn3/32517.gcn3).
+
+## Why do GCN Ciculars that I submit by email appear to be double spaced?
+
+Some email clients in some configurations are known to add extra line breaks to emails. When you are preparing to submit a GCN Circular by email, you should always make sure that you are composing a plain text message. See the following instructions for various mail clients:
+
+- [Apple Mail](https://support.apple.com/guide/mail/use-plain-or-rich-text-in-emails-mlhlp1009/mac)
+- [Microsoft Outlook for Mac](https://it.cornell.edu/outlook2016mac/choose-plain-text-or-formatted-text-outlook-mac)
+- [Microsoft Outlook for Windows](https://support.microsoft.com/en-us/office/change-the-message-format-to-html-rich-text-format-or-plain-text-338a389d-11da-47fe-b693-cf41f792fefa)
+
+Note that it used to be common practice for Circulars submitters to add line breaks to manually wrap long paragraphs in GCN Circulars. This practice is no longer recommended in the [GCN Circulars style guide](/circulars/styleguide).
