@@ -44,7 +44,7 @@ interface EmailProps {
   to: string[]
   body: string
   parsedSubmissionSubject: string
-  newCircularId?: number
+  circularId?: number
 }
 
 const fromName = 'GCN Circulars'
@@ -117,16 +117,16 @@ module.exports.handler = createTriggerHandler(
 
     // Removes sub as a property if it is undefined from the legacy users
     if (!circular.sub) delete circular.sub
-    const newCircularId = await putRaw(circular)
+    const { circularId } = await putRaw(circular)
 
     // Send a success email
     await sendSuccessEmail({
       userEmail,
       to,
-      subjectMessage: `${newCircularId}`,
+      subjectMessage: `${circularId}`,
       body: '',
       parsedSubmissionSubject: parsed.subject,
-      newCircularId,
+      circularId,
     })
   }
 )
@@ -258,7 +258,7 @@ async function sendSuccessEmail(props: EmailProps) {
       successMessage(
         props.userEmail,
         props.parsedSubmissionSubject,
-        `The email message you submitted to the GCN Circular service has been received and is being distributed to the GCN Circulars subscribers, and posted to the GCN Circulars archive (${origin}/circulars/${props.newCircularId}). If you have selected to receive Circulars, then you will receive your copy shortly.`
+        `The email message you submitted to the GCN Circular service has been received and is being distributed to the GCN Circulars subscribers, and posted to the GCN Circulars archive (${origin}/circulars/${props.circularId}). If you have selected to receive Circulars, then you will receive your copy shortly.`
       ) + sharedEmailBody,
   })
 }

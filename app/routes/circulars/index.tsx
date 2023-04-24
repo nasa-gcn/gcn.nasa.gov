@@ -9,6 +9,7 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
+  useActionData,
   useLoaderData,
   useSearchParams,
   useSubmit,
@@ -45,8 +46,7 @@ export async function action({ request }: DataFunctionArgs) {
   const subject = getFormDataString(data, 'subject')
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
-  await put(subject, body, request)
-  return null
+  return await put(subject, body, request)
 }
 
 function getPageLink(page: number, query?: string) {
@@ -140,7 +140,11 @@ function Pagination({
 }
 
 export default function () {
+  const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
+
+  // Concatenate items from the action and loader functions
+  const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
@@ -208,7 +212,7 @@ export default function () {
             </h3>
           )}
           <ol>
-            {items.map(({ circularId, subject }) => (
+            {allItems.map(({ circularId, subject }) => (
               <li key={circularId} value={circularId}>
                 <Link to={`/circulars/${circularId}`}>{subject}</Link>
               </li>

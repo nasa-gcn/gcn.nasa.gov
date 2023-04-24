@@ -136,11 +136,13 @@ export async function remove(circularId: number, request: Request) {
 /**
  * Adds a new entry into the GCN Circulars table WITHOUT authentication
  */
-export async function putRaw<T>(item: T) {
+export async function putRaw(
+  item: Omit<Circular, 'createdOn' | 'circularId'>
+): Promise<Circular> {
   const autoincrement = await getDynamoDBAutoIncrement()
   const createdOn = Date.now()
   const circularId = await autoincrement.put({ createdOn, ...item })
-  return circularId
+  return { ...item, createdOn, circularId }
 }
 
 /**
@@ -163,7 +165,7 @@ export async function put(subject: string, body: string, request: Request) {
     throw new Response('subject is invalid', { status: 400 })
   if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
 
-  await putRaw({
+  return await putRaw({
     subject,
     body,
     sub: user.sub,
