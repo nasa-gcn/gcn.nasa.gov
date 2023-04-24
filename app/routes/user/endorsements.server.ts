@@ -251,7 +251,7 @@ export class EndorsementsServer {
         
         No further action is required on your part for this user's request.
         
-        Review your remaining endorsement requests here: ${origin}/user/endorsements`,
+        Review your endorsement requests here: ${origin}/user/endorsements`,
       })
     )
 
