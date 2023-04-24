@@ -105,7 +105,7 @@
     "nasawds": "^3.0.338-beta.1",
     "npm-run-all": "^4.1.5",
     "oidc-provider": "^8.1.0",
-    "postcss": "^8.4.20",
+    "postcss": "^8.4.23",
     "postcss-csso": "^6.0.1",
     "prettier": "2.8.5",
     "rehype-add-classes": "^1.0.0",
