@@ -217,7 +217,7 @@ export class EndorsementsServer {
       )
       requestorMessage += `
       
-      As an approved user, you may submit GCN Circulars at ${origin}/circulars/new and be requested for endorsement by other users.
+      As an approved user, you may now submit GCN Circulars at ${origin}/circulars/new and be requested for endorsement by other users.
       
       View your pending endorsements here: ${origin}/user/endorsements`
     } else if (status === 'reported')
