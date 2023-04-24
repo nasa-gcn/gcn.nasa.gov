@@ -12,7 +12,7 @@ import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
-import { publicStaticCacheControlHeaders } from '~/lib/utils'
+import { publicStaticCacheControlHeaders } from '~/lib/headers.server'
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
