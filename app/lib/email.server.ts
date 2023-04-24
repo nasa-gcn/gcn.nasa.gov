@@ -13,10 +13,10 @@ import {
 } from '@aws-sdk/client-sesv2'
 import chunk from 'lodash/chunk'
 
-import { getHostname } from './env.server'
+import { getEnvBannerHeaderAndDescription, getHostname } from './env.server'
 
 const client = new SESv2Client({})
-
+const hostname = getHostname()
 // https://docs.aws.amazon.com/ses/latest/dg/quotas.html
 const maxRecipientsPerMessage = 50
 
@@ -42,13 +42,15 @@ function getBaseMessage({
   subject,
   body,
 }: BaseMessageProps): Omit<SendEmailCommandInput, 'Destination'> {
-  if (getHostname().startsWith('dev') || getHostname().startsWith('test')) {
+  if (hostname !== 'gcn.nasa.gov') {
+    const { heading, description } = getEnvBannerHeaderAndDescription()
     body =
-      `******** This notification is from the internal development version of GCN. For the production version, go to https://gcn.nasa.gov/ ********
-    ` + body
+      `******** ${heading}: This notification is from ${description} of GCN. For the production version, go to https://gcn.nasa.gov/ ********
+
+` + body
   }
   return {
-    FromEmailAddress: `${fromName} <no-reply@${getHostname()}>`,
+    FromEmailAddress: `${fromName} <no-reply@${hostname}>`,
     ReplyToAddresses: replyTo,
     Content: {
       Simple: {
