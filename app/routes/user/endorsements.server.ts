@@ -12,6 +12,7 @@ import {
   ListUsersCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import dedent from 'ts-dedent'
 
 import { clearUserToken, getUser } from '../__auth/user.server'
 import { group } from '../circulars/circulars.server'
@@ -27,6 +28,10 @@ import { getOrigin } from '~/lib/env.server'
 const origin = getOrigin()
 
 const fromName = 'GCN Endorsements'
+// Call-to-action
+const endorsementsCTA = `
+      
+View your pending endorsements here: ${origin}/user/endorsements`
 
 // models
 export type EndorsementRequest = {
@@ -134,8 +139,8 @@ export class EndorsementsServer {
     await sendEmail({
       fromName,
       to: [endorserEmail],
-      subject: 'New GCN Peer Endorsement Request',
-      body: `You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
+      subject: 'GCN Peer Endorsements: New Request',
+      body: dedent`You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
         this.#currentUserEmail
       }. Approval of an endorsement means that the requestor, ${
         this.#currentUserEmail
@@ -205,38 +210,50 @@ export class EndorsementsServer {
 
     let promiseArray: Promise<void>[] = []
 
-    if (status === 'approved')
+    let requestorMessage = `You are receiving this email because the status of your peer endorsment requested from ${
+      this.#currentUserEmail
+    } has been updated to ${status}.`
+
+    if (status === 'approved') {
       promiseArray.push(
         this.#addUserToGroup(requestorSub),
         clearUserToken(requestorSub)
       )
-
-    if (status === 'reported')
+      requestorMessage +=
+        `
+      
+      As an approved user, you may now submit GCN Circulars at ${origin}/circulars/new and be requested for endorsement by other users.` +
+        endorsementsCTA
+    } else if (status === 'reported')
       promiseArray.push(
         sendEmail({
           fromName,
           to: ['gcnkafka@lists.nasa.gov'],
-          subject: 'Notice: Endorsement Request Reported',
+          subject: 'GCN Peer Endorsements: Endorsement Request Reported',
           body: `${
             this.#currentUserEmail
           } has reported the endorsement request from ${requestorEmail}.`,
         })
       )
-
+    else if (status == 'rejected') {
+      requestorMessage += endorsementsCTA
+    }
     promiseArray.push(
       sendEmail({
         fromName,
         to: [requestorEmail],
-        subject: 'GCN Peer Endorsement Status Update',
-        body: `You are receiving this email because the status of your peer endorsment requested from ${
-          this.#currentUserEmail
-        } has been updated to ${status}.`,
+        subject: `GCN Peer Endorsements: Endorsement ${status}`,
+        body: dedent(requestorMessage),
       }),
       sendEmail({
         fromName,
         to: [this.#currentUserEmail],
-        subject: 'GCN Peer Endorsement Status Update',
-        body: `Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.`,
+        subject: `GCN Peer Endorsements: Endorsement ${status}`,
+        body:
+          dedent`Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.
+        
+        No further action is required on your part for this user's request.` +
+          endorsementsCTA,
       })
     )
 
