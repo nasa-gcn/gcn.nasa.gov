@@ -13,7 +13,8 @@ import {
 } from '@aws-sdk/client-sesv2'
 import chunk from 'lodash/chunk'
 
-import { getEnvBannerHeaderAndDescription, getHostname } from './env.server'
+import { getHostname } from './env.server'
+import { getEnvBannerHeaderAndDescription } from './utils'
 
 const client = new SESv2Client({})
 const hostname = getHostname()
@@ -43,7 +44,7 @@ function getBaseMessage({
   body,
 }: BaseMessageProps): Omit<SendEmailCommandInput, 'Destination'> {
   if (hostname !== 'gcn.nasa.gov') {
-    const { heading, description } = getEnvBannerHeaderAndDescription()
+    const { heading, description } = getEnvBannerHeaderAndDescription(hostname)
     body =
       `******** ${heading}: This notification is from ${description} of GCN. For the production version, go to https://gcn.nasa.gov/ ********
 

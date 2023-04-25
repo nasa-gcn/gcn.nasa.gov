@@ -31,3 +31,23 @@ export function getFormDataString(formData: FormData, key: string) {
     throw new Response(`expected ${key} to be a string`, { status: 400 })
   }
 }
+
+export function getEnvBannerHeaderAndDescription(hostname: string) {
+  const production_hostname = 'gcn.nasa.gov'
+  let heading, description
+  if (hostname === `dev.${production_hostname}`) {
+    heading = 'Development'
+    description = 'the internal development version'
+  } else if (hostname === `test.${production_hostname}`) {
+    heading = 'Testing'
+    description = 'the public testing version'
+  } else if (hostname === 'localhost') {
+    heading = 'Local Development'
+    description = 'a local development version'
+  } else {
+    heading = 'Non-Production'
+    description = 'a non-production version'
+  }
+
+  return { heading, description }
+}
