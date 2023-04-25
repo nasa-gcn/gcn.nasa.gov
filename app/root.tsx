@@ -95,11 +95,15 @@ export const handle = {
   breadcrumb: 'GCN',
 }
 
-export const meta: V2_MetaFunction = () => {
-  return [
+export const meta: V2_MetaFunction<typeof loader> = ({ data: { origin } }) => {
+  let result = [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ]
+  // Exclude non-production deployments from indexing by search engines
+  if (new URL(origin).hostname !== 'gcn.nasa.gov')
+    result.push({ name: 'robots', content: 'noindex' })
+  return result
 }
 
 export const links: LinksFunction = () => [
