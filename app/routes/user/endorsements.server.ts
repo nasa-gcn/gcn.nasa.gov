@@ -28,6 +28,10 @@ import { getOrigin } from '~/lib/env.server'
 const origin = getOrigin()
 
 const fromName = 'GCN Endorsements'
+// Call-to-action
+const endorsementsCTA = `
+      
+View your pending endorsements here: ${origin}/user/endorsements`
 
 // models
 export type EndorsementRequest = {
@@ -215,11 +219,11 @@ export class EndorsementsServer {
         this.#addUserToGroup(requestorSub),
         clearUserToken(requestorSub)
       )
-      requestorMessage += `
+      requestorMessage +=
+        `
       
-      As an approved user, you may submit GCN Circulars at ${origin}/circulars/new and be requested for endorsement by other users.
-      
-      View your pending endorsements here: ${origin}/user/endorsements`
+      As an approved user, you may submit GCN Circulars at ${origin}/circulars/new and be requested for endorsement by other users.` +
+        endorsementsCTA
     } else if (status === 'reported')
       promiseArray.push(
         sendEmail({
@@ -232,9 +236,7 @@ export class EndorsementsServer {
         })
       )
     else if (status == 'rejected') {
-      requestorMessage += `
-      
-      Submit a new request or view all of your pending endorsement requests here: ${origin}/user/endorsements`
+      requestorMessage += endorsementsCTA
     }
     promiseArray.push(
       sendEmail({
@@ -247,11 +249,11 @@ export class EndorsementsServer {
         fromName,
         to: [this.#currentUserEmail],
         subject: `GCN Peer Endorsements: Endorsement ${status}`,
-        body: dedent`Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.
+        body:
+          dedent`Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.
         
-        No further action is required on your part for this user's request.
-        
-        Review your remaining endorsement requests here: ${origin}/user/endorsements`,
+        No further action is required on your part for this user's request.` +
+          endorsementsCTA,
       })
     )
 
