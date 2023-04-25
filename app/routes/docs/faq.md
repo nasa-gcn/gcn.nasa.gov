@@ -68,7 +68,7 @@ To get started, [sign in or sign up](https://gcn.nasa.gov/login) and then select
 
 ## Circulars
 
-### Why do GCN Ciculars that I submit by email appear to be double spaced?
+### Why do GCN Circulars that I submit by email appear to be double spaced?
 
 Some email clients in some configurations are known to add extra line breaks to emails. When you are preparing to submit a GCN Circular by email, you should always make sure that you are composing a plain text message. See the following instructions for various mail clients:
 
