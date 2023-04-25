@@ -73,3 +73,7 @@ Some email clients in some configurations are known to add extra line breaks to 
 - [Microsoft Outlook for Windows](https://support.microsoft.com/en-us/office/change-the-message-format-to-html-rich-text-format-or-plain-text-338a389d-11da-47fe-b693-cf41f792fefa)
 
 Note that it used to be common practice for Circulars submitters to add line breaks to manually wrap long paragraphs in GCN Circulars. This practice is no longer recommended in the [GCN Circulars style guide](/circulars/styleguide).
+
+## How do I sign in as a legacy GCN Classic Circulars user?
+
+If you had a GCN Circulars account prior to April 17, 2023, your account was migrated to the new GCN. Your receiving preferences, submitting permission, name and affiliation will be associated with your account as soon as you sign in for the first time. If you choose to sign in via email address and password, tap "Sign up" not "Forgot your password?".
