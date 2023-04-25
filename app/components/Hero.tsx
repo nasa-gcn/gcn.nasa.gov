@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { Link } from '@remix-run/react'
+import { ButtonGroup } from '@trussworks/react-uswds'
 
 import gcn_diagram from '~/img/gcn-diagram.jpg'
 
@@ -17,16 +18,21 @@ export function Hero() {
     >
       <div className="bg-base-darkest padding-4 tablet:grid-col-5">
         <h1 className="usa-hero__heading">
-          <span className="usa-hero__heading--alt">The new GCN:</span>{' '}
-          Multimessenger astronomy alerts delivered over Kafka
+          <span className="usa-hero__heading--alt">GCN:</span> NASA's
+          Time-Domain and Multimessenger Alert System
         </h1>
         <p className="usa-paragraph text-base-lightest">
           GCN distributes alerts between space- and ground-based observatories,
           physics experiments, and thousands of astronomers around the world.
         </p>
-        <Link to="/quickstart" className="usa-button">
-          <>Start streaming GCN Notices</>
-        </Link>
+        <ButtonGroup>
+          <Link to="/quickstart" className="usa-button">
+            <>Start streaming GCN Notices</>
+          </Link>
+          <Link to="/circulars" className="usa-button usa-button--secondary">
+            <>Post a GCN Circular</>
+          </Link>
+        </ButtonGroup>
       </div>
       <img
         src={gcn_diagram}
