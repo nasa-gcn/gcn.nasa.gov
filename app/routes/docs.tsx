@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { NavLink, Outlet } from '@remix-run/react'
+import { Link, NavLink, Outlet } from '@remix-run/react'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
 
@@ -72,9 +72,26 @@ export default function () {
             <NavLink key="roadmap" to="roadmap">
               Road Map
             </NavLink>,
-            <NavLink key="faq" to="faq">
-              Frequently Asked Questions
-            </NavLink>,
+            <>
+              <NavLink key="faq" to="faq">
+                Frequently Asked Questions
+              </NavLink>
+              <SideNavSub
+                base="faq"
+                key="faq-sub"
+                items={[
+                  <Link key="kafka" to="faq#kafka">
+                    Kafka
+                  </Link>,
+                  <Link key="circulars" to="faq#circulars">
+                    Circulars
+                  </Link>,
+                  <Link key="accounts" to="faq#accounts">
+                    Accounts
+                  </Link>,
+                ]}
+              />
+            </>,
           ]}
         />
       </div>
