@@ -31,7 +31,6 @@ export default function () {
               </NavLink>
               <SideNavSub
                 base="circulars"
-                isSubnav={true}
                 items={[
                   <NavLink key="subscribing" to="circulars/subscribing">
                     Subscribing
@@ -55,7 +54,6 @@ export default function () {
               <SideNavSub
                 base="contributing"
                 key="contributing-sub"
-                isSubnav
                 items={[
                   <NavLink key="index" to="contributing" end>
                     Getting Started
