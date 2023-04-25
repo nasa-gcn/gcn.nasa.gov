@@ -80,6 +80,10 @@ export default function () {
         </>
       ) : (
         <Form method="POST">
+          <p className="usa-paragraph">
+            Have you checked if your question is answered in our{' '}
+            <Link to="/docs/faq">Frequently Asked Questions (FAQ)</Link>?
+          </p>
           <Label htmlFor="email">What is your email address?</Label>
           <TextInput
             id="email"
