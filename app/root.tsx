@@ -127,10 +127,11 @@ export async function loader({ request }: DataFunctionArgs) {
 
   const user = await getUser(request)
   const email = user?.email
+  const name = user?.name
   const features = getFeatures()
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
 
-  return { origin, email, features, recaptchaSiteKey }
+  return { origin, email, name, features, recaptchaSiteKey }
 }
 
 /** Don't reevaluate this route's loader due to client-side navigations. */
@@ -145,6 +146,11 @@ function useLoaderDataRoot() {
 export function useEmail() {
   const { email } = useLoaderDataRoot()
   return email
+}
+
+export function useName() {
+  const { name } = useLoaderDataRoot()
+  return name
 }
 
 export function useRecaptchaSiteKey() {
@@ -231,6 +237,10 @@ function Document({ children }: { children?: React.ReactNode }) {
         <Footer />
         <ScrollRestoration />
         <Scripts />
+        <script
+          id="ze-snippet"
+          src="https://static.zdassets.com/ekr/snippet.js?key=3ea5135d-cc92-48dd-bac6-79bd11f39102"
+        ></script>
         <LiveReload />
       </body>
     </html>
