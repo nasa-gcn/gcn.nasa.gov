@@ -197,7 +197,7 @@ export default function () {
           tags={['gamma']}
           selectedTags={tagNames}
         >
-          Sub-Threshold Triggers detected by the GBM instrument on Fermi.
+          Sub-threshold triggers detected by the GBM instrument on Fermi.
         </NoticeCard>
         <NoticeCard
           name="Fermi LAT"
