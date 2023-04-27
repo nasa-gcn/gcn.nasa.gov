@@ -184,12 +184,20 @@ export default function () {
           X-ray transients detected by the MAXI instrument on the ISS.
         </NoticeCard>
         <NoticeCard
-          name="Fermi GBM"
+          name="Fermi GRBs"
           href="https://gcn.gsfc.nasa.gov/fermi_grbs.html"
           tags={['gamma']}
           selectedTags={tagNames}
         >
-          GRBs detected by the GBM instrument on Fermi.
+          GRBs detected by the GBM and LAT instruments on Fermi.
+        </NoticeCard>
+        <NoticeCard
+          name="Fermi GBM Sub-Threshold"
+          href="https://gcn.gsfc.nasa.gov/fermi_gbm_subthresh_archive.html"
+          tags={['gamma']}
+          selectedTags={tagNames}
+        >
+          Sub-Threshold Triggers detected by the GBM instrument on Fermi.
         </NoticeCard>
         <NoticeCard
           name="Fermi LAT"
@@ -197,7 +205,8 @@ export default function () {
           tags={['gamma']}
           selectedTags={tagNames}
         >
-          Non-GRB gamma-ray transients detected by the LAT instrument on Fermi.
+          Gamma-ray transient and variable sources detected by the LAT
+          instrument on Fermi.
         </NoticeCard>
         <NoticeCard
           name="Swift GRBs"
