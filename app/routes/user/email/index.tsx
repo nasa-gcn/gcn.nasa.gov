@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
@@ -56,7 +55,7 @@ export async function action({ request }: DataFunctionArgs) {
       await deleteCircularEmailNotification(user.sub, user.email)
       break
   }
-  return redirect('/user/email')
+  return null
 }
 
 export async function loader({ request }: DataFunctionArgs) {
