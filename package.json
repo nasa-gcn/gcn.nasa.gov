@@ -43,7 +43,7 @@
     "dayjs": "^1.11.7",
     "downshift": "^7.2.1",
     "email-validator": "^2.0.4",
-    "highlight.js": "^11.7.0",
+    "highlight.js": "^11.8.0",
     "jest-environment-jsdom": "^29.5.0",
     "lodash": "^4.17.21",
     "mailparser": "^3.6.4",
