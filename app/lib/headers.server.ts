@@ -26,3 +26,15 @@ export function getCanonicalUrlHeaders(url: string | URL) {
     Link: `<${url}>; rel="canonical"`,
   }
 }
+
+/**
+ * Get HTTP Basic auth request headers for a username and password.
+ *
+ * @see https://datatracker.ietf.org/doc/html/rfc7617
+ */
+export function getBasicAuthHeaders(username: string, password: string) {
+  if (username.includes(':'))
+    throw new Error('Usernames for basic auth must not contain colons')
+  const userpass = Buffer.from(`${username}:${password}`).toString('base64')
+  return { Authorization: `Basic ${userpass}` }
+}
