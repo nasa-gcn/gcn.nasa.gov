@@ -71,6 +71,11 @@ export function formatCircular({
   `
 }
 
+/** Convert a date to an ISO 8601 string with seconds precision. */
+export function formatDateISO(date: number) {
+  return new Date(date).toISOString().replace(/\.\d+Z$/, 'Z')
+}
+
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
   if (subject.length) {
