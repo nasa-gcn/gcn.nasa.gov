@@ -10,6 +10,7 @@ import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
+import { formatDateISO } from './circulars.lib'
 import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
 import { publicStaticCacheControlHeaders } from '~/lib/headers.server'
@@ -64,7 +65,7 @@ export default function () {
           <b>Date</b>
         </Grid>
         <Grid col="fill">
-          {new Date(createdOn).toISOString()}{' '}
+          {formatDateISO(createdOn)}{' '}
           <small className="text-base-light">
             (<TimeAgo time={createdOn}></TimeAgo>)
           </small>
