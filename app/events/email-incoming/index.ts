@@ -137,15 +137,6 @@ function authenticateReceipt(receipt: SESReceipt) {
     throw new Error('Message failed spam check')
   if (receipt.virusVerdict.status !== 'PASS')
     throw new Error('Message failed virus check')
-  const rest = [
-    receipt.spfVerdict.status,
-    receipt.dkimVerdict.status,
-    receipt.dmarcVerdict.status,
-  ]
-  if (!rest.some((value) => value === 'PASS'))
-    throw new Error(
-      'Message failed SPF, DKIM, and DMARC checks; at least one of these checks must pass'
-    )
 }
 
 /**
