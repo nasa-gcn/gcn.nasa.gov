@@ -16,9 +16,14 @@ export const deploy = {
           {
             Effect: 'Allow',
             Action: ['ses:SendEmail'],
-            Resource: {
-              'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:identity/*`,
-            },
+            Resource: [
+              {
+                'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:identity/*`,
+              },
+              {
+                'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:configuration-set/*`,
+              },
+            ],
           },
         ],
       },
