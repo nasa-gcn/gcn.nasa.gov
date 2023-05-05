@@ -19,6 +19,22 @@ import {
 
   <CollectionItem
     variantComponent={
+      <CollectionCalendarDate datetime={'May 6, 2023'} />
+    }
+  >
+    <CollectionHeading headingLevel="h3">
+      GCN Classic Outage Due to Local Network Maintenance
+    </CollectionHeading>
+    <CollectionDescription>
+    Due to planned network maintenance at GSFC, the connections to GCN Classic will be offline on Saturday, May 6 from 8AM ET (12:00 UTC) and concluding no later than 3PM ET (19:00 UTC).  This affects the following GCN services:
+    * GCN Classic Notices distribution via socket, VOEvent, and email
+    * GCN Classic Notices web site archive
+    * GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email
+    * Forwarding of GCN Circulars submitted to gcncirc@capella2.gsfc.nasa.gov, however submission to circulars@gcn.nasa.gov and the [web form](/circulars) will be unaffected.
+    </CollectionDescription>
+  </CollectionItem>
+  <CollectionItem
+    variantComponent={
       <CollectionCalendarDate datetime={'April 6, 2023'} />
     }
   >
