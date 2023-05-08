@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { DataFunctionArgs, SerializeFrom } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
@@ -14,6 +14,16 @@ import { formatDateISO } from './circulars.lib'
 import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
 import { publicStaticCacheControlHeaders } from '~/lib/headers.server'
+
+export const handle = {
+  breadcrumb({
+    data: { circularId, subject },
+  }: {
+    data: SerializeFrom<typeof loader>
+  }) {
+    return `${circularId}: ${subject}`
+  },
+}
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
