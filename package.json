@@ -73,7 +73,7 @@
     "@nasa-gcn/architect-plugin-search": "^0.2.0",
     "@nasa-gcn/architect-plugin-tracing": "^0.0.1",
     "@remix-run/dev": "^1.15.0",
-    "@remix-run/eslint-config": "^1.15.0",
+    "@remix-run/eslint-config": "^1.16.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
