@@ -9,136 +9,142 @@ import {
   CollectionDescription,
   CollectionHeading,
   CollectionItem,
+  GridContainer,
   Link,
 } from '@trussworks/react-uswds'
 
+<GridContainer className="usa-section">
+
 # GCN News and Events
 
-<Collection>
+  <Collection>
 
 ## 2023
 
-  <CollectionItem
-    className="maxw-none"
-    variantComponent={
-      <CollectionCalendarDate datetime={'May 6, 2023'} />
-    }
-  >
-    <CollectionHeading headingLevel="h3">
-      GCN Classic Outage Due to Local Network Maintenance
-    </CollectionHeading>
-    <CollectionDescription>
-    Due to planned network maintenance at GSFC, the connections to GCN Classic will be offline on Saturday, May 6 from 8AM ET (12:00 UTC) and concluding no later than 3PM ET (19:00 UTC).  This affects the following GCN services:
-    * GCN Classic Notices distribution via socket, VOEvent, and email
-    * GCN Classic Notices web site archive
-    * GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email
-    * Forwarding of GCN Circulars submitted to gcncirc@capella2.gsfc.nasa.gov, however submission to circulars@gcn.nasa.gov and the [web form](/circulars) will be unaffected.
-    </CollectionDescription>
-  </CollectionItem>
-  <CollectionItem
-    className="maxw-none"
-    variantComponent={
-      <CollectionCalendarDate datetime={'April 6, 2023'} />
-    }
-  >
-    <CollectionHeading headingLevel="h3">
-      New GCN Circulars Service Coming April 17, 2023
-    </CollectionHeading>
-    <CollectionDescription>
-     We are pleased to announce that on April 17, 2023, the General Coordinates Network will launch the most significant overhaul of GCN Circulars since its inception in 1997. The modernized GCN Circulars experience will be part of the new GCN web site.
-     After the transition on April 17, you will be able to:
-      - Browse and search Circulars in our all-new [archive](/circulars).
-      - Sign up for and manage your own email subscriptions.
-      - Enroll yourself and your colleagues to submit Circulars with arXiv-style peer endorsements for new contributors.
-      - Submit Circulars with our new Web form, or continue to submit by email.
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'May 6, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        GCN Classic Outage Due to Local Network Maintenance
+      </CollectionHeading>
+      <CollectionDescription>
+      Due to planned network maintenance at GSFC, the connections to GCN Classic will be offline on Saturday, May 6 from 8AM ET (12:00 UTC) and concluding no later than 3PM ET (19:00 UTC).  This affects the following GCN services:
+      * GCN Classic Notices distribution via socket, VOEvent, and email
+      * GCN Classic Notices web site archive
+      * GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email
+      * Forwarding of GCN Circulars submitted to gcncirc@capella2.gsfc.nasa.gov, however submission to circulars@gcn.nasa.gov and the [web form](/circulars) will be unaffected.
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'April 6, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        New GCN Circulars Service Coming April 17, 2023
+      </CollectionHeading>
+      <CollectionDescription>
+      We are pleased to announce that on April 17, 2023, the General Coordinates Network will launch the most significant overhaul of GCN Circulars since its inception in 1997. The modernized GCN Circulars experience will be part of the new GCN web site.
+      After the transition on April 17, you will be able to:
+        - Browse and search Circulars in our all-new [archive](/circulars).
+        - Sign up for and manage your own email subscriptions.
+        - Enroll yourself and your colleagues to submit Circulars with arXiv-style peer endorsements for new contributors.
+        - Submit Circulars with our new Web form, or continue to submit by email.
 
-      Here is what you need to know about preparing for the transition on April 17.
-      - If you use Circulars now, we will transfer your settings automatically.
-      - If you receive Circulars now, you will continue to receive them.
-      - If you submit Circulars now, you will still be able to submit from the same email addresses.
-      - Emails from Circulars will come from a new address, no-reply@gcn.nasa.gov.
-      - We will encourage you to submit Circulars to the new address, circulars@gcn.nasa.gov, but we will still support the old address gcncirc@capella2.gsfc.nasa.gov.
-      - The [new archive](/circulars) will include all past Circulars. We will freeze the old archive,
-        https://gcn.gsfc.nasa.gov/gcn3_archive.html.
+        Here is what you need to know about preparing for the transition on April 17.
+        - If you use Circulars now, we will transfer your settings automatically.
+        - If you receive Circulars now, you will continue to receive them.
+        - If you submit Circulars now, you will still be able to submit from the same email addresses.
+        - Emails from Circulars will come from a new address, no-reply@gcn.nasa.gov.
+        - We will encourage you to submit Circulars to the new address, circulars@gcn.nasa.gov, but we will still support the old address gcncirc@capella2.gsfc.nasa.gov.
+        - The [new archive](/circulars) will include all past Circulars. We will freeze the old archive,
+          https://gcn.gsfc.nasa.gov/gcn3_archive.html.
 
-      To introduce GCN users to the [new GCN Circular system](/circulars), we invite you to join one of our three public Zoom webinars:
+        To introduce GCN users to the [new GCN Circular system](/circulars), we invite you to join one of our three public Zoom webinars:
 
-      - April 18, 2023 12:00-13:00 UTC (best for Atlantic):
-        https://bit.ly/3nSOqLN
+        - April 18, 2023 12:00-13:00 UTC (best for Atlantic):
+          https://bit.ly/3nSOqLN
 
-      - April 18, 2023 20:00-21:00 UTC (best for Pacific):
-        https://bit.ly/3mdmAt7
+        - April 18, 2023 20:00-21:00 UTC (best for Pacific):
+          https://bit.ly/3mdmAt7
 
-      - April 19, 2023 04:00-05:00 UTC (best for Asia and Oceania):
-        https://bit.ly/3UcHogZ
-    </CollectionDescription>
+        - April 19, 2023 04:00-05:00 UTC (best for Asia and Oceania):
+          https://bit.ly/3UcHogZ
+      </CollectionDescription>
 
-  </CollectionItem>
+    </CollectionItem>
 
 ## 2022
 
-  <CollectionItem
-    className="maxw-none"
-    variantComponent={
-      <CollectionCalendarDate datetime={'September 22, 2022'} />
-    }
-  >
-    <CollectionHeading headingLevel="h3">
-      New GECAM Notice Types Available
-    </CollectionHeading>
-    <CollectionDescription>
-      GCN now distributes notices from the
-      [GECAM](https://gcn.nasa.gov/missions/gecam) mission. Start streaming
-      GECAM notices using [GCN Classic over Kafka](/quickstart), have them
-      [delivered to your email inbox using self-service email
-      subscriptions](#Self-Service-Configuration-of-Email-Notifications-for-GCN-Notices),
-      or receive them as legacy notices using GCN Classic. To modify GCN Classic
-      subscriptions, please [contact
-      us](/contact?service=gcn-classic).
-    </CollectionDescription>
-  </CollectionItem>
-  <CollectionItem
-    className="maxw-none"
-    variantComponent={<CollectionCalendarDate datetime={'September 2, 2022'} />}
-  >
-    <CollectionHeading headingLevel="h3">
-      Self-Service Configuration of Email Notifications for GCN Notices
-    </CollectionHeading>
-    <CollectionDescription>
-      Have GCN Notices delivered to your email inbox by signing up and managing
-      your subscriptions through this web site. To get started, sign in or sign
-      up and then select "Email Notifications" from the account dropdown menu.
-      Note that signing up here does not affect prior subscriptions on the old
-      web site, https://gcn.gsfc.nasa.gov. To unsubscribe from the old web site,
-      please [contact
-      us](/contact?service=gcn-classic).
-      See [GCN Circular 32517](https://gcn.gsfc.nasa.gov/gcn3/32517.gcn3).
-    </CollectionDescription>
-  </CollectionItem>
-  <CollectionItem
-    className="maxw-none"
-    variantComponent={<CollectionCalendarDate datetime={'August 1, 2022'} />}
-  >
-    <CollectionHeading headingLevel="h3">New GCN Webinars</CollectionHeading>
-    <CollectionDescription>
-      GCN held three public webinars to introduce the new GCN, the GCN Classic
-      over Kafka service, and plans for new features and feedback. See the
-      [slides](https://nasa-gcn.github.io/gcn-presentation/).
-    </CollectionDescription>
-  </CollectionItem>
-  <CollectionItem
-    className="maxw-none"
-    variantComponent={<CollectionCalendarDate datetime={'July 20, 2022'} />}
-  >
-    <CollectionHeading headingLevel="h3">
-      GCN Classic over Kafka Now Available
-    </CollectionHeading>
-    <CollectionDescription>
-      All three classic GCN Notice formats (text, VOEvent, 160-byte binary
-      packet) are now also available over Kafka. This new Kafka streaming
-      service can be used as a drop-in replacement for GCN Classic socket and
-      VOEvent subscribers, with an upcoming release serving email subscribers.
-      See [GCN Circular 32419](https://gcn.gsfc.nasa.gov/gcn3/32419.gcn3).
-    </CollectionDescription>
-  </CollectionItem>
-</Collection>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'September 22, 2022'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        New GECAM Notice Types Available
+      </CollectionHeading>
+      <CollectionDescription>
+        GCN now distributes notices from the
+        [GECAM](https://gcn.nasa.gov/missions/gecam) mission. Start streaming
+        GECAM notices using [GCN Classic over Kafka](/quickstart), have them
+        [delivered to your email inbox using self-service email
+        subscriptions](#Self-Service-Configuration-of-Email-Notifications-for-GCN-Notices),
+        or receive them as legacy notices using GCN Classic. To modify GCN Classic
+        subscriptions, please [contact
+        us](/contact?service=gcn-classic).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={<CollectionCalendarDate datetime={'September 2, 2022'} />}
+    >
+      <CollectionHeading headingLevel="h3">
+        Self-Service Configuration of Email Notifications for GCN Notices
+      </CollectionHeading>
+      <CollectionDescription>
+        Have GCN Notices delivered to your email inbox by signing up and managing
+        your subscriptions through this web site. To get started, sign in or sign
+        up and then select "Email Notifications" from the account dropdown menu.
+        Note that signing up here does not affect prior subscriptions on the old
+        web site, https://gcn.gsfc.nasa.gov. To unsubscribe from the old web site,
+        please [contact
+        us](/contact?service=gcn-classic).
+        See [GCN Circular 32517](https://gcn.gsfc.nasa.gov/gcn3/32517.gcn3).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={<CollectionCalendarDate datetime={'August 1, 2022'} />}
+    >
+      <CollectionHeading headingLevel="h3">New GCN Webinars</CollectionHeading>
+      <CollectionDescription>
+        GCN held three public webinars to introduce the new GCN, the GCN Classic
+        over Kafka service, and plans for new features and feedback. See the
+        [slides](https://nasa-gcn.github.io/gcn-presentation/).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={<CollectionCalendarDate datetime={'July 20, 2022'} />}
+    >
+      <CollectionHeading headingLevel="h3">
+        GCN Classic over Kafka Now Available
+      </CollectionHeading>
+      <CollectionDescription>
+        All three classic GCN Notice formats (text, VOEvent, 160-byte binary
+        packet) are now also available over Kafka. This new Kafka streaming
+        service can be used as a drop-in replacement for GCN Classic socket and
+        VOEvent subscribers, with an upcoming release serving email subscribers.
+        See [GCN Circular 32419](https://gcn.gsfc.nasa.gov/gcn3/32419.gcn3).
+      </CollectionDescription>
+    </CollectionItem>
+
+  </Collection>
+
+</GridContainer>

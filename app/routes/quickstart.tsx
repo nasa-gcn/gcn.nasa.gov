@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { Outlet } from '@remix-run/react'
+import { GridContainer } from '@trussworks/react-uswds'
 
 import { NavStepIndicator } from '~/components/NavStepIndicator'
 
@@ -15,7 +16,7 @@ export const handle = {
 
 export default function () {
   return (
-    <>
+    <GridContainer className="usa-section">
       <h1>Start Streaming GCN Notices</h1>
       <NavStepIndicator
         counters="small"
@@ -28,6 +29,6 @@ export default function () {
         ]}
       />
       <Outlet />
-    </>
+    </GridContainer>
   )
 }

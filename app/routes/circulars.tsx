@@ -5,8 +5,17 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-export { Outlet as default } from 'react-router'
+import { GridContainer } from '@trussworks/react-uswds'
+import { Outlet } from 'react-router'
 
 export const handle = {
   breadcrumb: 'Circulars',
+}
+
+export default function () {
+  return (
+    <GridContainer className="usa-section">
+      <Outlet />
+    </GridContainer>
+  )
 }
