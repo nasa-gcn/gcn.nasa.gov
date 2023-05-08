@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { NavLink, Outlet } from '@remix-run/react'
+import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav } from '~/components/SideNav'
 
@@ -13,7 +14,7 @@ export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
 export default function () {
   return (
-    <>
+    <GridContainer className="usa-section">
       <div className="grid-row grid-gap">
         <div className="desktop:grid-col-3">
           <SideNav
@@ -40,6 +41,6 @@ export default function () {
           <Outlet />
         </div>
       </div>
-    </>
+    </GridContainer>
   )
 }

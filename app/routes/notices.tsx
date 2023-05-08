@@ -4,6 +4,7 @@ import {
   CardFooter,
   CardGroup,
   CardHeader,
+  GridContainer,
   Icon,
   Tag,
 } from '@trussworks/react-uswds'
@@ -98,7 +99,7 @@ export default function () {
   const tagNames = tags.map(({ label }) => label)
 
   return (
-    <>
+    <GridContainer className="usa-section">
       <h1>GCN Notices</h1>
       <p className="usa-paragraph">
         GCN Notices are real-time, machine-readable alerts that are submitted by
@@ -429,6 +430,6 @@ export default function () {
           Status of the CGRO spacecraft.
         </NoticeCard>
       </CardGroup>
-    </>
+    </GridContainer>
   )
 }

@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { Link, NavLink, Outlet } from '@remix-run/react'
+import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
 
@@ -15,87 +16,92 @@ export const handle = {
 
 export default function () {
   return (
-    <div className="grid-row grid-gap">
-      <div className="desktop:grid-col-3">
-        <SideNav
-          items={[
-            <NavLink key="." to="." end>
-              About GCN
-            </NavLink>,
-            <NavLink key="client" to="client">
-              Kafka Client Setup
-            </NavLink>,
-            <>
-              <NavLink key="circulars" to="circulars" end>
-                Circulars
-              </NavLink>
-              <SideNavSub
-                base="circulars"
-                items={[
-                  <NavLink key="subscribing" to="circulars/subscribing">
-                    Subscribing
-                  </NavLink>,
-                  <NavLink key="submitting" to="circulars/submitting">
-                    Submitting
-                  </NavLink>,
-                  <NavLink key="styleguide" to="circulars/styleguide">
-                    Style Guide
-                  </NavLink>,
-                  <NavLink key="archive" to="circulars/archive">
-                    Archive
-                  </NavLink>,
-                ]}
-              />
-            </>,
-            <>
-              <NavLink key="contributing" to="contributing">
-                Contributing
-              </NavLink>
-              <SideNavSub
-                base="contributing"
-                key="contributing-sub"
-                items={[
-                  <NavLink key="index" to="contributing" end>
-                    Getting Started
-                  </NavLink>,
-                  <NavLink key="feature-flags" to="contributing/feature-flags">
-                    Feature Flags
-                  </NavLink>,
-                ]}
-              />
-            </>,
-            <NavLink key="producers" to="producers">
-              New Notice Producers
-            </NavLink>,
-            <NavLink key="roadmap" to="roadmap">
-              Road Map
-            </NavLink>,
-            <>
-              <NavLink key="faq" to="faq">
-                Frequently Asked Questions
-              </NavLink>
-              <SideNavSub
-                base="faq"
-                key="faq-sub"
-                items={[
-                  <Link key="kafka" to="faq#kafka">
-                    Kafka
-                  </Link>,
-                  <Link key="circulars" to="faq#circulars">
-                    Circulars
-                  </Link>,
-                  <Link key="accounts" to="faq#accounts">
-                    Accounts
-                  </Link>,
-                ]}
-              />
-            </>,
-          ]}
-        />
+    <GridContainer className="usa-section">
+      <div className="grid-row grid-gap">
+        <div className="desktop:grid-col-3">
+          <SideNav
+            items={[
+              <NavLink key="." to="." end>
+                About GCN
+              </NavLink>,
+              <NavLink key="client" to="client">
+                Kafka Client Setup
+              </NavLink>,
+              <>
+                <NavLink key="circulars" to="circulars" end>
+                  Circulars
+                </NavLink>
+                <SideNavSub
+                  base="circulars"
+                  items={[
+                    <NavLink key="subscribing" to="circulars/subscribing">
+                      Subscribing
+                    </NavLink>,
+                    <NavLink key="submitting" to="circulars/submitting">
+                      Submitting
+                    </NavLink>,
+                    <NavLink key="styleguide" to="circulars/styleguide">
+                      Style Guide
+                    </NavLink>,
+                    <NavLink key="archive" to="circulars/archive">
+                      Archive
+                    </NavLink>,
+                  ]}
+                />
+              </>,
+              <>
+                <NavLink key="contributing" to="contributing">
+                  Contributing
+                </NavLink>
+                <SideNavSub
+                  base="contributing"
+                  key="contributing-sub"
+                  items={[
+                    <NavLink key="index" to="contributing" end>
+                      Getting Started
+                    </NavLink>,
+                    <NavLink
+                      key="feature-flags"
+                      to="contributing/feature-flags"
+                    >
+                      Feature Flags
+                    </NavLink>,
+                  ]}
+                />
+              </>,
+              <NavLink key="producers" to="producers">
+                New Notice Producers
+              </NavLink>,
+              <NavLink key="roadmap" to="roadmap">
+                Road Map
+              </NavLink>,
+              <>
+                <NavLink key="faq" to="faq">
+                  Frequently Asked Questions
+                </NavLink>
+                <SideNavSub
+                  base="faq"
+                  key="faq-sub"
+                  items={[
+                    <Link key="kafka" to="faq#kafka">
+                      Kafka
+                    </Link>,
+                    <Link key="circulars" to="faq#circulars">
+                      Circulars
+                    </Link>,
+                    <Link key="accounts" to="faq#accounts">
+                      Accounts
+                    </Link>,
+                  ]}
+                />
+              </>,
+            ]}
+          />
+        </div>
+        <div className="desktop:grid-col-9">
+          <Outlet />
+        </div>
       </div>
-      <div className="desktop:grid-col-9">
-        <Outlet />
-      </div>
-    </div>
+    </GridContainer>
   )
 }

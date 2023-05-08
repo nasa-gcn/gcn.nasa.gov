@@ -223,9 +223,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner message="GCN Circulars are now part of the new GCN!" />
-        <main className="usa-section" id="main-content">
-          <GridContainer>{children}</GridContainer>
-        </main>
+        <main id="main-content">{children}</main>
         <Footer />
         <ScrollRestoration />
         <Scripts />
@@ -238,13 +236,15 @@ function Document({ children }: { children?: React.ReactNode }) {
 function ErrorUnexpected({ children }: { children?: ReactNode }) {
   return (
     <Document>
-      <h1>Unexpected error {children}</h1>
-      <p className="usa-intro">An unexpected error occurred.</p>
-      <ButtonGroup>
-        <Link to="/" className="usa-button">
-          Go home
-        </Link>
-      </ButtonGroup>
+      <GridContainer className="usa-content">
+        <h1>Unexpected error {children}</h1>
+        <p className="usa-intro">An unexpected error occurred.</p>
+        <ButtonGroup>
+          <Link to="/" className="usa-button">
+            Go home
+          </Link>
+        </ButtonGroup>
+      </GridContainer>
     </Document>
   )
 }
@@ -253,22 +253,24 @@ function ErrorUnauthorized() {
   const url = useUrl()
   return (
     <Document>
-      <h1>Unauthorized</h1>
-      <p className="usa-intro">
-        We're sorry, you must log in to access the page you're looking for.
-      </p>
-      <p className="usa-paragraph">Log in to access that page, or go home.</p>
-      <ButtonGroup>
-        <Link
-          to={`/login?redirect=${encodeURIComponent(url)}`}
-          className="usa-button"
-        >
-          Log in and take me there
-        </Link>
-        <Link to="/" className="usa-button usa-button--outline">
-          Go home
-        </Link>
-      </ButtonGroup>
+      <GridContainer className="usa-content">
+        <h1>Unauthorized</h1>
+        <p className="usa-intro">
+          We're sorry, you must log in to access the page you're looking for.
+        </p>
+        <p className="usa-paragraph">Log in to access that page, or go home.</p>
+        <ButtonGroup>
+          <Link
+            to={`/login?redirect=${encodeURIComponent(url)}`}
+            className="usa-button"
+          >
+            Log in and take me there
+          </Link>
+          <Link to="/" className="usa-button usa-button--outline">
+            Go home
+          </Link>
+        </ButtonGroup>
+      </GridContainer>
     </Document>
   )
 }
@@ -276,23 +278,25 @@ function ErrorUnauthorized() {
 function ErrorNotFound() {
   return (
     <Document>
-      <h1>Page not found</h1>
-      <p className="usa-intro">
-        We're sorry, we can't find the page you're looking for. It might have
-        been removed, changed its name, or is otherwise unavailable.
-      </p>
-      <p className="usa-paragraph">
-        Visit our homepage for helpful tools and resources, or contact us and
-        we'll point you in the right direction.
-      </p>
-      <ButtonGroup>
-        <Link to="/" className="usa-button">
-          Visit homepage
-        </Link>
-        <Link to="/contact" className="usa-button usa-button--outline">
-          Contact us
-        </Link>
-      </ButtonGroup>
+      <GridContainer className="usa-content">
+        <h1>Page not found</h1>
+        <p className="usa-intro">
+          We're sorry, we can't find the page you're looking for. It might have
+          been removed, changed its name, or is otherwise unavailable.
+        </p>
+        <p className="usa-paragraph">
+          Visit our homepage for helpful tools and resources, or contact us and
+          we'll point you in the right direction.
+        </p>
+        <ButtonGroup>
+          <Link to="/" className="usa-button">
+            Visit homepage
+          </Link>
+          <Link to="/contact" className="usa-button usa-button--outline">
+            Contact us
+          </Link>
+        </ButtonGroup>
+      </GridContainer>
     </Document>
   )
 }

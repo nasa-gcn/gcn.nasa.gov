@@ -10,6 +10,7 @@ import { Form, Link, useActionData } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
+  GridContainer,
   Label,
   TextInput,
   Textarea,
@@ -59,7 +60,7 @@ export default function () {
   const submitted = useActionData<typeof action>()
 
   return (
-    <>
+    <GridContainer className="usa-section">
       <h1>Contact Us</h1>
       {submitted ? (
         <>
@@ -133,6 +134,6 @@ export default function () {
           </ButtonGroup>
         </Form>
       )}
-    </>
+    </GridContainer>
   )
 }
