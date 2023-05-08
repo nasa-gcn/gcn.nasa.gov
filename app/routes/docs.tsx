@@ -86,6 +86,9 @@ export default function () {
                   ]}
                 />
               </>,
+              <NavLink key="schema-browser" to="/schema-browser">
+                Schema-Browser
+              </NavLink>,
               <NavLink key="history" to="history">
                 History
               </NavLink>,

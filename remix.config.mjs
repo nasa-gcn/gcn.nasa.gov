@@ -41,7 +41,7 @@ export const server = './server.js'
 export const serverBuildPath = 'build/server/index.js'
 export const serverMinify = isProduction
 export const serverDependenciesToBundle = isProduction
-  ? [/^(?!@?aws-sdk\/)/]
+  ? [/^(?!@?aws-sdk\/)/, /^(@nasa-gcn\/schema\/)/]
   : undefined
 export const future = {
   v2_meta: true,
