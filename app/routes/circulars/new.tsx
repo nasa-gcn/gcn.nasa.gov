@@ -28,6 +28,10 @@ import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
 import { useUrl } from '~/root'
 
+export const handle = {
+  breadcrumb: 'New',
+}
+
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   let isAuthenticated, isAuthorized, formattedAuthor

@@ -190,7 +190,11 @@ export function useHostname() {
 
 function Title() {
   const title = useMatches()
-    .map(({ handle }) => handle?.breadcrumb)
+    .map((match) => {
+      let breadcrumb = match.handle?.breadcrumb
+      if (typeof breadcrumb === 'function') breadcrumb = breadcrumb(match)
+      return breadcrumb
+    })
     .filter(Boolean)
     .join(' - ')
   return <title>{title}</title>
