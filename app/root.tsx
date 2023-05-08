@@ -218,7 +218,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         <GovBanner />
         <DevBanner />
         <Header />
-        <NewsBanner message="GCN Classic outage due to local network maintenance - May 6 12:00-19:00 UTC." />
+        <NewsBanner message="GCN Circulars are now part of the new GCN!" />
         <main className="usa-section" id="main-content">
           <GridContainer>{children}</GridContainer>
         </main>
