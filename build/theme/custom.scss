@@ -468,11 +468,44 @@ input.react-tags__combobox-input:focus {
  Hero formatting
 */
 
-.hero-image-right {
-  object-fit: scale-down;
+.gcn-hero-background {
+  background-image: none;
+
+  @include at-media('tablet-lg') {
+    background-image: url('../../img/hero/center.jpg'),
+      url('../../img/hero/left.jpg');
+    background-repeat: no-repeat, repeat-x;
+    background-size: auto 100%;
+    background-position-x: right;
+    background-position-y: top;
+    background-origin: padding-box;
+    padding-left: calc(0.5 * (100vw - units($theme-grid-container-max-width)));
+    box-sizing: content-box;
+    max-width: units($theme-grid-container-max-width);
+  }
 }
-h1.usa-hero__heading > p {
-  margin-top: 0;
+
+.usa-hero__callout {
+  @include at-media('tablet-lg') {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+.gcn-hero-background-right {
+  @include at-media('tablet-lg') {
+    background-image: url('../../img/hero/right.jpg');
+    background-repeat: repeat-x;
+    background-size: auto 100%;
+    background-position-x: left;
+    background-position-y: top;
+  }
+}
+
+.gcn-hero-image {
+  @include at-media('tablet-lg') {
+    display: none;
+  }
 }
 
 /*
