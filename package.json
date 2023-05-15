@@ -93,7 +93,7 @@
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-jest": "^27.2.1",
     "generate-password": "^1.7.0",
-    "glob": "^10.1.0",
+    "glob": "^10.2.4",
     "gulp": "^4.0.2",
     "gulp-postcss": "^9.0.1",
     "gulp-replace": "^1.1.4",
