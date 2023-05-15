@@ -110,6 +110,5 @@ missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platf
 sendEmailPermissions  # Grant the Lambda function permission to send email.
 emailIncoming  # Enable notifications from SES to SNS to trigger email-incoming Lambda
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
-nasa-gcn/architect-plugin-tracing  # Enable AWS X-Ray distributed tracing
 architect/plugin-lambda-invoker
 architect/plugin-storage-private
