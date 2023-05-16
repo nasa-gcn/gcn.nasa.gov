@@ -57,6 +57,7 @@
     "react-router": "^6.10.0",
     "react-tag-autocomplete": "^7.0.0-rc.1",
     "react-topbar-progress-indicator": "^4.1.1",
+    "remix-utils": "github:lpsinger/remix-utils#route-data-moved-npm-prepare",
     "spin-delay": "^1.1.0",
     "ts-dedent": "^2.2.0"
   },
