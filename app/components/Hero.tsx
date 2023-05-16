@@ -42,7 +42,14 @@ export function Hero() {
           tablet={{ col: 6 }}
           className="gcn-hero-image display-inline-block tablet:padding-x-2 text-middle"
         >
-          <img src={center_cropped} alt="GCN diagram" />
+          <img
+            src={center_cropped}
+            alt="GCN diagram"
+            width="1280"
+            height="900"
+            loading="lazy"
+            style={{ height: 'auto' }}
+          />
         </Grid>
       </div>
       <Grid col className="gcn-hero-background-right" />
