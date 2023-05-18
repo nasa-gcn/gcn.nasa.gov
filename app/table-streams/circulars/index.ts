@@ -16,7 +16,7 @@ import type {
   AttributeValue as LambdaTriggerAttributeValue,
 } from 'aws-lambda'
 
-import { sendEmailBcc } from '~/lib/email.server'
+import { sendEmailBulk } from '~/lib/email.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import { search as getSearchClient } from '~/lib/search.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
@@ -95,7 +95,7 @@ async function send(circular: Circular) {
     getLegacyEmails(),
   ])
   const to = [...emails, ...legacyEmails]
-  await sendEmailBcc({
+  await sendEmailBulk({
     fromName,
     to,
     subject: circular.subject,

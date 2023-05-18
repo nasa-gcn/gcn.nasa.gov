@@ -5,7 +5,13 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { SendEmailCommandInput } from '@aws-sdk/client-sesv2'
+import { services } from '@architect/functions'
+import type {
+  BulkEmailEntry,
+  SendBulkEmailCommandInput,
+  SendEmailCommandInput,
+} from '@aws-sdk/client-sesv2'
+import { SendBulkEmailCommand } from '@aws-sdk/client-sesv2'
 import {
   SESv2Client,
   SESv2ServiceException,
@@ -37,12 +43,7 @@ interface MessageProps extends BaseMessageProps {
   to: string[]
 }
 
-function getBaseMessage({
-  fromName,
-  replyTo,
-  subject,
-  body,
-}: BaseMessageProps): Omit<SendEmailCommandInput, 'Destination'> {
+function getBody(body: string) {
   if (hostname !== 'gcn.nasa.gov') {
     const { heading, description } = getEnvBannerHeaderAndDescription(hostname)
     body =
@@ -50,22 +51,11 @@ function getBaseMessage({
 
 ` + body
   }
-  return {
-    FromEmailAddress: `${fromName} <no-reply@${hostname}>`,
-    ReplyToAddresses: replyTo,
-    Content: {
-      Simple: {
-        Subject: {
-          Data: subject,
-        },
-        Body: {
-          Text: {
-            Data: body,
-          },
-        },
-      },
-    },
-  }
+  return body
+}
+
+function getFrom(fromName: string) {
+  return `${fromName} <no-reply@${hostname}>`
 }
 
 async function send(sendCommandInput: SendEmailCommandInput) {
@@ -87,25 +77,65 @@ async function send(sendCommandInput: SendEmailCommandInput) {
   }
 }
 
-/** Send an email to many Bcc: recipients. */
-export async function sendEmailBcc({ to, ...props }: MessageProps) {
-  const message = getBaseMessage(props)
+/** Send an email to many recipients in parallel. */
+export async function sendEmailBulk({
+  to,
+  fromName,
+  replyTo,
+  subject,
+  body,
+}: MessageProps) {
+  const s = await services()
+  const message: Omit<SendBulkEmailCommandInput, 'BulkEmailEntries'> = {
+    FromEmailAddress: getFrom(fromName),
+    ReplyToAddresses: replyTo,
+    DefaultContent: {
+      Template: {
+        TemplateData: JSON.stringify({
+          subject,
+          body: getBody(body),
+        }),
+        TemplateName: s.emailOutgoing.template,
+      },
+    },
+  }
   await Promise.all(
-    chunk(to, maxRecipientsPerMessage).map(async (BccAddresses) => {
-      await send({
-        Destination: { BccAddresses },
-        ...message,
-      })
+    chunk(to, maxRecipientsPerMessage).map(async (addresses) => {
+      const BulkEmailEntries: BulkEmailEntry[] = addresses.map((address) => ({
+        Destination: { ToAddresses: [address] },
+      }))
+      await client.send(
+        new SendBulkEmailCommand({ BulkEmailEntries, ...message })
+      )
     })
   )
 }
 
 /** Send an email to one To: recipient. */
-export async function sendEmail({ to, ...props }: MessageProps) {
+export async function sendEmail({
+  to,
+  fromName,
+  replyTo,
+  subject,
+  body,
+}: MessageProps) {
   await send({
     Destination: {
       ToAddresses: to,
     },
-    ...getBaseMessage(props),
+    FromEmailAddress: getFrom(fromName),
+    ReplyToAddresses: replyTo,
+    Content: {
+      Simple: {
+        Subject: {
+          Data: subject,
+        },
+        Body: {
+          Text: {
+            Data: getBody(body),
+          },
+        },
+      },
+    },
   })
 }
