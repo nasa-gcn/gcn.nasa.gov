@@ -397,7 +397,7 @@ export function ClientSampleCode({
           following command:
           <Highlight
             language="sh"
-            code="gcc $(pkg-config --cflags libcrypto) example.c $(pkg-config --libs libcrypto) -lrdkafka"
+            code="gcc $(pkg-config --cflags libcrypto rdkafka) example.c $(pkg-config --libs libcrypto rdkafka)"
           />
           Run the program. On Linux or macOS, run the following command:
           <Highlight language="sh" code="./a.out" />
