@@ -9,6 +9,7 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
+import { useFeature } from '~/root'
 
 export const handle = {
   breadcrumb: 'Documentation',
@@ -69,9 +70,28 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="producers" to="producers">
-                New Notice Producers
-              </NavLink>,
+              useFeature('SCHEMA') ? (
+                <>
+                  <NavLink key="producers" to="producers">
+                    New Notice Producers
+                  </NavLink>
+                  <SideNavSub
+                    base="producers"
+                    items={[
+                      <NavLink
+                        key="schema-documentation"
+                        to="producers/schema-documentation"
+                      >
+                        Schema Design
+                      </NavLink>,
+                    ]}
+                  />
+                </>
+              ) : (
+                <NavLink key="producers" to="producers">
+                  New Notice Producers
+                </NavLink>
+              ),
               <NavLink key="roadmap" to="roadmap">
                 Road Map
               </NavLink>,
