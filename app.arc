@@ -10,7 +10,7 @@ remix-gcn
 email-incoming
   src build/events/email-incoming
 
-@table-streams
+@tables-streams
 circulars
   src build/table-streams/circulars
 
@@ -79,15 +79,21 @@ circulars
 
 circulars_subscriptions
   sub *String
-  email **String
   name circularsSubscriptionsBySub
+
+legacy_users
+  receive *Number
+  name legacyReceivers
 
 @aws
 runtime nodejs18.x
 region us-east-1
 architecture arm64
 memory 256
-tracing true
+timeout 10
+
+@storage-private
+email-incoming
 
 @search
 instanceType t3.small.search
@@ -101,8 +107,8 @@ sandboxOidcIdp  # Sandbox identity provider
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
 lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
 missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
-sendEmailPermissions  # Grant the Lambda function permission to send email.
-emailIncoming  # // Enable notifications from SES to SNS to trigger email-incoming Lambda
+emailOutgoing  # Grant the Lambda function permission to send email; add email templates.
+emailIncoming  # Enable notifications from SES to SNS to trigger email-incoming Lambda
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
-nasa-gcn/architect-plugin-tracing  # Enable AWS X-Ray distributed tracing
 architect/plugin-lambda-invoker
+architect/plugin-storage-private

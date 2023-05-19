@@ -4,6 +4,7 @@ import {
   CardFooter,
   CardGroup,
   CardHeader,
+  GridContainer,
   Icon,
   Tag,
 } from '@trussworks/react-uswds'
@@ -98,7 +99,7 @@ export default function () {
   const tagNames = tags.map(({ label }) => label)
 
   return (
-    <>
+    <GridContainer className="usa-section">
       <h1>GCN Notices</h1>
       <p className="usa-paragraph">
         GCN Notices are real-time, machine-readable alerts that are submitted by
@@ -184,12 +185,20 @@ export default function () {
           X-ray transients detected by the MAXI instrument on the ISS.
         </NoticeCard>
         <NoticeCard
-          name="Fermi GBM"
+          name="Fermi GRBs"
           href="https://gcn.gsfc.nasa.gov/fermi_grbs.html"
           tags={['gamma']}
           selectedTags={tagNames}
         >
-          GRBs detected by the GBM instrument on Fermi.
+          GRBs detected by the GBM and LAT instruments on Fermi.
+        </NoticeCard>
+        <NoticeCard
+          name="Fermi GBM Sub-Threshold"
+          href="https://gcn.gsfc.nasa.gov/fermi_gbm_subthresh_archive.html"
+          tags={['gamma']}
+          selectedTags={tagNames}
+        >
+          Sub-threshold triggers detected by the GBM instrument on Fermi.
         </NoticeCard>
         <NoticeCard
           name="Fermi LAT"
@@ -197,7 +206,8 @@ export default function () {
           tags={['gamma']}
           selectedTags={tagNames}
         >
-          Non-GRB gamma-ray transients detected by the LAT instrument on Fermi.
+          Gamma-ray transient and variable sources detected by the LAT
+          instrument on Fermi.
         </NoticeCard>
         <NoticeCard
           name="Swift GRBs"
@@ -420,6 +430,6 @@ export default function () {
           Status of the CGRO spacecraft.
         </NoticeCard>
       </CardGroup>
-    </>
+    </GridContainer>
   )
 }

@@ -25,6 +25,7 @@ export default function CredentialCard({
   name,
   client_id,
   created,
+  scope,
 }: RedactedClientCredential) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
@@ -34,9 +35,16 @@ export default function CredentialCard({
       <Grid row style={disabled ? { opacity: '50%' } : undefined}>
         <div className="tablet:grid-col flex-fill">
           <div>
-            <strong>{name}</strong>{' '}
-            <small className="text-base">
-              (created <TimeAgo time={created} />)
+            <small>
+              <strong>{name}</strong>{' '}
+              <span>
+                (created <TimeAgo time={created} />)
+              </span>
+            </small>
+          </div>
+          <div>
+            <small>
+              scope: <code>{scope}</code>
             </small>
           </div>
           <div>
@@ -45,7 +53,7 @@ export default function CredentialCard({
             </small>
           </div>
         </div>
-        <div className="tablet:grid-col flex-auto">
+        <div className="tablet:grid-col flex-auto margin-y-auto">
           <ModalToggleButton
             opener
             disabled={disabled}
@@ -57,7 +65,7 @@ export default function CredentialCard({
             Delete
           </ModalToggleButton>
           <Form
-            method="get"
+            method="GET"
             action="/quickstart/alerts"
             className="display-inline"
           >
@@ -76,7 +84,7 @@ export default function CredentialCard({
         aria-describedby="modal-delete-description"
         renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
       >
-        <fetcher.Form method="post">
+        <fetcher.Form method="POST">
           <input type="hidden" name="intent" value="delete" />
           <input type="hidden" name="clientId" value={client_id} />
           <ModalHeading id="modal-delete-heading">

@@ -5,14 +5,25 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { DataFunctionArgs, SerializeFrom } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { Grid } from '@trussworks/react-uswds'
+import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
+import { formatDateISO } from './circulars.lib'
 import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
-import { publicStaticCacheControlHeaders } from '~/lib/utils'
+import { publicStaticCacheControlHeaders } from '~/lib/headers.server'
+
+export const handle = {
+  breadcrumb({
+    data: { circularId, subject },
+  }: {
+    data: SerializeFrom<typeof loader>
+  }) {
+    return `${circularId}: ${subject}`
+  },
+}
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
@@ -28,34 +39,55 @@ export default function () {
     useLoaderData<typeof loader>()
   return (
     <>
-      <Link to="/circulars">back to archive</Link>
+      <ButtonGroup>
+        <Link to="/circulars" className="usa-button">
+          <div className="position-relative">
+            <Icon.ArrowBack className="position-absolute top-0 left-0" />
+          </div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+        </Link>
+        <ButtonGroup type="segmented">
+          <Link
+            to="raw"
+            className="usa-button usa-button--outline"
+            reloadDocument
+          >
+            Raw
+          </Link>
+          <Link
+            to="json"
+            className="usa-button usa-button--outline"
+            reloadDocument
+          >
+            JSON
+          </Link>
+        </ButtonGroup>
+      </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
-      <p className="usa-paragraph">
-        <Grid row>
-          <Grid col={1}>
-            <b>Subject</b>
-          </Grid>
-          <Grid col="fill">{subject}</Grid>
+      <Grid row>
+        <Grid tablet={{ col: 1 }}>
+          <b>Subject</b>
         </Grid>
-        <Grid row>
-          <Grid col={1}>
-            <b>Date</b>
-          </Grid>
-          <Grid col="fill">
-            {new Date(createdOn).toISOString()}{' '}
-            <small className="text-base-light">
-              (<TimeAgo time={createdOn}></TimeAgo>)
-            </small>
-          </Grid>
+        <Grid col="fill">{subject}</Grid>
+      </Grid>
+      <Grid row>
+        <Grid tablet={{ col: 1 }}>
+          <b>Date</b>
         </Grid>
-        <Grid row>
-          <Grid col={1}>
-            <b>From</b>
-          </Grid>
-          <Grid col="fill">{submitter}</Grid>
+        <Grid col="fill">
+          {formatDateISO(createdOn)}{' '}
+          <small className="text-base-light">
+            (<TimeAgo time={createdOn}></TimeAgo>)
+          </small>
         </Grid>
-      </p>
-      <div className="text-pre-wrap">{body}</div>
+      </Grid>
+      <Grid row>
+        <Grid tablet={{ col: 1 }}>
+          <b>From</b>
+        </Grid>
+        <Grid col="fill">{submitter}</Grid>
+      </Grid>
+      <div className="text-pre-wrap margin-top-2">{body}</div>
     </>
   )
 }

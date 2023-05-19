@@ -81,7 +81,7 @@ export default function () {
           />
         </Tab>
       </Tabs>
-      <Form method="get" action="../alerts">
+      <Form method="GET" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
         <Button type="submit" className="usa-button--outline">
           Back

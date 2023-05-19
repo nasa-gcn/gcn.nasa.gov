@@ -16,31 +16,14 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import ReCAPTCHA from 'react-google-recaptcha'
 
-import { getEnvOrDieInProduction } from '~/lib/env.server'
+import { ReCAPTCHA, verifyRecaptcha } from './ReCAPTCHA'
 import { getFormDataString } from '~/lib/utils'
+import { useRecaptchaSiteKey } from '~/root'
 import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
 
 export async function loader(args: DataFunctionArgs) {
   return await handleCredentialLoader(args)
-}
-
-export async function verifyRecaptcha(response?: string) {
-  const secret = getEnvOrDieInProduction('RECAPTCHA_SITE_SECRET')
-  if (!secret) return
-
-  const params = new URLSearchParams()
-  if (response) {
-    params.set('response', response)
-  }
-  params.set('secret', secret)
-  const verifyResponse = await fetch(
-    'https://www.google.com/recaptcha/api/siteverify',
-    { method: 'POST', body: params }
-  )
-  const { success } = await verifyResponse.json()
-  if (!success) throw new Response('ReCAPTCHA was invalid', { status: 400 })
 }
 
 export async function handleCredentialActions(
@@ -86,17 +69,16 @@ export async function handleCredentialLoader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
   const groups = await machine.getGroupDescriptions()
-  const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
-  return { client_credentials, recaptchaSiteKey, groups }
+  return { client_credentials, groups }
 }
 
 export function NewCredentialForm() {
-  const { groups, recaptchaSiteKey } = useLoaderData<typeof loader>()
-  const [recaptchaValid, setRecaptchaValid] = useState(!recaptchaSiteKey)
+  const { groups } = useLoaderData<typeof loader>()
+  const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
   const [nameValid, setNameValid] = useState(false)
 
   return (
-    <Form method="post">
+    <Form method="POST">
       <input type="hidden" name="intent" value="create" />
       <p className="usa-paragraph">
         Choose a name for your new client credential.
@@ -129,21 +111,11 @@ export function NewCredentialForm() {
           />
         ))}
       </Fieldset>
-      {recaptchaSiteKey ? (
-        <p className="usa-paragraph">
-          <ReCAPTCHA
-            sitekey={recaptchaSiteKey}
-            onChange={(value) => {
-              setRecaptchaValid(!!value)
-            }}
-          />
-        </p>
-      ) : (
-        <p className="text-base">
-          You are working in a development environment, the ReCaptcha is
-          currently hidden
-        </p>
-      )}
+      <ReCAPTCHA
+        onChange={(value) => {
+          setRecaptchaValid(!!value)
+        }}
+      />
       <Link to=".." type="button" className="usa-button usa-button--outline">
         Back
       </Link>

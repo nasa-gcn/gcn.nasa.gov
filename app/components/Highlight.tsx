@@ -30,7 +30,7 @@ export function Highlight({
 
   return (
     <div className="position-relative">
-      <div className="position-absolute pin-right pin-top">
+      <div className="pin-right pin-top">
         {filename && (
           <Tooltip
             position="top"

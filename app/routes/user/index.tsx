@@ -81,7 +81,7 @@ export default function () {
         You signed in with {idp || 'username and password'}.
       </p>
       <h2>Profile</h2>
-      <fetcher.Form method="post" onSubmit={() => setDirty(false)}>
+      <fetcher.Form method="POST" onSubmit={() => setDirty(false)}>
         <p className="usa-paragraph">
           Your profile affects how your name appears in GCN Circulars that you
           submit.

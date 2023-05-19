@@ -13,9 +13,27 @@ import virgo_logo from '~/img/virgo-logo.png'
   align="right"
   className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3"
 >
-  <img src={lsc_logo} alt="LIGO logo" />
-  <img src={virgo_logo} alt="Virgo logo" />
-  <img src={kagra_logo} alt="KAGRA logo" />
+  <img
+    src={lsc_logo}
+    width="373"
+    height="72"
+    className="height-auto"
+    alt="LIGO logo"
+  />
+  <img
+    src={virgo_logo}
+    width="373"
+    height="72"
+    className="height-auto"
+    alt="Virgo logo"
+  />
+  <img
+    src={kagra_logo}
+    width="6386"
+    height="2641"
+    className="height-auto"
+    alt="KAGRA logo"
+  />
 </div>
 
 **Planned Lifetime:** 2028+
@@ -49,12 +67,13 @@ LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network
 
 <div className="overflow-table">
 
-| Type              | Contents                                                                                      | Latency      |
-| ----------------- | --------------------------------------------------------------------------------------------- | ------------ |
-| `LVC_PRELIMINARY` | First Notice, Timestamp Alert, location probability sky map; all automated processing.        | 1–10 minutes |
-| `LVC_INITIAL`     | Improved SkyMap now available (human-involved procesing).                                     | 4–24 hours   |
-| `LVC_UPDATE`      | Ultimate refined skymap (more detailed off-line processing).                                  | ~1–7 days    |
-| `LVC_RETRACTION`  | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 hour–1 day |
+| Type                | Contents                                                                                      | Latency      |
+| ------------------- | --------------------------------------------------------------------------------------------- | ------------ |
+| `LVC_EARLY_WARNING` | A pre-merger alert.                                                                           | -1-0 minutes |
+| `LVC_PRELIMINARY`   | First Notice, Timestamp Alert, location probability sky map; all automated processing.        | 1–10 minutes |
+| `LVC_INITIAL`       | Improved SkyMap now available (human-involved procesing).                                     | 4–24 hours   |
+| `LVC_UPDATE`        | Ultimate refined skymap (more detailed off-line processing).                                  | ~1–7 days    |
+| `LVC_RETRACTION`    | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 hour–1 day |
 
 </div>
 

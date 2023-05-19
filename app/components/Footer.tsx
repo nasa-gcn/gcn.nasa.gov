@@ -5,6 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import { Link } from '@remix-run/react'
+import type { RemixLinkProps } from '@remix-run/react/dist/components'
 import {
   Grid,
   GridContainer,
@@ -26,14 +28,13 @@ import logo from '~/img/logo.svg'
 function ContactLink({
   children,
   headline,
-  href,
   icon,
+  ...props
 }: {
-  children: ReactNode
   headline: ReactNode
-  href: string
   icon: ReactNode
-}) {
+} & RemixLinkProps &
+  React.RefAttributes<HTMLAnchorElement>) {
   return (
     <Grid
       tablet={{ col: true }}
@@ -46,7 +47,7 @@ function ContactLink({
         <div className="usa-media-block_body">
           {headline}{' '}
           <div className="display-block tablet:display-inline">
-            <a href={href}>{children}</a>.
+            <Link {...props}>{children}</Link>.
           </div>
         </div>
       </div>
@@ -61,21 +62,21 @@ export function Footer() {
         <GridContainer>
           <Grid row gap>
             <ContactLink
-              href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn"
+              to="/contact"
               icon={<Icon.Help size={4} color={'white'} />}
               headline="Questions or comments?"
             >
               Contact GCN directly
             </ContactLink>
             <ContactLink
-              href="https://github.com/nasa-gcn/gcn.nasa.gov/issues"
+              to="https://github.com/nasa-gcn/gcn.nasa.gov/issues"
               icon={<Icon.BugReport size={4} color={'white'} />}
               headline="Have you found a bug in GCN?"
             >
               Open an issue
             </ContactLink>
             <ContactLink
-              href="https://github.com/nasa-gcn/gcn.nasa.gov"
+              to="https://github.com/nasa-gcn/gcn.nasa.gov"
               icon={<Icon.Github size={4} color={'white'} />}
               headline="Want to contribute code to GCN?"
             >

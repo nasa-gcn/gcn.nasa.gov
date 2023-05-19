@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
 import {
   Form,
   Link,
+  useActionData,
   useLoaderData,
   useSearchParams,
   useSubmit,
@@ -25,7 +25,6 @@ import classNames from 'classnames'
 import { useState } from 'react'
 
 import { put, search } from './circulars.server'
-import { feature } from '~/lib/env.server'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
@@ -34,8 +33,6 @@ import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 const limit = 100
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
-  if (!feature('circulars')) throw redirect('/circulars/classic')
-
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   const page = parseInt(searchParams.get('page') || '1')
@@ -49,8 +46,7 @@ export async function action({ request }: DataFunctionArgs) {
   const subject = getFormDataString(data, 'subject')
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
-  await put(subject, body, request)
-  return null
+  return await put(subject, body, request)
 }
 
 function getPageLink(page: number, query?: string) {
@@ -144,7 +140,11 @@ function Pagination({
 }
 
 export default function () {
+  const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
+
+  // Concatenate items from the action and loader functions
+  const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
@@ -158,35 +158,43 @@ export default function () {
     <>
       <h1>GCN Circulars</h1>
       <p className="usa-paragraph">
-        GCN Circulars are rapid astronomical bulletins submitted by and
-        distributed to community members worldwide. For more information, see{' '}
-        <Link to="">docs</Link>
+        <b>
+          GCN Circulars are rapid astronomical bulletins submitted by and
+          distributed to community members worldwide.
+        </b>{' '}
+        They are used to share discoveries, observations, quantitative near-term
+        predictions, requests for follow-up observations, or future observing
+        plans related to high-energy, multi-messenger, and variable or transient
+        astrophysical events. See the{' '}
+        <Link to="/docs/circulars">documentation</Link> for help with
+        subscribing to or submitting Circulars.
       </p>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
-        <div className="usa-search display-inline-block">
-          <Form className="usa-search usa-search--small" role="search">
-            <Label srOnly={true} htmlFor="query">
-              Search
-            </Label>
-            <TextInput
-              id="query"
-              name="query"
-              type="search"
-              defaultValue={query}
-              onChange={({ target: { form, value } }) => {
-                setInput(value)
-                if (!value) submit(form)
-              }}
+        <Form
+          className="display-inline-block usa-search usa-search--small"
+          role="search"
+        >
+          <Label srOnly={true} htmlFor="query">
+            Search
+          </Label>
+          <TextInput
+            id="query"
+            name="query"
+            type="search"
+            defaultValue={query}
+            onChange={({ target: { form, value } }) => {
+              setInput(value)
+              if (!value) submit(form)
+            }}
+          />
+          <Button type="submit">
+            <img
+              src={searchImg}
+              className="usa-search__submit-icon"
+              alt="Search"
             />
-            <Button type="submit">
-              <img
-                src={searchImg}
-                className="usa-search__submit-icon"
-                alt="Search"
-              />
-            </Button>
-          </Form>
-        </div>
+          </Button>
+        </Form>
         <Link to="/circulars/new">
           <Button
             type="button"
@@ -204,7 +212,7 @@ export default function () {
             </h3>
           )}
           <ol>
-            {items.map(({ circularId, subject }) => (
+            {allItems.map(({ circularId, subject }) => (
               <li key={circularId} value={circularId}>
                 <Link to={`/circulars/${circularId}`}>{subject}</Link>
               </li>

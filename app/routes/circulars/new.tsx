@@ -24,12 +24,15 @@ import dedent from 'ts-dedent'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import { group } from './circulars.server'
+import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
-import { feature } from '~/lib/env.server'
 import { useUrl } from '~/root'
 
+export const handle = {
+  breadcrumb: 'New',
+}
+
 export async function loader({ request }: DataFunctionArgs) {
-  if (!feature('circulars')) throw new Response(null, { status: 404 })
   const user = await getUser(request)
   let isAuthenticated, isAuthorized, formattedAuthor
   if (user) {
@@ -42,12 +45,10 @@ export async function loader({ request }: DataFunctionArgs) {
 
 function useSubjectPlaceholder() {
   const date = new Date()
-  return `GRB ${(date.getUTCFullYear() % 1000)
-    .toString()
-    .padStart(2, '0')}${date.getUTCMonth().toString().padStart(2, '0')}${date
-    .getUTCDay()
-    .toString()
-    .padStart(2, '0')}A: observations of a gamma-ray burst`
+  const YY = (date.getUTCFullYear() % 1000).toString().padStart(2, '0')
+  const MM = (date.getUTCMonth() + 1).toString().padStart(2, '0')
+  const DD = date.getUTCDate().toString().padStart(2, '0')
+  return `GRB ${YY}${MM}${DD}A: observations of a gamma-ray burst`
 }
 
 function useBodyPlaceholder() {
@@ -63,13 +64,18 @@ export default function () {
     useLoaderData<typeof loader>()
   const [subjectValid, setSubjectValid] = useState<boolean | undefined>()
   const [bodyValid, setBodyValid] = useState<boolean | undefined>()
+  const [showKeywords, setShowKeywords] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
+
+  function toggleShowKeywords() {
+    setShowKeywords(!showKeywords)
+  }
 
   return (
     <>
       <h1>New GCN Circular</h1>
-      <Form method="post" action="/circulars">
+      <Form method="POST" action="/circulars?index">
         <div className="usa-input-group border-0 maxw-full">
           <div className="usa-input-prefix" aria-hidden>
             From
@@ -108,14 +114,23 @@ export default function () {
         </div>
         <div className="text-base margin-bottom-1" id="subjectDescription">
           <small>
-            The subject line must start with the name of the transient, which
-            must start with one of the{' '}
-            <Link to="/circulars#submission-process">known keywords</Link>. (
-            <a href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn">
-              Contact us
-            </a>{' '}
-            to add new keywords.)
+            The subject line must contain (and should start with) the name of
+            the transient, which must start with one of the{' '}
+            <Button
+              type="button"
+              className="usa-banner__button margin-left-0"
+              aria-expanded={showKeywords}
+              onClick={toggleShowKeywords}
+            >
+              <span className="usa-banner__button-text">known keywords</span>
+            </Button>
+            .
           </small>
+          {showKeywords && (
+            <div className="text-base padding-x-2 padding-bottom-2">
+              <CircularsKeywords />
+            </div>
+          )}
         </div>
         <label hidden htmlFor="body">
           Body
@@ -136,7 +151,7 @@ export default function () {
         <div className="text-base margin-bottom-1" id="bodyDescription">
           <small>
             Body text. If this is your first Circular, please review the{' '}
-            <Link to="/docs/styleguide">style guide</Link>.
+            <Link to="/docs/circulars/styleguide">style guide</Link>.
           </small>
         </div>
         <ButtonGroup>

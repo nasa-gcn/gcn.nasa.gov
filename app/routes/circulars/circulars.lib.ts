@@ -71,13 +71,22 @@ export function formatCircular({
   `
 }
 
+/** Convert a date to an ISO 8601 string with seconds precision. */
+export function formatDateISO(date: number) {
+  return new Date(date).toISOString().replace(/\.\d+Z$/, 'Z')
+}
+
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
-  if (subject.length)
+  if (subject.length) {
+    const subjectLowerCase = subject.toLowerCase()
     return (
       !emailIsAutoReply(subject) &&
-      validSubjectKeywords.some((x) => subject.startsWith(x))
+      validSubjectKeywords.some((x) =>
+        subjectLowerCase.includes(x.toLowerCase())
+      )
     )
+  }
 }
 
 /** Return true if the body is valid, false if it is invalid, or undefined if it is an empty string */
@@ -95,37 +104,48 @@ export const validSubjectKeywords = [
   'ANTARES',
   'AXP',
   'Baksan Neutrino Observatory Alert',
+  'CALET',
   'Chandra',
   'Fermi',
   'FXT',
-  'grb',
   'GRB',
   'GW',
   'HAWC',
   'HST',
   'IBAS',
   'IceCube',
-  'ICECUBE',
   'INTEGRAL',
   'IPN',
+  'KAGRA',
   'KONUS',
-  'LIGO/Virgo',
+  'LIGO',
+  'LOFAR',
   'LVC',
+  'LVK',
+  'MAGIC',
+  'MASTER',
   'MAXI',
+  'Pan-STARRS',
+  'POLAR',
   'RATIR',
   'SDSS',
+  'SFXT',
   'SGR',
+  'Suzaku',
   'Swift',
-  'SWIFT',
-  'Virgo',
+  'transient',
   'VLA',
   'VLBI',
   'XRB',
+  'XRF',
+  'XRT',
   'XTR',
+  'Virgo',
+  'VLA',
   'ZTF',
 ]
 
-const emailAutoReplyChecklist = [
+export const emailAutoReplyChecklist = [
   'this is an automatic reply',
   'automatic reply: ',
   'auto reply',

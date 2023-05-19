@@ -41,7 +41,9 @@ export function getHostname() {
 }
 
 export function getFeatures() {
-  return process.env.GCN_FEATURES?.split(',').filter(Boolean) ?? []
+  return (
+    process.env.GCN_FEATURES?.toUpperCase().split(',').filter(Boolean) ?? []
+  )
 }
 
 /**
@@ -51,5 +53,6 @@ export function getFeatures() {
  * is a comma-separated list of enabled features.
  */
 export function feature(feature: string) {
-  return getFeatures().includes(feature)
+  const featureUppercase = feature.toUpperCase()
+  return getFeatures().includes(featureUppercase)
 }

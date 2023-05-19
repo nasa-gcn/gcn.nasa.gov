@@ -47,7 +47,9 @@ export default function () {
 
   return (
     <>
-      <HeadingWithAddButton>Client Credentials</HeadingWithAddButton>
+      <HeadingWithAddButton headingLevel={1}>
+        Client Credentials
+      </HeadingWithAddButton>
       <p className="usa-paragraph">
         Manage your client credentials here. Client credentials allow your
         scripts to interact with GCN on your behalf. You can also create client

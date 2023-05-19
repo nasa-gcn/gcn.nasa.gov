@@ -6,16 +6,15 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { NavLink, Outlet } from '@remix-run/react'
-import { SideNav } from '@trussworks/react-uswds'
+import { GridContainer } from '@trussworks/react-uswds'
 
-import { useFeature } from '~/root'
+import { SideNav } from '~/components/SideNav'
 
 export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
 export default function () {
-  const enableCirculars = useFeature('circulars')
   return (
-    <>
+    <GridContainer className="usa-section">
       <div className="grid-row grid-gap">
         <div className="desktop:grid-col-3">
           <SideNav
@@ -23,11 +22,9 @@ export default function () {
               <NavLink key="." to="." end>
                 Profile
               </NavLink>,
-              enableCirculars && (
-                <NavLink key="endorsements" to="endorsements">
-                  Peer Endorsements
-                </NavLink>
-              ),
+              <NavLink key="endorsements" to="endorsements">
+                Peer Endorsements
+              </NavLink>,
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,
@@ -44,6 +41,6 @@ export default function () {
           <Outlet />
         </div>
       </div>
-    </>
+    </GridContainer>
   )
 }

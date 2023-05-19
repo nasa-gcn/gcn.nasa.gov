@@ -20,9 +20,8 @@
  */
 import type {
   DataFunctionArgs,
-  ErrorBoundaryComponent,
   LinksFunction,
-  MetaFunction,
+  V2_MetaFunction,
 } from '@remix-run/node'
 import {
   Link,
@@ -32,20 +31,26 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useCatch,
+  isRouteErrorResponse,
   useLocation,
   useMatches,
   useNavigation,
+  useRouteError,
 } from '@remix-run/react'
 import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
+import type { ReactNode } from 'react'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
 
 import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
-import { Highlight } from './components/Highlight'
-import { getFeatures, getOrigin } from './lib/env.server'
+import NewsBanner from './components/NewsBanner'
+import {
+  getEnvOrDieInProduction,
+  getFeatures,
+  getOrigin,
+} from './lib/env.server'
 import { useRouteLoaderData } from './lib/remix'
 import { getUser } from './routes/__auth/user.server'
 
@@ -90,11 +95,15 @@ export const handle = {
   breadcrumb: 'GCN',
 }
 
-export const meta: MetaFunction = () => {
-  return {
-    charset: 'utf-8',
-    viewport: 'width=device-width,initial-scale=1',
-  }
+export const meta: V2_MetaFunction<typeof loader> = ({ data: { origin } }) => {
+  let result = [
+    { charset: 'utf-8' },
+    { name: 'viewport', content: 'width=device-width,initial-scale=1' },
+  ]
+  // Exclude non-production deployments from indexing by search engines
+  if (new URL(origin).hostname !== 'gcn.nasa.gov')
+    result.push({ name: 'robots', content: 'noindex' })
+  return result
 }
 
 export const links: LinksFunction = () => [
@@ -119,8 +128,9 @@ export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   const email = user?.email
   const features = getFeatures()
+  const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
 
-  return { origin, email, features }
+  return { origin, email, features, recaptchaSiteKey }
 }
 
 /** Don't reevaluate this route's loader due to client-side navigations. */
@@ -132,6 +142,16 @@ function useLoaderDataRoot() {
   return useRouteLoaderData<typeof loader>('root')
 }
 
+export function useEmail() {
+  const { email } = useLoaderDataRoot()
+  return email
+}
+
+export function useRecaptchaSiteKey() {
+  const { recaptchaSiteKey } = useLoaderDataRoot()
+  return recaptchaSiteKey
+}
+
 /**
  * Return true if the given feature flag is enabled.
  *
@@ -141,7 +161,17 @@ function useLoaderDataRoot() {
  * is a comma-separated list of enabled features.
  */
 export function useFeature(feature: string) {
-  return useLoaderDataRoot().features.includes(feature)
+  const featureUppercase = feature.toUpperCase()
+  return useLoaderDataRoot().features.includes(featureUppercase)
+}
+
+export function WithFeature({
+  children,
+  ...features
+}: {
+  children: ReactNode
+} & Record<string, boolean>) {
+  return <>{useFeature(Object.keys(features)[0]) && children}</>
 }
 
 export function useUrl() {
@@ -160,7 +190,11 @@ export function useHostname() {
 
 function Title() {
   const title = useMatches()
-    .map(({ handle }) => handle?.breadcrumb)
+    .map((match) => {
+      let breadcrumb = match.handle?.breadcrumb
+      if (typeof breadcrumb === 'function') breadcrumb = breadcrumb(match)
+      return breadcrumb
+    })
     .filter(Boolean)
     .join(' - ')
   return <title>{title}</title>
@@ -173,8 +207,6 @@ function Progress() {
 }
 
 function Document({ children }: { children?: React.ReactNode }) {
-  const { email } = useLoaderDataRoot()
-
   return (
     <html lang="en-US">
       <head>
@@ -189,21 +221,9 @@ function Document({ children }: { children?: React.ReactNode }) {
         <Progress />
         <GovBanner />
         <DevBanner />
-        <Header email={email} />
-        <div className="bg-gold padding-x-2 desktop:padding-x-4 padding-y-1 line-height-sans-3 font-lang-4">
-          <GridContainer>
-            <span className="text-bold">
-              GECAM Notices are here! Receive them via Kafka or email.
-            </span>{' '}
-            See{' '}
-            <Link to="/news" className="hover:text-no-underline">
-              news and announcements
-            </Link>
-          </GridContainer>
-        </div>
-        <section className="usa-section main-content">
-          <GridContainer>{children}</GridContainer>
-        </section>
+        <Header />
+        <NewsBanner message="GCN Circulars are now part of the new GCN!" />
+        <main id="main-content">{children}</main>
         <Footer />
         <ScrollRestoration />
         <Scripts />
@@ -213,12 +233,27 @@ function Document({ children }: { children?: React.ReactNode }) {
   )
 }
 
-export function CatchBoundary() {
-  const { status } = useCatch()
+function ErrorUnexpected({ children }: { children?: ReactNode }) {
+  return (
+    <Document>
+      <GridContainer className="usa-content">
+        <h1>Unexpected error {children}</h1>
+        <p className="usa-intro">An unexpected error occurred.</p>
+        <ButtonGroup>
+          <Link to="/" className="usa-button">
+            Go home
+          </Link>
+        </ButtonGroup>
+      </GridContainer>
+    </Document>
+  )
+}
+
+function ErrorUnauthorized() {
   const url = useUrl()
-  if (status == 403) {
-    return (
-      <Document>
+  return (
+    <Document>
+      <GridContainer className="usa-content">
         <h1>Unauthorized</h1>
         <p className="usa-intro">
           We're sorry, you must log in to access the page you're looking for.
@@ -235,37 +270,52 @@ export function CatchBoundary() {
             Go home
           </Link>
         </ButtonGroup>
-      </Document>
-    )
-  } else {
-    return (
-      <Document>
-        <h1>Unexpected error (HTTP {status})</h1>
-        <p className="usa-intro">An unexpected error occurred.</p>
-        <ButtonGroup>
-          <Link to="/" className="usa-button">
-            Go home
-          </Link>
-        </ButtonGroup>
-      </Document>
-    )
-  }
-}
-
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }) => {
-  console.error(error)
-  return (
-    <Document>
-      <h1>Unexpected error</h1>
-      <p className="usa-intro">An unexpected error occurred:</p>
-      <Highlight language="text" code={error.stack || error.toString()} />
-      <ButtonGroup>
-        <Link to="/" className="usa-button">
-          Go home
-        </Link>
-      </ButtonGroup>
+      </GridContainer>
     </Document>
   )
+}
+
+function ErrorNotFound() {
+  return (
+    <Document>
+      <GridContainer className="usa-content">
+        <h1>Page not found</h1>
+        <p className="usa-intro">
+          We're sorry, we can't find the page you're looking for. It might have
+          been removed, changed its name, or is otherwise unavailable.
+        </p>
+        <p className="usa-paragraph">
+          Visit our homepage for helpful tools and resources, or contact us and
+          we'll point you in the right direction.
+        </p>
+        <ButtonGroup>
+          <Link to="/" className="usa-button">
+            Visit homepage
+          </Link>
+          <Link to="/contact" className="usa-button usa-button--outline">
+            Contact us
+          </Link>
+        </ButtonGroup>
+      </GridContainer>
+    </Document>
+  )
+}
+
+export function ErrorBoundary() {
+  const error = useRouteError()
+  if (isRouteErrorResponse(error)) {
+    switch (error.status) {
+      case 403:
+        return <ErrorUnauthorized />
+      case 404:
+        return <ErrorNotFound />
+      default:
+        return <ErrorUnexpected>HTTP {error.status}</ErrorUnexpected>
+    }
+  } else {
+    console.error(error)
+    return <ErrorUnexpected />
+  }
 }
 
 export default function App() {

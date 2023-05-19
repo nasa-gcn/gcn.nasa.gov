@@ -7,6 +7,7 @@
  */
 import { Form, Link, useSearchParams } from '@remix-run/react'
 import { Button, Label } from '@trussworks/react-uswds'
+import { useState } from 'react'
 
 import { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
@@ -18,9 +19,11 @@ export const handle = {
 
 export default function () {
   const [params] = useSearchParams()
+  const [alertsValid, setAlertsValid] = useState(false)
   const clientId = params.get('clientId') || undefined
+
   return (
-    <Form method="get" action="../code">
+    <Form method="GET" action="../code">
       <p className="usa-paragraph">
         Choose how you would like your results returned. Select a Format and
         Notice type for each alert you would like to subscribe to. More details
@@ -30,7 +33,7 @@ export default function () {
       <Label htmlFor="noticeFormat">Notice Format</Label>
       <NoticeFormat name="noticeFormat" value="text" />
       <Label htmlFor="noticeTypes">Notice Type</Label>
-      <NoticeTypeCheckboxes />
+      <NoticeTypeCheckboxes validationFunction={setAlertsValid} />
       <input type="hidden" name="clientId" value={clientId} />
       <Link
         to="../credentials"
@@ -39,7 +42,9 @@ export default function () {
       >
         Back
       </Link>
-      <Button type="submit">Generate Code</Button>
+      <Button disabled={!alertsValid} type="submit">
+        Generate Code
+      </Button>
     </Form>
   )
 }

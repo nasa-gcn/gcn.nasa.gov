@@ -7,6 +7,7 @@
  */
 import { SiteAlert } from '@trussworks/react-uswds'
 
+import { getEnvBannerHeaderAndDescription } from '~/lib/utils'
 import { useHostname } from '~/root'
 
 const production_hostname = 'gcn.nasa.gov'
@@ -14,23 +15,7 @@ const production_hostname = 'gcn.nasa.gov'
 export function DevBanner() {
   const hostname = useHostname()
   if (hostname === production_hostname) return null
-
-  let heading: string
-  let description: string
-
-  if (hostname === `dev.${production_hostname}`) {
-    heading = 'Development'
-    description = 'the internal development version'
-  } else if (hostname === `test.${production_hostname}`) {
-    heading = 'Testing'
-    description = 'the public testing version'
-  } else if (hostname === 'localhost') {
-    heading = 'Local Development'
-    description = 'a local development version'
-  } else {
-    heading = 'Non-Production'
-    description = 'a non-production version'
-  }
+  const { heading, description } = getEnvBannerHeaderAndDescription(hostname)
 
   return (
     <SiteAlert slim variant="emergency">

@@ -46,7 +46,10 @@ export class ClientCredentialVendingMachine {
   static async create(request: Request) {
     const user = await getUser(request)
     if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(user.sub, user.groups)
+    return new this(
+      user.sub,
+      user.groups.filter((x) => x.startsWith('gcn.nasa.gov/kafka'))
+    )
   }
 
   get groups() {

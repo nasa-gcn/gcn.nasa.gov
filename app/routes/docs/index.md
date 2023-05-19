@@ -16,7 +16,7 @@ GCN has two kinds of data products:
 
 ## Client Configuration
 
-To begin receiving GCN notices via Kafka, users have two options for setting up their listeners. The [Client Configuration](/docs/client) section describes how to connect to Kafka using [Python](/docs/client#python) or [JavaScript](/docs/client#nodejs). Once the listener is set up, users can specify which Kafka topics they wish to follow for different GCN notice types.
+To begin receiving GCN notices via Kafka, users have two options for setting up their listeners. The [Kafka Client Setup](/docs/client) section describes how to connect to Kafka using [Python](/docs/client#python) or [JavaScript](/docs/client#nodejs). Once the listener is set up, users can specify which Kafka topics they wish to follow for different GCN notice types.
 
 ## Contributing
 
