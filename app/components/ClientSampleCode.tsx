@@ -89,6 +89,8 @@ export function ClientSampleCode({
                                 `)}])
             while True:
                 for message in consumer.consume(timeout=1):
+                    # Print the topic and message ID
+                    print(f'{message.topic()}: #{message.offset()}')
                     value = message.value()
                     print(value)
 
@@ -160,6 +162,7 @@ export function ClientSampleCode({
             await consumer.run({
               eachMessage: async (payload) => {
                 const value = payload.message.value
+                console.log(\`\${payload.topic}: #\${payload.message.offset}\`)
                 console.log(value?.toString())
               },
             })
@@ -233,6 +236,7 @@ export function ClientSampleCode({
               await consumer.run({
                 eachMessage: async (payload) => {
                   const value = payload.message.value
+                  console.log(\`\${payload.topic}: #\${payload.message.offset}\`)
                   console.log(value?.toString())
                 },
               })
@@ -455,6 +459,7 @@ export function ClientSampleCode({
                 try
                 {
                   var consumeResult = consumer.Consume();
+                  Console.WriteLine( string.Format("{0}: #{1}",consumeResult.Topic, consumeResult.Offset));
                   Console.WriteLine(consumeResult.Message.Value);
                 }
                 catch (Exception ex)
