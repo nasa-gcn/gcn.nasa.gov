@@ -259,12 +259,20 @@ export default function () {
           INTEGRAL.
         </NoticeCard>
         <NoticeCard
-          name="AGILE"
+          name="AGILE MCAL"
+          href="https://gcn.gsfc.nasa.gov/agile_mcal.html"
+          tags={['gamma']}
+          selectedTags={tagNames}
+        >
+          GRBs detected by the MCAL instrument on AGILE.
+        </NoticeCard>
+        <NoticeCard
+          name="AGILE SuperAGILE"
           href="https://gcn.gsfc.nasa.gov/agile_grbs.html"
           tags={['gamma']}
           selectedTags={tagNames}
         >
-          GRBs detected by AGILE.
+          GRBs detected by the SuperAGILE instrument on AGILE.
         </NoticeCard>
         <NoticeCard
           name="IPN"
