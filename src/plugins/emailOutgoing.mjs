@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 
-// Grant the Lambda function permission to send email.
+// Grant the Lambda function permission to send email; add email templates.
 export const deploy = {
   start({ cloudformation }) {
     cloudformation.Resources.Role.Properties.Policies.push({
@@ -15,7 +15,11 @@ export const deploy = {
         Statement: [
           {
             Effect: 'Allow',
-            Action: ['ses:SendEmail'],
+            Action: [
+              'ses:SendEmail',
+              'ses:SendBulkEmail',
+              'ses:SendBulkTemplatedEmail',
+            ],
             Resource: [
               {
                 'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:identity/*`,
@@ -23,11 +27,26 @@ export const deploy = {
               {
                 'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:configuration-set/*`,
               },
+              {
+                'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:template/*`,
+              },
             ],
           },
         ],
       },
     })
+    cloudformation.Resources.EmailOutgoingTemplate = {
+      Type: 'AWS::SES::Template',
+      Properties: {
+        Template: {
+          SubjectPart: '{{subject}}',
+          TextPart: '{{body}}',
+        },
+      },
+    }
     return cloudformation
+  },
+  services() {
+    return { template: { Ref: 'EmailOutgoingTemplate' } }
   },
 }
