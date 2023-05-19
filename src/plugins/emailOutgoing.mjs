@@ -46,7 +46,11 @@ export const deploy = {
     }
     return cloudformation
   },
-  services() {
-    return { template: { Ref: 'EmailOutgoingTemplate' } }
+  services({ stage }) {
+    if (stage === 'production') {
+      return { template: { Ref: 'EmailOutgoingTemplate' } }
+    } else {
+      return {}
+    }
   },
 }
