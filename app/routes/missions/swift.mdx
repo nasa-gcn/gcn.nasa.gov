@@ -284,31 +284,12 @@ These are bursts that did not result in any of the automatic GCN Notices describ
 These notices are published on the GCN Kafka topic **swift.bat.guano**.
 [Detailed Description and Examples](https://gcn.nasa.gov/schema/gcn/notices/swift/bat/guano/alert.schema.json)
 
-<div>
-  <table className="usa-table">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Contents</th>
-        <th>Latency</th>
-      </tr>
-    </thead>
-    <tr>
-      <th> Alert </th>
-      <th> Detection of a burst </th>
-      <th> 5 min - 5 hours </th>
-    </tr>
-    <tr>
-      <th> Localization </th>
-      <th> Arcminute position or HEALPix map </th>
-      <th> 4 hours - 8 hours </th>
-    </tr>
-    <tr>
-      <th> Retraction </th>
-      <th> Retraction of an alert or localization </th>
-      <th> 4 hours - 1 day </th>
-    </tr>
-  </table>
+<div className="overflow-table">
+  | Type | Contents | Latency |
+  |-------------|---------------------------------------|----------------| |
+  Alert | Detection of a burst | 5 min - 5 hours| | Localization| Arcminute
+  position or HEALPix map | 4 hours - 8 hours| | Retraction | Retraction of an
+  alert or localization| 4 hours - 1 day|
 </div>
 
 **Common GCN Circular Types:**
