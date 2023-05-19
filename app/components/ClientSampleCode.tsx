@@ -374,7 +374,7 @@ export function ClientSampleCode({
                     // Unknown topic or partition; print warning and continue.
                     fprintf(stderr, "%s\n", rd_kafka_message_errstr(message));
                   } else if (message->err) {
-                    fprintf(stderr, "%s\n", message->err, rd_kafka_message_errstr(message));
+                    fprintf(stderr, "%s\n", rd_kafka_message_errstr(message));
                     rd_kafka_consumer_close(rk);
                     rd_kafka_destroy(rk);
                     return 1;
