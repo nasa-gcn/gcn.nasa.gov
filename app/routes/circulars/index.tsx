@@ -214,7 +214,7 @@ export default function () {
           <ol>
             {allItems.map(({ circularId, subject }) => (
               <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}`}>{subject}</Link>
+                <Link to={`/circulars/${circularId}?query=${query ?? ''}`}>{subject}</Link>
               </li>
             ))}
           </ol>
