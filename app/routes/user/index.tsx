@@ -122,7 +122,7 @@ export default function () {
         />
         <Label htmlFor="preview">Preview</Label>
         <Hint id="previewHint">
-          This is how the "From" field will be show in GCN Circulars that you
+          This is how the "From" field will be shown in GCN Circulars that you
           submit.
         </Hint>
         <div aria-describedby="previewHint" id="preview">
