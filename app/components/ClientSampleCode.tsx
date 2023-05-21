@@ -264,6 +264,7 @@ export function ClientSampleCode({
             language={language}
             filename={`example.${language}`}
             code={dedent(String.raw`
+              #include <inttypes.h>
               #include <openssl/bio.h>
               #include <openssl/evp.h>
               #include <openssl/rand.h>
@@ -383,6 +384,13 @@ export function ClientSampleCode({
                     rd_kafka_destroy(rk);
                     return 1;
                   } else {
+                    // We received a message; print its topic and offset.
+                    printf(
+                      "topic=%s, offset=%" PRId64 "\n",
+                      rd_kafka_topic_name(message->rkt),
+                      message->offset
+                    );
+                    // Print the message itself.
                     printf("%.*s\n", message->len, message->payload);
                   }
 
