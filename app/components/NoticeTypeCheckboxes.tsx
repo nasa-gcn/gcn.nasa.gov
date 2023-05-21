@@ -33,7 +33,7 @@ function humanizedRate(rate: number, singular: string, plural?: string) {
 }
 
 const NoticeTypes = {
-  Agile: [
+  AGILE: [
     'AGILE_GRB_GROUND',
     'AGILE_GRB_POS_TEST',
     'AGILE_GRB_REFINED',
@@ -167,7 +167,7 @@ const NoticeTypes = {
   ],
 }
 const NoticeTypeLinks: { [key: string]: string | undefined } = {
-  Agile: 'agile',
+  AGILE: 'agile',
   AMON: 'icecube',
   Calet: 'calet',
   Fermi: 'fermi',
