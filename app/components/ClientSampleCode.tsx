@@ -236,7 +236,7 @@ export function ClientSampleCode({
               await consumer.run({
                 eachMessage: async (payload) => {
                   const value = payload.message.value
-                  console.log(\`topic = \${payload.topic} offset = \${payload.message.offset}\`)
+                  console.log(\`topic=\${payload.topic}, offset=\${payload.message.offset}\`)
                   console.log(value?.toString())
                 },
               })
