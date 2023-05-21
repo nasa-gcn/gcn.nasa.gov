@@ -90,7 +90,7 @@ export function ClientSampleCode({
             while True:
                 for message in consumer.consume(timeout=1):
                     # Print the topic and message ID
-                    print(f'topic = {message.topic()} offset = {message.offset()}')
+                    print(f'topic={message.topic()}, offset={message.offset()}')
                     value = message.value()
                     print(value)
 
