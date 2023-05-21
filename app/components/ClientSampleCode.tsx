@@ -89,6 +89,8 @@ export function ClientSampleCode({
                                 `)}])
             while True:
                 for message in consumer.consume(timeout=1):
+                    # Print the topic and message ID
+                    print(f'topic={message.topic()}, offset={message.offset()}')
                     value = message.value()
                     print(value)
 
@@ -160,6 +162,7 @@ export function ClientSampleCode({
             await consumer.run({
               eachMessage: async (payload) => {
                 const value = payload.message.value
+                console.log(\`topic=\${payload.topic}, offset=\${payload.message.offset}\`)
                 console.log(value?.toString())
               },
             })
@@ -233,6 +236,7 @@ export function ClientSampleCode({
               await consumer.run({
                 eachMessage: async (payload) => {
                   const value = payload.message.value
+                  console.log(\`topic=\${payload.topic}, offset=\${payload.message.offset}\`)
                   console.log(value?.toString())
                 },
               })
@@ -260,6 +264,7 @@ export function ClientSampleCode({
             language={language}
             filename={`example.${language}`}
             code={dedent(String.raw`
+              #include <inttypes.h>
               #include <openssl/bio.h>
               #include <openssl/evp.h>
               #include <openssl/rand.h>
@@ -379,6 +384,13 @@ export function ClientSampleCode({
                     rd_kafka_destroy(rk);
                     return 1;
                   } else {
+                    // We received a message; print its topic and offset.
+                    printf(
+                      "topic=%s, offset=%" PRId64 "\n",
+                      rd_kafka_topic_name(message->rkt),
+                      message->offset
+                    );
+                    // Print the message itself.
                     printf("%.*s\n", message->len, message->payload);
                   }
 
@@ -455,6 +467,7 @@ export function ClientSampleCode({
                 try
                 {
                   var consumeResult = consumer.Consume();
+                  Console.WriteLine(string.Format("topic={0}, offset={1}",consumeResult.Topic, consumeResult.Offset));
                   Console.WriteLine(consumeResult.Message.Value);
                 }
                 catch (Exception ex)
