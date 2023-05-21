@@ -459,7 +459,7 @@ export function ClientSampleCode({
                 try
                 {
                   var consumeResult = consumer.Consume();
-                  Console.WriteLine( string.Format("topic = {0} offset = {1}",consumeResult.Topic, consumeResult.Offset));
+                  Console.WriteLine(string.Format("topic={0}, offset={1}",consumeResult.Topic, consumeResult.Offset));
                   Console.WriteLine(consumeResult.Message.Value);
                 }
                 catch (Exception ex)
