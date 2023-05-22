@@ -7,7 +7,7 @@
  */
 import type { DataFunctionArgs, SerializeFrom } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
 import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { formatDateISO } from './circulars.lib'
@@ -37,10 +37,13 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
 export default function () {
   const { circularId, subject, submitter, createdOn, body } =
     useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+  let searchParamsString = searchParams.toString()
+  if (searchParamsString) searchParamsString = `?${searchParamsString}`
   return (
     <>
       <ButtonGroup>
-        <Link to="/circulars" className="usa-button">
+        <Link to={`/circulars${searchParamsString}`} className="usa-button">
           <div className="position-relative">
             <Icon.ArrowBack className="position-absolute top-0 left-0" />
           </div>
