@@ -33,7 +33,7 @@
     "@nasa-gcn/dynamodb-autoincrement": "^0.0.6",
     "@octokit/rest": "^19.0.8",
     "@opensearch-project/opensearch": "^2.2.0",
-    "@remix-run/architect": "^1.15.0",
+    "@remix-run/architect": "^1.16.1",
     "@remix-run/node": "^1.15.0",
     "@remix-run/react": "^1.15.0",
     "@trussworks/react-uswds": "^4.2.0",
