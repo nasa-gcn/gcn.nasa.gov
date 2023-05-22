@@ -5,6 +5,15 @@ handle:
 
 The development of GCN began in 1992 as the BAtse COordinates DIstribution NEtwork (BACODINE). BACODINE was a necessity for the success of the Burst And Transient Search Experiment ([BATSE](https://heasarc.gsfc.nasa.gov/docs/cgro/batse/) instrument on the Compton Gamma-ray Observatory ([CGRO](https://heasarc.gsfc.nasa.gov/docs/cgro/cgro.html), 1991-2000) due to an early failure of the onboard tape recorders. This meant that all BATSE data had to be transmitted via the NASA TDRSS space network in realtime or it would be lost. BACODINE captured the telemetry stream, searched for count rate increases indicating a new transient, and localized the source based upon the relative count rates in each detector. Those coordinates were distributed by phone connections (July 1993), e-mail (December 1993), direct computer-to-computer socket connections over the Internet (January 1994), and by alpha-numeric pagers (September 1994) to any interested follow-up observatories within seconds of detection. The first robotic follow-up instrument connected to BACODINE was the Gamma-Ray Optical Counterpart Search Experiments ([GROCSE](https://ui.adsabs.harvard.edu/abs/1995Ap%26SS.231..255A/abstract)) in August 1993. Additional capabilities were added to BACODINE throughout the mid 1990's including trigger classification (GRBs from non-GRBs), monitoring (including 24/7 staffing) and the first incarnation of the interplanetary network (IPN).
 
+import gcn_history from 'gcn_history.png'
+
+<img
+  src={gcn_history}
+  align="center"
+  alt="Timeline of GCN Development History"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
 As other observatories were added, BACODINE became the Gamma-ray Burst Coordinates Network (first usage of acronym GCN) in May 1997. The first additions were the Rossi X-ray timing Explorer ([RXTE](https://heasarc.gsfc.nasa.gov/docs/xte/learning_center/index.html)) Proportional Counter Array ([PCA](https://heasarc.gsfc.nasa.gov/docs/xte/learning_center/pca.html)) and the Array of Low Energy X-Ray Imaging Sensors ([ALEXIS](https://heasarc.gsfc.nasa.gov/docs/heasarc/missions/alexis.html)) extreme ultraviolet transient mission. GCN Notices from the GCRO Imaging Compton Telescope ([COMPTEL](https://heasarc.gsfc.nasa.gov/docs/cgro/comptel/)) were added in November 1997.
 
 The human-generated curated observation reporting via GCN Circulars was introduced in 1998, and has led to >30k circulars as of today. These citable, though non-peer reviewed, reports appear automatically in ADS and are regularly cited in the astronomical literature.
