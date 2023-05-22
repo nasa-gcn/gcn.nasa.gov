@@ -71,7 +71,7 @@
     "@aws-sdk/util-dynamodb": "3.188.0",
     "@babel/preset-typescript": "^7.21.5",
     "@nasa-gcn/architect-plugin-search": "^0.2.0",
-    "@remix-run/dev": "^1.15.0",
+    "@remix-run/dev": "^1.16.1",
     "@remix-run/eslint-config": "^1.15.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
