@@ -213,6 +213,6 @@ export async function sendTestEmail(to: string) {
     fromName: 'GCN Notices',
     to: [to],
     subject: 'GCN Notices test',
-    body: 'This is a test message from the GCN Notices.',
+    body: 'This is a test message from GCN Notices.',
   })
 }

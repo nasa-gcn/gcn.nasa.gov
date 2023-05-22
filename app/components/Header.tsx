@@ -5,10 +5,9 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { Link, NavLink, useLocation } from '@remix-run/react'
+import { Link, NavLink } from '@remix-run/react'
 import {
   Menu,
-  NavDropDownButton,
   NavMenuButton,
   PrimaryNav,
   Title,
@@ -20,15 +19,56 @@ import { useEmail } from '~/root'
 
 import logo from '~/img/logo.svg'
 
+/**
+ * A variation on the NavDropDownButton component from @trussworks/react-uswds
+ * that acts as a simple hyperlink if JavaScript is disabled or if the page
+ * has not yet been hydrated.
+ *
+ * Adapted from https://github.com/trussworks/react-uswds/blob/main/src/components/header/NavDropDownButton/NavDropDownButton.tsx.
+ */
+function NavDropDownButton({
+  label,
+  menuId,
+  isOpen,
+  onToggle,
+  isCurrent,
+  className,
+  ...props
+}: {
+  label: string
+  menuId: string
+  isOpen: boolean
+  onToggle: () => void
+  isCurrent?: boolean
+} & Parameters<typeof NavLink>[0]) {
+  return (
+    <NavLink
+      className={`usa-nav__link ${className}`}
+      style={{ padding: 0 }}
+      {...props}
+    >
+      <button
+        type="button"
+        className="usa-accordion__button"
+        data-testid="navDropDownButton"
+        aria-expanded={isOpen}
+        aria-controls={menuId}
+        onClick={(e) => {
+          onToggle()
+          e.preventDefault()
+        }}
+      >
+        <span>{label}</span>
+      </button>
+    </NavLink>
+  )
+}
+
 export function Header() {
   const email = useEmail()
-  const { pathname } = useLocation()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = () => setExpanded((prvExpanded) => !prvExpanded)
-
-  const pathMatches = (path: string) =>
-    pathname === path || pathname.startsWith(`${path}/`)
 
   return (
     <>
@@ -66,7 +106,7 @@ export function Header() {
               email ? (
                 <>
                   <NavDropDownButton
-                    className={pathMatches('/user') ? 'active' : undefined}
+                    to="/user"
                     type="button"
                     key="user"
                     label={email}
