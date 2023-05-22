@@ -10,10 +10,7 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { formatCircular } from './circulars.lib'
 import { get } from './circulars.server'
 import { getOrigin } from '~/lib/env.server'
-import {
-  getCanonicalUrlHeaders,
-  publicStaticCacheControlHeaders,
-} from '~/lib/headers.server'
+import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
@@ -21,11 +18,8 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
   const result = await get(parseInt(circularId))
   delete result.sub
   return new Response(formatCircular(result), {
-    headers: {
-      ...publicStaticCacheControlHeaders,
-      ...getCanonicalUrlHeaders(
-        new URL(`/circulars/${circularId}`, getOrigin())
-      ),
-    },
+    headers: getCanonicalUrlHeaders(
+      new URL(`/circulars/${circularId}`, getOrigin())
+    ),
   })
 }

@@ -214,10 +214,11 @@ export default function () {
             </h3>
           )}
           <ol>
-            
             {allItems.map(({ circularId, subject }) => (
               <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}${searchParamsString}`}>{subject}</Link>
+                <Link to={`/circulars/${circularId}${searchParamsString}`}>
+                  {subject}
+                </Link>
               </li>
             ))}
           </ol>
