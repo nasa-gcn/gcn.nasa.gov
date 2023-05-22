@@ -38,11 +38,12 @@ export default function () {
   const { circularId, subject, submitter, createdOn, body } =
     useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
-  const query = searchParams.get('query') ?? ''
+  let searchParamsString = searchParams.toString()
+  if (searchParamsString) searchParamsString = `?${searchParamsString}`
   return (
     <>
       <ButtonGroup>
-        <Link to={`/circulars?query=${query}`} className="usa-button">
+        <Link to={`/circulars${searchParamsString}`} className="usa-button">
           <div className="position-relative">
             <Icon.ArrowBack className="position-absolute top-0 left-0" />
           </div>
