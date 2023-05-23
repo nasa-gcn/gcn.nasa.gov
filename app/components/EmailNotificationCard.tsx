@@ -28,10 +28,14 @@ export default function EmailNotificationCard({
   const disabled = deleteFetcher.state !== 'idle'
 
   useEffect(() => {
-    if (testFetcher.type === 'done' && testModalRef.current) {
+    if (
+      testFetcher.state === 'idle' &&
+      testFetcher.data !== undefined &&
+      testModalRef.current
+    ) {
       testModalRef.current.toggleModal(undefined, true)
     }
-  }, [testFetcher.type, testModalRef])
+  }, [testFetcher.state, testFetcher.data, testModalRef])
 
   return (
     <>

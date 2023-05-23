@@ -144,7 +144,7 @@ export default function () {
             <Spinner /> Saving...
           </>
         )}
-        {fetcher.type === 'done' && !dirty && (
+        {fetcher.state === 'idle' && fetcher.data !== undefined && !dirty && (
           <>
             <Icon.Check color="green" /> Saved
           </>
