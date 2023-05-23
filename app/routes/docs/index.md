@@ -14,13 +14,17 @@ GCN has two kinds of data products:
 - [**Notices**](/notices) are automated, machine-to-machine, generally real-time, notifications of detections and localizations of astronomical transients detected by space- and ground-based observatories.
 - [**Circulars**](/circulars) are human-readable, citable, rapid but generally not real-time, bulletins observations, quantitative near-term predictions, requests for follow-up observations, or future observing plans.
 
-## Client Configuration
-
-To begin receiving GCN notices via Kafka, users have two options for setting up their listeners. The [Kafka Client Setup](/docs/client) section describes how to connect to Kafka using [Python](/docs/client#python) or [JavaScript](/docs/client#nodejs). Once the listener is set up, users can specify which Kafka topics they wish to follow for different GCN notice types.
-
 ## Contributing
 
 The GCN web site is an open source project built in [Remix](https://remix.run), a full stack web framework. Have an idea to make GCN better and want to contribute, or have a bug to report? Head over to our [contributing](/docs/contributing) documentation for our quick start instructions.
+
+## Kafka Client Configuration
+
+To begin receiving GCN notices via Kafka, users have two options for setting up their listeners. The [Kafka Client Setup](/docs/client) section describes how to connect to Kafka using [Python](/docs/client#python) or [JavaScript](/docs/client#nodejs). Once the listener is set up, users can specify which Kafka topics they wish to follow for different GCN notice types.
+
+## History
+
+Learn about how and why GCN was created, and how it became an essential component of multimessenger astrophysics in the [History of GCN](/docs/history).
 
 ## Roadmap
 
