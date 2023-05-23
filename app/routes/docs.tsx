@@ -37,9 +37,29 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="client" to="client">
-                Kafka Client Setup
-              </NavLink>,
+              <>
+                <NavLink key="client" to="client">
+                  Kafka Client Setup
+                </NavLink>
+                <SideNavSub
+                  base="client"
+                  key="client-sub"
+                  items={[
+                    <Link key="python" to="client#python">
+                      Python
+                    </Link>,
+                    <Link key="nodejs" to="client#nodejs">
+                      Node.js
+                    </Link>,
+                    <Link key="c" to="client#c">
+                      C
+                    </Link>,
+                    <Link key="c-1" to="client#c-1">
+                      C#
+                    </Link>,
+                  ]}
+                />
+              </>,
               <>
                 <NavLink key="circulars" to="circulars" end>
                   Circulars
