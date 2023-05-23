@@ -25,29 +25,6 @@ export default function () {
                 About GCN
               </NavLink>,
               <>
-                <NavLink key="client" to="client">
-                  Kafka Client Setup
-                </NavLink>
-                <SideNavSub
-                  base="client"
-                  key="client-sub"
-                  items={[
-                    <Link key="python" to="client#python">
-                      Python
-                    </Link>,
-                    <Link key="nodejs" to="client#nodejs">
-                      Node.js
-                    </Link>,
-                    <Link key="c" to="client#c">
-                      C
-                    </Link>,
-                    <Link key="c-1" to="client#c-1">
-                      C#
-                    </Link>,
-                  ]}
-                />
-              </>,
-              <>
                 <NavLink key="circulars" to="circulars" end>
                   Circulars
                 </NavLink>
@@ -89,12 +66,6 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="producers" to="producers">
-                New Notice Producers
-              </NavLink>,
-              <NavLink key="roadmap" to="roadmap">
-                Road Map
-              </NavLink>,
               <>
                 <NavLink key="faq" to="faq">
                   Frequently Asked Questions
@@ -115,6 +86,38 @@ export default function () {
                   ]}
                 />
               </>,
+              <NavLink key="history" to="history">
+                History
+              </NavLink>,
+              <>
+                <NavLink key="client" to="client">
+                  Kafka Client Setup
+                </NavLink>
+                <SideNavSub
+                  base="client"
+                  key="client-sub"
+                  items={[
+                    <Link key="python" to="client#python">
+                      Python
+                    </Link>,
+                    <Link key="nodejs" to="client#nodejs">
+                      Node.js
+                    </Link>,
+                    <Link key="c" to="client#c">
+                      C
+                    </Link>,
+                    <Link key="c-1" to="client#c-1">
+                      C#
+                    </Link>,
+                  ]}
+                />
+              </>,
+              <NavLink key="producers" to="producers">
+                New Notice Producers
+              </NavLink>,
+              <NavLink key="roadmap" to="roadmap">
+                Road Map
+              </NavLink>,
             ]}
           />
         </div>
