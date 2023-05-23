@@ -14,12 +14,11 @@ import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
 
 export const handle = {
-  breadcrumb({
-    data: { circularId, subject },
-  }: {
-    data: SerializeFrom<typeof loader>
-  }) {
-    return `${circularId}: ${subject}`
+  breadcrumb({ data }: { data: SerializeFrom<typeof loader> }) {
+    if (data) {
+      const { circularId, subject } = data
+      return `${circularId}: ${subject}`
+    }
   },
 }
 
