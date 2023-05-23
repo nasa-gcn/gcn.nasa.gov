@@ -175,8 +175,10 @@ export async function put(subject: string, body: string, request: Request) {
 }
 
 export async function circularRedirect(query: string | undefined) {
-  if (query && query.startsWith('circular:')) {
-    const circularId = query.split(':').at(1)
+  if (!query) return
+  const validCircularSearchStyles = /(GCN\s*|Circular\s*|(^[0-9]+$))/i
+  if (validCircularSearchStyles.test(query)) {
+    const circularId = query.replace(/\D/g, '')
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL, { status: 302 })
   }
