@@ -236,7 +236,7 @@ function Document({ children }: { children?: React.ReactNode }) {
 function ErrorUnexpected({ children }: { children?: ReactNode }) {
   return (
     <Document>
-      <GridContainer className="usa-content">
+      <GridContainer className="usa-section">
         <h1>Unexpected error {children}</h1>
         <p className="usa-intro">An unexpected error occurred.</p>
         <ButtonGroup>
@@ -253,7 +253,7 @@ function ErrorUnauthorized() {
   const url = useUrl()
   return (
     <Document>
-      <GridContainer className="usa-content">
+      <GridContainer className="usa-section">
         <h1>Unauthorized</h1>
         <p className="usa-intro">
           We're sorry, you must log in to access the page you're looking for.
@@ -278,7 +278,7 @@ function ErrorUnauthorized() {
 function ErrorNotFound() {
   return (
     <Document>
-      <GridContainer className="usa-content">
+      <GridContainer className="usa-section">
         <h1>Page not found</h1>
         <p className="usa-intro">
           We're sorry, we can't find the page you're looking for. It might have
