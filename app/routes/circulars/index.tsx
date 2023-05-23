@@ -25,6 +25,7 @@ import classNames from 'classnames'
 import { useState } from 'react'
 
 import { circularRedirect, put, search } from './circulars.server'
+import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
@@ -207,6 +208,12 @@ export default function () {
           </Button>
         </Link>
       </ButtonGroup>
+      <p className="usa-hint">
+        <Hint>
+          To navigate to a specific circular, search for the Circular ID
+          ('gcn123', 'Circular 123', '123', etc.)
+        </Hint>
+      </p>
       {clean && (
         <>
           {query && (
