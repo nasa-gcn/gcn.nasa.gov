@@ -6,7 +6,3 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 export { Outlet as default } from 'react-router'
-
-export const handle = {
-  breadcrumb: 'Documentation',
-}
