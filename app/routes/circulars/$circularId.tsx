@@ -26,7 +26,7 @@ export const handle = {
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
     throw new Response('circularId must be defined', { status: 400 })
-  return await get(parseInt(circularId))
+  return await get(parseFloat(circularId))
 }
 
 export default function () {

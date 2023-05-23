@@ -15,7 +15,7 @@ import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
     throw new Response('circularId must be defined', { status: 400 })
-  const result = await get(parseInt(circularId))
+  const result = await get(parseFloat(circularId))
   delete result.sub
   return new Response(formatCircular(result), {
     headers: getCanonicalUrlHeaders(
