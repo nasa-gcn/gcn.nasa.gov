@@ -24,7 +24,7 @@ import {
 import classNames from 'classnames'
 import { useState } from 'react'
 
-import { put, search } from './circulars.server'
+import { circularRedirect, put, search } from './circulars.server'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
@@ -35,6 +35,7 @@ const limit = 100
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
+  await circularRedirect(query?.toString())
   const page = parseInt(searchParams.get('page') || '1')
   const results = await search({ query, page: page - 1, limit })
   return { page, ...results }
