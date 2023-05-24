@@ -176,10 +176,16 @@ export async function put(subject: string, body: string, request: Request) {
 
 export async function circularRedirect(query: string | undefined) {
   if (!query) return
-  const validCircularSearchStyles = /(GCN\s*|Circular\s*|(^[0-9]+$))/i
-  if (validCircularSearchStyles.test(query)) {
-    const circularId = query.replace(/\D/g, '')
-    const circularURL = `/circulars/${circularId}`
+  const validCircularSearchStyles =
+    /^(?:\s*GCN\s*)?(?:\s*CIRCULAR\s*)?((\s*-?\d+(?:\.\d)?)\s*)$/i
+  const circularID = validCircularSearchStyles.exec(query)?.[1]
+  if (circularID) {
+    const db = await tables()
+    const result = await db.circulars.get({
+      circularId: Number(circularID),
+    })
+    if (!result) return
+    const circularURL = `/circulars/${circularID}`
     throw redirect(circularURL, { status: 302 })
   }
 }
