@@ -8,6 +8,7 @@
 import { useState } from 'react'
 
 import { NestedCheckboxes } from './NestedCheckboxes'
+import type { NoticeFormat } from './NoticeFormat'
 import { triggerRate } from '~/lib/prometheus'
 
 function humanizedCount(count: number, singular: string, plural?: string) {
@@ -185,13 +186,13 @@ const JsonNoticeTypes = {
   LVK: ['igwn.gwalert'],
 }
 
-const ExternalNoticeTypeLinks: { [key: string]: string | undefined } = {
+const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
 }
 
 interface NoticeTypeCheckboxProps {
   defaultSelected?: string[]
-  selectedFormat?: 'binary' | 'text' | 'voevent' | 'json'
+  selectedFormat?: NoticeFormat
   validationFunction?: (arg: any) => void
 }
 
@@ -240,7 +241,7 @@ export function NoticeTypeCheckboxes({
               ? NoticeTypeLinks[mission]
                 ? '/missions/' + NoticeTypeLinks[mission]
                 : undefined
-              : ExternalNoticeTypeLinks[mission],
+              : JsonNoticeTypeLinks[mission],
           nodes: noticeTypes.map((noticeType) => ({
             id: noticeType,
             label: (

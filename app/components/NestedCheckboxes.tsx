@@ -9,6 +9,8 @@ import { Link } from '@remix-run/react'
 import { Checkbox } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
 
+import { useOrigin } from '~/root'
+
 type CheckboxArgs = Parameters<typeof Checkbox>
 type CheckboxProps = CheckboxArgs[0]
 interface NestedCheckboxProps extends CheckboxProps {
@@ -57,8 +59,9 @@ function NestedCheckboxNode({
       }
     }
   })
-
-  const isExternalLink = link && link.startsWith('http')
+  const origin = useOrigin()
+  const isExternalLink =
+    link && !link.startsWith('/') && new URL(link).origin !== origin
 
   return (
     <li

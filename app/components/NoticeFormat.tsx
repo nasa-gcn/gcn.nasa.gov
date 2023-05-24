@@ -7,25 +7,28 @@
  */
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
 import { useState } from 'react'
+import { useLocation } from 'react-router'
 
 export type NoticeFormat = 'text' | 'voevent' | 'binary' | 'json'
 
 export function NoticeFormatInput({
   name,
   value,
-  stateFunction,
+  onChange,
 }: {
   name: string
   value?: NoticeFormat
-  stateFunction?: (arg: any) => void
+  onChange?: (arg: NoticeFormat) => void
 }) {
-  const [currentValue, setCurrentValue] = useState(value)
+  const [currentValue, setCurrentValue] = useState<NoticeFormat | undefined>(
+    value
+  )
   const [hover, setHover] = useState<NoticeFormat | undefined>(undefined)
 
   function clearHover() {
     setHover(undefined)
   }
-
+  const location = useLocation()
   const options = [
     {
       value: 'text' as NoticeFormat,
@@ -63,26 +66,25 @@ export function NoticeFormatInput({
         </>
       ),
     },
-    {
-      value: 'json' as ValueType,
-      label: 'JSON',
-      description: (
-        <>
-          Preliminary new notice types available only via JSON (other notice
-          types under development).
-        </>
-      ),
-    },
+    ...(location.pathname !== '/user/email/edit'
+      ? [
+          {
+            value: 'json' as NoticeFormat,
+            label: 'JSON',
+            description: (
+              <>
+                Preliminary new notice types available only via JSON (other
+                notice types under development).
+              </>
+            ),
+          },
+        ]
+      : []),
   ]
 
   return (
     <>
-      <input
-        type="hidden"
-        name={name}
-        value={currentValue}
-        onChange={(e) => (stateFunction ? stateFunction(e) : null)}
-      />
+      <input type="hidden" name={name} value={currentValue} />
       <ButtonGroup role="radiogroup" type="segmented">
         {options.map(({ value, label }) => {
           function setHoverToSelf() {
@@ -101,7 +103,7 @@ export function NoticeFormatInput({
               outline={currentValue !== value}
               onClick={() => {
                 setCurrentValue(value)
-                if (stateFunction) stateFunction(value)
+                onChange?.(value)
               }}
               onMouseEnter={setHoverToSelf}
               onMouseOver={setHoverToSelf}

@@ -184,6 +184,10 @@ export function useUrl() {
   return url.toString()
 }
 
+export function useOrigin() {
+  return useLoaderDataRoot().origin
+}
+
 export function useHostname() {
   return new URL(useLoaderDataRoot().origin).hostname
 }

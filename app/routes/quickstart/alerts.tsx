@@ -9,6 +9,7 @@ import { Form, Link, useSearchParams } from '@remix-run/react'
 import { Button, Label } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
+import type { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 
@@ -21,9 +22,7 @@ export default function () {
   const [params] = useSearchParams()
   const [alertsValid, setAlertsValid] = useState(false)
   const clientId = params.get('clientId') || undefined
-  const [format, setFormat] = useState<'text' | 'voevent' | 'binary' | 'json'>(
-    'text'
-  )
+  const [format, setFormat] = useState<NoticeFormat>('text')
 
   return (
     <Form method="GET" action="../code">
@@ -37,7 +36,7 @@ export default function () {
       <NoticeFormatInput
         name="noticeFormat"
         value={format}
-        stateFunction={setFormat}
+        onChange={setFormat}
       />
       <Label htmlFor="noticeTypes">Notice Type</Label>
       <NoticeTypeCheckboxes
