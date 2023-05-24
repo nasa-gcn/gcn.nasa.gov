@@ -20,7 +20,7 @@ import {
   getEmailNotification,
   updateEmailNotification,
 } from '../email_notices.server'
-import { NoticeFormat } from '~/components/NoticeFormat'
+import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import { getUser } from '~/routes/__auth/user.server'
@@ -79,7 +79,7 @@ export async function loader({ request }: DataFunctionArgs) {
     notification = await getEmailNotification(uuid, user.sub)
     intent = 'update'
   }
-  const format = notification.format as 'text' | 'voevent' | 'binary'
+  const format = notification.format as NoticeFormat
   return { notification, intent, format }
 }
 
@@ -130,7 +130,7 @@ export default function () {
         onChange={(e) => setrecipientValid(!!e.target.value)}
       />
       <Label htmlFor="format">Format</Label>
-      <NoticeFormat name="noticeFormat" value={format} />
+      <NoticeFormatInput name="noticeFormat" value={format} />
       <Label htmlFor="noticeTypes">Types</Label>
       <NoticeTypeCheckboxes
         defaultSelected={notification.noticeTypes}

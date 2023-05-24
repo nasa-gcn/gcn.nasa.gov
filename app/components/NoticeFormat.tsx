@@ -8,17 +8,17 @@
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-type ValueType = 'text' | 'voevent' | 'binary'
+export type NoticeFormat = 'text' | 'voevent' | 'binary'
 
-export function NoticeFormat({
+export function NoticeFormatInput({
   name,
   value,
 }: {
   name: string
-  value?: ValueType
+  value?: NoticeFormat
 }) {
   const [currentValue, setCurrentValue] = useState(value)
-  const [hover, setHover] = useState<ValueType | undefined>(undefined)
+  const [hover, setHover] = useState<NoticeFormat | undefined>(undefined)
 
   function clearHover() {
     setHover(undefined)
@@ -26,12 +26,12 @@ export function NoticeFormat({
 
   const options = [
     {
-      value: 'text' as ValueType,
+      value: 'text' as NoticeFormat,
       label: 'Text',
       description: <>Plain text key: value pairs separated by newlines.</>,
     },
     {
-      value: 'voevent' as ValueType,
+      value: 'voevent' as NoticeFormat,
       label: 'VOEvent',
       description: (
         <>
@@ -47,7 +47,7 @@ export function NoticeFormat({
       ),
     },
     {
-      value: 'binary' as ValueType,
+      value: 'binary' as NoticeFormat,
       label: 'Binary',
       description: (
         <>
