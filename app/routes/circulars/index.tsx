@@ -186,6 +186,7 @@ export default function () {
             name="query"
             type="search"
             defaultValue={query}
+            placeholder="Search"
             onChange={({ target: { form, value } }) => {
               setInput(value)
               if (!value) submit(form)
@@ -210,8 +211,12 @@ export default function () {
       </ButtonGroup>
       <p className="usa-hint">
         <Hint>
-          To navigate to a specific circular, search for the Circular ID
-          ('gcn123', 'Circular 123', '123', etc.)
+          Search for Circulars by submitter, subject, or body text. For example,
+          to search for GRB circulars from Fermi, search for 'Fermi GRB'.
+        </Hint>
+        <Hint>
+          To navigate to a specific circular, search for the associated Circular
+          ID ('gcn123', 'Circular 123', '123', etc.)
         </Hint>
       </p>
       {clean && (
