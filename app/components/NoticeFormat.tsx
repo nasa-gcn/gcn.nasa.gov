@@ -7,16 +7,17 @@
  */
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
 import { useState } from 'react'
-import { useLocation } from 'react-router'
 
 export type NoticeFormat = 'text' | 'voevent' | 'binary' | 'json'
 
 export function NoticeFormatInput({
   name,
+  showJson,
   value,
   onChange,
 }: {
   name: string
+  showJson: boolean
   value?: NoticeFormat
   onChange?: (arg: NoticeFormat) => void
 }) {
@@ -28,7 +29,6 @@ export function NoticeFormatInput({
   function clearHover() {
     setHover(undefined)
   }
-  const location = useLocation()
   const options = [
     {
       value: 'text' as NoticeFormat,
@@ -66,7 +66,7 @@ export function NoticeFormatInput({
         </>
       ),
     },
-    ...(location.pathname !== '/user/email/edit'
+    ...(showJson
       ? [
           {
             value: 'json' as NoticeFormat,

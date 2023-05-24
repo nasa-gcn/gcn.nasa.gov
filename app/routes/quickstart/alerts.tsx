@@ -36,6 +36,7 @@ export default function () {
       <NoticeFormatInput
         name="noticeFormat"
         value={format}
+        showJson={true}
         onChange={setFormat}
       />
       <Label htmlFor="noticeTypes">Notice Type</Label>
