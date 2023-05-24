@@ -60,10 +60,10 @@ to update and transition these to the new GCN Kafka system.
 
 </div>
 
-## GCN Notice on GCN Over Kafka
+## GCN Notice Types in GCN Over Kafka
 
 **_IceCube LVK Alert Nu Track Search_**\
-**topic = icecube.lvk_nu_track_search**\
+**topic = gcn.notices.icecube.lvk_nu_track_search**\
 IceCube performs realtime searches for coincident neutrino signals with all
 [LVK Gravitational alerts](https://emfollow.docs.ligo.org/userguide/), using
 a realtime muon neutrino track event selection([3]) and the sky maps from gravitational
@@ -89,10 +89,10 @@ be sent as a [GCN Circular](https://gcn.nasa.gov/circulars).
 The GCN Notice will highlight:
 
 - Overall search results p-values for the generic and Bayesian searches ("pval_generic" and "pval_bayesian")
-- If the analysis p-value from either search is less than 10%, the number ("n_events_coincident") and per-event information for coincident neutrino events (events with a per-event p-value of less than 10%) are also provided:
+- If the analysis p-value from either search is less than 10%, the number ("n_events_coincident") and per-event information for coincident neutrino events (for events with a per-event p-value of less than 10%) are also provided:
   - "event_dt" - relative timing of neutrino to GW alert (sec)
   - "ra", "dec" - reconstructed neutrino event direction (deg., J200),
-  - "ra_uncertainty" - circular error circle directional error (deg.) at 90\% confidence.
+  - "ra_uncertainty" - circular direction error (deg.) at 90\% confidence.
   - "event_pval_generic", "event_pval_bayesian" - per-event p-values for each search. In the case of multiple coincidences, can be used to determine relative importance of each event to search results.
 - "most_probable_direction" - RA/DEC (deg., J2000) for the most likely direction from the generic neutrino source coincidence search.
 - "neutrino_flux_sensitivity_range" - Time integrated flux sensitivity range (min, max) [GeV cm^-2] and energy sensitivity range (lower, upper) [GeV], assuming an E^-2 neutrino spectrum (E^2 dN/dE) found within the points in the 90% region of GW map localization"
