@@ -24,7 +24,8 @@
     "deploy": "arc deploy --no-hydrate --prune --production",
     "clean": "rimraf build/static build/server/_assets build/server/index.* build/events build/table-streams sam.json sam.yaml .cache",
     "test": "jest",
-    "test-coverage": "jest --coverage"
+    "test-coverage": "jest --coverage",
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@architect/functions": "^5.3.4",

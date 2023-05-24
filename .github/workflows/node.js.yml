@@ -20,7 +20,7 @@ jobs:
       - name: Run eslint linter
         run: npx eslint --max-warnings 0 .
       - name: Run TypeScript compiler
-        run: npx tsc -p .
+        run: npm run typecheck
       - name: Run Prettier code style checks
         run: npx prettier -c .
       - name: Run unit tests
