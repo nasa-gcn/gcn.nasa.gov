@@ -32,13 +32,17 @@ export const mdx = {
   remarkPlugins: [remarkGfm],
 }
 
+const isProduction = process.env.NODE_ENV === 'production'
+
 export const ignoredRouteFiles = ['**/.*', '**/*.lib.*']
 export const assetsBuildDirectory = 'build/static'
 export const publicPath = '/_static/'
 export const server = './server.js'
 export const serverBuildPath = 'build/server/index.js'
-export const serverMinify = true
-export const serverDependenciesToBundle = [/^(?!@?aws-sdk\/)/]
+export const serverMinify = isProduction
+export const serverDependenciesToBundle = isProduction
+  ? [/^(?!@?aws-sdk\/)/]
+  : undefined
 export const future = {
   v2_meta: true,
   v2_errorBoundary: true,
