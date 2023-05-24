@@ -29,7 +29,7 @@ export default {
     if (!files) return []
     return `eslint --cache --fix --max-warnings 0 ${filteredFiles}`
   },
-  '*.{ts,tsx}': () => 'tsc -p .',
+  '*.{ts,tsx}': () => 'tsc',
   '*.{css,scss,cjs,mjs,js,json,jsx,md,mdx,ts,tsx}': async (files) => {
     const filteredFiles = prettierRemoveIgnoredFiles(files)
     if (!files) return []

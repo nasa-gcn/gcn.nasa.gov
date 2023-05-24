@@ -93,7 +93,7 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
               <Spinner /> Saving...
             </>
           )}
-          {fetcher.type === 'done' && (
+          {fetcher.state === 'idle' && fetcher.data !== undefined && (
             <>
               <Icon.Check color="green" /> Saved
             </>

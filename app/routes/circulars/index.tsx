@@ -148,6 +148,8 @@ export default function () {
 
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
+  let searchParamsString = searchParams.toString()
+  if (searchParamsString) searchParamsString = `?${searchParamsString}`
 
   const [input, setInput] = useState(query)
   const clean = input === query
@@ -214,7 +216,9 @@ export default function () {
           <ol>
             {allItems.map(({ circularId, subject }) => (
               <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}`}>{subject}</Link>
+                <Link to={`/circulars/${circularId}${searchParamsString}`}>
+                  {subject}
+                </Link>
               </li>
             ))}
           </ol>

@@ -6,41 +6,38 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs, SerializeFrom } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
 import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { formatDateISO } from './circulars.lib'
 import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
-import { publicStaticCacheControlHeaders } from '~/lib/headers.server'
 
 export const handle = {
-  breadcrumb({
-    data: { circularId, subject },
-  }: {
-    data: SerializeFrom<typeof loader>
-  }) {
-    return `${circularId}: ${subject}`
+  breadcrumb({ data }: { data: SerializeFrom<typeof loader> }) {
+    if (data) {
+      const { circularId, subject } = data
+      return `${circularId}: ${subject}`
+    }
   },
 }
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
     throw new Response('circularId must be defined', { status: 400 })
-  const result = await get(parseInt(circularId))
-  return json(result, {
-    headers: publicStaticCacheControlHeaders,
-  })
+  return await get(parseFloat(circularId))
 }
 
 export default function () {
   const { circularId, subject, submitter, createdOn, body } =
     useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
+  let searchParamsString = searchParams.toString()
+  if (searchParamsString) searchParamsString = `?${searchParamsString}`
   return (
     <>
       <ButtonGroup>
-        <Link to="/circulars" className="usa-button">
+        <Link to={`/circulars${searchParamsString}`} className="usa-button">
           <div className="position-relative">
             <Icon.ArrowBack className="position-absolute top-0 left-0" />
           </div>
