@@ -182,7 +182,7 @@ export async function circularRedirect(query: string) {
   )
   if (!isNaN(circularId)) {
     const db = await tables()
-    const result = await db.circulars.get({ circularId: circularId })
+    const result = await db.circulars.get({ circularId })
     if (!result) return
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL, { status: 302 })
