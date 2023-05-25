@@ -176,7 +176,7 @@ export async function put(subject: string, body: string, request: Request) {
 
 export async function circularRedirect(query: string) {
   const validCircularSearchStyles =
-    /^(?:\s*GCN\s*)?(?:\s*CIRCULAR\s*)?((\s*-?\d+(?:\.\d)?)\s*)$/i
+    /^\s*(?:GCN)?\s*(?:CIRCULAR)?\s*(-?\d+(?:\.\d)?)\s*$/i
   const circularId = parseFloat(
     validCircularSearchStyles.exec(query)?.[1] || ''
   )
