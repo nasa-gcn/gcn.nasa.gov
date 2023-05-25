@@ -213,8 +213,7 @@ export default function () {
         </Link>
       </ButtonGroup>
       <Hint id="searchHint">
-        Search for Circulars by submitter, subject, or body text. For example,
-        to search for GRB circulars from Fermi, search for 'Fermi GRB'.
+        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi GRB').
         <br />
         To navigate to a specific circular, search for the associated Circular
         ID ('gcn123', 'Circular 123', '123', etc.)
