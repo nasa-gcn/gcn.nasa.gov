@@ -37,7 +37,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   if (query) {
-    await circularRedirect(query.toString())
+    await circularRedirect(query)
   }
   const page = parseInt(searchParams.get('page') || '1')
   const results = await search({ query, page: page - 1, limit })
