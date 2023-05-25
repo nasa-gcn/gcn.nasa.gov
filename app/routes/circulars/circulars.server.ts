@@ -174,18 +174,17 @@ export async function put(subject: string, body: string, request: Request) {
   })
 }
 
-export async function circularRedirect(query: string | undefined) {
-  if (!query) return
+export async function circularRedirect(query: string) {
   const validCircularSearchStyles =
     /^(?:\s*GCN\s*)?(?:\s*CIRCULAR\s*)?((\s*-?\d+(?:\.\d)?)\s*)$/i
-  const circularID = validCircularSearchStyles.exec(query)?.[1]
-  if (circularID) {
+  const circularId = parseFloat(
+    validCircularSearchStyles.exec(query)?.[1] || ''
+  )
+  if (!isNaN(circularId)) {
     const db = await tables()
-    const result = await db.circulars.get({
-      circularId: Number(circularID),
-    })
+    const result = await db.circulars.get({ circularId: circularId })
     if (!result) return
-    const circularURL = `/circulars/${circularID}`
+    const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL, { status: 302 })
   }
 }
