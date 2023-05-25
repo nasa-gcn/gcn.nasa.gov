@@ -213,10 +213,10 @@ export default function () {
         </Link>
       </ButtonGroup>
       <Hint id="searchHint">
-        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi GRB').
-        <br />
-        To navigate to a specific circular, enter the associated Circular
-        ID (e.g. 'gcn123', 'Circular 123', or '123').
+        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
+        GRB'). <br />
+        To navigate to a specific circular, enter the associated Circular ID
+        (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
       {clean && (
         <>
