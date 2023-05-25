@@ -185,6 +185,6 @@ export async function circularRedirect(query: string) {
     const result = await db.circulars.get({ circularId })
     if (!result) return
     const circularURL = `/circulars/${circularId}`
-    throw redirect(circularURL, { status: 302 })
+    throw redirect(circularURL)
   }
 }
