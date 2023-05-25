@@ -9,6 +9,7 @@ import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
+import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
 import { getUser } from '../__auth/user.server'
@@ -171,4 +172,19 @@ export async function put(subject: string, body: string, request: Request) {
     sub: user.sub,
     submitter: formatAuthor(user),
   })
+}
+
+export async function circularRedirect(query: string) {
+  const validCircularSearchStyles =
+    /^\s*(?:GCN)?\s*(?:CIRCULAR)?\s*(-?\d+(?:\.\d)?)\s*$/i
+  const circularId = parseFloat(
+    validCircularSearchStyles.exec(query)?.[1] || ''
+  )
+  if (!isNaN(circularId)) {
+    const db = await tables()
+    const result = await db.circulars.get({ circularId })
+    if (!result) return
+    const circularURL = `/circulars/${circularId}`
+    throw redirect(circularURL)
+  }
 }

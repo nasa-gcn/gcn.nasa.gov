@@ -24,7 +24,8 @@ import {
 import classNames from 'classnames'
 import { useState } from 'react'
 
-import { put, search } from './circulars.server'
+import { circularRedirect, put, search } from './circulars.server'
+import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
@@ -35,6 +36,9 @@ const limit = 100
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
+  if (query) {
+    await circularRedirect(query)
+  }
   const page = parseInt(searchParams.get('page') || '1')
   const results = await search({ query, page: page - 1, limit })
   return { page, ...results }
@@ -184,6 +188,8 @@ export default function () {
             name="query"
             type="search"
             defaultValue={query}
+            placeholder="Search"
+            aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
               setInput(value)
               if (!value) submit(form)
@@ -206,6 +212,12 @@ export default function () {
           </Button>
         </Link>
       </ButtonGroup>
+      <Hint id="searchHint">
+        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
+        GRB'). <br />
+        To navigate to a specific circular, enter the associated Circular ID
+        (e.g. 'gcn123', 'Circular 123', or '123').
+      </Hint>
       {clean && (
         <>
           {query && (
