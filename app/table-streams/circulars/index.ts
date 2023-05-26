@@ -100,6 +100,7 @@ async function send(circular: Circular) {
     to,
     subject: circular.subject,
     body: formatCircular(circular),
+    topic: 'circulars',
   })
 }
 

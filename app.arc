@@ -68,6 +68,14 @@ email_notification_subscription
   topic *String
   name byTopic
   
+email_notification
+  recipient *String
+  name byRecipient
+
+email_notification_subscription
+  recipient *String
+  name byRecipient
+
 sessions
   sub *String
   name sessionsBySub
