@@ -107,12 +107,13 @@ export async function search({
 
 /** Get a circular by ID. */
 export async function get(circularId: number): Promise<Circular> {
+  if (isNaN(circularId)) throw new Response(null, { status: 404 })
   const db = await tables()
   const result = await db.circulars.get({
     circularId,
   })
   if (!result)
-    throw new Response('The requested circular does not exist', {
+    throw new Response(null, {
       status: 404,
     })
   return result
