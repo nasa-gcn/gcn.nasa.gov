@@ -24,11 +24,11 @@ The GCN web site is an open source project built in [Remix](https://remix.run), 
 
 ## Road Map
 
-Check out our [Road Map](about/roadmap.md) for features that are under development, including the Unified Schema and the GRB Name Server.
+Check out our [Road Map](roadmap.md) for features that are under development, including the Unified Schema and the GRB Name Server.
 
 ## GCN History
 
-GCN has enabled seminal breakthroughs in astrophysics since its inception in 1992. For more details on the history of GCN, check out our [GCN History](about/history.md).
+GCN has enabled seminal breakthroughs in astrophysics since its inception in 1992. For more details on the history of GCN, check out our [GCN History](history.md).
 
 ## GCN Support
 
