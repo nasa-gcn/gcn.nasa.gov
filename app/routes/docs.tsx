@@ -24,12 +24,6 @@ export default function () {
               <NavLink key="." to="." end>
                 About GCN
               </NavLink>,
-              <NavLink key="history" to="history">
-                History
-              </NavLink>,
-              <NavLink key="roadmap" to="roadmap">
-                Road Map
-              </NavLink>,
               <>
                 <NavLink key="client" to="client">
                   Kafka Client Setup
@@ -95,9 +89,6 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="producers" to="producers">
-                New Notice Producers
-              </NavLink>,
               <>
                 <NavLink key="faq" to="faq">
                   Frequently Asked Questions
@@ -118,6 +109,15 @@ export default function () {
                   ]}
                 />
               </>,
+              <NavLink key="history" to="history">
+                History
+              </NavLink>,
+              <NavLink key="producers" to="producers">
+                New Notice Producers
+              </NavLink>,
+              <NavLink key="roadmap" to="roadmap">
+                Road Map
+              </NavLink>,
             ]}
           />
         </div>
