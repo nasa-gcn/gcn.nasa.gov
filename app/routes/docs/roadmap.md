@@ -9,7 +9,7 @@ The following features are coming soon to GCN.
 
 ## Unified Schema
 
-The unified schema is a modern and standards-based format for GCN Notices. The schema itself is described in the machine-readable [Apache Avro](https://avro.apache.org) format and the records are serialized as easily parsed JSON records. Similar fields have consistent naming and units across all missions supported by GCN.
+The unified schema is a modern and standards-based format for GCN Notices. The schema itself is described in the machine-readable JSON format and the records are serialized as easily parsed JSON records. Similar fields have consistent naming and units across all missions supported by GCN.
 
 ## GRB Name Server
 
