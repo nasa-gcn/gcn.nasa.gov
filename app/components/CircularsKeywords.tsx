@@ -18,10 +18,7 @@ export function CircularsKeywords() {
       <h3>Allowed subject keywords</h3>
       <ul className="grid-row usa-list usa-list--unstyled">
         {validSubjectKeywords.map((keyword) => (
-          <li
-            key={keyword}
-            className={getKeywordClassName(keyword.length)}
-          >
+          <li key={keyword} className={getKeywordClassName(keyword.length)}>
             {keyword}
           </li>
         ))}
