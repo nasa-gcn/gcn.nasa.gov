@@ -41,7 +41,7 @@ export function CircularsKeywords() {
   )
 }
 
-function CalculateAllowedKeywordClassName(length: number) {
+function getKeywordClassName(length: number) {
   let className = 'tablet:'
   if (length < 16) className += 'grid-col-2 grid-col-4'
   else if (length < 32) className += 'grid-col-4 grid-col-8'
