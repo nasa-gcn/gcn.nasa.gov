@@ -18,10 +18,9 @@ export function CircularsKeywords() {
       <h3>Allowed subject keywords</h3>
       <ul className="grid-row usa-list usa-list--unstyled">
         {validSubjectKeywords.map((keyword) => (
-          /* special case grid length for 'Baksan Neutrino Observatory Alert' */
           <li
             key={keyword}
-            className={keyword.length < 20 ? 'grid-col-2' : 'grid-col-6'}
+            className={CalculateAllowedKeywordClassName(keyword.length)}
           >
             {keyword}
           </li>
@@ -30,7 +29,7 @@ export function CircularsKeywords() {
       <h3>Disallowed subject keywords</h3>
       <ul className="grid-row usa-list usa-list--unstyled">
         {emailAutoReplyChecklist.map((keyword) => (
-          <li key={keyword} className={'grid-col-3'}>
+          <li key={keyword} className={'tablet:grid-col-3'}>
             {keyword}
           </li>
         ))}
@@ -40,4 +39,12 @@ export function CircularsKeywords() {
       </p>
     </>
   )
+}
+
+function CalculateAllowedKeywordClassName(length: number) {
+  let className = 'tablet:'
+  if (length < 16) className += 'grid-col-2 grid-col-4'
+  else if (length < 32) className += 'grid-col-4 grid-col-8'
+  else className += 'grid-col-6'
+  return className
 }
