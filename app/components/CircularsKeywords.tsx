@@ -20,7 +20,7 @@ export function CircularsKeywords() {
         {validSubjectKeywords.map((keyword) => (
           <li
             key={keyword}
-            className={CalculateAllowedKeywordClassName(keyword.length)}
+            className={getKeywordClassName(keyword.length)}
           >
             {keyword}
           </li>
