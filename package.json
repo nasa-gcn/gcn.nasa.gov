@@ -79,7 +79,7 @@
     "@trivago/prettier-plugin-sort-imports": "^4.1.1",
     "@types/color-convert": "^2.0.0",
     "@types/grecaptcha": "^3.0.4",
-    "@types/jest": "^29.5.1",
+    "@types/jest": "^29.5.2",
     "@types/lodash": "^4.14.194",
     "@types/mailparser": "^3.4.0",
     "@types/memoizee": "^0.4.7",
