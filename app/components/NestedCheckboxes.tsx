@@ -26,12 +26,7 @@ function allSame([first, ...rest]: any[]) {
 }
 
 function isExternalLink(link: string): boolean {
-  try {
-    const url = new URL(link)
-    return url.hostname !== window.location.hostname
-  } catch (error) {
-    return false
-  }
+  return link.startsWith('https://') || link.startsWith('http://')
 }
 
 function NestedCheckboxNode({
