@@ -45,7 +45,7 @@ function NestedCheckboxNode({
     nodes.map((node) => node.defaultChecked || false)
   )
 
-  const isExternal = link ? isExternalLink(link) : false
+  const isExternal = link && isExternalLink(link)
 
   function updateParent() {
     if (topLevelRef.current) {
