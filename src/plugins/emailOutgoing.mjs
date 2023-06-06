@@ -19,6 +19,7 @@ export const deploy = {
               'ses:SendEmail',
               'ses:SendBulkEmail',
               'ses:SendBulkTemplatedEmail',
+              'ses:SendRawEmail',
             ],
             Resource: [
               {
