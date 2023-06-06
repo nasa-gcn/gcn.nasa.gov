@@ -10,6 +10,9 @@ remix-gcn
 circulars
   src build/email-incoming/circulars
 
+support
+  src build/email-incoming/support
+
 @tables-streams
 circulars
   src build/table-streams/circulars
