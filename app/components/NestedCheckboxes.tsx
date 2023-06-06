@@ -25,6 +25,10 @@ function allSame([first, ...rest]: any[]) {
   return rest.every((value) => value === first)
 }
 
+function isExternalLink(link: string): boolean {
+  return link.startsWith('https://') || link.startsWith('http://')
+}
+
 function NestedCheckboxNode({
   nodes,
   link,
@@ -40,6 +44,8 @@ function NestedCheckboxNode({
   const [childValues, setChildValues] = useState(
     nodes.map((node) => node.defaultChecked || false)
   )
+
+  const isExternal = link && isExternalLink(link)
 
   function updateParent() {
     if (topLevelRef.current) {
@@ -57,6 +63,7 @@ function NestedCheckboxNode({
       }
     }
   })
+
   return (
     <li
       role="treeitem"
@@ -71,18 +78,16 @@ function NestedCheckboxNode({
           <>
             <span className="padding-right-1">{topLevelNodeProps.label}</span>
             {link && (
-              <>
-                (
-                <Link
-                  to={link}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                  }}
-                >
-                  Details
-                </Link>
-                )
-              </>
+              <Link
+                to={link}
+                target={isExternal ? '_blank' : undefined}
+                rel={isExternal ? 'noreferrer' : undefined}
+                onClick={(e) => {
+                  e.stopPropagation()
+                }}
+              >
+                Details
+              </Link>
             )}
           </>
         }

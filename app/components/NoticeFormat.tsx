@@ -8,22 +8,27 @@
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-export type NoticeFormat = 'text' | 'voevent' | 'binary'
+export type NoticeFormat = 'text' | 'voevent' | 'binary' | 'json'
 
 export function NoticeFormatInput({
   name,
+  showJson,
   value,
+  onChange,
 }: {
   name: string
+  showJson: boolean
   value?: NoticeFormat
+  onChange?: (arg: NoticeFormat) => void
 }) {
-  const [currentValue, setCurrentValue] = useState(value)
+  const [currentValue, setCurrentValue] = useState<NoticeFormat | undefined>(
+    value
+  )
   const [hover, setHover] = useState<NoticeFormat | undefined>(undefined)
 
   function clearHover() {
     setHover(undefined)
   }
-
   const options = [
     {
       value: 'text' as NoticeFormat,
@@ -61,6 +66,22 @@ export function NoticeFormatInput({
         </>
       ),
     },
+    ...(showJson
+      ? [
+          {
+            value: 'json' as NoticeFormat,
+            label: 'JSON',
+            description: (
+              <>
+                New notice types in JSON format defined using{' '}
+                <a href="https://json-schema.org" rel="external">
+                  JSON schema
+                </a>
+              </>
+            ),
+          },
+        ]
+      : []),
   ]
 
   return (
@@ -82,7 +103,10 @@ export function NoticeFormatInput({
               aria-checked={currentValue === value}
               aria-describedby={`${value}-label`}
               outline={currentValue !== value}
-              onClick={() => setCurrentValue(value)}
+              onClick={() => {
+                setCurrentValue(value)
+                onChange?.(value)
+              }}
               onMouseEnter={setHoverToSelf}
               onMouseOver={setHoverToSelf}
               onFocus={setHoverToSelf}

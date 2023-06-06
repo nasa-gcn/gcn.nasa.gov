@@ -130,7 +130,7 @@ export default function () {
         onChange={(e) => setrecipientValid(!!e.target.value)}
       />
       <Label htmlFor="format">Format</Label>
-      <NoticeFormatInput name="noticeFormat" value={format} />
+      <NoticeFormatInput name="noticeFormat" value={format} showJson={false} />
       <Label htmlFor="noticeTypes">Types</Label>
       <NoticeTypeCheckboxes
         defaultSelected={notification.noticeTypes}
