@@ -73,8 +73,7 @@ export function NoticeFormatInput({
             label: 'JSON',
             description: (
               <>
-                Preliminary new notice types available only via JSON (other
-                notice types under development).
+                New notice types in JSON format defined using <a href="https://json-schema.org" rel="external">JSON schema</a>
               </>
             ),
           },
