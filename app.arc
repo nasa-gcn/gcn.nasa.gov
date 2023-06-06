@@ -6,9 +6,9 @@ remix-gcn
   method any
   src build/server
 
-@events
-email-incoming
-  src build/events/email-incoming
+@email-incoming
+circulars
+  src build/email-incoming/circulars
 
 @tables-streams
 circulars
@@ -108,7 +108,7 @@ lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run t
 lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the static bucket
 missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
 emailOutgoing  # Grant the Lambda function permission to send email; add email templates.
-emailIncoming  # Enable notifications from SES to SNS to trigger email-incoming Lambda
+email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 architect/plugin-lambda-invoker
 architect/plugin-storage-private

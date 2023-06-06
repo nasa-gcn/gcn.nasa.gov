@@ -19,8 +19,25 @@ export function createTriggerHandler<T>(
   recordHandler: (record: T) => Promise<void>
 ) {
   return async (event: { Records: T[] }) => {
-    const results = await Promise.allSettled(event.Records.map(recordHandler))
-    const rejections = results.filter(isRejected).map(({ reason }) => reason)
-    if (rejections.length) throw rejections
+    await allSettledOrRaise(event.Records.map(recordHandler))
   }
+}
+
+/**
+ * Execute a collection of promises.
+ * Resolve when all of the promises have resolved,
+ * or reject when all of the promises have settled and any of the promises have
+ * rejected.
+ */
+export async function allSettledOrRaise<T extends readonly unknown[]>(
+  promises: T
+) {
+  const results = await Promise.allSettled(promises)
+  const rejections = results.filter(isRejected).map(({ reason }) => reason)
+  if (rejections.length) throw rejections
+  return (
+    results as {
+      -readonly [P in keyof T]: PromiseFulfilledResult<Awaited<T[P]>>
+    }
+  ).map(({ value }) => value) as { -readonly [P in keyof T]: Awaited<T[P]> }
 }

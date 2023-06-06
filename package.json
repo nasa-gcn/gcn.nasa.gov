@@ -22,7 +22,7 @@
     "prepare:husky": "husky install",
     "prepare": "run-p \"prepare:*\"",
     "deploy": "arc deploy --no-hydrate --prune --production",
-    "clean": "rimraf build/static build/server/_assets build/server/index.* build/events build/table-streams sam.json sam.yaml .cache",
+    "clean": "rimraf build/static build/server/_assets build/server/index.* build/email-incoming build/table-streams sam.json sam.yaml .cache",
     "test": "jest",
     "test-coverage": "jest --coverage",
     "typecheck": "tsc"
@@ -65,6 +65,7 @@
     "@architect/architect": "^10.11.0",
     "@architect/plugin-lambda-invoker": "^1.0.0",
     "@architect/plugin-storage-private": "^1.0.1",
+    "@architect/utils": "^3.1.9",
     "@aws-sdk/client-cognito-identity-provider": "3.188.0",
     "@aws-sdk/client-s3": "3.188.0",
     "@aws-sdk/client-sesv2": "3.188.0",

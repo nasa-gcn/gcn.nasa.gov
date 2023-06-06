@@ -6,14 +6,13 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { tables } from '@architect/functions'
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { SESMessage, SESReceipt, SNSEventRecord } from 'aws-lambda'
 
 import {
   bodyIsValid,
   formatAuthor,
   subjectIsValid,
 } from '../../routes/circulars/circulars.lib'
+import { createEmailIncomingMessageHandler } from '../handler'
 import {
   getFromAddress,
   getReplyToAddresses,
@@ -26,7 +25,6 @@ import {
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { getHostname, getOrigin } from '~/lib/env.server'
-import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import { group, putRaw } from '~/routes/circulars/circulars.server'
 
 interface UserData {
@@ -49,31 +47,13 @@ interface EmailProps {
 
 const fromName = 'GCN Circulars'
 
-const s3 = new S3Client({})
 const origin = getOrigin()
 
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-module.exports.handler = createTriggerHandler(
-  async (record: SNSEventRecord) => {
-    // Save a copy of the message in an S3 bucket for debugging.
-    // FIXME: remove this later?
-    await s3.send(
-      new PutObjectCommand({
-        Bucket: process.env.ARC_STORAGE_PRIVATE_EMAIL_INCOMING,
-        Key: `${record.Sns.MessageId}.json`,
-        Body: record.Sns.Message,
-      })
-    )
-
-    const message: SESMessage & { content: string } = JSON.parse(
-      record.Sns.Message
-    )
-
-    authenticateReceipt(message.receipt)
-    const parsed = await parseEmailContentFromSource(
-      Buffer.from(message.content, 'base64')
-    )
+module.exports.handler = createEmailIncomingMessageHandler(
+  async ({ content }) => {
+    const parsed = await parseEmailContentFromSource(content)
     const userEmail = getFromAddress(parsed.from)
     const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
 
@@ -130,14 +110,6 @@ module.exports.handler = createTriggerHandler(
     })
   }
 )
-
-/** Check Amazon SES's email authentication verdicts. */
-function authenticateReceipt(receipt: SESReceipt) {
-  if (receipt.spamVerdict.status !== 'PASS')
-    throw new Error('Message failed spam check')
-  if (receipt.virusVerdict.status !== 'PASS')
-    throw new Error('Message failed virus check')
-}
 
 /**
  * Returns a UserData object constructed from cognito if the

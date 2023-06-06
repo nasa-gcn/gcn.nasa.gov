@@ -8,10 +8,7 @@
 import type { AddressObject } from 'mailparser'
 import addressparser from 'nodemailer/lib/addressparser'
 
-import {
-  getFromAddress,
-  parseEmailContentFromSource,
-} from '~/events/email-incoming/parse'
+import { getFromAddress, parseEmailContentFromSource } from '../parse'
 
 function parseFrom(from: string): AddressObject {
   return {
