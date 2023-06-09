@@ -95,9 +95,6 @@ architecture arm64
 memory 256
 timeout 10
 
-@storage-private
-email-incoming
-
 @search
 instanceType t3.small.search
 instanceCount 2
@@ -114,4 +111,3 @@ emailOutgoing  # Grant the Lambda function permission to send email; add email t
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 architect/plugin-lambda-invoker
-architect/plugin-storage-private
