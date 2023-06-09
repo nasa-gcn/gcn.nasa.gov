@@ -19,9 +19,10 @@ import { validate } from 'email-validator'
 import { useState } from 'react'
 
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
-import { sendEmail } from '~/lib/email.server'
+import { getEnvOrDie } from '~/lib/env.server'
+import { getBasicAuthHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
-import { useEmail, useRecaptchaSiteKey } from '~/root'
+import { useEmail, useName, useRecaptchaSiteKey } from '~/root'
 
 export const handle = {
   breadcrumb: 'Contact Us',
@@ -33,26 +34,42 @@ export async function action({ request }: DataFunctionArgs) {
   const recaptchaResponse = getFormDataString(data, 'g-recaptcha-response')
   await verifyRecaptcha(recaptchaResponse)
 
-  const [email, subject, body] = ['email', 'subject', 'body'].map((key) => {
-    const result = getFormDataString(data, key)
-    if (!result) throw new Response(`${key} is undefined`, { status: 400 })
-    return result
-  })
+  const [name, email, subject, body] = ['name', 'email', 'subject', 'body'].map(
+    (key) => {
+      const result = getFormDataString(data, key)
+      if (!result) throw new Response(`${key} is undefined`, { status: 400 })
+      return result
+    }
+  )
 
-  const to = ['gcnkafka@lists.nasa.gov']
-  await sendEmail({
-    body,
-    subject,
-    to,
-    fromName: 'GCN Support',
-    replyTo: [email, ...to],
-  })
+  const response = await fetch(
+    'https://nasa-gcn.zendesk.com/api/v2/requests.json',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getBasicAuthHeaders(
+          `${getEnvOrDie('ZENDESK_TOKEN_EMAIL')}/token`,
+          getEnvOrDie('ZENDESK_TOKEN')
+        ),
+      },
+      body: JSON.stringify({
+        request: { requester: { name, email }, subject, comment: { body } },
+      }),
+    }
+  )
+  if (!response.ok) {
+    console.error(response)
+    throw new Error(`Reqeust failed with status ${response.status}`)
+  }
 
   return { email, subject }
 }
 
 export default function () {
+  const defaultName = useName()
   const defaultEmail = useEmail()
+  const [nameValid, setNameValid] = useState(!!defaultName)
   const [emailValid, setEmailValid] = useState(!!defaultEmail)
   const [subjectValid, setSubjectValid] = useState(false)
   const [bodyValid, setBodyValid] = useState(false)
@@ -85,6 +102,17 @@ export default function () {
             Have you checked if your question is answered in our{' '}
             <Link to="/docs/faq">Frequently Asked Questions (FAQ)</Link>?
           </p>
+          <Label htmlFor="name">What is your name?</Label>
+          <TextInput
+            id="name"
+            name="name"
+            type="text"
+            required
+            defaultValue={defaultName}
+            onChange={({ target: { value } }) => {
+              setNameValid(!!value)
+            }}
+          />
           <Label htmlFor="email">What is your email address?</Label>
           <TextInput
             id="email"
@@ -125,7 +153,13 @@ export default function () {
           <ButtonGroup>
             <Button
               disabled={
-                !(recaptchaValid && emailValid && subjectValid && bodyValid)
+                !(
+                  recaptchaValid &&
+                  nameValid &&
+                  emailValid &&
+                  subjectValid &&
+                  bodyValid
+                )
               }
               type="submit"
             >
