@@ -59,59 +59,6 @@ export const deploy = {
       Type: 'AWS::SES::ReceiptRuleSet',
     }
 
-    cloudformation.Resources.EmailIncomingBucket = {
-      Type: 'AWS::S3::Bucket',
-      Properties: {
-        OwnershipControls: {
-          Rules: [
-            {
-              ObjectOwnership: 'BucketOwnerEnforced',
-            },
-          ],
-        },
-        PublicAccessBlockConfiguration: {
-          BlockPublicAcls: true,
-          BlockPublicPolicy: true,
-          IgnorePublicAcls: true,
-          RestrictPublicBuckets: true,
-        },
-      },
-    }
-
-    cloudformation.Resources.EmailIncomingBucketPolicy = {
-      Type: 'AWS::S3::BucketPolicy',
-      Properties: {
-        Bucket: { Ref: 'EmailIncomingBucket' },
-        PolicyDocument: {
-          Version: '2012-10-17',
-          Statement: [
-            {
-              Sid: 'AllowSESPuts',
-              Effect: 'Allow',
-              Principal: {
-                Service: 'ses.amazonaws.com',
-              },
-              Action: 's3:PutObject',
-              Resource: {
-                'Fn::Sub': [
-                  `\${bukkit}/*`,
-                  { bukkit: { Ref: 'EmailIncomingBucket' } },
-                ],
-              },
-              Condition: {
-                StringEquals: {
-                  'AWS:SourceAccount': { Ref: 'AWS::AccountId' },
-                  'AWS:SourceArn': {
-                    Ref: 'EmailIncomingReceiptRuleSet',
-                  },
-                },
-              },
-            },
-          ],
-        },
-      },
-    }
-
     emailIncoming.forEach((item) => {
       const [key] = Object.keys(item)
       const logicalID = toLogicalID(getLambdaName(key))
@@ -132,12 +79,8 @@ export const deploy = {
             Recipients: [`${key}@${hostname}`],
             Actions: [
               {
-                S3Action: {
-                  BucketName: { Ref: 'EmailIncomingBucket' },
-                  KmsKeyArn: {
-                    'Fn::Sub': `arn:aws:kms:\${AWS::Region}:\${AWS::AccountId}:alias/aws/ses`,
-                  },
-                  ObjectKeyPrefix: `${key}/`,
+                SNSAction: {
+                  Encoding: 'Base64',
                   TopicArn: { Ref: `${logicalID}EventTopic` },
                 },
               },
