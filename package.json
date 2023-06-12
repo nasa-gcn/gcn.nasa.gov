@@ -72,7 +72,7 @@
     "@aws-sdk/client-sesv2": "3.188.0",
     "@aws-sdk/lib-dynamodb": "3.188.0",
     "@aws-sdk/util-dynamodb": "3.188.0",
-    "@babel/preset-typescript": "^7.21.5",
+    "@babel/preset-typescript": "^7.22.5",
     "@nasa-gcn/architect-plugin-search": "^0.2.0",
     "@remix-run/dev": "^1.15.0",
     "@remix-run/eslint-config": "^1.15.0",
