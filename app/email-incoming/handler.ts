@@ -5,42 +5,57 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { SESMessage, SNSMessage } from 'aws-lambda'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import type { SESMessage, SNSEventRecord, SNSMessage } from 'aws-lambda'
 
-import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
+import { getEnvOrDie } from '~/lib/env.server'
+import {
+  allSettledOrRaise,
+  createTriggerHandler,
+} from '~/lib/lambdaTrigger.server'
 
 const s3 = new S3Client({})
+const Bucket = getEnvOrDie('ARC_STORAGE_PRIVATE_EMAIL_INCOMING')
 
 interface SESMessageWithContent extends SESMessage {
   content: Buffer
 }
 
-// Check Amazon SES's email authentication verdicts.
-// If they pass, then call the handler.
+interface SESMessageWithContentBase64 extends SESMessage {
+  content: string
+}
+
 export function createEmailIncomingMessageHandler(
   messageHandler: (message: SESMessageWithContent) => Promise<void>
 ) {
-  return createTriggerHandler(async ({ Message }: SNSMessage) => {
-    const message: SESMessage = JSON.parse(Message)
+  // Save a copy of the message in an S3 bucket for debugging.
+  // FIXME: remove this later?
+  async function save({ Message, MessageId }: SNSMessage) {
+    await s3.send(
+      new PutObjectCommand({
+        Bucket,
+        Key: `${MessageId}.json`,
+        Body: Message,
+      })
+    )
+  }
+
+  // Check Amazon SES's email authentication verdicts.
+  // If they pass, then call the handler.
+  async function process({ Message }: SNSMessage) {
+    const { content: base64, ...message }: SESMessageWithContentBase64 =
+      JSON.parse(Message)
 
     if (message.receipt.spamVerdict.status !== 'PASS')
       throw new Error('Message failed spam check')
-    if (message.receipt.virusVerdict.status !== 'PASS')
+    else if (message.receipt.virusVerdict.status !== 'PASS')
       throw new Error('Message failed virus check')
-    if (message.receipt.action.type !== 'S3')
-      throw new Error('Action type must be S3')
 
-    const response = await s3.send(
-      new GetObjectCommand({
-        Bucket: message.receipt.action.bucketName,
-        Key: message.receipt.action.objectKey,
-      })
-    )
-    const bytes = await response.Body?.transformToByteArray()
-    if (!bytes) throw new Error('No bytes')
-    const content = Buffer.from(bytes)
-
+    const content = Buffer.from(base64, 'base64')
     await messageHandler({ content, ...message })
+  }
+
+  return createTriggerHandler(async ({ Sns }: SNSEventRecord) => {
+    await allSettledOrRaise([save(Sns), process(Sns)])
   })
 }
