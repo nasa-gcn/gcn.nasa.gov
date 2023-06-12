@@ -65,7 +65,6 @@
   "devDependencies": {
     "@architect/architect": "^10.11.0",
     "@architect/plugin-lambda-invoker": "^1.0.0",
-    "@architect/plugin-storage-private": "^1.0.1",
     "@architect/utils": "^3.1.9",
     "@aws-sdk/client-cognito-identity-provider": "3.188.0",
     "@aws-sdk/client-s3": "3.188.0",
