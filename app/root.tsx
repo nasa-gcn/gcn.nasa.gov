@@ -237,10 +237,6 @@ function Document({ children }: { children?: React.ReactNode }) {
         <Footer />
         <ScrollRestoration />
         <Scripts />
-        <script
-          id="ze-snippet"
-          src="https://static.zdassets.com/ekr/snippet.js?key=3ea5135d-cc92-48dd-bac6-79bd11f39102"
-        ></script>
         <LiveReload />
       </body>
     </html>
