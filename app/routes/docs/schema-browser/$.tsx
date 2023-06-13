@@ -28,9 +28,12 @@ export async function loader({ params: { '*': path } }: DataFunctionArgs) {
 
 export default function () {
   const { path, result, examples } = useLoaderData<typeof loader>()
+  const anchor = `#${result.title?.replaceAll(' ', '-')}`
   return (
     <>
-      <h1>{result.title ?? path}</h1>
+      <h1 id={anchor}>
+        <a href={anchor}>{result.title ?? path}</a>
+      </h1>
       <p className="usa-paragraph">{result.description}</p>
       <div>
         View the source on{' '}

@@ -15,7 +15,7 @@ import {
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-import { useEmail } from '~/root'
+import { useEmail, useFeature } from '~/root'
 
 import logo from '~/img/logo.svg'
 
@@ -68,6 +68,7 @@ export function Header() {
   const email = useEmail()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
+  const [docsMenuIsOpen, setDocsMenuIsOpen] = useState(false)
   const onClick = () => setExpanded((prvExpanded) => !prvExpanded)
 
   return (
@@ -100,9 +101,43 @@ export function Header() {
               >
                 Circulars
               </NavLink>,
-              <NavLink className="usa-nav__link" to="/docs" key="/docs">
-                Documentation
-              </NavLink>,
+              useFeature('SCHEMA') ? (
+                <>
+                  <NavDropDownButton
+                    to="/docs"
+                    type="button"
+                    key="docs"
+                    label="Documentation"
+                    isOpen={docsMenuIsOpen}
+                    onToggle={() => setDocsMenuIsOpen(!docsMenuIsOpen)}
+                    menuId="notices"
+                  />
+                  <Menu
+                    id="docs"
+                    isOpen={docsMenuIsOpen}
+                    items={[
+                      <Link
+                        key="docs"
+                        to="/docs"
+                        onClick={() => setDocsMenuIsOpen(!docsMenuIsOpen)}
+                      >
+                        Documentation
+                      </Link>,
+                      <Link
+                        key="schema"
+                        to="/docs/schema-browser"
+                        onClick={() => setDocsMenuIsOpen(!docsMenuIsOpen)}
+                      >
+                        Schema Browser
+                      </Link>,
+                    ]}
+                  />
+                </>
+              ) : (
+                <NavLink className="usa-nav__link" to="/docs" key="/docs">
+                  Documentation
+                </NavLink>
+              ),
               email ? (
                 <>
                   <NavDropDownButton

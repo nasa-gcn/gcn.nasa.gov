@@ -44,22 +44,25 @@ export default function Schema() {
 
   return (
     <>
-      <Button
-        type="button"
-        onClick={() => setShowSideNav(!showSideNav)}
-        className="margin-bottom-1"
-        unstyled
-      >
-        <div className="position-relative">
-          <Icon.ArrowBack className="position-absolute top-0 left-0" />
-        </div>
-        <span className="padding-left-2">
-          {showSideNav ? 'Hide' : 'Show'} Docs Nav
-        </span>
-      </Button>
-
       <div className="grid-row grid-gap">
         <div className="desktop:grid-col-3">
+          <Button
+            type="button"
+            onClick={() => setShowSideNav(!showSideNav)}
+            className="margin-bottom-1"
+            unstyled
+          >
+            <div className="position-relative">
+              {showSideNav ? (
+                <Icon.ArrowBack className="position-absolute top-0 left-0" />
+              ) : (
+                <Icon.ArrowForward className="position-absolute top-0 left-0" />
+              )}
+            </div>
+            <span className="padding-left-2">
+              {showSideNav ? 'Hide' : 'Show'} Docs Nav
+            </span>
+          </Button>
           <SideNav items={items} />
         </div>
         <div className="desktop:grid-col-9">

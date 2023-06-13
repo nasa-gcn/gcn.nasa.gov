@@ -136,9 +136,7 @@ export default function () {
             ]}
           />
         </div>
-        <div
-          className={showSideNav ? 'desktop:grid-col-9' : 'desktop:grid-col-12'}
-        >
+        <div className={showSideNav ? 'desktop:grid-col-9' : 'grid-col-12'}>
           <Outlet context={{ showSideNav, setShowSideNav }} />
         </div>
       </div>
