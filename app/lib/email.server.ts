@@ -21,13 +21,14 @@ import chunk from 'lodash/chunk'
 
 import { getHostname } from './env.server'
 import { getEnvBannerHeaderAndDescription } from './utils'
+import { encodeToURL } from '~/routes/unsubscribe/jwt.server'
 
 const client = new SESv2Client({})
 const hostname = getHostname()
 // https://docs.aws.amazon.com/ses/latest/dg/quotas.html
 const maxRecipientsPerMessage = 50
 
-interface BaseMessageProps {
+interface MessageProps {
   /** The name to show in the From: address. */
   fromName: string
   /** The reply-to addresses. */
@@ -36,11 +37,13 @@ interface BaseMessageProps {
   subject: string
   /** The body of the email. */
   body: string
-}
-
-interface MessageProps extends BaseMessageProps {
   /** Email recipients. */
   to: string[]
+}
+
+interface BulkMessageProps extends MessageProps {
+  /** The topic key (for unsubscribing). */
+  topic: string
 }
 
 function getBody(body: string) {
@@ -84,7 +87,8 @@ export async function sendEmailBulk({
   replyTo,
   subject,
   body,
-}: MessageProps) {
+  topic,
+}: BulkMessageProps) {
   const s = await services()
   const message: Omit<SendBulkEmailCommandInput, 'BulkEmailEntries'> = {
     FromEmailAddress: getFrom(fromName),
@@ -103,6 +107,15 @@ export async function sendEmailBulk({
     chunk(to, maxRecipientsPerMessage).map(async (addresses) => {
       const BulkEmailEntries: BulkEmailEntry[] = addresses.map((address) => ({
         Destination: { ToAddresses: [address] },
+        ReplacementEmailContent: {
+          ReplacementTemplate: {
+            ReplacementTemplateData: JSON.stringify({
+              perUserBody: `\n\n\n---\nTo unsubscribe, open this link in a web browser:\n${encodeToURL(
+                { email: address, topics: [topic] }
+              )}`,
+            }),
+          },
+        },
       }))
       await client.send(
         new SendBulkEmailCommand({ BulkEmailEntries, ...message })

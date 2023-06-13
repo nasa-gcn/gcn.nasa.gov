@@ -41,7 +41,7 @@ export const deploy = {
       Properties: {
         Template: {
           SubjectPart: '{{subject}}',
-          TextPart: '{{body}}',
+          TextPart: '{{body}}{{perUserBody}}',
         },
       },
     }
