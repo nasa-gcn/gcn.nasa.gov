@@ -10,11 +10,16 @@ import { Link, useLoaderData } from '@remix-run/react'
 import { Table } from '@trussworks/react-uswds'
 
 import { Highlight } from '~/components/Highlight'
-import type { Schema, SchemaProperty } from '~/components/SchemaBrowserElements'
-import { SchemaPropertiesTableBody } from '~/components/SchemaBrowserElements'
-import { ReferencedElementTable } from '~/components/SchemaBrowserElements'
 import { Tab, Tabs } from '~/components/Tabs'
 import { loadJson, loadSchemaExamples } from '~/lib/schema-data'
+import type {
+  Schema,
+  SchemaProperty,
+} from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
+import {
+  ReferencedElementTable,
+  SchemaPropertiesTableBody,
+} from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
 
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
   if (!path) throw new Response(null, { status: 404 })

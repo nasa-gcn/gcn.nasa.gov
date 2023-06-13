@@ -11,7 +11,7 @@ import { dirname, extname, join } from 'path'
 import type {
   ReferencedSchema,
   Schema,
-} from '~/components/SchemaBrowserElements'
+} from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
 
 function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
   return e instanceof Error && 'code' in e && 'errno' in e
