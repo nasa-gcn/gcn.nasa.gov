@@ -5,8 +5,9 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { Link, NavLink, Outlet } from '@remix-run/react'
+import { Link, NavLink, Outlet, useOutletContext } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
+import { useState } from 'react'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
 
@@ -14,11 +15,22 @@ export const handle = {
   breadcrumb: 'Documentation',
 }
 
+type ContextType = {
+  showSideNav: boolean
+  setShowSideNav: (val: boolean) => void
+}
+
+export function useSideNavContext() {
+  return useOutletContext<ContextType>()
+}
+
 export default function () {
+  const [showSideNav, setShowSideNav] = useState(true)
+
   return (
     <GridContainer className="usa-section">
       <div className="grid-row grid-gap">
-        <div className="desktop:grid-col-3">
+        <div className="desktop:grid-col-3" hidden={!showSideNav}>
           <SideNav
             items={[
               <NavLink key="." to="." end>
@@ -86,7 +98,7 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="schema-browser" to="/schema-browser">
+              <NavLink key="schema-browser" to="schema-browser">
                 Schema-Browser
               </NavLink>,
               <NavLink key="history" to="history">
@@ -124,8 +136,8 @@ export default function () {
             ]}
           />
         </div>
-        <div className="desktop:grid-col-9">
-          <Outlet />
+        <div className={showSideNav ? 'desktop:grid-col-9' : 'grid-col-12'}>
+          <Outlet context={{ showSideNav, setShowSideNav }} />
         </div>
       </div>
     </GridContainer>
