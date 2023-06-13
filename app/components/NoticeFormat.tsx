@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
+import type { ReactNode } from 'react'
 import { useState } from 'react'
 
 export type NoticeFormat = 'text' | 'voevent' | 'binary' | 'json'
@@ -29,14 +30,19 @@ export function NoticeFormatInput({
   function clearHover() {
     setHover(undefined)
   }
-  const options = [
+
+  const options: {
+    value: NoticeFormat
+    label: ReactNode
+    description: ReactNode
+  }[] = [
     {
-      value: 'text' as NoticeFormat,
+      value: 'text',
       label: 'Text',
       description: <>Plain text key: value pairs separated by newlines.</>,
     },
     {
-      value: 'voevent' as NoticeFormat,
+      value: 'voevent',
       label: 'VOEvent',
       description: (
         <>
@@ -52,7 +58,7 @@ export function NoticeFormatInput({
       ),
     },
     {
-      value: 'binary' as NoticeFormat,
+      value: 'binary',
       label: 'Binary',
       description: (
         <>
