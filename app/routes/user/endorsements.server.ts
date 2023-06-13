@@ -297,7 +297,8 @@ export class EndorsementsServer {
    * @returns an array of the EndorsementRequest object
    */
   async getEndorsements(role: EndorsementRole): Promise<EndorsementRequest[]> {
-    const queryParams = {
+    const db = await tables()
+    const { Items } = await db.circular_endorsements.query({
       IndexName:
         role === 'requestor' ? undefined : 'circularEndorsementsByEndorserSub',
       KeyConditionExpression:
@@ -319,10 +320,7 @@ export class EndorsementsServer {
             },
       ProjectionExpression:
         'requestorSub, requestorEmail, endorserSub, endorserEmail, #status, created',
-    }
-
-    const db = await tables()
-    const { Items } = await db.circular_endorsements.query(queryParams)
+    })
     return Items
   }
 
