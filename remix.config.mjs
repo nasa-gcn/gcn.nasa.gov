@@ -34,7 +34,7 @@ export const mdx = {
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-export const ignoredRouteFiles = ['**/.*', '**/*.lib.*']
+export const ignoredRouteFiles = ['**/.*', '**/*.lib.*', '**/*.server.*']
 export const assetsBuildDirectory = 'build/static'
 export const publicPath = '/_static/'
 export const server = './server.js'
