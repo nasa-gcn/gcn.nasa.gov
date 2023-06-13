@@ -44,19 +44,20 @@ export default function Schema() {
 
   return (
     <>
-      {!showSideNav && (
-        <Button
-          type="button"
-          onClick={() => setShowSideNav(!showSideNav)}
-          className="margin-bottom-1"
-          unstyled
-        >
-          <div className="position-relative">
-            <Icon.ArrowBack className="position-absolute top-0 left-0" />
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Show Docs Nav
-        </Button>
-      )}
+      <Button
+        type="button"
+        onClick={() => setShowSideNav(!showSideNav)}
+        className="margin-bottom-1"
+        unstyled
+      >
+        <div className="position-relative">
+          <Icon.ArrowBack className="position-absolute top-0 left-0" />
+        </div>
+        <span className="padding-left-2">
+          {showSideNav ? 'Hide' : 'Show'} Docs Nav
+        </span>
+      </Button>
+
       <div className="grid-row grid-gap">
         <div className="desktop:grid-col-3">
           <SideNav items={items} />
@@ -140,5 +141,5 @@ function RenderSchemaTreeItem(item: SchemaTreeItem) {
 function formatPath(path: string) {
   return path
     .replaceAll('\\', '/')
-    .replace('node_modules/@nasa-gcn/schema', 'schema-browser')
+    .replace('node_modules/@nasa-gcn/schema', 'docs/schema-browser')
 }
