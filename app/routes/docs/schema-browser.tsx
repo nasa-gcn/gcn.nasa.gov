@@ -5,12 +5,11 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { NavLink, Outlet, useLoaderData } from '@remix-run/react'
-import { Button, Icon } from '@trussworks/react-uswds'
+import { Link, NavLink, Outlet, useLoaderData } from '@remix-run/react'
+import { Icon } from '@trussworks/react-uswds'
 import dirTree from 'directory-tree'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import { useSideNavContext } from '../docs'
 import { SideNav, SideNavSub } from '~/components/SideNav'
 import { feature } from '~/lib/env.server'
 
@@ -32,37 +31,21 @@ export async function loader() {
 
 export default function Schema() {
   const { localDataTree } = useLoaderData<typeof loader>()
-  const { showSideNav, setShowSideNav } = useSideNavContext()
 
   const items: React.ReactNode[] = ([localDataTree] as SchemaTreeItem[])
     .filter((x) => !x.name.includes('.example.json'))
     .map(RenderSchemaTreeItem)
 
-  useEffect(() => {
-    setShowSideNav(false)
-  }, [setShowSideNav])
-
   return (
     <>
       <div className="grid-row grid-gap">
         <div className="desktop:grid-col-3">
-          <Button
-            type="button"
-            onClick={() => setShowSideNav(!showSideNav)}
-            className="margin-bottom-1"
-            unstyled
-          >
+          <Link to="/docs" className="margin-bottom-1">
             <div className="position-relative">
-              {showSideNav ? (
-                <Icon.ArrowBack className="position-absolute top-0 left-0" />
-              ) : (
-                <Icon.ArrowForward className="position-absolute top-0 left-0" />
-              )}
+              <Icon.ArrowBack className="position-absolute top-0 left-0" />
             </div>
-            <span className="padding-left-2">
-              {showSideNav ? 'Hide' : 'Show'} Docs Nav
-            </span>
-          </Button>
+            <span className="padding-left-2">Back</span>
+          </Link>
           <SideNav items={items} />
         </div>
         <div className="desktop:grid-col-9">
