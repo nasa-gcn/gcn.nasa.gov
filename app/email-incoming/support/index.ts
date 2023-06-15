@@ -5,10 +5,9 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { SESv2Client } from '@aws-sdk/client-sesv2'
+import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
 import {
   processMessage,
-  sendMessage,
   transformRecipients,
   /* @ts-expect-error: aws-lambda-ses-forwarder does not have type definitions */
 } from 'aws-lambda-ses-forwarder'
@@ -19,6 +18,7 @@ import { getEnvOrDie, getHostname } from '~/lib/env.server'
 const hostname = getHostname()
 const origEmail = `support@${hostname}`
 const zendeskEmail = getEnvOrDie('ZENDESK_EMAIL')
+const sesv2 = new SESv2Client({})
 
 const origData = {
   callback(error: any) {
@@ -28,10 +28,8 @@ const origData = {
     allowPlusSign: true,
     forwardMapping: { [origEmail]: [zendeskEmail] },
     fromEmail: origEmail,
-    toEmail: zendeskEmail,
   },
   log: console.log,
-  ses: new SESv2Client({}),
 }
 
 /**
@@ -45,6 +43,11 @@ module.exports.handler = createEmailIncomingMessageHandler(
     let data = { recipients, emailData: content.toString(), ...origData }
     data = await transformRecipients(data)
     data = await processMessage(data)
-    await sendMessage(data)
+    await sesv2.send(
+      new SendEmailCommand({
+        Content: { Raw: { Data: Buffer.from(data.emailData) } },
+        Destination: { ToAddresses: [zendeskEmail] },
+      })
+    )
   }
 )
