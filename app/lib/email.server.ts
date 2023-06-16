@@ -105,18 +105,20 @@ export async function sendEmailBulk({
   }
   await Promise.all(
     chunk(to, maxRecipientsPerMessage).map(async (addresses) => {
-      const BulkEmailEntries: BulkEmailEntry[] = addresses.map((address) => ({
-        Destination: { ToAddresses: [address] },
-        ReplacementEmailContent: {
-          ReplacementTemplate: {
-            ReplacementTemplateData: JSON.stringify({
-              perUserBody: `\n\n\n---\nTo unsubscribe, open this link in a web browser:\n${encodeToURL(
-                { email: address, topics: [topic] }
-              )}`,
-            }),
+      const BulkEmailEntries: BulkEmailEntry[] = await Promise.all(
+        addresses.map(async (address) => ({
+          Destination: { ToAddresses: [address] },
+          ReplacementEmailContent: {
+            ReplacementTemplate: {
+              ReplacementTemplateData: JSON.stringify({
+                perUserBody: `\n\n\n---\nTo unsubscribe, open this link in a web browser:\n${await encodeToURL(
+                  { email: address, topics: [topic] }
+                )}`,
+              }),
+            },
           },
-        },
-      }))
+        }))
+      )
       await client.send(
         new SendBulkEmailCommand({ BulkEmailEntries, ...message })
       )
