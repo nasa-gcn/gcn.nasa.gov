@@ -99,7 +99,7 @@ export function SchemaPropertiesTableBody({
       {schema.properties &&
         Object.keys(schema.properties).map((itemKey) => (
           <tr key={itemKey}>
-            <th scope="row" className={indent ? 'indent' : ''}>
+            <th scope="row" className={indent ? 'text-indent-2' : ''}>
               {formatFieldName(itemKey, schema.required)}
             </th>
             <td>
