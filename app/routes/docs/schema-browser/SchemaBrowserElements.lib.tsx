@@ -99,7 +99,7 @@ export function SchemaPropertiesTableBody({
       {schema.properties &&
         Object.keys(schema.properties).map((itemKey) => (
           <tr key={itemKey}>
-            <th scope="row" className={indent ? 'text-indent-2' : ''}>
+            <th scope="row" className={indent ? 'text-indent-4' : ''}>
               {formatFieldName(itemKey, schema.required)}
             </th>
             <td>
@@ -122,7 +122,7 @@ export function SchemaPropertiesTableBody({
 }
 
 function formatLinkString(schemaLinkString: string) {
-  return schemaLinkString.replace('schema', 'schema-browser')
+  return schemaLinkString.replace('schema', 'docs/schema-browser')
 }
 
 function formatFieldName(name: string, requiredProps?: string[]) {
