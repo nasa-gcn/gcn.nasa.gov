@@ -22,9 +22,11 @@ type SchemaTreeItem = {
 
 export async function loader() {
   if (!feature('SCHEMA')) throw new Response(null, { status: 404 })
-  const localDataTree = dirTree(
-    '../../node_modules/@nasa-gcn/schema/gcn/notices'
-  )
+  const localDataTree = (
+    [
+      dirTree('../../node_modules/@nasa-gcn/schema/gcn/notices'),
+    ] as SchemaTreeItem[]
+  ).filter((x) => !x.name.includes('.example.json'))
 
   return { localDataTree }
 }
@@ -32,9 +34,7 @@ export async function loader() {
 export default function Schema() {
   const { localDataTree } = useLoaderData<typeof loader>()
 
-  const items: React.ReactNode[] = ([localDataTree] as SchemaTreeItem[])
-    .filter((x) => !x.name.includes('.example.json'))
-    .map(RenderSchemaTreeItem)
+  const items: React.ReactNode[] = localDataTree.map(RenderSchemaTreeItem)
 
   return (
     <>

@@ -121,7 +121,7 @@ export function Header() {
                         to="/docs"
                         onClick={() => setDocsMenuIsOpen(!docsMenuIsOpen)}
                       >
-                        Documentation
+                        About GCN
                       </Link>,
                       <Link
                         key="schema"
