@@ -7,46 +7,13 @@
  */
 import { type DataFunctionArgs, redirect } from '@remix-run/node'
 
-import { getEnvOrDieInProduction } from '~/lib/env.server'
-
-type TagObject = {
-  name: string
-}
-
 /* Make all JSON files at https://github.com/nasa-gcn/gcn-schema available from
  * https://gcn.nasa.gov/schema */
-export async function loader({
-  params: { '*': path },
-  request: { url },
-}: DataFunctionArgs) {
-  const requestedTag =
-    new URL(url).searchParams.get('version')?.toLowerCase() ?? 'latest'
-  const GITHUB_API_TOKEN = getEnvOrDieInProduction('GITHUB_API_ACCESS')
-
-  const tags: TagObject[] = await (
-    await fetch('https://api.github.com/repos/nasa-gcn/gcn-schema/tags', {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${GITHUB_API_TOKEN}`,
-      },
-    })
-  ).json()
-
-  let parsedTag = ''
-
-  if (requestedTag === 'latest') {
-    parsedTag = tags[0]?.name ?? 'main'
-  } else if (requestedTag == 'main') {
-    parsedTag = 'main'
-  } else if (tags.map((x) => x.name).includes(requestedTag)) {
-    parsedTag = requestedTag
-  } else {
-    throw new Response(null, { status: 404 })
+export async function loader({ params: { '*': path } }: DataFunctionArgs) {
+  if (!path?.startsWith('main') && !path?.startsWith('v')) {
+    path = `main/${path}`
   }
-
   return redirect(
-    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${parsedTag}/${
-      path ?? ''
-    }`
+    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${path ?? ''}`
   )
 }
