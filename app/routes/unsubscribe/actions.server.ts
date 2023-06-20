@@ -37,7 +37,7 @@ async function nukeSubscriptions(
 
   const promises = []
   for await (const { Items } of pages) {
-    if (Items) {
+    if (Items?.length) {
       promises.push(
         client.batchWrite({
           RequestItems: {
