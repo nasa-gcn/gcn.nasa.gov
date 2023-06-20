@@ -19,14 +19,10 @@ export async function loader({ params: { '*': path } }: DataFunctionArgs) {
     (x) => x.name
   )
 
-  // const releases = (await octokit.rest.repos.listReleases(githubData)).data
-  //     .sort((one, two) => (one.created_at > two.created_at ? -1 : 1))
-  //     .map((x) => ({ name: x.name, tag: x.tag_name }))
-  // )
+  if (!tags.length) throw new Response(null, { status: 404 })
 
-  path = `${tags[0] ?? 'main'}/${path}`
+  path = `${tags[0]}/${path}`
 
-  console.log(path)
   return redirect(
     `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${path ?? ''}`
   )
