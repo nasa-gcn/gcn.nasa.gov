@@ -5,28 +5,29 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import { Octokit } from '@octokit/rest'
 import { type DataFunctionArgs, redirect } from '@remix-run/node'
 
-import { getEnvOrDieInProduction } from '~/lib/env.server'
-
-type TagObject = {
-  name: string
+const githubData = {
+  owner: 'nasa-gcn',
+  repo: 'gcn-schema',
 }
+const octokit = new Octokit()
 
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
-  const GITHUB_API_TOKEN = getEnvOrDieInProduction('GITHUB_API_ACCESS')
-  const tags: TagObject[] = await (
-    await fetch('https://api.github.com/repos/nasa-gcn/gcn-schema/tags', {
-      headers: {
-        Accept: 'application/vnd.github+json',
-        Authorization: `Bearer ${GITHUB_API_TOKEN}`,
-      },
-    })
-  ).json()
+  const tags = (await octokit.rest.repos.listTags(githubData)).data.map(
+    (x) => x.name
+  )
 
-  path = path?.replace('stable', tags[0]?.name ?? 'main')
+  // const releases = (await octokit.rest.repos.listReleases(githubData)).data
+  //     .sort((one, two) => (one.created_at > two.created_at ? -1 : 1))
+  //     .map((x) => ({ name: x.name, tag: x.tag_name }))
+  // )
 
+  path = `${tags[0] ?? 'main'}/${path}`
+
+  console.log(path)
   return redirect(
-    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/main/${path ?? ''}`
+    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${path ?? ''}`
   )
 }
