@@ -15,15 +15,11 @@ const githubData = {
 const octokit = new Octokit()
 
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
-  const tags = (await octokit.rest.repos.listTags(githubData)).data.map(
-    (x) => x.name
-  )
-
-  if (!tags.length) throw new Response(null, { status: 404 })
-
-  path = `${tags[0]}/${path}`
+  const latestRelease = (await octokit.rest.repos.getLatestRelease(githubData))
+    .data
+  if (!latestRelease) throw new Response(null, { status: 404 })
 
   return redirect(
-    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${path ?? ''}`
+    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${latestRelease.tag_name}/${path}`
   )
 }
