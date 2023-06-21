@@ -5,42 +5,50 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { readFile, readdir } from 'fs/promises'
-import { dirname, extname, join } from 'path'
+import { Octokit } from '@octokit/rest'
+import { extname, join } from 'path'
 
+import { getEnvOrDieInProduction } from './env.server'
 import type {
   ReferencedSchema,
   Schema,
 } from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
 
+const GITHUB_API_TOKEN = getEnvOrDieInProduction('GITHUB_API_TOKEN')
+const octokit = new Octokit({ auth: GITHUB_API_TOKEN })
+const repoData = {
+  repo: 'gcn-schema',
+  owner: 'nasa-gcn',
+}
+
 function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
   return e instanceof Error && 'code' in e && 'errno' in e
 }
 
-export async function loadJson(filePath: string): Promise<Schema> {
+export async function getVersionRefs() {
+  const releases = (await octokit.rest.repos.listReleases(repoData)).data.map(
+    (x) => ({ name: x.name, ref: x.tag_name })
+  )
+  return [...releases, { name: 'main', ref: 'main' }]
+}
+
+export async function loadJson(filePath: string, ref: string): Promise<Schema> {
   if (!filePath) throw new Error('path must be defined')
 
   if (extname(filePath) !== '.json')
     throw new Response('not found', { status: 404 })
 
-  const path = join(dirname(require.resolve('@nasa-gcn/schema')), filePath)
-
   let body: Schema
   try {
-    body = JSON.parse(
-      await readFile(path, {
-        encoding: 'utf-8',
-      })
-    )
-
+    body = await loadContentFromGithub(filePath, ref)
     if (body.allOf?.find((x) => x.$ref)) {
-      await loadSubSchema(body.allOf)
+      await loadSubSchema(body.allOf, body.$id)
     }
     if (body.anyOf?.find((x) => x.$ref)) {
-      await loadSubSchema(body.anyOf)
+      await loadSubSchema(body.anyOf, body.$id)
     }
-    if (body.oneOf?.find((x) => x.$ref)) {
-      await loadSubSchema(body.oneOf)
+    if (body.oneOf?.find((x) => x.$ref, body.$id)) {
+      await loadSubSchema(body.oneOf, body.$id)
     }
   } catch (e) {
     if (isErrnoException(e) && e.code === 'ENOENT') {
@@ -52,19 +60,39 @@ export async function loadJson(filePath: string): Promise<Schema> {
   return body
 }
 
-async function loadSubSchema(schemaArray: ReferencedSchema[]) {
+async function loadContentFromGithub(path: string, ref?: string) {
+  const ghData = (
+    await octokit.repos.getContent({
+      ...repoData,
+      path: path.replaceAll('\\', '/'),
+      ref: ref ?? 'main',
+      mediaType: {
+        format: 'raw',
+      },
+    })
+  ).data
+
+  if (!ghData || typeof ghData != 'string')
+    throw new Response(null, { status: 404 })
+
+  return JSON.parse(ghData) as Schema
+}
+
+async function loadSubSchema(
+  schemaArray: ReferencedSchema[],
+  parentId: string
+) {
   for (let item of schemaArray) {
     if (!item.$ref.startsWith('#')) {
-      const subSchemaPath = join(
-        dirname(require.resolve('@nasa-gcn/schema')),
-        item.$ref.replace('schema/', '')
-      )
+      const pathSteps = item.$ref.match(/\.\.\//g)?.length ?? 0
+      const parentPath = parentId?.split('/')
+      const formattedPath = parentPath?.slice(5, -1 - pathSteps)
+      const newPath = `${formattedPath?.join('/')}/${item.$ref
+        .split('/')
+        .slice(pathSteps)
+        .join('/')}`
 
-      item.schema = JSON.parse(
-        await readFile(subSchemaPath, {
-          encoding: 'utf-8',
-        })
-      )
+      item.schema = await loadContentFromGithub(newPath, parentPath[4])
     }
   }
 }
@@ -73,26 +101,72 @@ export type ExampleFiles = {
   name: string
   content: object
 }
+export type GitContentDataResponse = {
+  name: string
+  path: string
+  type: string
+  content?: string
+  children?: GitContentDataResponse[]
+}
 
 export async function loadSchemaExamples(
-  path: string
+  path: string,
+  ref: string
 ): Promise<ExampleFiles[]> {
-  const dirPath = path.substring(0, path.lastIndexOf('/') + 1)
+  const dirPath = path.substring(0, path.lastIndexOf('/'))
   const schemaName = path.substring(path.lastIndexOf('/') + 1)
-  const exampleFiles = (
-    await readdir(join(dirname(require.resolve('@nasa-gcn/schema')), dirPath))
-  ).filter(
+  const exampleFiles = (await getContentTree(dirPath, ref)).filter(
     (x) =>
-      x.startsWith(`${schemaName.split('.')[0]}.`) &&
-      x.endsWith('.example.json')
+      x.name.startsWith(`${schemaName.split('.')[0]}.`) &&
+      x.name.endsWith('.example.json')
   )
+
   let result: ExampleFiles[] = []
-  exampleFiles.forEach(async (exampleFile) => {
-    const example = await loadJson(join(dirPath, exampleFile))
+  for (const exampleFile of exampleFiles) {
+    const exPath = join(dirPath, '/', exampleFile.name)
+    const example = await loadContentFromGithub(exPath)
     result.push({
-      name: exampleFile.replace('.example.json', ''),
+      name: exampleFile.name.replace('.example.json', ''),
       content: example,
     })
-  })
+  }
   return result
+}
+
+export async function getContentTree(
+  path?: string,
+  ref: string = 'main'
+): Promise<GitContentDataResponse[]> {
+  try {
+    let data = (
+      await octokit.repos.getContent({
+        ...repoData,
+        path: path ?? 'gcn',
+        ref,
+      })
+    ).data as GitContentDataResponse[]
+
+    for (let item of data) {
+      if (item.type == 'dir' || item.type == 'submodule') {
+        item.children = await getContentTree(item.path, ref)
+      }
+    }
+
+    return data
+  } catch (error) {
+    return []
+  }
+}
+
+export async function getGithubDir(
+  path?: string,
+  ref: string = 'main'
+): Promise<GitContentDataResponse[]> {
+  return (
+    await octokit.repos.getContent({
+      ...repoData,
+      path: path ?? 'gcn',
+      ref,
+    })
+  ).data as GitContentDataResponse[]
 }

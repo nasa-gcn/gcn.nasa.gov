@@ -5,12 +5,14 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import { type DataFunctionArgs, json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { Table } from '@trussworks/react-uswds'
 
+import { useSideNavContext } from '../schema-browser'
 import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/Tabs'
+import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 import { loadJson, loadSchemaExamples } from '~/lib/schema-data'
 import type {
   Schema,
@@ -22,17 +24,23 @@ import {
 } from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
 
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
-  if (!path) throw new Response(null, { status: 404 })
+  if (!path?.includes('.schema.json')) throw new Response(null, { status: 404 })
   let result: Schema
-  if (!path.includes('.schema.json')) throw new Response(null, { status: 404 })
-  const examples = await loadSchemaExamples(path)
-  result = await loadJson(path)
+  const ref = path.split('/')[0]
+  path = path.replace(`${ref}/`, '')
+  result = await loadJson(path, ref)
+  const examples = await loadSchemaExamples(path, ref)
 
-  return { path, result, examples }
+  return json(
+    { path, result, examples },
+    { headers: publicStaticShortTermCacheControlHeaders }
+  )
 }
 
 export default function () {
   const { path, result, examples } = useLoaderData<typeof loader>()
+  const { selectedVersion } = useSideNavContext()
+
   const anchor = `#${result.title?.replaceAll(' ', '-')}`
   return (
     <>
@@ -44,7 +52,7 @@ export default function () {
         View the source on{' '}
         <Link
           rel="external"
-          to={`https://github.com/nasa-gcn/gcn-schema/blob/main/${path}`}
+          to={`https://github.com/nasa-gcn/gcn-schema/blob/${selectedVersion}/${path}`}
         >
           Github
         </Link>

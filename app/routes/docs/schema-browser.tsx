@@ -5,36 +5,52 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { Link, NavLink, Outlet, useLoaderData } from '@remix-run/react'
-import { Icon } from '@trussworks/react-uswds'
-import dirTree from 'directory-tree'
-import { useState } from 'react'
+import { type DataFunctionArgs, json } from '@remix-run/node'
+import {
+  Link,
+  NavLink,
+  Outlet,
+  useFetcher,
+  useLoaderData,
+  useOutletContext,
+} from '@remix-run/react'
+import { Dropdown, Icon } from '@trussworks/react-uswds'
+import { useEffect, useState } from 'react'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
+import Spinner from '~/components/Spinner'
 import { feature } from '~/lib/env.server'
+import type { GitContentDataResponse } from '~/lib/schema-data'
+import { getGithubDir, getVersionRefs } from '~/lib/schema-data'
 
-// Schema treeItem
-type SchemaTreeItem = {
-  name: string
-  path: string
-  children?: SchemaTreeItem[]
+export type VersionContext = {
+  selectedVersion: string
+  setSelectedVersion: (val: string) => void
 }
 
-export async function loader() {
+export async function loader({ request }: DataFunctionArgs) {
   if (!feature('SCHEMA')) throw new Response(null, { status: 404 })
-  const localDataTree = (
-    [
-      dirTree('../../node_modules/@nasa-gcn/schema/gcn/notices'),
-    ] as SchemaTreeItem[]
-  ).filter((x) => !x.name.includes('.example.json'))
 
-  return { localDataTree }
+  const searchParams = Object.fromEntries(new URL(request.url).searchParams)
+
+  const versionRefs = await getVersionRefs()
+  const version = searchParams.version ?? versionRefs[0].ref
+
+  const smallTree = await getGithubDir(searchParams.path, version)
+
+  return json({ versionRefs, version, smallTree })
+}
+
+export function useSideNavContext() {
+  return useOutletContext<VersionContext>()
 }
 
 export default function Schema() {
-  const { localDataTree } = useLoaderData<typeof loader>()
+  const { versionRefs, version, smallTree } = useLoaderData<typeof loader>()
+  const versionFetcher = useFetcher<typeof loader>()
 
-  const items: React.ReactNode[] = localDataTree.map(RenderSchemaTreeItem)
+  const [selectedVersion, setSelectedVersion] = useState(version ?? 'main')
+  const [smallItems] = useState(smallTree)
 
   return (
     <>
@@ -46,27 +62,116 @@ export default function Schema() {
             </div>
             <span className="padding-left-2">Back</span>
           </Link>
-          <SideNav items={items} />
+          <versionFetcher.Form method="GET">
+            <Dropdown
+              id="version"
+              name="version"
+              value={selectedVersion}
+              onChange={(e) => {
+                setSelectedVersion(e.target.value)
+                const data = new FormData()
+                data.set('version', e.target.value)
+                versionFetcher.submit(data)
+              }}
+              disabled={versionFetcher.state !== 'idle'}
+            >
+              {versionRefs.map((x) => (
+                <option key={x.name} value={x.ref}>
+                  {x.name}
+                </option>
+              ))}
+            </Dropdown>
+          </versionFetcher.Form>
+          <OnDemandGithubTree items={smallItems} version={selectedVersion} />
         </div>
         <div className="desktop:grid-col-9">
-          <Outlet />
+          <Outlet context={{ selectedVersion, setSelectedVersion }} />
         </div>
       </div>
     </>
   )
 }
 
-function filterOutExampleChildren(childrenArray: SchemaTreeItem[]) {
-  return childrenArray?.filter(
-    (childItem) => !childItem.name.includes('.example.json')
+function OnDemandGithubTree({
+  items,
+  version,
+}: {
+  items: GitContentDataResponse[]
+  version: string
+}) {
+  return (
+    <SideNav
+      items={items.map((x) => (
+        <RenderSmallerTreeItem key={x.path} item={x} version={version} />
+      ))}
+    />
+  )
+}
+
+function RenderSmallerTreeItem({
+  item,
+  version,
+}: {
+  item: GitContentDataResponse
+  version: string
+}): JSX.Element {
+  const [showChildren, toggleShowChildren] = useState(false)
+  const [childItems, setChildItems] = useState<GitContentDataResponse[]>([])
+  const [loading, setIsLoading] = useState(false)
+  const fetcher = useFetcher()
+
+  useEffect(() => {
+    function updateChildren() {
+      const filteredChildren = fetcher.data.smallTree.filter(
+        (childItem: GitContentDataResponse) =>
+          !childItem.name.includes('.example.json')
+      )
+      setChildItems(filteredChildren)
+    }
+    if (fetcher.data && !childItems.length) {
+      updateChildren()
+      setIsLoading(false)
+    }
+  }, [childItems, fetcher.data, version])
+
+  if (item.type != 'dir') {
+    return renderNavLink(item, version, false)
+  }
+
+  return (
+    <>
+      <fetcher.Form>
+        {renderNavLink(item, version, loading, () => {
+          if (childItems.length == 0) {
+            setIsLoading(true)
+            const data = new FormData()
+            data.set('path', item.path)
+            data.set('version', version)
+            fetcher.submit(data)
+          }
+          toggleShowChildren(!showChildren)
+        })}
+      </fetcher.Form>
+      {childItems.length > 0 && (
+        <SideNavSub
+          base={item.path}
+          items={childItems.map((x) => (
+            <RenderSmallerTreeItem key={x.path} item={x} version={version} />
+          ))}
+          isVisible={showChildren}
+        />
+      )}
+    </>
   )
 }
 
 function renderNavLink(
-  item: SchemaTreeItem,
+  item: GitContentDataResponse,
+  version: string,
+  loading: boolean,
   onClick?: () => void
-): React.ReactNode {
-  const path = formatPath(item.path)
+): JSX.Element {
+  const path = `${version}/${item.path}`
   return (
     <NavLink
       key={path}
@@ -79,53 +184,14 @@ function renderNavLink(
       }}
     >
       <span className="display-flex flex-align-center">
-        {item.children && item.children.length > 0 && (
+        {item.type == 'dir' && (
           <span className="margin-top-05 padding-right-05">
             <Icon.FolderOpen />
           </span>
         )}
         <span>{item.name}</span>
-        <small className="margin-left-auto">
-          {filterOutExampleChildren(item.children ?? []).length > 0
-            ? filterOutExampleChildren(item.children ?? []).length
-            : ''}
-        </small>
+        <small className="margin-left-auto">{loading && <Spinner />}</small>
       </span>
     </NavLink>
   )
-}
-
-function RenderSchemaTreeItem(item: SchemaTreeItem) {
-  const [showChildren, toggleShowChildren] = useState(false)
-
-  if (!item.children || item.children.length === 0) {
-    return renderNavLink(item)
-  }
-
-  const filteredChildren = item.children.filter(
-    (childItem) => !childItem.name.includes('.example.json')
-  )
-
-  const childNodes = filteredChildren.map((childItem) =>
-    RenderSchemaTreeItem(childItem)
-  )
-
-  return (
-    <>
-      {renderNavLink(item, () => {
-        toggleShowChildren(!showChildren)
-      })}
-      <SideNavSub
-        base={formatPath(item.path)}
-        items={childNodes}
-        isVisible={showChildren}
-      />
-    </>
-  )
-}
-
-function formatPath(path: string) {
-  return path
-    .replaceAll('\\', '/')
-    .replace('node_modules/@nasa-gcn/schema', 'docs/schema-browser')
 }

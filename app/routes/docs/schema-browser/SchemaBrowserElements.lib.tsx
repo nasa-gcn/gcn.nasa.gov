@@ -16,7 +16,7 @@ export type SchemaProperty = {
 }
 
 export type Schema = {
-  $id?: string
+  $id: string
   $schema?: string
   type: string
   title?: string
@@ -32,7 +32,6 @@ export type Schema = {
 function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
   const [showHiddenRow, toggleHiddenRow] = useState(false)
   const locallyDefined = item.$ref?.startsWith('#')
-
   return (
     <>
       <tr onClick={() => toggleHiddenRow(!showHiddenRow)}>
