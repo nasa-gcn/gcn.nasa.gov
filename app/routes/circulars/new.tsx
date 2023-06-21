@@ -11,6 +11,8 @@ import {
   Button,
   ButtonGroup,
   Icon,
+  InputGroup,
+  InputPrefix,
   Modal,
   ModalFooter,
   ModalHeading,
@@ -76,10 +78,8 @@ export default function () {
     <>
       <h1>New GCN Circular</h1>
       <Form method="POST" action="/circulars?index">
-        <div className="usa-input-group border-0 maxw-full">
-          <div className="usa-input-prefix" aria-hidden>
-            From
-          </div>
+        <InputGroup className="border-0 maxw-full">
+          <InputPrefix>From</InputPrefix>
           <span className="padding-1">{formattedAuthor}</span>
           <Link
             to="/user"
@@ -89,16 +89,14 @@ export default function () {
               <Icon.Edit /> Edit
             </Button>
           </Link>
-        </div>
-        <div
-          className={classnames('usa-input-group', 'maxw-full', {
+        </InputGroup>
+        <InputGroup
+          className={classnames('maxw-full', {
             'usa-input--error': subjectValid === false,
             'usa-input--success': subjectValid,
           })}
         >
-          <div className="usa-input-prefix" aria-hidden>
-            Subject
-          </div>
+          <InputPrefix>Subject</InputPrefix>
           <TextInput
             aria-describedby="subjectDescription"
             className="maxw-full"
@@ -111,7 +109,7 @@ export default function () {
               setSubjectValid(subjectIsValid(value))
             }}
           />
-        </div>
+        </InputGroup>
         <div className="text-base margin-bottom-1" id="subjectDescription">
           <small>
             The subject line must contain (and should start with) the name of
