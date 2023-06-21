@@ -16,7 +16,7 @@ export type SchemaProperty = {
 }
 
 export type Schema = {
-  $id?: string
+  $id: string
   $schema?: string
   type: string
   title?: string
@@ -32,7 +32,6 @@ export type Schema = {
 function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
   const [showHiddenRow, toggleHiddenRow] = useState(false)
   const locallyDefined = item.$ref?.startsWith('#')
-
   return (
     <>
       <tr onClick={() => toggleHiddenRow(!showHiddenRow)}>
@@ -125,13 +124,13 @@ function formatLinkString(schemaLinkString: string) {
   return schemaLinkString.replace('schema', 'docs/schema-browser')
 }
 
-function formatFieldName(name: string, requiredProps?: string[]) {
+export function formatFieldName(name: string, requiredProps?: string[]) {
   let formattedName = name
   if (requiredProps && requiredProps.includes(name)) formattedName += '*'
   return formattedName
 }
 
-function formatFieldType(item: SchemaProperty): string {
+export function formatFieldType(item: SchemaProperty): string {
   if (item.type) return item.type
   if (item.enum) return 'enum'
   if (item.$ref) return item.$ref.split('/').slice(-1)[0]

@@ -1,34 +1,164 @@
-/*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
- *
- * SPDX-License-Identifier: NASA-1.3
- */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
-import { Table } from '@trussworks/react-uswds'
+import { Link, NavLink, useLoaderData } from '@remix-run/react'
+import {
+  Card,
+  CardBody,
+  CardGroup,
+  CardHeader,
+  Icon,
+  SideNav,
+  Table,
+} from '@trussworks/react-uswds'
+import { json, redirect, useParams } from 'react-router'
 
-import { Highlight } from '~/components/Highlight'
-import { Tab, Tabs } from '~/components/Tabs'
-import { loadJson, loadSchemaExamples } from '~/lib/schema-data'
-import type { SchemaProperty } from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
+import SchemaDefinition from '.'
+import type { Schema } from '../SchemaBrowserElements.lib'
 import {
   ReferencedElementTable,
   SchemaPropertiesTableBody,
-} from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
+  formatFieldName,
+  formatFieldType,
+} from '../SchemaBrowserElements.lib'
+import { Highlight } from '~/components/Highlight'
+import { SideNavSub } from '~/components/SideNav'
+import { Tab, Tabs } from '~/components/Tabs'
+import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import type { ExampleFiles, GitContentDataResponse } from '~/lib/schema-data'
+import {
+  getGithubDir,
+  getVersionRefs,
+  loadJson,
+  loadSchemaExamples,
+} from '~/lib/schema-data'
 
-export async function loader({ params: { '*': path } }: DataFunctionArgs) {
-  if (!path) throw new Response(null, { status: 404 })
-  if (!path.includes('.schema.json')) throw new Response(null, { status: 404 })
-  const examples = await loadSchemaExamples(path)
-  const result = await loadJson(path)
-
-  return { path, result, examples }
+export async function loader({
+  params: { version, '*': path },
+}: DataFunctionArgs) {
+  if (!version) throw new Response(null, { status: 404 })
+  if (path?.endsWith('/')) {
+    return redirect(`${path.slice(0, -1)}`)
+  }
+  let jsonContent
+  let data
+  let examples: ExampleFiles[] = []
+  const versions = await getVersionRefs()
+  if (path?.endsWith('.schema.json')) {
+    const fileName = path.split('/').at(-1)
+    const parentPath = path.replace(`/${fileName}`, '')
+    jsonContent = await loadJson(path, version)
+    examples = await loadSchemaExamples(path, version)
+    data = await getGithubDir(parentPath, version)
+  } else {
+    data = await getGithubDir(path, version)
+  }
+  data = data.filter((x) => !x.name.endsWith('.example.json'))
+  return json(
+    { data, jsonContent, examples, versions },
+    { headers: publicStaticShortTermCacheControlHeaders }
+  )
 }
 
 export default function () {
-  const { path, result, examples } = useLoaderData<typeof loader>()
+  const { version, '*': path } = useParams()
+  const { data, jsonContent, examples, versions } = useLoaderData()
+  if (!path) {
+    throw new Error('Path is not defined.')
+  }
+  const previous = path?.replace(`/${path.split('/').at(-1)}`, '')
+
+  return (
+    <>
+      <div className="desktop:grid-col-3">
+        <Link to="/docs" className="margin-bottom-1">
+          <div className="position-relative">
+            <Icon.ArrowBack className="position-absolute top-0 left-0" />
+          </div>
+          <span className="padding-left-2">Back</span>
+        </Link>
+        <details id="selectedVersionDetails" className="margin-top-1">
+          <summary
+            id="selectedVersionSummary"
+            className="display-flex usa-button usa-button--outline grid-col-12 flex-align-center"
+          >
+            <span className="margin-right-auto">Version: {version}</span>
+            <Icon.UnfoldMore />
+          </summary>
+          <div>
+            <CardGroup>
+              <Card gridLayout={{ tablet: { col: 'fill' } }}>
+                <CardHeader>
+                  <h3>Versions</h3>
+                </CardHeader>
+
+                <CardBody className="padding-y-0">
+                  {versions.map((x: { name: string; ref: string }) => (
+                    <div key={x.name}>
+                      <Link to={`/docs/schema-browser/${x.ref}`}>{x.name}</Link>
+                    </div>
+                  ))}
+                </CardBody>
+              </Card>
+            </CardGroup>
+          </div>
+        </details>
+        <SideNav
+          items={[
+            path != previous && (
+              <Link key={previous} to={previous}>
+                Previous
+              </Link>
+            ),
+            !path.endsWith('.schema.json') && (
+              <NavLink key={path} to={path}>
+                {path}
+              </NavLink>
+            ),
+            <SideNavSub
+              key="subnav"
+              items={data.map((x: GitContentDataResponse) => (
+                <NavLink key={x.path} to={x.path}>
+                  <span className="display-flex flex-align-center">
+                    {x.type == 'dir' && (
+                      <span className="margin-top-05 padding-right-05">
+                        <Icon.FolderOpen />
+                      </span>
+                    )}
+                    <span>{x.name}</span>
+                  </span>
+                </NavLink>
+              ))}
+              base={path}
+            ></SideNavSub>,
+          ]}
+        />
+      </div>
+      <div className="desktop:grid-col-9">
+        {jsonContent ? (
+          <SchemaBody
+            path={path ?? ''}
+            result={jsonContent}
+            selectedVersion={version ?? ''}
+            examples={examples}
+          />
+        ) : (
+          <SchemaDefinition />
+        )}
+      </div>
+    </>
+  )
+}
+
+function SchemaBody({
+  path,
+  result,
+  selectedVersion,
+  examples,
+}: {
+  path: string
+  result: Schema
+  selectedVersion: string
+  examples: ExampleFiles[]
+}) {
   const anchor = `#${result.title?.replaceAll(' ', '-')}`
   return (
     <>
@@ -40,7 +170,7 @@ export default function () {
         View the source on{' '}
         <Link
           rel="external"
-          to={`https://github.com/nasa-gcn/gcn-schema/blob/main/${path}`}
+          to={`https://github.com/nasa-gcn/gcn-schema/blob/${selectedVersion}/${path}`}
         >
           Github
         </Link>
@@ -177,17 +307,4 @@ export default function () {
       )}
     </>
   )
-}
-
-function formatFieldName(name: string, requiredProps?: string[]) {
-  let formattedName = name
-  if (requiredProps && requiredProps.includes(name)) formattedName += '*'
-  return formattedName
-}
-
-function formatFieldType(item: SchemaProperty): string {
-  if (item.type) return item.type
-  if (item.enum) return 'enum'
-  if (item.$ref) return item.$ref.split('/').slice(-1)[0]
-  return ''
 }
