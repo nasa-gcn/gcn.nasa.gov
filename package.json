@@ -28,7 +28,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@architect/functions": "^6.0.1",
+    "@architect/functions": "^5.3.4",
     "@balavishnuvj/remix-seo": "^1.0.2",
     "@nasa-gcn/architect-functions-search": "^0.2.1",
     "@nasa-gcn/dynamodb-autoincrement": "^0.0.6",
@@ -67,15 +67,15 @@
     "ts-dedent": "^2.2.0"
   },
   "devDependencies": {
-    "@architect/architect": "^10.12.6",
+    "@architect/architect": "^10.11.0",
     "@architect/plugin-lambda-invoker": "^1.0.0",
     "@architect/plugin-storage-private": "^1.0.1",
     "@architect/utils": "^3.1.9",
-    "@aws-sdk/client-cognito-identity-provider": "^3.319.0",
-    "@aws-sdk/client-s3": "^3.319.0",
-    "@aws-sdk/client-sesv2": "^3.319.0",
-    "@aws-sdk/lib-dynamodb": "^3.319.0",
-    "@aws-sdk/util-dynamodb": "^3.319.0",
+    "@aws-sdk/client-cognito-identity-provider": "3.188.0",
+    "@aws-sdk/client-s3": "3.188.0",
+    "@aws-sdk/client-sesv2": "3.188.0",
+    "@aws-sdk/lib-dynamodb": "3.188.0",
+    "@aws-sdk/util-dynamodb": "3.188.0",
     "@babel/preset-typescript": "^7.22.5",
     "@nasa-gcn/architect-plugin-search": "^0.2.0",
     "@remix-run/dev": "^1.15.0",
