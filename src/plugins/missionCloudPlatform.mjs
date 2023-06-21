@@ -13,6 +13,11 @@ export const deploy = {
     // they must be set manually by an administrator
     delete cloudformation.Resources.StaticBucketPolicy
 
+    // Mission Cloud Platform does not support user-defined public access block
+    // configurations; they must be set manually by an administrator
+    delete cloudformation.Resources.StaticBucket.Properties
+      .PublicAccessBlockConfiguration
+
     // Add required permissions boundary for working on the Mission Cloud Platform
     cloudformation.Resources.Role.Properties.PermissionsBoundary = {
       // eslint-disable-next-line no-template-curly-in-string
