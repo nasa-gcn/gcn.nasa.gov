@@ -39,8 +39,17 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   if (query) {
     await circularRedirect(query)
   }
+  const startDate = searchParams.get('startDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
-  const results = await search({ query, page: page - 1, limit })
+  const results = await search({
+    query,
+    page: page - 1,
+    limit,
+    startDate,
+    endDate,
+  })
+
   return { page, ...results }
 }
 
@@ -53,9 +62,17 @@ export async function action({ request }: DataFunctionArgs) {
   return await put(subject, body, request)
 }
 
-function getPageLink(page: number, query?: string) {
-  const searchParams = new URLSearchParams({ page: page.toString() })
+function getPageLink(
+  page: number,
+  query?: string,
+  startDate?: string,
+  endDate?: string
+) {
+  const searchParams = new URLSearchParams({ page: page.toString() || '1' })
   if (query) searchParams.set('query', query)
+  searchParams.set('page', page.toString() || '1')
+  if (startDate) searchParams.set('startDate', startDate)
+  if (endDate) searchParams.set('endDate', endDate)
   return `?${searchParams.toString()}`
 }
 
@@ -63,10 +80,14 @@ function Pagination({
   page,
   totalPages,
   query,
+  startDate,
+  endDate,
 }: {
   page: number
   totalPages: number
   query?: string
+  startDate?: string
+  endDate?: string
 }) {
   const pages = usePagination({ currentPage: page, totalPages })
 
@@ -82,7 +103,7 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query)}
+                    to={getPageLink(number!, query, startDate, endDate)}
                     className="usa-pagination__link usa-pagination__previous-page"
                     aria-label="Previous page"
                   >
@@ -108,7 +129,7 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query)}
+                    to={getPageLink(number!, query, startDate, endDate)}
                     className="usa-pagination__link usa-pagination__next-page"
                     aria-label="Next page"
                   >
@@ -124,7 +145,7 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query)}
+                    to={getPageLink(number!, query, startDate, endDate)}
                     className={classNames('usa-pagination__button', {
                       'usa-current': isCurrent,
                     })}
@@ -152,11 +173,12 @@ export default function () {
 
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
+
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
 
-  const [input, setInput] = useState(query)
-  const clean = input === query
+  const [inputQuery, setInputQuery] = useState(query)
+  const clean = inputQuery === query
 
   const submit = useSubmit()
 
@@ -187,11 +209,11 @@ export default function () {
             id="query"
             name="query"
             type="search"
-            defaultValue={query}
+            defaultValue={inputQuery}
             placeholder="Search"
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
-              setInput(value)
+              setInputQuery(value)
               if (!value) submit(form)
             }}
           />
