@@ -15,6 +15,7 @@ import memoizee from 'memoizee'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
+import { formatDateEpoch } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
 export const group = 'gcn.nasa.gov/circular-submitter'
@@ -48,16 +49,23 @@ export async function search({
   query,
   page,
   limit,
+  startDate,
+  endDate,
 }: {
   query?: string
   page?: number
   limit?: number
+  startDate?: string
+  endDate?: string
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
   totalItems: number
 }> {
   const client = await getSearch()
+
+  const startTime = formatDateEpoch(startDate!) || -Infinity
+  const endTime = formatDateEpoch(endDate!) + 86400000 || Infinity
 
   const {
     body: {
@@ -69,11 +77,29 @@ export async function search({
   } = await client.search({
     index: 'circulars',
     body: {
-      query: query && {
-        multi_match: { query, fields: ['submitter', 'subject', 'body'] },
+      query: {
+        bool: {
+          must: query
+            ? {
+                multi_match: {
+                  query,
+                  fields: ['submitter', 'subject', 'body'],
+                },
+              }
+            : undefined,
+          filter: {
+            range: {
+              createdOn: {
+                gte: startTime,
+                lte: endTime,
+              },
+            },
+          },
+        },
       },
-      fields: ['subject'],
-      _source: false,
+      _source: {
+        includes: ['subject', 'createdOn'],
+      },
       sort: {
         circularId: {
           order: 'desc',
@@ -88,15 +114,17 @@ export async function search({
   const items = hits.map(
     ({
       _id: circularId,
-      fields: {
-        subject: [subject],
-      },
+      _source: { subject, createdOn },
     }: {
       _id: string
-      fields: { subject: string[] }
+      _source: {
+        subject?: string
+        createdOn?: string
+      }
     }) => ({
       circularId,
       subject,
+      createdOn,
     })
   )
 

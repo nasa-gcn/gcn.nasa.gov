@@ -76,6 +76,11 @@ export function formatDateISO(date: number) {
   return new Date(date).toISOString().replace(/\.\d+Z$/, 'Z')
 }
 
+/** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
+export function formatDateEpoch(date: string) {
+  return new Date(date).getTime()
+}
+
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
   if (subject.length) {
