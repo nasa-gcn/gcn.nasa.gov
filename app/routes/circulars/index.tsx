@@ -173,14 +173,19 @@ export default function () {
 
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
+  // const startDate = searchParams.get('startDate') ?? undefined
+  // const endDate = searchParams.get('endDate') ?? undefined
 
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
 
   const [inputQuery, setInputQuery] = useState(query)
+  // const [inputDateGte, setInputDateGte] = useState(startDate)
+  // const [inputDateLte, setInputDateLte] = useState(endDate)
+  // const [inputExpand, setInputExpand] = useState(false)
   const clean = inputQuery === query
 
-  const submit = useSubmit()
+  const submit = useSubmit() //&& inputDateGte === startDate && inputDateLte === endDate
 
   return (
     <>
@@ -217,6 +222,15 @@ export default function () {
               if (!value) submit(form)
             }}
           />
+          <Button
+            type="button"
+            className="height-4 padding-top-0 padding-bottom-0"
+            onClick={() => {
+              console.log('test')
+            }}
+          >
+            &gt;&gt;
+          </Button>
           <Button type="submit">
             <img
               src={searchImg}
