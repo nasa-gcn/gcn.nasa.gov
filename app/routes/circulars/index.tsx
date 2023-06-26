@@ -62,12 +62,17 @@ export async function action({ request }: DataFunctionArgs) {
   return await put(subject, body, request)
 }
 
-function getPageLink(
-  page: number,
-  query?: string,
-  startDate?: string,
+function getPageLink({
+  page,
+  query,
+  startDate,
+  endDate,
+}: {
+  page: number
+  query?: string
+  startDate?: string
   endDate?: string
-) {
+}) {
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
   if (query) searchParams.set('query', query)
@@ -81,9 +86,7 @@ function getPageLink(
 function Pagination({
   page,
   totalPages,
-  query,
-  startDate,
-  endDate,
+  ...queryStringProps
 }: {
   page: number
   totalPages: number
@@ -105,12 +108,10 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(
-                      pageProps.number,
-                      query,
-                      startDate,
-                      endDate
-                    )}
+                    to={getPageLink({
+                      page: pageProps.number,
+                      ...queryStringProps,
+                    })}
                     className="usa-pagination__link usa-pagination__previous-page"
                     aria-label="Previous page"
                   >
@@ -136,12 +137,10 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(
-                      pageProps.number,
-                      query,
-                      startDate,
-                      endDate
-                    )}
+                    to={getPageLink({
+                      page: pageProps.number,
+                      ...queryStringProps,
+                    })}
                     className="usa-pagination__link usa-pagination__next-page"
                     aria-label="Next page"
                   >
@@ -157,12 +156,10 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(
-                      pageProps.number,
-                      query,
-                      startDate,
-                      endDate
-                    )}
+                    to={getPageLink({
+                      page: pageProps.number,
+                      ...queryStringProps,
+                    })}
                     className={classNames('usa-pagination__button', {
                       'usa-current': pageProps.isCurrent,
                     })}
@@ -190,6 +187,8 @@ export default function () {
 
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
+  const startDate = searchParams.get('startDate') ?? undefined
+  const endDate = searchParams.get('endDate') ?? undefined
 
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
@@ -274,7 +273,13 @@ export default function () {
             ))}
           </ol>
           {totalPages > 1 && (
-            <Pagination query={query} page={page} totalPages={totalPages} />
+            <Pagination
+              query={query}
+              page={page}
+              totalPages={totalPages}
+              startDate={startDate}
+              endDate={endDate}
+            />
           )}
         </>
       )}
