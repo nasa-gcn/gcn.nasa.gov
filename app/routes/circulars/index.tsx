@@ -73,7 +73,9 @@ function getPageLink(
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
-  return `?${searchParams.toString()}`
+
+  const searchParamsString = searchParams.toString()
+  return searchParamsString && `?${searchParamsString}`
 }
 
 function Pagination({
