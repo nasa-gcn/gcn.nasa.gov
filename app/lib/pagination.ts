@@ -1,3 +1,10 @@
+type Page =
+  | {
+      type: 'overflow'
+    }
+  | { type: 'next' | 'prev'; number: number }
+  | { type: 'number'; number: number; isCurrent: boolean }
+
 /**
  * Implement the pagination algorithm desscribed at
  * https://designsystem.digital.gov/components/pagination/.
@@ -95,9 +102,5 @@ export function usePagination({
           }
     ),
     ...(nextPage ? [{ type: 'next', number: nextPage }] : []),
-  ] as {
-    type: 'next' | 'prev' | 'overflow' | 'number'
-    number?: number
-    isCurrent?: boolean
-  }[]
+  ] as Page[]
 }
