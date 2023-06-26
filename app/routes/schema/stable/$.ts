@@ -5,12 +5,21 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import { Octokit } from '@octokit/rest'
 import { type DataFunctionArgs, redirect } from '@remix-run/node'
 
-/* Make all JSON files at https://github.com/nasa-gcn/gcn-schema available from
- * https://gcn.nasa.gov/schema */
+const githubData = {
+  owner: 'nasa-gcn',
+  repo: 'gcn-schema',
+}
+const octokit = new Octokit()
+
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
+  const latestRelease = (await octokit.rest.repos.getLatestRelease(githubData))
+    .data
+  if (!latestRelease) throw new Response(null, { status: 404 })
+
   return redirect(
-    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${path ?? ''}`
+    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${latestRelease.tag_name}/${path}`
   )
 }

@@ -15,7 +15,6 @@ import memoizee from 'memoizee'
 import { getUser } from '../__auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
-import { formatDateEpoch } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
 export const group = 'gcn.nasa.gov/circular-submitter'
@@ -45,6 +44,11 @@ export const getDynamoDBAutoIncrement = memoizee(
   { promise: true }
 )
 
+/** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
+function parseDate(date?: string) {
+  return date ? new Date(date).getTime() : NaN
+}
+
 export async function search({
   query,
   page,
@@ -64,8 +68,8 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  const startTime = formatDateEpoch(startDate!) || -Infinity
-  const endTime = formatDateEpoch(endDate!) + 86400000 || Infinity
+  const startTime = parseDate(startDate) || undefined
+  const endTime = parseDate(endDate) + 86400000 || undefined
 
   const {
     body: {
@@ -97,9 +101,8 @@ export async function search({
           },
         },
       },
-      _source: {
-        includes: ['subject', 'createdOn'],
-      },
+      fields: ['subject'],
+      _source: false,
       sort: {
         circularId: {
           order: 'desc',
@@ -114,17 +117,15 @@ export async function search({
   const items = hits.map(
     ({
       _id: circularId,
-      _source: { subject, createdOn },
+      fields: {
+        subject: [subject],
+      },
     }: {
       _id: string
-      _source: {
-        subject?: string
-        createdOn?: string
-      }
+      fields: { subject: string[] }
     }) => ({
       circularId,
       subject,
-      createdOn,
     })
   )
 

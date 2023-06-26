@@ -64,26 +64,31 @@ export async function action({ request }: DataFunctionArgs) {
   return await put(subject, body, request)
 }
 
-function getPageLink(
-  page: number,
-  query?: string,
-  startDate?: string,
+function getPageLink({
+  page,
+  query,
+  startDate,
+  endDate,
+}: {
+  page: number
+  query?: string
+  startDate?: string
   endDate?: string
-) {
-  const searchParams = new URLSearchParams({ page: page.toString() || '1' })
+}) {
+  const searchParams = new URLSearchParams()
+  if (page > 1) searchParams.set('page', page.toString())
   if (query) searchParams.set('query', query)
-  searchParams.set('page', page.toString() || '1')
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
-  return `?${searchParams.toString()}`
+
+  const searchParamsString = searchParams.toString()
+  return searchParamsString && `?${searchParamsString}`
 }
 
 function Pagination({
   page,
   totalPages,
-  query,
-  startDate,
-  endDate,
+  ...queryStringProps
 }: {
   page: number
   totalPages: number
@@ -96,8 +101,8 @@ function Pagination({
   return (
     <nav aria-label="Pagination" className="usa-pagination">
       <ul className="usa-pagination__list">
-        {pages.map(({ type, number, isCurrent }, i) => {
-          switch (type) {
+        {pages.map((pageProps, i) => {
+          switch (pageProps.type) {
             case 'prev':
               return (
                 <li
@@ -105,7 +110,10 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query, startDate, endDate)}
+                    to={getPageLink({
+                      page: pageProps.number,
+                      ...queryStringProps,
+                    })}
                     className="usa-pagination__link usa-pagination__previous-page"
                     aria-label="Previous page"
                   >
@@ -131,7 +139,10 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query, startDate, endDate)}
+                    to={getPageLink({
+                      page: pageProps.number,
+                      ...queryStringProps,
+                    })}
                     className="usa-pagination__link usa-pagination__next-page"
                     aria-label="Next page"
                   >
@@ -147,15 +158,18 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query, startDate, endDate)}
+                    to={getPageLink({
+                      page: pageProps.number,
+                      ...queryStringProps,
+                    })}
                     className={classNames('usa-pagination__button', {
-                      'usa-current': isCurrent,
+                      'usa-current': pageProps.isCurrent,
                     })}
                     prefetch="render"
-                    aria-label={`Page ${number}`}
-                    aria-current={isCurrent}
+                    aria-label={`Page ${pageProps.number}`}
+                    aria-current={pageProps.isCurrent}
                   >
-                    {number}
+                    {pageProps.number}
                   </Link>
                 </li>
               )
@@ -315,7 +329,13 @@ export default function () {
             ))}
           </ol>
           {totalPages > 1 && (
-            <Pagination query={query} page={page} totalPages={totalPages} />
+            <Pagination
+              query={query}
+              page={page}
+              totalPages={totalPages}
+              startDate={startDate}
+              endDate={endDate}
+            />
           )}
         </>
       )}

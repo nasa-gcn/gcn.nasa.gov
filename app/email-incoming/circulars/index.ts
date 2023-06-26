@@ -57,6 +57,21 @@ module.exports.handler = createEmailIncomingMessageHandler(
     const userEmail = getFromAddress(parsed.from)
     const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
 
+    const userData =
+      (await getCognitoUserData(userEmail)) ??
+      (await getLegacyUserData(userEmail))
+
+    if (!userData || !userData.submit) {
+      await sendFailureEmail({
+        subjectMessage: 'Not an authorized submitter',
+        userEmail,
+        to,
+        body: `The email address you are submitting this circular from is not approved to submit GCN Circulars. To become an approved submitter, please sign in to ${origin} and see ${origin}/user/endorsements`,
+        parsedSubmissionSubject: parsed.subject ?? '',
+      })
+      return
+    }
+
     if (
       !parsed.subject ||
       !subjectIsValid(parsed.subject) ||
@@ -69,21 +84,6 @@ module.exports.handler = createEmailIncomingMessageHandler(
         to,
         body: `The subject line and body do not conform to the appropriate format. Please see ${origin}/circulars/classic#submission-process for more information.`,
         parsedSubmissionSubject: parsed.subject ?? 'No Subject Provided',
-      })
-      return
-    }
-
-    const userData =
-      (await getCognitoUserData(userEmail)) ??
-      (await getLegacyUserData(userEmail))
-
-    if (!userData || !userData.submit) {
-      await sendFailureEmail({
-        subjectMessage: 'Not an authorized submitter',
-        userEmail,
-        to,
-        body: `The email address you are submitting this circular from is not approved to submit GCN Circulars. To become an approved submitter, please sign in to ${origin} and see ${origin}/user/endorsements`,
-        parsedSubmissionSubject: parsed.subject,
       })
       return
     }
