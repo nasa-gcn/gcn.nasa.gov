@@ -94,8 +94,8 @@ function Pagination({
   return (
     <nav aria-label="Pagination" className="usa-pagination">
       <ul className="usa-pagination__list">
-        {pages.map(({ type, number, isCurrent }, i) => {
-          switch (type) {
+        {pages.map((pageProps, i) => {
+          switch (pageProps.type) {
             case 'prev':
               return (
                 <li
@@ -103,7 +103,12 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query, startDate, endDate)}
+                    to={getPageLink(
+                      pageProps.number,
+                      query,
+                      startDate,
+                      endDate
+                    )}
                     className="usa-pagination__link usa-pagination__previous-page"
                     aria-label="Previous page"
                   >
@@ -129,7 +134,12 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query, startDate, endDate)}
+                    to={getPageLink(
+                      pageProps.number,
+                      query,
+                      startDate,
+                      endDate
+                    )}
                     className="usa-pagination__link usa-pagination__next-page"
                     aria-label="Next page"
                   >
@@ -145,15 +155,20 @@ function Pagination({
                   key={i}
                 >
                   <Link
-                    to={getPageLink(number!, query, startDate, endDate)}
+                    to={getPageLink(
+                      pageProps.number,
+                      query,
+                      startDate,
+                      endDate
+                    )}
                     className={classNames('usa-pagination__button', {
-                      'usa-current': isCurrent,
+                      'usa-current': pageProps.isCurrent,
                     })}
                     prefetch="render"
-                    aria-label={`Page ${number}`}
-                    aria-current={isCurrent}
+                    aria-label={`Page ${pageProps.number}`}
+                    aria-current={pageProps.isCurrent}
                   >
-                    {number}
+                    {pageProps.number}
                   </Link>
                 </li>
               )
