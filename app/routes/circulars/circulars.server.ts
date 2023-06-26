@@ -101,9 +101,8 @@ export async function search({
           },
         },
       },
-      _source: {
-        includes: ['subject', 'createdOn'],
-      },
+      fields: ['subject'],
+      _source: false,
       sort: {
         circularId: {
           order: 'desc',
@@ -118,17 +117,15 @@ export async function search({
   const items = hits.map(
     ({
       _id: circularId,
-      _source: { subject, createdOn },
+      fields: {
+        subject: [subject],
+      },
     }: {
       _id: string
-      _source: {
-        subject?: string
-        createdOn?: string
-      }
+      fields: { subject: string[] }
     }) => ({
       circularId,
       subject,
-      createdOn,
     })
   )
 
