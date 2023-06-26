@@ -16,7 +16,8 @@ import {
 } from '@remix-run/react'
 import {
   Button,
-  ButtonGroup,
+  ButtonGroup, // Card,
+  DateRangePicker,
   Icon,
   Label,
   TextInput,
@@ -35,6 +36,7 @@ const limit = 100
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
+  console.log(searchParams)
   const query = searchParams.get('query') || undefined
   if (query) {
     await circularRedirect(query)
@@ -171,21 +173,26 @@ export default function () {
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
+  // const inputRef = useRef<SubmitEvent>(null)
+
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
-  // const startDate = searchParams.get('startDate') ?? undefined
-  // const endDate = searchParams.get('endDate') ?? undefined
+  const startDate = searchParams.get('startDate') ?? undefined
+  const endDate = searchParams.get('endDate') ?? undefined
 
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  // const [inputDateGte, setInputDateGte] = useState(startDate)
-  // const [inputDateLte, setInputDateLte] = useState(endDate)
+  const [inputDateGte, setInputDateGte] = useState(startDate)
+  const [inputDateLte, setInputDateLte] = useState(endDate)
   // const [inputExpand, setInputExpand] = useState(false)
-  const clean = inputQuery === query
+  const clean =
+    inputQuery === query &&
+    inputDateGte === startDate &&
+    inputDateLte === endDate
 
-  const submit = useSubmit() //&& inputDateGte === startDate && inputDateLte === endDate
+  const submit = useSubmit()
 
   return (
     <>
@@ -254,6 +261,43 @@ export default function () {
         To navigate to a specific circular, enter the associated Circular ID
         (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
+      <hr />
+      <Form className="display-inline-block usa-card__container top-0 bg-white margin-bottom-1 padding-left-1 padding-bottom-1">
+        <h2>Filter Circulars by date</h2>
+        <DateRangePicker
+          endDateHint="dd-mm-yyyy"
+          endDateLabel="End Date"
+          endDatePickerProps={{
+            disabled: false,
+            id: 'event-date-end',
+            name: 'event-date-end',
+            defaultValue: inputDateLte,
+
+            onChange: (value) => {
+              setInputDateLte(value)
+              console.log(value)
+              // const form = inputRef.current
+              // useRef hook to get the form
+              // if (!value) submit(form)
+            },
+          }}
+          startDateHint="dd-mm-yyyy"
+          startDateLabel="Start Date"
+          startDatePickerProps={{
+            disabled: false,
+            id: 'event-date-start',
+            name: 'event-date-start',
+            defaultValue: inputDateGte,
+            onChange: (value) => {
+              setInputDateGte(value)
+              // const form = inputRef.current
+              // useRef hook to get the form
+              // if (!value) submit(form)
+            },
+          }}
+        />
+      </Form>
+
       {clean && (
         <>
           {query && (
