@@ -52,7 +52,7 @@ export const sandbox = {
         }
       },
       claims: {
-        openid: ['sub', 'email', 'cognito:username'],
+        openid: ['sub', 'email', 'cognito:username', 'cognito:groups'],
       },
       // Register an app client for the web site
       clients: [
