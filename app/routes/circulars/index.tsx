@@ -279,6 +279,20 @@ export default function () {
       <Form className="display-inline-block usa-card__container top-0 bg-white margin-bottom-1 padding-left-1 padding-bottom-1">
         <h2>Filter Circulars by date</h2>
         <DateRangePicker
+          startDateHint="dd-mm-yyyy"
+          startDateLabel="Start Date"
+          startDatePickerProps={{
+            disabled: false,
+            id: 'event-date-start',
+            name: 'event-date-start',
+            defaultValue: inputDateGte,
+            onChange: (value) => {
+              setInputDateGte(value)
+              // const form = inputRef.current
+              // useRef hook to get the form
+              // if (!value) submit(form)
+            },
+          }}
           endDateHint="dd-mm-yyyy"
           endDateLabel="End Date"
           endDatePickerProps={{
@@ -290,20 +304,6 @@ export default function () {
             onChange: (value) => {
               setInputDateLte(value)
               console.log(value)
-              // const form = inputRef.current
-              // useRef hook to get the form
-              // if (!value) submit(form)
-            },
-          }}
-          startDateHint="dd-mm-yyyy"
-          startDateLabel="Start Date"
-          startDatePickerProps={{
-            disabled: false,
-            id: 'event-date-start',
-            name: 'event-date-start',
-            defaultValue: inputDateGte,
-            onChange: (value) => {
-              setInputDateGte(value)
               // const form = inputRef.current
               // useRef hook to get the form
               // if (!value) submit(form)
