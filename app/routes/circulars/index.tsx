@@ -68,9 +68,9 @@ function getPageLink(
   startDate?: string,
   endDate?: string
 ) {
-  const searchParams = new URLSearchParams({ page: page.toString() || '1' })
+  const searchParams = new URLSearchParams()
+  if (page > 1) searchParams.set('page', page.toString())
   if (query) searchParams.set('query', query)
-  searchParams.set('page', page.toString() || '1')
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
   return `?${searchParams.toString()}`
