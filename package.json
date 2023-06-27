@@ -28,7 +28,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@architect/functions": "^5.3.4",
+    "@architect/functions": "^6.0.1",
     "@balavishnuvj/remix-seo": "^1.0.2",
     "@nasa-gcn/architect-functions-search": "^0.2.2",
     "@nasa-gcn/dynamodb-autoincrement": "^0.0.6",
