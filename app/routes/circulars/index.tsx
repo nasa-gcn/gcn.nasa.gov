@@ -32,6 +32,7 @@ import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
+import calendarImg from 'app/theme/img/usa-icons/calendar_today.svg'
 
 const limit = 100
 
@@ -251,7 +252,11 @@ export default function () {
               console.log('test')
             }}
           >
-            &gt;&gt;
+            <img
+              className="usa-search__submit-icon"
+              src={calendarImg}
+              alt="Date Filter"
+            />
           </Button>
           <Button type="submit">
             <img
