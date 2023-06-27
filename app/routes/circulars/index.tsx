@@ -11,6 +11,7 @@ import {
   Link,
   useActionData,
   useLoaderData,
+  useLocation,
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
@@ -23,8 +24,8 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { useState } from 'react'
 
+// import { useState } from 'react'
 import { circularRedirect, put, search } from './circulars.server'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
@@ -51,7 +52,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     startDate,
     endDate,
   })
-
+  console.log(results)
   return { page, ...results }
 }
 
@@ -187,8 +188,6 @@ export default function () {
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
-  // const inputRef = useRef<SubmitEvent>(null)
-
   const [searchParams] = useSearchParams()
   const query = searchParams.get('query') ?? undefined
   const startDate = searchParams.get('startDate') ?? undefined
@@ -197,16 +196,17 @@ export default function () {
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
 
-  const [inputQuery, setInputQuery] = useState(query)
-  const [inputDateGte, setInputDateGte] = useState(startDate)
-  const [inputDateLte, setInputDateLte] = useState(endDate)
+  // const [inputQuery, setInputQuery] = useState(query)
+  // const [inputDateGte] = useState(startDate)
+  // const [inputDateLte] = useState(endDate)
   // const [inputExpand, setInputExpand] = useState(false)
-  const clean =
-    inputQuery === query &&
-    inputDateGte === startDate &&
-    inputDateLte === endDate
+  // const clean = inputQuery === query
+  // inputDateGte === startDate &&
+  // inputDateLte === endDate
 
   const submit = useSubmit()
+
+  const location = useLocation()
 
   return (
     <>
@@ -227,6 +227,7 @@ export default function () {
         <Form
           className="display-inline-block usa-search usa-search--small"
           role="search"
+          action="/circulars"
         >
           <Label srOnly={true} htmlFor="query">
             Search
@@ -235,13 +236,13 @@ export default function () {
             id="query"
             name="query"
             type="search"
-            defaultValue={inputQuery}
+            defaultValue={query}
             placeholder="Search"
             aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form)
-            }}
+            // onChange={({ target: { form, value } }) => {
+            //   setInputQuery(value)
+            //   if (!value) submit(form)
+            // }}
           />
           <Button
             type="button"
@@ -278,67 +279,64 @@ export default function () {
       <hr />
       <Form className="display-inline-block usa-card__container top-0 bg-white margin-bottom-1 padding-left-1 padding-bottom-1">
         <h2>Filter Circulars by date</h2>
+
         <DateRangePicker
-          startDateHint="dd-mm-yyyy"
+          startDateHint="dd/mm/yyyy"
           startDateLabel="Start Date"
           startDatePickerProps={{
-            disabled: false,
             id: 'event-date-start',
             name: 'event-date-start',
-            defaultValue: inputDateGte,
+            defaultValue: startDate,
             onChange: (value) => {
-              setInputDateGte(value)
-              // const form = inputRef.current
-              // useRef hook to get the form
-              // if (!value) submit(form)
+              if (value) {
+                let params = new URLSearchParams(location.search)
+                params.set('startDate', value)
+                submit(params, {
+                  method: 'get',
+                  action: '/circulars',
+                })
+              }
             },
           }}
-          endDateHint="dd-mm-yyyy"
+          endDateHint="dd/mm/yyyy"
           endDateLabel="End Date"
           endDatePickerProps={{
-            disabled: false,
             id: 'event-date-end',
             name: 'event-date-end',
-            defaultValue: inputDateLte,
-
+            defaultValue: endDate,
             onChange: (value) => {
-              setInputDateLte(value)
-              console.log(value)
-              // const form = inputRef.current
-              // useRef hook to get the form
-              // if (!value) submit(form)
+              if (value) {
+                let params = new URLSearchParams(location.search)
+                params.set('endDate', value)
+                submit(params, {
+                  method: 'get',
+                  action: '/circulars',
+                })
+              }
             },
           }}
         />
       </Form>
 
-      {clean && (
-        <>
-          {query && (
-            <h3>
-              {totalItems} result{totalItems != 1 && 's'} found.
-            </h3>
-          )}
-          <ol>
-            {allItems.map(({ circularId, subject }) => (
-              <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}${searchParamsString}`}>
-                  {subject}
-                </Link>
-              </li>
-            ))}
-          </ol>
-          {totalPages > 1 && (
-            <Pagination
-              query={query}
-              page={page}
-              totalPages={totalPages}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          )}
-        </>
-      )}
+      <>
+        {query && (
+          <h3>
+            {totalItems} result{totalItems != 1 && 's'} found.
+          </h3>
+        )}
+        <ol>
+          {allItems.map(({ circularId, subject }) => (
+            <li key={circularId} value={circularId}>
+              <Link to={`/circulars/${circularId}${searchParamsString}`}>
+                {subject}
+              </Link>
+            </li>
+          ))}
+        </ol>
+        {totalPages > 1 && (
+          <Pagination query={query} page={page} totalPages={totalPages} />
+        )}
+      </>
     </>
   )
 }
