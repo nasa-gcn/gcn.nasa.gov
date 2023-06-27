@@ -116,6 +116,7 @@ export const validSubjectKeywords = [
   'IceCube',
   'INTEGRAL',
   'IPN',
+  'JCMT',
   'KAGRA',
   'KONUS',
   'LIGO',
