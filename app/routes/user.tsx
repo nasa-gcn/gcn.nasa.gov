@@ -5,14 +5,27 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import type { DataFunctionArgs } from '@remix-run/node'
 import { NavLink, Outlet } from '@remix-run/react'
+import { useLoaderData } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
+import { getUser } from './__auth/user.server'
 import { SideNav } from '~/components/SideNav'
 
 export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
+export async function loader({ request }: DataFunctionArgs) {
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+
+  const { email, idp } = user
+  return { email, idp }
+}
+
 export default function () {
+  const { idp } = useLoaderData<typeof loader>()
+
   return (
     <GridContainer className="usa-section">
       <div className="grid-row grid-gap">
@@ -25,6 +38,11 @@ export default function () {
               <NavLink key="endorsements" to="endorsements">
                 Peer Endorsements
               </NavLink>,
+              !idp ? (
+                <NavLink key="password" to="password">
+                  Update Password
+                </NavLink>
+              ) : null,
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,

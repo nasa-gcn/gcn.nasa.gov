@@ -134,10 +134,11 @@ export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   const email = user?.email
   const name = user?.name
+  const idp = user?.idp
   const features = getFeatures()
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
 
-  return { origin, email, name, features, recaptchaSiteKey }
+  return { origin, email, name, features, recaptchaSiteKey, idp }
 }
 
 /** Don't reevaluate this route's loader due to client-side navigations. */
@@ -149,6 +150,11 @@ function useLoaderDataRoot() {
   const result = useRouteLoaderData<typeof loader>('root')
   invariant(result)
   return result
+}
+
+export function useUserIdp() {
+  const { idp } = useLoaderDataRoot()
+  return idp
 }
 
 export function useEmail() {

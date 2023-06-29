@@ -15,7 +15,7 @@ import {
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-import { useEmail } from '~/root'
+import { useEmail, useUserIdp } from '~/root'
 
 import logo from '~/img/logo.svg'
 
@@ -66,6 +66,7 @@ function NavDropDownButton({
 
 export function Header() {
   const email = useEmail()
+  const idp = useUserIdp()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
 
@@ -160,6 +161,15 @@ export function Header() {
                       >
                         Peer Endorsements
                       </Link>,
+                      !idp ? (
+                        <Link
+                          key="password"
+                          to="/user/password"
+                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                        >
+                          Update Password
+                        </Link>
+                      ) : null,
                       <Link
                         key="credentials"
                         to="/user/credentials"
