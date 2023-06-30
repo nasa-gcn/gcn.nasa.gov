@@ -10,9 +10,9 @@ import { useFetcher } from '@remix-run/react'
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
+import { PasswordManager } from './password.server'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
-import { PasswordManager } from '~/routes/user/password.server'
 
 export const handle = {
   breadcrumb: 'Password',
@@ -32,12 +32,8 @@ export async function action({ request }: DataFunctionArgs) {
   if (newPassword != confirmPassword) {
     throw new Response('passwords must match', { status: 400 })
   } else {
-    const passwordManager = await PasswordManager.create(
-      request,
-      oldPassword,
-      newPassword
-    )
-    await passwordManager.updatePassword()
+    await PasswordManager.updatePassword(request, oldPassword, newPassword)
+
     return null
   }
 }

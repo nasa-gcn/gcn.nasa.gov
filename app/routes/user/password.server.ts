@@ -9,24 +9,11 @@ import { ChangePasswordCommand } from '@aws-sdk/client-cognito-identity-provider
 
 import { getOpenIDClient, storage } from '../__auth/auth.server'
 import { getUser, parseTokenSet } from '../__auth/user.server'
-import { client, maybeThrow } from './cognito.server'
+import { maybeThrow } from './cognito.server'
+import { cognito } from '~/lib/cognito.server'
 
-export class PasswordManager {
-  #oldPassword: string
-  #newPassword: string
-  #accessToken: string
-
-  private constructor(
-    oldPassword: string,
-    newPassword: string,
-    accessToken: string
-  ) {
-    this.#oldPassword = oldPassword
-    this.#newPassword = newPassword
-    this.#accessToken = accessToken
-  }
-
-  static async create(
+export module PasswordManager {
+  async function updatePasswordFunc(
     request: Request,
     oldPassword: string,
     newPassword: string
@@ -43,23 +30,30 @@ export class PasswordManager {
       throw new Response('all password fields must be present', { status: 400 })
     }
 
-    return new this(oldPassword, newPassword, parsedTokenSet.accessToken)
-  }
-
-  async updatePassword() {
     const passwordData = {
-      AccessToken: this.#accessToken,
-      PreviousPassword: this.#oldPassword,
-      ProposedPassword: this.#newPassword,
+      AccessToken: parsedTokenSet.accessToken,
+      PreviousPassword: oldPassword,
+      ProposedPassword: newPassword,
     }
+
     let response
     try {
       const command = new ChangePasswordCommand(passwordData)
-      const response = await client.send(command)
+      const response = await cognito.send(command)
       return response
     } catch (e) {
       maybeThrow(e, 'creating fake user password')
       return response
     }
   }
+
+  export async function updatePassword(
+    request: Request,
+    oldPassword: string,
+    newPassword: string
+  ) {
+    updatePasswordFunc(request, oldPassword, newPassword)
+  }
 }
+
+export default PasswordManager
