@@ -38,11 +38,14 @@ export default function () {
               <NavLink key="endorsements" to="endorsements">
                 Peer Endorsements
               </NavLink>,
-              !idp ? (
-                <NavLink key="password" to="password">
-                  Reset Password
-                </NavLink>
-              ) : null,
+              ...(idp === 'Cognito'
+                ? [
+                    <NavLink key="password" to="password">
+                      {' '}
+                      Reset Password
+                    </NavLink>,
+                  ]
+                : []),
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,
