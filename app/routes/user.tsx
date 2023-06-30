@@ -38,7 +38,7 @@ export default function () {
               <NavLink key="endorsements" to="endorsements">
                 Peer Endorsements
               </NavLink>,
-              ...(idp === 'Cognito'
+              ...(idp === 'COGNITO'
                 ? [
                     <NavLink key="password" to="password">
                       {' '}
