@@ -40,13 +40,29 @@ export async function handlePasswordActions(
 }
 
 export function PasswordResetForm() {
+  const checkPassword = (str: string) => {
+    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+    return re.test(str)
+  }
+  const startsOrEndsWithWhitespace = (str: string) => {
+    return /^\s|\s$/.test(str)
+  }
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isNewPasswordTouched, setIsNewPasswordTouched] = useState(false)
+  const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
+    useState(false)
   const passwordsMatch = newPassword === confirmPassword
   const passwordsAreEmpty = newPassword === '' && confirmPassword === ''
   const shouldDisableSubmit =
     passwordsAreEmpty || !isNewPasswordTouched || !passwordsMatch
+  const isMatchError =
+    !isConfirmPasswordTouched || passwordsMatch ? '' : 'usa-input--error'
+
+  const valid =
+    !startsOrEndsWithWhitespace(newPassword) && checkPassword(newPassword)
+  const isValidPassword =
+    !isNewPasswordTouched || valid ? '' : 'usa-input--error'
 
   return (
     <Form method="POST">
@@ -61,6 +77,7 @@ export function PasswordResetForm() {
       <Label htmlFor="newPassword">New Password</Label>
       <TextInput
         data-focus
+        className={isValidPassword}
         name="newPassword"
         id="newPassword"
         type="password"
@@ -74,6 +91,7 @@ export function PasswordResetForm() {
       <Label htmlFor="confirmPassword">Retype New Password</Label>
       <TextInput
         data-focus
+        className={isMatchError}
         name="confirmPassword"
         id="confirmPassword"
         type="password"
@@ -81,18 +99,16 @@ export function PasswordResetForm() {
         onChange={(e) => {
           setConfirmPassword(e.target.value)
           setIsNewPasswordTouched(true)
+          setIsConfirmPasswordTouched(true)
         }}
         value={confirmPassword}
       />
 
-      <div className="margin-1">
-        {passwordsMatch ? (
-          <br />
-        ) : (
-          <span className="text-error"> Passwords must match </span>
-        )}
-      </div>
-      <Button disabled={shouldDisableSubmit} type="submit">
+      <Button
+        className="margin-y-2"
+        disabled={shouldDisableSubmit}
+        type="submit"
+      >
         Reset Password
       </Button>
     </Form>

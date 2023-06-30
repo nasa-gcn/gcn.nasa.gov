@@ -24,8 +24,19 @@ export async function action({ request }: DataFunctionArgs) {
 export default function () {
   return (
     <>
-      <h1>Update Password</h1>
+      <h1>Reset Password</h1>
       <PasswordResetForm />
+      <h3 className="site-preview-heading margin-0">
+        New password must contain:
+      </h3>
+      <ul className="usa-list">
+        <li>A lower case letter</li>
+        <li>An upper case letter</li>
+        <li>A number</li>
+        <li>At least 8 characters</li>
+        <li>At least 1 special character or space</li>
+        <li>No leading or trailing spaces</li>
+      </ul>
     </>
   )
 }

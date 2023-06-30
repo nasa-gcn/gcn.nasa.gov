@@ -40,7 +40,7 @@ export default function () {
               </NavLink>,
               !idp ? (
                 <NavLink key="password" to="password">
-                  Update Password
+                  Reset Password
                 </NavLink>
               ) : null,
               <NavLink key="credentials" to="credentials">
