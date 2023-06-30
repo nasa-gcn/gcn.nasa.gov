@@ -38,3 +38,11 @@ For C, use [librdkafka](https://github.com/edenhill/librdkafka) and the followin
 For C#, use the [Confluent.Kafka](https://www.nuget.org/packages/Confluent.Kafka/) NuGet package. The code sample was based on Confluent's [Kafka .NET Client](https://docs.confluent.io/kafka-clients/dotnet/current/overview.html#consumer) documentation.
 
 <ClientSampleCode language="cs" />
+
+## Known Issues
+
+### confluent-kafka-python
+
+If you use confluent-kafka-python v2.1.0 or v2.1.1 with librdkafka v2.1.1 you will encounter a segmentation fault when subscribed to inactive topics.
+
+Please refer to [the confluent-kafka-python github issue](https://github.com/confluentinc/confluent-kafka-python/issues/1547) for updates on the issue.
