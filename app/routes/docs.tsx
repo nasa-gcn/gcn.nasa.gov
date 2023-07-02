@@ -10,12 +10,14 @@ import { GridContainer } from '@trussworks/react-uswds'
 import { useMatch } from 'react-router'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
+import { useFeature } from '~/root'
 
 export const handle = {
   breadcrumb: 'Documentation',
 }
 
 export default function () {
+  const enableSchemaBrowser = useFeature('SCHEMA')
   const isSchemaBrowser = useMatch('/docs/schema-browser/*')
 
   return (
@@ -90,9 +92,13 @@ export default function () {
                     ]}
                   />
                 </>,
-                <NavLink key="schema-browser" to="schema-browser">
-                  Schema-Browser
-                </NavLink>,
+                ...(enableSchemaBrowser
+                  ? [
+                      <NavLink key="schema-browser" to="schema-browser">
+                        Schema-Browser
+                      </NavLink>,
+                    ]
+                  : []),
                 <NavLink key="history" to="history">
                   History
                 </NavLink>,
