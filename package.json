@@ -36,7 +36,7 @@
     "@octokit/rest": "^19.0.11",
     "@opensearch-project/opensearch": "^2.2.0",
     "@remix-run/architect": "^1.15.0",
-    "@remix-run/node": "^1.15.0",
+    "@remix-run/node": "^1.18.1",
     "@remix-run/react": "^1.15.0",
     "@trussworks/react-uswds": "^5.0.0",
     "addresscompiler": "^1.0.1",
