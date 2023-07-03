@@ -161,15 +161,15 @@ export function Header() {
                       >
                         Peer Endorsements
                       </Link>,
-                      idp === 'COGNITO' ? (
+                      idp === 'COGNITO' && (
                         <Link
                           key="password"
                           to="/user/password"
                           onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
                         >
-                          Update Password
+                          Reset Password
                         </Link>
-                      ) : null,
+                      ),
                       <Link
                         key="credentials"
                         to="/user/credentials"

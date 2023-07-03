@@ -10,7 +10,7 @@ import { useFetcher } from '@remix-run/react'
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-import { PasswordManager } from './password.server'
+import { updatePassword } from './password.server'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 
@@ -29,10 +29,10 @@ export async function action({ request }: DataFunctionArgs) {
     throw new Response('all password fields must be present', { status: 400 })
   }
 
-  if (newPassword != confirmPassword) {
+  if (newPassword !== confirmPassword) {
     throw new Response('passwords must match', { status: 400 })
   } else {
-    await PasswordManager.updatePassword(request, oldPassword, newPassword)
+    await updatePassword(request, oldPassword, newPassword)
 
     return null
   }

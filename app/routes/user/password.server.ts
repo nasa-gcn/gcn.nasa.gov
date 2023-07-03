@@ -12,48 +12,36 @@ import { getUser, parseTokenSet } from '../__auth/user.server'
 import { maybeThrow } from './cognito.server'
 import { cognito } from '~/lib/cognito.server'
 
-export module PasswordManager {
-  async function updatePasswordFunc(
-    request: Request,
-    oldPassword: string,
-    newPassword: string
-  ) {
-    const user = await getUser(request)
-    if (!user) throw new Response('not signed in', { status: 403 })
-    const client = await getOpenIDClient()
-    const session = await storage.getSession(request.headers.get('Cookie'))
-    const refreshToken = session.get('refreshToken')
-    const tokenSet = await client.refresh(refreshToken)
-    const parsedTokenSet = parseTokenSet(tokenSet)
+export async function updatePassword(
+  request: Request,
+  oldPassword: string,
+  newPassword: string
+) {
+  const user = await getUser(request)
+  if (!user) throw new Response('not signed in', { status: 403 })
+  const client = await getOpenIDClient()
+  const session = await storage.getSession(request.headers.get('Cookie'))
+  const refreshToken = session.get('refreshToken')
+  const tokenSet = await client.refresh(refreshToken)
+  const parsedTokenSet = parseTokenSet(tokenSet)
 
-    if (!oldPassword || !newPassword || !parsedTokenSet.accessToken) {
-      throw new Response('all password fields must be present', { status: 400 })
-    }
-
-    const passwordData = {
-      AccessToken: parsedTokenSet.accessToken,
-      PreviousPassword: oldPassword,
-      ProposedPassword: newPassword,
-    }
-
-    let response
-    try {
-      const command = new ChangePasswordCommand(passwordData)
-      const response = await cognito.send(command)
-      return response
-    } catch (e) {
-      maybeThrow(e, 'creating fake user password')
-      return response
-    }
+  if (!oldPassword || !newPassword || !parsedTokenSet.accessToken) {
+    throw new Response('all password fields must be present', { status: 400 })
   }
 
-  export async function updatePassword(
-    request: Request,
-    oldPassword: string,
-    newPassword: string
-  ) {
-    updatePasswordFunc(request, oldPassword, newPassword)
+  const passwordData = {
+    AccessToken: parsedTokenSet.accessToken,
+    PreviousPassword: oldPassword,
+    ProposedPassword: newPassword,
+  }
+
+  let response
+  try {
+    const command = new ChangePasswordCommand(passwordData)
+    const response = await cognito.send(command)
+    return response
+  } catch (e) {
+    maybeThrow(e, 'creating fake user password')
+    return response
   }
 }
-
-export default PasswordManager
