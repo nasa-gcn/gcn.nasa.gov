@@ -47,12 +47,19 @@ export const sandbox = {
               email: 'user@example.com',
               'cognito:username': id,
               'cognito:groups': ['gcn.nasa.gov/kafka-public-consumer'],
+              identities: [{ providerName: 'Local Sandbox' }],
             }
           },
         }
       },
       claims: {
-        openid: ['sub', 'email', 'cognito:username', 'cognito:groups'],
+        openid: [
+          'sub',
+          'email',
+          'cognito:username',
+          'cognito:groups',
+          'identities',
+        ],
       },
       // Register an app client for the web site
       clients: [
