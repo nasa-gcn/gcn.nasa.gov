@@ -53,7 +53,7 @@ export default function () {
   const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
     useState(false)
   const passwordsMatch = newPassword === confirmPassword
-  const passwordsAreEmpty = newPassword === '' && confirmPassword === ''
+  const passwordsAreEmpty = !newPassword && !confirmPassword
   const shouldDisableSubmit =
     passwordsAreEmpty || !isNewPasswordTouched || !passwordsMatch
   const isMatchError =
