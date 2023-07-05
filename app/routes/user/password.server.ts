@@ -7,9 +7,8 @@
  */
 import { ChangePasswordCommand } from '@aws-sdk/client-cognito-identity-provider'
 
-import { getOpenIDClient, storage } from '../__auth/auth.server'
-import { getUser, parseTokenSet } from '../__auth/user.server'
-import { maybeThrow } from './cognito.server'
+import { storage } from '../__auth/auth.server'
+import { getUser } from '../__auth/user.server'
 import { cognito } from '~/lib/cognito.server'
 
 export async function updatePassword(
@@ -19,29 +18,23 @@ export async function updatePassword(
 ) {
   const user = await getUser(request)
   if (!user) throw new Response('not signed in', { status: 403 })
-  const client = await getOpenIDClient()
   const session = await storage.getSession(request.headers.get('Cookie'))
-  const refreshToken = session.get('refreshToken')
-  const tokenSet = await client.refresh(refreshToken)
-  const parsedTokenSet = parseTokenSet(tokenSet)
+  const accessToken = session.get('accessToken')
 
-  if (!oldPassword || !newPassword || !parsedTokenSet.accessToken) {
+  if (!oldPassword || !newPassword || !accessToken) {
     throw new Response('all password fields must be present', { status: 400 })
   }
 
   const passwordData = {
-    AccessToken: parsedTokenSet.accessToken,
+    AccessToken: accessToken,
     PreviousPassword: oldPassword,
     ProposedPassword: newPassword,
   }
 
-  let response
   try {
     const command = new ChangePasswordCommand(passwordData)
-    const response = await cognito.send(command)
-    return response
+    await cognito.send(command)
   } catch (e) {
-    maybeThrow(e, 'creating fake user password')
-    return response
+    throw new Response('password validation failed', { status: 400 })
   }
 }

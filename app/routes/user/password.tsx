@@ -58,11 +58,21 @@ export default function () {
     passwordsAreEmpty || !isNewPasswordTouched || !passwordsMatch
   const isMatchError =
     !isConfirmPasswordTouched || passwordsMatch ? '' : 'usa-input--error'
-
   const valid =
     !startsOrEndsWithWhitespace(newPassword) && checkPassword(newPassword)
   const isValidPassword =
     !isNewPasswordTouched || valid ? '' : 'usa-input--error'
+  const isValidConfirmation =
+    passwordsMatch && !passwordsAreEmpty ? 'usa-input--success' : ''
+  const containsLower = /[a-z]/.test(newPassword)
+  const containsUpper = /[A-Z]/.test(newPassword)
+  const containsNumber = /[0-9]/.test(newPassword)
+  const validLength = newPassword.length >= 8
+  const containsSpecialChar = /[~`!@#$%^&*+=\-_ [\]\\';,/{}()|\\":<>?]/g.test(
+    newPassword
+  )
+  const leadingOrTrailingSpace =
+    newPassword.length !== newPassword.trim().length
 
   return (
     <>
@@ -92,7 +102,7 @@ export default function () {
           />
           <Label htmlFor="confirmPassword">Retype New Password</Label>
           <TextInput
-            className={isMatchError}
+            className={`${isMatchError} ${isValidConfirmation}`}
             name="confirmPassword"
             id="confirmPassword"
             type="password"
@@ -124,17 +134,64 @@ export default function () {
           )}
         </fetcher.Form>
       </>
-      <h3 className="site-preview-heading margin-0">
-        New password must contain:
-      </h3>
-      <ul className="usa-list">
-        <li>A lower case letter</li>
-        <li>An upper case letter</li>
-        <li>A number</li>
-        <li>At least 8 characters</li>
-        <li>At least 1 special character or space</li>
-        <li>No leading or trailing spaces</li>
-      </ul>
+
+      <div className="usa-alert usa-alert--info usa-alert--validation">
+        <div className="usa-alert__body">
+          <h3 className="site-preview-heading margin-0 usa-alert__heading">
+            New password must contain:
+          </h3>
+          <ul className="usa-checklist" id="validate-code">
+            <li>
+              A lower case letter
+              {containsLower && (
+                <>
+                  <Icon.Check color="green" />
+                </>
+              )}
+            </li>
+            <li>
+              An upper case letter
+              {containsUpper && (
+                <>
+                  <Icon.Check color="green" />
+                </>
+              )}
+            </li>
+            <li>
+              A number
+              {containsNumber && (
+                <>
+                  <Icon.Check color="green" />
+                </>
+              )}
+            </li>
+            <li>
+              At least 8 characters
+              {validLength && (
+                <>
+                  <Icon.Check color="green" />
+                </>
+              )}
+            </li>
+            <li>
+              At least 1 special character or space
+              {containsSpecialChar && (
+                <>
+                  <Icon.Check color="green" />
+                </>
+              )}
+            </li>
+            <li>
+              No leading or trailing spaces
+              {!leadingOrTrailingSpace && (
+                <>
+                  <Icon.Check color="green" />
+                </>
+              )}
+            </li>
+          </ul>
+        </div>
+      </div>
     </>
   )
 }
