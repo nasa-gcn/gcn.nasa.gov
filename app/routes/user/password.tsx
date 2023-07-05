@@ -41,7 +41,8 @@ export async function action({ request }: DataFunctionArgs) {
 export default function () {
   const fetcher = useFetcher<typeof action>()
   const checkPassword = (str: string) => {
-    var re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
+    var re =
+      /^(?=.*\d)(?=.*[~`!@#$%^&*.+=\-_ [\]\\';,/{}()|\\":<>?])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
     return re.test(str)
   }
   const startsOrEndsWithWhitespace = (str: string) => {
@@ -68,7 +69,7 @@ export default function () {
   const containsUpper = /[A-Z]/.test(newPassword)
   const containsNumber = /[0-9]/.test(newPassword)
   const validLength = newPassword.length >= 8
-  const containsSpecialChar = /[~`!@#$%^&*+=\-_ [\]\\';,/{}()|\\":<>?]/g.test(
+  const containsSpecialChar = /[~`!@#$%^.&*+=\-_ [\]\\';,/{}()|\\":<>?]/g.test(
     newPassword
   )
   const leadingOrTrailingSpace =
