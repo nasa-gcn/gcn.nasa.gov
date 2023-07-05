@@ -28,7 +28,7 @@ export default function () {
               <NavLink key="endorsements" to="endorsements">
                 Peer Endorsements
               </NavLink>,
-              ...(idp === 'COGNITO'
+              ...(!idp
                 ? [
                     <NavLink key="password" to="password">
                       Reset Password

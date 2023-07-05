@@ -161,7 +161,7 @@ export function Header() {
                       >
                         Peer Endorsements
                       </Link>,
-                      idp === 'COGNITO' && (
+                      !idp && (
                         <Link
                           key="password"
                           to="/user/password"
