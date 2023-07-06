@@ -16,25 +16,27 @@ export async function updatePassword(
   oldPassword: string,
   newPassword: string
 ) {
-  const user = await getUser(request)
-  if (!user) throw new Response('not signed in', { status: 403 })
-  const session = await storage.getSession(request.headers.get('Cookie'))
-  const accessToken = session.get('accessToken')
-
-  if (!oldPassword || !newPassword || !accessToken) {
-    throw new Response('all password fields must be present', { status: 400 })
-  }
-
-  const passwordData = {
-    AccessToken: accessToken,
-    PreviousPassword: oldPassword,
-    ProposedPassword: newPassword,
-  }
-
   try {
+    const user = await getUser(request)
+    if (!user) throw new Error('you must be signed in to reset your password')
+    const session = await storage.getSession(request.headers.get('Cookie'))
+    const accessToken = session.get('accessToken')
+
+    if (!oldPassword || !newPassword || !accessToken) {
+      throw new Error('all password fields must be present')
+    }
+
+    const passwordData = {
+      AccessToken: accessToken,
+      PreviousPassword: oldPassword,
+      ProposedPassword: newPassword,
+    }
+
     const command = new ChangePasswordCommand(passwordData)
     await cognito.send(command)
-  } catch (e) {
-    throw new Response('password validation failed', { status: 400 })
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message)
+    }
   }
 }

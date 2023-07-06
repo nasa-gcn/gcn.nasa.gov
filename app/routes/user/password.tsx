@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { useFetcher } from '@remix-run/react'
+import { Link, useFetcher, useRouteError } from '@remix-run/react'
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
@@ -194,5 +194,29 @@ export default function () {
         </div>
       </div>
     </>
+  )
+}
+
+export function ErrorBoundary() {
+  let error = useRouteError()
+  let errorMessage = 'An unknown error has occurred.'
+  if (error instanceof Error) {
+    errorMessage = error.message
+  }
+
+  return (
+    <div>
+      <div className="usa-alert usa-alert--error" role="alert">
+        <div className="usa-alert__body">
+          <h4 className="usa-alert__heading">Error Resetting Password</h4>
+          <p className="usa-alert__text">{errorMessage}</p>
+        </div>
+      </div>
+      <div className="margin-y-2">
+        <Link to="/user/password" className="usa-button">
+          Retry
+        </Link>
+      </div>
+    </div>
   )
 }
