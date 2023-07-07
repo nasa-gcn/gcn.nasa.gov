@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { updatePassword } from './password.server'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
+import { useUserIdp } from '~/root'
 
 export const handle = {
   breadcrumb: 'Password',
@@ -39,6 +40,11 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function () {
+  const idp = useUserIdp()
+  if (idp)
+    throw new Error(
+      'you must be logged in with a user name and password to reest password'
+    )
   const fetcher = useFetcher<typeof action>()
   const checkPassword = (str: string) => {
     var re =
