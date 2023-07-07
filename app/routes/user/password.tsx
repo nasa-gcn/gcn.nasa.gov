@@ -212,10 +212,17 @@ export function ErrorBoundary() {
           <p className="usa-alert__text">{errorMessage}</p>
         </div>
       </div>
-      <div className="margin-y-2">
-        <Link to="/user/password" className="usa-button">
-          Retry
-        </Link>
+
+      <div className="grid-container margin-y-2">
+        <div className="grid-row">
+          <div className="tablet:grid-col"></div>
+          <div className="tablet:grid-col">
+            <Link to="/user/password" className="usa-button">
+              Retry
+            </Link>
+          </div>
+          <div className="tablet:grid-col"></div>
+        </div>
       </div>
     </div>
   )
