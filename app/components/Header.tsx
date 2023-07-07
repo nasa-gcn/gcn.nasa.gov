@@ -73,7 +73,7 @@ export function Header() {
   return (
     <>
       <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
-      <USWDSHeader basic className={'usa-header usa-header--dark'}>
+      <USWDSHeader basic className="usa-header usa-header--dark">
         <div className="usa-nav-container">
           <div className="usa-navbar">
             <Title>
