@@ -13,7 +13,7 @@ import {
   Title,
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useEmail } from '~/root'
 
@@ -69,27 +69,11 @@ export function Header() {
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const onClick = () => setExpanded((prvExpanded) => !prvExpanded)
-  const [isDesktop, setIsDesktop] = useState<boolean>(false)
-  const headerTheme = isDesktop ? 'usa-header--dark' : 'usa-header'
-
-  useEffect(() => {
-    const handleResize = () => {
-      const isDesktopView = window.innerWidth >= 768
-      setIsDesktop(isDesktopView)
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [])
 
   return (
     <>
       <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
-      <USWDSHeader basic className={`usa-header ${headerTheme}`}>
+      <USWDSHeader basic className={'usa-header usa-header--dark'}>
         <div className="usa-nav-container">
           <div className="usa-navbar">
             <Title>
