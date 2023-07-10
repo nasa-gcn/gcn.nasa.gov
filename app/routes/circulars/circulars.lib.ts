@@ -119,6 +119,7 @@ export const validSubjectKeywords = [
   'IPN',
   'JCMT',
   'KAGRA',
+  'KamLAND',
   'KONUS',
   'LIGO',
   'LOFAR',
