@@ -33,6 +33,7 @@ import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 import calendarImg from 'app/theme/img/usa-icons/calendar_today.svg'
+import { useState } from 'react'
 
 const limit = 100
 
@@ -197,17 +198,14 @@ export default function () {
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
 
-  // const [inputQuery, setInputQuery] = useState(query)
-  // const [inputDateGte] = useState(startDate)
-  // const [inputDateLte] = useState(endDate)
-  // const [inputExpand, setInputExpand] = useState(false)
-  // const clean = inputQuery === query
-  // inputDateGte === startDate &&
-  // inputDateLte === endDate
+  const [inputQuery, setInputQuery] = useState(query)
+  const [inputDateGte] = useState(startDate)
+  const [inputDateLte] = useState(endDate)
+  const clean = inputQuery === query && inputDateGte === startDate && inputDateLte === endDate
 
   const submit = useSubmit()
 
-  const location = useLocation()
+  // const location = useLocation()
 
   return (
     <>
@@ -240,16 +238,17 @@ export default function () {
             defaultValue={query}
             placeholder="Search"
             aria-describedby="searchHint"
-            // onChange={({ target: { form, value } }) => {
-            //   setInputQuery(value)
-            //   if (!value) submit(form)
-            // }}
+            onChange={({ target: { form, value } }) => {
+              setInputQuery(value)
+              if (!value) submit(form)
+            }}
           />
           <Button
             type="button"
             className="height-4 padding-top-0 padding-bottom-0"
+
             onClick={() => {
-              console.log('test')
+              console.log('pressed calendar button')
             }}
           >
             <img
@@ -265,27 +264,8 @@ export default function () {
               alt="Search"
             />
           </Button>
-        </Form>
-        <Link to="/circulars/new">
-          <Button
-            type="button"
-            className="height-4 padding-top-0 padding-bottom-0"
-          >
-            <Icon.Edit /> New
-          </Button>
-        </Link>
-      </ButtonGroup>
-      <Hint id="searchHint">
-        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
-        GRB'). <br />
-        To navigate to a specific circular, enter the associated Circular ID
-        (e.g. 'gcn123', 'Circular 123', or '123').
-      </Hint>
-      <hr />
-      <Form className="display-inline-block usa-card__container top-0 bg-white margin-bottom-1 padding-left-1 padding-bottom-1">
-        <h2>Filter Circulars by date</h2>
 
-        <DateRangePicker
+          <DateRangePicker
           startDateHint="dd/mm/yyyy"
           startDateLabel="Start Date"
           startDatePickerProps={{
@@ -321,27 +301,49 @@ export default function () {
             },
           }}
         />
-      </Form>
-
-      <>
-        {query && (
-          <h3>
-            {totalItems} result{totalItems != 1 && 's'} found.
-          </h3>
-        )}
-        <ol>
-          {allItems.map(({ circularId, subject }) => (
-            <li key={circularId} value={circularId}>
-              <Link to={`/circulars/${circularId}${searchParamsString}`}>
-                {subject}
-              </Link>
-            </li>
-          ))}
-        </ol>
-        {totalPages > 1 && (
-          <Pagination query={query} page={page} totalPages={totalPages} />
-        )}
-      </>
+        </Form>
+        <Link to="/circulars/new">
+          <Button
+            type="button"
+            className="height-4 padding-top-0 padding-bottom-0"
+          >
+            <Icon.Edit /> New
+          </Button>
+        </Link>
+      </ButtonGroup>
+      <Hint id="searchHint">
+        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
+        GRB'). <br />
+        To navigate to a specific circular, enter the associated Circular ID
+        (e.g. 'gcn123', 'Circular 123', or '123').
+      </Hint>
+      {clean && (
+        <>
+          {query && (
+            <h3>
+              {totalItems} result{totalItems != 1 && 's'} found.
+            </h3>
+          )}
+          <ol>
+            {allItems.map(({ circularId, subject }) => (
+              <li key={circularId} value={circularId}>
+                <Link to={`/circulars/${circularId}${searchParamsString}`}>
+                  {subject}
+                </Link>
+              </li>
+            ))}
+          </ol>
+          {totalPages > 1 && (
+            <Pagination
+              query={query}
+              page={page}
+              totalPages={totalPages}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          )}
+        </>
+      )}
     </>
   )
 }
