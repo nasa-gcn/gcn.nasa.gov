@@ -66,17 +66,20 @@ export async function action({ request }: DataFunctionArgs) {
 
 function getPageLink({
   page,
+  limit,
   query,
   startDate,
   endDate,
 }: {
   page: number
+  limit?: number
   query?: string
   startDate?: string
   endDate?: string
 }) {
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
+  if (limit && limit != 100) searchParams.set('limit', limit.toString())
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
@@ -188,7 +191,7 @@ export default function () {
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
-  // const resultsPerPage = searchParams.get('resultsPerPage') ?? undefined
+  const limit = searchParams.get('limit') || '100'
   const query = searchParams.get('query') ?? undefined
   const startDate = searchParams.get('startDate') ?? undefined
   const endDate = searchParams.get('endDate') ?? undefined
@@ -197,13 +200,25 @@ export default function () {
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
+  const [inputLimit, setInputLimit] = useState(limit)
+  const clean = inputQuery === query && inputLimit === limit
 
   const submit = useSubmit()
 
   return (
     <>
-      <h1>GCN Circulars</h1>
+      <ButtonGroup className="top-0">
+        <h1 className="float-left">GCN Circulars</h1>
+        {/* need to figure out how to left justify the button */}
+        <Link to="/circulars/new">
+          <Button
+            type="button"
+            className="height-4 padding-top-0 padding-bottom-0"
+          >
+            <Icon.Edit /> Submit New Circular
+          </Button>
+        </Link>
+      </ButtonGroup>
       <p className="usa-paragraph">
         <b>
           GCN Circulars are rapid astronomical bulletins submitted by and
@@ -244,28 +259,27 @@ export default function () {
             />
           </Button>
         </Form>
-        <Link to="/circulars/new">
-          <Button
-            type="button"
-            className="height-4 padding-top-0 padding-bottom-0"
-          >
-            <Icon.Edit /> New
-          </Button>
-        </Link>
+
+        <p className="display-inline-block margin-left-1 margin-right-0">
+          Showing
+        </p>
         <Dropdown
           id="resultsPerPage"
-          className="height-4 padding-top-0 padding-bottom-0"
+          className="height-3 padding-top-0 padding-bottom-0"
           name="resultsPerPage"
           defaultValue="100results"
-          // onChange={({ target: { form, value } }) => {
-          //   setInputQuery(value)
-          //   if (!value) submit(form)
-          // }}
+          onChange={({ target: { form, value } }) => {
+            setInputLimit(value)
+            if (!value) submit(form)
+          }}
         >
           <option value="50results">50</option>
           <option value="100results">100</option>
           <option value="250results">250</option>
         </Dropdown>
+        <p className="display-inline-block margin-left-0 margin-right-1">
+          results per page
+        </p>
       </ButtonGroup>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
