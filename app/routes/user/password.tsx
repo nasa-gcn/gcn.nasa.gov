@@ -6,7 +6,11 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Link, useFetcher, useRouteError } from '@remix-run/react'
+import {
+  isRouteErrorResponse,
+  useFetcher,
+  useRouteError,
+} from '@remix-run/react'
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
@@ -27,11 +31,17 @@ export async function action({ request }: DataFunctionArgs) {
   const confirmPassword = getFormDataString(data, 'confirmPassword')
 
   if (!oldPassword || !newPassword || !confirmPassword) {
-    throw new Response('all password fields must be present', { status: 400 })
+    throw new Response(null, {
+      statusText: 'all password fields must be present',
+      status: 400,
+    })
   }
 
   if (newPassword !== confirmPassword) {
-    throw new Response('passwords must match', { status: 400 })
+    throw new Response(null, {
+      statusText: 'passwords must match',
+      status: 400,
+    })
   } else {
     await updatePassword(request, oldPassword, newPassword)
 
@@ -39,7 +49,13 @@ export async function action({ request }: DataFunctionArgs) {
   }
 }
 
-export default function () {
+const ResetPassword = ({
+  isPasswordError,
+  errorMessage,
+}: {
+  isPasswordError: boolean
+  errorMessage: string
+}) => {
   const idp = useUserIdp()
   if (idp)
     throw new Error(
@@ -56,6 +72,7 @@ export default function () {
   }
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [isOldPasswordTouched, setIsOldPasswordTouched] = useState(false)
   const [isNewPasswordTouched, setIsNewPasswordTouched] = useState(false)
   const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
     useState(false)
@@ -80,6 +97,8 @@ export default function () {
   )
   const leadingOrTrailingSpace =
     newPassword.length !== newPassword.trim().length
+  const oldPasswordError =
+    isPasswordError && !isOldPasswordTouched ? 'usa-input--error' : ''
 
   return (
     <>
@@ -89,11 +108,20 @@ export default function () {
           <Label htmlFor="oldPassword">Old Password</Label>
           <TextInput
             data-focus
+            className={oldPasswordError}
             name="oldPassword"
             id="oldPassword"
             type="password"
             placeholder="Old Password"
+            onChange={(e) => {
+              setIsOldPasswordTouched(true)
+            }}
           />
+          {oldPasswordError ? (
+            <span className="text-red">{errorMessage}</span>
+          ) : (
+            <></>
+          )}
           <Label htmlFor="newPassword">New Password</Label>
           <TextInput
             className={isValidPassword}
@@ -205,8 +233,21 @@ export default function () {
 
 export function ErrorBoundary() {
   let error = useRouteError()
-  let errorMessage = 'An unknown error has occurred.'
-  if (error instanceof Error) {
+  let errorMessage = 'uknown error'
+  if (isRouteErrorResponse(error)) {
+    if (error.status === 403) {
+      throw new Response(null, {
+        statusText: 'User must be logged in',
+        status: error.status,
+      })
+    }
+    return (
+      <ResetPassword
+        isPasswordError={true}
+        errorMessage={error.statusText}
+      ></ResetPassword>
+    )
+  } else if (error instanceof Error) {
     errorMessage = error.message
   }
 
@@ -218,18 +259,8 @@ export function ErrorBoundary() {
           <p className="usa-alert__text">{errorMessage}</p>
         </div>
       </div>
-
-      <div className="grid-container margin-y-2">
-        <div className="grid-row">
-          <div className="tablet:grid-col"></div>
-          <div className="tablet:grid-col">
-            <Link to="/user/password" className="usa-button">
-              Retry
-            </Link>
-          </div>
-          <div className="tablet:grid-col"></div>
-        </div>
-      </div>
     </div>
   )
 }
+
+export default ResetPassword
