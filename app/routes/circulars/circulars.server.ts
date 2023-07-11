@@ -128,7 +128,7 @@ export async function search({
       subject,
     })
   )
-
+  console.log('search limit', limit)
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
 
   return { items, totalPages, totalItems }

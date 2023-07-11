@@ -51,6 +51,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     startDate,
     endDate,
   })
+  console.log('loader limit', limit)
 
   return { page, ...results }
 }
@@ -72,19 +73,22 @@ function getPageLink({
   endDate,
 }: {
   page: number
-  limit?: number
+  limit?: string
   query?: string
   startDate?: string
   endDate?: string
 }) {
+  console.log('getPageLink limit', limit)
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
-  if (limit && limit != 100) searchParams.set('limit', limit.toString())
+  if (limit && limit != '100') searchParams.set('limit', limit)
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
+  console.log('getPageLink limit', limit)
 
   const searchParamsString = searchParams.toString()
+  console.log('gpl searchParamsString', searchParamsString)
   return searchParamsString && `?${searchParamsString}`
 }
 
@@ -95,6 +99,7 @@ function Pagination({
 }: {
   page: number
   totalPages: number
+  limit?: string
   query?: string
   startDate?: string
   endDate?: string
@@ -191,13 +196,14 @@ export default function () {
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
-  const limit = searchParams.get('limit') || '100'
+  const limit = searchParams.get('limit') ?? '100'
   const query = searchParams.get('query') ?? undefined
   const startDate = searchParams.get('startDate') ?? undefined
   const endDate = searchParams.get('endDate') ?? undefined
 
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
+  console.log('searchParamsString', searchParamsString)
 
   const [inputQuery, setInputQuery] = useState(query)
   const [inputLimit, setInputLimit] = useState(limit)
@@ -261,21 +267,22 @@ export default function () {
         </Form>
 
         <p className="display-inline-block margin-left-1 margin-right-0">
-          Showing
+          Show
         </p>
         <Dropdown
           id="resultsPerPage"
           className="height-3 padding-top-0 padding-bottom-0"
           name="resultsPerPage"
-          defaultValue="100results"
+          defaultValue="100"
           onChange={({ target: { form, value } }) => {
             setInputLimit(value)
             if (!value) submit(form)
+            console.log('limit onChange', value)
           }}
         >
-          <option value="50results">50</option>
-          <option value="100results">100</option>
-          <option value="250results">250</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="250">250</option>
         </Dropdown>
         <p className="display-inline-block margin-left-0 margin-right-1">
           results per page
@@ -307,6 +314,7 @@ export default function () {
             <Pagination
               query={query}
               page={page}
+              limit={limit}
               totalPages={totalPages}
               startDate={startDate}
               endDate={endDate}
