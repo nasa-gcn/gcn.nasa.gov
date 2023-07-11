@@ -17,6 +17,7 @@ import {
 import {
   Button,
   ButtonGroup,
+  Dropdown,
   Icon,
   Label,
   TextInput,
@@ -31,7 +32,7 @@ import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 
-const limit = 100
+// const limit = 100
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
@@ -42,6 +43,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
+  const limit = parseInt(searchParams.get('limit') || '100')
   const results = await search({
     query,
     page: page - 1,
@@ -186,6 +188,7 @@ export default function () {
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
+  // const resultsPerPage = searchParams.get('resultsPerPage') ?? undefined
   const query = searchParams.get('query') ?? undefined
   const startDate = searchParams.get('startDate') ?? undefined
   const endDate = searchParams.get('endDate') ?? undefined
@@ -249,6 +252,20 @@ export default function () {
             <Icon.Edit /> New
           </Button>
         </Link>
+        <Dropdown
+          id="resultsPerPage"
+          className="height-4 padding-top-0 padding-bottom-0"
+          name="resultsPerPage"
+          defaultValue="100results"
+          // onChange={({ target: { form, value } }) => {
+          //   setInputQuery(value)
+          //   if (!value) submit(form)
+          // }}
+        >
+          <option value="50results">50</option>
+          <option value="100results">100</option>
+          <option value="250results">250</option>
+        </Dropdown>
       </ButtonGroup>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
