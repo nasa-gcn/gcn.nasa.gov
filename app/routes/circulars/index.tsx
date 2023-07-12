@@ -206,7 +206,7 @@ export default function () {
   console.log('searchParamsString', searchParamsString)
 
   const [inputQuery, setInputQuery] = useState(query)
-  const [inputLimit, setInputLimit] = useState(limit)
+  const [inputLimit] = useState(limit)
   const clean = inputQuery === query && inputLimit === limit
 
   const submit = useSubmit()
@@ -237,57 +237,52 @@ export default function () {
         <Link to="/docs/circulars">documentation</Link> for help with
         subscribing to or submitting Circulars.
       </p>
-      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
-        <Form
-          className="display-inline-block usa-search usa-search--small"
-          role="search"
-        >
-          <Label srOnly={true} htmlFor="query">
-            Search
-          </Label>
-          <TextInput
-            id="query"
-            name="query"
-            type="search"
-            defaultValue={inputQuery}
-            placeholder="Search"
-            aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form)
-            }}
-          />
-          <Button type="submit">
-            <img
-              src={searchImg}
-              className="usa-search__submit-icon"
-              alt="Search"
-            />
-          </Button>
+      <div className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
+        <Form className="usa-search usa-search--small width-full">
+          <div className=" grid-row">
+            <div className="tablet:grid-col-6">
+              <Label htmlFor="query">Search</Label>
+              <div className="display-flex">
+                <TextInput
+                  id="query"
+                  name="query"
+                  type="search"
+                  defaultValue={inputQuery}
+                  placeholder="Search"
+                  aria-describedby="searchHint"
+                  onChange={({ target: { form, value } }) => {
+                    setInputQuery(value)
+                    if (!value) submit(form)
+                  }}
+                />
+                <Button type="submit">
+                  <img
+                    src={searchImg}
+                    className="usa-search__submit-icon"
+                    alt="Search"
+                  />
+                </Button>
+              </div>
+            </div>
+            <div className="tablet:grid-col-3 tablet:padding-x-1">
+              <Label htmlFor="value">Results Per Page</Label>
+              <Dropdown
+                id="limit"
+                className="usa-select height-4 margin-y-0 padding-y-0"
+                name="limit"
+                defaultValue={limit}
+                onChange={({ target: { form, value } }) => {
+                  submit(form)
+                }}
+              >
+                <option value="50">50</option>
+                <option value="100">100</option>
+                <option value="250">250</option>
+              </Dropdown>
+            </div>
+          </div>
         </Form>
-
-        <p className="display-inline-block margin-left-1 margin-right-0">
-          Show
-        </p>
-        <Dropdown
-          id="resultsPerPage"
-          className="height-3 padding-top-0 padding-bottom-0"
-          name="resultsPerPage"
-          defaultValue="100"
-          onChange={({ target: { form, value } }) => {
-            setInputLimit(value)
-            if (!value) submit(form)
-            console.log('limit onChange', value)
-          }}
-        >
-          <option value="50">50</option>
-          <option value="100">100</option>
-          <option value="250">250</option>
-        </Dropdown>
-        <p className="display-inline-block margin-left-0 margin-right-1">
-          results per page
-        </p>
-      </ButtonGroup>
+      </div>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
         GRB'). <br />
