@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import { useSearchParams } from '@remix-run/react'
 
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
@@ -52,4 +53,12 @@ export function getEnvBannerHeaderAndDescription(hostname: string) {
   }
 
   return { heading, description }
+}
+
+/** Return the search string for the current page. */
+export function useSearchString() {
+  const [searchParams] = useSearchParams()
+  let searchString = searchParams.toString()
+  if (searchString) searchString = `?${searchString}`
+  return searchString
 }
