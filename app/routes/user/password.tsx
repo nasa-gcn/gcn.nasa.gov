@@ -6,14 +6,11 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import {
-  isRouteErrorResponse,
-  useFetcher,
-  useRouteError,
-} from '@remix-run/react'
+import { useFetcher } from '@remix-run/react'
 import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import { getUser } from '../__auth/user.server'
 import { updatePassword } from './password.server'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
@@ -24,44 +21,39 @@ export const handle = {
   getSitemapEntries: () => null,
 }
 
+export async function loader({ request }: DataFunctionArgs) {
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+  return null
+}
+
 export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
   const oldPassword = getFormDataString(data, 'oldPassword')
   const newPassword = getFormDataString(data, 'newPassword')
   const confirmPassword = getFormDataString(data, 'confirmPassword')
 
-  if (!oldPassword || !newPassword || !confirmPassword) {
-    throw new Response(null, {
-      statusText: 'all password fields must be present',
-      status: 400,
-    })
+  let response = null
+  if (
+    oldPassword &&
+    newPassword &&
+    confirmPassword &&
+    newPassword === confirmPassword
+  ) {
+    response = await updatePassword(request, oldPassword, newPassword)
   }
 
-  if (newPassword !== confirmPassword) {
-    throw new Response(null, {
-      statusText: 'passwords must match',
-      status: 400,
-    })
-  } else {
-    await updatePassword(request, oldPassword, newPassword)
-
-    return null
-  }
+  return response
 }
 
-const ResetPassword = ({
-  isPasswordError,
-  errorMessage,
-}: {
-  isPasswordError: boolean
-  errorMessage: string
-}) => {
+const ResetPassword = () => {
   const idp = useUserIdp()
   if (idp)
     throw new Error(
       'you must be logged in with a user name and password to reest password'
     )
   const fetcher = useFetcher<typeof action>()
+  const errorMessage = fetcher.data
   const checkPassword = (str: string) => {
     var re =
       /^(?=.*\d)(?=.*[~`!@#$%^&*.+=\-_ [\]\\';,/{}()|\\":<>?])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
@@ -70,12 +62,14 @@ const ResetPassword = ({
   const startsOrEndsWithWhitespace = (str: string) => {
     return /^\s|\s$/.test(str)
   }
+
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isOldPasswordTouched, setIsOldPasswordTouched] = useState(false)
   const [isNewPasswordTouched, setIsNewPasswordTouched] = useState(false)
   const [isConfirmPasswordTouched, setIsConfirmPasswordTouched] =
     useState(false)
+
   const passwordsMatch = newPassword === confirmPassword
   const passwordsAreEmpty = !newPassword && !confirmPassword
   const shouldDisableSubmit =
@@ -98,13 +92,20 @@ const ResetPassword = ({
   const leadingOrTrailingSpace =
     newPassword.length !== newPassword.trim().length
   const oldPasswordError =
-    isPasswordError && !isOldPasswordTouched ? 'usa-input--error' : ''
+    errorMessage && !isOldPasswordTouched ? 'usa-input--error' : ''
+  const formRef = useRef<HTMLFormElement>(null)
+
+  useEffect(() => {
+    if (formRef.current && fetcher.state === 'submitting') {
+      formRef.current.reset()
+    }
+  }, [fetcher.state])
 
   return (
     <>
       <h1>Reset Password</h1>
       <>
-        <fetcher.Form method="POST">
+        <fetcher.Form method="POST" ref={formRef}>
           <Label htmlFor="oldPassword">Old Password</Label>
           <TextInput
             data-focus
@@ -117,10 +118,13 @@ const ResetPassword = ({
               setIsOldPasswordTouched(true)
             }}
           />
-          {oldPasswordError ? (
-            <span className="text-red">{errorMessage}</span>
-          ) : (
-            <></>
+          {errorMessage === 'NotAuthorizedException' && (
+            <span className="text-red">Invalid Password</span>
+          )}
+          {errorMessage === 'LimitExceededException' && (
+            <span className="text-red">
+              Attempts Exceeded. Please try again later.
+            </span>
           )}
           <Label htmlFor="newPassword">New Password</Label>
           <TextInput
@@ -162,11 +166,14 @@ const ResetPassword = ({
               <Spinner /> Saving...
             </>
           )}
-          {fetcher.state === 'idle' && fetcher.data !== undefined && (
-            <>
-              <Icon.Check color="green" /> Saved
-            </>
-          )}
+          {fetcher.state === 'idle' &&
+            fetcher.data !== undefined &&
+            fetcher.data !== 'NotAuthorizedException' &&
+            fetcher.data !== 'LimitExceededException' && (
+              <>
+                <Icon.Check color="green" /> Saved
+              </>
+            )}
         </fetcher.Form>
       </>
 
@@ -228,38 +235,6 @@ const ResetPassword = ({
         </div>
       </div>
     </>
-  )
-}
-
-export function ErrorBoundary() {
-  let error = useRouteError()
-  let errorMessage = 'uknown error'
-  if (isRouteErrorResponse(error)) {
-    if (error.status === 403) {
-      throw new Response(null, {
-        statusText: 'User must be logged in',
-        status: error.status,
-      })
-    }
-    return (
-      <ResetPassword
-        isPasswordError={true}
-        errorMessage={error.statusText}
-      ></ResetPassword>
-    )
-  } else if (error instanceof Error) {
-    errorMessage = error.message
-  }
-
-  return (
-    <div>
-      <div className="usa-alert usa-alert--error" role="alert">
-        <div className="usa-alert__body">
-          <h4 className="usa-alert__heading">Error Resetting Password</h4>
-          <p className="usa-alert__text">{errorMessage}</p>
-        </div>
-      </div>
-    </div>
   )
 }
 
