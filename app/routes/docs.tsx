@@ -69,6 +69,9 @@ export default function () {
                       >
                         Feature Flags
                       </NavLink>,
+                      <NavLink key="deployment" to="contributing/deployment">
+                        Deployment
+                      </NavLink>,
                     ]}
                   />
                 </>,
