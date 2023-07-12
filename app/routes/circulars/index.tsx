@@ -31,6 +31,8 @@ import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
+import { json } from 'react-router'
+import { ceil } from 'lodash'
 
 // const limit = 100
 
@@ -52,6 +54,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     endDate,
   })
   console.log('loader limit', limit)
+
 
   return { page, ...results }
 }
@@ -206,8 +209,7 @@ export default function () {
   console.log('searchParamsString', searchParamsString)
 
   const [inputQuery, setInputQuery] = useState(query)
-  const [inputLimit] = useState(limit)
-  const clean = inputQuery === query && inputLimit === limit
+  const clean = inputQuery === query
 
   const submit = useSubmit()
 
@@ -275,9 +277,9 @@ export default function () {
                   submit(form)
                 }}
               >
-                <option value="50">50</option>
                 <option value="100">100</option>
                 <option value="250">250</option>
+                <option value="500">500</option>
               </Dropdown>
             </div>
           </div>
