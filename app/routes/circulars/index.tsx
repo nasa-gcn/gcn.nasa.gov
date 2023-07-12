@@ -16,8 +16,8 @@ import {
 } from '@remix-run/react'
 import {
   Button,
-  ButtonGroup,
   Dropdown,
+  Grid,
   Icon,
   Label,
   TextInput,
@@ -31,8 +31,6 @@ import { usePagination } from '~/lib/pagination'
 import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
-import { json } from 'react-router'
-import { ceil } from 'lodash'
 
 // const limit = 100
 
@@ -54,7 +52,6 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     endDate,
   })
   console.log('loader limit', limit)
-
 
   return { page, ...results }
 }
@@ -215,18 +212,16 @@ export default function () {
 
   return (
     <>
-      <ButtonGroup className="top-0">
-        <h1 className="float-left">GCN Circulars</h1>
-        {/* need to figure out how to left justify the button */}
-        <Link to="/circulars/new">
-          <Button
-            type="button"
-            className="height-4 padding-top-0 padding-bottom-0"
-          >
+      <Grid row>
+        <div className="tablet:grid-col flex-fill">
+          <h1 className="float-left margin-bottom-0">GCN Circulars</h1>
+        </div>
+        <div className="tablet:grid-col flex-auto">
+          <Link className="usa-button" to="/circulars/new">
             <Icon.Edit /> Submit New Circular
-          </Button>
-        </Link>
-      </ButtonGroup>
+          </Link>
+        </div>
+      </Grid>
       <p className="usa-paragraph">
         <b>
           GCN Circulars are rapid astronomical bulletins submitted by and
