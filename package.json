@@ -49,7 +49,7 @@
     "downshift": "^7.2.1",
     "email-validator": "^2.0.4",
     "highlight.js": "^11.8.0",
-    "jest-environment-jsdom": "^29.5.0",
+    "jest-environment-jsdom": "^29.6.1",
     "lodash": "^4.17.21",
     "mailparser": "^3.6.5",
     "memoizee": "^0.4.15",
