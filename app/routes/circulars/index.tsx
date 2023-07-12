@@ -51,7 +51,6 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     startDate,
     endDate,
   })
-  console.log('loader limit', limit)
 
   return { page, ...results }
 }
@@ -78,17 +77,14 @@ function getPageLink({
   startDate?: string
   endDate?: string
 }) {
-  console.log('getPageLink limit', limit)
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
   if (limit && limit != '100') searchParams.set('limit', limit)
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
-  console.log('getPageLink limit', limit)
 
   const searchParamsString = searchParams.toString()
-  console.log('gpl searchParamsString', searchParamsString)
   return searchParamsString && `?${searchParamsString}`
 }
 
@@ -203,7 +199,6 @@ export default function () {
 
   let searchParamsString = searchParams.toString()
   if (searchParamsString) searchParamsString = `?${searchParamsString}`
-  console.log('searchParamsString', searchParamsString)
 
   const [inputQuery, setInputQuery] = useState(query)
   const clean = inputQuery === query
