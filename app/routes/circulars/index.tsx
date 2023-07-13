@@ -259,7 +259,7 @@ export default function () {
             To navigate to a specific circular, enter the associated Circular ID
             (e.g. 'gcn123', 'Circular 123', or '123').
           </Hint>
-          {clean && (
+          {true && (
             <>
               {query && (
                 <h3>
@@ -276,11 +276,13 @@ export default function () {
                 ))}
               </ol>
               <div className=" grid-row">
-                <div className="tablet:grid-col-3 tablet:padding-x-1">
-                  <Label htmlFor="value">Results Per Page</Label>
+                <div className="tablet:grid-col-4 grid-col-6 tablet:padding-x-1">
+                  <Label className="margin-top-auto" htmlFor="value">
+                    Results Per Page
+                  </Label>
                   <Dropdown
                     id="limit"
-                    className="usa-select height-4 margin-y-0 padding-y-0"
+                    className="usa-select height-4  margin-y-0 padding-y-0"
                     name="limit"
                     defaultValue={limit}
                     onChange={({ target: { form, value } }) => {
@@ -292,7 +294,7 @@ export default function () {
                     <option value="500">500</option>
                   </Dropdown>
                 </div>
-                <div className="tablet:grid-col-6">
+                <div className="tablet:grid ">
                   <div className="display-flex">
                     {totalPages > 1 && (
                       <Pagination
