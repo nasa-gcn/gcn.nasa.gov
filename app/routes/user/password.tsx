@@ -11,6 +11,7 @@ import {
   Button,
   ButtonGroup,
   Icon,
+  InputGroup,
   Label,
   TextInput,
 } from '@trussworks/react-uswds'
@@ -46,7 +47,7 @@ export async function action({ request }: DataFunctionArgs) {
   return response
 }
 
-const ResetPassword = () => {
+export default function () {
   const idp = useUserIdp()
   if (idp)
     throw new Error(
@@ -68,14 +69,6 @@ const ResetPassword = () => {
   const [isNewPasswordTouched, setIsNewPasswordTouched] = useState(false)
   const [visible, setVisible] = useState(false)
 
-  const valid = !checkWhitespace(newPassword) && checkPassword(newPassword)
-  let shouldDisableSubmit = false
-  shouldDisableSubmit =
-    !newPassword || !isNewPasswordTouched || !valid || !isOldPasswordTouched
-  const isValidPassword =
-    !isNewPasswordTouched || valid ? '' : 'usa-input--error'
-  const passwordSuccess =
-    isNewPasswordTouched && valid ? 'usa-input--success' : ''
   const containsLower = /[a-z]/.test(newPassword)
   const containsUpper = /[A-Z]/.test(newPassword)
   const containsNumber = /[0-9]/.test(newPassword)
@@ -85,8 +78,17 @@ const ResetPassword = () => {
   )
   const leadingOrTrailingSpace =
     newPassword.length !== newPassword.trim().length
-  const oldPasswordError =
-    errorMessage && !isOldPasswordTouched ? 'usa-input--error' : ''
+  const oldPasswordError = errorMessage && !isOldPasswordTouched
+  const valid = !checkWhitespace(newPassword) && checkPassword(newPassword)
+  const shouldDisableSubmit =
+    !newPassword || !isNewPasswordTouched || !valid || !isOldPasswordTouched
+  let isError
+  if (isNewPasswordTouched && valid) {
+    isError = false
+  }
+  if (isNewPasswordTouched && !valid) {
+    isError = true
+  }
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
@@ -103,7 +105,7 @@ const ResetPassword = () => {
           <Label htmlFor="oldPassword">Old Password</Label>
           <TextInput
             data-focus
-            className={oldPasswordError}
+            className={oldPasswordError ? 'usa-input--error' : ''}
             name="oldPassword"
             id="oldPassword"
             type="password"
@@ -121,11 +123,13 @@ const ResetPassword = () => {
             </span>
           )}
           <Label htmlFor="newPassword">New Password</Label>
-          <div className="usa-input-group">
+          <InputGroup error={isError}>
             <TextInput
-              className={`${isValidPassword} ${passwordSuccess}`}
               name="newPassword"
               id="newPassword"
+              className={
+                !isError && isNewPasswordTouched ? 'usa-input--success' : ''
+              }
               type={visible ? 'text' : 'password'}
               placeholder="New Password"
               onChange={(e) => {
@@ -154,7 +158,7 @@ const ResetPassword = () => {
                 />
               </div>
             )}
-          </div>
+          </InputGroup>
           <ButtonGroup>
             <Button
               disabled={shouldDisableSubmit}
@@ -270,5 +274,3 @@ const ResetPassword = () => {
     </>
   )
 }
-
-export default ResetPassword
