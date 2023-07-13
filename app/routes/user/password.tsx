@@ -7,7 +7,13 @@
  */
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
-import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
+import {
+  Button,
+  ButtonGroup,
+  Icon,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
 
 import { getUser } from '../__auth/user.server'
@@ -149,9 +155,15 @@ const ResetPassword = () => {
               </div>
             )}
           </div>
-          <Button disabled={shouldDisableSubmit} type="submit">
-            Reset Password
-          </Button>
+          <ButtonGroup>
+            <Button
+              disabled={shouldDisableSubmit}
+              type="submit"
+              className="margin-y-2"
+            >
+              Reset Password
+            </Button>
+          </ButtonGroup>
           {fetcher.state !== 'idle' && (
             <>
               <Spinner /> Saving...
@@ -175,52 +187,82 @@ const ResetPassword = () => {
           </h3>
           <ul className="usa-checklist" id="validate-code">
             <li>
-              A lower case letter
               {containsLower && (
                 <>
                   <Icon.Check color="green" />
                 </>
               )}
+              {!containsLower && (
+                <>
+                  <Icon.Close color="red" />
+                </>
+              )}
+              A lower case letter
             </li>
             <li>
-              An upper case letter
               {containsUpper && (
                 <>
                   <Icon.Check color="green" />
                 </>
               )}
+              {!containsUpper && (
+                <>
+                  <Icon.Close color="red" />
+                </>
+              )}
+              An upper case letter
             </li>
             <li>
-              A number
               {containsNumber && (
                 <>
                   <Icon.Check color="green" />
                 </>
               )}
+              {!containsNumber && (
+                <>
+                  <Icon.Close color="red" />
+                </>
+              )}
+              A number
             </li>
             <li>
-              At least 8 characters
               {validLength && (
                 <>
                   <Icon.Check color="green" />
                 </>
               )}
+              {!validLength && (
+                <>
+                  <Icon.Close color="red" />
+                </>
+              )}
+              At least 8 characters
             </li>
             <li>
-              At least 1 special character or space
               {containsSpecialChar && (
                 <>
                   <Icon.Check color="green" />
                 </>
               )}
+              {!containsSpecialChar && (
+                <>
+                  <Icon.Close color="red" />
+                </>
+              )}
+              At least 1 special character or space
             </li>
             <li>
-              No leading or trailing spaces
               {!leadingOrTrailingSpace && (
                 <>
                   <Icon.Check color="green" />
                 </>
               )}
+              {leadingOrTrailingSpace && (
+                <>
+                  <Icon.Close color="red" />
+                </>
+              )}
+              No leading or trailing spaces
             </li>
           </ul>
         </div>
