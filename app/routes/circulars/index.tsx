@@ -231,84 +231,86 @@ export default function () {
       </p>
       <div className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <Form className="usa-search usa-search--small width-full">
-          <div className=" grid-row">
-            <div className="tablet:grid-col-6">
-              <Label htmlFor="query">Search</Label>
-              <div className="display-flex">
-                <TextInput
-                  id="query"
-                  name="query"
-                  type="search"
-                  defaultValue={inputQuery}
-                  placeholder="Search"
-                  aria-describedby="searchHint"
-                  onChange={({ target: { form, value } }) => {
-                    setInputQuery(value)
-                    if (!value) submit(form)
-                  }}
-                />
-                <Button type="submit">
-                  <img
-                    src={searchImg}
-                    className="usa-search__submit-icon"
-                    alt="Search"
-                  />
-                </Button>
+          <Label htmlFor="query">Search</Label>
+
+          <TextInput
+            id="query"
+            name="query"
+            type="search"
+            defaultValue={inputQuery}
+            placeholder="Search"
+            aria-describedby="searchHint"
+            onChange={({ target: { form, value } }) => {
+              setInputQuery(value)
+              if (!value) submit(form)
+            }}
+          />
+          <Button type="submit">
+            <img
+              src={searchImg}
+              className="usa-search__submit-icon"
+              alt="Search"
+            />
+          </Button>
+
+          <Hint id="searchHint">
+            Search for Circulars by submitter, subject, or body text (e.g.
+            'Fermi GRB'). <br />
+            To navigate to a specific circular, enter the associated Circular ID
+            (e.g. 'gcn123', 'Circular 123', or '123').
+          </Hint>
+          {clean && (
+            <>
+              {query && (
+                <h3>
+                  {totalItems} result{totalItems != 1 && 's'} found.
+                </h3>
+              )}
+              <ol>
+                {allItems.map(({ circularId, subject }) => (
+                  <li key={circularId} value={circularId}>
+                    <Link to={`/circulars/${circularId}${searchParamsString}`}>
+                      {subject}
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+              <div className=" grid-row">
+                <div className="tablet:grid-col-3 tablet:padding-x-1">
+                  <Label htmlFor="value">Results Per Page</Label>
+                  <Dropdown
+                    id="limit"
+                    className="usa-select height-4 margin-y-0 padding-y-0"
+                    name="limit"
+                    defaultValue={limit}
+                    onChange={({ target: { form, value } }) => {
+                      submit(form)
+                    }}
+                  >
+                    <option value="100">100</option>
+                    <option value="250">250</option>
+                    <option value="500">500</option>
+                  </Dropdown>
+                </div>
+                <div className="tablet:grid-col-6">
+                  <div className="display-flex">
+                    {totalPages > 1 && (
+                      <Pagination
+                        query={query}
+                        page={page}
+                        limit={limit}
+                        totalPages={totalPages}
+                        startDate={startDate}
+                        endDate={endDate}
+                      />
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className="tablet:grid-col-3 tablet:padding-x-1">
-              <Label htmlFor="value">Results Per Page</Label>
-              <Dropdown
-                id="limit"
-                className="usa-select height-4 margin-y-0 padding-y-0"
-                name="limit"
-                defaultValue={limit}
-                onChange={({ target: { form, value } }) => {
-                  submit(form)
-                }}
-              >
-                <option value="100">100</option>
-                <option value="250">250</option>
-                <option value="500">500</option>
-              </Dropdown>
-            </div>
-          </div>
+            </>
+          )}
         </Form>
       </div>
-      <Hint id="searchHint">
-        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
-        GRB'). <br />
-        To navigate to a specific circular, enter the associated Circular ID
-        (e.g. 'gcn123', 'Circular 123', or '123').
-      </Hint>
-      {clean && (
-        <>
-          {query && (
-            <h3>
-              {totalItems} result{totalItems != 1 && 's'} found.
-            </h3>
-          )}
-          <ol>
-            {allItems.map(({ circularId, subject }) => (
-              <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}${searchParamsString}`}>
-                  {subject}
-                </Link>
-              </li>
-            ))}
-          </ol>
-          {totalPages > 1 && (
-            <Pagination
-              query={query}
-              page={page}
-              limit={limit}
-              totalPages={totalPages}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          )}
-        </>
-      )}
     </>
   )
 }
