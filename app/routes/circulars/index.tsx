@@ -32,8 +32,6 @@ import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 
-// const limit = 100
-
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
