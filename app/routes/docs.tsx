@@ -72,6 +72,9 @@ export default function () {
                       <NavLink key="deployment" to="contributing/deployment">
                         Deployment
                       </NavLink>,
+                      <NavLink key="email" to="contributing/email">
+                        Email Data Flow
+                      </NavLink>,
                     ]}
                   />
                 </>,
