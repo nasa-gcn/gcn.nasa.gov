@@ -7,9 +7,9 @@
  */
 import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
-import { useMatch } from 'react-router'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
+import { useActiveLink } from '~/lib/remix'
 import { useFeature } from '~/root'
 
 export const handle = {
@@ -18,7 +18,7 @@ export const handle = {
 
 export default function () {
   const enableSchemaBrowser = useFeature('SCHEMA')
-  const isSchemaBrowser = useMatch('/docs/schema-browser/*')
+  const isSchemaBrowser = useActiveLink({ to: '/docs/schema-browser' })
 
   return (
     <GridContainer className="usa-section">
