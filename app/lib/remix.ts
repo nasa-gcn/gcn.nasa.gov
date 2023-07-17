@@ -7,11 +7,10 @@
  */
 import type { AppData, SerializeFrom } from '@remix-run/node'
 import type { NavLinkProps } from '@remix-run/react'
+import { useLocation, useResolvedPath } from '@remix-run/react'
 import { useContext } from 'react'
 import {
   UNSAFE_NavigationContext as NavigationContext,
-  useLocation,
-  useResolvedPath,
   useRouteLoaderData as useRouteLoaderDataRR,
 } from 'react-router'
 

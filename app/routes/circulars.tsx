@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
+import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
-import { Outlet } from 'react-router'
 
 import { put } from './circulars/circulars.server'
 import { getFormDataString } from '~/lib/utils'

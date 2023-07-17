@@ -5,8 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import type { Params } from '@remix-run/react'
 import { SignJWT, jwtVerify } from 'jose'
-import type { Params } from 'react-router'
 import invariant from 'tiny-invariant'
 
 import { maxTokenAge } from './jwt.lib'
