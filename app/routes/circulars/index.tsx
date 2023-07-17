@@ -257,7 +257,7 @@ export default function () {
             To navigate to a specific circular, enter the associated Circular ID
             (e.g. 'gcn123', 'Circular 123', or '123').
           </Hint>
-          {true && (
+          {clean && (
             <>
               {query && (
                 <h3>
@@ -273,38 +273,38 @@ export default function () {
                   </li>
                 ))}
               </ol>
-              <div className=" grid-row">
-                <div className="tablet:grid-col-4 grid-col-6 tablet:padding-x-1">
-                  <Label className="margin-top-auto" htmlFor="value">
-                    Results Per Page
-                  </Label>
-                  <Dropdown
-                    id="limit"
-                    className="usa-select height-4  margin-y-0 padding-y-0"
-                    name="limit"
-                    defaultValue={limit}
-                    onChange={({ target: { form, value } }) => {
-                      submit(form)
-                    }}
-                  >
-                    <option value="100">100</option>
-                    <option value="250">250</option>
-                    <option value="500">500</option>
-                  </Dropdown>
-                </div>
-                <div className="tablet:grid ">
-                  <div className="display-flex">
-                    {totalPages > 1 && (
-                      <Pagination
-                        query={query}
-                        page={page}
-                        limit={limit}
-                        totalPages={totalPages}
-                        startDate={startDate}
-                        endDate={endDate}
-                      />
-                    )}
+              <div className="display-flex flex-row flex-wrap">
+                <div className="flex-align-start tablet:flex-fill">
+                  <div>
+                    <Label className="margin-top-auto" htmlFor="value">
+                      Results Per Page
+                    </Label>
+                    <Dropdown
+                      id="limit"
+                      className="usa-select height-4 padding-y-0"
+                      name="limit"
+                      defaultValue={limit}
+                      onChange={({ target: { form, value } }) => {
+                        submit(form)
+                      }}
+                    >
+                      <option value="100">100</option>
+                      <option value="250">250</option>
+                      <option value="500">500</option>
+                    </Dropdown>
                   </div>
+                </div>
+                <div className="display-flex flex-justify-center flex-fill">
+                  {totalPages > 1 && (
+                    <Pagination
+                      query={query}
+                      page={page}
+                      limit={limit}
+                      totalPages={totalPages}
+                      startDate={startDate}
+                      endDate={endDate}
+                    />
+                  )}
                 </div>
               </div>
             </>
