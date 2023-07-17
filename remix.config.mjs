@@ -35,13 +35,14 @@ export default {
   ignoredRouteFiles: ['**/.*', '**/*.lib.*', '**/*.server.*'],
   assetsBuildDirectory: 'build/static',
   publicPath: '/_static/',
-  server: './server.js',
+  server: './server.ts',
   serverBuildPath: 'build/server/index.js',
   serverMinify: isProduction,
   serverDependenciesToBundle: isProduction
     ? [/^(?!@?aws-sdk(\/|$))/]
     : undefined,
   future: {
+    v2_dev: true,
     v2_meta: true,
     v2_errorBoundary: true,
     v2_normalizeFormMethod: true,

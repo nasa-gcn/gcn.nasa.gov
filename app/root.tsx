@@ -36,6 +36,7 @@ import {
   useMatches,
   useNavigation,
   useRouteError,
+  useRouteLoaderData,
 } from '@remix-run/react'
 import {
   ButtonGroup,
@@ -46,6 +47,7 @@ import {
 import type { ReactNode } from 'react'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
+import invariant from 'tiny-invariant'
 
 import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
@@ -56,7 +58,6 @@ import {
   getFeatures,
   getOrigin,
 } from './lib/env.server'
-import { useRouteLoaderData } from './lib/remix'
 import { getUser } from './routes/__auth/user.server'
 
 import themeStyle from './theme/css/custom.css'
@@ -100,13 +101,13 @@ export const handle = {
   breadcrumb: 'GCN',
 }
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data: { origin } }) => {
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
   const result = [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ]
   // Exclude non-production deployments from indexing by search engines
-  if (new URL(origin).hostname !== 'gcn.nasa.gov')
+  if (data && new URL(data.origin).hostname !== 'gcn.nasa.gov')
     result.push({ name: 'robots', content: 'noindex' })
   return result
 }
@@ -145,7 +146,9 @@ export function shouldRevalidate() {
 }
 
 function useLoaderDataRoot() {
-  return useRouteLoaderData<typeof loader>('root')
+  const result = useRouteLoaderData<typeof loader>('root')
+  invariant(result)
+  return result
 }
 
 export function useEmail() {
