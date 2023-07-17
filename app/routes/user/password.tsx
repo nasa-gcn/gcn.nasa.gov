@@ -8,6 +8,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
 import {
+  Alert,
   Button,
   ButtonGroup,
   Icon,
@@ -16,6 +17,7 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
+import invariant from 'tiny-invariant'
 
 import { getUser } from '../__auth/user.server'
 import { updatePassword } from './password.server'
@@ -39,27 +41,21 @@ export async function action({ request }: DataFunctionArgs) {
   const oldPassword = getFormDataString(data, 'oldPassword')
   const newPassword = getFormDataString(data, 'newPassword')
 
-  let response = null
-  if (oldPassword && newPassword) {
-    response = await updatePassword(request, oldPassword, newPassword)
-  }
-
-  return response
+  invariant(oldPassword && newPassword)
+  return await updatePassword(request, oldPassword, newPassword)
 }
 
-export default function () {
-  const idp = useUserIdp()
-  if (idp)
-    throw new Error(
-      'you must be logged in with a user name and password to reest password'
-    )
+export function WrongIdp() {
+  return (
+    <Alert type="error" heading="Error:" headingLevel="h4">
+      You must be signed in with a username and password to reset your password.
+    </Alert>
+  )
+}
+
+export function ResetPassword() {
   const fetcher = useFetcher<typeof action>()
   const errorMessage = fetcher.data
-  const checkPassword = (str: string) => {
-    var re =
-      /^(?=.*\d)(?=.*[~`!@#$%^&*.+=\-_ [\]\\';,/{}()|\\":<>?])(?=.*[a-z])(?=.*[A-Z]).{8,}$/
-    return re.test(str)
-  }
   const checkWhitespace = (str: string) => {
     return /^\s|\s$/.test(str)
   }
@@ -79,7 +75,13 @@ export default function () {
   const leadingOrTrailingSpace =
     newPassword.length !== newPassword.trim().length
   const oldPasswordError = errorMessage && !isOldPasswordTouched
-  const valid = !checkWhitespace(newPassword) && checkPassword(newPassword)
+  const valid =
+    !checkWhitespace(newPassword) &&
+    containsLower &&
+    containsUpper &&
+    containsNumber &&
+    validLength &&
+    containsSpecialChar
   const shouldDisableSubmit =
     !newPassword || !isNewPasswordTouched || !valid || !isOldPasswordTouched
   let isError
@@ -138,26 +140,25 @@ export default function () {
               }}
               value={newPassword}
             />
-            {visible && (
-              <div className="usa-input-suffix" aria-hidden="true">
+            <div className="usa-input-suffix" aria-hidden="true">
+              {visible ? (
                 <Icon.VisibilityOff
                   className="margin-y-2"
+                  aria-label="Hide password"
                   onClick={() => {
                     setVisible(!visible)
                   }}
                 />
-              </div>
-            )}
-            {!visible && (
-              <div className="usa-input-suffix" aria-hidden="true">
+              ) : (
                 <Icon.Visibility
                   className="margin-y-2"
+                  aria-label="Show password"
                   onClick={() => {
                     setVisible(!visible)
                   }}
                 />
-              </div>
-            )}
+              )}
+            </div>
           </InputGroup>
           <ButtonGroup>
             <Button
@@ -183,7 +184,6 @@ export default function () {
             )}
         </fetcher.Form>
       </>
-
       <div className="usa-alert usa-alert--info usa-alert--validation">
         <div className="usa-alert__body">
           <h3 className="site-preview-heading margin-0 usa-alert__heading">
@@ -191,80 +191,50 @@ export default function () {
           </h3>
           <ul className="usa-checklist" id="validate-code">
             <li>
-              {containsLower && (
-                <>
-                  <Icon.Check color="green" />
-                </>
-              )}
-              {!containsLower && (
-                <>
-                  <Icon.Close color="red" />
-                </>
+              {containsLower ? (
+                <Icon.Check color="green" aria-label="green check" />
+              ) : (
+                <Icon.Close color="red" aria-label="red x" />
               )}
               A lower case letter
             </li>
             <li>
-              {containsUpper && (
-                <>
-                  <Icon.Check color="green" />
-                </>
-              )}
-              {!containsUpper && (
-                <>
-                  <Icon.Close color="red" />
-                </>
+              {containsUpper ? (
+                <Icon.Check color="green" aria-label="green check" />
+              ) : (
+                <Icon.Close color="red" aria-label="red x" />
               )}
               An upper case letter
             </li>
             <li>
-              {containsNumber && (
-                <>
-                  <Icon.Check color="green" />
-                </>
-              )}
-              {!containsNumber && (
-                <>
-                  <Icon.Close color="red" />
-                </>
+              {containsNumber ? (
+                <Icon.Check color="green" aria-label="green check" />
+              ) : (
+                <Icon.Close color="red" aria-label="red x" />
               )}
               A number
             </li>
             <li>
-              {validLength && (
-                <>
-                  <Icon.Check color="green" />
-                </>
-              )}
-              {!validLength && (
-                <>
-                  <Icon.Close color="red" />
-                </>
+              {validLength ? (
+                <Icon.Check color="green" aria-label="green check" />
+              ) : (
+                <Icon.Close color="red" aria-label="red x" />
               )}
               At least 8 characters
             </li>
             <li>
-              {containsSpecialChar && (
-                <>
-                  <Icon.Check color="green" />
-                </>
-              )}
-              {!containsSpecialChar && (
-                <>
-                  <Icon.Close color="red" />
-                </>
+              {containsSpecialChar ? (
+                <Icon.Check color="green" aria-label="green check" />
+              ) : (
+                <Icon.Close color="red" aria-label="red x" />
               )}
               At least 1 special character or space
             </li>
             <li>
-              {!leadingOrTrailingSpace && (
-                <>
-                  <Icon.Check color="green" />
-                </>
-              )}
-              {leadingOrTrailingSpace && (
-                <>
-                  <Icon.Close color="red" />
-                </>
+              {!leadingOrTrailingSpace ? (
+                <Icon.Check color="green" aria-label="green check" />
+              ) : (
+                <Icon.Close color="red" aria-label="red x" />
               )}
               No leading or trailing spaces
             </li>
@@ -273,4 +243,8 @@ export default function () {
       </div>
     </>
   )
+}
+
+export default function () {
+  return useUserIdp() ? WrongIdp() : ResetPassword()
 }

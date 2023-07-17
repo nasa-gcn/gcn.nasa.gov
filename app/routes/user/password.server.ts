@@ -16,27 +16,27 @@ export async function updatePassword(
   oldPassword: string,
   newPassword: string
 ) {
-  try {
-    const user = await getUser(request)
-    if (!user) throw new Response(null, { status: 403 })
-    const session = await storage.getSession(request.headers.get('Cookie'))
-    const accessToken = session.get('accessToken')
-    const passwordData = {
-      AccessToken: accessToken,
-      PreviousPassword: oldPassword,
-      ProposedPassword: newPassword,
-    }
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+  const session = await storage.getSession(request.headers.get('Cookie'))
+  const accessToken = session.get('accessToken')
+  const passwordData = {
+    AccessToken: accessToken,
+    PreviousPassword: oldPassword,
+    ProposedPassword: newPassword,
+  }
 
-    const command = new ChangePasswordCommand(passwordData)
+  const command = new ChangePasswordCommand(passwordData)
+  try {
     await cognito.send(command)
   } catch (error) {
-    if (error instanceof Error) {
-      if (error.name === 'NotAuthorizedException') {
-        return 'NotAuthorizedException'
-      }
-      if (error.name === 'LimitExceededException') {
-        return 'LimitExceededException'
-      }
+    if (
+      error instanceof Error &&
+      ['NotAuthorizedException', 'LimitExceededException'].includes(error.name)
+    ) {
+      return error.name
+    } else {
+      throw error
     }
   }
   return null
