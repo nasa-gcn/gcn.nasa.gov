@@ -21,6 +21,7 @@ import invariant from 'tiny-invariant'
 
 import { getUser } from '../__auth/user.server'
 import { updatePassword } from './password.server'
+import PasswordValidationStep from '~/components/PasswordValidationStep'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { useUserIdp } from '~/root'
@@ -56,9 +57,6 @@ export function WrongIdp() {
 export function ResetPassword() {
   const fetcher = useFetcher<typeof action>()
   const errorMessage = fetcher.data
-  const checkWhitespace = (str: string) => {
-    return /^\s|\s$/.test(str)
-  }
 
   const [newPassword, setNewPassword] = useState('')
   const [isOldPasswordTouched, setIsOldPasswordTouched] = useState(false)
@@ -69,14 +67,14 @@ export function ResetPassword() {
   const containsUpper = /[A-Z]/.test(newPassword)
   const containsNumber = /[0-9]/.test(newPassword)
   const validLength = newPassword.length >= 8
+  const whitespaceValid = !/^\s|\s$/.test(newPassword)
   const containsSpecialChar = /[~`!@#$%^.&*+=\-_ [\]\\';,/{}()|\\":<>?]/g.test(
     newPassword
   )
-  const leadingOrTrailingSpace =
-    newPassword.length !== newPassword.trim().length
+
   const oldPasswordError = errorMessage && !isOldPasswordTouched
   const valid =
-    !checkWhitespace(newPassword) &&
+    whitespaceValid &&
     containsLower &&
     containsUpper &&
     containsNumber &&
@@ -189,55 +187,28 @@ export function ResetPassword() {
           <h3 className="site-preview-heading margin-0 usa-alert__heading">
             New password must contain:
           </h3>
-          <ul className="usa-checklist" id="validate-code">
-            <li>
-              {containsLower ? (
-                <Icon.Check color="green" aria-label="green check" />
-              ) : (
-                <Icon.Close color="red" aria-label="red x" />
-              )}
-              A lower case letter
-            </li>
-            <li>
-              {containsUpper ? (
-                <Icon.Check color="green" aria-label="green check" />
-              ) : (
-                <Icon.Close color="red" aria-label="red x" />
-              )}
-              An upper case letter
-            </li>
-            <li>
-              {containsNumber ? (
-                <Icon.Check color="green" aria-label="green check" />
-              ) : (
-                <Icon.Close color="red" aria-label="red x" />
-              )}
-              A number
-            </li>
-            <li>
-              {validLength ? (
-                <Icon.Check color="green" aria-label="green check" />
-              ) : (
-                <Icon.Close color="red" aria-label="red x" />
-              )}
-              At least 8 characters
-            </li>
-            <li>
-              {containsSpecialChar ? (
-                <Icon.Check color="green" aria-label="green check" />
-              ) : (
-                <Icon.Close color="red" aria-label="red x" />
-              )}
-              At least 1 special character or space
-            </li>
-            <li>
-              {!leadingOrTrailingSpace ? (
-                <Icon.Check color="green" aria-label="green check" />
-              ) : (
-                <Icon.Close color="red" aria-label="red x" />
-              )}
-              No leading or trailing spaces
-            </li>
+          <ul className="usa-checklist">
+            <PasswordValidationStep
+              valid={containsLower}
+              text="A lower case letter"
+            />
+            <PasswordValidationStep
+              valid={containsUpper}
+              text="An upper case letter"
+            />
+            <PasswordValidationStep valid={containsNumber} text="A number" />
+            <PasswordValidationStep
+              valid={validLength}
+              text="At least 8 characters"
+            />
+            <PasswordValidationStep
+              valid={containsSpecialChar}
+              text="At least 1 special character or space"
+            />
+            <PasswordValidationStep
+              valid={whitespaceValid}
+              text="No leading or trailing space"
+            />
           </ul>
         </div>
       </div>
