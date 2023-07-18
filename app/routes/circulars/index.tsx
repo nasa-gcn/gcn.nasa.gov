@@ -289,6 +289,7 @@ export default function () {
                     </Dropdown>
                   </div>
                 </div>
+
                 <div className="display-flex flex-justify-center flex-fill">
                   {totalPages > 1 && (
                     <Pagination
