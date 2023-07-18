@@ -68,11 +68,25 @@ export function Header() {
   const email = useEmail()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
-  const onClick = () => setExpanded((prvExpanded) => !prvExpanded)
+
+  function toggleMobileNav() {
+    setExpanded((expanded) => !expanded)
+  }
+
+  function hideMobileNav() {
+    setExpanded(false)
+  }
+
+  function onClickUserMenuItem() {
+    if (userMenuIsOpen && !expanded) setUserMenuIsOpen(false)
+    hideMobileNav()
+  }
 
   return (
     <>
-      <div className={`usa-overlay ${expanded ? 'is-visible' : ''}`}></div>
+      {expanded && (
+        <div className="usa-overlay is-visible" onClick={hideMobileNav} />
+      )}
       <USWDSHeader basic className="usa-header usa-header--dark">
         <div className="usa-nav-container">
           <div className="usa-navbar">
@@ -82,25 +96,41 @@ export function Header() {
                 <span id="site-title">General Coordinates Network</span>
               </Link>
             </Title>
-            <NavMenuButton onClick={onClick} label="Menu" />
+            <NavMenuButton onClick={toggleMobileNav} label="Menu" />
           </div>
           <PrimaryNav
             mobileExpanded={expanded}
             items={[
-              <NavLink className="usa-nav__link" to="/missions" key="/missions">
+              <NavLink
+                className="usa-nav__link"
+                to="/missions"
+                key="/missions"
+                onClick={hideMobileNav}
+              >
                 Missions
               </NavLink>,
-              <NavLink className="usa-nav__link" to="/notices" key="/notices">
+              <NavLink
+                className="usa-nav__link"
+                to="/notices"
+                key="/notices"
+                onClick={hideMobileNav}
+              >
                 Notices
               </NavLink>,
               <NavLink
                 className="usa-nav__link"
                 to="/circulars"
                 key="/circulars"
+                onClick={hideMobileNav}
               >
                 Circulars
               </NavLink>,
-              <NavLink className="usa-nav__link" to="/docs" key="/docs">
+              <NavLink
+                className="usa-nav__link"
+                to="/docs"
+                key="/docs"
+                onClick={hideMobileNav}
+              >
                 Documentation
               </NavLink>,
               email ? (
@@ -111,54 +141,61 @@ export function Header() {
                     key="user"
                     label={email}
                     isOpen={userMenuIsOpen}
-                    onToggle={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                    onToggle={() => {
+                      setUserMenuIsOpen(!userMenuIsOpen)
+                    }}
                     menuId="user"
                   />
                   <Menu
                     id="user"
                     isOpen={userMenuIsOpen}
                     items={[
-                      <Link
-                        key="user"
-                        to="/user"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
-                      >
+                      <Link key="user" to="/user" onClick={onClickUserMenuItem}>
                         Profile
                       </Link>,
                       <Link
                         key="endorsements"
                         to="/user/endorsements"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                        onClick={onClickUserMenuItem}
                       >
                         Peer Endorsements
                       </Link>,
                       <Link
                         key="credentials"
                         to="/user/credentials"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                        onClick={onClickUserMenuItem}
                       >
                         Client Credentials
                       </Link>,
                       <Link
                         key="email"
                         to="/user/email"
-                        onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                        onClick={onClickUserMenuItem}
                       >
                         Email Notifications
                       </Link>,
-                      <Link key="logout" to="/logout">
+                      <Link
+                        key="logout"
+                        to="/logout"
+                        onClick={onClickUserMenuItem}
+                      >
                         Sign Out
                       </Link>,
                     ]}
                   />
                 </>
               ) : (
-                <Link className="usa-nav__link" to="/login" key="/login">
+                <Link
+                  className="usa-nav__link"
+                  to="/login"
+                  key="/login"
+                  onClick={hideMobileNav}
+                >
                   Sign in / Sign up
                 </Link>
               ),
             ]}
-            onToggleMobileNav={onClick}
+            onToggleMobileNav={toggleMobileNav}
           />
         </div>
       </USWDSHeader>
