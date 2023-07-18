@@ -72,7 +72,6 @@ export function ResetPassword() {
     newPassword
   )
 
-  const oldPasswordError = errorMessage && !oldPassword
   const valid =
     whitespaceValid &&
     containsLower &&
@@ -101,7 +100,7 @@ export function ResetPassword() {
           <Label htmlFor="oldPassword">Old Password</Label>
           <TextInput
             data-focus
-            className={oldPasswordError ? 'usa-input--error' : ''}
+            className={errorMessage && !oldPassword ? 'usa-input--error' : ''}
             name="oldPassword"
             id="oldPassword"
             type="password"
@@ -160,17 +159,17 @@ export function ResetPassword() {
             >
               Reset Password
             </Button>
+            {fetcher.state !== 'idle' && (
+              <>
+                <Spinner className="margin-top-3" /> Saving...
+              </>
+            )}
+            {fetcher.state === 'idle' && fetcher.data === null && (
+              <>
+                <Icon.Check className="margin-top-3" color="green" /> Saved
+              </>
+            )}
           </ButtonGroup>
-          {fetcher.state !== 'idle' && (
-            <>
-              <Spinner /> Saving...
-            </>
-          )}
-          {fetcher.state === 'idle' && fetcher.data === null && (
-            <>
-              <Icon.Check color="green" /> Saved
-            </>
-          )}
         </fetcher.Form>
       </>
       <div className="usa-alert usa-alert--info usa-alert--validation">
