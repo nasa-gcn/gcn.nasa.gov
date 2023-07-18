@@ -25,10 +25,10 @@ import {
 import classNames from 'classnames'
 import { useState } from 'react'
 
-import { circularRedirect, put, search } from './circulars.server'
+import type { action } from '../circulars'
+import { circularRedirect, search } from './circulars.server'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
-import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 
@@ -53,15 +53,6 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   return { page, ...results }
 }
 
-export async function action({ request }: DataFunctionArgs) {
-  const data = await request.formData()
-  const body = getFormDataString(data, 'body')
-  const subject = getFormDataString(data, 'subject')
-  if (!body || !subject)
-    throw new Response('Body and subject are required', { status: 400 })
-  return await put(subject, body, request)
-}
-
 function getPageLink({
   page,
   limit,
@@ -82,8 +73,8 @@ function getPageLink({
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
 
-  const searchParamsString = searchParams.toString()
-  return searchParamsString && `?${searchParamsString}`
+  const searchString = searchParams.toString()
+  return searchString && `?${searchString}`
 }
 
 function Pagination({
@@ -255,7 +246,6 @@ export default function () {
               alt="Search"
             />
           </Button>
-
           <Hint id="searchHint">
             Search for Circulars by submitter, subject, or body text (e.g.
             'Fermi GRB'). <br />

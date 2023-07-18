@@ -6,12 +6,13 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs, SerializeFrom } from '@remix-run/node'
-import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { formatDateISO } from './circulars.lib'
 import { get } from './circulars.server'
 import TimeAgo from '~/components/TimeAgo'
+import { useSearchString } from '~/lib/utils'
 
 export const handle = {
   breadcrumb({ data }: { data: SerializeFrom<typeof loader> }) {
@@ -31,13 +32,11 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
 export default function () {
   const { circularId, subject, submitter, createdOn, body } =
     useLoaderData<typeof loader>()
-  const [searchParams] = useSearchParams()
-  let searchParamsString = searchParams.toString()
-  if (searchParamsString) searchParamsString = `?${searchParamsString}`
+  const searchString = useSearchString()
   return (
     <>
       <ButtonGroup>
-        <Link to={`/circulars${searchParamsString}`} className="usa-button">
+        <Link to={`/circulars${searchString}`} className="usa-button">
           <div className="position-relative">
             <Icon.ArrowBack className="position-absolute top-0 left-0" />
           </div>

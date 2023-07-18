@@ -5,8 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import type { Link } from '@remix-run/react'
 import { SideNav as BaseSideNav } from '@trussworks/react-uswds'
-import type { To } from 'react-router'
 
 import { useActiveLink } from '~/lib/remix'
 
@@ -23,8 +23,8 @@ export function SideNavSub({
   isVisible,
   ...props
 }: Omit<Parameters<typeof BaseSideNav>[0], 'isSubNav'> & {
-  base: To
-  isVisible?: Boolean
+  base: Parameters<typeof Link>[0]['to']
+  isVisible?: boolean
 }) {
   const isActive = useActiveLink({ to: base })
   return isActive || isVisible ? <BaseSideNav {...props} isSubnav /> : <></>
