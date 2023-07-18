@@ -58,8 +58,8 @@ export function ResetPassword() {
   const fetcher = useFetcher<typeof action>()
   const errorMessage = fetcher.data
 
+  const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
-  const [isOldPasswordTouched, setIsOldPasswordTouched] = useState(false)
   const [isNewPasswordTouched, setIsNewPasswordTouched] = useState(false)
   const [visible, setVisible] = useState(false)
 
@@ -72,7 +72,7 @@ export function ResetPassword() {
     newPassword
   )
 
-  const oldPasswordError = errorMessage && !isOldPasswordTouched
+  const oldPasswordError = errorMessage && !oldPassword
   const valid =
     whitespaceValid &&
     containsLower &&
@@ -80,20 +80,16 @@ export function ResetPassword() {
     containsNumber &&
     validLength &&
     containsSpecialChar
-  const shouldDisableSubmit =
-    !newPassword || !isNewPasswordTouched || !valid || !isOldPasswordTouched
-  let isError
-  if (isNewPasswordTouched && valid) {
-    isError = false
-  }
-  if (isNewPasswordTouched && !valid) {
-    isError = true
-  }
+  const shouldDisableSubmit = !valid || !oldPassword
+
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
     if (formRef.current && fetcher.state === 'submitting') {
       formRef.current.reset()
+    } else if (formRef && formRef.current) {
+      // this works around autofill on the old password field for all browsers
+      setOldPassword((formRef.current[0] as HTMLInputElement).value || '')
     }
   }, [fetcher.state])
 
@@ -111,7 +107,7 @@ export function ResetPassword() {
             type="password"
             placeholder="Old Password"
             onChange={(e) => {
-              setIsOldPasswordTouched(true)
+              setOldPassword(e.target.value)
             }}
           />
           {errorMessage === 'NotAuthorizedException' && (
@@ -123,13 +119,11 @@ export function ResetPassword() {
             </span>
           )}
           <Label htmlFor="newPassword">New Password</Label>
-          <InputGroup error={isError}>
+          <InputGroup error={isNewPasswordTouched && !valid}>
             <TextInput
               name="newPassword"
               id="newPassword"
-              className={
-                !isError && isNewPasswordTouched ? 'usa-input--success' : ''
-              }
+              className={valid ? 'usa-input--success' : ''}
               type={visible ? 'text' : 'password'}
               placeholder="New Password"
               onChange={(e) => {
@@ -172,14 +166,11 @@ export function ResetPassword() {
               <Spinner /> Saving...
             </>
           )}
-          {fetcher.state === 'idle' &&
-            fetcher.data !== undefined &&
-            fetcher.data !== 'NotAuthorizedException' &&
-            fetcher.data !== 'LimitExceededException' && (
-              <>
-                <Icon.Check color="green" /> Saved
-              </>
-            )}
+          {fetcher.state === 'idle' && fetcher.data === null && (
+            <>
+              <Icon.Check color="green" /> Saved
+            </>
+          )}
         </fetcher.Form>
       </>
       <div className="usa-alert usa-alert--info usa-alert--validation">
