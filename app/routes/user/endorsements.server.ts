@@ -23,9 +23,7 @@ import {
   listUsersInGroup,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
-import { getOrigin } from '~/lib/env.server'
-
-const origin = getOrigin()
+import { origin } from '~/lib/env.server'
 
 const fromName = 'GCN Endorsements'
 // Call-to-action

@@ -24,7 +24,7 @@ import {
   listUsersInGroup,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
-import { getHostname, getOrigin } from '~/lib/env.server'
+import { hostname, origin } from '~/lib/env.server'
 import { group, putRaw } from '~/routes/circulars/circulars.server'
 
 interface UserData {
@@ -46,8 +46,6 @@ interface EmailProps {
 }
 
 const fromName = 'GCN Circulars'
-
-const origin = getOrigin()
 
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
@@ -198,8 +196,8 @@ If you have not already done so, we encourage you to make an account at ${origin
 
 - Your Circulars settings have been transferred automatically.
 - You are able to submit Circulars from the same email addresses registered in the legacy service.
-- Emails from GCN come from a new address, no-reply@${getHostname()}.
-- We encourage you to submit Circulars to the new address, circulars@${getHostname()}, but we still support the old address gcncirc@capella2.gsfc.nasa.gov.
+- Emails from GCN come from a new address, no-reply@${hostname}.
+- We encourage you to submit Circulars to the new address, circulars@${hostname}, but we still support the old address gcncirc@capella2.gsfc.nasa.gov.
 - The new archive, ${origin}/circulars, includes all past Circulars. We have frozen the old archive, https://gcn.gsfc.nasa.gov/gcn3_archive.html.
 
 For more information about the GCN Circulars, please see ${origin}/circulars.

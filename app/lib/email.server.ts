@@ -19,12 +19,11 @@ import {
 } from '@aws-sdk/client-sesv2'
 import chunk from 'lodash/chunk'
 
-import { getHostname } from './env.server'
+import { hostname } from './env.server'
 import { getEnvBannerHeaderAndDescription } from './utils'
 import { encodeToURL } from '~/routes/unsubscribe/jwt.server'
 
 const client = new SESv2Client({})
-const hostname = getHostname()
 // https://docs.aws.amazon.com/ses/latest/dg/quotas.html
 const maxRecipientsPerMessage = 50
 
