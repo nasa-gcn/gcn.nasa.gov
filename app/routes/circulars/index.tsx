@@ -195,8 +195,8 @@ export default function () {
   const startDate = searchParams.get('startDate') ?? undefined
   const endDate = searchParams.get('endDate') ?? undefined
 
-  let searchParamsString = searchParams.toString()
-  if (searchParamsString) searchParamsString = `?${searchParamsString}`
+  let searchString = searchParams.toString()
+  if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
   const clean = inputQuery === query
@@ -210,8 +210,13 @@ export default function () {
           <h1 className="float-left margin-bottom-0">GCN Circulars</h1>
         </div>
         <div className="tablet:grid-col flex-auto">
-          <Link className="usa-button" to="/circulars/new">
-            <Icon.Edit /> Submit New Circular
+          <Link to={`/circulars/new${searchString}`}>
+            <Button
+              type="button"
+              className="height-4 padding-top-0 padding-bottom-0"
+            >
+              <Icon.Edit /> Submit New Circular
+            </Button>
           </Link>
         </div>
       </Grid>
@@ -267,7 +272,7 @@ export default function () {
               <ol>
                 {allItems.map(({ circularId, subject }) => (
                   <li key={circularId} value={circularId}>
-                    <Link to={`/circulars/${circularId}${searchParamsString}`}>
+                    <Link to={`/circulars/${circularId}${searchString}`}>
                       {subject}
                     </Link>
                   </li>
