@@ -24,7 +24,7 @@ export function SideNavSub({
   ...props
 }: Omit<Parameters<typeof BaseSideNav>[0], 'isSubNav'> & {
   base: Parameters<typeof Link>[0]['to']
-  isVisible?: Boolean
+  isVisible?: boolean
 }) {
   const isActive = useActiveLink({ to: base })
   return isActive || isVisible ? <BaseSideNav {...props} isSubnav /> : <></>
