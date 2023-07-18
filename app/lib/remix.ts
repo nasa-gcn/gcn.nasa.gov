@@ -7,10 +7,9 @@
  */
 import type { AppData, SerializeFrom } from '@remix-run/node'
 import type { NavLinkProps } from '@remix-run/react'
-import { useLocation, useResolvedPath } from '@remix-run/react'
-import { useContext } from 'react'
 import {
-  UNSAFE_NavigationContext as NavigationContext,
+  useMatch,
+  useResolvedPath,
   useRouteLoaderData as useRouteLoaderDataRR,
 } from 'react-router'
 
@@ -30,25 +29,6 @@ export function useActiveLink({
   end = false,
   relative,
 }: Pick<NavLinkProps, 'to' | 'caseSensitive' | 'end' | 'relative'>) {
-  let path = useResolvedPath(to, { relative })
-  let location = useLocation()
-  let { navigator } = useContext(NavigationContext)
-
-  let toPathname = navigator.encodeLocation
-    ? navigator.encodeLocation(path).pathname
-    : path.pathname
-  let locationPathname = location.pathname
-
-  if (!caseSensitive) {
-    locationPathname = locationPathname.toLowerCase()
-    toPathname = toPathname.toLowerCase()
-  }
-
-  let isActive =
-    locationPathname === toPathname ||
-    (!end &&
-      locationPathname.startsWith(toPathname) &&
-      locationPathname.charAt(toPathname.length) === '/')
-
-  return isActive
+  const path = useResolvedPath(to, { relative }).pathname
+  return !!useMatch({ path, caseSensitive, end })
 }

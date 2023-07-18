@@ -31,12 +31,15 @@ export default function () {
                   About GCN
                 </NavLink>,
                 <>
-                  <NavLink key="circulars" to="circulars" end>
+                  <NavLink key="circulars" to="circulars">
                     Circulars
                   </NavLink>
                   <SideNavSub
                     base="circulars"
                     items={[
+                      <NavLink key="subscribing" to="circulars" end>
+                        About
+                      </NavLink>,
                       <NavLink key="subscribing" to="circulars/subscribing">
                         Subscribing
                       </NavLink>,
