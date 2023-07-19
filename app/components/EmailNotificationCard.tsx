@@ -1,11 +1,13 @@
 import { Form, useFetcher } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
-import { Modal, ModalFooter, ModalHeading } from '@trussworks/react-uswds'
 import {
   Button,
   ButtonGroup,
   Grid,
   Icon,
+  Modal,
+  ModalFooter,
+  ModalHeading,
   ModalToggleButton,
 } from '@trussworks/react-uswds'
 import { useEffect, useRef } from 'react'
