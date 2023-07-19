@@ -8,7 +8,13 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import { Button, ButtonGroup, Label, TextInput } from '@trussworks/react-uswds'
+import {
+  Button,
+  ButtonGroup,
+  FormGroup,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 import type {
@@ -136,17 +142,23 @@ export default function () {
         defaultSelected={notification.noticeTypes}
         validationFunction={setAlertsValid}
       ></NoticeTypeCheckboxes>
-      <ButtonGroup>
-        <Link to=".." type="button" className="usa-button usa-button--outline">
-          Cancel
-        </Link>
-        <Button
-          disabled={!(nameValid && recipientValid && alertsValid)}
-          type="submit"
-        >
-          Save
-        </Button>
-      </ButtonGroup>
+      <FormGroup>
+        <ButtonGroup>
+          <Link
+            to=".."
+            type="button"
+            className="usa-button usa-button--outline"
+          >
+            Cancel
+          </Link>
+          <Button
+            disabled={!(nameValid && recipientValid && alertsValid)}
+            type="submit"
+          >
+            Save
+          </Button>
+        </ButtonGroup>
+      </FormGroup>
     </Form>
   )
 }
