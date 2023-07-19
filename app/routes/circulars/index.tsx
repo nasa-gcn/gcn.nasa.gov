@@ -18,7 +18,6 @@ import {
   Button,
   ButtonGroup,
   Dropdown,
-  Grid,
   Icon,
   Label,
   TextInput,
@@ -198,21 +197,8 @@ export default function () {
 
   return (
     <>
-      <Grid row>
-        <div className="tablet:grid-col flex-fill">
-          <h1 className="float-left margin-bottom-0">GCN Circulars</h1>
-        </div>
-        <div className="tablet:grid-col flex-auto">
-          <Link to={`/circulars/new${searchString}`}>
-            <Button
-              type="button"
-              className="height-4 padding-top-0 padding-bottom-0"
-            >
-              <Icon.Edit /> Submit New Circular
-            </Button>
-          </Link>
-        </div>
-      </Grid>
+      <h1>GCN Circulars</h1>
+
       <p className="usa-paragraph">
         <b>
           GCN Circulars are rapid astronomical bulletins submitted by and
@@ -225,35 +211,44 @@ export default function () {
         <Link to="/docs/circulars">documentation</Link> for help with
         subscribing to or submitting Circulars.
       </p>
-      <Form className="usa-search usa-search--small width-full">
-        <ButtonGroup
-          type="segmented"
-          className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 segmented"
-        >
-          <Label srOnly={true} htmlFor="query">
-            Search
-          </Label>
+      <Form className="usa-search usa-search--small ">
+        <ButtonGroup className="display-flex position-sticky top-0 bg-white margin-bottom-1 padding-top-1 flex-align-start">
+          <ButtonGroup className="display-flex flex-row " type="segmented">
+            <Label srOnly={true} htmlFor="query">
+              Search
+            </Label>
 
-          <TextInput
-            id="query"
-            name="query"
-            type="search"
-            defaultValue={inputQuery}
-            placeholder="Search"
-            aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form)
-            }}
-          />
-          <Button className="usa-search__submit" type="submit">
-            <img
-              src={searchImg}
-              className="usa-search__submit-icon"
-              alt="Search"
+            <TextInput
+              className="grid-col"
+              id="query"
+              name="query"
+              type="search"
+              defaultValue={inputQuery}
+              placeholder="Search"
+              aria-describedby="searchHint"
+              onChange={({ target: { form, value } }) => {
+                setInputQuery(value)
+                if (!value) submit(form)
+              }}
             />
-          </Button>
+            <Button className="usa-search__submit" type="submit">
+              <img
+                src={searchImg}
+                className="usa-search__submit-icon"
+                alt="Search"
+              />
+            </Button>
+          </ButtonGroup>
+          <Link to={`/circulars/new${searchString}`}>
+            <Button
+              type="button"
+              className="height-4 padding-top-0 padding-bottom-0"
+            >
+              <Icon.Edit /> New
+            </Button>
+          </Link>
         </ButtonGroup>
+
         <Hint id="searchHint">
           Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
           GRB'). <br />
