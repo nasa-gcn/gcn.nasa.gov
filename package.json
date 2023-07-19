@@ -152,6 +152,9 @@
       "@remix-run/eslint-config/node",
       "prettier"
     ],
+    "rules": {
+      "prefer-const": "error"
+    },
     "overrides": [
       {
         "files": [

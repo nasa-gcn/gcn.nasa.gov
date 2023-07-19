@@ -12,10 +12,7 @@ import { Table } from '@trussworks/react-uswds'
 import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/Tabs'
 import { loadJson, loadSchemaExamples } from '~/lib/schema-data'
-import type {
-  Schema,
-  SchemaProperty,
-} from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
+import type { SchemaProperty } from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
 import {
   ReferencedElementTable,
   SchemaPropertiesTableBody,
@@ -23,10 +20,9 @@ import {
 
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
   if (!path) throw new Response(null, { status: 404 })
-  let result: Schema
   if (!path.includes('.schema.json')) throw new Response(null, { status: 404 })
   const examples = await loadSchemaExamples(path)
-  result = await loadJson(path)
+  const result = await loadJson(path)
 
   return { path, result, examples }
 }

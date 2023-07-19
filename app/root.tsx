@@ -101,7 +101,7 @@ export const handle = {
 }
 
 export const meta: V2_MetaFunction<typeof loader> = ({ data: { origin } }) => {
-  let result = [
+  const result = [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ]

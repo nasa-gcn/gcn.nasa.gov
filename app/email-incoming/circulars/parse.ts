@@ -48,7 +48,7 @@ export function getReplyToAddresses(replyTo?: AddressObject) {
 }
 
 export async function parseEmailContentFromSource(emailContent: Source) {
-  let parsedMail = await simpleParser(emailContent)
+  const parsedMail = await simpleParser(emailContent)
   // sns includes the attachments if there are any.
   // Remove this if we want to implement some type of behavior for attachments
   parsedMail.attachments = []
