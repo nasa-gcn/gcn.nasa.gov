@@ -17,6 +17,7 @@ import {
 import {
   Button,
   ButtonGroup,
+  Grid,
   Icon,
   Label,
   TextInput,
@@ -191,7 +192,21 @@ export default function () {
 
   return (
     <>
-      <h1>GCN Circulars</h1>
+      <Grid row>
+        <div className="tablet:grid-col flex-fill">
+          <h1 className="float-left margin-bottom-0">GCN Circulars</h1>
+        </div>
+        <div className="tablet:grid-col flex-auto">
+          <Link to={`/circulars/new${searchString}`}>
+            <Button
+              type="button"
+              className="height-4 padding-top-0 padding-bottom-0"
+            >
+              <Icon.Edit /> Submit New Circular
+            </Button>
+          </Link>
+        </div>
+      </Grid>
       <p className="usa-paragraph">
         <b>
           GCN Circulars are rapid astronomical bulletins submitted by and
@@ -232,14 +247,6 @@ export default function () {
             />
           </Button>
         </Form>
-        <Link to={`/circulars/new${searchString}`}>
-          <Button
-            type="button"
-            className="height-4 padding-top-0 padding-bottom-0"
-          >
-            <Icon.Edit /> New
-          </Button>
-        </Link>
       </ButtonGroup>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
