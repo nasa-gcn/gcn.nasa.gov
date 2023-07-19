@@ -11,6 +11,7 @@ import {
   Alert,
   Button,
   ButtonGroup,
+  FormGroup,
   Icon,
   InputGroup,
   Label,
@@ -151,25 +152,23 @@ export function ResetPassword() {
               )}
             </div>
           </InputGroup>
-          <ButtonGroup>
-            <Button
-              disabled={shouldDisableSubmit}
-              type="submit"
-              className="margin-y-2"
-            >
-              Reset Password
-            </Button>
-            {fetcher.state !== 'idle' && (
-              <>
-                <Spinner className="margin-top-3" /> Saving...
-              </>
-            )}
-            {fetcher.state === 'idle' && fetcher.data === null && (
-              <>
-                <Icon.Check className="margin-top-3" color="green" /> Saved
-              </>
-            )}
-          </ButtonGroup>
+          <FormGroup>
+            <ButtonGroup>
+              <Button disabled={shouldDisableSubmit} type="submit">
+                Reset Password
+              </Button>
+              {fetcher.state !== 'idle' && (
+                <>
+                  <Spinner /> Saving...
+                </>
+              )}
+              {fetcher.state === 'idle' && fetcher.data === null && (
+                <>
+                  <Icon.Check color="green" /> Saved
+                </>
+              )}
+            </ButtonGroup>
+          </FormGroup>
         </fetcher.Form>
       </>
       <div className="usa-alert usa-alert--info usa-alert--validation">
