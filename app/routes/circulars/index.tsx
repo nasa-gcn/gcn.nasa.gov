@@ -225,7 +225,9 @@ export default function () {
       </p>
       <div className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <Form className="usa-search usa-search--small width-full">
-          <Label htmlFor="query">Search</Label>
+          <Label srOnly={true} htmlFor="query">
+            Search
+          </Label>
 
           <TextInput
             id="query"
