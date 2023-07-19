@@ -10,7 +10,6 @@ import { useFetcher } from '@remix-run/react'
 import {
   Alert,
   Button,
-  ButtonGroup,
   FormGroup,
   Icon,
   InputGroup,
@@ -63,6 +62,7 @@ export function ResetPassword() {
   const [newPassword, setNewPassword] = useState('')
   const [isNewPasswordTouched, setIsNewPasswordTouched] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [interacted, setInteracted] = useState(false)
 
   const containsLower = /[a-z]/.test(newPassword)
   const containsUpper = /[A-Z]/.test(newPassword)
@@ -85,13 +85,17 @@ export function ResetPassword() {
   const formRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {
-    if (formRef.current && fetcher.state === 'submitting') {
+    if (fetcher.state === 'submitting') {
+      setInteracted(false)
+    }
+    if (fetcher.state === 'idle' && fetcher.data === null && formRef.current) {
       formRef.current.reset()
+      setInteracted(false)
     } else if (formRef && formRef.current) {
       // this works around autofill on the old password field for all browsers
       setOldPassword((formRef.current[0] as HTMLInputElement).value || '')
     }
-  }, [fetcher.state])
+  }, [fetcher.state, fetcher.data])
 
   return (
     <>
@@ -101,24 +105,29 @@ export function ResetPassword() {
           <Label htmlFor="oldPassword">Old Password</Label>
           <TextInput
             data-focus
-            className={errorMessage && !oldPassword ? 'usa-input--error' : ''}
+            className={errorMessage ? 'usa-input--error' : 'margin-bottom-4'}
             name="oldPassword"
             id="oldPassword"
             type="password"
             placeholder="Old Password"
             onChange={(e) => {
               setOldPassword(e.target.value)
+              setInteracted(true)
             }}
           />
           {errorMessage === 'NotAuthorizedException' && (
-            <span className="text-red">Invalid Password</span>
+            <div className="text-red margin-bottom-105 margin-top-2px">
+              Invalid Password
+            </div>
           )}
           {errorMessage === 'LimitExceededException' && (
-            <span className="text-red">
+            <div className="text-red margin-bottom-105 margin-top-2px">
               Attempts Exceeded. Please try again later.
-            </span>
+            </div>
           )}
-          <Label htmlFor="newPassword">New Password</Label>
+          <Label htmlFor="newPassword" className="margin-top-0">
+            New Password
+          </Label>
           <InputGroup error={isNewPasswordTouched && !valid}>
             <TextInput
               name="newPassword"
@@ -129,10 +138,10 @@ export function ResetPassword() {
               onChange={(e) => {
                 setNewPassword(e.target.value)
                 setIsNewPasswordTouched(true)
+                setInteracted(true)
               }}
-              value={newPassword}
             />
-            <div className="usa-input-suffix" aria-hidden="true">
+            <div className="usa-input-suffix">
               {visible ? (
                 <Icon.VisibilityOff
                   className="margin-y-2"
@@ -153,21 +162,21 @@ export function ResetPassword() {
             </div>
           </InputGroup>
           <FormGroup>
-            <ButtonGroup>
-              <Button disabled={shouldDisableSubmit} type="submit">
-                Reset Password
-              </Button>
-              {fetcher.state !== 'idle' && (
+            <Button disabled={shouldDisableSubmit} type="submit">
+              Reset Password
+            </Button>
+            {fetcher.state !== 'idle' && (
+              <>
+                <Spinner className="text-middle" /> Saving...
+              </>
+            )}
+            {fetcher.state === 'idle' &&
+              fetcher.data === null &&
+              !interacted && (
                 <>
-                  <Spinner /> Saving...
+                  <Icon.Check className="text-middle" color="green" /> Saved
                 </>
               )}
-              {fetcher.state === 'idle' && fetcher.data === null && (
-                <>
-                  <Icon.Check color="green" /> Saved
-                </>
-              )}
-            </ButtonGroup>
           </FormGroup>
         </fetcher.Form>
       </>
