@@ -193,12 +193,10 @@ export default function () {
   const clean = inputQuery === query
 
   const submit = useSubmit()
-  console.log('clean', clean)
 
   return (
     <>
       <h1>GCN Circulars</h1>
-
       <p className="usa-paragraph">
         <b>
           GCN Circulars are rapid astronomical bulletins submitted by and
@@ -211,103 +209,103 @@ export default function () {
         <Link to="/docs/circulars">documentation</Link> for help with
         subscribing to or submitting Circulars.
       </p>
-      <Form className="usa-search usa-search--small ">
-        <ButtonGroup className="display-flex position-sticky top-0 bg-white margin-bottom-1 padding-top-1 flex-align-start">
-          <ButtonGroup className="display-flex flex-row " type="segmented">
-            <Label srOnly={true} htmlFor="query">
-              Search
-            </Label>
-
-            <TextInput
-              className="grid-col"
-              id="query"
-              name="query"
-              type="search"
-              defaultValue={inputQuery}
-              placeholder="Search"
-              aria-describedby="searchHint"
-              onChange={({ target: { form, value } }) => {
-                setInputQuery(value)
-                if (!value) submit(form)
-              }}
+      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
+        <Form
+          className="display-inline-block usa-search usa-search--small"
+          role="search"
+          id="searchForm"
+        >
+          <Label srOnly={true} htmlFor="query">
+            Search
+          </Label>
+          <TextInput
+            id="query"
+            name="query"
+            type="search"
+            defaultValue={inputQuery}
+            placeholder="Search"
+            aria-describedby="searchHint"
+            onChange={({ target: { form, value } }) => {
+              setInputQuery(value)
+              if (!value) submit(form)
+            }}
+          />
+          <Button type="submit">
+            <img
+              src={searchImg}
+              className="usa-search__submit-icon"
+              alt="Search"
             />
-            <Button className="usa-search__submit" type="submit">
-              <img
-                src={searchImg}
-                className="usa-search__submit-icon"
-                alt="Search"
-              />
-            </Button>
-          </ButtonGroup>
-          <Link to={`/circulars/new${searchString}`}>
-            <Button
-              type="button"
-              className="height-4 padding-top-0 padding-bottom-0"
-            >
-              <Icon.Edit /> New
-            </Button>
-          </Link>
-        </ButtonGroup>
-
-        <Hint id="searchHint">
-          Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
-          GRB'). <br />
-          To navigate to a specific circular, enter the associated Circular ID
-          (e.g. 'gcn123', 'Circular 123', or '123').
-        </Hint>
-        {clean && (
-          <>
-            {query && (
-              <h3>
-                {totalItems} result{totalItems != 1 && 's'} found.
-              </h3>
-            )}
-            <ol>
-              {allItems.map(({ circularId, subject }) => (
-                <li key={circularId} value={circularId}>
-                  <Link to={`/circulars/${circularId}${searchString}`}>
-                    {subject}
-                  </Link>
-                </li>
-              ))}
-            </ol>
-            <div className="display-flex flex-row flex-wrap">
-              <div className="flex-align-start tablet:flex-fill">
-                <div>
-                  <Label className="margin-top-auto" htmlFor="value">
-                    Results Per Page
-                  </Label>
-                  <Dropdown
-                    id="limit"
-                    className="usa-select height-4 padding-y-0"
-                    name="limit"
-                    defaultValue={limit}
-                    onChange={({ target: { form, value } }) => {
-                      submit(form)
-                    }}
-                  >
-                    <option value="100">100</option>
-                    <option value="250">250</option>
-                    <option value="500">500</option>
-                  </Dropdown>
-                </div>
-              </div>
-              <div className="display-flex flex-justify-center flex-fill">
-                {totalPages > 1 && (
-                  <Pagination
-                    query={query}
-                    page={page}
-                    limit={parseInt(limit)}
-                    totalPages={totalPages}
-                    startDate={startDate}
-                    endDate={endDate}
-                  />
-                )}
+          </Button>
+        </Form>
+        <Link to={`/circulars/new${searchString}`}>
+          <Button
+            type="button"
+            className="height-4 padding-top-0 padding-bottom-0"
+          >
+            <Icon.Edit /> New
+          </Button>
+        </Link>
+      </ButtonGroup>
+      <Hint id="searchHint">
+        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
+        GRB'). <br />
+        To navigate to a specific circular, enter the associated Circular ID
+        (e.g. 'gcn123', 'Circular 123', or '123').
+      </Hint>
+      {clean && (
+        <>
+          {query && (
+            <h3>
+              {totalItems} result{totalItems != 1 && 's'} found.
+            </h3>
+          )}
+          <ol>
+            {allItems.map(({ circularId, subject }) => (
+              <li key={circularId} value={circularId}>
+                <Link to={`/circulars/${circularId}${searchString}`}>
+                  {subject}
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <div className="display-flex flex-row flex-wrap">
+            <div className="flex-align-start tablet:flex-fill">
+              <div>
+                <Label className="margin-top-auto" htmlFor="value">
+                  Results Per Page
+                </Label>
+                <Dropdown
+                  id="limit"
+                  className="usa-select height-4 padding-y-0"
+                  name="limit"
+                  defaultValue={limit}
+                  form="searchForm"
+                  onChange={({ target: { form, value } }) => {
+                    submit(form)
+                  }}
+                >
+                  <option value="100">100</option>
+                  <option value="250">250</option>
+                  <option value="500">500</option>
+                </Dropdown>
               </div>
             </div>
-          </>
-        )}
-      </Form>
+            <div className="display-flex flex-justify-center flex-fill">
+              {totalPages > 1 && (
+                <Pagination
+                  query={query}
+                  page={page}
+                  limit={parseInt(limit)}
+                  totalPages={totalPages}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </>
   )
 }
