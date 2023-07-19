@@ -281,7 +281,7 @@ export default function () {
                   name="limit"
                   defaultValue={limit}
                   form="searchForm"
-                  onChange={({ target: { form, value } }) => {
+                  onChange={({ target: { form } }) => {
                     submit(form)
                   }}
                 >
