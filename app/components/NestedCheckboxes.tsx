@@ -68,6 +68,7 @@ function NestedCheckboxNode({
     <li
       role="treeitem"
       aria-expanded={expanded}
+      aria-selected={false}
       onClick={() => setExpanded(!expanded)}
       className="nested-checkboxes__node"
     >
@@ -108,7 +109,7 @@ function NestedCheckboxNode({
       />
       <ul hidden={!expanded} className="nested-checkboxes__leaf">
         {nodes.map((node, index) => (
-          <li role="treeitem" key={index}>
+          <li role="treeitem" key={index} aria-selected={false}>
             <Checkbox
               {...node}
               inputRef={(instance) => {
