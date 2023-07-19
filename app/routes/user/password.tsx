@@ -105,7 +105,11 @@ export function ResetPassword() {
           <Label htmlFor="oldPassword">Old Password</Label>
           <TextInput
             data-focus
-            className={errorMessage ? 'usa-input--error' : 'margin-bottom-4'}
+            className={
+              errorMessage && !interacted
+                ? 'usa-input--error'
+                : 'margin-bottom-4'
+            }
             name="oldPassword"
             id="oldPassword"
             type="password"
@@ -115,12 +119,12 @@ export function ResetPassword() {
               setInteracted(true)
             }}
           />
-          {errorMessage === 'NotAuthorizedException' && (
+          {errorMessage === 'NotAuthorizedException' && !interacted && (
             <div className="text-red margin-bottom-105 margin-top-2px">
               Invalid Password
             </div>
           )}
-          {errorMessage === 'LimitExceededException' && (
+          {errorMessage === 'LimitExceededException' && !interacted && (
             <div className="text-red margin-bottom-105 margin-top-2px">
               Attempts Exceeded. Please try again later.
             </div>
