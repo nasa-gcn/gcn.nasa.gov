@@ -37,7 +37,12 @@ import {
   useNavigation,
   useRouteError,
 } from '@remix-run/react'
-import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
+import {
+  ButtonGroup,
+  FormGroup,
+  GovBanner,
+  GridContainer,
+} from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
@@ -249,11 +254,13 @@ function ErrorUnexpected({ children }: { children?: ReactNode }) {
       <GridContainer className="usa-section">
         <h1>Unexpected error {children}</h1>
         <p className="usa-intro">An unexpected error occurred.</p>
-        <ButtonGroup>
-          <Link to="/" className="usa-button">
-            Go home
-          </Link>
-        </ButtonGroup>
+        <FormGroup>
+          <ButtonGroup>
+            <Link to="/" className="usa-button">
+              Go home
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </GridContainer>
     </Document>
   )
@@ -269,17 +276,19 @@ function ErrorUnauthorized() {
           We're sorry, you must log in to access the page you're looking for.
         </p>
         <p className="usa-paragraph">Log in to access that page, or go home.</p>
-        <ButtonGroup>
-          <Link
-            to={`/login?redirect=${encodeURIComponent(url)}`}
-            className="usa-button"
-          >
-            Log in and take me there
-          </Link>
-          <Link to="/" className="usa-button usa-button--outline">
-            Go home
-          </Link>
-        </ButtonGroup>
+        <FormGroup>
+          <ButtonGroup>
+            <Link
+              to={`/login?redirect=${encodeURIComponent(url)}`}
+              className="usa-button"
+            >
+              Log in and take me there
+            </Link>
+            <Link to="/" className="usa-button usa-button--outline">
+              Go home
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </GridContainer>
     </Document>
   )
@@ -298,14 +307,16 @@ function ErrorNotFound() {
           Visit our homepage for helpful tools and resources, or contact us and
           we'll point you in the right direction.
         </p>
-        <ButtonGroup>
-          <Link to="/" className="usa-button">
-            Visit homepage
-          </Link>
-          <Link to="/contact" className="usa-button usa-button--outline">
-            Contact us
-          </Link>
-        </ButtonGroup>
+        <FormGroup>
+          <ButtonGroup>
+            <Link to="/" className="usa-button">
+              Visit homepage
+            </Link>
+            <Link to="/contact" className="usa-button usa-button--outline">
+              Contact us
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </GridContainer>
     </Document>
   )
