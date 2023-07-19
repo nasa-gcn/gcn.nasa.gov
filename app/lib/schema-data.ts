@@ -53,7 +53,7 @@ export async function loadJson(filePath: string): Promise<Schema> {
 }
 
 async function loadSubSchema(schemaArray: ReferencedSchema[]) {
-  for (let item of schemaArray) {
+  for (const item of schemaArray) {
     if (!item.$ref.startsWith('#')) {
       const subSchemaPath = join(
         dirname(require.resolve('@nasa-gcn/schema')),
@@ -86,7 +86,7 @@ export async function loadSchemaExamples(
       x.startsWith(`${schemaName.split('.')[0]}.`) &&
       x.endsWith('.example.json')
   )
-  let result: ExampleFiles[] = []
+  const result: ExampleFiles[] = []
   exampleFiles.forEach(async (exampleFile) => {
     const example = await loadJson(join(dirPath, exampleFile))
     result.push({

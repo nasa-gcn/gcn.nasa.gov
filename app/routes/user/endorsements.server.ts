@@ -208,7 +208,7 @@ export class EndorsementsServer {
       ConditionExpression: '#status = :pending',
     })
 
-    let promiseArray: Promise<void>[] = []
+    const promiseArray: Promise<void>[] = []
 
     let requestorMessage = `You are receiving this email because the status of your peer endorsment requested from ${
       this.#currentUserEmail

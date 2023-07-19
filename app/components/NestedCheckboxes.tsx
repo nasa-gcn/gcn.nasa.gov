@@ -57,7 +57,7 @@ function NestedCheckboxNode({
   useEffect(updateParent)
   useEffect(() => {
     for (const ref in childRefs.current) {
-      let childRef = childRefs.current[ref]
+      const childRef = childRefs.current[ref]
       if (childRef != null) {
         childoncheckhandler(childRef)
       }
