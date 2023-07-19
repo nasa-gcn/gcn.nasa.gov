@@ -61,14 +61,14 @@ function getPageLink({
   endDate,
 }: {
   page: number
-  limit?: string
+  limit?: number
   query?: string
   startDate?: string
   endDate?: string
 }) {
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
-  if (limit && limit != '100') searchParams.set('limit', limit)
+  if (limit && limit != 100) searchParams.set('limit', limit.toString())
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
@@ -84,7 +84,7 @@ function Pagination({
 }: {
   page: number
   totalPages: number
-  limit?: string
+  limit?: number
   query?: string
   startDate?: string
   endDate?: string
@@ -193,6 +193,7 @@ export default function () {
   const clean = inputQuery === query
 
   const submit = useSubmit()
+  console.log('clean', clean)
 
   return (
     <>
@@ -296,7 +297,7 @@ export default function () {
                     <Pagination
                       query={query}
                       page={page}
-                      limit={limit}
+                      limit={parseInt(limit)}
                       totalPages={totalPages}
                       startDate={startDate}
                       endDate={endDate}
