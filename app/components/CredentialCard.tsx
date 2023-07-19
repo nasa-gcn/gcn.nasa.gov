@@ -7,10 +7,10 @@
  */
 import { Form, useFetcher } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
-import { Icon } from '@trussworks/react-uswds'
 import {
   Button,
   Grid,
+  Icon,
   Modal,
   ModalFooter,
   ModalHeading,

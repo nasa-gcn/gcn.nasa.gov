@@ -11,10 +11,10 @@ import type {
   SendBulkEmailCommandInput,
   SendEmailCommandInput,
 } from '@aws-sdk/client-sesv2'
-import { SendBulkEmailCommand } from '@aws-sdk/client-sesv2'
 import {
   SESv2Client,
   SESv2ServiceException,
+  SendBulkEmailCommand,
   SendEmailCommand,
 } from '@aws-sdk/client-sesv2'
 import chunk from 'lodash/chunk'
