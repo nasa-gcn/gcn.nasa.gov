@@ -23,6 +23,7 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
+import { clamp } from 'lodash'
 import { useState } from 'react'
 
 import type { action } from '../circulars'
@@ -41,11 +42,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
-  const limitRequest = parseInt(searchParams.get('limit') || '100')
-  var limit = 100
-  if (limitRequest < 100) {
-    limit = limitRequest
-  }
+  const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
   const results = await search({
     query,
     page: page - 1,
@@ -283,7 +280,7 @@ export default function () {
                   id="limit"
                   className="usa-select height-4 padding-y-0"
                   name="limit"
-                  defaultValue={'100'}
+                  defaultValue="100"
                   form="searchForm"
                   onChange={({ target: { form } }) => {
                     submit(form)
