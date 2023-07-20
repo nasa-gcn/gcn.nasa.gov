@@ -205,5 +205,11 @@
     "transformIgnorePatterns": [
       "/node_modules/openid-client/"
     ]
-  }
+  },
+  "browserslist": [
+    "> 2%",
+    "last 2 versions",
+    "IE 11",
+    "not dead"
+  ]
 }
