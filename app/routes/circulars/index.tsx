@@ -283,7 +283,7 @@ export default function () {
                   id="limit"
                   className="usa-select height-4 padding-y-0"
                   name="limit"
-                  defaultValue={limit}
+                  defaultValue={'100'}
                   form="searchForm"
                   onChange={({ target: { form } }) => {
                     submit(form)
