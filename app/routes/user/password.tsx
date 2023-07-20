@@ -54,10 +54,13 @@ export function WrongIdp() {
   )
 }
 
-export function ErrorMessage(errorMessage: any, interacted: boolean) {
-  if (errorMessage === 'NotAuthorizedException' && !interacted) {
+function ErrorMessage(errorMessage: any, isOldPasswordTouched: boolean) {
+  if (errorMessage === 'NotAuthorizedException' && !isOldPasswordTouched) {
     return <div className="text-red">Invalid Password</div>
-  } else if (errorMessage === 'LimitExceededException' && !interacted) {
+  } else if (
+    errorMessage === 'LimitExceededException' &&
+    !isOldPasswordTouched
+  ) {
     return (
       <div className="text-red">Attempts Exceeded. Please try again later.</div>
     )
@@ -132,7 +135,7 @@ export function ResetPassword() {
               setIsOldPasswordTouched(true)
             }}
           />
-          {ErrorMessage(errorMessage, interacted)}
+          {ErrorMessage(errorMessage, isOldPasswordTouched)}
           <Label htmlFor="newPassword" className="margin-top-105">
             New Password
           </Label>
