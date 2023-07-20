@@ -83,7 +83,7 @@ async function loadSubSchema(
   schemaArray: ReferencedSchema[],
   parentId: string
 ) {
-  for (let item of schemaArray) {
+  for (const item of schemaArray) {
     if (!item.$ref.startsWith('#')) {
       const { resolvedPath, ref } = resolveRelativePath(parentId, item.$ref)
       item.schema = await loadContentFromGithub(resolvedPath, ref)
@@ -143,7 +143,7 @@ export async function loadSchemaExamples(
 
 export async function getGithubDir(
   path?: string,
-  ref: string = 'main'
+  ref = 'main'
 ): Promise<GitContentDataResponse[]> {
   return (
     await octokit.repos.getContent({
