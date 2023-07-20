@@ -7,7 +7,14 @@
  */
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
-import { Button, ButtonGroup, Grid, Label } from '@trussworks/react-uswds'
+import {
+  Button,
+  ButtonGroup,
+  Grid,
+  Icon,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
 import classnames from 'classnames'
 import { useCombobox } from 'downshift'
 import type { UseComboboxProps } from 'downshift'
@@ -18,6 +25,7 @@ import {
   useRef,
   useState,
 } from 'react'
+import { useElementSize } from 'usehooks-ts'
 
 import { formatAuthor } from '../circulars/circulars.lib'
 import type {
@@ -42,7 +50,6 @@ export async function loader({ request }: DataFunctionArgs) {
     endorsementServer.getEndorsements('requestor'),
     endorsementServer.getEndorsements('endorser'),
   ])
-
   const userIsSubmitter = endorsementServer.userIsSubmitter()
   return {
     requestedEndorsements,
@@ -60,12 +67,13 @@ export async function action({ request }: DataFunctionArgs) {
   const endorserSub = getFormDataString(data, 'endorserSub')
   const requestorSub = getFormDataString(data, 'requestorSub')
   const filter = getFormDataString(data, 'filter')
+  const note = getFormDataString(data, 'note') ?? ''
 
   switch (intent) {
     case 'create':
       if (!endorserSub)
         throw new Response('Valid endorser is required', { status: 403 })
-      await endorsementServer.createEndorsementRequest(endorserSub)
+      await endorsementServer.createEndorsementRequest(endorserSub, note)
       break
     case 'approved':
     case 'rejected':
@@ -215,49 +223,92 @@ export function EndorsementRequestCard({
 }) {
   const fetcher = useFetcher()
   const disabled = fetcher.state !== 'idle'
+  const [showMore, setShowMore] = useState(false)
+
+  const [noteRef, { width }] = useElementSize()
+  const [noteConatinerRef, { width: containerWidth }] = useElementSize()
 
   return (
     <fetcher.Form method="POST">
       {role === 'endorser' ? (
         <Grid row style={disabled ? { opacity: '50%' } : undefined}>
-          <div className="tablet:grid-col flex-fill">
+          <div className="tablet:grid-col flex-fill order-first">
             <div className="margin-y-0">
               <strong>{endorsementRequest.requestorEmail}</strong>
             </div>
+            {endorsementRequest.note && (
+              <div className="margin-top-0 margin-bottom-1">
+                Comments from the user:
+                {(width > containerWidth || showMore) && (
+                  <Button
+                    type="button"
+                    unstyled
+                    aria-label="Show or hide the comments provided by the requestor"
+                    aria-expanded={showMore}
+                    onClick={() => setShowMore(!showMore)}
+                  >
+                    Show{' '}
+                    {showMore ? (
+                      <>
+                        less <Icon.ArrowDropUp />
+                      </>
+                    ) : (
+                      <>
+                        more <Icon.ArrowDropDown />
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
-          <ButtonGroup className="tablet:grid-col flex-auto flex-align-center">
-            <input
-              type="hidden"
-              name="requestorSub"
-              value={endorsementRequest.requestorSub}
-            />
-            <Button
-              type="submit"
-              disabled={disabled}
-              name="intent"
-              value="approved"
+          <div className="tablet:grid-col flex-auto order-last">
+            <ButtonGroup type="default">
+              <input
+                type="hidden"
+                name="requestorSub"
+                value={endorsementRequest.requestorSub}
+              />
+              <Button
+                type="submit"
+                disabled={disabled}
+                name="intent"
+                value="approved"
+              >
+                Approve
+              </Button>
+              <Button
+                type="submit"
+                outline
+                disabled={disabled}
+                name="intent"
+                value="rejected"
+              >
+                Reject
+              </Button>
+              <Button
+                type="submit"
+                secondary
+                disabled={disabled}
+                name="intent"
+                value="reported"
+              >
+                Reject and Report
+              </Button>
+            </ButtonGroup>
+          </div>
+          {endorsementRequest.note && (
+            <div
+              ref={noteConatinerRef}
+              aria-label="Additional comments provided by the requestor"
+              className={
+                'grid-col-12 tablet:order-last ' +
+                (!showMore ? 'notice-types-overflow' : '')
+              }
             >
-              Approve
-            </Button>
-            <Button
-              type="submit"
-              outline
-              disabled={disabled}
-              name="intent"
-              value="rejected"
-            >
-              Reject
-            </Button>
-            <Button
-              type="submit"
-              secondary
-              disabled={disabled}
-              name="intent"
-              value="reported"
-            >
-              Reject and Report
-            </Button>
-          </ButtonGroup>
+              <span ref={noteRef}>{endorsementRequest.note}</span>
+            </div>
+          )}
         </Grid>
       ) : (
         <Grid row style={disabled ? { opacity: '50%' } : undefined}>
@@ -466,13 +517,23 @@ export function EndorsementRequestForm() {
             }
           />
         </Grid>
-        <Grid col="auto">
+      </Grid>
+      <Grid row>
+        <Grid tablet={{ col: 'fill' }}>
+          <TextInput
+            id="note"
+            name="note"
+            type="text"
+            placeholder="Optional message to the endorser"
+          />
+        </Grid>
+        <Grid tablet={{ col: 'auto' }}>
           <Button
             type="submit"
             name="intent"
             value="create"
             disabled={submitting || !endorserSub}
-            className="margin-top-1 margin-left-1"
+            className="margin-top-1 tablet:margin-left-1 tablet:margin-right-0"
           >
             {submitting ? 'Requesting...' : 'Request'}
           </Button>
