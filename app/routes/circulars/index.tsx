@@ -41,7 +41,11 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
-  const limit = parseInt(searchParams.get('limit') || '100')
+  const limitRequest = parseInt(searchParams.get('limit') || '100')
+  var limit = 100
+  if (limitRequest < 100) {
+    limit = limitRequest
+  }
   const results = await search({
     query,
     page: page - 1,
