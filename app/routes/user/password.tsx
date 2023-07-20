@@ -83,19 +83,11 @@ function ErrorMessage({
   interacted: boolean
   fetcherState: string
 }) {
-  if (
-    errorMessage === 'NotAuthorizedException' &&
-    !isOldPasswordTouched &&
-    !interacted &&
-    fetcherState !== 'submitting'
-  ) {
+  const errorState =
+    !isOldPasswordTouched && !interacted && fetcherState !== 'submitting'
+  if (errorMessage === 'NotAuthorizedException' && errorState) {
     return <div className="text-red">Invalid Password</div>
-  } else if (
-    errorMessage === 'LimitExceededException' &&
-    !isOldPasswordTouched &&
-    !interacted &&
-    fetcherState !== 'submitting'
-  ) {
+  } else if (errorMessage === 'LimitExceededException' && errorState) {
     return (
       <div className="text-red">Attempts Exceeded. Please try again later.</div>
     )
