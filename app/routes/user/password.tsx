@@ -54,6 +54,18 @@ export function WrongIdp() {
   )
 }
 
+export function ErrorMessage(errorMessage: any, interacted: boolean) {
+  if (errorMessage === 'NotAuthorizedException' && !interacted) {
+    return <div className="text-red">Invalid Password</div>
+  } else if (errorMessage === 'LimitExceededException' && !interacted) {
+    return (
+      <div className="text-red">Attempts Exceeded. Please try again later.</div>
+    )
+  } else {
+    return <div>&nbsp;</div>
+  }
+}
+
 export function ResetPassword() {
   const fetcher = useFetcher<typeof action>()
   const errorMessage = fetcher.data
@@ -63,6 +75,7 @@ export function ResetPassword() {
   const [isNewPasswordTouched, setIsNewPasswordTouched] = useState(false)
   const [visible, setVisible] = useState(false)
   const [interacted, setInteracted] = useState(false)
+  const [isOldPasswordTouched, setIsOldPasswordTouched] = useState(false)
 
   const containsLower = /[a-z]/.test(newPassword)
   const containsUpper = /[A-Z]/.test(newPassword)
@@ -87,6 +100,7 @@ export function ResetPassword() {
   useEffect(() => {
     if (fetcher.state === 'submitting') {
       setInteracted(false)
+      setIsOldPasswordTouched(false)
     }
     if (fetcher.state === 'idle' && fetcher.data === null && formRef.current) {
       formRef.current.reset()
@@ -105,31 +119,21 @@ export function ResetPassword() {
           <Label htmlFor="oldPassword">Old Password</Label>
           <TextInput
             data-focus
-            className={
-              errorMessage && !interacted
-                ? 'usa-input--error'
-                : 'margin-bottom-4'
-            }
             name="oldPassword"
+            className={
+              !isOldPasswordTouched && errorMessage ? 'usa-input--error' : ''
+            }
             id="oldPassword"
             type="password"
             placeholder="Old Password"
             onChange={(e) => {
               setOldPassword(e.target.value)
               setInteracted(true)
+              setIsOldPasswordTouched(true)
             }}
           />
-          {errorMessage === 'NotAuthorizedException' && !interacted && (
-            <div className="text-red margin-bottom-105 margin-top-2px">
-              Invalid Password
-            </div>
-          )}
-          {errorMessage === 'LimitExceededException' && !interacted && (
-            <div className="text-red margin-bottom-105 margin-top-2px">
-              Attempts Exceeded. Please try again later.
-            </div>
-          )}
-          <Label htmlFor="newPassword" className="margin-top-0">
+          {ErrorMessage(errorMessage, interacted)}
+          <Label htmlFor="newPassword" className="margin-top-105">
             New Password
           </Label>
           <InputGroup error={isNewPasswordTouched && !valid}>
