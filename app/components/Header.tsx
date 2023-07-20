@@ -165,7 +165,7 @@ export function Header() {
                         <Link
                           key="password"
                           to="/user/password"
-                          onClick={() => setUserMenuIsOpen(!userMenuIsOpen)}
+                          onClick={onClickUserMenuItem}
                         >
                           Reset Password
                         </Link>

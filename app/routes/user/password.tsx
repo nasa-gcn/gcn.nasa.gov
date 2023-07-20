@@ -21,7 +21,6 @@ import invariant from 'tiny-invariant'
 
 import { getUser } from '../__auth/user.server'
 import { updatePassword } from './password.server'
-import PasswordValidationStep from '~/components/PasswordValidationStep'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { useUserIdp } from '~/root'
@@ -46,7 +45,7 @@ export async function action({ request }: DataFunctionArgs) {
   return await updatePassword(request, oldPassword, newPassword)
 }
 
-export function WrongIdp() {
+function WrongIdp() {
   return (
     <Alert type="error" heading="Error:" headingLevel="h4">
       You must be signed in with a username and password to reset your password.
@@ -54,12 +53,48 @@ export function WrongIdp() {
   )
 }
 
-function ErrorMessage(errorMessage: any, isOldPasswordTouched: boolean) {
-  if (errorMessage === 'NotAuthorizedException' && !isOldPasswordTouched) {
+function PasswordValidationStep({
+  valid,
+  text,
+}: {
+  valid: boolean
+  text: string
+}) {
+  return (
+    <li>
+      {valid ? (
+        <Icon.Check color="green" aria-label="green check" />
+      ) : (
+        <Icon.Close color="red" aria-label="red x" />
+      )}
+      {text}
+    </li>
+  )
+}
+
+function ErrorMessage({
+  errorMessage,
+  isOldPasswordTouched,
+  interacted,
+  fetcherState,
+}: {
+  errorMessage: unknown
+  isOldPasswordTouched: boolean
+  interacted: boolean
+  fetcherState: string
+}) {
+  if (
+    errorMessage === 'NotAuthorizedException' &&
+    !isOldPasswordTouched &&
+    !interacted &&
+    fetcherState !== 'submitting'
+  ) {
     return <div className="text-red">Invalid Password</div>
   } else if (
     errorMessage === 'LimitExceededException' &&
-    !isOldPasswordTouched
+    !isOldPasswordTouched &&
+    !interacted &&
+    fetcherState !== 'submitting'
   ) {
     return (
       <div className="text-red">Attempts Exceeded. Please try again later.</div>
@@ -69,7 +104,7 @@ function ErrorMessage(errorMessage: any, isOldPasswordTouched: boolean) {
   }
 }
 
-export function ResetPassword() {
+function ResetPassword() {
   const fetcher = useFetcher<typeof action>()
   const errorMessage = fetcher.data
 
@@ -88,7 +123,8 @@ export function ResetPassword() {
   const containsSpecialChar = /[~`!@#$%^.&*+=\-_ [\]\\';,/{}()|\\":<>?]/g.test(
     newPassword
   )
-
+  const isOldPasswordError =
+    !isOldPasswordTouched && errorMessage && fetcher.state !== 'submitting'
   const valid =
     whitespaceValid &&
     containsLower &&
@@ -123,9 +159,7 @@ export function ResetPassword() {
           <TextInput
             data-focus
             name="oldPassword"
-            className={
-              !isOldPasswordTouched && errorMessage ? 'usa-input--error' : ''
-            }
+            className={isOldPasswordError ? 'usa-input--error' : ''}
             id="oldPassword"
             type="password"
             placeholder="Old Password"
@@ -135,7 +169,12 @@ export function ResetPassword() {
               setIsOldPasswordTouched(true)
             }}
           />
-          {ErrorMessage(errorMessage, isOldPasswordTouched)}
+          <ErrorMessage
+            errorMessage={errorMessage}
+            isOldPasswordTouched={isOldPasswordTouched}
+            interacted={interacted}
+            fetcherState={fetcher.state}
+          />
           <Label htmlFor="newPassword" className="margin-top-105">
             New Password
           </Label>
