@@ -1,9 +1,7 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, NavLink, useLoaderData } from '@remix-run/react'
 import {
-  Card,
   CardBody,
-  CardGroup,
   CardHeader,
   Icon,
   SideNav,
@@ -19,6 +17,7 @@ import {
   formatFieldName,
   formatFieldType,
 } from '../SchemaBrowserElements.lib'
+import DetailsDropdown from '~/components/DetailsDropdown'
 import { Highlight } from '~/components/Highlight'
 import { SideNavSub } from '~/components/SideNav'
 import { Tab, Tabs } from '~/components/Tabs'
@@ -75,32 +74,18 @@ export default function () {
           </div>
           <span className="padding-left-2">Back</span>
         </Link>
-        <details id="selectedVersionDetails" className="margin-top-1">
-          <summary
-            id="selectedVersionSummary"
-            className="display-flex usa-button usa-button--outline grid-col-12 flex-align-center"
-          >
-            <span className="margin-right-auto">Version: {version}</span>
-            <Icon.UnfoldMore />
-          </summary>
-          <div>
-            <CardGroup>
-              <Card gridLayout={{ tablet: { col: 'fill' } }}>
-                <CardHeader>
-                  <h3>Versions</h3>
-                </CardHeader>
-
-                <CardBody className="padding-y-0">
-                  {versions.map((x: { name: string; ref: string }) => (
-                    <div key={x.name}>
-                      <Link to={`/docs/schema-browser/${x.ref}`}>{x.name}</Link>
-                    </div>
-                  ))}
-                </CardBody>
-              </Card>
-            </CardGroup>
-          </div>
-        </details>
+        <DetailsDropdown summary={<>Version: {version}</>}>
+          <CardHeader>
+            <h3>Versions</h3>
+          </CardHeader>
+          <CardBody className="padding-y-0">
+            {versions.map((x: { name: string; ref: string }) => (
+              <div key={x.name}>
+                <Link to={`/docs/schema-browser/${x.ref}`}>{x.name}</Link>
+              </div>
+            ))}
+          </CardBody>
+        </DetailsDropdown>
         <SideNav
           items={[
             path != previous && (
