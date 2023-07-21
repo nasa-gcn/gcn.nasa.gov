@@ -7,7 +7,7 @@
  */
 import classnames from 'classnames'
 
-import loaderImage from 'app/theme/img/loader.gif'
+import loaderImage from '~/../node_modules/nasawds/src/img/loader.gif'
 
 // Adapted from https://github.com/trussworks/react-uswds/blob/main/src/components/Icon/Icon.tsx
 export default function Spinner({

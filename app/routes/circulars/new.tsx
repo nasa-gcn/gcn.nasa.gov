@@ -116,14 +116,14 @@ export default function () {
           <small>
             The subject line must contain (and should start with) the name of
             the transient, which must start with one of the{' '}
-            <Button
+            <button
               type="button"
               className="usa-banner__button margin-left-0"
               aria-expanded={showKeywords}
               onClick={toggleShowKeywords}
             >
               <span className="usa-banner__button-text">known keywords</span>
-            </Button>
+            </button>
             .
           </small>
           {showKeywords && (
