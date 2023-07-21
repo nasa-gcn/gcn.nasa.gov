@@ -17,9 +17,9 @@ import {
 import {
   Button,
   ButtonGroup,
-  Dropdown,
   Icon,
   Label,
+  Select,
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
@@ -273,9 +273,9 @@ export default function () {
           <div className="display-flex flex-row flex-wrap">
             <div className="flex-align-start tablet:flex-fill">
               <div>
-                <Dropdown
+                <Select
                   id="limit"
-                  className="usa-select height-4 padding-y-0"
+                  className="width-auto"
                   name="limit"
                   defaultValue="100"
                   form="searchForm"
@@ -287,7 +287,7 @@ export default function () {
                   <option value="20">20</option>
                   <option value="50">50</option>
                   <option value="100">100</option>
-                </Dropdown>
+                </Select>
               </div>
             </div>
             <div className="display-flex flex-justify-center flex-fill">
