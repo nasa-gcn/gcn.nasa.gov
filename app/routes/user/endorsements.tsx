@@ -37,7 +37,7 @@ import { EndorsementsServer } from './endorsements.server'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 
-import loaderImage from 'app/theme/img/loader.gif'
+import loaderImage from '~/../node_modules/nasawds/src/img/loader.gif'
 
 export const handle = {
   breadcrumb: 'Peer Endorsements',

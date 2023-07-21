@@ -56,7 +56,6 @@ import NewsBanner from './components/NewsBanner'
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
 import { getUser } from './routes/__auth/user.server'
 
-import themeStyle from './theme/css/custom.css'
 import highlightStyle from 'highlight.js/styles/github.css'
 // FIXME: no top-level await, no import function
 // const favicons = Object.fromEntries(
@@ -67,13 +66,14 @@ import highlightStyle from 'highlight.js/styles/github.css'
 //     ])
 //   )
 // )
-import favicon_16 from '~/theme/img/favicons/favicon-16.png'
-import favicon_40 from '~/theme/img/favicons/favicon-40.png'
-import favicon_57 from '~/theme/img/favicons/favicon-57.png'
-import favicon_72 from '~/theme/img/favicons/favicon-72.png'
-import favicon_114 from '~/theme/img/favicons/favicon-114.png'
-import favicon_144 from '~/theme/img/favicons/favicon-144.png'
-import favicon_192 from '~/theme/img/favicons/favicon-192.png'
+import favicon_16 from '~/../node_modules/nasawds/src/img/favicons/favicon-16.png'
+import favicon_40 from '~/../node_modules/nasawds/src/img/favicons/favicon-40.png'
+import favicon_57 from '~/../node_modules/nasawds/src/img/favicons/favicon-57.png'
+import favicon_72 from '~/../node_modules/nasawds/src/img/favicons/favicon-72.png'
+import favicon_114 from '~/../node_modules/nasawds/src/img/favicons/favicon-114.png'
+import favicon_144 from '~/../node_modules/nasawds/src/img/favicons/favicon-144.png'
+import favicon_192 from '~/../node_modules/nasawds/src/img/favicons/favicon-192.png'
+import themeStyle from '~/css/custom.css'
 
 const favicons = {
   16: favicon_16,
