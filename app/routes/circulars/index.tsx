@@ -273,9 +273,6 @@ export default function () {
           <div className="display-flex flex-row flex-wrap">
             <div className="flex-align-start tablet:flex-fill">
               <div>
-                <Label className="margin-top-auto" htmlFor="value">
-                  Results Per Page
-                </Label>
                 <Dropdown
                   id="limit"
                   className="usa-select height-4 padding-y-0"
