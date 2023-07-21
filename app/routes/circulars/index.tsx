@@ -182,10 +182,10 @@ export default function () {
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
-  const limit = searchParams.get('limit') ?? '100'
-  const query = searchParams.get('query') ?? undefined
-  const startDate = searchParams.get('startDate') ?? undefined
-  const endDate = searchParams.get('endDate') ?? undefined
+  const limit = searchParams.get('limit') || '100'
+  const query = searchParams.get('query') || undefined
+  const startDate = searchParams.get('startDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
