@@ -174,7 +174,6 @@ function ResetPassword() {
             <TextInput
               name="newPassword"
               id="newPassword"
-              className={valid ? 'usa-input--success' : ''}
               type={visible ? 'text' : 'password'}
               placeholder="New Password"
               onChange={(e) => {
