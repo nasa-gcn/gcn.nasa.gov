@@ -23,7 +23,7 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { clamp } from 'lodash'
+import clamp from 'lodash/clamp'
 import { useState } from 'react'
 
 import type { action } from '../circulars'
