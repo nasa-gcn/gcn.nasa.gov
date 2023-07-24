@@ -271,11 +271,11 @@ export default function () {
             ))}
           </ol>
           <div className="display-flex flex-row flex-wrap">
-            <div className="flex-align-start tablet:flex-fill">
+            <div className="display-flex flex-align-self-center margin-right-2 width-auto">
               <div>
                 <Select
                   id="limit"
-                  className="width-auto"
+                  className="usa-select height-5 padding-y-0 margin-y-0"
                   name="limit"
                   defaultValue="100"
                   form="searchForm"
@@ -290,7 +290,7 @@ export default function () {
                 </Select>
               </div>
             </div>
-            <div className="display-flex flex-justify-center flex-fill">
+            <div className="display-flex flex-justify-center flex-fill flex-align-self-center">
               {totalPages > 1 && (
                 <Pagination
                   query={query}
