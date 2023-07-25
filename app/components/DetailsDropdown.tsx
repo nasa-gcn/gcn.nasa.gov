@@ -16,7 +16,7 @@ export default function DetailsDropdown({
   return (
     <div className={className}>
       <Button
-        className="display-flex flex-align-center usa-button usa-button--outline"
+        className="usa-button"
         type="button"
         onClick={() => setShowContent(!showContent)}
       >
