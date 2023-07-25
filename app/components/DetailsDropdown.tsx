@@ -1,27 +1,33 @@
-import { Card, CardGroup, Icon } from '@trussworks/react-uswds'
+import { Button, Card, CardGroup, Icon } from '@trussworks/react-uswds'
+import { useState } from 'react'
 import type { ReactNode } from 'react'
 
 export default function DetailsDropdown({
   summary,
   children,
+  className,
 }: {
   summary: ReactNode
   children: ReactNode
+  className?: string
 }) {
+  const [showContent, setShowContent] = useState(false)
+
   return (
-    <details id="selectedVersionDetails" className="margin-top-1">
-      <summary
-        id="selectedVersionSummary"
-        className="display-flex usa-button usa-button--outline grid-col-12 flex-align-center"
+    <div className={className}>
+      <Button
+        className="display-flex flex-align-center usa-button usa-button--outline"
+        type="button"
+        onClick={() => setShowContent(!showContent)}
       >
         <span className="margin-right-auto">{summary}</span>
         <Icon.UnfoldMore />
-      </summary>
-      <div className="position-absolute z-top">
-        <CardGroup>
-          <Card gridLayout={{ tablet: { col: 'fill' } }}>{children}</Card>
+      </Button>
+      {showContent && (
+        <CardGroup className="position-absolute z-top">
+          <Card>{children}</Card>
         </CardGroup>
-      </div>
-    </details>
+      )}
+    </div>
   )
 }
