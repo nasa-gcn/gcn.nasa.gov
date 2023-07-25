@@ -23,7 +23,7 @@ import { getUser } from '../__auth/user.server'
 import { updatePassword } from './password.server'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
-import { useUserIdp } from '~/root'
+import { useEmail, useUserIdp } from '~/root'
 
 export const handle = {
   breadcrumb: 'Reset Password',
@@ -147,6 +147,12 @@ function ResetPassword() {
       <h1>Reset Password</h1>
       <>
         <fetcher.Form method="POST" ref={formRef}>
+          <input
+            type="hidden"
+            name="username"
+            autoComplete="username"
+            value={useEmail()}
+          />
           <Label htmlFor="current-password">Old Password</Label>
           <TextInput
             data-focus
