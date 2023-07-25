@@ -12,10 +12,9 @@ export default function DetailsDropdownButton({
 } & Omit<ButtonProps & JSX.IntrinsicElements['button'], 'type'>) {
   return (
     <Button
-      className={`usa-button ${className ?? ''}`}
+      className={`${className ?? ''}`}
       type="button"
       aria-controls="details-content"
-      role="button"
       {...props}
     >
       {children}
