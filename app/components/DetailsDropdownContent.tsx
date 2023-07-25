@@ -11,12 +11,14 @@ import type { ReactNode } from 'react'
 export default function DetailsDropdownContent({
   children,
   className,
+  ...props
 }: {
   children: ReactNode
   className?: string
 }) {
   return (
     <CardGroup
+      {...props}
       className={`position-absolute z-top ${className ?? ''}`}
       role="menu"
     >
