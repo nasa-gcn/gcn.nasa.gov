@@ -12,11 +12,14 @@ export interface CircularMetadata {
   subject: string
 }
 
+export type SubmittedHow = 'web' | 'email' | 'email-legacy'
+
 export interface Circular extends CircularMetadata {
   sub?: string
   createdOn: number
   body: string
   submitter: string
+  submittedHow?: SubmittedHow
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]

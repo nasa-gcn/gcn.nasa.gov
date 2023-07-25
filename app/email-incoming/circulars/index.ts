@@ -52,7 +52,7 @@ const fromName = 'GCN Circulars'
 module.exports.handler = createEmailIncomingMessageHandler(
   async ({ content }) => {
     const parsed = await parseEmailContentFromSource(content)
-    const userEmail = getFromAddress(parsed.from)
+    const { address: userEmail, submittedHow } = getFromAddress(parsed.from)
     const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
 
     const userData =
@@ -91,6 +91,7 @@ module.exports.handler = createEmailIncomingMessageHandler(
       body: parsed.text,
       sub: userData.sub,
       submitter: formatAuthor(userData),
+      submittedHow,
     }
 
     // Removes sub as a property if it is undefined from the legacy users

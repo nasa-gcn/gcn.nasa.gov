@@ -50,9 +50,10 @@ describe('getFromAddress', () => {
   })
 
   test('returns the address verbatim for a normal email address', () => {
-    expect(getFromAddress(parseFrom('example@example.com'))).toBe(
-      'example@example.com'
-    )
+    expect(getFromAddress(parseFrom('example@example.com'))).toEqual({
+      address: 'example@example.com',
+      submittedHow: 'email',
+    })
   })
 
   test('returns the original address for a rewritten address', () => {
@@ -62,7 +63,7 @@ describe('getFromAddress', () => {
           '"Example <example@example.com> via gcncirc" <mailnull@capella2.gsfc.nasa.gov>'
         )
       )
-    ).toBe('example@example.com')
+    ).toEqual({ address: 'example@example.com', submittedHow: 'email-legacy' })
   })
 
   test('returns the original address for a rewritten address with an alternative "via" name', () => {
@@ -72,7 +73,7 @@ describe('getFromAddress', () => {
           '"Example <example@example.com> via my mind" <mailnull@capella2.gsfc.nasa.gov>'
         )
       )
-    ).toBe('example@example.com')
+    ).toEqual({ address: 'example@example.com', submittedHow: 'email-legacy' })
   })
 })
 
