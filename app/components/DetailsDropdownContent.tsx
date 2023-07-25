@@ -10,10 +10,8 @@ export default function DetailsDropdownContent({
 }) {
   return (
     <CardGroup
-      id="details-content"
-      className={`position-absolute z-top ${className}`}
-      role="region"
-      aria-label="Details Content"
+      className={`position-absolute z-top ${className ?? ''}`}
+      role="menu"
     >
       <Card>{children}</Card>
     </CardGroup>
