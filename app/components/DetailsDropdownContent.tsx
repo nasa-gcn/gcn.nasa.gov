@@ -12,10 +12,7 @@ export default function DetailsDropdownContent({
   children,
   className,
   ...props
-}: {
-  children: ReactNode
-  className?: string
-}) {
+}: : Omit<JSX.IntrinsicElements['ul'], 'role'>) {
   return (
     <CardGroup
       {...props}
