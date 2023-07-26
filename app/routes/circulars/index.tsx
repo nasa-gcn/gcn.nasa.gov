@@ -290,7 +290,7 @@ export default function () {
                 </Select>
               </div>
             </div>
-            <div className="display-flex flex-justify-center flex-fill flex-align-self-center">
+            <div className="display-flex flex-fill">
               {totalPages > 1 && (
                 <Pagination
                   query={query}
