@@ -7,6 +7,7 @@ import {
   SideNav,
   Table,
 } from '@trussworks/react-uswds'
+import { useState } from 'react'
 import { json, redirect, useParams } from 'react-router'
 
 import SchemaDefinition from '.'
@@ -17,7 +18,8 @@ import {
   formatFieldName,
   formatFieldType,
 } from '../SchemaBrowserElements.lib'
-import DetailsDropdown from '~/components/DetailsDropdown'
+import DetailsDropdownButton from '~/components/DetailsDropdownButton'
+import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { Highlight } from '~/components/Highlight'
 import { SideNavSub } from '~/components/SideNav'
 import { Tab, Tabs } from '~/components/Tabs'
@@ -59,12 +61,12 @@ export async function loader({
 
 export default function () {
   const { version, '*': path } = useParams()
+  const [showVersions, setShowVersions] = useState(false)
   const { data, jsonContent, examples, versions } = useLoaderData()
   if (!path) {
     throw new Error('Path is not defined.')
   }
   const previous = path?.replace(`/${path.split('/').at(-1)}`, '')
-
   return (
     <>
       <div className="desktop:grid-col-3">
@@ -74,18 +76,31 @@ export default function () {
           </div>
           <span className="padding-left-2">Back</span>
         </Link>
-        <DetailsDropdown summary={<>Version: {version}</>}>
-          <CardHeader>
-            <h3>Versions</h3>
-          </CardHeader>
-          <CardBody className="padding-y-0">
-            {versions.map((x: { name: string; ref: string }) => (
-              <div key={x.name}>
-                <Link to={`/docs/schema-browser/${x.ref}`}>{x.name}</Link>
-              </div>
-            ))}
-          </CardBody>
-        </DetailsDropdown>
+        <div className="margin-top-1">
+          <DetailsDropdownButton
+            className="grid-col-12"
+            onClick={() => setShowVersions(!showVersions)}
+            outline
+          >
+            {<>Version: {version}</>}
+          </DetailsDropdownButton>
+          {showVersions && (
+            <DetailsDropdownContent>
+              <CardHeader>
+                <h3>Versions</h3>
+              </CardHeader>
+              <CardBody className="padding-y-0">
+                {versions.map((x: { name: string; ref: string }) => (
+                  <div key={x.name}>
+                    <Link to={`/docs/schema-browser/${x.ref}/${path}`}>
+                      {x.name}
+                    </Link>
+                  </div>
+                ))}
+              </CardBody>
+            </DetailsDropdownContent>
+          )}
+        </div>
         <SideNav
           items={[
             path != previous && (
