@@ -6,13 +6,12 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { Card, CardGroup } from '@trussworks/react-uswds'
-import type { ReactNode } from 'react'
 
 export default function DetailsDropdownContent({
   children,
   className,
   ...props
-}: : Omit<JSX.IntrinsicElements['ul'], 'role'>) {
+}: Omit<JSX.IntrinsicElements['ul'], 'role'>) {
   return (
     <CardGroup
       {...props}
