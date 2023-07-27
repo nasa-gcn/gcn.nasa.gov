@@ -35,7 +35,6 @@ import { usePagination } from '~/lib/pagination'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 import calendarImg from 'app/theme/img/usa-icons/calendar_today.svg'
-import { useState } from 'react'
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
@@ -198,7 +197,10 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const [inputDateGte] = useState(startDate)
   const [inputDateLte] = useState(endDate)
-  const clean = inputQuery === query && inputDateGte === startDate && inputDateLte === endDate
+  const clean =
+    inputQuery === query &&
+    inputDateGte === startDate &&
+    inputDateLte === endDate
 
   const submit = useSubmit()
 
@@ -244,7 +246,6 @@ export default function () {
           <Button
             type="button"
             className="height-4 padding-top-0 padding-bottom-0"
-
             onClick={() => {
               console.log('pressed calendar button')
             }}
@@ -264,41 +265,41 @@ export default function () {
           </Button>
 
           <DateRangePicker
-          startDateHint="dd/mm/yyyy"
-          startDateLabel="Start Date"
-          startDatePickerProps={{
-            id: 'event-date-start',
-            name: 'event-date-start',
-            defaultValue: startDate,
-            onChange: (value) => {
-              if (value) {
-                let params = new URLSearchParams(location.search)
-                params.set('startDate', value)
-                submit(params, {
-                  method: 'get',
-                  action: '/circulars',
-                })
-              }
-            },
-          }}
-          endDateHint="dd/mm/yyyy"
-          endDateLabel="End Date"
-          endDatePickerProps={{
-            id: 'event-date-end',
-            name: 'event-date-end',
-            defaultValue: endDate,
-            onChange: (value) => {
-              if (value) {
-                let params = new URLSearchParams(location.search)
-                params.set('endDate', value)
-                submit(params, {
-                  method: 'get',
-                  action: '/circulars',
-                })
-              }
-            },
-          }}
-        />
+            startDateHint="dd/mm/yyyy"
+            startDateLabel="Start Date"
+            startDatePickerProps={{
+              id: 'event-date-start',
+              name: 'event-date-start',
+              defaultValue: startDate,
+              onChange: (value) => {
+                if (value) {
+                  let params = new URLSearchParams(location.search)
+                  params.set('startDate', value)
+                  submit(params, {
+                    method: 'get',
+                    action: '/circulars',
+                  })
+                }
+              },
+            }}
+            endDateHint="dd/mm/yyyy"
+            endDateLabel="End Date"
+            endDatePickerProps={{
+              id: 'event-date-end',
+              name: 'event-date-end',
+              defaultValue: endDate,
+              onChange: (value) => {
+                if (value) {
+                  let params = new URLSearchParams(location.search)
+                  params.set('endDate', value)
+                  submit(params, {
+                    method: 'get',
+                    action: '/circulars',
+                  })
+                }
+              },
+            }}
+          />
         </Form>
         <Link to={`/circulars/new${searchString}`}>
           <Button
