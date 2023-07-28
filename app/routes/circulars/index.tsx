@@ -11,12 +11,14 @@ import {
   Link,
   useActionData,
   useLoaderData,
+  useLocation,
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
 import {
   Button,
-  ButtonGroup,
+  ButtonGroup, // Card,
+  DateRangePicker,
   Icon,
   Label,
   Select,
@@ -32,9 +34,12 @@ import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
+import calendarImg from 'app/theme/img/usa-icons/calendar_today.svg'
+import { useState } from 'react'
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
+  console.log(searchParams)
   const query = searchParams.get('query') || undefined
   if (query) {
     await circularRedirect(query)
@@ -50,7 +55,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     startDate,
     endDate,
   })
-
+  console.log(results)
   return { page, ...results }
 }
 
@@ -191,9 +196,13 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
+  const [inputDateGte] = useState(startDate)
+  const [inputDateLte] = useState(endDate)
+  const clean = inputQuery === query && inputDateGte === startDate && inputDateLte === endDate
 
   const submit = useSubmit()
+
+  // const location = useLocation()
 
   return (
     <>
@@ -215,6 +224,7 @@ export default function () {
           className="display-inline-block usa-search usa-search--small"
           role="search"
           id="searchForm"
+          action="/circulars"
         >
           <Label srOnly={true} htmlFor="query">
             Search
@@ -223,7 +233,7 @@ export default function () {
             id="query"
             name="query"
             type="search"
-            defaultValue={inputQuery}
+            defaultValue={query}
             placeholder="Search"
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
@@ -231,6 +241,20 @@ export default function () {
               if (!value) submit(form)
             }}
           />
+          <Button
+            type="button"
+            className="height-4 padding-top-0 padding-bottom-0"
+
+            onClick={() => {
+              console.log('pressed calendar button')
+            }}
+          >
+            <img
+              className="usa-search__submit-icon"
+              src={calendarImg}
+              alt="Date Filter"
+            />
+          </Button>
           <Button type="submit">
             <img
               src={searchImg}
@@ -238,6 +262,43 @@ export default function () {
               alt="Search"
             />
           </Button>
+
+          <DateRangePicker
+          startDateHint="dd/mm/yyyy"
+          startDateLabel="Start Date"
+          startDatePickerProps={{
+            id: 'event-date-start',
+            name: 'event-date-start',
+            defaultValue: startDate,
+            onChange: (value) => {
+              if (value) {
+                let params = new URLSearchParams(location.search)
+                params.set('startDate', value)
+                submit(params, {
+                  method: 'get',
+                  action: '/circulars',
+                })
+              }
+            },
+          }}
+          endDateHint="dd/mm/yyyy"
+          endDateLabel="End Date"
+          endDatePickerProps={{
+            id: 'event-date-end',
+            name: 'event-date-end',
+            defaultValue: endDate,
+            onChange: (value) => {
+              if (value) {
+                let params = new URLSearchParams(location.search)
+                params.set('endDate', value)
+                submit(params, {
+                  method: 'get',
+                  action: '/circulars',
+                })
+              }
+            },
+          }}
+        />
         </Form>
         <Link to={`/circulars/new${searchString}`}>
           <Button
