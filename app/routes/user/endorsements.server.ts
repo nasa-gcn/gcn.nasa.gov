@@ -23,9 +23,7 @@ import {
   listUsersInGroup,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
-import { getOrigin } from '~/lib/env.server'
-
-const origin = getOrigin()
+import { origin } from '~/lib/env.server'
 
 const fromName = 'GCN Endorsements'
 // Call-to-action
@@ -41,6 +39,7 @@ export type EndorsementRequest = {
   requestorSub: string
   created: number
   status: EndorsementState
+  note?: string
 }
 
 export type EndorsementState = 'approved' | 'pending' | 'rejected' | 'reported'
@@ -87,7 +86,7 @@ export class EndorsementsServer {
    *   - User `endorserSub` does not have an email attribute
    *   - There is an existing endorsement with the same requester and submitter sub
    */
-  async createEndorsementRequest(endorserSub: string) {
+  async createEndorsementRequest(endorserSub: string, note: string) {
     if (endorserSub === this.#sub)
       throw new Response(
         'Users cannot request themselves as the endorser of their own request',
@@ -120,7 +119,7 @@ export class EndorsementsServer {
         endorserSub: endorserSub,
       },
       UpdateExpression:
-        'set #status = :status, endorserEmail = :endorserEmail, requestorEmail = :requestorEmail, created = :created',
+        'set #status = :status, endorserEmail = :endorserEmail, requestorEmail = :requestorEmail, created = :created, note = :note',
       ExpressionAttributeNames: {
         '#status': 'status',
       },
@@ -131,6 +130,7 @@ export class EndorsementsServer {
         ':created': Date.now(),
         ':endorserSub': endorserSub,
         ':requestorSub': this.#sub,
+        ':note': note,
       },
       ConditionExpression:
         'NOT (endorserSub = :endorserSub and requestorSub = :requestorSub and #status <> :status)',
@@ -142,7 +142,11 @@ export class EndorsementsServer {
       subject: 'GCN Peer Endorsements: New Request',
       body: dedent`You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
         this.#currentUserEmail
-      }. Approval of an endorsement means that the requestor, ${
+      }. 
+      
+      ${note && `Comments from the user: ${note}`}
+
+      Approval of an endorsement means that the requestor, ${
         this.#currentUserEmail
       }, is in good standing with the astronomy community and will permit them to submit GCN circulars. In addition, they will also be able to receive endorsement requests from other users.
 
@@ -208,7 +212,7 @@ export class EndorsementsServer {
       ConditionExpression: '#status = :pending',
     })
 
-    let promiseArray: Promise<void>[] = []
+    const promiseArray: Promise<void>[] = []
 
     let requestorMessage = `You are receiving this email because the status of your peer endorsment requested from ${
       this.#currentUserEmail
@@ -319,7 +323,7 @@ export class EndorsementsServer {
               ':status': 'pending',
             },
       ProjectionExpression:
-        'requestorSub, requestorEmail, endorserSub, endorserEmail, #status, created',
+        'requestorSub, requestorEmail, endorserSub, endorserEmail, #status, created, note',
     })
     return Items
   }

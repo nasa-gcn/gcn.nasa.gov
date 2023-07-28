@@ -5,9 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import { useMatches } from '@remix-run/react'
+import { resolvePath, useMatches } from '@remix-run/react'
 import { StepIndicator, StepIndicatorStep } from '@trussworks/react-uswds'
-import { resolvePath } from 'react-router'
 
 type StepIndicatorProps = Parameters<typeof StepIndicator>[0]
 type StepIndicatorStepProps = Parameters<typeof StepIndicatorStep>[0]

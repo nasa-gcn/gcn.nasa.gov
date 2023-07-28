@@ -71,11 +71,11 @@ export function ClientSampleCode({
             # Warning: don't share the client secret with others.
             consumer = Consumer(client_id='${clientId}',
                                 client_secret='${clientSecret}'${
-              domain
-                ? `,
+                                  domain
+                                    ? `,
                                 domain='${domain}'`
-                : ''
-            })
+                                    : ''
+                                })
             ${
               listTopics
                 ? `
@@ -122,11 +122,11 @@ export function ClientSampleCode({
             const kafka = new Kafka({
               client_id: '${clientId}',
               client_secret: '${clientSecret}',${
-              domain
-                ? `
+                domain
+                  ? `
               domain: '${domain}',`
-                : ''
-            }
+                  : ''
+              }
             })
             ${
               listTopics
@@ -196,11 +196,11 @@ export function ClientSampleCode({
               const kafka = new Kafka({
                 client_id: '${clientId}',
                 client_secret: '${clientSecret}',${
-              domain
-                ? `
+                  domain
+                    ? `
                 domain: '${domain}',`
-                : ''
-            }
+                    : ''
+                }
               })
             ${
               listTopics

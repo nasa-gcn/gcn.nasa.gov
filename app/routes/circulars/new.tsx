@@ -28,6 +28,7 @@ import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import { group } from './circulars.server'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
+import { useSearchString } from '~/lib/utils'
 import { useUrl } from '~/root'
 
 export const handle = {
@@ -69,6 +70,7 @@ export default function () {
   const [showKeywords, setShowKeywords] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
+  const searchString = useSearchString()
 
   function toggleShowKeywords() {
     setShowKeywords(!showKeywords)
@@ -77,7 +79,7 @@ export default function () {
   return (
     <>
       <h1>New GCN Circular</h1>
-      <Form method="POST" action="/circulars?index">
+      <Form method="POST" action={`/circulars${searchString}`}>
         <InputGroup className="border-0 maxw-full">
           <InputPrefix>From</InputPrefix>
           <span className="padding-1">{formattedAuthor}</span>
@@ -153,7 +155,10 @@ export default function () {
           </small>
         </div>
         <ButtonGroup>
-          <Link to="/circulars" className="usa-button usa-button--outline">
+          <Link
+            to={`/circulars${searchString}`}
+            className="usa-button usa-button--outline"
+          >
             Back
           </Link>
           <Button disabled={sending || !valid} type="submit">
@@ -189,6 +194,8 @@ function SignInButton() {
 }
 
 function ModalUnauthorized({ isAuthenticated }: { isAuthenticated?: boolean }) {
+  const searchString = useSearchString()
+
   return (
     <Modal
       id="modal-unauthorized"
@@ -207,7 +214,7 @@ function ModalUnauthorized({ isAuthenticated }: { isAuthenticated?: boolean }) {
         get a peer endorsement from an existing GCN Circulars user.
       </p>
       <ModalFooter>
-        <Link to="/circulars">
+        <Link to={`/circulars${searchString}`}>
           <Button type="button" outline>
             Cancel
           </Button>

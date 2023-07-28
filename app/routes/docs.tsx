@@ -7,9 +7,9 @@
  */
 import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
-import { useMatch } from 'react-router'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
+import { useActiveLink } from '~/lib/remix'
 import { useFeature } from '~/root'
 
 export const handle = {
@@ -18,7 +18,7 @@ export const handle = {
 
 export default function () {
   const enableSchemaBrowser = useFeature('SCHEMA')
-  const isSchemaBrowser = useMatch('/docs/schema-browser/*')
+  const isSchemaBrowser = useActiveLink({ to: '/docs/schema-browser' })
 
   return (
     <GridContainer className="usa-section">
@@ -31,12 +31,15 @@ export default function () {
                   About GCN
                 </NavLink>,
                 <>
-                  <NavLink key="circulars" to="circulars" end>
+                  <NavLink key="circulars" to="circulars">
                     Circulars
                   </NavLink>
                   <SideNavSub
                     base="circulars"
                     items={[
+                      <NavLink key="subscribing" to="circulars" end>
+                        About
+                      </NavLink>,
                       <NavLink key="subscribing" to="circulars/subscribing">
                         Subscribing
                       </NavLink>,
@@ -69,6 +72,12 @@ export default function () {
                       >
                         Feature Flags
                       </NavLink>,
+                      <NavLink key="deployment" to="contributing/deployment">
+                        Deployment
+                      </NavLink>,
+                      <NavLink key="email" to="contributing/email">
+                        Email Data Flow
+                      </NavLink>,
                     ]}
                   />
                 </>,
@@ -95,7 +104,7 @@ export default function () {
                 ...(enableSchemaBrowser
                   ? [
                       <NavLink key="schema-browser" to="schema-browser">
-                        Schema-Browser
+                        Schema Browser
                       </NavLink>,
                     ]
                   : []),

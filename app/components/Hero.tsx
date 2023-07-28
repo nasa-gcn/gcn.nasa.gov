@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { Link } from '@remix-run/react'
-import { ButtonGroup, Grid } from '@trussworks/react-uswds'
+import { ButtonGroup, FormGroup, Grid } from '@trussworks/react-uswds'
 
 import center_cropped from '~/img/hero/center-cropped.jpg'
 
@@ -28,15 +28,19 @@ export function Hero() {
             observatories, physics experiments, and thousands of astronomers
             around the world.
           </p>
-          <p></p>
-          <ButtonGroup>
-            <Link to="/quickstart" className="usa-button">
-              <>Start streaming GCN Notices</>
-            </Link>
-            <Link to="/circulars" className="usa-button usa-button--secondary">
-              <>Post a GCN Circular</>
-            </Link>
-          </ButtonGroup>
+          <FormGroup>
+            <ButtonGroup>
+              <Link to="/quickstart" className="usa-button">
+                <>Start streaming GCN Notices</>
+              </Link>
+              <Link
+                to="/circulars"
+                className="usa-button usa-button--secondary"
+              >
+                <>Post a GCN Circular</>
+              </Link>
+            </ButtonGroup>
+          </FormGroup>
         </Grid>
         <Grid
           tablet={{ col: 6 }}

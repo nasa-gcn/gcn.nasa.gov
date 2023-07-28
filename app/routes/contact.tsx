@@ -10,6 +10,7 @@ import { Form, Link, useActionData } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
+  FormGroup,
   GridContainer,
   Label,
   TextInput,
@@ -101,14 +102,16 @@ export default function () {
             Shortly, a GCN team member will contact you at the email address
             that you provided ({submitted.email}).
           </p>
-          <ButtonGroup>
-            <Link to="/contact" className="usa-button">
-              Contact us again about something else
-            </Link>
-            <Link to="/" className="usa-button usa-button--outline">
-              Go home
-            </Link>
-          </ButtonGroup>
+          <FormGroup>
+            <ButtonGroup>
+              <Link to="/contact" className="usa-button">
+                Contact us again about something else
+              </Link>
+              <Link to="/" className="usa-button usa-button--outline">
+                Go home
+              </Link>
+            </ButtonGroup>
+          </FormGroup>
         </>
       ) : (
         <Form method="POST">

@@ -9,7 +9,7 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 
 import { get } from './circulars.server'
-import { getOrigin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
@@ -19,7 +19,7 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
   delete result.sub
   return json(result, {
     headers: getCanonicalUrlHeaders(
-      new URL(`/circulars/${circularId}`, getOrigin())
+      new URL(`/circulars/${circularId}`, origin)
     ),
   })
 }

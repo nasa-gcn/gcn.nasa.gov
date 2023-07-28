@@ -21,21 +21,21 @@ import {
   DateRangePicker,
   Icon,
   Label,
+  Select,
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
+import clamp from 'lodash/clamp'
+import { useState } from 'react'
 
-// import { useState } from 'react'
-import { circularRedirect, put, search } from './circulars.server'
+import type { action } from '../circulars'
+import { circularRedirect, search } from './circulars.server'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
-import { getFormDataString } from '~/lib/utils'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
 import calendarImg from 'app/theme/img/usa-icons/calendar_today.svg'
 import { useState } from 'react'
-
-const limit = 100
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
@@ -47,6 +47,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
+  const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
   const results = await search({
     query,
     page: page - 1,
@@ -58,34 +59,28 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   return { page, ...results }
 }
 
-export async function action({ request }: DataFunctionArgs) {
-  const data = await request.formData()
-  const body = getFormDataString(data, 'body')
-  const subject = getFormDataString(data, 'subject')
-  if (!body || !subject)
-    throw new Response('Body and subject are required', { status: 400 })
-  return await put(subject, body, request)
-}
-
 function getPageLink({
   page,
+  limit,
   query,
   startDate,
   endDate,
 }: {
   page: number
+  limit?: number
   query?: string
   startDate?: string
   endDate?: string
 }) {
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
+  if (limit && limit != 100) searchParams.set('limit', limit.toString())
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
 
-  const searchParamsString = searchParams.toString()
-  return searchParamsString && `?${searchParamsString}`
+  const searchString = searchParams.toString()
+  return searchString && `?${searchString}`
 }
 
 function Pagination({
@@ -95,6 +90,7 @@ function Pagination({
 }: {
   page: number
   totalPages: number
+  limit?: number
   query?: string
   startDate?: string
   endDate?: string
@@ -191,12 +187,13 @@ export default function () {
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
-  const query = searchParams.get('query') ?? undefined
-  const startDate = searchParams.get('startDate') ?? undefined
-  const endDate = searchParams.get('endDate') ?? undefined
+  const limit = searchParams.get('limit') || '100'
+  const query = searchParams.get('query') || undefined
+  const startDate = searchParams.get('startDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
 
-  let searchParamsString = searchParams.toString()
-  if (searchParamsString) searchParamsString = `?${searchParamsString}`
+  let searchString = searchParams.toString()
+  if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
   const [inputDateGte] = useState(startDate)
@@ -226,6 +223,7 @@ export default function () {
         <Form
           className="display-inline-block usa-search usa-search--small"
           role="search"
+          id="searchForm"
           action="/circulars"
         >
           <Label srOnly={true} htmlFor="query">
@@ -302,7 +300,7 @@ export default function () {
           }}
         />
         </Form>
-        <Link to="/circulars/new">
+        <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
             className="height-4 padding-top-0 padding-bottom-0"
@@ -327,21 +325,45 @@ export default function () {
           <ol>
             {allItems.map(({ circularId, subject }) => (
               <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}${searchParamsString}`}>
+                <Link to={`/circulars/${circularId}${searchString}`}>
                   {subject}
                 </Link>
               </li>
             ))}
           </ol>
-          {totalPages > 1 && (
-            <Pagination
-              query={query}
-              page={page}
-              totalPages={totalPages}
-              startDate={startDate}
-              endDate={endDate}
-            />
-          )}
+          <div className="display-flex flex-row flex-wrap">
+            <div className="display-flex flex-align-self-center margin-right-2 width-auto">
+              <div>
+                <Select
+                  id="limit"
+                  className="width-auto height-5 padding-y-0 margin-y-0"
+                  name="limit"
+                  defaultValue="100"
+                  form="searchForm"
+                  onChange={({ target: { form } }) => {
+                    submit(form)
+                  }}
+                >
+                  <option value="10">10 / page</option>
+                  <option value="20">20 / page</option>
+                  <option value="50">50 / page</option>
+                  <option value="100">100 / page</option>
+                </Select>
+              </div>
+            </div>
+            <div className="display-flex flex-fill">
+              {totalPages > 1 && (
+                <Pagination
+                  query={query}
+                  page={page}
+                  limit={parseInt(limit)}
+                  totalPages={totalPages}
+                  startDate={startDate}
+                  endDate={endDate}
+                />
+              )}
+            </div>
+          </div>
         </>
       )}
     </>

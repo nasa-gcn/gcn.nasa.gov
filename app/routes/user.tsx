@@ -9,10 +9,13 @@ import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav } from '~/components/SideNav'
+import { useUserIdp } from '~/root'
 
 export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
 
 export default function () {
+  const idp = useUserIdp()
+
   return (
     <GridContainer className="usa-section">
       <div className="grid-row grid-gap">
@@ -25,6 +28,13 @@ export default function () {
               <NavLink key="endorsements" to="endorsements">
                 Peer Endorsements
               </NavLink>,
+              ...(!idp
+                ? [
+                    <NavLink key="password" to="password">
+                      Reset Password
+                    </NavLink>,
+                  ]
+                : []),
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,

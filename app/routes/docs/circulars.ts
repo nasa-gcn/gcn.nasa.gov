@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-export { Outlet as default } from 'react-router'
+export { Outlet as default } from '@remix-run/react'
 
 export const handle = {
   breadcrumb: 'Circulars',

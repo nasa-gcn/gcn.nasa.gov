@@ -8,7 +8,13 @@
 import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
-import { Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
+import {
+  Button,
+  FormGroup,
+  Icon,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 import { storage } from '../__auth/auth.server'
@@ -125,30 +131,28 @@ export default function () {
           This is how the "From" field will be shown in GCN Circulars that you
           submit.
         </Hint>
-        <div aria-describedby="previewHint" id="preview">
+        <p aria-describedby="previewHint" id="preview" className="margin-top-0">
           {formatAuthor({
             name: currentName,
             affiliation: currentAffiliation,
             email,
           })}
-        </div>
-        <Button
-          className="usa-button margin-top-2"
-          type="submit"
-          disabled={disabled}
-        >
-          Save
-        </Button>
-        {fetcher.state !== 'idle' && (
-          <>
-            <Spinner /> Saving...
-          </>
-        )}
-        {fetcher.state === 'idle' && fetcher.data !== undefined && !dirty && (
-          <>
-            <Icon.Check color="green" /> Saved
-          </>
-        )}
+        </p>
+        <FormGroup>
+          <Button className="usa-button" type="submit" disabled={disabled}>
+            Save
+          </Button>
+          {fetcher.state !== 'idle' && (
+            <span className="text-middle">
+              <Spinner /> Saving...
+            </span>
+          )}
+          {fetcher.state === 'idle' && fetcher.data !== undefined && !dirty && (
+            <span className="text-middle">
+              <Icon.Check color="green" /> Saved
+            </span>
+          )}
+        </FormGroup>
       </fetcher.Form>
     </>
   )

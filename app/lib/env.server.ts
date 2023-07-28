@@ -32,19 +32,23 @@ function getOriginSandbox() {
   return `http://localhost:${http}`
 }
 
-export function getOrigin() {
+function getOrigin() {
   return getEnvOrDieInProduction('ORIGIN') || getOriginSandbox()
 }
 
-export function getHostname() {
+function getHostname() {
   return new URL(getOrigin()).hostname
 }
 
-export function getFeatures() {
+function getFeatures() {
   return (
     process.env.GCN_FEATURES?.toUpperCase().split(',').filter(Boolean) ?? []
   )
 }
+
+export const origin = /* @__PURE__ */ getOrigin()
+export const hostname = /* @__PURE__ */ getHostname()
+export const features = /* @__PURE__ */ getFeatures()
 
 /**
  * Return true if the given feature flag is enabled.
@@ -53,6 +57,5 @@ export function getFeatures() {
  * is a comma-separated list of enabled features.
  */
 export function feature(feature: string) {
-  const featureUppercase = feature.toUpperCase()
-  return getFeatures().includes(featureUppercase)
+  return features.includes(feature.toUpperCase())
 }

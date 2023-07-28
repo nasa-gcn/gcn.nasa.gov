@@ -9,6 +9,8 @@ import type { AddressObject, Source } from 'mailparser'
 import { simpleParser } from 'mailparser'
 import addressparser from 'nodemailer/lib/addressparser'
 
+import type { SubmittedHow } from '~/routes/circulars/circulars.lib'
+
 const legacyAddress = 'mailnull@capella2.gsfc.nasa.gov'
 const legacyFromNameSplitter = ' via '
 
@@ -25,6 +27,7 @@ const legacyFromNameSplitter = ' via '
  */
 export function getFromAddress(fromAddressObject?: AddressObject) {
   let from = fromAddressObject?.value[0]
+  let submittedHow: SubmittedHow
   if (from?.address === legacyAddress) {
     const i = from.name.lastIndexOf(legacyFromNameSplitter)
     if (i === -1)
@@ -34,10 +37,13 @@ export function getFromAddress(fromAddressObject?: AddressObject) {
     from = addressparser(from.name.slice(0, i), {
       flatten: true,
     })[0]
+    submittedHow = 'email-legacy'
+  } else {
+    submittedHow = 'email'
   }
   const address = from?.address
   if (!address) throw new Error('From address is missing')
-  return address
+  return { address, submittedHow }
 }
 
 export function getReplyToAddresses(replyTo?: AddressObject) {
@@ -48,7 +54,7 @@ export function getReplyToAddresses(replyTo?: AddressObject) {
 }
 
 export async function parseEmailContentFromSource(emailContent: Source) {
-  let parsedMail = await simpleParser(emailContent)
+  const parsedMail = await simpleParser(emailContent)
   // sns includes the attachments if there are any.
   // Remove this if we want to implement some type of behavior for attachments
   parsedMail.attachments = []

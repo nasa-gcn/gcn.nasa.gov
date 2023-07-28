@@ -36,22 +36,24 @@ import {
   useMatches,
   useNavigation,
   useRouteError,
+  useRouteLoaderData,
 } from '@remix-run/react'
-import { ButtonGroup, GovBanner, GridContainer } from '@trussworks/react-uswds'
+import {
+  ButtonGroup,
+  FormGroup,
+  GovBanner,
+  GridContainer,
+} from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
+import invariant from 'tiny-invariant'
 
 import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import NewsBanner from './components/NewsBanner'
-import {
-  getEnvOrDieInProduction,
-  getFeatures,
-  getOrigin,
-} from './lib/env.server'
-import { useRouteLoaderData } from './lib/remix'
+import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
 import { getUser } from './routes/__auth/user.server'
 
 import themeStyle from './theme/css/custom.css'
@@ -95,13 +97,13 @@ export const handle = {
   breadcrumb: 'GCN',
 }
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data: { origin } }) => {
-  let result = [
+export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+  const result = [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },
   ]
   // Exclude non-production deployments from indexing by search engines
-  if (new URL(origin).hostname !== 'gcn.nasa.gov')
+  if (data && new URL(data.origin).hostname !== 'gcn.nasa.gov')
     result.push({ name: 'robots', content: 'noindex' })
   return result
 }
@@ -123,15 +125,13 @@ export const links: LinksFunction = () => [
 ]
 
 export async function loader({ request }: DataFunctionArgs) {
-  const origin = getOrigin()
-
   const user = await getUser(request)
   const email = user?.email
   const name = user?.name
-  const features = getFeatures()
+  const idp = user?.idp
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
 
-  return { origin, email, name, features, recaptchaSiteKey }
+  return { origin, email, name, features, recaptchaSiteKey, idp }
 }
 
 /** Don't reevaluate this route's loader due to client-side navigations. */
@@ -140,7 +140,14 @@ export function shouldRevalidate() {
 }
 
 function useLoaderDataRoot() {
-  return useRouteLoaderData<typeof loader>('root')
+  const result = useRouteLoaderData<typeof loader>('root')
+  invariant(result)
+  return result
+}
+
+export function useUserIdp() {
+  const { idp } = useLoaderDataRoot()
+  return idp
 }
 
 export function useEmail() {
@@ -249,11 +256,13 @@ function ErrorUnexpected({ children }: { children?: ReactNode }) {
       <GridContainer className="usa-section">
         <h1>Unexpected error {children}</h1>
         <p className="usa-intro">An unexpected error occurred.</p>
-        <ButtonGroup>
-          <Link to="/" className="usa-button">
-            Go home
-          </Link>
-        </ButtonGroup>
+        <FormGroup>
+          <ButtonGroup>
+            <Link to="/" className="usa-button">
+              Go home
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </GridContainer>
     </Document>
   )
@@ -269,17 +278,19 @@ function ErrorUnauthorized() {
           We're sorry, you must log in to access the page you're looking for.
         </p>
         <p className="usa-paragraph">Log in to access that page, or go home.</p>
-        <ButtonGroup>
-          <Link
-            to={`/login?redirect=${encodeURIComponent(url)}`}
-            className="usa-button"
-          >
-            Log in and take me there
-          </Link>
-          <Link to="/" className="usa-button usa-button--outline">
-            Go home
-          </Link>
-        </ButtonGroup>
+        <FormGroup>
+          <ButtonGroup>
+            <Link
+              to={`/login?redirect=${encodeURIComponent(url)}`}
+              className="usa-button"
+            >
+              Log in and take me there
+            </Link>
+            <Link to="/" className="usa-button usa-button--outline">
+              Go home
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </GridContainer>
     </Document>
   )
@@ -298,14 +309,16 @@ function ErrorNotFound() {
           Visit our homepage for helpful tools and resources, or contact us and
           we'll point you in the right direction.
         </p>
-        <ButtonGroup>
-          <Link to="/" className="usa-button">
-            Visit homepage
-          </Link>
-          <Link to="/contact" className="usa-button usa-button--outline">
-            Contact us
-          </Link>
-        </ButtonGroup>
+        <FormGroup>
+          <ButtonGroup>
+            <Link to="/" className="usa-button">
+              Visit homepage
+            </Link>
+            <Link to="/contact" className="usa-button usa-button--outline">
+              Contact us
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </GridContainer>
     </Document>
   )

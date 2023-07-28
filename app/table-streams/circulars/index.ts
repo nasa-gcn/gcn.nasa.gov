@@ -57,7 +57,7 @@ async function getEmails() {
     { client },
     { AttributesToGet: ['email'], TableName }
   )
-  let emails: string[] = []
+  const emails: string[] = []
   for await (const page of pages) {
     const newEmails = page.Items?.map(({ email }) => email)
     if (newEmails) emails.push(...newEmails)
@@ -81,7 +81,7 @@ async function getLegacyEmails() {
       TableName,
     }
   )
-  let emails: string[] = []
+  const emails: string[] = []
   for await (const page of pages) {
     const newEmails = page.Items?.map(({ email }) => email)
     if (newEmails) emails.push(...newEmails)

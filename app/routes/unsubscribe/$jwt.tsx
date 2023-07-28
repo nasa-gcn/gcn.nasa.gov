@@ -6,16 +6,23 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
+import {
+  Form,
+  Link,
+  isRouteErrorResponse,
+  useActionData,
+  useLoaderData,
+  useRouteError,
+} from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
   Checkbox,
+  FormGroup,
   GridContainer,
 } from '@trussworks/react-uswds'
 import capitalize from 'lodash/capitalize'
 import { useState } from 'react'
-import { isRouteErrorResponse, useRouteError } from 'react-router'
 
 import { unsubscribeActions } from './actions.server'
 import { maxTokenAge } from './jwt.lib'
@@ -98,15 +105,16 @@ function UnsubscribeForm({
         may still receive limited notifications related to your account (for
         example, for password recovery requests).
       </Hint>
-      <br />
-      <ButtonGroup>
-        <Link to="/" className="usa-button usa-button--outline">
-          Cancel
-        </Link>
-        <Button type="submit" disabled={disabled}>
-          Unsubscribe
-        </Button>
-      </ButtonGroup>
+      <FormGroup>
+        <ButtonGroup>
+          <Link to="/" className="usa-button usa-button--outline">
+            Cancel
+          </Link>
+          <Button type="submit" disabled={disabled}>
+            Unsubscribe
+          </Button>
+        </ButtonGroup>
+      </FormGroup>
     </Form>
   )
 }
@@ -119,11 +127,13 @@ function UnsubscribeConfirmation({ actionsTaken }: { actionsTaken: string[] }) {
         You will no longer receive GCN{' '}
         {joinListWithOxfordComma(actionsTaken.map(capitalize), 'or')}.
       </p>
-      <ButtonGroup>
-        <Link to="/" className="usa-button">
-          Go Home
-        </Link>
-      </ButtonGroup>
+      <FormGroup>
+        <ButtonGroup>
+          <Link to="/" className="usa-button">
+            Go Home
+          </Link>
+        </ButtonGroup>
+      </FormGroup>
     </>
   )
 }
@@ -157,11 +167,13 @@ export function ErrorBoundary() {
           Unsubscribe links are valid for {maxTokenAge}. Please find an
           unsubscribe link from a newer email message.
         </p>
-        <ButtonGroup>
-          <Link to="/" className="usa-button">
-            Go home
-          </Link>
-        </ButtonGroup>
+        <FormGroup>
+          <ButtonGroup>
+            <Link to="/" className="usa-button">
+              Go home
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </GridContainer>
     )
   } else {
