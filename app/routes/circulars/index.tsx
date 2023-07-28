@@ -261,6 +261,13 @@ export default function () {
               alt="Date Filter"
             />
           </Button> */}
+          <Button type="submit">
+            <img
+              src={searchImg}
+              className="usa-search__submit-icon"
+              alt="Search"
+            />
+          </Button>
           <DetailsDropdownButton
             onClick={() => setShowContent(!showContent)}
             outline
@@ -351,13 +358,6 @@ export default function () {
               )}
             </DetailsDropdownContent>
           )}
-          <Button type="submit">
-            <img
-              src={searchImg}
-              className="usa-search__submit-icon"
-              alt="Search"
-            />
-          </Button>
 
           {/* <DateRangePicker
             startDateHint="dd/mm/yyyy"
