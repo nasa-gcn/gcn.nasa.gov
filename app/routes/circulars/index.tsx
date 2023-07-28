@@ -30,6 +30,8 @@ import { useState } from 'react'
 
 import type { action } from '../circulars'
 import { circularRedirect, search } from './circulars.server'
+import DetailsDropdownButton from '~/components/DetailsDropdownButton'
+import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 
@@ -197,6 +199,9 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const [inputDateGte] = useState(startDate)
   const [inputDateLte] = useState(endDate)
+  const [expandedState] = useState(true)
+  const [showContent, setShowContent] = useState(false)
+  const [showDateRange, setShowDateRange] = useState(false)
   const clean =
     inputQuery === query &&
     inputDateGte === startDate &&
@@ -243,7 +248,7 @@ export default function () {
               if (!value) submit(form)
             }}
           />
-          <Button
+          {/* <Button
             type="button"
             className="height-4 padding-top-0 padding-bottom-0"
             onClick={() => {
@@ -255,7 +260,97 @@ export default function () {
               src={calendarImg}
               alt="Date Filter"
             />
-          </Button>
+          </Button> */}
+          <DetailsDropdownButton
+            onClick={() => setShowContent(!showContent)}
+            outline
+            className="height-4 padding-top-0 padding-bottom-0"
+          >
+            <Icon.CalendarToday />
+          </DetailsDropdownButton>
+          {showContent && (
+            <DetailsDropdownContent>
+              {!showDateRange && (
+                <>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                  >
+                    button1
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                  >
+                    button2
+                  </Button>
+                </>
+              )}
+              {!showDateRange && (
+                <Button
+                  type="button"
+                  className="usa-button"
+                  onClick={() => setShowDateRange(!showDateRange)}
+                >
+                  expand date range
+                </Button>
+              )}
+              {showDateRange && (
+                <>
+                  <Button
+                    type="button"
+                    className="usa-button"
+                    onClick={() => setShowDateRange(!showDateRange)}
+                  >
+                    hide
+                  </Button>
+                  <DateRangePicker
+                    startDateHint="dd/mm/yyyy"
+                    startDateLabel="Start Date"
+                    startDatePickerProps={{
+                      id: 'event-date-start',
+                      name: 'event-date-start',
+                      defaultValue: 'startDate',
+                      onChange: (value) => {
+                        if (value) {
+                          let params = new URLSearchParams(location.search)
+                          params.set('startDate', value)
+                          // submit(params, {
+                          //   method: 'get',
+                          //   action: '/circulars',
+                          // })
+                        }
+                      },
+                    }}
+                    endDateHint="dd/mm/yyyy"
+                    endDateLabel="End Date"
+                    endDatePickerProps={{
+                      id: 'event-date-end',
+                      name: 'event-date-end',
+                      defaultValue: 'endDate',
+                      onChange: (value) => {
+                        if (value) {
+                          let params = new URLSearchParams(location.search)
+                          params.set('endDate', value)
+                          // submit(params, {
+                          //   method: 'get',
+                          //   action: '/circulars',
+                          // })
+                        }
+                      },
+                    }}
+                  />
+                  <Button
+                    type="submit"
+                    className="usa-button margin-top-2"
+                    form="searchForm"
+                  >
+                    submit dates
+                  </Button>
+                </>
+              )}
+            </DetailsDropdownContent>
+          )}
           <Button type="submit">
             <img
               src={searchImg}
@@ -264,7 +359,7 @@ export default function () {
             />
           </Button>
 
-          <DateRangePicker
+          {/* <DateRangePicker
             startDateHint="dd/mm/yyyy"
             startDateLabel="Start Date"
             startDatePickerProps={{
@@ -299,7 +394,7 @@ export default function () {
                 }
               },
             }}
-          />
+          /> */}
         </Form>
         <Link to={`/circulars/new${searchString}`}>
           <Button
