@@ -94,8 +94,10 @@ export async function search({
   if (startDate || endDate) {
     startTime = parseDate(startDate) || undefined
     endTime = parseDate(endDate) + 86400000 || undefined
+    console.log('parseDate', startTime, endTime)
   } else if (last) {
     ;[startTime, endTime] = fuzzyTimeRange(last)
+    console.log('fuzzyTimeRange', startTime, endTime)
   }
 
   const {
