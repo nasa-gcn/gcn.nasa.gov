@@ -48,9 +48,7 @@ function NoticeCard({
             </CardHeader>
             <CardBody>{children}</CardBody>
             <CardFooter>
-              {tags?.map((tag) => (
-                <Tag key={tag}>{tag}</Tag>
-              ))}
+              {tags?.map((tag) => <Tag key={tag}>{tag}</Tag>)}
             </CardFooter>
           </div>
         </a>

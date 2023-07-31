@@ -29,8 +29,14 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
   return await get(parseFloat(circularId))
 }
 
+const submittedHowMap = {
+  web: 'Web form',
+  email: 'email',
+  'email-legacy': 'legacy email',
+}
+
 export default function () {
-  const { circularId, subject, submitter, createdOn, body } =
+  const { circularId, subject, submitter, createdOn, body, submittedHow } =
     useLoaderData<typeof loader>()
   const searchString = useSearchString()
   return (
@@ -61,13 +67,13 @@ export default function () {
       </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
       <Grid row>
-        <Grid tablet={{ col: 1 }}>
+        <Grid tablet={{ col: 2 }}>
           <b>Subject</b>
         </Grid>
         <Grid col="fill">{subject}</Grid>
       </Grid>
       <Grid row>
-        <Grid tablet={{ col: 1 }}>
+        <Grid tablet={{ col: 2 }}>
           <b>Date</b>
         </Grid>
         <Grid col="fill">
@@ -78,11 +84,19 @@ export default function () {
         </Grid>
       </Grid>
       <Grid row>
-        <Grid tablet={{ col: 1 }}>
+        <Grid tablet={{ col: 2 }}>
           <b>From</b>
         </Grid>
         <Grid col="fill">{submitter}</Grid>
       </Grid>
+      {submittedHow && (
+        <Grid row>
+          <Grid tablet={{ col: 2 }}>
+            <b>Submitted By</b>
+          </Grid>
+          <Grid col="fill">{submittedHowMap[submittedHow]}</Grid>
+        </Grid>
+      )}
       <div className="text-pre-wrap margin-top-2">{body}</div>
     </>
   )

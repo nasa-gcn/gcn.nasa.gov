@@ -13,9 +13,8 @@ import {
 } from 'aws-lambda-ses-forwarder'
 
 import { createEmailIncomingMessageHandler } from '../handler'
-import { getEnvOrDie, getHostname } from '~/lib/env.server'
+import { getEnvOrDie, hostname } from '~/lib/env.server'
 
-const hostname = getHostname()
 const origEmail = `support@${hostname}`
 const zendeskEmail = getEnvOrDie('ZENDESK_EMAIL')
 const sesv2 = new SESv2Client({})

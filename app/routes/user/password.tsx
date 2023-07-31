@@ -23,7 +23,7 @@ import { getUser } from '../__auth/user.server'
 import { updatePassword } from './password.server'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
-import { useUserIdp } from '~/root'
+import { useEmail, useUserIdp } from '~/root'
 
 export const handle = {
   breadcrumb: 'Reset Password',
@@ -38,8 +38,8 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
-  const oldPassword = getFormDataString(data, 'oldPassword')
-  const newPassword = getFormDataString(data, 'newPassword')
+  const oldPassword = getFormDataString(data, 'current-password')
+  const newPassword = getFormDataString(data, 'new-password')
 
   invariant(oldPassword && newPassword)
   return await updatePassword(request, oldPassword, newPassword)
@@ -147,14 +147,21 @@ function ResetPassword() {
       <h1>Reset Password</h1>
       <>
         <fetcher.Form method="POST" ref={formRef}>
-          <Label htmlFor="oldPassword">Old Password</Label>
+          <input
+            type="hidden"
+            name="username"
+            autoComplete="username"
+            value={useEmail()}
+          />
+          <Label htmlFor="current-password">Old Password</Label>
           <TextInput
             data-focus
-            name="oldPassword"
+            name="current-password"
             className={isOldPasswordError ? 'usa-input--error' : ''}
-            id="oldPassword"
+            id="current-password"
             type="password"
             placeholder="Old Password"
+            autoComplete="current-password"
             onChange={(e) => {
               setOldPassword(e.target.value)
               setInteracted(true)
@@ -167,15 +174,16 @@ function ResetPassword() {
             interacted={interacted}
             fetcherState={fetcher.state}
           />
-          <Label htmlFor="newPassword" className="margin-top-105">
+          <Label htmlFor="new-password" className="margin-top-105">
             New Password
           </Label>
           <InputGroup error={isNewPasswordTouched && !valid}>
             <TextInput
-              name="newPassword"
-              id="newPassword"
+              name="new-password"
+              id="new-password"
               type={visible ? 'text' : 'password'}
               placeholder="New Password"
+              autoComplete="new-password"
               onChange={(e) => {
                 setNewPassword(e.target.value)
                 setIsNewPasswordTouched(true)

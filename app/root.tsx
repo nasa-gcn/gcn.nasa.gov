@@ -53,11 +53,7 @@ import { DevBanner } from './components/DevBanner'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import NewsBanner from './components/NewsBanner'
-import {
-  getEnvOrDieInProduction,
-  getFeatures,
-  getOrigin,
-} from './lib/env.server'
+import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
 import { getUser } from './routes/__auth/user.server'
 
 import themeStyle from './theme/css/custom.css'
@@ -129,13 +125,10 @@ export const links: LinksFunction = () => [
 ]
 
 export async function loader({ request }: DataFunctionArgs) {
-  const origin = getOrigin()
-
   const user = await getUser(request)
   const email = user?.email
   const name = user?.name
   const idp = user?.idp
-  const features = getFeatures()
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
 
   return { origin, email, name, features, recaptchaSiteKey, idp }

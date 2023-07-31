@@ -23,8 +23,8 @@ import EmailNotificationCard from '~/components/EmailNotificationCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
-import { getHostname } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
+import { useEmail, useHostname } from '~/root'
 import { getUser } from '~/routes/__auth/user.server'
 
 export const handle = { getSitemapEntries: () => null }
@@ -62,11 +62,10 @@ export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const data = await getEmailNotifications(user.sub)
-  const hostname = getHostname()
   const userIsSubscribedToCircularEmails =
     await getUsersCircularSubmissionStatus(user.sub)
 
-  return { data, userIsSubscribedToCircularEmails, hostname, email: user.email }
+  return { data, userIsSubscribedToCircularEmails }
 }
 
 function CircularsSubscriptionForm({ value }: { value: boolean }) {
@@ -126,7 +125,9 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
 }
 
 export default function () {
-  const { data, userIsSubscribedToCircularEmails, hostname, email } =
+  const hostname = useHostname()
+  const email = useEmail()
+  const { data, userIsSubscribedToCircularEmails } =
     useLoaderData<typeof loader>()
 
   return (

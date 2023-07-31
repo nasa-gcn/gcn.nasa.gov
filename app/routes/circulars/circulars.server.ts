@@ -17,6 +17,9 @@ import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
+// A type with certain keys required.
+type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
+
 export const group = 'gcn.nasa.gov/circular-submitter'
 
 export const getDynamoDBAutoIncrement = memoizee(
@@ -197,7 +200,7 @@ export async function remove(circularId: number, request: Request) {
  * Adds a new entry into the GCN Circulars table WITHOUT authentication
  */
 export async function putRaw(
-  item: Omit<Circular, 'createdOn' | 'circularId'>,
+  item: Require<Omit<Circular, 'createdOn' | 'circularId'>, 'submittedHow'>
 ): Promise<Circular> {
   const autoincrement = await getDynamoDBAutoIncrement()
   const createdOn = Date.now()
@@ -215,21 +218,27 @@ export async function putRaw(
  * @param body - main content of the Circular
  * @param subject - the title/subject line of the Circular
  */
-export async function put(subject: string, body: string, request: Request) {
+export async function put(
+  item: Require<
+    Omit<Circular, 'sub' | 'submitter' | 'createdOn' | 'circularId'>,
+    'submittedHow'
+  >,
+  request: Request
+) {
   const user = await getUser(request)
   if (!user?.groups.includes(group))
     throw new Response('User is not in the submitters group', {
       status: 403,
     })
-  if (!subjectIsValid(subject))
+  if (!subjectIsValid(item.subject))
     throw new Response('subject is invalid', { status: 400 })
-  if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
+  if (!bodyIsValid(item.body))
+    throw new Response('body is invalid', { status: 400 })
 
   return await putRaw({
-    subject,
-    body,
     sub: user.sub,
     submitter: formatAuthor(user),
+    ...item,
   })
 }
 
