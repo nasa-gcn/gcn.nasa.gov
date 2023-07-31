@@ -50,8 +50,7 @@ function parseDate(date?: string) {
 }
 
 /** take input string and return start/end times based on string value */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function fuzzyTimeRange(fuzzyTime: string) {
+function fuzzyTimeRange(fuzzyTime?: string) {
   const now = Date.now()
   if (fuzzyTime === 'hour') return [now - 3600000, now]
   if (fuzzyTime === 'today') return [new Date().setHours(0, 0, 0, 0), now]
@@ -90,8 +89,14 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  const startTime = parseDate(startDate) || undefined
-  const endTime = parseDate(endDate) + 86400000 || undefined
+  let startTime = undefined
+  let endTime = undefined
+  if (startDate || endDate) {
+    startTime = parseDate(startDate) || undefined
+    endTime = parseDate(endDate) + 86400000 || undefined
+  } else if (last) {
+    ;[startTime, endTime] = fuzzyTimeRange(last)
+  }
 
   const {
     body: {
