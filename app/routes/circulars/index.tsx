@@ -211,34 +211,36 @@ export default function () {
         subscribing to or submitting Circulars.
       </p>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
-        <Form
-          className="display-inline-block usa-search usa-search--small"
-          role="search"
-          id="searchForm"
-        >
-          <Label srOnly={true} htmlFor="query">
-            Search
-          </Label>
-          <TextInput
-            id="query"
-            name="query"
-            type="search"
-            defaultValue={inputQuery}
-            placeholder="Search"
-            aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form)
-            }}
-          />
-          <Button type="submit">
-            <img
-              src={searchImg}
-              className="usa-search__submit-icon"
-              alt="Search"
+        <Form id="searchForm">
+          <div
+            className="display-inline-block usa-search usa-search--small"
+            role="search"
+          >
+            <Label srOnly={true} htmlFor="query">
+              Search
+            </Label>
+            <TextInput
+              id="query"
+              name="query"
+              type="search"
+              defaultValue={inputQuery}
+              placeholder="Search"
+              aria-describedby="searchHint"
+              onChange={({ target: { form, value } }) => {
+                setInputQuery(value)
+                if (!value) submit(form)
+              }}
             />
-          </Button>
+            <Button type="submit">
+              <img
+                src={searchImg}
+                className="usa-search__submit-icon"
+                alt="Search"
+              />
+            </Button>
+          </div>
         </Form>
+
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
