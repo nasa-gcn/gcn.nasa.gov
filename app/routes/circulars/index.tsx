@@ -77,6 +77,7 @@ function getPageLink({
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
+  if (last) searchParams.set('last', last)
 
   const searchString = searchParams.toString()
   return searchString && `?${searchString}`
@@ -306,6 +307,7 @@ export default function () {
                   totalPages={totalPages}
                   startDate={startDate}
                   endDate={endDate}
+                  last={last}
                 />
               )}
             </div>
