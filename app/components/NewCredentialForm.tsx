@@ -10,7 +10,9 @@ import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import {
   Button,
+  ButtonGroup,
   Fieldset,
+  FormGroup,
   Label,
   Radio,
   TextInput,
@@ -116,12 +118,20 @@ export function NewCredentialForm() {
           setRecaptchaValid(!!value)
         }}
       />
-      <Link to=".." type="button" className="usa-button usa-button--outline">
-        Back
-      </Link>
-      <Button disabled={!(nameValid && recaptchaValid)} type="submit">
-        Create New Credentials
-      </Button>
+      <FormGroup>
+        <ButtonGroup>
+          <Link
+            to=".."
+            type="button"
+            className="usa-button usa-button--outline"
+          >
+            Back
+          </Link>
+          <Button disabled={!(nameValid && recaptchaValid)} type="submit">
+            Create New Credentials
+          </Button>
+        </ButtonGroup>
+      </FormGroup>
     </Form>
   )
 }

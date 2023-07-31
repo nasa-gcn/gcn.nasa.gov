@@ -7,6 +7,7 @@
  */
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
+import { FormGroup } from '@trussworks/react-uswds'
 
 import { useUrl } from '~/root'
 import { getUser } from '~/routes/__auth/user.server'
@@ -46,19 +47,21 @@ export default function () {
         </p>
       </div>
 
-      {email ? (
-        <Link type="button" className="usa-button" to="credentials">
-          Next
-        </Link>
-      ) : (
-        <Link
-          type="button"
-          className="usa-button"
-          to={`/login?redirect=${encodeURIComponent(url)}`}
-        >
-          Sign in / Sign up
-        </Link>
-      )}
+      <FormGroup>
+        {email ? (
+          <Link type="button" className="usa-button" to="credentials">
+            Next
+          </Link>
+        ) : (
+          <Link
+            type="button"
+            className="usa-button"
+            to={`/login?redirect=${encodeURIComponent(url)}`}
+          >
+            Sign in / Sign up
+          </Link>
+        )}
+      </FormGroup>
     </>
   )
 }

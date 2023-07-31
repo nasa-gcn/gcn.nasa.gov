@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import { Form, Link, useSearchParams } from '@remix-run/react'
-import { Button, Label } from '@trussworks/react-uswds'
+import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 import type { NoticeFormat } from '~/components/NoticeFormat'
@@ -45,16 +45,20 @@ export default function () {
         validationFunction={setAlertsValid}
       />
       <input type="hidden" name="clientId" value={clientId} />
-      <Link
-        to="../credentials"
-        type="button"
-        className="usa-button usa-button--outline"
-      >
-        Back
-      </Link>
-      <Button disabled={!alertsValid} type="submit">
-        Generate Code
-      </Button>
+      <FormGroup>
+        <ButtonGroup>
+          <Link
+            to="../credentials"
+            type="button"
+            className="usa-button usa-button--outline"
+          >
+            Back
+          </Link>
+          <Button disabled={!alertsValid} type="submit">
+            Generate Code
+          </Button>
+        </ButtonGroup>
+      </FormGroup>
     </Form>
   )
 }
