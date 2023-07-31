@@ -11,7 +11,6 @@ import {
   Link,
   useActionData,
   useLoaderData,
-  useLocation,
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
@@ -36,7 +35,8 @@ import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 
 import searchImg from 'app/theme/img/usa-icons-bg/search--white.svg'
-import calendarImg from 'app/theme/img/usa-icons/calendar_today.svg'
+
+// import calendarImg from 'app/theme/img/usa-icons/calendar_today.svg'
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)
@@ -199,7 +199,6 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const [inputDateGte] = useState(startDate)
   const [inputDateLte] = useState(endDate)
-  const [expandedState] = useState(true)
   const [showContent, setShowContent] = useState(false)
   const [showDateRange, setShowDateRange] = useState(false)
   const clean =
@@ -291,16 +290,14 @@ export default function () {
                   >
                     button2
                   </Button>
+                  <Button
+                    type="button"
+                    className="usa-button"
+                    onClick={() => setShowDateRange(!showDateRange)}
+                  >
+                    expand date range
+                  </Button>
                 </>
-              )}
-              {!showDateRange && (
-                <Button
-                  type="button"
-                  className="usa-button"
-                  onClick={() => setShowDateRange(!showDateRange)}
-                >
-                  expand date range
-                </Button>
               )}
               {showDateRange && (
                 <>
@@ -320,7 +317,7 @@ export default function () {
                       defaultValue: 'startDate',
                       onChange: (value) => {
                         if (value) {
-                          let params = new URLSearchParams(location.search)
+                          const params = new URLSearchParams(location.search)
                           params.set('startDate', value)
                           // submit(params, {
                           //   method: 'get',
@@ -337,7 +334,7 @@ export default function () {
                       defaultValue: 'endDate',
                       onChange: (value) => {
                         if (value) {
-                          let params = new URLSearchParams(location.search)
+                          const params = new URLSearchParams(location.search)
                           params.set('endDate', value)
                           // submit(params, {
                           //   method: 'get',
@@ -358,43 +355,6 @@ export default function () {
               )}
             </DetailsDropdownContent>
           )}
-
-          {/* <DateRangePicker
-            startDateHint="dd/mm/yyyy"
-            startDateLabel="Start Date"
-            startDatePickerProps={{
-              id: 'event-date-start',
-              name: 'event-date-start',
-              defaultValue: startDate,
-              onChange: (value) => {
-                if (value) {
-                  let params = new URLSearchParams(location.search)
-                  params.set('startDate', value)
-                  submit(params, {
-                    method: 'get',
-                    action: '/circulars',
-                  })
-                }
-              },
-            }}
-            endDateHint="dd/mm/yyyy"
-            endDateLabel="End Date"
-            endDatePickerProps={{
-              id: 'event-date-end',
-              name: 'event-date-end',
-              defaultValue: endDate,
-              onChange: (value) => {
-                if (value) {
-                  let params = new URLSearchParams(location.search)
-                  params.set('endDate', value)
-                  submit(params, {
-                    method: 'get',
-                    action: '/circulars',
-                  })
-                }
-              },
-            }}
-          /> */}
         </Form>
         <Link to={`/circulars/new${searchString}`}>
           <Button
