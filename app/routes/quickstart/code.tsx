@@ -7,7 +7,7 @@
  */
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import { Button } from '@trussworks/react-uswds'
+import { Button, ButtonGroup, FormGroup } from '@trussworks/react-uswds'
 
 import { ClientCredentialVendingMachine } from '../user/client_credentials.server'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
@@ -83,12 +83,16 @@ export default function () {
       </Tabs>
       <Form method="GET" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
-        <Button type="submit" className="usa-button--outline">
-          Back
-        </Button>
-        <Link to="/user/credentials">
-          <Button type="button">Done</Button>
-        </Link>
+        <FormGroup>
+          <ButtonGroup>
+            <Button type="submit" className="usa-button--outline">
+              Back
+            </Button>
+            <Link to="/user/credentials">
+              <Button type="button">Done</Button>
+            </Link>
+          </ButtonGroup>
+        </FormGroup>
       </Form>
     </>
   )
