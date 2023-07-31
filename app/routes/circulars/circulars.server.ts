@@ -44,7 +44,7 @@ export const getDynamoDBAutoIncrement = memoizee(
       dangerously,
     })
   },
-  { promise: true },
+  { promise: true }
 )
 
 /** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
@@ -158,7 +158,7 @@ export async function search({
     }) => ({
       circularId,
       subject,
-    }),
+    })
   )
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
@@ -246,7 +246,7 @@ export async function circularRedirect(query: string) {
   const validCircularSearchStyles =
     /^\s*(?:GCN)?\s*(?:CIRCULAR)?\s*(-?\d+(?:\.\d)?)\s*$/i
   const circularId = parseFloat(
-    validCircularSearchStyles.exec(query)?.[1] || '',
+    validCircularSearchStyles.exec(query)?.[1] || ''
   )
   if (!isNaN(circularId)) {
     const db = await tables()
