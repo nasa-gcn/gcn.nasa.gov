@@ -44,12 +44,31 @@ export const getDynamoDBAutoIncrement = memoizee(
       dangerously,
     })
   },
-  { promise: true }
+  { promise: true },
 )
 
 /** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
 function parseDate(date?: string) {
   return date ? new Date(date).getTime() : NaN
+}
+
+/** take input string and return start/end times based on string value */
+function fuzzyTimeRange(fuzzyTime?: string) {
+  const now = Date.now()
+  if (fuzzyTime === 'hour') return [now - 3600000, now]
+  if (fuzzyTime === 'today') return [new Date().setHours(0, 0, 0, 0), now]
+  if (fuzzyTime === 'day') return [now - 86400000, now]
+  if (fuzzyTime === 'week') return [now - 86400000 * 7, now]
+  if (fuzzyTime === 'month') return [now - 86400000 * 30, now]
+  if (fuzzyTime === 'year') return [now - 86400000 * 365, now]
+  if (fuzzyTime === 'mtd')
+    return [
+      new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime(),
+      now,
+    ]
+  if (fuzzyTime === 'ytd')
+    return [new Date(new Date().getFullYear(), 0).getTime(), now]
+  else return [undefined, undefined] // invalid fuzzyTime defaults to fuzzless time range
 }
 
 export async function search({
@@ -58,12 +77,14 @@ export async function search({
   limit,
   startDate,
   endDate,
+  last,
 }: {
   query?: string
   page?: number
   limit?: number
   startDate?: string
   endDate?: string
+  last?: string
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
@@ -71,8 +92,16 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  const startTime = parseDate(startDate) || undefined
-  const endTime = parseDate(endDate) + 86400000 || undefined
+  let startTime = undefined
+  let endTime = undefined
+  if (startDate || endDate) {
+    startTime = parseDate(startDate) || undefined
+    endTime = parseDate(endDate) + 86400000 || undefined
+    console.log('parseDate', startTime, endTime)
+  } else if (last) {
+    ;[startTime, endTime] = fuzzyTimeRange(last)
+    console.log('fuzzyTimeRange', startTime, endTime)
+  }
 
   const {
     body: {
@@ -129,7 +158,7 @@ export async function search({
     }) => ({
       circularId,
       subject,
-    })
+    }),
   )
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
@@ -217,7 +246,7 @@ export async function circularRedirect(query: string) {
   const validCircularSearchStyles =
     /^\s*(?:GCN)?\s*(?:CIRCULAR)?\s*(-?\d+(?:\.\d)?)\s*$/i
   const circularId = parseFloat(
-    validCircularSearchStyles.exec(query)?.[1] || ''
+    validCircularSearchStyles.exec(query)?.[1] || '',
   )
   if (!isNaN(circularId)) {
     const db = await tables()
