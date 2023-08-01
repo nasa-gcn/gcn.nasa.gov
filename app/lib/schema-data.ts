@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import { RequestError } from '@octokit/request-error'
 import { Octokit } from '@octokit/rest'
 import { extname, join } from 'path'
 import { relative } from 'path/posix'
@@ -152,4 +153,21 @@ export async function getGithubDir(
       ref,
     })
   ).data as GitContentDataResponse[]
+}
+
+export async function getLatestRelease() {
+  let latestRelease
+  try {
+    latestRelease = (await octokit.rest.repos.getLatestRelease(repoData)).data
+  } catch (error) {
+    if (error instanceof RequestError) {
+      if (error.status != 404) {
+        throw error
+      }
+      latestRelease = { tag_name: 'main' }
+    } else {
+      throw error
+    }
+  }
+  return latestRelease
 }

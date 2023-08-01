@@ -105,7 +105,7 @@ export default function () {
                   ? [
                       <NavLink
                         key="schema-browser"
-                        to="schema-browser/main/gcn"
+                        to="schema-browser/latest/gcn"
                       >
                         Schema Browser
                       </NavLink>,
