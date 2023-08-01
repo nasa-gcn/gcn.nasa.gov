@@ -20,8 +20,7 @@ export const deploy = {
 
     // Add required permissions boundary for working on the Mission Cloud Platform
     cloudformation.Resources.Role.Properties.PermissionsBoundary = {
-      // eslint-disable-next-line no-template-curly-in-string
-      'Fn::Sub': 'arn:aws:iam::${AWS::AccountId}:policy/mcp-tenantOperator',
+      'Fn::Sub': `arn:\${AWS::Partition}:iam::\${AWS::AccountId}:policy/mcp-tenantOperator`,
     }
     return cloudformation
   },

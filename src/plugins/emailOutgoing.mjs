@@ -23,13 +23,13 @@ export const deploy = {
             ],
             Resource: [
               {
-                'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:identity/*`,
+                'Fn::Sub': `arn:\${AWS::Partition}:ses:\${AWS::Region}:\${AWS::AccountId}:identity/*`,
               },
               {
-                'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:configuration-set/*`,
+                'Fn::Sub': `arn:\${AWS::Partition}:ses:\${AWS::Region}:\${AWS::AccountId}:configuration-set/*`,
               },
               {
-                'Fn::Sub': `arn:aws:ses:\${AWS::Region}:\${AWS::AccountId}:template/*`,
+                'Fn::Sub': `arn:\${AWS::Partition}:ses:\${AWS::Region}:\${AWS::AccountId}:template/*`,
               },
             ],
           },

@@ -34,7 +34,7 @@ export const deploy = {
               'cognito-idp:ListUsersInGroup',
             ],
             Resource: {
-              'Fn::Sub': `arn:aws:cognito-idp:${region}:\${AWS::AccountId}:userpool/${user_pool_id}`,
+              'Fn::Sub': `arn:\${AWS::Partition}:cognito-idp:${region}:\${AWS::AccountId}:userpool/${user_pool_id}`,
             },
           },
         ],
