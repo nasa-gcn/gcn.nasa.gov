@@ -1,13 +1,6 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, NavLink, useLoaderData } from '@remix-run/react'
-import {
-  CardBody,
-  CardHeader,
-  Icon,
-  SideNav,
-  Table,
-} from '@trussworks/react-uswds'
-import { useState } from 'react'
+import { Icon, SideNav, Table } from '@trussworks/react-uswds'
 import { json, redirect, useParams } from 'react-router'
 
 import SchemaDefinition from '.'
@@ -18,8 +11,6 @@ import {
   formatFieldName,
   formatFieldType,
 } from '../SchemaBrowserElements.lib'
-import DetailsDropdownButton from '~/components/DetailsDropdownButton'
-import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { Highlight } from '~/components/Highlight'
 import { SideNavSub } from '~/components/SideNav'
 import { Tab, Tabs } from '~/components/Tabs'
@@ -61,8 +52,8 @@ export async function loader({
 
 export default function () {
   const { version, '*': path } = useParams()
-  const [showVersions, setShowVersions] = useState(false)
-  const { data, jsonContent, examples, versions } = useLoaderData()
+  // const [showVersions, setShowVersions] = useState(false)
+  const { data, jsonContent, examples } = useLoaderData()
   if (!path) {
     throw new Error('Path is not defined.')
   }
@@ -70,37 +61,6 @@ export default function () {
   return (
     <>
       <div className="desktop:grid-col-3">
-        <Link to="/docs" className="margin-bottom-1">
-          <div className="position-relative">
-            <Icon.ArrowBack className="position-absolute top-0 left-0" />
-          </div>
-          <span className="padding-left-2">Back</span>
-        </Link>
-        <div className="margin-top-1">
-          <DetailsDropdownButton
-            className="grid-col-12"
-            onClick={() => setShowVersions(!showVersions)}
-            outline
-          >
-            {<>Version: {version}</>}
-          </DetailsDropdownButton>
-          {showVersions && (
-            <DetailsDropdownContent>
-              <CardHeader>
-                <h3>Versions</h3>
-              </CardHeader>
-              <CardBody className="padding-y-0">
-                {versions.map((x: { name: string; ref: string }) => (
-                  <div key={x.name}>
-                    <Link to={`/docs/schema-browser/${x.ref}/${path}`}>
-                      {x.name}
-                    </Link>
-                  </div>
-                ))}
-              </CardBody>
-            </DetailsDropdownContent>
-          )}
-        </div>
         <SideNav
           items={[
             path != previous && (
