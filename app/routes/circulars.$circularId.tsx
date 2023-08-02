@@ -5,13 +5,20 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { DataFunctionArgs, SerializeFrom } from '@remix-run/node'
+import type {
+  DataFunctionArgs,
+  HeadersFunction,
+  SerializeFrom,
+} from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { formatDateISO } from './circulars/circulars.lib'
 import { get } from './circulars/circulars.server'
 import TimeAgo from '~/components/TimeAgo'
+import { origin } from '~/lib/env.server'
+import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
 
 export const handle = {
@@ -26,8 +33,16 @@ export const handle = {
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
   if (!circularId)
     throw new Response('circularId must be defined', { status: 400 })
-  return await get(parseFloat(circularId))
+  const result = await get(parseFloat(circularId))
+  return json(result, {
+    headers: getCanonicalUrlHeaders(
+      new URL(`/circulars/${circularId}`, origin)
+    ),
+  })
 }
+
+export const headers: HeadersFunction = ({ loaderHeaders }) =>
+  pickHeaders(loaderHeaders, ['Link'])
 
 const submittedHowMap = {
   web: 'Web form',

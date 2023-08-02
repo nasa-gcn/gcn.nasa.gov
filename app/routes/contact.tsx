@@ -5,7 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { Form, Link, useActionData } from '@remix-run/react'
 import {
   Button,
@@ -24,13 +25,26 @@ import { useState } from 'react'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { sendEmail } from '~/lib/email.server'
 import { feature, getEnvOrDie } from '~/lib/env.server'
-import { getBasicAuthHeaders } from '~/lib/headers.server'
+import {
+  getBasicAuthHeaders,
+  getCanonicalUrlHeaders,
+  pickHeaders,
+} from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useName, useRecaptchaSiteKey } from '~/root'
 
 export const handle = {
   breadcrumb: 'Contact Us',
 }
+
+export async function loader() {
+  return json(null, {
+    headers: getCanonicalUrlHeaders(new URL('/contact', origin)),
+  })
+}
+
+export const headers: HeadersFunction = ({ loaderHeaders }) =>
+  pickHeaders(loaderHeaders, ['Link'])
 
 export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()

@@ -45,3 +45,12 @@ export function getBasicAuthHeaders(username: string, password: string) {
   const userpass = Buffer.from(`${username}:${password}`).toString('base64')
   return { Authorization: `Basic ${userpass}` }
 }
+
+export function pickHeaders(headers: Headers, keys: string[]) {
+  const result: [string, string][] = []
+  for (const key of keys) {
+    const value = headers.get(key)
+    if (value) result.push([key, value])
+  }
+  return result
+}
