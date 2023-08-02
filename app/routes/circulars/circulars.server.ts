@@ -12,7 +12,7 @@ import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
-import { getUser } from '../__auth/user.server'
+import { getUser } from '../_auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'

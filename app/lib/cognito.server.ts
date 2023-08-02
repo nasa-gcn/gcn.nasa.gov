@@ -5,9 +5,12 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
+import type {
+  CognitoIdentityProviderServiceException,
+  UserType,
+} from '@aws-sdk/client-cognito-identity-provider'
 import {
   CognitoIdentityProviderClient,
-  type UserType,
   paginateListUsersInGroup,
 } from '@aws-sdk/client-cognito-identity-provider'
 
@@ -53,4 +56,24 @@ export async function listUsersInGroup(GroupName: string) {
     if (nextUsers) users.push(...nextUsers)
   }
   return users
+}
+
+export function maybeThrow(e: any, warning: string) {
+  const errorsAllowedInDev = [
+    'ExpiredTokenException',
+    'NotAuthorizedException',
+    'UnrecognizedClientException',
+  ]
+  const { name } = e as CognitoIdentityProviderServiceException
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(
+      `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+    )
+  }
 }

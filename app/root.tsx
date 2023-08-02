@@ -54,7 +54,7 @@ import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import NewsBanner from './components/NewsBanner'
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
-import { getUser } from './routes/__auth/user.server'
+import { getUser } from './routes/_auth/user.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 // FIXME: no top-level await, no import function

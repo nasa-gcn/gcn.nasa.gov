@@ -14,7 +14,7 @@ import { getEnvOrDieInProduction } from './env.server'
 import type {
   ReferencedSchema,
   Schema,
-} from '~/routes/docs/schema-browser/SchemaBrowserElements.lib'
+} from '~/routes/docs.schema-browser.$version.$/components'
 
 const GITHUB_API_TOKEN = getEnvOrDieInProduction('GITHUB_API_TOKEN')
 const octokit = new Octokit({ auth: GITHUB_API_TOKEN })
