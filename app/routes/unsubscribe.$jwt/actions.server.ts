@@ -68,7 +68,7 @@ export const unsubscribeActions = {
         if (item)
           await db.legacy_users.update({
             Key: { email },
-            UpdateExpression: 'set receive = #receive',
+            UpdateExpression: 'set receive = :receive',
             ExpressionAttributeValues: { ':receive': 0 },
           })
       })(),
