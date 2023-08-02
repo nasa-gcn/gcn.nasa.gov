@@ -1,0 +1,42 @@
+import {
+  Alert,
+  ProcessList,
+  ProcessListHeading,
+  ProcessListItem,
+} from '@trussworks/react-uswds'
+
+# Subscribing to GCN Notices
+
+See our [quickstart](/quickstart) guide to stream GCN notices via kafka.
+
+Follow these steps to receive GCN Notices via email:
+
+<ProcessList>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      [Sign in / Sign up](/login)
+    </ProcessListHeading>
+    Sign up for GCN or sign in to your existing account by tapping the [Sign in / Sign up](/login) button in the navigation bar.
+
+    {/* <Alert headingLevel="h4" heading="Migrating from GCN Classic">
+      If you were previously signed up to receive GCN Circulars via the legacy GCN Classic circulars service, your preferences were automatically transfered and you should already be subscribed already.
+
+      Once you make an account here with the same email address, you will be able to modify your preferences.
+    </Alert> */}
+
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Go to [Email Notifications](/user/email) Settings
+    </ProcessListHeading>
+    Once you are signed in, open the user menu in the navigation bar and go to [Email Notifications](/user/email).
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">Create a New Notice Subscription</ProcessListHeading>
+    Click the Add button to open the New Notice Form. Enter a descriptive name. The recipient email will default to the address you are signed in with, but you may change it. Select the format and notice types you wish to subscribe to and click save to create the subscription. 
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">Self-Manage Your Subscription</ProcessListHeading>
+    Your list of Notice Subscriptions is visible in the [emails](/user/email) page. You can edit/delete your exisiting subscriptions at any time. The Test Message button will send a small email to the recipient address associated with the subscription so that you can verify delivery of future notices.
+  </ProcessListItem>
+</ProcessList>

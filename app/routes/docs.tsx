@@ -101,16 +101,6 @@ export default function () {
                     ]}
                   />
                 </>,
-                ...(enableSchemaBrowser
-                  ? [
-                      <NavLink
-                        key="schema-browser"
-                        to="schema-browser/latest/gcn"
-                      >
-                        Schema Browser
-                      </NavLink>,
-                    ]
-                  : []),
                 <NavLink key="history" to="history">
                   History
                 </NavLink>,
@@ -140,9 +130,38 @@ export default function () {
                 <NavLink key="producers" to="producers">
                   New Notice Producers
                 </NavLink>,
+                <>
+                  <NavLink key="notices" to="notices">
+                    Notices
+                  </NavLink>
+                  <SideNavSub
+                    base="notices"
+                    items={[
+                      <NavLink key="notice-about" to="notices" end>
+                        About
+                      </NavLink>,
+                      <NavLink
+                        key="notice-subscribing"
+                        to="notices/subscribing"
+                      >
+                        Subscribing
+                      </NavLink>,
+                    ]}
+                  />
+                </>,
                 <NavLink key="roadmap" to="roadmap">
                   Road Map
                 </NavLink>,
+                ...(enableSchemaBrowser
+                  ? [
+                      <NavLink
+                        key="schema-browser"
+                        to="schema-browser/latest/gcn"
+                      >
+                        Schema Browser
+                      </NavLink>,
+                    ]
+                  : []),
               ]}
             />
           </div>
