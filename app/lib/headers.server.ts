@@ -14,6 +14,13 @@ export const publicStaticCacheControlHeaders = {
 }
 
 /**
+ * HTTP headers for 1 day life.
+ */
+export const publicStaticShortTermCacheControlHeaders = {
+  'Cache-Control': 'public, max-age=86400',
+}
+
+/**
  * Get HTTP headers for declaring the canonical URL to search engines.
  *
  * This adds HTTP headers that are equivalent to the HTML

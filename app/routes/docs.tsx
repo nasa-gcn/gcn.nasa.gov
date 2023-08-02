@@ -103,7 +103,10 @@ export default function () {
                 </>,
                 ...(enableSchemaBrowser
                   ? [
-                      <NavLink key="schema-browser" to="schema-browser">
+                      <NavLink
+                        key="schema-browser"
+                        to="schema-browser/latest/gcn"
+                      >
                         Schema Browser
                       </NavLink>,
                     ]
