@@ -295,7 +295,7 @@ export default function () {
                     className="usa-button"
                     onClick={() => setShowDateRange(!showDateRange)}
                   >
-                    expand date range
+                    Custom Date Range
                   </Button>
                 </>
               )}
@@ -303,14 +303,15 @@ export default function () {
                 <>
                   <Button
                     type="button"
-                    className="usa-button"
+                    className="usa-button width-10 height-5 margin-bottom-neg-2"
                     onClick={() => setShowDateRange(!showDateRange)}
                   >
-                    hide
+                    <Icon.ArrowBack />
                   </Button>
                   <DateRangePicker
                     startDateHint="dd/mm/yyyy"
                     startDateLabel="Start Date"
+                    className="margin-bottom-2"
                     startDatePickerProps={{
                       id: 'event-date-start',
                       name: 'event-date-start',
@@ -345,11 +346,18 @@ export default function () {
                     }}
                   />
                   <Button
-                    type="submit"
-                    className="usa-button margin-top-2"
+                    type="button"
+                    className="usa-button width-auto height-5"
                     form="searchForm"
+                    onClick={() => {
+                      const params = new URLSearchParams(location.search)
+                      submit(params, {
+                        method: 'get',
+                        action: '/circulars',
+                      })
+                    }}
                   >
-                    submit dates
+                    <Icon.CalendarToday /> Submit
                   </Button>
                 </>
               )}
