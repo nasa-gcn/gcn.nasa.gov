@@ -13,7 +13,7 @@ import {
 import { useEffect, useRef } from 'react'
 
 import TimeAgo from './TimeAgo'
-import type { EmailNotificationVM } from '~/routes/user/email_notices.server'
+import type { EmailNotificationVM } from '~/routes/user.email/email_notices.server'
 
 export default function EmailNotificationCard({
   uuid,

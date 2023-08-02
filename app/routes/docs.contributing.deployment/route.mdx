@@ -1,0 +1,86 @@
+---
+handle:
+  breadcrumb: Deployment
+---
+
+import { Link } from '@remix-run/react'
+
+import deploymentScreenshot from './screenshot.png'
+
+# Deployment
+
+This web site is deployed **in the cloud** on [Amazon Web Services (AWS)](https://aws.amazon.com) in order resist outages due to local network conditions or distasters.
+
+Site assets are replicated and cached through a global **[content delivery network](https://en.wikipedia.org/wiki/Content_delivery_network)** ([AWS CloudFront](https://aws.amazon.com/cloudfront/)) to provide the fastest experience possible to scientists everywhere regardless of their country and location.
+
+The site's architecture within AWS is entirely **[serverless](https://en.wikipedia.org/wiki/Serverless_computing)**: we run on fully managed AWS computing, storage, and database services so that resource usage and cost adjust dynamically with user demand and so that we do not have to patch or maintain the operating systems on our own machine instances.
+
+We provision all AWS resources using **[infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code)** so that the configuration of cloud services is automated and under version control. We use the [Architect](https://arc.codes/) serverless framework to model, generate, and orchestrate the AWS resources.
+
+We perform code and infrastructure changes automatially using **[continuous deployment](https://en.wikipedia.org/wiki/Continuous_deployment)** on [GitHub Actions](https://github.com/features/actions) (see our [deployment workflow](https://github.com/nasa-gcn/gcn.nasa.gov/blob/main/.github/workflows/deploy.yml)).
+
+## Stages
+
+There are three full deployments of GCN. Each **deployment stage** is in a separate AWS account and on a separate subdomain:
+
+<table className="usa-table">
+  <thead>
+    <th>Stage</th>
+    <th>Purpose</th>
+    <th>Access</th>
+    <th>Triggered How</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        Development
+        <Link to="https://dev.gcn.nasa.gov/" className="text-no-wrap">
+          dev.gcn.nasa.gov
+        </Link>
+      </td>
+      <td>Internal development site</td>
+      <td>NASA intranet only</td>
+      <td>Automatically, on pushes to the main branch</td>
+    </tr>
+    <tr>
+      <td>
+        Testing
+        <Link to="https://test.gcn.nasa.gov/" className="text-no-wrap">
+          test.gcn.nasa.gov
+        </Link>
+      </td>
+      <td>Public feature preview</td>
+      <td rowSpan="2">Internet</td>
+      <td rowSpan="2">Manually, when approved by GCN DevOps team</td>
+    </tr>
+    <tr>
+      <td>
+        Production
+        <Link to="https://gcn.nasa.gov/" className="text-no-wrap">
+          gcn.nasa.gov
+        </Link>
+      </td>
+      <td>Live site with real data</td>
+    </tr>
+  </tbody>
+</table>
+
+## To deploy
+
+To approve and trigger a deployment to testing or production, follow these steps.
+
+1. Navigate to the [Deploy to AWS workflow](https://github.com/nasa-gcn/gcn.nasa.gov/actions/workflows/deploy.yml).
+2. Select the desired workflow run.
+3. Tap the `Review deployments` button.
+4. Check the stages that you want to deploy.
+5. Tap the `Approve and deploy` button.
+
+The deployment should take about 5 minutes.
+
+<img
+  src={deploymentScreenshot}
+  alt="Screen shot of deployment review in GitHub Actions"
+  width="2410"
+  height="1880"
+  className="height-auto"
+/>
