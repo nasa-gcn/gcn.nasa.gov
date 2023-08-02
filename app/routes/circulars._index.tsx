@@ -14,17 +14,22 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
+import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
   ButtonGroup,
   Icon,
   Label,
+  Modal,
+  ModalFooter,
+  ModalHeading,
+  ModalToggleButton,
   Select,
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import clamp from 'lodash/clamp'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
@@ -39,6 +44,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   if (query) {
     await circularRedirect(query)
   }
+
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
@@ -177,6 +183,7 @@ function Pagination({
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
+  const submit = useSubmit()
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
@@ -191,9 +198,10 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
 
-  const submit = useSubmit()
+  const modalRef = useRef<ModalRef>(null)
+
+  const clean = inputQuery === query
 
   return (
     <>
@@ -276,7 +284,7 @@ export default function () {
               <div>
                 <Select
                   id="limit"
-                  className="width-auto height-5 padding-y-0 margin-y-0"
+                  className="width-auto height-5 padding-y-0 margin-bottom-2"
                   name="limit"
                   defaultValue="100"
                   form="searchForm"
@@ -303,6 +311,67 @@ export default function () {
                 />
               )}
             </div>
+          </div>
+          <div>
+            <ModalToggleButton
+              modalRef={modalRef}
+              opener
+              className="text-middle"
+            >
+              <Icon.FileDownload className="bottom-aligned margin-right-05" />
+              Download
+            </ModalToggleButton>
+            <Modal
+              renderToPortal={false}
+              ref={modalRef}
+              id="example-modal-1"
+              aria-labelledby="modal-1-heading"
+              aria-describedby="modal-1-description"
+            >
+              <ModalHeading id="modal-1-heading">
+                GCN Circulars Database Download
+              </ModalHeading>
+              <div className="usa-prose">
+                <div id="modal-1-description">
+                  This is a download of the entire GCN Circulars Databse.
+                </div>
+                <div>It may take a moment.</div>
+                <div>
+                  Download will start once a file format is chosen below.
+                </div>
+              </div>
+              <ModalFooter>
+                <ButtonGroup>
+                  <ModalToggleButton modalRef={modalRef} closer>
+                    <a
+                      className="text-no-underline text-white"
+                      href={`/circulars/download?type=txt`}
+                      download={'gcn-circulars.tar.gz'}
+                    >
+                      Raw text
+                    </a>
+                  </ModalToggleButton>
+
+                  <ModalToggleButton modalRef={modalRef} closer>
+                    <a
+                      className="text-no-underline text-white"
+                      href={`/circulars/download?type=json`}
+                      download={'gcn-circulars.tar.gz'}
+                    >
+                      JSON
+                    </a>
+                  </ModalToggleButton>
+                  <ModalToggleButton
+                    modalRef={modalRef}
+                    closer
+                    unstyled
+                    className="padding-105 text-center"
+                  >
+                    Go back
+                  </ModalToggleButton>
+                </ButtonGroup>
+              </ModalFooter>
+            </Modal>
           </div>
         </>
       )}

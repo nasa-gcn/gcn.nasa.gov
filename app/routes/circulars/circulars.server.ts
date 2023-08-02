@@ -11,9 +11,15 @@ import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
+import { pack as tarPack } from 'tar-stream'
 
 import { getUser } from '../_auth/user.server'
-import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
+import {
+  bodyIsValid,
+  formatAuthor,
+  formatCircular,
+  subjectIsValid,
+} from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
@@ -262,4 +268,63 @@ export async function circularRedirect(query: string) {
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL)
   }
+}
+
+async function getAllRecords(): Promise<Circular[]> {
+  const data = await tables()
+  let results: Circular[] = []
+  let exclusiveStartKey: AWS.DynamoDB.DocumentClient.Key | undefined = undefined
+
+  do {
+    const params: AWS.DynamoDB.DocumentClient.ScanInput = {
+      TableName: 'circulars',
+      ExclusiveStartKey: exclusiveStartKey,
+    }
+
+    const { Items, LastEvaluatedKey } = await data.circulars.scan(params)
+
+    if (Items) {
+      results = [...results, ...(Items as Circular[])]
+    }
+
+    exclusiveStartKey = LastEvaluatedKey
+  } while (exclusiveStartKey)
+  return results
+}
+
+export async function makeTarFile(fileType: string): Promise<Blob> {
+  const circulars = await getAllRecords()
+  return new Promise<Blob>((resolve, reject) => {
+    const tarChunks: Uint8Array[] = []
+    const pack = tarPack()
+
+    pack.on('error', (err: Error) => {
+      reject(err)
+    })
+
+    pack.on('close', () => {
+      const tarballBlob = new Blob(tarChunks, { type: 'application/tar' })
+      resolve(tarballBlob)
+    })
+    for (const circular of circulars) {
+      if (fileType === 'txt') {
+        const txt_entry = pack.entry(
+          { name: `gcn-circulars/${circular.circularId}.txt` },
+          formatCircular(circular)
+        )
+        txt_entry.end()
+      } else if (fileType === 'json') {
+        const json_entry = pack.entry(
+          { name: `gcn-circulars/${circular.circularId}.json` },
+          JSON.stringify(circular)
+        )
+        json_entry.end()
+      }
+    }
+
+    pack.finalize()
+    pack.on('data', (chunk: Uint8Array) => {
+      tarChunks.push(chunk)
+    })
+  })
 }
