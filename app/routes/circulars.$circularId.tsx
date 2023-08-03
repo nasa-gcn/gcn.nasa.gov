@@ -50,14 +50,14 @@ export default function () {
         </Link>
         <ButtonGroup type="segmented">
           <Link
-            to="raw"
+            to={`/circulars/${circularId}.txt`}
             className="usa-button usa-button--outline"
             reloadDocument
           >
-            Raw
+            Text
           </Link>
           <Link
-            to="json"
+            to={`/circulars/${circularId}.json`}
             className="usa-button usa-button--outline"
             reloadDocument
           >
