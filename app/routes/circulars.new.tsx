@@ -5,7 +5,8 @@
  *
  * SPDX-License-Identifier: NASA-1.3
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { Form, Link, useLoaderData, useNavigation } from '@remix-run/react'
 import {
   Button,
@@ -32,6 +33,8 @@ import {
 import { group } from './circulars/circulars.server'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
+import { origin } from '~/lib/env.server'
+import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
 import { useUrl } from '~/root'
 
@@ -47,8 +50,14 @@ export async function loader({ request }: DataFunctionArgs) {
     if (user.groups.includes(group)) isAuthorized = true
     formattedAuthor = formatAuthor(user)
   }
-  return { isAuthenticated, isAuthorized, formattedAuthor }
+  return json(
+    { isAuthenticated, isAuthorized, formattedAuthor },
+    { headers: getCanonicalUrlHeaders(new URL(`/circulars/new`, origin)) }
+  )
 }
+
+export const headers: HeadersFunction = ({ loaderHeaders }) =>
+  pickHeaders(loaderHeaders, ['Link'])
 
 function useSubjectPlaceholder() {
   const date = new Date()
