@@ -326,30 +326,10 @@ input.react-tags__combobox-input:focus {
   box-shadow: 1px 1px 2px rgb(204 204 204 / 75%);
 }
 
-.tabs-component.vertical {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-}
-
-.tabs-component.vertical [role='tablist'] {
-  flex-direction: column;
-}
-
-.tabs-component.vertical [role='tabpanel'] {
-  flex: 1;
-}
-
 .tabs-component [role='tablist'] button {
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   margin: 0;
-}
-
-.tabs-component.vertical [role='tablist'] button.active,
-.tabs-component.vertical [role='tablist'] button:focus,
-.tabs-component.vertical [role='tablist'] button:hover {
-  border-color: #e9ecef transparent #e9ecef #b41c1c;
 }
 
 /*
