@@ -114,7 +114,7 @@ export default function () {
             })
           }
           delimiterKeys={[' ', ',', 'Enter', 'Tab']}
-          closeOnSelect={true}
+          collapseOnSelect={true}
           suggestions={suggestions.map((label) => ({ label, value: label }))}
           selected={tags}
           renderTag={renderTag}
