@@ -9,7 +9,7 @@
   "license": "NASA-1.3",
   "scripts": {
     "build:remix": "remix build",
-    "build:sass": "sass -Inode_modules/nasawds/src/theme -Inode_modules/@uswds -Inode_modules/@uswds/uswds/packages app/sass:build/css",
+    "build:sass": "sass -Inode_modules/nasawds/src/theme -Inode_modules/@uswds -Inode_modules/@uswds/uswds/packages app/sass:app/css",
     "build:esbuild": "node esbuild.mjs",
     "build:website": "run-s build:sass build:remix",
     "build": "run-p build:website build:esbuild",
