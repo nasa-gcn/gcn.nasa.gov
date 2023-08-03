@@ -8,7 +8,12 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 import { json, redirect } from '@remix-run/node'
 import { Link, Outlet, useLoaderData, useParams } from '@remix-run/react'
-import { CardBody, CardHeader, Icon } from '@trussworks/react-uswds'
+import {
+  CardBody,
+  CardHeader,
+  GridContainer,
+  Icon,
+} from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
@@ -39,39 +44,43 @@ export default function Schema() {
   const { versions } = useLoaderData()
 
   return (
-    <>
-      <Link to="/docs" className="margin-bottom-1">
-        <div className="position-relative">
-          <Icon.ArrowBack className="position-absolute top-0 left-0" />
+    <GridContainer>
+      <div className="grid-row grid-gap margin-y-2">
+        <Link to="/docs">
+          <div className="position-relative">
+            <Icon.ArrowBack className="position-absolute top-0 left-0" />
+          </div>
+          <span className="padding-left-2">Back</span>
+        </Link>
+      </div>
+      <div className="grid-row grid-gap margin-y-1">
+        <div className="tablet:grid-col-3">
+          <DetailsDropdownButton
+            className="width-full"
+            onClick={() => setShowVersions(!showVersions)}
+            outline
+          >
+            {<>Version: {version}</>}
+          </DetailsDropdownButton>
+          {showVersions && (
+            <DetailsDropdownContent>
+              <CardHeader>
+                <h3>Versions</h3>
+              </CardHeader>
+              <CardBody className="padding-y-0">
+                {versions.map((x: { name: string; ref: string }) => (
+                  <div key={x.name}>
+                    <Link to={`/docs/schema/${x.ref}/${path}`}>{x.name}</Link>
+                  </div>
+                ))}
+              </CardBody>
+            </DetailsDropdownContent>
+          )}
         </div>
-        <span className="padding-left-2">Back</span>
-      </Link>
-      <div className="margin-top-1">
-        <DetailsDropdownButton
-          className="grid-col-3"
-          onClick={() => setShowVersions(!showVersions)}
-          outline
-        >
-          {<>Version: {version}</>}
-        </DetailsDropdownButton>
-        {showVersions && (
-          <DetailsDropdownContent>
-            <CardHeader>
-              <h3>Versions</h3>
-            </CardHeader>
-            <CardBody className="padding-y-0">
-              {versions.map((x: { name: string; ref: string }) => (
-                <div key={x.name}>
-                  <Link to={`/docs/schema/${x.ref}/${path}`}>{x.name}</Link>
-                </div>
-              ))}
-            </CardBody>
-          </DetailsDropdownContent>
-        )}
       </div>
       <div className="grid-row grid-gap">
         <Outlet />
       </div>
-    </>
+    </GridContainer>
   )
 }
