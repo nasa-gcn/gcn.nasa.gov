@@ -3,7 +3,7 @@ import { Link, NavLink, useLoaderData } from '@remix-run/react'
 import { Icon, SideNav, Table } from '@trussworks/react-uswds'
 import { json, redirect, useParams } from 'react-router'
 
-import SchemaDefinition from '../docs.schema.$version._index'
+import SchemaDefinition from '../docs_.schema.$version._index'
 import type { Schema } from './components'
 import {
   ReferencedElementTable,
@@ -52,7 +52,6 @@ export async function loader({
 
 export default function () {
   const { version, '*': path } = useParams()
-  // const [showVersions, setShowVersions] = useState(false)
   const { data, jsonContent, examples } = useLoaderData()
   if (!path) {
     throw new Error('Path is not defined.')
@@ -61,38 +60,40 @@ export default function () {
   return (
     <>
       <div className="desktop:grid-col-3">
-        <SideNav
-          items={[
-            path != previous && (
-              <Link key={previous} to={previous}>
-                Previous
-              </Link>
-            ),
-            !path.endsWith('.schema.json') && (
-              <NavLink key={path} to={path}>
-                {path}
-              </NavLink>
-            ),
-            <SideNavSub
-              key="subnav"
-              items={data.map((x: GitContentDataResponse) => (
-                <NavLink key={x.path} to={x.path}>
-                  <span className="display-flex flex-align-center">
-                    {x.type == 'dir' && (
-                      <span className="margin-top-05 padding-right-05">
-                        <Icon.FolderOpen />
-                      </span>
-                    )}
-                    <span>{x.name}</span>
-                  </span>
+        <div className="position-sticky top-0">
+          <SideNav
+            items={[
+              path != previous && (
+                <Link key={previous} to={previous}>
+                  Previous
+                </Link>
+              ),
+              !path.endsWith('.schema.json') && (
+                <NavLink key={path} to={path}>
+                  {path}
                 </NavLink>
-              ))}
-              base={path}
-            ></SideNavSub>,
-          ]}
-        />
+              ),
+              <SideNavSub
+                key="subnav"
+                items={data.map((x: GitContentDataResponse) => (
+                  <NavLink key={x.path} to={x.path}>
+                    <span className="display-flex flex-align-center">
+                      {x.type == 'dir' && (
+                        <span className="margin-top-05 padding-right-05">
+                          <Icon.FolderOpen />
+                        </span>
+                      )}
+                      <span>{x.name}</span>
+                    </span>
+                  </NavLink>
+                ))}
+                base={path}
+              ></SideNavSub>,
+            ]}
+          />
+        </div>
       </div>
-      <div className="desktop:grid-col-9">
+      <div className="desktop:grid-col-9 desktop:margin-top-neg-6">
         {jsonContent ? (
           <SchemaBody
             path={path ?? ''}
