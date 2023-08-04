@@ -1,0 +1,87 @@
+---
+handle:
+  breadcrumb: New Notice Producers
+---
+
+import {
+  ProcessList,
+  ProcessListHeading,
+  ProcessListItem,
+} from '@trussworks/react-uswds'
+
+# New Notice Producers
+
+The following steps guide new instrument, mission, or observatory producers
+into setting up new notices streams that are distributed to the user community
+via [Kafka](faq#what-is-kafka). This process requires interaction
+with the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn)
+to enable accounts and Kafka topics creation on the GCN Kafka broker. The GCN Team is
+also happy to work with the mission teams to help construct your alerts.
+
+## Start Producing Alerts
+
+<ProcessList>
+   <ProcessListItem>
+     <ProcessListHeading type="h3">
+       Sign in / Sign up 
+     </ProcessListHeading>
+     Decide which of your team members will have programmatic access to produce your alerts. 
+     Make sure that they have all signed in at least once to the [GCN website](https://gcn.nasa.gov/login) 
+     and the [GCN test website](https://test.gcn.nasa.gov/login).
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Name Your Kafka Topics
+      </ProcessListHeading>
+      Names of Kafka topics follow the format <code>gcn.notices.<i>mission</i>.<i>notice_type</i></code>.
+      Pick a prefix for your Kafka topic names, <code><i>mission</i>.\*</code>.
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Contact the GCN Team
+      </ProcessListHeading>
+      Send the [GCN Team](/contact)
+   your list of team members from Step 1 and your chosen Kafka topic prefix from Step 2.
+      The GCN Team will reply after they have configured producer permissions for your team.
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Build Producer Code
+      </ProcessListHeading>
+      - Log out and log back in.
+      - Go through the [Start Streaming GCN Notices](/quickstart) process.
+      - On Step 2, choose the scope <code>gcn.nasa.gov/kafka-<i>mission</i>-producer</code>.
+      - Your producer code will look very similar to the [client example code](client) and
+      Step 4 of [Start Streaming GCN Notices](/quickstart). `client_id` and `client_secret`
+      can be found in Step 4 client example code.
+      - Start from this and adjust the `client_id`, `client_secret`, `topic` and `data` content:
+
+      ```python
+      from gcn_kafka import Producer
+      # Connect as a producer.
+      # Warning: don't share the client secret with others.
+      producer = Producer(client_id='fill me in', client_secret='fill me in')
+      # any topic starting with 'mission.'
+      topic = 'gcn.notices.mission.example'
+      data = b'...'  # any bytes
+      producer.produce(topic, data)
+      ```
+
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Create or Update the Mission Page
+      </ProcessListHeading>
+      Create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls)
+or by sending text to the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
+   </ProcessListItem>
+
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
+         Announce New Notice Types
+      </ProcessListHeading>
+      Work with the
+      [GCN Team](/contact)
+      to draft a community announcement, which the GCN Team will circulate. 
+   </ProcessListItem>
+</ProcessList>

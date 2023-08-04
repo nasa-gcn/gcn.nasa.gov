@@ -1,0 +1,21 @@
+.node {
+  list-style: url("~/../node_modules/nasawds/src/img/usa-icons/chevron_right.svg");
+}
+.node[aria-expanded=true] {
+  list-style: url("~/../node_modules/nasawds/src/img/usa-icons/expand_more.svg");
+}
+.node [data-testid=checkbox] {
+  position: relative;
+  top: -0.25rem;
+  display: inline-block;
+}
+.node label {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.leaf {
+  list-style: none;
+}
+
+/*# sourceMappingURL=nested-checkboxes.module.css.map */
