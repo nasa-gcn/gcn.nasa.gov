@@ -121,7 +121,7 @@ export function SchemaPropertiesTableBody({
 }
 
 function formatLinkString(schemaLinkString: string) {
-  return schemaLinkString.replace('schema', 'docs/schema-browser')
+  return schemaLinkString.replace('schema', 'docs/schema')
 }
 
 export function formatFieldName(name: string, requiredProps?: string[]) {

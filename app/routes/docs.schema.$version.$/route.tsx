@@ -3,7 +3,7 @@ import { Link, NavLink, useLoaderData } from '@remix-run/react'
 import { Icon, SideNav, Table } from '@trussworks/react-uswds'
 import { json, redirect, useParams } from 'react-router'
 
-import SchemaDefinition from '../docs.schema-browser.$version._index'
+import SchemaDefinition from '../docs.schema.$version._index'
 import type { Schema } from './components'
 import {
   ReferencedElementTable,

@@ -5,5 +5,5 @@ import { getLatestRelease } from '~/lib/schema-data'
 
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
   const latestRelease = await getLatestRelease()
-  return redirect(`/docs/schema-browser/${latestRelease.tag_name}/${path}`)
+  return redirect(`/docs/schema/${latestRelease.tag_name}/${path}`)
 }

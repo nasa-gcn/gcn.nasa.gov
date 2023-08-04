@@ -62,9 +62,7 @@ export default function Schema() {
             <CardBody className="padding-y-0">
               {versions.map((x: { name: string; ref: string }) => (
                 <div key={x.name}>
-                  <Link to={`/docs/schema-browser/${x.ref}/${path}`}>
-                    {x.name}
-                  </Link>
+                  <Link to={`/docs/schema/${x.ref}/${path}`}>{x.name}</Link>
                 </div>
               ))}
             </CardBody>

@@ -18,7 +18,7 @@ export const handle = {
 
 export default function () {
   const enableSchemaBrowser = useFeature('SCHEMA')
-  const isSchemaBrowser = useActiveLink({ to: '/docs/schema-browser' })
+  const isSchemaBrowser = useActiveLink({ to: '/docs/schema' })
 
   return (
     <GridContainer className="usa-section">
@@ -103,10 +103,7 @@ export default function () {
                 </>,
                 ...(enableSchemaBrowser
                   ? [
-                      <NavLink
-                        key="schema-browser"
-                        to="schema-browser/latest/gcn"
-                      >
+                      <NavLink key="schema" to="schema/latest/gcn">
                         Schema Browser
                       </NavLink>,
                     ]
