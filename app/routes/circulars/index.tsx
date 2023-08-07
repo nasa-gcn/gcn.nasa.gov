@@ -41,7 +41,6 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   }
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
-  const last = searchParams.get('last') || undefined
   const page = parseInt(searchParams.get('page') || '1')
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
   const results = await search({
@@ -50,7 +49,6 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     limit,
     startDate,
     endDate,
-    last,
   })
 
   return { page, ...results }
@@ -62,14 +60,12 @@ function getPageLink({
   query,
   startDate,
   endDate,
-  last,
 }: {
   page: number
   limit?: number
   query?: string
   startDate?: string
   endDate?: string
-  last?: string
 }) {
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
@@ -77,7 +73,6 @@ function getPageLink({
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
-  if (last) searchParams.set('last', last)
 
   const searchString = searchParams.toString()
   return searchString && `?${searchString}`
@@ -94,7 +89,6 @@ function Pagination({
   query?: string
   startDate?: string
   endDate?: string
-  last?: string
 }) {
   const pages = usePagination({ currentPage: page, totalPages })
 
@@ -192,7 +186,6 @@ export default function () {
   const query = searchParams.get('query') || undefined
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
-  const last = searchParams.get('last') ?? undefined
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -307,7 +300,6 @@ export default function () {
                   totalPages={totalPages}
                   startDate={startDate}
                   endDate={endDate}
-                  last={last}
                 />
               )}
             </div>

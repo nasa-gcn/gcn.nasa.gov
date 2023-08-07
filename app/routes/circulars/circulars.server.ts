@@ -55,20 +55,33 @@ function parseDate(date?: string) {
 /** take input string and return start/end times based on string value */
 function fuzzyTimeRange(fuzzyTime?: string) {
   const now = Date.now()
-  if (fuzzyTime === 'hour') return [now - 3600000, now]
-  if (fuzzyTime === 'today') return [new Date().setHours(0, 0, 0, 0), now]
-  if (fuzzyTime === 'day') return [now - 86400000, now]
-  if (fuzzyTime === 'week') return [now - 86400000 * 7, now]
-  if (fuzzyTime === 'month') return [now - 86400000 * 30, now]
-  if (fuzzyTime === 'year') return [now - 86400000 * 365, now]
+  if (fuzzyTime === 'hour') return now - 3600000
+  if (fuzzyTime === 'today') return new Date().setHours(0, 0, 0, 0)
+  if (fuzzyTime === 'day') return now - 86400000
+  if (fuzzyTime === 'week') return now - 86400000 * 7
+  if (fuzzyTime === 'month') return now - 86400000 * 30
+  if (fuzzyTime === 'year') return now - 86400000 * 365
   if (fuzzyTime === 'mtd')
     return [
       new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime(),
       now,
     ]
   if (fuzzyTime === 'ytd')
-    return [new Date(new Date().getFullYear(), 0).getTime(), now]
-  else return [undefined, undefined] // invalid fuzzyTime defaults to fuzzless time range
+    return new Date(new Date().getFullYear(), 0).getTime()
+  else return undefined // invalid fuzzyTime defaults to fuzzless time range
+}
+
+function checkFuzzyDate(date: string) {
+  // regex for YYYY-MM-DD and another for MM/DD/YYYY
+  const usDateRegex = /(\d{4})-(\d{2})-(\d{2})|(\d{2})\/(\d{2})\/(\d{4})/
+  const normalDateRegex = /(\d{4})-(\d{2})-(\d{2})/
+  const usDateMatch = date.match(usDateRegex)
+  const normalDateMatch = date.match(normalDateRegex)
+  if (usDateMatch || normalDateMatch) {
+    return parseDate(date)
+  } else {
+    return fuzzyTimeRange(date)
+  }
 }
 
 export async function search({
@@ -77,14 +90,12 @@ export async function search({
   limit,
   startDate,
   endDate,
-  last,
 }: {
   query?: string
   page?: number
   limit?: number
   startDate?: string
   endDate?: string
-  last?: string
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
@@ -92,16 +103,16 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  let startTime = undefined
-  let endTime = undefined
-  if (startDate || endDate) {
-    startTime = parseDate(startDate) || undefined
-    endTime = parseDate(endDate) + 86400000 || undefined
-    console.log('parseDate', startTime, endTime)
-  } else if (last) {
-    ;[startTime, endTime] = fuzzyTimeRange(last)
-    console.log('fuzzyTimeRange', startTime, endTime)
-  }
+  const startTime = checkFuzzyDate(startDate || '')
+  const endTime = parseDate(endDate) + 86400000 || undefined
+  // if (startDate || endDate) {
+  //   startTime = parseDate(startDate) || undefined
+  //   endTime = parseDate(endDate) + 86400000 || undefined
+  //   console.log('parseDate', startTime, endTime)
+  // } else if (last) {
+  //   ;[startTime, endTime] = fuzzyTimeRange(last)
+  //   console.log('fuzzyTimeRange', startTime, endTime)
+  // }
 
   const {
     body: {
