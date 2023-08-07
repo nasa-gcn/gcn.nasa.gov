@@ -305,17 +305,7 @@ export default function () {
                       name: 'event-date-start',
                       defaultValue: 'startDate',
                       onChange: (value) => {
-                        if (value) {
-                          setInputDateGte(value)
-                          // const params = new URLSearchParams(location.search)
-                          // params.set('startDate', value)
-                          // console.log(value)
-                          // console.log(params)
-                          // submit(params, {
-                          //   method: 'get',
-                          //   action: '/circulars',
-                          // })
-                        }
+                        setInputDateGte(value)
                       },
                     }}
                     endDateHint="dd/mm/yyyy"
@@ -325,16 +315,7 @@ export default function () {
                       name: 'event-date-end',
                       defaultValue: 'endDate',
                       onChange: (value) => {
-                        if (value) {
-                          setInputDateLte(value)
-                          // console.log(value)
-                          // const params = new URLSearchParams(location.search)
-                          // params.set('endDate', value)
-                          // submit(params, {
-                          //   method: 'get',
-                          //   action: '/circulars',
-                          // })
-                        }
+                        setInputDateLte(value)
                       },
                     }}
                   />
