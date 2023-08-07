@@ -45,6 +45,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   if (query) {
     await circularRedirect(query)
   }
+  // console.log(searchParams.get('event-date-start') || undefined)
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
@@ -56,7 +57,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
     startDate,
     endDate,
   })
-  console.log(results)
+  // console.log(results)
   return { page, ...results }
 }
 
@@ -197,8 +198,8 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const [inputDateGte] = useState(startDate)
-  const [inputDateLte] = useState(endDate)
+  const [inputDateGte, setInputDateGte] = useState(startDate)
+  const [inputDateLte, setInputDateLte] = useState(endDate)
   const [showContent, setShowContent] = useState(false)
   const [showDateRange, setShowDateRange] = useState(false)
   const clean =
@@ -247,19 +248,6 @@ export default function () {
               if (!value) submit(form)
             }}
           />
-          {/* <Button
-            type="button"
-            className="height-4 padding-top-0 padding-bottom-0"
-            onClick={() => {
-              console.log('pressed calendar button')
-            }}
-          >
-            <img
-              className="usa-search__submit-icon"
-              src={calendarImg}
-              alt="Date Filter"
-            />
-          </Button> */}
           <Button type="submit">
             <img
               src={searchImg}
@@ -270,12 +258,12 @@ export default function () {
           <DetailsDropdownButton
             onClick={() => setShowContent(!showContent)}
             outline
-            className="height-4 padding-top-0 padding-bottom-0"
+            className="height-4 padding-top-0 padding-bottom-0 position-relative"
           >
             <Icon.CalendarToday />
           </DetailsDropdownButton>
           {showContent && (
-            <DetailsDropdownContent>
+            <DetailsDropdownContent className=" position-absolute right-10">
               {!showDateRange && (
                 <>
                   <Button
@@ -318,8 +306,11 @@ export default function () {
                       defaultValue: 'startDate',
                       onChange: (value) => {
                         if (value) {
-                          const params = new URLSearchParams(location.search)
-                          params.set('startDate', value)
+                          setInputDateGte(value)
+                          // const params = new URLSearchParams(location.search)
+                          // params.set('startDate', value)
+                          // console.log(value)
+                          // console.log(params)
                           // submit(params, {
                           //   method: 'get',
                           //   action: '/circulars',
@@ -335,8 +326,10 @@ export default function () {
                       defaultValue: 'endDate',
                       onChange: (value) => {
                         if (value) {
-                          const params = new URLSearchParams(location.search)
-                          params.set('endDate', value)
+                          setInputDateLte(value)
+                          // console.log(value)
+                          // const params = new URLSearchParams(location.search)
+                          // params.set('endDate', value)
                           // submit(params, {
                           //   method: 'get',
                           //   action: '/circulars',
@@ -350,7 +343,11 @@ export default function () {
                     className="usa-button width-auto height-5"
                     form="searchForm"
                     onClick={() => {
+                      setShowContent(!showContent)
+                      setShowDateRange(!showDateRange)
                       const params = new URLSearchParams(location.search)
+                      if (inputDateGte) params.set('startDate', inputDateGte)
+                      if (inputDateLte) params.set('endDate', inputDateLte)
                       submit(params, {
                         method: 'get',
                         action: '/circulars',
