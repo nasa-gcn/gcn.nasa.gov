@@ -55,6 +55,7 @@ function parseDate(date?: string) {
 /** take input string and return start/end times based on string value */
 function fuzzyTimeRange(fuzzyTime?: string) {
   const now = Date.now()
+  if (fuzzyTime === 'now') return now
   if (fuzzyTime === 'hour') return now - 3600000
   if (fuzzyTime === 'today') return new Date().setHours(0, 0, 0, 0)
   if (fuzzyTime === 'day') return now - 86400000
@@ -62,25 +63,26 @@ function fuzzyTimeRange(fuzzyTime?: string) {
   if (fuzzyTime === 'month') return now - 86400000 * 30
   if (fuzzyTime === 'year') return now - 86400000 * 365
   if (fuzzyTime === 'mtd')
-    return [
-      new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime(),
-      now,
-    ]
+    return new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1
+    ).getTime()
   if (fuzzyTime === 'ytd')
     return new Date(new Date().getFullYear(), 0).getTime()
   else return undefined // invalid fuzzyTime defaults to fuzzless time range
 }
 
-function checkFuzzyDate(date: string) {
+function checkFuzzyDate(startDate?: string, endDate?: string) {
   // regex for YYYY-MM-DD and another for MM/DD/YYYY
   const usDateRegex = /(\d{4})-(\d{2})-(\d{2})|(\d{2})\/(\d{2})\/(\d{4})/
   const normalDateRegex = /(\d{4})-(\d{2})-(\d{2})/
-  const usDateMatch = date.match(usDateRegex)
-  const normalDateMatch = date.match(normalDateRegex)
+  const usDateMatch = startDate?.match(usDateRegex)
+  const normalDateMatch = startDate?.match(normalDateRegex)
   if (usDateMatch || normalDateMatch) {
-    return parseDate(date)
+    return [parseDate(startDate), parseDate(endDate) + 86400000]
   } else {
-    return fuzzyTimeRange(date)
+    return [fuzzyTimeRange(startDate), fuzzyTimeRange(endDate)]
   }
 }
 
@@ -103,16 +105,7 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  const startTime = checkFuzzyDate(startDate || '')
-  const endTime = parseDate(endDate) + 86400000 || undefined
-  // if (startDate || endDate) {
-  //   startTime = parseDate(startDate) || undefined
-  //   endTime = parseDate(endDate) + 86400000 || undefined
-  //   console.log('parseDate', startTime, endTime)
-  // } else if (last) {
-  //   ;[startTime, endTime] = fuzzyTimeRange(last)
-  //   console.log('fuzzyTimeRange', startTime, endTime)
-  // }
+  const [startTime, endTime] = checkFuzzyDate(startDate, endDate)
 
   const {
     body: {
