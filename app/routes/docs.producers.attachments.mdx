@@ -1,0 +1,51 @@
+---
+handle:
+  breadcrumb: Advanced Documentation
+---
+
+import { Highlight } from '~/components/Highlight'
+
+# Attachments
+
+## Parsing HEALPix maps
+
+TODO: Leo/Israel?:Instructions on how to create multiresolution healpix maps.
+
+## File Encoding and Decoding
+
+The following code sample shows how to encode/decode a file in python. The `base64` package includes the methods `b64decode` and `b64encode` to make this task simple.
+
+```python
+import base64
+
+# Parse the content of your file to a base64 encoded string:
+with open("path/to/your/file", 'rb') as file:
+    encoded_string = base64.b64encode(file.read())
+
+print(encoded_string)
+# b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
+
+# Decode and write the content to a local file:
+with open("path/to/destination/file", 'wb') as file:
+    file.write(base64.b64decode(encoded_string))
+
+```
+
+For example, if we wanted to include a FITS file in a notice, you would need to add a property to your schema definition and define the value to be the following:
+
+<Highlight
+  language="json"
+  code={JSON.stringify(
+    {
+      type: 'string',
+      contentEncoding: 'base64',
+      contentMediaType: 'image/fits',
+    },
+    null,
+    2
+  )}
+/>
+
+Then in your data production pipeline, you can use the encoding steps to convert your file to a bytestring, and set the value of the property to said bytestring. See [non json data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html) for more information
+
+The following is a rough example of what that would look like in your producer code. We will assume for this example that the schema is defined such that the encoded data property is named `fits_data`:

@@ -170,6 +170,9 @@ export default function () {
                     <NavLink key="schema" to="notices/schema">
                       Unified Schema
                     </NavLink>,
+                    <NavLink key="attachments" to="producers/attachments">
+                      Attachments
+                    </NavLink>,
                     <NavLink key="archive" to="notices/archive">
                       Archive
                     </NavLink>,
