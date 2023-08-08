@@ -46,6 +46,12 @@ also happy to work with the mission teams to help construct your alerts.
    </ProcessListItem>
    <ProcessListItem>
       <ProcessListHeading type="h3">
+         Draft Your Schema
+      </ProcessListHeading>
+      As a GCN Notice producer, you can create your own instrument-specific schema. Please contribute your schema to our [GitHub repository](https://github.com/nasa-gcn/gcn-schema), placing it in a folder under <code>gcn/notices/<i>mission</i></code> and submit a pull request for the GCN Team to review. For details, please refer to the [schema documentation](/docs/producers/schema).
+   </ProcessListItem>
+   <ProcessListItem>
+      <ProcessListHeading type="h3">
          Build Producer Code
       </ProcessListHeading>
       - Log out and log back in.
@@ -62,8 +68,12 @@ also happy to work with the mission teams to help construct your alerts.
       # Warning: don't share the client secret with others.
       producer = Producer(client_id='fill me in', client_secret='fill me in')
       # any topic starting with 'mission.'
-      topic = 'gcn.notices.mission.example'
-      data = b'...'  # any bytes
+      topic = 'gcn.notices.mission'
+      # JSON data converted to byte string format
+      data = json.dumps({
+          '$schema': 'https://gcn.nasa.gov/schema/main/gcn/notices/mission/SchemaName.schema.json',
+          'key': 'value'
+      }).encode()
       producer.produce(topic, data)
       ```
 
