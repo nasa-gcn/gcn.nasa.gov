@@ -81,6 +81,25 @@ export default function () {
                     ]}
                   />
                 </>,
+                useFeature('SCHEMA') ? (
+                  <>
+                    <NavLink key="producers" to="producers">
+                      New Notice Producers
+                    </NavLink>
+                    <SideNavSub
+                      base="producers"
+                      items={[
+                        <NavLink key="practices" to="producers/practices">
+                          Schema Practices
+                        </NavLink>,
+                      ]}
+                    />
+                  </>
+                ) : (
+                  <NavLink key="producers" to="producers">
+                    New Notice Producers
+                  </NavLink>
+                ),
                 <>
                   <NavLink key="faq" to="faq">
                     Frequently Asked Questions

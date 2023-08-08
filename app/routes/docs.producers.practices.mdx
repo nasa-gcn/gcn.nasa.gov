@@ -1,0 +1,30 @@
+---
+handle:
+  breadcrumb: Schema Practices
+---
+
+import { Highlight } from '~/components/Highlight'
+
+# Schema Practices
+
+### Which unit system is recommended for the schema?
+
+To ensure a consistent database for same property, but different instrument, it is preferable to utilize SI units or maintain the same unit system. Easy conversion can be made using the astropy software.
+
+### Which option, "allOf", "anyOf", or "oneOf" should be used?
+
+We recommend utilizing the "allOf" option, as none of the properties in the core schema are required. However, this flexibility, with no required property, can lead to false positives when "anyOf" is used, as anything will technically validate against it.
+
+### How can I reference coincident detection using a different instrument?
+
+We've designed a [follow-up core schema](https://github.com/nasa-gcn/gcn-schema/blob/main/gcn/notices/core/FollowUp.schema.json) for referencing instrument properties. This schema can be utilized by other instruments engaged in follow-up studies.
+
+### How is the schema version maintained?
+
+The GCN Team manages schema versioning. To stay updated on new releases, it's best to follow the [GCN-Schema](https://github.com/nasa-gcn/gcn-schema) repository for notifications. Updates come in three levels: major, minor, and patch, depending on the complexity of the changes. For instance, core schema changes are major updates, new missions are minor, and specific typing changes might be labeled as patches.
+
+### Enforcing strict typing using unevaluatedProperties
+
+By default, JSON Schema is flexible and will allow validation of JSON objects with undefined properties.
+In some cases this is fine, however this also means that you may potentially get a false positive when
+running the validation steps. In order to avoid this, we encourage you to include the `unevaluatedProperties` key in your schema definition and set its value to false. This key exists on the root level of the schema definition. Additionally, you will need to add `'$schema':true` to your schema's properties. The `Alert.schema.json` code for Swift/BAT-GUANO alerts in step 5 of the [schema documentation](/docs/producers/schema) shows an example of how this is implemented.
