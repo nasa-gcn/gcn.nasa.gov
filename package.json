@@ -148,6 +148,12 @@
       "prettier"
     ],
     "rules": {
+      "no-restricted-globals": [
+        "error",
+        "event",
+        "name",
+        "origin"
+      ],
       "prefer-const": "error"
     },
     "overrides": [
