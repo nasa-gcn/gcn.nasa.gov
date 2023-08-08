@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: Archive
+  breadcrumb: Notices Archive
 ---
 
 # Notices Archive

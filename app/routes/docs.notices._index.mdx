@@ -1,3 +1,24 @@
+---
+handle:
+  breadcrumb: Notices Documentation
+---
+
+import { Link } from '@remix-run/react'
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardGroup,
+  CardHeader,
+  CardMedia,
+  GridContainer,
+  Icon,
+} from '@trussworks/react-uswds'
+
+import gcn_classic_over_kafka from './_index/gcn-classic-over-kafka.svg'
+import gcn_classic from './_index/gcn-classic.svg'
+import gcn_kafka from './_index/gcn-kafka.svg'
+
 # GCN Notices
 
 Notices are real-time, machine-readable alerts that are submitted by participating facilities and redistributed publicly.
@@ -12,6 +33,82 @@ GCN Classic and the new GCN offer multiple file formats and protocols for receiv
 | VOEvent                       | VOEvent XML                              | GCN Classic | Manual or Anonymous | Active but recommend Kafka instead     |
 | Email (capella2)              | Text                                     | GCN Classic | Manual              | Active but recommend email via new GCN |
 | SMS                           | Short Text                               | GCN Classic | Manual              | Active (future new GCN enhancement)    |
+
+<br />
+<CardGroup>
+  <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
+    <CardHeader className="bg-base-lighter">
+      <p className="margin-0 text-base-dark">For legacy applications</p>
+      <h4 className="usa-card__heading">GCN Classic</h4>
+    </CardHeader>
+    <CardMedia imageClass="bg-white padding-2">
+      <img
+        src={gcn_classic}
+        width="347.84"
+        height="282.47"
+        loading="lazy"
+        alt="Data flow diagram for GCN Classic"
+      />
+    </CardMedia>
+    <CardBody>
+      <p>Three formats, three protocols.</p>
+    </CardBody>
+    <CardFooter>
+      <a
+        className="usa-button usa-button--base"
+        href="https://gcn.gsfc.nasa.gov/invitation.html"
+      >
+        <>Get Started (Old Web Site)</>
+      </a>
+    </CardFooter>
+  </Card>
+  <Card
+    className="card-accent-cool"
+    gridLayout={{ tablet: { col: 4 } }}
+    headerFirst
+  >
+    <CardHeader>
+      <p className="margin-0">Recommended</p>
+      <h4 className="usa-card__heading">GCN Classic over Kafka</h4>
+    </CardHeader>
+    <CardMedia imageClass="bg-white padding-2">
+      <img
+        src={gcn_classic_over_kafka}
+        width="347.84"
+        height="282.47"
+        loading="lazy"
+        className="height-auto"
+        alt="Data flow diagram for GCN Classic over Kafka"
+      />
+    </CardMedia>
+    <CardBody>
+      <p>Three formats, one protocol.</p>
+    </CardBody>
+    <CardFooter>
+      <Link className="usa-button" to="/quickstart">
+        <>Get Started</>
+      </Link>
+    </CardFooter>
+  </Card>
+  <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
+    <CardHeader className="bg-base-lighter">
+      <p className="margin-0 text-base-dark">Coming soon</p>
+      <h4 className="usa-card__heading">GCN Kafka</h4>
+    </CardHeader>
+    <CardMedia imageClass="bg-white padding-2">
+      <img
+        src={gcn_kafka}
+        width="347.84"
+        height="282.47"
+        loading="lazy"
+        alt="Data flow diagram for GCN Kafka"
+      />
+    </CardMedia>
+    <CardBody>
+      <p>One format, one protocol.</p>
+    </CardBody>
+  </Card>
+</CardGroup>
 
 ## Distribution Protocols
 
@@ -35,16 +132,16 @@ Notices have fixed pre-defined schema.
 
 #### GCN Classic Schema
 
-GCN Classic binary and text schema are bespoke for each notice type with some commonality across missions. VOEvent schema are defined from the [IVOA standard](https://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent).
+GCN Classic binary and text schema are bespoke for each notice type with some commonality across missions. Detailed descriptions for each notice type are available in the [mission descriptions](https://gcn.gsfc.nasa.gov/archives.html). VOEvent schema are defined from the [IVOA standard](https://wiki.ivoa.net/twiki/bin/view/IVOA/IvoaVOEvent).
 
 #### Unified Schema
 
 The GCN team has created new JSON format custom schema designed specifically for the types of transients reported by current and upcoming GCN producer missions. The core schema are designed to be building blocks containing most of the common fields used by the majority of instruments. Additional parameters can be added, but we encourage only including fields useful for informing consumers about the properties of the event useful for alerting and follow-up observations. They should not include fields that can easily be calculated using common software packages (e.g. coordinate transformations, distance from Sun or Moon).
 
-More details on schema are available on the individual [Mission](/missions) pages and in the Schema Browser.
+More details on schema are available on the individual [Mission](/missions) pages and in the [Schema Browser](schema/latest/gcn).
 
 ## For more details on how to use GCN Notices, see:
 
-- [Subscribing](notices/subscribing) to receive GCN Notices by Kafka or Email
-- [Producers](producers) for setting up new notice types
-- [Archive](circulars/archive) for how to search for and browse GCN Notices
+- [Consuming](notices/consuming) to receive GCN Notices by Kafka or Email
+- [Producers](notices/producers) for setting up new notice types
+- [Archive](notices/archive) for how to search for and browse GCN Notices
