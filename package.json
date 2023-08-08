@@ -148,6 +148,9 @@
       "prettier"
     ],
     "rules": {
+      "no-implicit-coercion": [
+        "error"
+      ],
       "prefer-const": "error"
     },
     "overrides": [

@@ -91,9 +91,9 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export default function () {
   const { notification, intent, format } = useLoaderData<typeof loader>()
-  const defaultNameValid = !!notification.name
+  const defaultNameValid = Boolean(notification.name)
   const [nameValid, setNameValid] = useState(defaultNameValid)
-  const defaultRecipientValid = !!notification.recipient
+  const defaultRecipientValid = Boolean(notification.recipient)
   const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
   return (
@@ -116,7 +116,7 @@ export default function () {
         autoCorrect="off"
         defaultValue={notification.name}
         required={true}
-        onChange={(e) => setNameValid(!!e.target.value)}
+        onChange={(e) => setNameValid(Boolean(e.target.value))}
       />
       <Label htmlFor="recipient">
         Recipient
@@ -133,7 +133,7 @@ export default function () {
         required={true}
         placeholder="email"
         defaultValue={notification.recipient}
-        onChange={(e) => setrecipientValid(!!e.target.value)}
+        onChange={(e) => setrecipientValid(Boolean(e.target.value))}
       />
       <Label htmlFor="format">Format</Label>
       <NoticeFormatInput name="noticeFormat" value={format} showJson={false} />
