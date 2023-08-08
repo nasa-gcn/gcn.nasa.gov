@@ -17,5 +17,5 @@ export function useActiveLink({
   relative,
 }: Pick<NavLinkProps, 'to' | 'caseSensitive' | 'end' | 'relative'>) {
   const path = useResolvedPath(to, { relative }).pathname
-  return !!useMatch({ path, caseSensitive, end })
+  return Boolean(useMatch({ path, caseSensitive, end }))
 }

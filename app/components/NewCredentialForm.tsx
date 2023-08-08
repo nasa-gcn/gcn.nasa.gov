@@ -97,7 +97,7 @@ export function NewCredentialForm() {
         id="name"
         type="text"
         placeholder="Name"
-        onChange={(e) => setNameValid(!!e.target.value)}
+        onChange={(e) => setNameValid(Boolean(e.target.value))}
       />
       <Label htmlFor="scope">Scope</Label>
       <Fieldset id="scope">
@@ -115,7 +115,7 @@ export function NewCredentialForm() {
       </Fieldset>
       <ReCAPTCHA
         onChange={(value) => {
-          setRecaptchaValid(!!value)
+          setRecaptchaValid(Boolean(value))
         }}
       />
       <FormGroup>
