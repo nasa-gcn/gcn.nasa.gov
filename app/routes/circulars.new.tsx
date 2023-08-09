@@ -7,7 +7,13 @@
  */
 import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { Form, Link, useLoaderData, useNavigation } from '@remix-run/react'
+import {
+  Form,
+  Link,
+  useLoaderData,
+  useNavigation,
+  useSearchParams,
+} from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
@@ -78,12 +84,24 @@ function useBodyPlaceholder() {
 export default function () {
   const { isAuthenticated, isAuthorized, formattedAuthor } =
     useLoaderData<typeof loader>()
-  const [subjectValid, setSubjectValid] = useState<boolean | undefined>()
-  const [bodyValid, setBodyValid] = useState<boolean | undefined>()
+
+  // Get default subject from search params, then strip out
+  let [searchParams] = useSearchParams()
+  const defaultSubject = searchParams.get('subject') || ''
+  const defaultBody = searchParams.get('body') || ''
+  searchParams = new URLSearchParams(searchParams)
+  searchParams.delete('subject')
+  searchParams.delete('body')
+  let searchString = searchParams.toString()
+  if (searchString) searchString = `?${searchString}`
+
+  const [subjectValid, setSubjectValid] = useState(
+    subjectIsValid(defaultSubject)
+  )
+  const [bodyValid, setBodyValid] = useState(bodyIsValid(defaultBody))
   const [showKeywords, setShowKeywords] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
-  const searchString = useSearchString()
 
   function toggleShowKeywords() {
     setShowKeywords(!showKeywords)
@@ -119,6 +137,7 @@ export default function () {
             id="subject"
             type="text"
             placeholder={useSubjectPlaceholder()}
+            defaultValue={defaultSubject}
             required={true}
             onChange={({ target: { value } }) => {
               setSubjectValid(subjectIsValid(value))
@@ -153,6 +172,7 @@ export default function () {
           id="body"
           aria-describedby="bodyDescription"
           placeholder={useBodyPlaceholder()}
+          defaultValue={defaultBody}
           required={true}
           className={classnames('maxw-full', {
             'usa-input--success': bodyValid,
