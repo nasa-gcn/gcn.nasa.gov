@@ -3,7 +3,7 @@
  * of the National Aeronautics and Space Administration. No copyright is claimed
  * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 import { SESv2Client, SendEmailCommand } from '@aws-sdk/client-sesv2'
 import {
