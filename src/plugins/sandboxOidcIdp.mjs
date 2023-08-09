@@ -3,7 +3,7 @@
  * of the National Aeronautics and Space Administration. No copyright is claimed
  * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 import { generate } from 'generate-password'
 
@@ -14,7 +14,7 @@ let server
 export const set = {
   env({ inventory }) {
     const orig_env = inventory.inv._project.env.local?.[process.env.ARC_ENV]
-    let env = {}
+    const env = {}
     if (process.env.ARC_ENV === 'testing' && !orig_env?.COGNITO_USER_POOL_ID) {
       if (!orig_env?.OIDC_CLIENT_ID) {
         env.OIDC_CLIENT_ID = generate({ length: 26 })
