@@ -1,0 +1,56 @@
+---
+handle:
+  breadcrumb: Notices Consuming
+---
+
+import {
+  Alert,
+  ProcessList,
+  ProcessListHeading,
+  ProcessListItem,
+} from '@trussworks/react-uswds'
+
+# Consuming Notices
+
+Notices can be received via the Kafka data streaming protocol and email.
+
+## Kafka Streaming of Notices
+
+Subscriptions to notices via Kafka provides pipelines and robotic telescopes a realtime stream of alerts to trigger analysis or follow-up observations.
+
+See our [Start Streaming GCN Notices quick start guide](/quickstart) for a step-by-step walkthrough to begin streaming alerts now.
+
+See our [Kafka client setup](/client) for more details about configuring your client to receive Notices, and the lightweight wrappers in [Python](https://github.com/nasa-gcn/gcn-kafka-python), [Node.js](https://github.com/nasa-gcn/gcn-kafka-js), C, and C#.
+
+## Receving Notices via Email
+
+Follow these simple steps to receive GCN Notices via email in any of the 3 legacy formats (text,
+binary, VOEvent), and edit your settings at will.
+
+<ProcessList>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      [Sign in / Sign up](/login)
+    </ProcessListHeading>
+    Sign up for GCN or sign in to your existing account by tapping the [Sign in / Sign up](/login) button in the navigation bar.
+
+    <Alert headingLevel="h4" heading="Migrating from GCN Classic">
+      Note that signing up for receiving emails via the new GCN does not edit users’ prior subscriptions to Notices via GCN Classic. When you would like to unsubscribe from GCN Classic, please [contact the GCN Team](/contact).
+    </Alert>
+
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Go to [Email Notifications](/user/email) Settings
+    </ProcessListHeading>
+    Once you are signed in, open the user menu in the navigation bar and go to [Email Notifications](/user/email).
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">Create a New Notice Subscription</ProcessListHeading>
+    Tap the "Add" button to open the New Notice form.  Enter a descriptive name for this configuration.  The recipient email will default to the address you are signed in with, but you may change it. Select the format and notice types you wish to subscribe to and click save to create the subscription.
+      </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">Self-Manage Your Subscription</ProcessListHeading>
+    Your list of Notice Subscriptions is visible in the [emails](/user/email) page. You can edit/delete your exisiting subscriptions at any time. The Test Message button will send a small email to the recipient address associated with the subscription so that you can verify delivery of future notices.
+  </ProcessListItem>
+</ProcessList>

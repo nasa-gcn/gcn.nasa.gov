@@ -150,6 +150,12 @@
     "rules": {
       "no-implicit-coercion": [
         "error"
+      ]
+      "no-restricted-globals": [
+        "error",
+        "event",
+        "name",
+        "origin"
       ],
       "prefer-const": "error"
     },

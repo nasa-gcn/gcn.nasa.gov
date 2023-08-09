@@ -134,9 +134,28 @@ export default function () {
                     ]}
                   />
                 </>,
-                <NavLink key="producers" to="producers">
-                  New Notice Producers
-                </NavLink>,
+                <>
+                  <NavLink key="notices" to="notices">
+                    Notices
+                  </NavLink>
+                  <SideNavSub
+                    base="notices"
+                    items={[
+                      <NavLink key="about" to="notices" end>
+                        About
+                      </NavLink>,
+                      <NavLink key="consuming" to="notices/consuming">
+                        Consuming
+                      </NavLink>,
+                      <NavLink key="producing" to="notices/producers">
+                        Producing
+                      </NavLink>,
+                      <NavLink key="archive" to="notices/archive">
+                        Archive
+                      </NavLink>,
+                    ]}
+                  />
+                </>,
                 <NavLink key="roadmap" to="roadmap">
                   Road Map
                 </NavLink>,
