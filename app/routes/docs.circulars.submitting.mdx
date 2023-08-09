@@ -7,6 +7,7 @@ import { Link } from '@remix-run/react'
 import { Alert, Button, Icon } from '@trussworks/react-uswds'
 
 import { CircularsEmailAddress } from '~/components/CircularsEmailAddress'
+import { useOrigin } from '~/root'
 
 # Submitting Circulars
 
@@ -54,6 +55,19 @@ There are two ways to post a GCN Circular: via web form or via email.
 ### Post a GCN Circular by Web Form
 
 To post a GCN Circular via the web form, simply go to the [GCN Circulars archive](/circulars), click the <Link to="/circulars/new"><Button type="button" className="usa-button height-4 padding-y-0 padding-x-1 margin-x-05"><Icon.Edit /> New</Button></Link> button, and complete the form.
+
+<Alert
+  type="info"
+  heading="Pre-fill GCN Circulars web form with a hyperlink"
+  headingLevel="h4"
+>
+  **Tip:** You can pre-fill default values for the subject and body by passing
+  them to the web form in the [URL query
+  string](https://en.wikipedia.org/wiki/Query_string):
+  <pre>
+    <code>{useOrigin()}/circulars/new?subject=...&body=...</code>
+  </pre>
+</Alert>
 
 ### Post a GCN Circular by Email
 
