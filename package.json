@@ -150,7 +150,7 @@
     "rules": {
       "no-implicit-coercion": [
         "error"
-      ]
+      ],
       "no-restricted-globals": [
         "error",
         "event",
