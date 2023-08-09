@@ -98,8 +98,8 @@ export async function action({ request }: DataFunctionArgs) {
 export default function () {
   const defaultName = useName()
   const defaultEmail = useEmail()
-  const [nameValid, setNameValid] = useState(!!defaultName)
-  const [emailValid, setEmailValid] = useState(!!defaultEmail)
+  const [nameValid, setNameValid] = useState(Boolean(defaultName))
+  const [emailValid, setEmailValid] = useState(Boolean(defaultEmail))
   const [subjectValid, setSubjectValid] = useState(false)
   const [bodyValid, setBodyValid] = useState(false)
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
@@ -141,7 +141,7 @@ export default function () {
             required
             defaultValue={defaultName}
             onChange={({ target: { value } }) => {
-              setNameValid(!!value)
+              setNameValid(Boolean(value))
             }}
           />
           <Label htmlFor="email">What is your email address?</Label>
@@ -163,7 +163,7 @@ export default function () {
             required
             placeholder="Subject"
             onChange={({ target: { value } }) => {
-              setSubjectValid(!!value)
+              setSubjectValid(Boolean(value))
             }}
           />
           <Label htmlFor="email">What is your question?</Label>
@@ -173,12 +173,12 @@ export default function () {
             required
             placeholder="Body"
             onChange={({ target: { value } }) => {
-              setBodyValid(!!value)
+              setBodyValid(Boolean(value))
             }}
           />
           <ReCAPTCHA
             onChange={(value) => {
-              setRecaptchaValid(!!value)
+              setRecaptchaValid(Boolean(value))
             }}
           />
           <ButtonGroup>

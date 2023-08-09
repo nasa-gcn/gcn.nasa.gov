@@ -227,7 +227,7 @@ export class ClientCredentialVendingMachine {
 
     return [...this.groups]
       .sort()
-      .sort((a, b) => +(b === defaultGroup) - +(a === defaultGroup))
+      .sort((a, b) => Number(b === defaultGroup) - Number(a === defaultGroup))
       .map((key) => [key, groupsMap[key]])
   }
 }
