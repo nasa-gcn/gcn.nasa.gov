@@ -209,6 +209,18 @@ export default function () {
 
   const submit = useSubmit()
 
+  const setDateRange = () => {
+    setShowContent(!showContent)
+    if (showDateRange) setShowDateRange(!showDateRange)
+    const params = new URLSearchParams(location.search)
+    if (inputDateGte) params.set('startDate', inputDateGte)
+    if (inputDateLte) params.set('endDate', inputDateLte)
+    submit(params, {
+      method: 'get',
+      action: '/circulars',
+    })
+  }
+
   // const location = useLocation()
 
   return (
@@ -269,14 +281,68 @@ export default function () {
                   <Button
                     type="button"
                     className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('hour')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
                   >
-                    button1
+                    Last Hour
                   </Button>
                   <Button
                     type="button"
                     className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('today')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
                   >
-                    button2
+                    Today
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('day')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Last 24 Hours
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('month')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Last Month
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('year')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Last Year
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('ytd')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Year to Date
                   </Button>
                   <Button
                     type="button"
@@ -324,15 +390,7 @@ export default function () {
                     className="usa-button width-auto height-5"
                     form="searchForm"
                     onClick={() => {
-                      setShowContent(!showContent)
-                      setShowDateRange(!showDateRange)
-                      const params = new URLSearchParams(location.search)
-                      if (inputDateGte) params.set('startDate', inputDateGte)
-                      if (inputDateLte) params.set('endDate', inputDateLte)
-                      submit(params, {
-                        method: 'get',
-                        action: '/circulars',
-                      })
+                      setDateRange()
                     }}
                   >
                     <Icon.CalendarToday /> Submit
