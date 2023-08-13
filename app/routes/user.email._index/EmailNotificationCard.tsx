@@ -12,8 +12,8 @@ import {
 } from '@trussworks/react-uswds'
 import { useEffect, useRef } from 'react'
 
-import TimeAgo from './TimeAgo'
-import type { EmailNotificationVM } from '~/routes/user.email/email_notices.server'
+import type { EmailNotificationVM } from '../user.email/email_notices.server'
+import TimeAgo from '~/components/TimeAgo'
 
 export default function EmailNotificationCard({
   uuid,
