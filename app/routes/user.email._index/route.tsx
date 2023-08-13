@@ -13,13 +13,13 @@ import {
   createCircularEmailNotification,
   deleteCircularEmailNotification,
   getUsersCircularSubmissionStatus,
-} from './user.email/email_circulars.server'
+} from '../user.email/email_circulars.server'
 import {
   deleteEmailNotification,
   getEmailNotifications,
   sendTestEmail,
-} from './user.email/email_notices.server'
-import EmailNotificationCard from '~/components/EmailNotificationCard'
+} from '../user.email/email_notices.server'
+import EmailNotificationCard from './EmailNotificationCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
