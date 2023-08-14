@@ -27,7 +27,7 @@
   "dependencies": {
     "@architect/functions": "^5.3.4",
     "@balavishnuvj/remix-seo": "^1.0.2",
-    "@nasa-gcn/architect-functions-search": "^0.2.2",
+    "@nasa-gcn/architect-functions-search": "^1.0.0",
     "@nasa-gcn/dynamodb-autoincrement": "^0.0.6",
     "@octokit/request-error": "^5.0.0",
     "@octokit/rest": "^20.0.1",
