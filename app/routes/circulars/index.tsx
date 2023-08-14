@@ -210,7 +210,6 @@ export default function () {
         <Link to="/docs/circulars">documentation</Link> for help with
         subscribing to or submitting Circulars.
       </p>
-      <h2> number of results: {totalItems}</h2>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <Form
           className="display-inline-block usa-search usa-search--small"
