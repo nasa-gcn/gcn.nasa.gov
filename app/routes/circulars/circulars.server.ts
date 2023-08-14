@@ -73,7 +73,7 @@ function fuzzyTimeRange(fuzzyTime?: string) {
   else return undefined // invalid fuzzyTime defaults to fuzzless time range
 }
 
-function checkFuzzyDate(startDate?: string, endDate?: string) {
+function getValidDates(startDate?: string, endDate?: string) {
   // regex for YYYY-MM-DD and another for MM/DD/YYYY
   const usDateRegex = /(\d{4})-(\d{2})-(\d{2})|(\d{2})\/(\d{2})\/(\d{4})/
   const normalDateRegex = /(\d{4})-(\d{2})-(\d{2})/
@@ -105,7 +105,7 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  const [startTime, endTime] = checkFuzzyDate(startDate, endDate)
+  const [startTime, endTime] = getValidDates(startDate, endDate)
 
   const {
     body: {
