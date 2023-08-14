@@ -110,7 +110,7 @@ This is a test for Spam/Virus
 --_000_PH0PR09MB78840D967BF3AA3F19E64A96A1DE9PH0PR09MB7884namp_
 `
 
-module.exports = {
+export default {
   events: {
     'email-incoming': {
       main: {
