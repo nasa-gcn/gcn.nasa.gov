@@ -103,9 +103,9 @@ export default function () {
       <input type="hidden" name="intent" value={intent} />
       <Label htmlFor="name">
         Name
-        <abbr title="required" className="usa-label--required">
+        <span title="required" className="usa-label--required">
           *
-        </abbr>
+        </span>
       </Label>
       <TextInput
         id="name"
@@ -120,9 +120,9 @@ export default function () {
       />
       <Label htmlFor="recipient">
         Recipient
-        <abbr title="required" className="usa-label--required">
+        <span title="required" className="usa-label--required">
           *
-        </abbr>
+        </span>
       </Label>
       <TextInput
         id="recipient"
