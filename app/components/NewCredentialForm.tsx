@@ -92,7 +92,7 @@ export function NewCredentialForm() {
       </p>
       <Label htmlFor="name">Name</Label>
       <TextInput
-        data-focus
+        autoFocus
         name="name"
         id="name"
         type="text"
