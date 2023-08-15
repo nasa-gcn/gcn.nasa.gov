@@ -131,6 +131,7 @@ export default function () {
         >
           <InputPrefix>Subject</InputPrefix>
           <TextInput
+            autoFocus
             aria-describedby="subjectDescription"
             className="maxw-full"
             name="subject"

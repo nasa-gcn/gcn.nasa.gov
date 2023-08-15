@@ -108,6 +108,7 @@ export default function () {
         </abbr>
       </Label>
       <TextInput
+        autoFocus
         id="name"
         name="name"
         type="text"
