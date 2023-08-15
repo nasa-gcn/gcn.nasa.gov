@@ -98,6 +98,7 @@ export default function () {
           A. E. Einstein, A. Einstein, Albert Einstein
         </Hint>
         <TextInput
+          autoFocus
           aria-describedby="nameHint"
           id="name"
           name="name"

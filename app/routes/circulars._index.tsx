@@ -220,6 +220,7 @@ export default function () {
             Search
           </Label>
           <TextInput
+            autoFocus
             id="query"
             name="query"
             type="search"
