@@ -7,6 +7,8 @@
  */
 import { useState } from 'react'
 
+import styles from './tabs.module.css'
+
 export interface TabProps {
   label: React.ReactNode
   children: React.ReactNode
@@ -24,7 +26,7 @@ export function Tabs({
   const [selectedTab, setSelectedTab] = useState(0)
 
   return (
-    <div className="tabs-component">
+    <div className={styles.tabs}>
       <div role="tablist">
         {children.map((tab, index) => (
           <button

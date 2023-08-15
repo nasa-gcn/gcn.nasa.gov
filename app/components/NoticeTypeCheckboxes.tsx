@@ -7,8 +7,8 @@
  */
 import { useState } from 'react'
 
-import { NestedCheckboxes } from './NestedCheckboxes'
 import type { NoticeFormat } from './NoticeFormat'
+import { NestedCheckboxes } from './nested-checkboxes/NestedCheckboxes'
 import { triggerRate } from '~/lib/prometheus'
 
 function humanizedCount(count: number, singular: string, plural?: string) {
