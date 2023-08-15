@@ -18,6 +18,7 @@
  *
  *
  */
+import { cssBundleHref } from '@remix-run/css-bundle'
 import type {
   DataFunctionArgs,
   LinksFunction,
@@ -73,7 +74,7 @@ import favicon_72 from '~/../node_modules/nasawds/src/img/favicons/favicon-72.pn
 import favicon_114 from '~/../node_modules/nasawds/src/img/favicons/favicon-114.png'
 import favicon_144 from '~/../node_modules/nasawds/src/img/favicons/favicon-144.png'
 import favicon_192 from '~/../node_modules/nasawds/src/img/favicons/favicon-192.png'
-import themeStyle from '~/css/custom.css'
+import themeStyle from '~/theme.css'
 
 const favicons = {
   16: favicon_16,
@@ -117,6 +118,7 @@ export const links: LinksFunction = () => [
     rel: 'stylesheet',
     href: highlightStyle,
   },
+  ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
   ...Object.entries(favicons).map(([size, href]) => ({
     rel: 'icon',
     href: href,

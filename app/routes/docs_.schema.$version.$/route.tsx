@@ -13,7 +13,7 @@ import {
 } from './components'
 import { Highlight } from '~/components/Highlight'
 import { SideNavSub } from '~/components/SideNav'
-import { Tab, Tabs } from '~/components/Tabs'
+import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 import type { ExampleFiles, GitContentDataResponse } from '~/lib/schema-data'
 import {
