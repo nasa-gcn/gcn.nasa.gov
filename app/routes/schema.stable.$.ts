@@ -5,21 +5,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Octokit } from '@octokit/rest'
 import { type DataFunctionArgs, redirect } from '@remix-run/node'
 
-const githubData = {
-  owner: 'nasa-gcn',
-  repo: 'gcn-schema',
-}
-const octokit = new Octokit()
+import { getLatestRelease } from '~/lib/schema-data'
 
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
-  const latestRelease = (await octokit.rest.repos.getLatestRelease(githubData))
-    .data
-  if (!latestRelease) throw new Response(null, { status: 404 })
-
   return redirect(
-    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${latestRelease.tag_name}/${path}`
+    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${await getLatestRelease()}/${path}`
   )
 }

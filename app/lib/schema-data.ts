@@ -155,19 +155,16 @@ export async function getGithubDir(
   ).data as GitContentDataResponse[]
 }
 
+async function getDefaultBranch() {
+  return (await octokit.rest.repos.get(repoData)).data.default_branch
+}
+
 export async function getLatestRelease() {
-  let latestRelease
   try {
-    latestRelease = (await octokit.rest.repos.getLatestRelease(repoData)).data
+    return (await octokit.rest.repos.getLatestRelease(repoData)).data.tag_name
   } catch (error) {
-    if (error instanceof RequestError) {
-      if (error.status != 404) {
-        throw error
-      }
-      latestRelease = { tag_name: 'main' }
-    } else {
-      throw error
-    }
+    if (error instanceof RequestError && error.status === 404)
+      return await getDefaultBranch()
+    throw error
   }
-  return latestRelease
 }
