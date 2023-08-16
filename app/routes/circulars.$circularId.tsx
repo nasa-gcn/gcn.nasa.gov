@@ -44,14 +44,8 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
-const submittedHowMap = {
-  web: 'Web form',
-  email: 'email',
-  'email-legacy': 'legacy email',
-}
-
 export default function () {
-  const { circularId, subject, submitter, createdOn, body, submittedHow } =
+  const { circularId, subject, submitter, createdOn, body } =
     useLoaderData<typeof loader>()
   const searchString = useSearchString()
   return (
@@ -104,14 +98,6 @@ export default function () {
         </Grid>
         <Grid col="fill">{submitter}</Grid>
       </Grid>
-      {submittedHow && (
-        <Grid row>
-          <Grid tablet={{ col: 2 }}>
-            <b>Submitted By</b>
-          </Grid>
-          <Grid col="fill">{submittedHowMap[submittedHow]}</Grid>
-        </Grid>
-      )}
       <div className="text-pre-wrap margin-top-2">{body}</div>
     </>
   )
