@@ -11,7 +11,7 @@ import { Button, ButtonGroup, FormGroup } from '@trussworks/react-uswds'
 
 import { ClientCredentialVendingMachine } from './user.credentials/client_credentials.server'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
-import { Tab, Tabs } from '~/components/Tabs'
+import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 
 export const handle = {

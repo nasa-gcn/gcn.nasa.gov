@@ -9,6 +9,8 @@ import { Link } from '@remix-run/react'
 import { Checkbox } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
 
+import styles from './nested-checkboxes.module.css'
+
 type CheckboxArgs = Parameters<typeof Checkbox>
 type CheckboxProps = CheckboxArgs[0]
 interface NestedCheckboxProps extends CheckboxProps {
@@ -70,7 +72,7 @@ function NestedCheckboxNode({
       aria-expanded={expanded}
       aria-selected={false}
       onClick={() => setExpanded(!expanded)}
-      className="nested-checkboxes__node"
+      className={styles.node}
     >
       <Checkbox
         className="display-inline-block"
@@ -107,7 +109,7 @@ function NestedCheckboxNode({
           })
         }}
       />
-      <ul hidden={!expanded} className="nested-checkboxes__leaf">
+      <ul hidden={!expanded} className={styles.leaf}>
         {nodes.map((node, index) => (
           <li role="treeitem" key={index} aria-selected={false}>
             <Checkbox
