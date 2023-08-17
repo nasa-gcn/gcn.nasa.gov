@@ -1,3 +1,10 @@
+/*!
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, NavLink, useLoaderData } from '@remix-run/react'
 import { Icon, SideNav, Table } from '@trussworks/react-uswds'
