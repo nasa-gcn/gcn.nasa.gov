@@ -147,6 +147,9 @@ export default function () {
                     <NavLink key="producing" to="notices/producers">
                       Producing
                     </NavLink>,
+                    <NavLink key="schema" to="notices/schema">
+                      Schema
+                    </NavLink>,
                     <NavLink key="archive" to="notices/archive">
                       Archive
                     </NavLink>,
