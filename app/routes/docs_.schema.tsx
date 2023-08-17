@@ -19,7 +19,7 @@ import { useState } from 'react'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
-import { getVersionRefs } from '~/lib/schema-data'
+import { getVersionRefs } from '~/lib/schema-data.server'
 
 export async function loader({
   params: { version, '*': path },
