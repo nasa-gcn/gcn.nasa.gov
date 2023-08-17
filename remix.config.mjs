@@ -33,7 +33,7 @@ export default {
     remarkPlugins: [remarkGfm],
   },
   postcss: true,
-  ignoredRouteFiles: ['**/.*', '**/*.lib.*', '**/*.server.*'],
+  ignoredRouteFiles: ['**/.*'],
   assetsBuildDirectory: 'build/static',
   publicPath: '/_static/',
   server: './server.ts',
