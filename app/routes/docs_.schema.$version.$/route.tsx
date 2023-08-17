@@ -15,13 +15,16 @@ import { Highlight } from '~/components/Highlight'
 import { SideNavSub } from '~/components/SideNav'
 import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
-import type { ExampleFiles, GitContentDataResponse } from '~/lib/schema-data'
+import type {
+  ExampleFiles,
+  GitContentDataResponse,
+} from '~/lib/schema-data.server'
 import {
   getGithubDir,
   getVersionRefs,
   loadJson,
   loadSchemaExamples,
-} from '~/lib/schema-data'
+} from '~/lib/schema-data.server'
 
 export async function loader({
   params: { version, '*': path },
