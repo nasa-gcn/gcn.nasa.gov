@@ -70,7 +70,6 @@ function fuzzyTimeRange(fuzzyTime?: string) {
     ).getTime()
   if (fuzzyTime === 'ytd')
     return new Date(new Date().getFullYear(), 0).getTime()
-  else return undefined // invalid fuzzyTime defaults to fuzzless time range
 }
 
 function getValidDates(startDate?: string, endDate?: string) {
