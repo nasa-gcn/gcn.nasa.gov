@@ -55,21 +55,32 @@ function parseDate(date?: string) {
 /** take input string and return start/end times based on string value */
 function fuzzyTimeRange(fuzzyTime?: string) {
   const now = Date.now()
-  if (fuzzyTime === 'now') return now
-  if (fuzzyTime === 'hour') return now - 3600000
-  if (fuzzyTime === 'today') return new Date().setHours(0, 0, 0, 0)
-  if (fuzzyTime === 'day') return now - 86400000
-  if (fuzzyTime === 'week') return now - 86400000 * 7
-  if (fuzzyTime === 'month') return now - 86400000 * 30
-  if (fuzzyTime === 'year') return now - 86400000 * 365
-  if (fuzzyTime === 'mtd')
-    return new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
-      1
-    ).getTime()
-  if (fuzzyTime === 'ytd')
-    return new Date(new Date().getFullYear(), 0).getTime()
+  switch (fuzzyTime) {
+    case 'now': // current time
+      return now
+    case 'hour': // 1 hour ago
+      return now - 3600000
+    case 'today': // 00:00:00 of same day
+      return new Date().setHours(0, 0, 0, 0)
+    case 'day': // 24 hours ago
+      return now - 86400000
+    case 'week': // 7 days ago
+      return now - 86400000 * 7
+    case 'month': // 30 days ago
+      return now - 86400000 * 30
+    case 'year': // 365 days ago
+      return now - 86400000 * 365
+    case 'mtd': // month to date
+      return new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1
+      ).getTime()
+    case 'ytd': // year to date
+      return new Date(new Date().getFullYear(), 0).getTime()
+    default:
+      return NaN
+  }
 }
 
 function getValidDates(startDate?: string, endDate?: string) {
