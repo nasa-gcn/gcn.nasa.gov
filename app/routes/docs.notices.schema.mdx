@@ -44,13 +44,13 @@ The GCN Unified schema provides a standardized method for organizing GCN notices
 
     <Highlight language="sh" code="git checkout -b <YourBranch>" />
 
-    The repository's structure allows producers to create their own folders to define schemas on an instrument-specific level. The schema folder is named according to the format <code>gcn.notices.<i>mission</i></code>, where <i>mission</i> is your [Kafka Topic](/docs/producers). Within it, you can define your own schema and examples. For eaxmple, schema definition for IceCube alerts is located in the directory [`gcn/notices/icecube/`](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/icecube).
+    The repository's structure allows producers to create their own folders to define schemas on an instrument-specific level. The schema folder is named according to the format <code>gcn.notices.<i>mission</i></code>, where <i>mission</i> is your [Kafka Topic](/docs/notices/producers). Within it, you can define your own schema and examples. For eaxmple, schema definition for IceCube alerts is located in the directory [`gcn/notices/icecube/`](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/icecube).
 
   </ProcessListItem>
   <ProcessListItem>
     <ProcessListHeading type="h3">Schema File Naming</ProcessListHeading>
     Naming convention for your new schema files should follow the pattern <code><i>SchemaName</i>.schema.json</code> for schema definitions. 
-    Examples corresponding to these schemas should follow the format, <code><i>SchemaName[.OptionalSpecification]</i>.example.json</code>. Both the <i>SchemaName</i> and <i>OptionalSpecification</i> example should be written in CamelCase formatting (ex., YourSchemaName, thisIsAlsoValid, etc.). This naming convention allows our [schema-browser](/docs/schema-browser) to generate pages based directly on the files in the latest tag.
+    Examples corresponding to these schemas should follow the format, <code><i>SchemaName[.OptionalSpecification]</i>.example.json</code>. Both the <i>SchemaName</i> and <i>OptionalSpecification</i> example should be written in CamelCase formatting (ex., YourSchemaName, thisIsAlsoValid, etc.). This naming convention allows our [schema-browser](/docs/schema/latest/gcn) to generate pages based directly on the files in the latest tag.
   </ProcessListItem>
   <ProcessListItem>
   <ProcessListHeading type="h3">Sample Code</ProcessListHeading>
@@ -97,7 +97,7 @@ The GCN Unified schema provides a standardized method for organizing GCN notices
 </ProcessListItem>
 <ProcessListItem>
   <ProcessListHeading type="h3">Defining Schema</ProcessListHeading>
-    We recommend exploring our [schema-browser](/docs/schema-browser) to get an idea of what common fields have already been defined in the [Core schema](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/core), as well as the [json schema documentation](https://www.learnjsonschema.com/) to familiarize yourself with the various keywords and types. A good method to start formulating your structure is to think first of your data product as JSON fields. Consider the possible values that your pipelines will have for each field. In the following example, we have a schema definition for Swift/BAT-GUANO alerts. They have included the `unevaluatedProperties` property and set it to `false`, which our validator can use to verify that there are no extra properties that are undefined in the examples:
+    We recommend exploring our [schema-browser](/docs/schema/latest/gcn) to get an idea of what common fields have already been defined in the [Core schema](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/core), as well as the [json schema documentation](https://www.learnjsonschema.com/) to familiarize yourself with the various keywords and types. A good method to start formulating your structure is to think first of your data product as JSON fields. Consider the possible values that your pipelines will have for each field. In the following example, we have a schema definition for Swift/BAT-GUANO alerts. They have included the `unevaluatedProperties` property and set it to `false`, which our validator can use to verify that there are no extra properties that are undefined in the examples:
     <Tabs>
       <Tab label="Alert.schema.json">
         <Highlight
@@ -198,7 +198,7 @@ The GCN Unified schema provides a standardized method for organizing GCN notices
     
     Once your schema and examples are validated, you can proceed to commit and push your local code to the [Git repository](https://github.com/nasa-gcn/gcn-schema).
 
-    Next, create a pull request to the [Git repository](https://github.com/nasa-gcn/gcn-schema). The GCN team will review and provide feedback as needed. Once you have incorporated the feedback, we will merge your pull request into main branch. Congratulations on successfully creating your mission schema! It is now ready for production and send alerts to GCN as described in [New Notice Producers](/docs/producers).
+    Next, create a pull request to the [Git repository](https://github.com/nasa-gcn/gcn-schema). The GCN team will review and provide feedback as needed. Once you have incorporated the feedback, we will merge your pull request into main branch. Congratulations on successfully creating your mission schema! It is now ready for production and send alerts to GCN as described in [New Notice Producers](/docs/notices/producers).
 
   </ProcessListItem>
 </ProcessList>

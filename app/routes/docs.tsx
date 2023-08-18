@@ -17,6 +17,7 @@ export const handle = {
 
 export default function () {
   const enableSchemaBrowser = useFeature('SCHEMA')
+  const enableSchemaDoc = useFeature('NewDoc')
 
   return (
     <GridContainer className="usa-section">
@@ -147,9 +148,13 @@ export default function () {
                     <NavLink key="producing" to="notices/producers">
                       Producing
                     </NavLink>,
-                    <NavLink key="schema" to="notices/schema">
-                      Schema
-                    </NavLink>,
+                    ...(enableSchemaDoc
+                      ? [
+                          <NavLink key="schema" to="notices/schema">
+                            Schema
+                          </NavLink>,
+                        ]
+                      : []),
                     <NavLink key="archive" to="notices/archive">
                       Archive
                     </NavLink>,
