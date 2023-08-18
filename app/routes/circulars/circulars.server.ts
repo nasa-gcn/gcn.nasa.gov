@@ -73,16 +73,9 @@ function fuzzyTimeRange(fuzzyTime?: string) {
 }
 
 function getValidDates(startDate?: string, endDate?: string) {
-  // regex for YYYY-MM-DD and another for MM/DD/YYYY
-  const usDateRegex = /(\d{4})-(\d{2})-(\d{2})|(\d{2})\/(\d{2})\/(\d{4})/
-  const normalDateRegex = /(\d{4})-(\d{2})-(\d{2})/
-  const usDateMatch = startDate?.match(usDateRegex)
-  const normalDateMatch = startDate?.match(normalDateRegex)
-  if (usDateMatch || normalDateMatch) {
-    return [parseDate(startDate), parseDate(endDate) + 86400000]
-  } else {
-    return [fuzzyTimeRange(startDate), fuzzyTimeRange(endDate)]
-  }
+  const startTimestamp = fuzzyTimeRange(startDate) || parseDate(startDate)
+  const endTimestamp = fuzzyTimeRange(endDate) || parseDate(endDate) + 86400000
+  return [startTimestamp, endTimestamp]
 }
 
 export async function search({
