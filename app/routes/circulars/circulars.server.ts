@@ -52,6 +52,43 @@ function parseDate(date?: string) {
   return date ? new Date(date).getTime() : NaN
 }
 
+/** take input string and return start/end times based on string value */
+function fuzzyTimeRange(fuzzyTime?: string) {
+  const now = Date.now()
+  switch (fuzzyTime) {
+    case 'now': // current time
+      return now
+    case 'hour': // 1 hour ago
+      return now - 3600000
+    case 'today': // 00:00:00 of same day
+      return new Date().setHours(0, 0, 0, 0)
+    case 'day': // 24 hours ago
+      return now - 86400000
+    case 'week': // 7 days ago
+      return now - 86400000 * 7
+    case 'month': // 30 days ago
+      return now - 86400000 * 30
+    case 'year': // 365 days ago
+      return now - 86400000 * 365
+    case 'mtd': // month to date
+      return new Date(
+        new Date().getFullYear(),
+        new Date().getMonth(),
+        1
+      ).getTime()
+    case 'ytd': // year to date
+      return new Date(new Date().getFullYear(), 0).getTime()
+    default:
+      return NaN
+  }
+}
+
+function getValidDates(startDate?: string, endDate?: string) {
+  const startTimestamp = fuzzyTimeRange(startDate) || parseDate(startDate)
+  const endTimestamp = fuzzyTimeRange(endDate) || parseDate(endDate) + 86400000
+  return [startTimestamp, endTimestamp]
+}
+
 export async function search({
   query,
   page,
@@ -71,8 +108,7 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  const startTime = parseDate(startDate) || undefined
-  const endTime = parseDate(endDate) + 86400000 || undefined
+  const [startTime, endTime] = getValidDates(startDate, endDate)
 
   const {
     body: {
