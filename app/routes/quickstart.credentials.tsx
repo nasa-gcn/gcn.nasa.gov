@@ -57,7 +57,7 @@ export default function () {
       ) : (
         <>
           <p className="usa-paragraph">{explanation}</p>
-          <NewCredentialForm />
+          <NewCredentialForm autoFocus={client_credentials.length === 0} />
         </>
       )}
     </>

@@ -74,7 +74,9 @@ export async function handleCredentialLoader({ request }: DataFunctionArgs) {
   return { client_credentials, groups }
 }
 
-export function NewCredentialForm() {
+export function NewCredentialForm({
+  autoFocus,
+}: Pick<JSX.IntrinsicElements['button'], 'autoFocus'>) {
   const { groups } = useLoaderData<typeof loader>()
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
   const [nameValid, setNameValid] = useState(false)
@@ -92,7 +94,7 @@ export function NewCredentialForm() {
       </p>
       <Label htmlFor="name">Name</Label>
       <TextInput
-        autoFocus
+        autoFocus={autoFocus}
         name="name"
         id="name"
         type="text"
