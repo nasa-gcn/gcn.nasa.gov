@@ -1,25 +1,24 @@
 import { generateRobotsTxt, generateSitemap } from '@balavishnuvj/remix-seo'
 import type { EntryContext } from '@remix-run/server-runtime'
 
+import { origin } from './lib/env.server'
+import { publicStaticShortTermCacheControlHeaders } from './lib/headers.server'
+
 type Handler = (
   request: Request,
   remixContext: EntryContext
 ) => Promise<Response | null> | null
 
 export const otherRootRoutes: Record<string, Handler> = {
-  '/sitemap.xml': async (request, remixContext) => {
-    const origin = new URL(request.url).origin
+  '/sitemap/main': async (request, remixContext) => {
     return generateSitemap(request, remixContext, {
       siteUrl: origin,
-      headers: {
-        'Cache-Control': `public, max-age=${60 * 5}`,
-      },
+      headers: publicStaticShortTermCacheControlHeaders,
     })
   },
-  '/robots.txt': async (request) => {
-    const origin = new URL(request.url).origin
+  '/robots.txt': async () => {
     return generateRobotsTxt([
-      { type: 'sitemap', value: `${origin}/sitemap.xml` },
+      { type: 'sitemap', value: `${origin}/sitemap` },
       { type: 'disallow', value: '/user' },
     ])
   },

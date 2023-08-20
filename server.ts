@@ -11,4 +11,7 @@ installGlobals()
 module.exports.handler = createRequestHandler({
   build,
   mode: process.env.NODE_ENV,
+  getLoadContext() {
+    return { assets: build.assets, routes: build.routes }
+  },
 })
