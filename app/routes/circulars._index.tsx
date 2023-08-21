@@ -17,6 +17,7 @@ import {
 import {
   Button,
   ButtonGroup,
+  DateRangePicker,
   Icon,
   Label,
   Select,
@@ -28,6 +29,8 @@ import { useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
+import DetailsDropdownButton from '~/components/DetailsDropdownButton'
+import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 
@@ -191,9 +194,28 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
+  const [inputDateGte, setInputDateGte] = useState(startDate)
+  const [inputDateLte, setInputDateLte] = useState(endDate)
+  const [showContent, setShowContent] = useState(false)
+  const [showDateRange, setShowDateRange] = useState(false)
+  const clean =
+    inputQuery === query &&
+    inputDateGte === startDate &&
+    inputDateLte === endDate
 
   const submit = useSubmit()
+
+  const setDateRange = () => {
+    setShowContent(!showContent)
+    if (showDateRange) setShowDateRange(!showDateRange)
+    const params = new URLSearchParams(location.search)
+    if (inputDateGte) params.set('startDate', inputDateGte)
+    if (inputDateLte) params.set('endDate', inputDateLte)
+    submit(params, {
+      method: 'get',
+      action: '/circulars',
+    })
+  }
 
   return (
     <>
@@ -239,6 +261,139 @@ export default function () {
               alt="Search"
             />
           </Button>
+          <DetailsDropdownButton
+            className="height-4 padding-top-0 padding-bottom-0"
+            onClick={() => setShowContent(!showContent)}
+            aria-expanded={showContent}
+            aria-controls="searchFilters"
+          >
+            <Icon.CalendarToday />
+          </DetailsDropdownButton>
+          {showContent && (
+            <DetailsDropdownContent>
+              {!showDateRange && (
+                <>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('hour')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Last Hour
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('today')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Today
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('day')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Last 24 Hours
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('month')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Last Month
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('year')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Last Year
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button usa-button--unstyled"
+                    onClick={(value) => {
+                      setInputDateGte('ytd')
+                      setInputDateLte('now')
+                      setDateRange()
+                    }}
+                  >
+                    Year to Date
+                  </Button>
+                  <Button
+                    type="button"
+                    className="usa-button"
+                    onClick={() => setShowDateRange(!showDateRange)}
+                  >
+                    Custom Date Range
+                  </Button>
+                </>
+              )}
+              {showDateRange && (
+                <>
+                  <Button
+                    type="button"
+                    className="usa-button width-10 height-5 margin-bottom-neg-2"
+                    onClick={() => setShowDateRange(!showDateRange)}
+                  >
+                    <Icon.ArrowBack />
+                  </Button>
+                  <DateRangePicker
+                    startDateHint="dd/mm/yyyy"
+                    startDateLabel="Start Date"
+                    className="margin-bottom-2"
+                    startDatePickerProps={{
+                      id: 'event-date-start',
+                      name: 'event-date-start',
+                      defaultValue: 'startDate',
+                      onChange: (value) => {
+                        setInputDateGte(value)
+                      },
+                    }}
+                    endDateHint="dd/mm/yyyy"
+                    endDateLabel="End Date"
+                    endDatePickerProps={{
+                      id: 'event-date-end',
+                      name: 'event-date-end',
+                      defaultValue: 'endDate',
+                      onChange: (value) => {
+                        setInputDateLte(value)
+                      },
+                    }}
+                  />
+                  <Button
+                    type="button"
+                    className="usa-button width-auto height-5"
+                    form="searchForm"
+                    onClick={() => {
+                      setDateRange()
+                    }}
+                  >
+                    <Icon.CalendarToday /> Submit
+                  </Button>
+                </>
+              )}
+            </DetailsDropdownContent>
+          )}
         </Form>
         <Link to={`/circulars/new${searchString}`}>
           <Button
