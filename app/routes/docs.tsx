@@ -144,20 +144,20 @@ export default function () {
                     <NavLink key="consuming" to="notices/consuming">
                       Consuming
                     </NavLink>,
-                    enableSchemaBrowser ? (
-                      <>
-                        <NavLink key="producing" to="notices/producers">
-                          Producing
-                        </NavLink>
-                        <NavLink key="schema" to="notices/schema">
-                          Schema
-                        </NavLink>
-                      </>
-                    ) : (
-                      <NavLink key="producing" to="notices/producers">
-                        Producing
-                      </NavLink>
-                    ),
+                    ...(enableSchemaBrowser
+                      ? [
+                          <NavLink key="producing" to="notices/producers">
+                            Producing
+                          </NavLink>,
+                          <NavLink key="schema" to="notices/schema">
+                            Schema
+                          </NavLink>,
+                        ]
+                      : [
+                          <NavLink key="producing" to="notices/producers">
+                            Producing
+                          </NavLink>,
+                        ]),
                     <NavLink key="archive" to="notices/archive">
                       Archive
                     </NavLink>,
