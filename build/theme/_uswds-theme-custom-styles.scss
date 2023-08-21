@@ -1,0 +1,189 @@
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+USWDS THEME CUSTOM STYLES
+----------------------------------------
+!! Copy this file to your project's
+   sass root. Don't edit the version
+   in node_modules.
+----------------------------------------
+Custom project SASS goes here.
+
+i.e.
+@include u-padding-right('05');
+----------------------------------------
+*/
+
+// Header helpers
+// ---------------------------------
+
+@mixin nav-border-extended-dark {
+  @include add-bar(0.5, 'secondary', 'bottom', 0, 2);
+}
+
+@mixin nav-border-basic-dark {
+  @include add-bar(0.5, 'secondary', 'bottom', 0, 2, -0.5);
+}
+
+h1,
+h2,
+.usa-display,
+.usa-logo__text {
+  letter-spacing: letter-spacing(-2);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.usa-logo__text {
+  @include add-knockout-font-smoothing;
+}
+
+.usa-intro {
+  font-weight: font-weight('light');
+}
+
+.usa-logo__text,
+.usa-legend {
+  font-family: family('heading');
+}
+
+.usa-hero__callout,
+.usa-section--dark {
+  background-color: color('ink');
+}
+
+// Dark option ----------- //
+
+.usa-header--dark {
+  background-color: color('ink');
+
+  //
+  //@include at-media-max($theme-header-min-width) {
+  .usa-nav__secondary-links a {
+    //@include at-media($theme-header-min-width) {
+    color: color('accent-cool-light');
+    //}
+  }
+
+  .usa-logo a,
+  .usa-nav__primary button,
+  .usa-nav__primary > .usa-nav__primary-item > a {
+    color: color('white');
+  }
+
+  &.usa-header--extended .usa-nav {
+    border-top: none;
+  }
+
+  .usa-nav__primary button[aria-expanded='false'] span::after {
+    background-color: color('white');
+  }
+
+  .usa-nav__primary button[aria-expanded='true'] {
+    & span::after {
+      background-color: color('white');
+    }
+
+    @include at-media($theme-header-min-width) {
+      background-color: color('base-lighter');
+      color: color('ink');
+
+      & span::after {
+        background-color: color('ink');
+      }
+    }
+  }
+
+  .usa-nav__primary > .usa-nav__primary-item > a:hover {
+    @include at-media($theme-header-min-width) {
+      color: color('white');
+    }
+  }
+
+  .usa-nav__submenu {
+    @include at-media($theme-header-min-width) {
+      background-color: color('base-lighter');
+    }
+  }
+
+  .usa-megamenu.usa-nav__submenu:after,
+  .usa-megamenu.usa-nav__submenu:before {
+    @include at-media($theme-header-min-width) {
+      background-color: color('base-lighter');
+    }
+  }
+
+  .usa-nav__submenu .usa-nav__submenu-item a {
+    @include at-media($theme-header-min-width) {
+      color: color('ink');
+    }
+  }
+
+  .usa-nav {
+    @include at-media-max($theme-header-min-width) {
+      background: color('ink');
+    }
+  }
+
+  .usa-nav__primary button:hover {
+    @include at-media-max($theme-header-min-width) {
+      background-color: color('ink');
+      color: color('accent-cool-light');
+    }
+  }
+
+  .usa-nav__primary a {
+    @include at-media-max($theme-header-min-width) {
+      color: color('white');
+    }
+  }
+
+  .usa-nav__submenu-item {
+    @include at-media-max($theme-header-min-width) {
+      border-top: none;
+    }
+  }
+
+  .usa-nav__primary a:hover {
+    @include at-media-max($theme-header-min-width) {
+      background-color: color('ink');
+      color: color('accent-cool-light');
+    }
+  }
+
+  .usa-nav__primary-item {
+    @include at-media-max($theme-header-min-width) {
+      border-top: 1px solid color('base');
+    }
+  }
+}
+
+.usa-header--extended.usa-header--dark {
+  @include at-media($theme-header-min-width) {
+    .usa-current,
+    [aria-expanded='true'],
+    .usa-nav__link:hover {
+      @include nav-border-extended-dark;
+    }
+  }
+}
+
+.usa-header--basic.usa-header--dark {
+  @include at-media($theme-header-min-width) {
+    .usa-current,
+    [aria-expanded='true'],
+    .usa-nav__link:hover {
+      @include nav-border-basic-dark;
+    }
+  }
+}
