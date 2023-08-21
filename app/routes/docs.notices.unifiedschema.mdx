@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: Schema Design
+  breadcrumb: Unified Schema
 ---
 
 import {
@@ -59,47 +59,47 @@ The GCN Unified Schema provides a standardized method for organizing GCN notices
     Examples corresponding to these schemas should follow the format, <code><i>SchemaName[.OptionalSpecification]</i>.example.json</code>. Both the <i>SchemaName</i> and <i>OptionalSpecification</i> example should be written in CamelCase formatting (ex., YourSchemaName, thisIsAlsoValid, etc.). This naming convention allows our [schema-browser](/docs/schema/stable/gcn) to generate pages based directly on the files in the latest tag.
   </ProcessListItem>
   <ProcessListItem>
-  <ProcessListHeading type="h3">Sample Code</ProcessListHeading>
-   After setting up your local version, you can use the provided code samples to get started, which already include commonly used keys. Note that the `$schema` field in the example has the same value as the `$id` field in the schema. 
-   This ensures our validator script to identify which schema examples to compare. Make sure to update these files to reflect the mission and schema names. Then, you can update the `title` and `definition` fields to provide context for other users who will use this schema.
-  <Tabs>
-    <Tab label="Sample.schema.json">
-      <Highlight
-        language="json"
-        code={JSON.stringify(
-          {
-            $id: 'https://gcn.nasa.gov/schema/gcn/notices/<mission>/<schema name>.schema.json',
-            $schema: 'https://json-schema.org/draft/2020-12/schema',
-            type: 'object',
-            title: 'Your Schema Name',
-            description: 'A description for your schema',
-            "allOf": [
-              {
-              "$ref": "/schema/gcn/notices/core/Alert.schema.json"
+    <ProcessListHeading type="h3">Sample Code</ProcessListHeading>
+    After setting up your local version, you can use the provided code samples to get started, which already include commonly used keys. Note that the `$schema` field in the example has the same value as the `$id` field in the schema. 
+    This ensures our validator script to identify which schema examples to compare. Make sure to update these files to reflect the mission and schema names. Then, you can update the `title` and `definition` fields to provide context for other users who will use this schema.
+    <Tabs>
+      <Tab label="Sample.schema.json">
+        <Highlight
+          language="json"
+          code={JSON.stringify(
+            {
+              $id: 'https://gcn.nasa.gov/schema/gcn/notices/<mission>/<schema name>.schema.json',
+              $schema: 'https://json-schema.org/draft/2020-12/schema',
+              type: 'object',
+              title: 'Your Schema Name',
+              description: 'A description for your schema',
+              "allOf": [
+                {
+                "$ref": "/schema/gcn/notices/core/Alert.schema.json"
+                }
+              ],
+              properties: {
               }
-            ],
-            properties: {
-            }
-          },
-          null,
-          2
-        )}
-      />
-    </Tab>
-    <Tab label="Sample.example.json">
-      <Highlight
-        language="json"
-        code={JSON.stringify(
-          {
-            $schema:'https://gcn.nasa.gov/schema/gcn/notices/<mission>/<schema name>.schema.json',
-            "alert_datetime":"yyyy-mm-ddThh:mm:ssZ"
-          },
-          null,
-          2
-        )}
-      />
-    </Tab>
-  </Tabs>
+            },
+            null,
+            2
+          )}
+        />
+      </Tab>
+      <Tab label="Sample.example.json">
+        <Highlight
+          language="json"
+          code={JSON.stringify(
+            {
+              $schema:'https://gcn.nasa.gov/schema/gcn/notices/<mission>/<schema name>.schema.json',
+              "alert_datetime":"yyyy-mm-ddThh:mm:ssZ"
+            },
+            null,
+            2
+          )}
+        />
+      </Tab>
+    </Tabs>
 </ProcessListItem>
 <ProcessListItem>
   <ProcessListHeading type="h3">Defining Schema</ProcessListHeading>
