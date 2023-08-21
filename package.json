@@ -76,6 +76,7 @@
     "@aws-sdk/util-dynamodb": "^3.319.0",
     "@babel/preset-typescript": "^7.22.5",
     "@nasa-gcn/architect-plugin-search": "^1.0.0",
+    "@nasa-gcn/eslint-config-gitignore": "^0.0.1",
     "@remix-run/dev": "^1.19.3",
     "@remix-run/eslint-config": "^1.19.3",
     "@testing-library/jest-dom": "^6.0.0",
@@ -146,6 +147,7 @@
     "extends": [
       "@remix-run/eslint-config",
       "@remix-run/eslint-config/node",
+      "@nasa-gcn/eslint-config-gitignore",
       "prettier"
     ],
     "rules": {
