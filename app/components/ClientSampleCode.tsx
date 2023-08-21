@@ -89,6 +89,9 @@ export function ClientSampleCode({
                                 `)}])
             while True:
                 for message in consumer.consume(timeout=1):
+                    if message.error():
+                        print(message.error())
+                        continue
                     # Print the topic and message ID
                     print(f'topic={message.topic()}, offset={message.offset()}')
                     value = message.value()
