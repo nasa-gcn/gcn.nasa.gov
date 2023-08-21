@@ -1,9 +1,9 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 import { type NavLinkProps, useMatch, useResolvedPath } from '@remix-run/react'
 
@@ -17,5 +17,5 @@ export function useActiveLink({
   relative,
 }: Pick<NavLinkProps, 'to' | 'caseSensitive' | 'end' | 'relative'>) {
   const path = useResolvedPath(to, { relative }).pathname
-  return !!useMatch({ path, caseSensitive, end })
+  return Boolean(useMatch({ path, caseSensitive, end }))
 }

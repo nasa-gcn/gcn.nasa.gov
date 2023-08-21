@@ -1,11 +1,12 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { Form, Link, useActionData } from '@remix-run/react'
 import {
   Button,
@@ -23,14 +24,27 @@ import { useState } from 'react'
 
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { sendEmail } from '~/lib/email.server'
-import { feature, getEnvOrDie } from '~/lib/env.server'
-import { getBasicAuthHeaders } from '~/lib/headers.server'
+import { feature, getEnvOrDie, origin } from '~/lib/env.server'
+import {
+  getBasicAuthHeaders,
+  getCanonicalUrlHeaders,
+  pickHeaders,
+} from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useName, useRecaptchaSiteKey } from '~/root'
 
 export const handle = {
   breadcrumb: 'Contact Us',
 }
+
+export async function loader() {
+  return json(null, {
+    headers: getCanonicalUrlHeaders(new URL('/contact', origin)),
+  })
+}
+
+export const headers: HeadersFunction = ({ loaderHeaders }) =>
+  pickHeaders(loaderHeaders, ['Link'])
 
 export async function action({ request }: DataFunctionArgs) {
   const data = await request.formData()
@@ -84,8 +98,8 @@ export async function action({ request }: DataFunctionArgs) {
 export default function () {
   const defaultName = useName()
   const defaultEmail = useEmail()
-  const [nameValid, setNameValid] = useState(!!defaultName)
-  const [emailValid, setEmailValid] = useState(!!defaultEmail)
+  const [nameValid, setNameValid] = useState(Boolean(defaultName))
+  const [emailValid, setEmailValid] = useState(Boolean(defaultEmail))
   const [subjectValid, setSubjectValid] = useState(false)
   const [bodyValid, setBodyValid] = useState(false)
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
@@ -127,7 +141,7 @@ export default function () {
             required
             defaultValue={defaultName}
             onChange={({ target: { value } }) => {
-              setNameValid(!!value)
+              setNameValid(Boolean(value))
             }}
           />
           <Label htmlFor="email">What is your email address?</Label>
@@ -149,7 +163,7 @@ export default function () {
             required
             placeholder="Subject"
             onChange={({ target: { value } }) => {
-              setSubjectValid(!!value)
+              setSubjectValid(Boolean(value))
             }}
           />
           <Label htmlFor="email">What is your question?</Label>
@@ -159,12 +173,12 @@ export default function () {
             required
             placeholder="Body"
             onChange={({ target: { value } }) => {
-              setBodyValid(!!value)
+              setBodyValid(Boolean(value))
             }}
           />
           <ReCAPTCHA
             onChange={(value) => {
-              setRecaptchaValid(!!value)
+              setRecaptchaValid(Boolean(value))
             }}
           />
           <ButtonGroup>

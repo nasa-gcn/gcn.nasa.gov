@@ -1,9 +1,9 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 import { Form, useFetcher } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
@@ -19,7 +19,7 @@ import {
 import { useRef } from 'react'
 
 import TimeAgo from './TimeAgo'
-import type { RedactedClientCredential } from '~/routes/user/client_credentials.server'
+import type { RedactedClientCredential } from '~/routes/user.credentials/client_credentials.server'
 
 export default function CredentialCard({
   name,

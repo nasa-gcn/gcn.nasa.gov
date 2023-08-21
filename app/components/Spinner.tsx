@@ -1,13 +1,13 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 import classnames from 'classnames'
 
-import loaderImage from 'app/theme/img/loader.gif'
+import loaderImage from '~/../node_modules/nasawds/src/img/loader.gif'
 
 // Adapted from https://github.com/trussworks/react-uswds/blob/main/src/components/Icon/Icon.tsx
 export default function Spinner({

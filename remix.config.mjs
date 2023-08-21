@@ -1,5 +1,5 @@
-import rehypeAddClasses from 'rehype-add-classes'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeClassNames from 'rehype-class-names'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
@@ -20,7 +20,7 @@ export default {
           ...options,
         }),
       (options) =>
-        rehypeAddClasses({
+        rehypeClassNames({
           a: 'usa-link',
           ol: 'usa-list',
           p: 'usa-paragraph',
@@ -32,7 +32,8 @@ export default {
     ],
     remarkPlugins: [remarkGfm],
   },
-  ignoredRouteFiles: ['**/.*', '**/*.lib.*', '**/*.server.*'],
+  postcss: true,
+  ignoredRouteFiles: ['**/.*'],
   assetsBuildDirectory: 'build/static',
   publicPath: '/_static/',
   server: './server.ts',
@@ -47,5 +48,6 @@ export default {
     v2_meta: true,
     v2_errorBoundary: true,
     v2_normalizeFormMethod: true,
+    v2_routeConvention: true,
   },
 }

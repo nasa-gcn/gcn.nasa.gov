@@ -1,9 +1,9 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  *
  *
  *                                +-------------+
@@ -18,6 +18,7 @@
  *
  *
  */
+import { cssBundleHref } from '@remix-run/css-bundle'
 import type {
   DataFunctionArgs,
   LinksFunction,
@@ -54,9 +55,8 @@ import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import NewsBanner from './components/NewsBanner'
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
-import { getUser } from './routes/__auth/user.server'
+import { getUser } from './routes/_auth/user.server'
 
-import themeStyle from './theme/css/custom.css'
 import highlightStyle from 'highlight.js/styles/github.css'
 // FIXME: no top-level await, no import function
 // const favicons = Object.fromEntries(
@@ -67,13 +67,14 @@ import highlightStyle from 'highlight.js/styles/github.css'
 //     ])
 //   )
 // )
-import favicon_16 from '~/theme/img/favicons/favicon-16.png'
-import favicon_40 from '~/theme/img/favicons/favicon-40.png'
-import favicon_57 from '~/theme/img/favicons/favicon-57.png'
-import favicon_72 from '~/theme/img/favicons/favicon-72.png'
-import favicon_114 from '~/theme/img/favicons/favicon-114.png'
-import favicon_144 from '~/theme/img/favicons/favicon-144.png'
-import favicon_192 from '~/theme/img/favicons/favicon-192.png'
+import favicon_16 from '~/../node_modules/nasawds/src/img/favicons/favicon-16.png'
+import favicon_40 from '~/../node_modules/nasawds/src/img/favicons/favicon-40.png'
+import favicon_57 from '~/../node_modules/nasawds/src/img/favicons/favicon-57.png'
+import favicon_72 from '~/../node_modules/nasawds/src/img/favicons/favicon-72.png'
+import favicon_114 from '~/../node_modules/nasawds/src/img/favicons/favicon-114.png'
+import favicon_144 from '~/../node_modules/nasawds/src/img/favicons/favicon-144.png'
+import favicon_192 from '~/../node_modules/nasawds/src/img/favicons/favicon-192.png'
+import themeStyle from '~/theme.css'
 
 const favicons = {
   16: favicon_16,
@@ -117,6 +118,7 @@ export const links: LinksFunction = () => [
     rel: 'stylesheet',
     href: highlightStyle,
   },
+  ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
   ...Object.entries(favicons).map(([size, href]) => ({
     rel: 'icon',
     href: href,

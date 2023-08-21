@@ -1,9 +1,9 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 import { services } from '@architect/functions'
 import type {
@@ -21,7 +21,7 @@ import chunk from 'lodash/chunk'
 
 import { hostname } from './env.server'
 import { getEnvBannerHeaderAndDescription } from './utils'
-import { encodeToURL } from '~/routes/unsubscribe/jwt.server'
+import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
 const client = new SESv2Client({})
 // https://docs.aws.amazon.com/ses/latest/dg/quotas.html

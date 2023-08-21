@@ -1,16 +1,18 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import {
   Button,
+  ButtonGroup,
   Fieldset,
+  FormGroup,
   Label,
   Radio,
   TextInput,
@@ -20,7 +22,7 @@ import { useState } from 'react'
 import { ReCAPTCHA, verifyRecaptcha } from './ReCAPTCHA'
 import { getFormDataString } from '~/lib/utils'
 import { useRecaptchaSiteKey } from '~/root'
-import { ClientCredentialVendingMachine } from '~/routes/user/client_credentials.server'
+import { ClientCredentialVendingMachine } from '~/routes/user.credentials/client_credentials.server'
 
 export async function loader(args: DataFunctionArgs) {
   return await handleCredentialLoader(args)
@@ -90,12 +92,12 @@ export function NewCredentialForm() {
       </p>
       <Label htmlFor="name">Name</Label>
       <TextInput
-        data-focus
+        autoFocus
         name="name"
         id="name"
         type="text"
         placeholder="Name"
-        onChange={(e) => setNameValid(!!e.target.value)}
+        onChange={(e) => setNameValid(Boolean(e.target.value))}
       />
       <Label htmlFor="scope">Scope</Label>
       <Fieldset id="scope">
@@ -113,15 +115,23 @@ export function NewCredentialForm() {
       </Fieldset>
       <ReCAPTCHA
         onChange={(value) => {
-          setRecaptchaValid(!!value)
+          setRecaptchaValid(Boolean(value))
         }}
       />
-      <Link to=".." type="button" className="usa-button usa-button--outline">
-        Back
-      </Link>
-      <Button disabled={!(nameValid && recaptchaValid)} type="submit">
-        Create New Credentials
-      </Button>
+      <FormGroup>
+        <ButtonGroup>
+          <Link
+            to=".."
+            type="button"
+            className="usa-button usa-button--outline"
+          >
+            Back
+          </Link>
+          <Button disabled={!(nameValid && recaptchaValid)} type="submit">
+            Create New Credentials
+          </Button>
+        </ButtonGroup>
+      </FormGroup>
     </Form>
   )
 }

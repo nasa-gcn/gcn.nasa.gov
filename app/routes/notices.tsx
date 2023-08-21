@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import {
   Button,
   CardBody,
@@ -101,7 +102,9 @@ export default function () {
       <h1>GCN Notices</h1>
       <p className="usa-paragraph">
         GCN Notices are real-time, machine-readable alerts that are submitted by
-        participating facilities and redistributed publicly.
+        participating facilities and redistributed publicly. See the{' '}
+        <Link to="/docs/notices"> documentation</Link> for help with consuming,
+        producing, or archiving of Notices.
       </p>
       <div className="margin-bottom-2">
         <ReactTags
@@ -114,7 +117,7 @@ export default function () {
             })
           }
           delimiterKeys={[' ', ',', 'Enter', 'Tab']}
-          closeOnSelect={true}
+          collapseOnSelect={true}
           suggestions={suggestions.map((label) => ({ label, value: label }))}
           selected={tags}
           renderTag={renderTag}

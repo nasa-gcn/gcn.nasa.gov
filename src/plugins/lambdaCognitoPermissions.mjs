@@ -1,9 +1,9 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 // Grant the Lambda function access to Cognito to run the credential vending machine.
@@ -34,7 +34,7 @@ export const deploy = {
               'cognito-idp:ListUsersInGroup',
             ],
             Resource: {
-              'Fn::Sub': `arn:aws:cognito-idp:${region}:\${AWS::AccountId}:userpool/${user_pool_id}`,
+              'Fn::Sub': `arn:\${AWS::Partition}:cognito-idp:${region}:\${AWS::AccountId}:userpool/${user_pool_id}`,
             },
           },
         ],

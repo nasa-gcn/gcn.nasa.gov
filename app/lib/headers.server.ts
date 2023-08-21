@@ -1,9 +1,9 @@
 /*!
- * Copyright © 2022 United States Government as represented by the Administrator
- * of the National Aeronautics and Space Administration. No copyright is claimed
- * in the United States under Title 17, U.S. Code. All Other Rights Reserved.
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
  *
- * SPDX-License-Identifier: NASA-1.3
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 /**
@@ -11,6 +11,13 @@
  */
 export const publicStaticCacheControlHeaders = {
   'Cache-Control': 'public, max-age=315360000',
+}
+
+/**
+ * HTTP headers for 1 day life.
+ */
+export const publicStaticShortTermCacheControlHeaders = {
+  'Cache-Control': 'public, max-age=86400',
 }
 
 /**
@@ -37,4 +44,13 @@ export function getBasicAuthHeaders(username: string, password: string) {
     throw new Error('Usernames for basic auth must not contain colons')
   const userpass = Buffer.from(`${username}:${password}`).toString('base64')
   return { Authorization: `Basic ${userpass}` }
+}
+
+export function pickHeaders(headers: Headers, keys: string[]) {
+  const result: [string, string][] = []
+  for (const key of keys) {
+    const value = headers.get(key)
+    if (value) result.push([key, value])
+  }
+  return result
 }
