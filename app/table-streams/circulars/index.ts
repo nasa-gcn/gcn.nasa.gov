@@ -110,7 +110,7 @@ async function send(circular: Circular) {
 module.exports.handler = createTriggerHandler(async (event: DynamoDBRecord) => {
   // FIXME: Temporarily log the event. Trying to rule out duplicate Lambda
   // invocations for https://github.com/nasa-gcn/gcn.nasa.gov/issues/924.
-  console.log(inspect(event))
+  console.log(inspect(event, { depth: null }))
   const { eventName, dynamodb } = event
 
   const id = unmarshallTrigger(dynamodb!.Keys).circularId as number
