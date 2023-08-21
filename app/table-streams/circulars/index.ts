@@ -106,19 +106,22 @@ async function send(circular: Circular) {
 
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-module.exports.handler = createTriggerHandler(
-  async ({ eventName, dynamodb }: DynamoDBRecord) => {
-    const id = unmarshallTrigger(dynamodb!.Keys).circularId as number
-    const promises = []
+module.exports.handler = createTriggerHandler(async (event: DynamoDBRecord) => {
+  // FIXME: Temporarily log the event. Trying to rule out duplicate Lambda
+  // invocations for https://github.com/nasa-gcn/gcn.nasa.gov/issues/924.
+  console.log(event)
+  const { eventName, dynamodb } = event
 
-    if (eventName === 'REMOVE') {
-      promises.push(removeIndex(id))
-    } /* (eventName === 'INSERT' || eventName === 'MODIFY') */ else {
-      const circular = unmarshallTrigger(dynamodb!.NewImage) as Circular
-      promises.push(putIndex(circular))
-      if (eventName === 'INSERT') promises.push(send(circular))
-    }
+  const id = unmarshallTrigger(dynamodb!.Keys).circularId as number
+  const promises = []
 
-    await Promise.all(promises)
+  if (eventName === 'REMOVE') {
+    promises.push(removeIndex(id))
+  } /* (eventName === 'INSERT' || eventName === 'MODIFY') */ else {
+    const circular = unmarshallTrigger(dynamodb!.NewImage) as Circular
+    promises.push(putIndex(circular))
+    if (eventName === 'INSERT') promises.push(send(circular))
   }
-)
+
+  await Promise.all(promises)
+})
