@@ -6,9 +6,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { Link, NavLink, useLoaderData } from '@remix-run/react'
-import { Icon, SideNav, Table } from '@trussworks/react-uswds'
+import { Link, useLoaderData } from '@remix-run/react'
+import {
+  Card,
+  CardBody,
+  CardGroup,
+  CardHeader,
+  Icon,
+  Table,
+} from '@trussworks/react-uswds'
 import { json, redirect, useParams } from 'react-router'
+import { useWindowSize } from 'usehooks-ts'
 
 import SchemaDefinition from '../docs_.schema.$version._index'
 import type { Schema } from './components'
@@ -19,7 +27,6 @@ import {
   formatFieldType,
 } from './components'
 import { Highlight } from '~/components/Highlight'
-import { SideNavSub } from '~/components/SideNav'
 import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 import type {
@@ -41,7 +48,7 @@ export async function loader({
     return redirect(`${path.slice(0, -1)}`)
   }
   let jsonContent
-  let data
+  let data: GitContentDataResponse[]
   let examples: ExampleFiles[] = []
   const versions = await getVersionRefs()
   if (path?.endsWith('.schema.json')) {
@@ -62,48 +69,14 @@ export async function loader({
 
 export default function () {
   const { version, '*': path } = useParams()
-  const { data, jsonContent, examples } = useLoaderData()
+  const { data, jsonContent, examples } = useLoaderData<typeof loader>()
   if (!path) {
     throw new Error('Path is not defined.')
   }
-  const previous = path?.replace(`/${path.split('/').at(-1)}`, '')
+
   return (
     <>
-      <div className="desktop:grid-col-3">
-        <div className="position-sticky top-0">
-          <SideNav
-            items={[
-              path != previous && (
-                <Link key={previous} to={previous}>
-                  Previous
-                </Link>
-              ),
-              !path.endsWith('.schema.json') && (
-                <NavLink key={path} to={path}>
-                  {path}
-                </NavLink>
-              ),
-              <SideNavSub
-                key="subnav"
-                items={data.map((x: GitContentDataResponse) => (
-                  <NavLink key={x.path} to={x.path}>
-                    <span className="display-flex flex-align-center">
-                      {x.type == 'dir' && (
-                        <span className="margin-top-05 padding-right-05">
-                          <Icon.FolderOpen role="presentation" />
-                        </span>
-                      )}
-                      <span>{x.name}</span>
-                    </span>
-                  </NavLink>
-                ))}
-                base={path}
-              ></SideNavSub>,
-            ]}
-          />
-        </div>
-      </div>
-      <div className="desktop:grid-col-9 desktop:margin-top-neg-6">
+      <div className="grid-col-12">
         {jsonContent ? (
           <SchemaBody
             path={path ?? ''}
@@ -112,7 +85,28 @@ export default function () {
             examples={examples}
           />
         ) : (
-          <SchemaDefinition />
+          <>
+            <SchemaDefinition />
+            <CardGroup>
+              {...data.map((x: GitContentDataResponse) => (
+                <Link key={x.path} to={x.path} className="tablet:grid-col-3">
+                  <Card key={x.path} className="">
+                    <CardHeader>
+                      <h3 className="display-flex flex-align-center">
+                        {x.type == 'dir' && (
+                          <span className="margin-top-05 padding-right-05">
+                            <Icon.FolderOpen />
+                          </span>
+                        )}
+                        <span>{x.name.replace('.schema.json', '')}</span>
+                      </h3>
+                    </CardHeader>
+                    <CardBody></CardBody>
+                  </Card>
+                </Link>
+              ))}
+            </CardGroup>
+          </>
         )}
       </div>
     </>
@@ -130,12 +124,11 @@ function SchemaBody({
   selectedVersion: string
   examples: ExampleFiles[]
 }) {
-  const anchor = `#${result.title?.replaceAll(' ', '-')}`
+  const windowSize = useWindowSize()
+
   return (
     <>
-      <h1 id={anchor}>
-        <a href={anchor}>{result.title ?? path}</a>
-      </h1>
+      {windowSize.width < 480 && <h1>{result.title}</h1>}
       <p className="usa-paragraph">{result.description}</p>
       <div>
         View the source on{' '}

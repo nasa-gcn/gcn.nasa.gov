@@ -7,6 +7,7 @@
  */
 import { RequestError } from '@octokit/request-error'
 import { Octokit } from '@octokit/rest'
+import memoizee from 'memoizee'
 import { extname, join } from 'path'
 import { relative } from 'path/posix'
 
@@ -23,44 +24,43 @@ const repoData = {
   owner: 'nasa-gcn',
 }
 
-function isErrnoException(e: unknown): e is NodeJS.ErrnoException {
-  return e instanceof Error && 'code' in e && 'errno' in e
-}
+export const getVersionRefs = memoizee(
+  async function () {
+    const releases = (await octokit.rest.repos.listReleases(repoData)).data.map(
+      (x) => ({ name: x.name, ref: x.tag_name })
+    )
+    return [...releases, { name: 'main', ref: 'main' }]
+  },
+  { promise: true }
+)
 
-export async function getVersionRefs() {
-  const releases = (await octokit.rest.repos.listReleases(repoData)).data.map(
-    (x) => ({ name: x.name, ref: x.tag_name })
-  )
-  return [...releases, { name: 'main', ref: 'main' }]
-}
+export const loadJson = memoizee(
+  async function (filePath: string, ref: string): Promise<Schema> {
+    if (!filePath) throw new Error('path must be defined')
 
-export async function loadJson(filePath: string, ref: string): Promise<Schema> {
-  if (!filePath) throw new Error('path must be defined')
+    if (extname(filePath) !== '.json')
+      throw new Response('not found', { status: 404 })
 
-  if (extname(filePath) !== '.json')
-    throw new Response('not found', { status: 404 })
-
-  let body: Schema
-  try {
-    body = await loadContentFromGithub(filePath, ref)
-    if (body.allOf?.find((x) => x.$ref)) {
-      await loadSubSchema(body.allOf, body.$id)
-    }
-    if (body.anyOf?.find((x) => x.$ref)) {
-      await loadSubSchema(body.anyOf, body.$id)
-    }
-    if (body.oneOf?.find((x) => x.$ref, body.$id)) {
-      await loadSubSchema(body.oneOf, body.$id)
-    }
-  } catch (e) {
-    if (isErrnoException(e) && e.code === 'ENOENT') {
+    let body: Schema
+    try {
+      body = await loadContentFromGithub(filePath, ref)
+      if (body.allOf?.find((x) => x.$ref)) {
+        await loadSubSchema(body.allOf, body.$id)
+      }
+      if (body.anyOf?.find((x) => x.$ref)) {
+        await loadSubSchema(body.anyOf, body.$id)
+      }
+      if (body.oneOf?.find((x) => x.$ref, body.$id)) {
+        await loadSubSchema(body.oneOf, body.$id)
+      }
+    } catch (e) {
       throw new Response('Not found', { status: 404 })
     }
-    throw e
-  }
 
-  return body
-}
+    return body
+  },
+  { promise: true }
+)
 
 async function loadContentFromGithub(path: string, ref?: string) {
   const ghData = (
@@ -118,53 +118,59 @@ export type GitContentDataResponse = {
   children?: GitContentDataResponse[]
 }
 
-export async function loadSchemaExamples(
-  path: string,
-  ref: string
-): Promise<ExampleFiles[]> {
-  const dirPath = path.substring(0, path.lastIndexOf('/'))
-  const schemaName = path.substring(path.lastIndexOf('/') + 1)
-  const exampleFiles = (await getGithubDir(dirPath, ref)).filter(
-    (x) =>
-      x.name.startsWith(`${schemaName.split('.')[0]}.`) &&
-      x.name.endsWith('.example.json')
-  )
+export const loadSchemaExamples = memoizee(
+  async function (path: string, ref: string): Promise<ExampleFiles[]> {
+    const dirPath = path.substring(0, path.lastIndexOf('/'))
+    const schemaName = path.substring(path.lastIndexOf('/') + 1)
+    const exampleFiles = (await getGithubDir(dirPath, ref)).filter(
+      (x) =>
+        x.name.startsWith(`${schemaName.split('.')[0]}.`) &&
+        x.name.endsWith('.example.json')
+    )
 
-  const result: ExampleFiles[] = []
-  for (const exampleFile of exampleFiles) {
-    const exPath = join(dirPath, '/', exampleFile.name)
-    const example = await loadContentFromGithub(exPath)
-    result.push({
-      name: exampleFile.name.replace('.example.json', ''),
-      content: example,
-    })
-  }
-  return result
-}
+    const result: ExampleFiles[] = []
+    for (const exampleFile of exampleFiles) {
+      const exPath = join(dirPath, '/', exampleFile.name)
+      const example = await loadContentFromGithub(exPath, ref)
+      result.push({
+        name: exampleFile.name.replace('.example.json', ''),
+        content: example,
+      })
+    }
+    return result
+  },
+  { promise: true }
+)
 
-export async function getGithubDir(
-  path?: string,
-  ref = 'main'
-): Promise<GitContentDataResponse[]> {
-  return (
-    await octokit.repos.getContent({
-      ...repoData,
-      path: path ?? 'gcn',
-      ref,
-    })
-  ).data as GitContentDataResponse[]
-}
+export const getGithubDir = memoizee(
+  async function (
+    path?: string,
+    ref = 'main'
+  ): Promise<GitContentDataResponse[]> {
+    return (
+      await octokit.repos.getContent({
+        ...repoData,
+        path: path ?? 'gcn',
+        ref,
+      })
+    ).data as GitContentDataResponse[]
+  },
+  { promise: true }
+)
 
 async function getDefaultBranch() {
   return (await octokit.rest.repos.get(repoData)).data.default_branch
 }
 
-export async function getLatestRelease() {
-  try {
-    return (await octokit.rest.repos.getLatestRelease(repoData)).data.tag_name
-  } catch (error) {
-    if (error instanceof RequestError && error.status === 404)
-      return await getDefaultBranch()
-    throw error
-  }
-}
+export const getLatestRelease = memoizee(
+  async function () {
+    try {
+      return (await octokit.rest.repos.getLatestRelease(repoData)).data.tag_name
+    } catch (error) {
+      if (error instanceof RequestError && error.status === 404)
+        return await getDefaultBranch()
+      throw error
+    }
+  },
+  { promise: true }
+)
