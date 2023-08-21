@@ -94,11 +94,8 @@
     "@types/react-copy-to-clipboard": "^5.0.4",
     "@types/react-dom": "^18.0.11",
     "@types/react-google-recaptcha": "^2.1.5",
-<<<<<<< HEAD
     "@types/source-map-support": "^0.5.6",
-=======
     "@types/tar-stream": "^2.2.2",
->>>>>>> 085ff4b (adding download options to circulars)
     "autoprefixer": "^10.4.14",
     "eslint": "^8.47.0",
     "eslint-config-prettier": "^9.0.0",
