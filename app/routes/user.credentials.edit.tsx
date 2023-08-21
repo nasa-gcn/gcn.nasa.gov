@@ -25,7 +25,7 @@ export default function () {
   return (
     <>
       <h1>New Client Credentials</h1>
-      <NewCredentialForm />
+      <NewCredentialForm autoFocus />
     </>
   )
 }
