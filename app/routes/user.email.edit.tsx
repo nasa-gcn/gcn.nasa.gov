@@ -28,7 +28,9 @@ import {
 } from './user.email/email_notices.server'
 import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
+import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
+import { useRecaptchaSiteKey } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 
 export const handle = { breadcrumb: 'Edit', getSitemapEntries: () => null }
@@ -37,8 +39,16 @@ export async function action({ request }: DataFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const data = await request.formData()
-  const { uuid, intent, name, recipient, noticeFormat, ...rest } =
-    Object.fromEntries(data)
+  const {
+    uuid,
+    intent,
+    name,
+    recipient,
+    noticeFormat,
+    'g-recaptcha-response': recaptchaResponse,
+    ...rest
+  } = Object.fromEntries(data)
+  await verifyRecaptcha(recaptchaResponse?.toString())
   const noticeTypes = Object.keys(rest)
   const topics = noticeTypes.map((noticeType) =>
     formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
@@ -96,6 +106,8 @@ export default function () {
   const defaultRecipientValid = Boolean(notification.recipient)
   const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
+  const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
+
   return (
     <Form method="POST">
       <h1>Edit Email Notification</h1>
@@ -143,6 +155,12 @@ export default function () {
         defaultSelected={notification.noticeTypes}
         validationFunction={setAlertsValid}
       ></NoticeTypeCheckboxes>
+      <ReCAPTCHA
+        onChange={(value) => {
+          setRecaptchaValid(Boolean(value))
+        }}
+      />
+
       <FormGroup>
         <ButtonGroup>
           <Link
@@ -153,7 +171,9 @@ export default function () {
             Cancel
           </Link>
           <Button
-            disabled={!(nameValid && recipientValid && alertsValid)}
+            disabled={
+              !(nameValid && recipientValid && alertsValid && recaptchaValid)
+            }
             type="submit"
           >
             Save
