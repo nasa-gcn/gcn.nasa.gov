@@ -56,7 +56,7 @@
     "react-copy-to-clipboard": "^5.0.4",
     "react-dom": "^18.2.0",
     "react-google-recaptcha": "^2.1.0",
-    "react-tag-autocomplete": "^7.0.0",
+    "react-tag-autocomplete": "^7.0.1",
     "react-topbar-progress-indicator": "^4.1.1",
     "source-map-support": "^0.5.21",
     "spin-delay": "^1.1.0",
