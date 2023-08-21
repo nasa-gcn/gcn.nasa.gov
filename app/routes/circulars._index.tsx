@@ -233,167 +233,168 @@ export default function () {
         subscribing to or submitting Circulars.
       </p>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
-        <Form
-          className="display-inline-block usa-search usa-search--small"
-          role="search"
-          id="searchForm"
-        >
-          <Label srOnly={true} htmlFor="query">
-            Search
-          </Label>
-          <TextInput
-            autoFocus
-            id="query"
-            name="query"
-            type="search"
-            defaultValue={inputQuery}
-            placeholder="Search"
-            aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form)
-            }}
-          />
-          <Button type="submit">
-            <img
-              src={searchImg}
-              className="usa-search__submit-icon"
-              alt="Search"
-            />
-          </Button>
-          <DetailsDropdownButton
-            className="height-4 padding-top-0 padding-bottom-0"
-            onClick={() => setShowContent(!showContent)}
-            aria-expanded={showContent}
-            aria-controls="searchFilters"
+        <Form id="searchForm">
+          <div
+            className="display-inline-block usa-search usa-search--small"
+            role="search"
           >
-            <Icon.CalendarToday />
-          </DetailsDropdownButton>
-          {showContent && (
-            <DetailsDropdownContent>
-              {!showDateRange && (
-                <>
-                  <Button
-                    type="button"
-                    className="usa-button usa-button--unstyled"
-                    onClick={(value) => {
-                      setInputDateGte('hour')
-                      setInputDateLte('now')
-                      setDateRange()
-                    }}
-                  >
-                    Last Hour
-                  </Button>
-                  <Button
-                    type="button"
-                    className="usa-button usa-button--unstyled"
-                    onClick={(value) => {
-                      setInputDateGte('today')
-                      setInputDateLte('now')
-                      setDateRange()
-                    }}
-                  >
-                    Today
-                  </Button>
-                  <Button
-                    type="button"
-                    className="usa-button usa-button--unstyled"
-                    onClick={(value) => {
-                      setInputDateGte('day')
-                      setInputDateLte('now')
-                      setDateRange()
-                    }}
-                  >
-                    Last 24 Hours
-                  </Button>
-                  <Button
-                    type="button"
-                    className="usa-button usa-button--unstyled"
-                    onClick={(value) => {
-                      setInputDateGte('month')
-                      setInputDateLte('now')
-                      setDateRange()
-                    }}
-                  >
-                    Last Month
-                  </Button>
-                  <Button
-                    type="button"
-                    className="usa-button usa-button--unstyled"
-                    onClick={(value) => {
-                      setInputDateGte('year')
-                      setInputDateLte('now')
-                      setDateRange()
-                    }}
-                  >
-                    Last Year
-                  </Button>
-                  <Button
-                    type="button"
-                    className="usa-button usa-button--unstyled"
-                    onClick={(value) => {
-                      setInputDateGte('ytd')
-                      setInputDateLte('now')
-                      setDateRange()
-                    }}
-                  >
-                    Year to Date
-                  </Button>
-                  <Button
-                    type="button"
-                    className="usa-button"
-                    onClick={() => setShowDateRange(!showDateRange)}
-                  >
-                    Custom Date Range
-                  </Button>
-                </>
-              )}
-              {showDateRange && (
-                <>
-                  <Button
-                    type="button"
-                    className="usa-button width-10 height-5 margin-bottom-neg-2"
-                    onClick={() => setShowDateRange(!showDateRange)}
-                  >
-                    <Icon.ArrowBack />
-                  </Button>
-                  <DateRangePicker
-                    startDateHint="dd/mm/yyyy"
-                    startDateLabel="Start Date"
-                    className="margin-bottom-2"
-                    startDatePickerProps={{
-                      id: 'event-date-start',
-                      name: 'event-date-start',
-                      defaultValue: 'startDate',
-                      onChange: (value) => {
-                        setInputDateGte(value)
-                      },
-                    }}
-                    endDateHint="dd/mm/yyyy"
-                    endDateLabel="End Date"
-                    endDatePickerProps={{
-                      id: 'event-date-end',
-                      name: 'event-date-end',
-                      defaultValue: 'endDate',
-                      onChange: (value) => {
-                        setInputDateLte(value)
-                      },
-                    }}
-                  />
-                  <Button
-                    type="button"
-                    className="usa-button width-auto height-5"
-                    form="searchForm"
-                    onClick={() => {
-                      setDateRange()
-                    }}
-                  >
-                    <Icon.CalendarToday /> Submit
-                  </Button>
-                </>
-              )}
-            </DetailsDropdownContent>
-          )}
+            <Label srOnly={true} htmlFor="query">
+              Search
+            </Label>
+            <TextInput
+              autoFocus
+              id="query"
+              name="query"
+              type="search"
+              defaultValue={inputQuery}
+              placeholder="Search"
+              aria-describedby="searchHint"
+              onChange={({ target: { form, value } }) => {
+                setInputQuery(value)
+                if (!value) submit(form)
+              }}
+            />
+            <Button type="submit">
+              <img
+                src={searchImg}
+                className="usa-search__submit-icon"
+                alt="Search"
+              />
+            </Button>
+            <DetailsDropdownButton
+              className="height-4 padding-top-0 padding-bottom-0"
+              onClick={() => setShowContent(!showContent)}
+              aria-expanded={showContent}
+              aria-controls="searchFilters"
+            >
+              <Icon.CalendarToday />
+            </DetailsDropdownButton>
+            {showContent && (
+              <DetailsDropdownContent className="position-absolute margin-left-15 margin-top-5">
+                {!showDateRange && (
+                  <>
+                    <Button
+                      type="button"
+                      className="usa-button usa-button--unstyled"
+                      onClick={(value) => {
+                        setInputDateGte('hour')
+                        setInputDateLte('now')
+                        setDateRange()
+                      }}
+                    >
+                      Last Hour
+                    </Button>
+                    <Button
+                      type="button"
+                      className="usa-button usa-button--unstyled"
+                      onClick={(value) => {
+                        setInputDateGte('today')
+                        setInputDateLte('now')
+                        setDateRange()
+                      }}
+                    >
+                      Today
+                    </Button>
+                    <Button
+                      type="button"
+                      className="usa-button usa-button--unstyled"
+                      onClick={(value) => {
+                        setInputDateGte('day')
+                        setInputDateLte('now')
+                        setDateRange()
+                      }}
+                    >
+                      Last 24 Hours
+                    </Button>
+                    <Button
+                      type="button"
+                      className="usa-button usa-button--unstyled"
+                      onClick={(value) => {
+                        setInputDateGte('month')
+                        setInputDateLte('now')
+                        setDateRange()
+                      }}
+                    >
+                      Last Month
+                    </Button>
+                    <Button
+                      type="button"
+                      className="usa-button usa-button--unstyled"
+                      onClick={(value) => {
+                        setInputDateGte('year')
+                        setInputDateLte('now')
+                        setDateRange()
+                      }}
+                    >
+                      Last Year
+                    </Button>
+                    <Button
+                      type="button"
+                      className="usa-button usa-button--unstyled"
+                      onClick={(value) => {
+                        setInputDateGte('ytd')
+                        setInputDateLte('now')
+                        setDateRange()
+                      }}
+                    >
+                      Year to Date
+                    </Button>
+                    <Button
+                      type="button"
+                      className="usa-button"
+                      onClick={() => setShowDateRange(!showDateRange)}
+                    >
+                      Custom Date Range
+                    </Button>
+                  </>
+                )}
+                {showDateRange && (
+                  <>
+                    <Button
+                      type="button"
+                      className="usa-button width-10 height-5 margin-bottom-neg-2"
+                      onClick={() => setShowDateRange(!showDateRange)}
+                    >
+                      <Icon.ArrowBack />
+                    </Button>
+                    <DateRangePicker
+                      startDateHint="dd/mm/yyyy"
+                      startDateLabel="Start Date"
+                      className="margin-bottom-2"
+                      startDatePickerProps={{
+                        id: 'event-date-start',
+                        name: 'event-date-start',
+                        defaultValue: 'startDate',
+                        onChange: (value) => {
+                          setInputDateGte(value)
+                        },
+                      }}
+                      endDateHint="dd/mm/yyyy"
+                      endDateLabel="End Date"
+                      endDatePickerProps={{
+                        id: 'event-date-end',
+                        name: 'event-date-end',
+                        defaultValue: 'endDate',
+                        onChange: (value) => {
+                          setInputDateLte(value)
+                        },
+                      }}
+                    />
+                    <Button
+                      type="button"
+                      className="usa-button width-auto height-5"
+                      form="searchForm"
+                      onClick={() => {
+                        setDateRange()
+                      }}
+                    >
+                      <Icon.CalendarToday /> Submit
+                    </Button>
+                  </>
+                )}
+              </DetailsDropdownContent>
+            )}
+          </div>
         </Form>
         <Link to={`/circulars/new${searchString}`}>
           <Button
