@@ -345,7 +345,7 @@ export default function () {
                   <ModalToggleButton modalRef={modalRef} closer>
                     <a
                       className="text-no-underline text-white"
-                      href={`/circulars/download?type=txt`}
+                      href={`/circulars/download/txt`}
                       download={'gcn-circulars.tar.gz'}
                     >
                       Raw text
@@ -355,7 +355,7 @@ export default function () {
                   <ModalToggleButton modalRef={modalRef} closer>
                     <a
                       className="text-no-underline text-white"
-                      href={`/circulars/download?type=json`}
+                      href={`/circulars/download/json`}
                       download={'gcn-circulars.tar.gz'}
                     >
                       JSON

@@ -9,8 +9,9 @@ import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
-import { redirect } from '@remix-run/node'
+import { createReadableStreamFromReadable, redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
+import { Readable } from 'stream'
 import { pack as tarPack } from 'tar-stream'
 
 import { getUser } from '../_auth/user.server'
@@ -270,9 +271,8 @@ export async function circularRedirect(query: string) {
   }
 }
 
-async function getAllRecords(): Promise<Circular[]> {
+async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
   const data = await tables()
-  let results: Circular[] = []
   let exclusiveStartKey: AWS.DynamoDB.DocumentClient.Key | undefined = undefined
 
   do {
@@ -284,29 +284,35 @@ async function getAllRecords(): Promise<Circular[]> {
     const { Items, LastEvaluatedKey } = await data.circulars.scan(params)
 
     if (Items) {
-      results = [...results, ...(Items as Circular[])]
+      yield Items as Circular[]
     }
 
     exclusiveStartKey = LastEvaluatedKey
   } while (exclusiveStartKey)
-  return results
+
+  return
 }
 
-export async function makeTarFile(fileType: string): Promise<Blob> {
-  const circulars = await getAllRecords()
-  return new Promise<Blob>((resolve, reject) => {
-    const tarChunks: Uint8Array[] = []
-    const pack = tarPack()
+export async function makeTarFile(fileType: string): Promise<ReadableStream> {
+  const tarStream = new Readable({
+    read() {},
+  })
 
-    pack.on('error', (err: Error) => {
-      reject(err)
-    })
+  const pack = tarPack()
 
-    pack.on('close', () => {
-      const tarballBlob = new Blob(tarChunks, { type: 'application/tar' })
-      resolve(tarballBlob)
-    })
-    for (const circular of circulars) {
+  pack.on('error', (err: Error) => {
+    tarStream.emit('error', err)
+  })
+
+  pack.on('data', (chunk: Uint8Array) => {
+    tarStream.push(chunk)
+  })
+
+  pack.on('end', () => {
+    tarStream.push(null)
+  })
+  for await (const circularArray of getAllRecords()) {
+    for (const circular of circularArray) {
       if (fileType === 'txt') {
         const txt_entry = pack.entry(
           { name: `gcn-circulars/${circular.circularId}.txt` },
@@ -316,15 +322,14 @@ export async function makeTarFile(fileType: string): Promise<Blob> {
       } else if (fileType === 'json') {
         const json_entry = pack.entry(
           { name: `gcn-circulars/${circular.circularId}.json` },
-          JSON.stringify(circular)
+          JSON.stringify(circular, null, 2)
         )
         json_entry.end()
       }
     }
+  }
 
-    pack.finalize()
-    pack.on('data', (chunk: Uint8Array) => {
-      tarChunks.push(chunk)
-    })
-  })
+  pack.finalize()
+
+  return createReadableStreamFromReadable(Readable.from(tarStream))
 }
