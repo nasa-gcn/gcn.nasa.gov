@@ -45,6 +45,7 @@
     "dayjs": "^1.11.9",
     "downshift": "^7.2.1",
     "email-validator": "^2.0.4",
+    "github-slugger": "^2.0.0",
     "highlight.js": "^11.8.0",
     "isbot": "^3.6.13",
     "lodash": "^4.17.21",

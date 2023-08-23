@@ -12,6 +12,8 @@ import {
   GridContainer,
 } from '@trussworks/react-uswds'
 
+import { Anchor } from '~/components/Anchor'
+
 <GridContainer className="usa-section">
 
 # GCN News and Events
@@ -27,7 +29,7 @@ import {
       }
     >
       <CollectionHeading headingLevel="h3">
-        GCN Classic Outage Due to Local Network Maintenance
+        <Anchor>GCN Classic Outage Due to Local Network Maintenance</Anchor>
       </CollectionHeading>
       <CollectionDescription>
       Due to planned network maintenance at GSFC, the connections to GCN Classic will be offline on Saturday, May 6 from 8AM ET (12:00 UTC) and concluding no later than 3PM ET (19:00 UTC).  This affects the following GCN services:
@@ -44,7 +46,7 @@ import {
       }
     >
       <CollectionHeading headingLevel="h3">
-        New GCN Circulars Service Coming April 17, 2023
+        <Anchor>New GCN Circulars Service Coming April 17, 2023</Anchor>
       </CollectionHeading>
       <CollectionDescription>
         We are pleased to announce that on April 17, 2023, the General Coordinates Network will launch the most significant overhaul of GCN Circulars since its inception in 1997. The modernized GCN Circulars experience will be part of the new GCN web site.
@@ -86,7 +88,7 @@ import {
       }
     >
       <CollectionHeading headingLevel="h3">
-        New GECAM Notice Types Available
+        <Anchor>New GECAM Notice Types Available</Anchor>
       </CollectionHeading>
       <CollectionDescription>
         GCN now distributes notices from the
@@ -104,7 +106,7 @@ import {
       variantComponent={<CollectionCalendarDate datetime={'September 2, 2022'} />}
     >
       <CollectionHeading headingLevel="h3">
-        Self-Service Configuration of Email Notifications for GCN Notices
+        <Anchor>Self-Service Configuration of Email Notifications for GCN Notices</Anchor>
       </CollectionHeading>
       <CollectionDescription>
         Have GCN Notices delivered to your email inbox by signing up and managing
@@ -121,7 +123,7 @@ import {
       className="maxw-none"
       variantComponent={<CollectionCalendarDate datetime={'August 1, 2022'} />}
     >
-      <CollectionHeading headingLevel="h3">New GCN Webinars</CollectionHeading>
+      <CollectionHeading headingLevel="h3"><Anchor>New GCN Webinars</Anchor></CollectionHeading>
       <CollectionDescription>
         GCN held three public webinars to introduce the new GCN, the GCN Classic
         over Kafka service, and plans for new features and feedback. See the
@@ -133,7 +135,7 @@ import {
       variantComponent={<CollectionCalendarDate datetime={'July 20, 2022'} />}
     >
       <CollectionHeading headingLevel="h3">
-        GCN Classic over Kafka Now Available
+        <Anchor>GCN Classic over Kafka Now Available</Anchor>
       </CollectionHeading>
       <CollectionDescription>
         All three classic GCN Notice formats (text, VOEvent, 160-byte binary
