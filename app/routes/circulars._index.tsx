@@ -350,7 +350,7 @@ export default function () {
               <div>
                 <Select
                   id="limit"
-                  className="width-auto height-5 padding-y-0"
+                  className="width-auto height-5 padding-y-0 margin-y-0"
                   name="limit"
                   defaultValue="100"
                   form="searchForm"
