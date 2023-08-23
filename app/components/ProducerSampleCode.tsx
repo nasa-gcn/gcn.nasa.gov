@@ -28,7 +28,7 @@ export function ProducerSampleCode() {
           data = json.dumps({
             '$schema': 'https://gcn.nasa.gov/schema/main/gcn/notices/mission/SchemaName.schema.json',
             'key': 'value'
-          }).encode() # Parse URL of your schema
+          }).encode()
           producer.produce(topic, data)`)}
         />
       ) : (
