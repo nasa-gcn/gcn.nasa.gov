@@ -184,10 +184,17 @@ function DownloadModal() {
   const modalRef = useRef<ModalRef>(null)
   return (
     <>
-      <ModalToggleButton modalRef={modalRef} opener className="text-middle">
+      <h2>Advanced</h2>
+      <ModalToggleButton
+        modalRef={modalRef}
+        opener
+        outline
+        className="text-middle"
+      >
         <Icon.FileDownload className="bottom-aligned margin-right-05" />
-        Download Circulars Archive
+        Download Archive
       </ModalToggleButton>
+      <div className="margin-right-2"></div>
       <Modal
         renderToPortal={false}
         ref={modalRef}
@@ -343,7 +350,7 @@ export default function () {
               <div>
                 <Select
                   id="limit"
-                  className="width-auto height-5 padding-y-0 margin-y-0"
+                  className="width-auto height-5 padding-y-0"
                   name="limit"
                   defaultValue="100"
                   form="searchForm"
