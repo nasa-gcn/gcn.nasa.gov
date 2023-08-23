@@ -7,7 +7,7 @@
  */
 import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { createReadableStreamFromReadable, redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
@@ -272,23 +272,15 @@ export async function circularRedirect(query: string) {
 }
 
 async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
-  const data = await tables()
-  let exclusiveStartKey: AWS.DynamoDB.DocumentClient.Key | undefined = undefined
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('circulars')
+  const pages = paginateScan({ client }, { TableName })
 
-  do {
-    const params: AWS.DynamoDB.DocumentClient.ScanInput = {
-      TableName: 'circulars',
-      ExclusiveStartKey: exclusiveStartKey,
-    }
-
-    const { Items, LastEvaluatedKey } = await data.circulars.scan(params)
-
-    if (Items) {
-      yield Items as Circular[]
-    }
-
-    exclusiveStartKey = LastEvaluatedKey
-  } while (exclusiveStartKey)
+  for await (const page of pages) {
+    const items: Circular[] = page.Items as Circular[]
+    yield items
+  }
 }
 
 export async function makeTarFile(fileType: string): Promise<ReadableStream> {
