@@ -8,14 +8,12 @@
 import type { DataFunctionArgs } from '@remix-run/node'
 
 import { makeTarFile } from './circulars/circulars.server'
+import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 
 export async function loader({ request }: DataFunctionArgs) {
   const tarFile = await makeTarFile('txt')
 
   return new Response(tarFile, {
-    headers: {
-      'Content-Type': 'application/tar',
-      'Cache-Control': 'public, max-age=86400',
-    },
+    headers: publicStaticShortTermCacheControlHeaders,
   })
 }
