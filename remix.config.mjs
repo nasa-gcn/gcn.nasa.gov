@@ -7,6 +7,10 @@ import remarkGfm from 'remark-gfm'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+// These packages only work in ESM mode, so we *must* bundle them
+// (at least until we switch the serverModuleFormat to ESM).
+const esmOnlyModules = ['github-slugger']
+
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {
   mdx: {
@@ -39,9 +43,10 @@ export default {
   server: './server.ts',
   serverBuildPath: 'build/server/index.js',
   serverMinify: isProduction,
-  serverDependenciesToBundle: isProduction
-    ? [/^(?!@?aws-sdk(\/|$))/]
-    : undefined,
+  serverDependenciesToBundle: [
+    ...esmOnlyModules,
+    ...(isProduction ? [/^(?!@?aws-sdk(\/|$))/] : []),
+  ],
   future: {
     v2_dev: true,
     v2_headers: true,
