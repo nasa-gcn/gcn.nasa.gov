@@ -27,31 +27,12 @@ The GCN Unified Schema provides a standardized method for organizing GCN notices
 
 <ProcessList>
   <ProcessListItem>
-    <ProcessListHeading type="h3">Clone the GitHub Repository</ProcessListHeading>
-    To begin, clone your own copy of the [nasa-gcn/gcn-schema](https://github.com/nasa-gcn/gcn-schema) repository on github. Run the following commands to get your local setup ready:
-    
-    To clone the repository:
-    <Highlight
-      language="sh"
-      code="git clone https://github.com/nasa-gcn/gcn-schema"
-    />
-
-    Change your working directory:
-    <Highlight language="sh" code="cd gcn-schema" />
-
-    Install the necessary packages:
-    <Highlight language="sh" code="npm i" />
-
+    <ProcessListHeading type="h3">Fork the GitHub Repository</ProcessListHeading>
+    To begin, fork your own copy of the [nasa-gcn/gcn-schema](https://github.com/nasa-gcn/gcn-schema) repository on GitHubub and clone a local version.
   </ProcessListItem>
   <ProcessListItem>
   <ProcessListHeading type="h3">Setting Up Your Repository</ProcessListHeading>
-
-    Create a new branch in your repository for all of your new changes:
-
-    <Highlight language="sh" code="git checkout -b <YourBranch>" />
-
-    The repository's structure allows producers to create their own folders to define schemas on an instrument-specific level. The schema folder is named according to the format <code>gcn.notices.<i>mission</i></code>, where <i>mission</i> is your [Kafka Topic](/docs/notices/producers). Within it, you can define your own schema and examples. For eaxmple, schema definition for IceCube alerts is located in the directory [`gcn/notices/icecube/`](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/icecube).
-
+    The repository's structure allows producers to create their own folders to define schemas on an instrument-specific level. The schema folder is named according to the format <code>gcn.notices.<i>mission</i></code>, where <i>mission</i> is your [Kafka Topic](/docs/notices/producers). Within it, you can define your own schema and example files. For example, schema definitions for IceCube alerts are located in the directory [`gcn/notices/icecube/`](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/icecube).
   </ProcessListItem>
   <ProcessListItem>
     <ProcessListHeading type="h3">Schema File Naming</ProcessListHeading>
@@ -68,7 +49,7 @@ The GCN Unified Schema provides a standardized method for organizing GCN notices
           language="json"
           code={JSON.stringify(
             {
-              $id: 'https://gcn.nasa.gov/schema/gcn/notices/<mission>/<schema name>.schema.json',
+              $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/<mission>/<schema name>.schema.json',
               $schema: 'https://json-schema.org/draft/2020-12/schema',
               type: 'object',
               title: 'Your Schema Name',
@@ -91,7 +72,7 @@ The GCN Unified Schema provides a standardized method for organizing GCN notices
           language="json"
           code={JSON.stringify(
             {
-              $schema:'https://gcn.nasa.gov/schema/gcn/notices/<mission>/<schema name>.schema.json',
+              $schema:'https://gcn.nasa.gov/schema/main/gcn/notices/<mission>/<schema name>.schema.json',
               "alert_datetime":"yyyy-mm-ddThh:mm:ssZ"
             },
             null,
@@ -100,93 +81,93 @@ The GCN Unified Schema provides a standardized method for organizing GCN notices
         />
       </Tab>
     </Tabs>
-</ProcessListItem>
-<ProcessListItem>
-  <ProcessListHeading type="h3">Defining Schema</ProcessListHeading>
-    We recommend exploring our [schema-browser](/docs/schema/stable/gcn) to get an idea of what common fields have already been defined in the [Core schema](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/core), as well as the [json schema documentation](https://www.learnjsonschema.com/) to familiarize yourself with the various keywords and types. A good method to start formulating your structure is to think first of your data product as JSON fields. Consider the possible values that your pipelines will have for each field. In the following example, we have a schema definition for Swift/BAT-GUANO alerts. They have included the `unevaluatedProperties` property and set it to `false`, which our validator can use to verify that there are no extra properties that are undefined in the examples:
-    <Tabs>
-      <Tab label="Alert.schema.json">
-        <Highlight
-          language="json"
-          code={JSON.stringify(
-            {
-              "$id": "https://gcn.nasa.gov/schema/gcn/notices/swift/bat/guano/alert.schema.json",
-              "$schema": "https://json-schema.org/draft/2020-12/schema",
-              "title": "Swift/BAT-GUANO Alert",
-              "description": "Candidate gamma-ray transient reported from the BAT-GUANO targeted search",
-              "type": "object",
-              "allOf": [
-                {
-                  "$ref": "/schema/gcn/notices/core/Alert.schema.json"
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">Defining Schema</ProcessListHeading>
+      We recommend exploring our [schema-browser](/docs/schema/stable/gcn) to get an idea of what common fields have already been defined in the [Core schema](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/core), as well as the [json schema documentation](https://www.learnjsonschema.com/) to familiarize yourself with the various keywords and types. A good method to start formulating your structure is to think first of your data product as JSON fields. Consider the possible values that your pipelines will have for each field. In the following example, we have a schema definition for Swift/BAT-GUANO alerts. They have included the `unevaluatedProperties` property and set it to `false`, which our validator can use to verify that there are no extra properties that are undefined in the examples:
+      <Tabs>
+        <Tab label="Alert.schema.json">
+          <Highlight
+            language="json"
+            code={JSON.stringify(
+              {
+                "$id": "https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/alert.schema.json",
+                "$schema": "https://json-schema.org/draft/2020-12/schema",
+                "title": "Swift/BAT-GUANO Alert",
+                "description": "Candidate gamma-ray transient reported from the BAT-GUANO targeted search",
+                "type": "object",
+                "allOf": [
+                  {
+                    "$ref": "/schema/gcn/notices/core/Alert.schema.json"
+                  },
+                  {
+                    "$ref": "/schema/gcn/notices/core/Event.schema.json"
+                  },
+                  {
+                    "$ref": "/schema/gcn/notices/core/DateTime.schema.json"
+                  },
+                  {
+                    "$ref": "/schema/gcn/notices/core/Localization.schema.json"
+                  },
+                  {
+                    "$ref": "/schema/gcn/notices/core/Statistics.schema.json"
+                  },
+                  {
+                    "$ref": "/schema/gcn/notices/core/Reporter.schema.json"
+                  },
+                  {
+                    "$ref": "/schema/gcn/notices/core/AdditionalInfo.schema.json"
+                  }
+                ],
+                "properties": {
+                  "$schema": true,
+                  "follow_up_event": {
+                    "type": "string",
+                    "description": "Name or trigger time of the external trigger that launched the search."
+                  },
+                  "follow_up_type": {
+                    "type": "string",
+                    "description": "Type of external trigger that launched the search, eg GW, neutrino, etc."
+                  }
                 },
-                {
-                  "$ref": "/schema/gcn/notices/core/Event.schema.json"
-                },
-                {
-                  "$ref": "/schema/gcn/notices/core/DateTime.schema.json"
-                },
-                {
-                  "$ref": "/schema/gcn/notices/core/Localization.schema.json"
-                },
-                {
-                  "$ref": "/schema/gcn/notices/core/Statistics.schema.json"
-                },
-                {
-                  "$ref": "/schema/gcn/notices/core/Reporter.schema.json"
-                },
-                {
-                  "$ref": "/schema/gcn/notices/core/AdditionalInfo.schema.json"
-                }
-              ],
-              "properties": {
-                "$schema": true,
-                "follow_up_event": {
-                  "type": "string",
-                  "description": "Name or trigger time of the external trigger that launched the search."
-                },
-                "follow_up_type": {
-                  "type": "string",
-                  "description": "Type of external trigger that launched the search, eg GW, neutrino, etc."
-                }
+                "unevaluatedProperties": false
               },
-              "unevaluatedProperties": false
-            },
-            null,
-            2
-          )}
-        />
-      </Tab>
-      <Tab label="Alert.example.json">
-        <Highlight
-          language="json"
-          code={JSON.stringify(
-            {
-              "$schema": "https://gcn.nasa.gov/schema/gcn/notices/swift/bat/guano/alert.schema.json",
-              "mission": "Swift",
-              "instrument": "BAT-GUANO",
-              "messenger": "EM",
-              "record_number": 1,
-              "alert_datetime": "2023-01-01T03:24:36.0Z",
-              "alert_tense": "current",
-              "alert_type": "initial",
-              "trigger_time": "2022-12-31T21:46:05.13Z",
-              "rate_snr": 15.8,
-              "rate_duration": 0.256,
-              "rate_energy_range": [15, 350],
-              "classification": { "GRB": 1 },
-              "far": 0.00001,
-              "follow_up_event": "Fermi 694215970",
-              "follow_up_type": "GRB",
-              "data_archive_page": "https://guano.swift.psu.edu/trigger_report?id=694215995",
-              "id": ["694215995"]
-            },
-            null,
-            2
-          )}
-        />
-      </Tab>
-    </Tabs>
-    Defining structures in JSON schema can get confusing, but we are happy to help.
+              null,
+              2
+            )}
+          />
+        </Tab>
+        <Tab label="Alert.example.json">
+          <Highlight
+            language="json"
+            code={JSON.stringify(
+              {
+                "$schema": "https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/alert.schema.json",
+                "mission": "Swift",
+                "instrument": "BAT-GUANO",
+                "messenger": "EM",
+                "record_number": 1,
+                "alert_datetime": "2023-01-01T03:24:36.0Z",
+                "alert_tense": "current",
+                "alert_type": "initial",
+                "trigger_time": "2022-12-31T21:46:05.13Z",
+                "rate_snr": 15.8,
+                "rate_duration": 0.256,
+                "rate_energy_range": [15, 350],
+                "classification": { "GRB": 1 },
+                "far": 0.00001,
+                "follow_up_event": "Fermi 694215970",
+                "follow_up_type": "GRB",
+                "data_archive_page": "https://guano.swift.psu.edu/trigger_report?id=694215995",
+                "id": ["694215995"]
+              },
+              null,
+              2
+            )}
+          />
+        </Tab>
+      </Tabs>
+      Defining structures in JSON schema can get confusing, but we are happy to help.
   </ProcessListItem>
   <ProcessListItem>
     <ProcessListHeading type="h3">Validating Schema</ProcessListHeading>
@@ -202,9 +183,9 @@ The GCN Unified Schema provides a standardized method for organizing GCN notices
   <ProcessListItem>
     <ProcessListHeading type="h3">Submit Your Schema</ProcessListHeading>
     
-    Once your schema and examples are validated, you can proceed to commit and push your local code to the [Git repository](https://github.com/nasa-gcn/gcn-schema).
+    Once your schema and examples are validated, you can proceed to commit and push your local code to your github repo.
 
-    Next, create a pull request to the [Git repository](https://github.com/nasa-gcn/gcn-schema). The GCN team will review and provide feedback as needed. Once you have incorporated the feedback, we will merge your pull request into main branch. Congratulations on successfully creating your mission schema! It is now ready for production and send alerts to GCN as described in [New Notice Producers](/docs/notices/producers).
+    Next, create a pull request to our [Git repository](https://github.com/nasa-gcn/gcn-schema). The GCN team will review and provide feedback as needed. Once you have incorporated the feedback, we will merge your pull request into main branch. Congratulations on successfully creating your mission schema! It is now ready for production and send alerts to GCN as described in [New Notice Producers](/docs/notices/producers).
 
   </ProcessListItem>
 </ProcessList>
