@@ -289,8 +289,6 @@ async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
 
     exclusiveStartKey = LastEvaluatedKey
   } while (exclusiveStartKey)
-
-  return
 }
 
 export async function makeTarFile(fileType: string): Promise<ReadableStream> {
@@ -320,6 +318,7 @@ export async function makeTarFile(fileType: string): Promise<ReadableStream> {
         )
         txt_entry.end()
       } else if (fileType === 'json') {
+        delete circular.sub
         const json_entry = pack.entry(
           { name: `gcn-circulars/${circular.circularId}.json` },
           JSON.stringify(circular, null, 2)

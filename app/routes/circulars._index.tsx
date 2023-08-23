@@ -180,6 +180,67 @@ function Pagination({
   )
 }
 
+function DownloadModal() {
+  const modalRef = useRef<ModalRef>(null)
+  return (
+    <>
+      <ModalToggleButton modalRef={modalRef} opener className="text-middle">
+        <Icon.FileDownload className="bottom-aligned margin-right-05" />
+        Download Circulars Archive
+      </ModalToggleButton>
+      <Modal
+        renderToPortal={false}
+        ref={modalRef}
+        id="example-modal-1"
+        aria-labelledby="modal-1-heading"
+        aria-describedby="modal-1-description"
+      >
+        <ModalHeading id="modal-1-heading">
+          GCN Circulars Database Download
+        </ModalHeading>
+        <div className="usa-prose">
+          <p id="modal-1-description">
+            This is a download of the entire GCN Circulars Databse.
+          </p>
+          <p>It may take a moment.</p>
+          <p>Download will start once a file format is chosen below.</p>
+        </div>
+        <ModalFooter>
+          <ButtonGroup>
+            <ModalToggleButton modalRef={modalRef} closer>
+              <a
+                className="text-no-underline text-white"
+                href={`/circulars/archive/txt/tar`}
+                download={'gcn-circulars.tar.gz'}
+              >
+                Raw text
+              </a>
+            </ModalToggleButton>
+
+            <ModalToggleButton modalRef={modalRef} closer>
+              <a
+                className="text-no-underline text-white"
+                href={`/circulars/archive/json/tar`}
+                download={'gcn-circulars.tar.gz'}
+              >
+                JSON
+              </a>
+            </ModalToggleButton>
+            <ModalToggleButton
+              modalRef={modalRef}
+              closer
+              outline
+              className="text-center"
+            >
+              Cancel
+            </ModalToggleButton>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
+    </>
+  )
+}
+
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
@@ -198,8 +259,6 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-
-  const modalRef = useRef<ModalRef>(null)
 
   const clean = inputQuery === query
 
@@ -284,7 +343,7 @@ export default function () {
               <div>
                 <Select
                   id="limit"
-                  className="width-auto height-5 padding-y-0 margin-bottom-2"
+                  className="width-auto height-5 padding-y-0 margin-y-0"
                   name="limit"
                   defaultValue="100"
                   form="searchForm"
@@ -312,67 +371,7 @@ export default function () {
               )}
             </div>
           </div>
-          <div>
-            <ModalToggleButton
-              modalRef={modalRef}
-              opener
-              className="text-middle"
-            >
-              <Icon.FileDownload className="bottom-aligned margin-right-05" />
-              Download
-            </ModalToggleButton>
-            <Modal
-              renderToPortal={false}
-              ref={modalRef}
-              id="example-modal-1"
-              aria-labelledby="modal-1-heading"
-              aria-describedby="modal-1-description"
-            >
-              <ModalHeading id="modal-1-heading">
-                GCN Circulars Database Download
-              </ModalHeading>
-              <div className="usa-prose">
-                <div id="modal-1-description">
-                  This is a download of the entire GCN Circulars Databse.
-                </div>
-                <div>It may take a moment.</div>
-                <div>
-                  Download will start once a file format is chosen below.
-                </div>
-              </div>
-              <ModalFooter>
-                <ButtonGroup>
-                  <ModalToggleButton modalRef={modalRef} closer>
-                    <a
-                      className="text-no-underline text-white"
-                      href={`/circulars/download/txt`}
-                      download={'gcn-circulars.tar.gz'}
-                    >
-                      Raw text
-                    </a>
-                  </ModalToggleButton>
-
-                  <ModalToggleButton modalRef={modalRef} closer>
-                    <a
-                      className="text-no-underline text-white"
-                      href={`/circulars/download/json`}
-                      download={'gcn-circulars.tar.gz'}
-                    >
-                      JSON
-                    </a>
-                  </ModalToggleButton>
-                  <ModalToggleButton
-                    modalRef={modalRef}
-                    closer
-                    unstyled
-                    className="padding-105 text-center"
-                  >
-                    Go back
-                  </ModalToggleButton>
-                </ButtonGroup>
-              </ModalFooter>
-            </Modal>
-          </div>
+          <DownloadModal />
         </>
       )}
     </>
