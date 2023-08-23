@@ -44,7 +44,6 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   if (query) {
     await circularRedirect(query)
   }
-
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
@@ -194,7 +193,6 @@ function DownloadModal() {
         <Icon.FileDownload className="bottom-aligned margin-right-05" />
         Download Archive
       </ModalToggleButton>
-      <div className="margin-right-2"></div>
       <Modal
         renderToPortal={false}
         ref={modalRef}
@@ -207,18 +205,18 @@ function DownloadModal() {
         </ModalHeading>
         <div className="usa-prose">
           <p id="modal-1-description">
-            This is a download of the entire GCN Circulars Databse.
+            This is a download of the entire GCN Circulars databse.
           </p>
           <p>It may take a moment.</p>
-          <p>Download will start once a file format is chosen below.</p>
+          <p>Select a file format to begin download.</p>
         </div>
         <ModalFooter>
           <ButtonGroup>
             <ModalToggleButton modalRef={modalRef} closer>
               <a
                 className="text-no-underline text-white"
-                href={`/circulars/archive/txt/tar`}
-                download={'gcn-circulars.tar.gz'}
+                href={`/circulars/archive.txt.tar`}
+                download={'archive.tar.gz'}
               >
                 Raw text
               </a>
@@ -227,8 +225,8 @@ function DownloadModal() {
             <ModalToggleButton modalRef={modalRef} closer>
               <a
                 className="text-no-underline text-white"
-                href={`/circulars/archive/json/tar`}
-                download={'gcn-circulars.tar.gz'}
+                href={`/circulars/archive.json.tar`}
+                download={'archive.tar.gz'}
               >
                 JSON
               </a>
@@ -251,7 +249,6 @@ function DownloadModal() {
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
-  const submit = useSubmit()
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
@@ -266,8 +263,9 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-
   const clean = inputQuery === query
+
+  const submit = useSubmit()
 
   return (
     <>

@@ -283,7 +283,9 @@ async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
   }
 }
 
-export async function makeTarFile(fileType: string): Promise<ReadableStream> {
+export async function makeTarFile(
+  fileType: 'json' | 'txt'
+): Promise<ReadableStream> {
   const tarStream = new Readable({
     read() {},
   })
@@ -305,14 +307,14 @@ export async function makeTarFile(fileType: string): Promise<ReadableStream> {
     for (const circular of circularArray) {
       if (fileType === 'txt') {
         const txt_entry = pack.entry(
-          { name: `gcn-circulars/${circular.circularId}.txt` },
+          { name: `archive/${circular.circularId}.txt` },
           formatCircular(circular)
         )
         txt_entry.end()
       } else if (fileType === 'json') {
         delete circular.sub
         const json_entry = pack.entry(
-          { name: `gcn-circulars/${circular.circularId}.json` },
+          { name: `archive/${circular.circularId}.json` },
           JSON.stringify(circular, null, 2)
         )
         json_entry.end()
