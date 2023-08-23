@@ -98,18 +98,21 @@ body {
  * Hover link indicator for headings (like in GitHub's display of Markdown)
  */
 
-@for $i from 1 through 6 {
-  h#{$i} > a {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  & > a {
     color: inherit;
     text-decoration: none;
   }
 
-  h#{$i} > a:hover::before {
+  & > a:hover::after {
     content: url('~/../node_modules/nasawds/src/img/usa-icons/link.svg');
-    position: relative;
-    float: left;
-    width: 0;
-    right: 30px;
+    position: absolute;
+    padding-left: 1ex;
   }
 }
 
