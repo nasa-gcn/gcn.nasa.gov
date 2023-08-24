@@ -270,8 +270,7 @@ export async function circularRedirect(query: string) {
   }
 }
 
-async function getAllRecords(): Promise<Circular[]> {
-  let results: Circular[] = []
+async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('circulars')
@@ -279,47 +278,47 @@ async function getAllRecords(): Promise<Circular[]> {
 
   for await (const page of pages) {
     const items: Circular[] = page.Items as Circular[]
-    if (items) {
-      results = [...results, ...(items as Circular[])]
-    }
+    yield items
   }
-  return results
 }
 
 export async function makeTarFile(fileType: 'json' | 'txt'): Promise<Blob> {
-  const circulars = await getAllRecords()
-  return new Promise<Blob>((resolve, reject) => {
-    const tarChunks: Uint8Array[] = []
+  return new Promise(async (resolve, reject) => {
     const pack = tarPack()
+    const chunks: Uint8Array[] = []
 
-    pack.on('error', (err: Error) => {
+    pack.on('data', (chunk) => {
+      chunks.push(chunk)
+    })
+
+    pack.on('end', () => {
+      const tarData = new Uint8Array(Buffer.concat(chunks))
+      resolve(new Blob([tarData], { type: 'application/x-tar' }))
+    })
+
+    pack.on('error', (err) => {
       reject(err)
     })
 
-    pack.on('close', () => {
-      const tarballBlob = new Blob(tarChunks, { type: 'application/tar' })
-      resolve(tarballBlob)
-    })
-    for (const circular of circulars) {
-      if (fileType === 'txt') {
-        const txt_entry = pack.entry(
-          { name: `archive.txt/${circular.circularId}.txt` },
-          formatCircular(circular)
-        )
-        txt_entry.end()
-      } else if (fileType === 'json') {
-        delete circular.sub
-        const json_entry = pack.entry(
-          { name: `archive.json/${circular.circularId}.json` },
-          JSON.stringify(circular, null, 2)
-        )
-        json_entry.end()
+    for await (const circularArray of getAllRecords()) {
+      for (const circular of circularArray) {
+        if (fileType === 'txt') {
+          const txt_entry = pack.entry(
+            { name: `archive.txt/${circular.circularId}.txt` },
+            formatCircular(circular)
+          )
+          txt_entry.end()
+        } else if (fileType === 'json') {
+          delete circular.sub
+          const json_entry = pack.entry(
+            { name: `archive.json/${circular.circularId}.json` },
+            JSON.stringify(circular, null, 2)
+          )
+          json_entry.end()
+        }
       }
     }
 
     pack.finalize()
-    pack.on('data', (chunk: Uint8Array) => {
-      tarChunks.push(chunk)
-    })
   })
 }
