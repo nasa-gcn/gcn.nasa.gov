@@ -12,7 +12,11 @@ import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 
 export async function loader({ request }: DataFunctionArgs) {
   const tarFile = await makeTarFile('json')
+  const headers = {
+    ...publicStaticShortTermCacheControlHeaders,
+    'Content-Type': 'application/x-tar',
+  }
   return new Response(tarFile, {
-    headers: publicStaticShortTermCacheControlHeaders,
+    headers: headers,
   })
 }

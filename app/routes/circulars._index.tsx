@@ -216,7 +216,6 @@ function DownloadModal() {
               <a
                 className="text-no-underline text-white"
                 href={`/circulars/archive.txt.tar`}
-                download={'archive.tar.gz'}
               >
                 Raw text
               </a>
@@ -226,7 +225,6 @@ function DownloadModal() {
               <a
                 className="text-no-underline text-white"
                 href={`/circulars/archive.json.tar`}
-                download={'archive.tar.gz'}
               >
                 JSON
               </a>
