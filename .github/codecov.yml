@@ -1,0 +1,9 @@
+# Use Codecov in "informational" mode: post coverage results to pull requests,
+# but do not report a failing status if the coverage decreases.
+#
+# FIXME: remove this when we have a much higher coverage fraction.
+coverage:
+  status:
+    project:
+      default:
+        informational: true
