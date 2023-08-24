@@ -17,7 +17,5 @@ export async function loader({ request }: DataFunctionArgs) {
     ...publicStaticShortTermCacheControlHeaders,
     'Content-Type': 'application/x-tar',
   }
-  return new Response(tarFile, {
-    headers: headers,
-  })
+  return new Response(tarFile, { headers })
 }
