@@ -101,7 +101,7 @@ runtime nodejs18.x
 region us-east-1
 architecture arm64
 memory 256
-timeout 10
+timeout 30
 
 @storage-private
 email-incoming
