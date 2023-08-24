@@ -475,13 +475,13 @@ export function ClientSampleCode({
                 }
                 catch (Exception ex)
                 {
-                  if (!ex.Message.Contains("Subscribed topic not available"))
+                  if (ex.Message.Contains("Subscribed topic not available"))
                   {
-                    throw;
+                    Console.WriteLine(ex.Message);
                   }
                   else
                   {
-                    Console.WriteLine(ex.Message);
+                    throw;
                   }
                 }
               }
