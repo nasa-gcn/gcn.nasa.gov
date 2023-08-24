@@ -46,9 +46,14 @@ function getFeatures() {
   )
 }
 
+function getSessionSecret() {
+  return getEnvOrDieInProduction('SESSION_SECRET') || 'fallback-secret-for-dev'
+}
+
 export const origin = /* @__PURE__ */ getOrigin()
 export const hostname = /* @__PURE__ */ getHostname()
 export const features = /* @__PURE__ */ getFeatures()
+export const sessionSecret = /* @__PURE__ */ getSessionSecret()
 
 /**
  * Return true if the given feature flag is enabled.

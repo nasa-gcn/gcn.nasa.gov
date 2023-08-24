@@ -112,6 +112,26 @@ describe('getOrigin', () => {
   })
 })
 
+describe('getSessionSecret', () => {
+  const key = 'SESSION_SECRET'
+
+  beforeAll(() => {
+    setEnv('ARC_SANDBOX', JSON.stringify({ ports: { http: 1234 } }))
+  })
+
+  test('gets sandbox value when SESSION_SECRET is not defined', () => {
+    setEnv(key, undefined)
+    const { sessionSecret } = importEnv()
+    expect(sessionSecret).toBe('fallback-secret-for-dev')
+  })
+
+  test('gets env.SESSION_SECRET when SESSION_SECRET is defined', () => {
+    setEnv(key, 'xyzzy')
+    const { sessionSecret } = importEnv()
+    expect(sessionSecret).toBe('xyzzy')
+  })
+})
+
 describe('getHostname', () => {
   test('returns localhost when ORIGIN is not defined', () => {
     setEnv('ORIGIN', undefined)
@@ -134,6 +154,7 @@ describe('getEnvOrDieInProduction', () => {
   // ORIGIN must be defined
   beforeEach(() => {
     setEnv('ORIGIN', 'http://example.gov')
+    setEnv('SESSION_SECRET', 'foobar')
   })
 
   test('returns undefined if the variable does not exist', () => {

@@ -64,6 +64,12 @@ export default function () {
                       Getting Started
                     </NavLink>,
                     <NavLink
+                      key="configuration"
+                      to="contributing/configuration"
+                    >
+                      Configuration
+                    </NavLink>,
+                    <NavLink
                       key="feature-flags"
                       to="contributing/feature-flags"
                     >
