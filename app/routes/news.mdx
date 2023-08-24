@@ -25,6 +25,44 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
+        <CollectionCalendarDate datetime={'August 23, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Important notes for GCN Kafka client users</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        Thanks to the feedback of some of our users, we have tracked down and fixed several reliability issues related to our Kafka brokers and clients. If you are consuming GCN Notices via Kafka in Python, then please take the actions noted below.
+
+        * **Daily Kafka outages have been resolved.** The GCN Kafka brokers had been experiencing daily outages at around 00:00 UTC and lasting from about a minute to an hour. We traced the problem to a log collection agent that was using excessive memory. We resolved the issue by disabling the agent.
+        * **Python sample code has been updated.** Our [Python client sample code](/docs/client#python) was missing some necessary error handling. Some errors that may occur in the `consumer.consume()` loop are reported in the returned Kafka message. If you consume GCN Notices via Kafka in Python using the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) client or [confluent-kafka-python](https://github.com/confluentinc/confluent-kafka-python), then please be sure to update your code as follows.
+
+          If your client consume loop looks like this:
+
+          ```python
+          while True:
+              for message in consumer.consume(timeout=1):
+              value = message.value()
+              # add your code to process the alert here
+          ```
+
+          then add an `if` statement to skip normal processing for errors, like this:
+
+          ```python
+          while True:
+              for message in consumer.consume(timeout=1):
+              if message.error():
+                  print(message.error())
+                  continue
+              value = message.value()
+              # add your code to process the alert here
+          ```
+        * **New version of Python client.** We have released version 0.3.3 of our [official Python client, gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python). This version improves the reliability of authentication for long-lived connections. Please update to the latest version. If you are not using our official client but you are using [confluent-kafka-python](https://github.com/confluentinc/confluent-kafka-python) directly, then please update to the latest version of confluent-kafka-python (2.2.0 or newer).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
         <CollectionCalendarDate datetime={'May 6, 2023'} />
       }
     >
