@@ -14,17 +14,22 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
+import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
   ButtonGroup,
   Icon,
   Label,
+  Modal,
+  ModalFooter,
+  ModalHeading,
+  ModalToggleButton,
   Select,
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import clamp from 'lodash/clamp'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
@@ -174,6 +179,71 @@ function Pagination({
   )
 }
 
+function DownloadModal() {
+  const modalRef = useRef<ModalRef>(null)
+  return (
+    <>
+      <h2>Advanced</h2>
+      <ModalToggleButton
+        modalRef={modalRef}
+        opener
+        outline
+        className="text-middle"
+      >
+        <Icon.FileDownload className="bottom-aligned margin-right-05" />
+        Download Archive
+      </ModalToggleButton>
+      <Modal
+        renderToPortal={false}
+        ref={modalRef}
+        id="example-modal-1"
+        aria-labelledby="modal-1-heading"
+        aria-describedby="modal-1-description"
+      >
+        <ModalHeading id="modal-1-heading">
+          GCN Circulars Database Download
+        </ModalHeading>
+        <div className="usa-prose">
+          <p id="modal-1-description">
+            This is a download of the entire GCN Circulars database.
+          </p>
+          <p>It may take a moment.</p>
+          <p>Select a file format to begin download.</p>
+        </div>
+        <ModalFooter>
+          <ButtonGroup>
+            <ModalToggleButton modalRef={modalRef} closer>
+              <a
+                className="text-no-underline text-white"
+                href={`/circulars/archive.txt.tar`}
+              >
+                Raw text
+              </a>
+            </ModalToggleButton>
+
+            <ModalToggleButton modalRef={modalRef} closer>
+              <a
+                className="text-no-underline text-white"
+                href={`/circulars/archive.json.tar`}
+              >
+                JSON
+              </a>
+            </ModalToggleButton>
+            <ModalToggleButton
+              modalRef={modalRef}
+              closer
+              outline
+              className="text-center"
+            >
+              Cancel
+            </ModalToggleButton>
+          </ButtonGroup>
+        </ModalFooter>
+      </Modal>
+    </>
+  )
+}
+
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
@@ -304,6 +374,7 @@ export default function () {
               )}
             </div>
           </div>
+          <DownloadModal />
         </>
       )}
     </>
