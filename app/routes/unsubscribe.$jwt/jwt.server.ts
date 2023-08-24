@@ -10,9 +10,9 @@ import { SignJWT, jwtVerify } from 'jose'
 import invariant from 'tiny-invariant'
 
 import { maxTokenAge } from './jwt.lib'
-import { getEnvOrDie, origin as issuer } from '~/lib/env.server'
+import { origin as issuer, sessionSecret } from '~/lib/env.server'
 
-const key = new TextEncoder().encode(getEnvOrDie('SESSION_SECRET'))
+const key = new TextEncoder().encode(sessionSecret)
 
 type UnsubscribeOptions = {
   email: string
