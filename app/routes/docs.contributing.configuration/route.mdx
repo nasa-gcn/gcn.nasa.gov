@@ -1,0 +1,114 @@
+---
+handle:
+  breadcrumb: Configuration
+---
+
+import { Table } from '@trussworks/react-uswds'
+
+import { Default, Description, Key } from './components'
+
+# Configuration
+
+For both [local development](.) and [deployment](deployment), the configuration of the GCN web application is controlled by the environment variables. You can adjust the environment variables in any one of three ways:
+
+- [**`.env` file:**](https://arc.codes/docs/en/reference/configuration/local-preferences#.env-file-support) Create a file called `.env` in the base directory of your project formatted like this:
+
+  ```text
+  FOO=value_of_foo_for_local_testing
+  BAR=value_of_bar_for_local_testing
+  ```
+
+- [**`preferences.arc` file:**](https://arc.codes/docs/en/reference/configuration/local-preferences#%40env) Create a file called `.preferences.arc` in the base directory of your project formatted like this:
+
+  ```text
+  @env
+  testing
+    FOO=value_of_foo_for_local_testing
+    BAR=value_of_bar_for_local_testing
+
+  production
+    FOO=value_of_foo_for_deployment
+    BAR=value_of_bar_for_deployment
+  ```
+
+- [**`arc env` command:**](https://arc.codes/docs/en/reference/cli/env) Adjust settings for production by running the following commands.
+
+  ```text
+  arc env -e production --add FOO value_of_foo_for_deployment
+  arc env -e production --add BAR value_of_bar_for_deployment
+  ```
+
+## Supported environment variables
+
+_All_ environment variables are _optional in local development_. _All_ environment variables with the exception of `GCN_FEATURES` are _required in production deployment_.
+
+<Table bordered compact stackedStyle="headers">
+  <thead>
+    <tr>
+      <th scope="col">Key</th>
+      <th scope="col">Description</th>
+      <th scope="col">Default</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <Key>`SESSION_SECRET`</Key>
+      <Description>
+        Signing key for session cookies. Should be a long, random string
+      </Description>
+      <Default>Hard-coded constant</Default>
+    </tr>
+    <tr>
+      <Key>`COGNITO_USER_POOL_ID`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`</Key>
+      <Description>
+        OpenID Connect identity provider configuration for [AWS
+        Cognito](https://aws.amazon.com/cognito/)
+      </Description>
+      <Default>Sandbox identity provider</Default>
+    </tr>
+    <tr>
+      <Key>`RECAPTCHA_SITE_KEY`, `RECAPTCHA_SECRET_KEY`</Key>
+      <Description>
+        [Google ReCAPTCHA](https://www.google.com/recaptcha/) configuration
+      </Description>
+      <Default>ReCAPTCHAs replaced with placeholder</Default>
+    </tr>
+    <tr>
+      <Key>`GITHUB_API_TOKEN`</Key>
+      <Description>
+        GitHub API token for the schema browser. In [GitHub
+        settings](https://github.com/settings/tokens), generate a Classic token
+        with the expiration as long as possible and no scopes selected
+      </Description>
+      <Default>Anonymous GitHub API requests with lower rate limits</Default>
+    </tr>
+    <tr>
+      <Key>`ORIGIN`</Key>
+      <Description>
+        URL origin for external redirects, email From addresses, etc.
+      </Description>
+      <Default>http://localhost:3333</Default>
+    </tr>
+    <tr>
+      <Key>`ZENDESK_EMAIL`</Key>
+      <Description>
+        Email address for [Zendesk
+        forwarding](https://support.zendesk.com/hc/en-us/articles/4408886828698)
+      </Description>
+      <Default>Forwarding disabled</Default>
+    </tr>
+    <tr>
+      <Key>`ZENDESK_TOKEN`, `ZENDESK_TOKEN_EMAIL`</Key>
+      <Description>Zendesk API token and user email address</Description>
+      <Default>Zendesk API disabled</Default>
+    </tr>
+    <tr>
+      <Key>`GCN_FEATURES`</Key>
+      <Description>
+        [Feature flags](feature-flags) (for example,
+        `ANTIGRAVITY,TIME_TRAVEL,PYROKINESIS`)
+      </Description>
+      <Default>No features</Default>
+    </tr>
+  </tbody>
+</Table>

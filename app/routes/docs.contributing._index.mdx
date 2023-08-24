@@ -75,59 +75,6 @@ Here are instructions for getting the GCN site set up and running on your own co
   </ProcessListItem>
   <ProcessListItem>
     <ProcessListHeading type="h3">
-      Write configuration file
-    </ProcessListHeading>
-
-    Create a file called `.env` in the root directory of the repository with the following contents to define the configuration of your local development GCN server:
-
-    ```sh
-    # (Required) Signing key for session cookies.
-    # Fill in with a long, random string.
-    SESSION_SECRET=fill-me-in
-
-    # (Optional) OpenID Connect identity provider configuration for Cognito.
-    # If omitted, then we will use a built-in sandbox identity provider.
-    # COGNITO_USER_POOL_ID=fill-me-in
-    # OIDC_CLIENT_ID=fill-me-in
-    # OIDC_CLIENT_SECRET=fill-me-in
-
-    # (Optional) Google ReCAPTCHA configuration.
-    # For parts of the site that require authentication,
-    # these lines must be uncommented and filled in.
-    # RECAPTCHA_SITE_KEY=fill-me-in
-    # RECAPTCHA_SECRET_KEY=fill-me-in
-
-    # (Optional) Github Integrations
-    # For parts of the site that pull data using Github's content API (i.e. schema-browser)
-    # See https://github.com/settings/tokens to generate an API token
-    # Generate a Classic token with the expiration set to be as long as possible and
-    # no scopes set.
-    # GITHUB_API_TOKEN=fill-me-in
-
-    # (Optional) URL origin to be used for external redirects, email From
-    # addresses, and so on. Leave this unset for local development so that it
-    # defaults to http://localhost:3333.
-    # ORIGIN=https://gcn.nasa.gov
-
-    # (Optional) Zendesk configuration.
-    # * ZENDESK_TOKEN, ZENDESK_TOKEN_EMAIL:
-    #   API token and user email address for the Zendesk API.
-    # * ZENDESK_EMAIL: forward emails from Amazon SES to Zendesk.
-    #   See https://support.zendesk.com/hc/en-us/articles/4408886828698.
-    # ZENDESK_TOKEN_EMAIL=username@example.com
-    # ZENDESK_TOKEN=fill-me-in
-    # ZENDESK_EMAIL=support@subdomain.zendesk.com
-
-    # (Optional) Feature flags turn on parts of the web site that are under
-    # development. On the production web site (https://gcn.nasa.gov), all
-    # feature flags are disabled by default. Turn feature flags for local
-    # development by adding them to this comma-separated list.
-    # GCN_FEATURES=ANTIGRAVITY,TIME_TRAVEL,PYROKINESIS
-    ```
-
-  </ProcessListItem>
-  <ProcessListItem>
-    <ProcessListHeading type="h3">
       Start development server
     </ProcessListHeading>
 
