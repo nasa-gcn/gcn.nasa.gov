@@ -154,10 +154,7 @@
       "prettier"
     ],
     "rules": {
-<<<<<<< HEAD
-      "no-implicit-coercion": [
-        "error"
-      ],
+      "no-implicit-coercion": "error",
       "no-restricted-globals": [
         "error",
         "event",
@@ -165,6 +162,7 @@
         "origin"
 >>>>>>> 20ba63a (Disallow use of silly browser globals)
       ],
+      "object-shorthand": "error",
       "prefer-const": "error"
     },
     "overrides": [

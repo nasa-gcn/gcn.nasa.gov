@@ -117,7 +117,7 @@ export class EndorsementsServer {
     await db.circular_endorsements.update({
       Key: {
         requestorSub: this.#sub,
-        endorserSub: endorserSub,
+        endorserSub,
       },
       UpdateExpression:
         'set #status = :status, endorserEmail = :endorserEmail, requestorEmail = :requestorEmail, created = :created, note = :note',
@@ -187,7 +187,7 @@ export class EndorsementsServer {
 
     const requestorEmail: string = (
       await db.circular_endorsements.get({
-        requestorSub: requestorSub,
+        requestorSub,
         endorserSub: this.#sub,
       })
     )?.requestorEmail
@@ -199,7 +199,7 @@ export class EndorsementsServer {
 
     await db.circular_endorsements.update({
       Key: {
-        requestorSub: requestorSub,
+        requestorSub,
         endorserSub: this.#sub,
       },
       UpdateExpression: 'set #status = :status',
@@ -277,7 +277,7 @@ export class EndorsementsServer {
     const param = {
       Key: {
         requestorSub: this.#sub,
-        endorserSub: endorserSub,
+        endorserSub,
       },
       TableName: tableName,
       ConditionExpression: '#status = :pendingStatus',

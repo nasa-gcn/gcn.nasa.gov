@@ -121,7 +121,7 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
   ...Object.entries(favicons).map(([size, href]) => ({
     rel: 'icon',
-    href: href,
+    href,
     sizes: `${size}x${size}`,
   })),
 ]
