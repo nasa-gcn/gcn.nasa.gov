@@ -57,7 +57,7 @@ export async function action({ request }: DataFunctionArgs) {
     name: name.toString(),
     recipient: recipient.toString(),
     created: 0,
-    topics: topics,
+    topics,
     uuid: uuid?.toString(),
     sub: user.sub,
   }
