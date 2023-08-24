@@ -45,7 +45,7 @@ export const getDynamoDBAutoIncrement = memoizee(
       counterTableName,
       counterTableKey: { tableName: 'circulars' },
       counterTableAttributeName: 'circularId',
-      tableName: tableName,
+      tableName,
       tableAttributeName: 'circularId',
       initialValue: 1,
       dangerously,
