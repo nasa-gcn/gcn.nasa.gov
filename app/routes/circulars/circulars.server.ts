@@ -307,14 +307,14 @@ export async function makeTarFile(
     for (const circular of circularArray) {
       if (fileType === 'txt') {
         const txt_entry = pack.entry(
-          { name: `archive/${circular.circularId}.txt` },
+          { name: `archive.txt/${circular.circularId}.txt` },
           formatCircular(circular)
         )
         txt_entry.end()
       } else if (fileType === 'json') {
         delete circular.sub
         const json_entry = pack.entry(
-          { name: `archive/${circular.circularId}.json` },
+          { name: `archive.json/${circular.circularId}.json` },
           JSON.stringify(circular, null, 2)
         )
         json_entry.end()

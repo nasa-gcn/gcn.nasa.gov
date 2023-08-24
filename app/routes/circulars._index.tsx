@@ -205,7 +205,7 @@ function DownloadModal() {
         </ModalHeading>
         <div className="usa-prose">
           <p id="modal-1-description">
-            This is a download of the entire GCN Circulars databse.
+            This is a download of the entire GCN Circulars database.
           </p>
           <p>It may take a moment.</p>
           <p>Select a file format to begin download.</p>
