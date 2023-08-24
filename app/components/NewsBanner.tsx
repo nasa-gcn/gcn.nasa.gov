@@ -8,12 +8,18 @@
 import { Link } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
-export default function NewsBanner({ message }: { message: string }) {
+export default function NewsBanner({
+  children,
+  to,
+}: {
+  children: React.ReactNode
+  to: Parameters<typeof Link>[0]['to']
+}) {
   return (
     <div className="bg-gold padding-x-2 desktop:padding-x-4 padding-y-1 line-height-sans-3 font-lang-4 text-bold">
       <GridContainer>
-        {message} See{' '}
-        <Link to="/news" className="hover:text-no-underline">
+        {children} See{' '}
+        <Link to={to} className="hover:text-no-underline">
           news and announcements
         </Link>
       </GridContainer>
