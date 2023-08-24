@@ -479,6 +479,10 @@ export function ClientSampleCode({
                   {
                     throw;
                   }
+                  else
+                  {
+                    Console.WriteLine(ex.Message);
+                  }
                 }
               }
             }
