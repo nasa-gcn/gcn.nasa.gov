@@ -218,7 +218,7 @@ function DownloadModal() {
                 className="text-no-underline text-white"
                 href="/circulars/archive.txt.tar"
               >
-                Raw text
+                Text
               </a>
             </ModalToggleButton>
 
