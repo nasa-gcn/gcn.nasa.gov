@@ -375,7 +375,7 @@ export default function () {
               )}
             </div>
           </div>
-          {useFeature('DOWNLOAD') && <DownloadModal />}
+          {useFeature('DOWNLOAD_CIRCULARS') && <DownloadModal />}
         </>
       )}
     </>
