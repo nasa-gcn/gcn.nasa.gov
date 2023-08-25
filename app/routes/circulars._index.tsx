@@ -35,6 +35,7 @@ import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
+import { useFeature } from '~/root'
 
 import searchImg from '~/../node_modules/nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -374,7 +375,7 @@ export default function () {
               )}
             </div>
           </div>
-          <DownloadModal />
+          {useFeature('DOWNLOAD') && <DownloadModal />}
         </>
       )}
     </>
