@@ -9,9 +9,8 @@ import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
-import { createReadableStreamFromReadable, redirect } from '@remix-run/node'
+import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
-import { Readable } from 'stream'
 import { pack as tarPack } from 'tar-stream'
 
 import { getUser } from '../_auth/user.server'
@@ -283,46 +282,43 @@ async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
   }
 }
 
-export async function makeTarFile(
-  fileType: 'json' | 'txt'
-): Promise<ReadableStream> {
-  const tarStream = new Readable({
-    read() {},
-  })
+export async function makeTarFile(fileType: 'json' | 'txt'): Promise<Blob> {
+  return new Promise(async (resolve, reject) => {
+    const pack = tarPack()
+    const chunks: Uint8Array[] = []
 
-  const pack = tarPack()
+    pack.on('data', (chunk) => {
+      chunks.push(chunk)
+    })
 
-  pack.on('error', (err: Error) => {
-    tarStream.emit('error', err)
-  })
+    pack.on('end', () => {
+      const tarData = new Uint8Array(Buffer.concat(chunks))
+      resolve(new Blob([tarData], { type: 'application/x-tar' }))
+    })
 
-  pack.on('data', (chunk: Uint8Array) => {
-    tarStream.push(chunk)
-  })
+    pack.on('error', (err) => {
+      reject(err)
+    })
 
-  pack.on('end', () => {
-    tarStream.push(null)
-  })
-  for await (const circularArray of getAllRecords()) {
-    for (const circular of circularArray) {
-      if (fileType === 'txt') {
-        const txt_entry = pack.entry(
-          { name: `archive.txt/${circular.circularId}.txt` },
-          formatCircular(circular)
-        )
-        txt_entry.end()
-      } else if (fileType === 'json') {
-        delete circular.sub
-        const json_entry = pack.entry(
-          { name: `archive.json/${circular.circularId}.json` },
-          JSON.stringify(circular, null, 2)
-        )
-        json_entry.end()
+    for await (const circularArray of getAllRecords()) {
+      for (const circular of circularArray) {
+        if (fileType === 'txt') {
+          const txt_entry = pack.entry(
+            { name: `archive.txt/${circular.circularId}.txt` },
+            formatCircular(circular)
+          )
+          txt_entry.end()
+        } else if (fileType === 'json') {
+          delete circular.sub
+          const json_entry = pack.entry(
+            { name: `archive.json/${circular.circularId}.json` },
+            JSON.stringify(circular, null, 2)
+          )
+          json_entry.end()
+        }
       }
     }
-  }
 
-  pack.finalize()
-
-  return createReadableStreamFromReadable(Readable.from(tarStream))
+    pack.finalize()
+  })
 }
