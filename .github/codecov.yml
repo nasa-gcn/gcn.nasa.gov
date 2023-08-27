@@ -4,6 +4,9 @@
 # FIXME: remove this when we have a much higher coverage fraction.
 coverage:
   status:
+    patch:
+      default:
+        informational: true
     project:
       default:
         informational: true
