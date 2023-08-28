@@ -38,7 +38,7 @@ export function Highlight({
             className="margin-top-1 margin-right-1 usa-button--unstyled"
           >
             <a download={filename} href={`data:,${encodeURIComponent(code)}`}>
-              <Icon.FileDownload />
+              <Icon.FileDownload role="Presentation" />
             </a>
           </Tooltip>
         )}
@@ -49,7 +49,7 @@ export function Highlight({
         >
           <CopyToClipboard text={code} onCopy={copyTooltipTextHandler}>
             <span>
-              <Icon.ContentCopy />
+              <Icon.ContentCopy role="presentation" />
             </span>
           </CopyToClipboard>
         </Tooltip>

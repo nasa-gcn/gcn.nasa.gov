@@ -119,7 +119,7 @@ export default function () {
             title="Adjust how your name and affiliation appear in new GCN Circulars"
           >
             <Button unstyled type="button">
-              <Icon.Edit /> Edit
+              <Icon.Edit role="presentation" /> Edit
             </Button>
           </Link>
         </InputGroup>

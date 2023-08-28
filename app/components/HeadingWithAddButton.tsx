@@ -30,7 +30,10 @@ export default function HeadingWithAddButton({
           })}
           to="edit"
         >
-          <Icon.Add className="bottom-aligned margin-right-05" />
+          <Icon.Add
+            role="presentation"
+            className="bottom-aligned margin-right-05"
+          />
           Add
         </Link>
       </Grid>

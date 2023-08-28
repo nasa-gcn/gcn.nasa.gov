@@ -150,7 +150,7 @@ export default function () {
           )}
           {fetcher.state === 'idle' && fetcher.data !== undefined && !dirty && (
             <span className="text-middle">
-              <Icon.Check color="green" /> Saved
+              <Icon.Check role="presentation" color="green" /> Saved
             </span>
           )}
         </FormGroup>
