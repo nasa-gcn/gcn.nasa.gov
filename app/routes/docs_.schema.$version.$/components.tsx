@@ -52,7 +52,11 @@ function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
         ) : (
           <>
             <td colSpan={2}>
-              {showHiddenRow ? <Icon.ExpandLess /> : <Icon.ExpandMore />}
+              {showHiddenRow ? (
+                <Icon.ExpandLess aria-label="Collapse" />
+              ) : (
+                <Icon.ExpandMore aria-label="Expand" />
+              )}
               <Link to={formatLinkString(item.$ref ?? '')}>
                 {item.$ref && item.$ref.split('/').slice(-1)[0]}
               </Link>

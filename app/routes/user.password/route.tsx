@@ -63,9 +63,9 @@ function PasswordValidationStep({
   return (
     <li>
       {valid ? (
-        <Icon.Check color="green" aria-label="green check" />
+        <Icon.Check color="green" aria-label="Passed" />
       ) : (
-        <Icon.Close color="red" aria-label="red x" />
+        <Icon.Close color="red" aria-label="Failed" />
       )}
       {text}
     </li>
@@ -223,7 +223,12 @@ function ResetPassword() {
               fetcher.data === null &&
               !interacted && (
                 <>
-                  <Icon.Check className="text-middle" color="green" /> Saved
+                  <Icon.Check
+                    role="presentation"
+                    className="text-middle"
+                    color="green"
+                  />{' '}
+                  Saved
                 </>
               )}
           </FormGroup>

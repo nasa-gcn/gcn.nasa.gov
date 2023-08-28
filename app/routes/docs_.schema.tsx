@@ -48,7 +48,10 @@ export default function Schema() {
       <div className="grid-row grid-gap margin-y-2">
         <Link to="/docs">
           <div className="position-relative">
-            <Icon.ArrowBack className="position-absolute top-0 left-0" />
+            <Icon.ArrowBack
+              role="presentation"
+              className="position-absolute top-0 left-0"
+            />
           </div>
           <span className="padding-left-2">Back</span>
         </Link>

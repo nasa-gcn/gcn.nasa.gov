@@ -65,14 +65,20 @@ export default function EmailNotificationCard({
                 <input type="hidden" name="recipient" value={recipient} />
                 <input type="hidden" name="intent" value="sendTest" />
                 <Button type="submit" outline disabled={disabled}>
-                  <Icon.MailOutline className="bottom-aligned margin-right-05" />
+                  <Icon.MailOutline
+                    role="presentation"
+                    className="bottom-aligned margin-right-05"
+                  />
                   Test Message
                 </Button>
               </testFetcher.Form>
               <Form method="GET" action="edit">
                 <input type="hidden" name="uuid" value={uuid} />
                 <Button type="submit" outline disabled={disabled}>
-                  <Icon.Edit className="bottom-aligned margin-right-05" />
+                  <Icon.Edit
+                    role="presentation"
+                    className="bottom-aligned margin-right-05"
+                  />
                   Edit
                 </Button>
               </Form>
@@ -83,7 +89,10 @@ export default function EmailNotificationCard({
                 type="button"
                 className="usa-button--secondary margin-right-0"
               >
-                <Icon.Delete className="bottom-aligned margin-right-05" />
+                <Icon.Delete
+                  role="presentation"
+                  className="bottom-aligned margin-right-05"
+                />
                 Delete
               </ModalToggleButton>
             </ButtonGroup>
