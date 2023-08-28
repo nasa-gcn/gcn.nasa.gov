@@ -23,7 +23,7 @@ import {
 } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 
-import logo from '~/img/logo.svg'
+import { Meatball } from './meatball/Meatball'
 
 function ContactLink({
   children,
@@ -88,11 +88,7 @@ export function Footer() {
       <IdentifierMasthead aria-label="Agency identifier">
         <IdentifierLogos>
           <IdentifierLogo href="https://www.nasa.gov">
-            <img
-              src={logo}
-              className="usa-identifier__logo-img"
-              alt="NASA logo"
-            />
+            <Meatball className="usa-identifier__logo-img width-auto" />
           </IdentifierLogo>
         </IdentifierLogos>
         <IdentifierIdentity domain="gcn.nasa.gov">
