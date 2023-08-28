@@ -34,7 +34,7 @@ export function Highlight({
         {filename && (
           <Tooltip
             position="top"
-            label={'Download ' + filename}
+            label={`Download ${filename}`}
             className="margin-top-1 margin-right-1 usa-button--unstyled"
           >
             <a download={filename} href={`data:,${encodeURIComponent(code)}`}>

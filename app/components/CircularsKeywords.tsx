@@ -26,7 +26,7 @@ export function CircularsKeywords() {
       <h3>Disallowed subject keywords</h3>
       <ul className="grid-row usa-list usa-list--unstyled">
         {emailAutoReplyChecklist.map((keyword) => (
-          <li key={keyword} className={'tablet:grid-col-3'}>
+          <li key={keyword} className="tablet:grid-col-3">
             {keyword}
           </li>
         ))}

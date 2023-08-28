@@ -78,7 +78,7 @@ function renderTag({
           <Icon.Close
             role="presentation"
             className="margin-left-1 text-bottom"
-            color={'white'}
+            color="white"
           />
         </Button>
       </span>

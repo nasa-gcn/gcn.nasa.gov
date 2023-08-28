@@ -63,7 +63,7 @@ export function Footer() {
           <Grid row gap>
             <ContactLink
               to="/contact"
-              icon={<Icon.Help role="presentation" size={4} color={'white'} />}
+              icon={<Icon.Help role="presentation" size={4} color="white" />}
               headline="Questions or comments?"
             >
               Contact GCN directly
@@ -71,7 +71,7 @@ export function Footer() {
             <ContactLink
               to="https://github.com/nasa-gcn/gcn.nasa.gov/issues"
               icon={
-                <Icon.BugReport role="presentation" size={4} color={'white'} />
+                <Icon.BugReport role="presentation" size={4} color="white" />
               }
               headline="Have you found a bug in GCN?"
             >
@@ -79,9 +79,7 @@ export function Footer() {
             </ContactLink>
             <ContactLink
               to="https://github.com/nasa-gcn/gcn.nasa.gov"
-              icon={
-                <Icon.Github role="presentation" size={4} color={'white'} />
-              }
+              icon={<Icon.Github role="presentation" size={4} color="white" />}
               headline="Want to contribute code to GCN?"
             >
               Get involved on GitHub

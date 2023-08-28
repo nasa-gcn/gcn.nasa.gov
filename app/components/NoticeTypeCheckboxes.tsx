@@ -239,7 +239,7 @@ export function NoticeTypeCheckboxes({
           link:
             selectedFormat !== 'json'
               ? NoticeTypeLinks[mission]
-                ? '/missions/' + NoticeTypeLinks[mission]
+                ? `/missions/${NoticeTypeLinks[mission]}`
                 : undefined
               : JsonNoticeTypeLinks[mission],
           nodes: noticeTypes.map((noticeType) => ({
