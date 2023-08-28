@@ -117,7 +117,7 @@ function Pagination({
                     className="usa-pagination__link usa-pagination__previous-page"
                     aria-label="Previous page"
                   >
-                    <Icon.NavigateBefore aria-hidden />
+                    <Icon.NavigateBefore role="presentation" />
                     <span className="usa-pagination__link-text">Previous</span>
                   </Link>
                 </li>
@@ -146,7 +146,7 @@ function Pagination({
                     className="usa-pagination__link usa-pagination__next-page"
                     aria-label="Next page"
                   >
-                    <Icon.NavigateNext aria-hidden />
+                    <Icon.NavigateNext role="presentation" />
                     <span className="usa-pagination__link-text">Next</span>
                   </Link>
                 </li>
@@ -191,7 +191,10 @@ function DownloadModal() {
         outline
         className="text-middle"
       >
-        <Icon.FileDownload className="bottom-aligned margin-right-05" />
+        <Icon.FileDownload
+          role="presentation"
+          className="bottom-aligned margin-right-05"
+        />
         Download Archive
       </ModalToggleButton>
       <Modal
@@ -316,7 +319,7 @@ export default function () {
             type="button"
             className="height-4 padding-top-0 padding-bottom-0"
           >
-            <Icon.Edit /> New
+            <Icon.Edit role="presentation" /> New
           </Button>
         </Link>
       </ButtonGroup>

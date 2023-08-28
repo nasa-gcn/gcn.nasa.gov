@@ -90,7 +90,7 @@ export default function () {
                     <span className="display-flex flex-align-center">
                       {x.type == 'dir' && (
                         <span className="margin-top-05 padding-right-05">
-                          <Icon.FolderOpen />
+                          <Icon.FolderOpen role="presentation" />
                         </span>
                       )}
                       <span>{x.name}</span>

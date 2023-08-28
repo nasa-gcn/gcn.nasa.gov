@@ -250,11 +250,11 @@ export function EndorsementRequestCard({
                     Show{' '}
                     {showMore ? (
                       <>
-                        less <Icon.ArrowDropUp />
+                        less <Icon.ArrowDropUp role="presentation" />
                       </>
                     ) : (
                       <>
-                        more <Icon.ArrowDropDown />
+                        more <Icon.ArrowDropDown role="presentation" />
                       </>
                     )}
                   </Button>

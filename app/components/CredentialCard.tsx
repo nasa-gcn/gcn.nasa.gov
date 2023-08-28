@@ -61,7 +61,10 @@ export default function CredentialCard({
             type="button"
             className="usa-button--secondary"
           >
-            <Icon.Delete className="bottom-aligned margin-right-05" />
+            <Icon.Delete
+              role="presentation"
+              className="bottom-aligned margin-right-05"
+            />
             Delete
           </ModalToggleButton>
           <Form
@@ -72,7 +75,10 @@ export default function CredentialCard({
             <input type="hidden" name="clientId" value={client_id} />
             <Button disabled={disabled} type="submit">
               Select
-              <Icon.ArrowForward className="bottom-aligned margin-left-05" />
+              <Icon.ArrowForward
+                role="presentation"
+                className="bottom-aligned margin-left-05"
+              />
             </Button>
           </Form>
         </div>

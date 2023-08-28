@@ -59,7 +59,10 @@ export default function () {
       <ButtonGroup>
         <Link to={`/circulars${searchString}`} className="usa-button">
           <div className="position-relative">
-            <Icon.ArrowBack className="position-absolute top-0 left-0" />
+            <Icon.ArrowBack
+              role="presentation"
+              className="position-absolute top-0 left-0"
+            />
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
         </Link>

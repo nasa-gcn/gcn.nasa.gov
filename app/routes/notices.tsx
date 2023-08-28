@@ -75,7 +75,11 @@ function renderTag({
       <span className={classNames.tagName}>
         {label}{' '}
         <Button type="button" unstyled>
-          <Icon.Close className="margin-left-1 text-bottom" color={'white'} />
+          <Icon.Close
+            role="presentation"
+            className="margin-left-1 text-bottom"
+            color={'white'}
+          />
         </Button>
       </span>
     </Tag>

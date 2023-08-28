@@ -94,7 +94,7 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
           )}
           {fetcher.state === 'idle' && fetcher.data !== undefined && (
             <>
-              <Icon.Check color="green" /> Saved
+              <Icon.Check role="presentation" color="green" /> Saved
             </>
           )}
         </div>

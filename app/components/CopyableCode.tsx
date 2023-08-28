@@ -21,7 +21,7 @@ export function CopyableCode(props: CopyableCodeProps) {
         className="padding-1px text-base-darkest"
         title="Copy to clipboard"
       >
-        <Icon.ContentCopy />{' '}
+        <Icon.ContentCopy role="presentation" />{' '}
         <code>
           <small>{props.text}</small>
         </code>
