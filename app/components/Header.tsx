@@ -15,9 +15,8 @@ import {
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
+import { Meatball } from './meatball/Meatball'
 import { useEmail, useUserIdp } from '~/root'
-
-import logo from '~/img/logo.svg'
 
 /**
  * A variation on the NavDropDownButton component from @trussworks/react-uswds
@@ -93,7 +92,7 @@ export function Header() {
           <div className="usa-navbar">
             <Title>
               <Link to="/">
-                <img id="site-logo" src={logo} alt="NASA logo" />
+                <Meatball id="site-logo" className="width-auto" />
                 <span id="site-title">General Coordinates Network</span>
               </Link>
             </Title>

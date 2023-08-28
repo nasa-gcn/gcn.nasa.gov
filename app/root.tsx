@@ -114,10 +114,6 @@ export const links: LinksFunction = () => [
     rel: 'stylesheet',
     href: themeStyle,
   },
-  {
-    rel: 'stylesheet',
-    href: highlightStyle,
-  },
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
   ...Object.entries(favicons).map(([size, href]) => ({
     rel: 'icon',
@@ -249,6 +245,8 @@ function Document({ children }: { children?: React.ReactNode }) {
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
+        {/* Deferred stylesheets (non render blocking) */}
+        <link rel="stylesheet" href={highlightStyle} />
       </body>
     </html>
   )
