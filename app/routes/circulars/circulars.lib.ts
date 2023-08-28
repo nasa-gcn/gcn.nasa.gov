@@ -197,7 +197,7 @@ export function formatAuthor({
 
 export function parseEventFromSubject(value: string) {
   for (const [regexp, normalize] of subjectMatchers) {
-    const startsWithMatch = RegExp('^' + regexp.source).exec(value)
+    const startsWithMatch = RegExp(`^${regexp.source}`).exec(value)
     if (startsWithMatch) return normalize(startsWithMatch)
   }
   for (const [regexp, normalize] of subjectMatchers) {
