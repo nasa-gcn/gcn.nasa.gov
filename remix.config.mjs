@@ -43,6 +43,7 @@ export default {
   server: './server.ts',
   serverBuildPath: 'build/server/index.js',
   serverMinify: isProduction,
+  serverModuleFormat: 'cjs',
   serverDependenciesToBundle: [
     ...esmOnlyModules,
     ...(isProduction ? [/^(?!@?aws-sdk(\/|$))/] : []),
