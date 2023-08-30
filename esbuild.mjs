@@ -4,7 +4,7 @@ import { glob } from 'glob'
 const args = process.argv.slice(2)
 const dev = args.includes('--dev')
 const entryPoints = await glob(
-  './app/{email-incoming,table-streams}/*/index.ts'
+  './app/{email-incoming,scheduled,table-streams}/*/index.ts'
 )
 
 /**
