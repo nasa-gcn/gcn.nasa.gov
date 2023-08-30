@@ -36,8 +36,7 @@ export type Schema = {
   required?: string[]
 }
 
-function formatLinkString(path: string) {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
+function useLinkString(path: string) {
   return useResolvedPath(`../${path}`, {
     relative: 'path',
   })
@@ -46,7 +45,7 @@ function formatLinkString(path: string) {
 function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
   const [showHiddenRow, toggleHiddenRow] = useState(false)
   const locallyDefined = item.$ref?.startsWith('#')
-
+  const linkString = useLinkString(item.$ref ?? '')
   return (
     <>
       <tr onClick={() => toggleHiddenRow(!showHiddenRow)}>
@@ -65,7 +64,7 @@ function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
               ) : (
                 <Icon.ExpandMore aria-label="Expand" />
               )}
-              <Link to={formatLinkString(item.$ref ?? '')}>
+              <Link to={linkString}>
                 {item.$ref && item.$ref.split('/').slice(-1)[0]}
               </Link>
             </td>
