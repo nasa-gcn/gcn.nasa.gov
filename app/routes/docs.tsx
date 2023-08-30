@@ -52,6 +52,9 @@ export default function () {
                   ]}
                 />
               </>,
+              <NavLink key="code-samples" to="samples">
+                Code Samples
+              </NavLink>,
               <>
                 <NavLink key="contributing" to="contributing">
                   Contributing
