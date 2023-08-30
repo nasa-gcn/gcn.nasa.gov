@@ -12,7 +12,7 @@ import type {
 } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
+import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { formatDateISO } from './circulars/circulars.lib'
 import { get } from './circulars/circulars.server'
@@ -51,8 +51,15 @@ const submittedHowMap = {
 }
 
 export default function () {
-  const { circularId, subject, submitter, createdOn, body, submittedHow } =
-    useLoaderData<typeof loader>()
+  const {
+    circularId,
+    subject,
+    submitter,
+    createdOn,
+    body,
+    submittedHow,
+    bibcode,
+  } = useLoaderData<typeof loader>()
   const searchString = useSearchString()
   return (
     <>
@@ -82,6 +89,23 @@ export default function () {
             JSON
           </Link>
         </ButtonGroup>
+        {bibcode ? (
+          <Link
+            to={`https://ui.adsabs.harvard.edu/abs/${bibcode}`}
+            className="usa-button usa-button--outline"
+          >
+            Cite (ADS)
+          </Link>
+        ) : (
+          <Button
+            type="button"
+            disabled
+            outline
+            title="The ADS entry for this Circular is not yet available. ADS entries are updated daily. Please check back later."
+          >
+            Cite (ADS)
+          </Button>
+        )}
       </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
       <Grid row>

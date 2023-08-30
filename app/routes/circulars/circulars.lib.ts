@@ -20,6 +20,7 @@ export interface Circular extends CircularMetadata {
   body: string
   submitter: string
   submittedHow?: SubmittedHow
+  bibcode?: string
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
