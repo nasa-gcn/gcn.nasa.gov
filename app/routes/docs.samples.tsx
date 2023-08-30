@@ -16,23 +16,26 @@ export default function Samples() {
           formats.
         </p>
         <p>
-          <code>xmltodict</code> is not a standard python package, it must be
-          installed with pip:
-        </p>
-        <Highlight language="sh" code="pip install xmltodict" />
-
-        <p>
           For more examples, or to contribute your own ideas, see our{' '}
           <Link href="https://github.com/nasa-gcn/utility-samples">
             Utility Sample repo
           </Link>
         </p>
-
+        <h2>Parsing</h2>
+        <p>
+          Within your consumer loop, the following functions can be used to
+          convert the content of <code>message.value()</code> into other data
+          types.
+        </p>
+        <p>
+          <code>xmltodict</code> is not a standard python package, it must be
+          installed with pip:
+        </p>
+        <Highlight language="sh" code="pip install xmltodict" />
         <Highlight
           code={dedent`
       import email
       import xml.etree.ElementTree as ET
-      import json
       import xmltodict
       
       
@@ -46,6 +49,18 @@ export default function Samples() {
               
       def parse_voevent_alert_to_dict(message_value):
           return xmltodict.parse(message_value)
+      
+      `}
+          language="py"
+        />
+        <h2>Saving</h2>
+        <p>
+          Once parsed, the following can be used to save the data to a local
+          file.
+        </p>
+        <Highlight
+          code={dedent`
+      import json
       
       
       def save_text_alert(message_value):
