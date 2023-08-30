@@ -10,11 +10,11 @@ import { Link } from '@remix-run/react'
 export default function () {
   return (
     <>
-      <h1>Schema Browser</h1>
+      <h2>Schema Browser</h2>
       <p className="usa-paragraph">
         Browse the schema definitions for GCN Notices as distributed by GCN
-        Kafka. Navigate through the directory tree and select a schema for more
-        information.
+        Kafka. Choose an option below to navigate through the schema directory
+        or inspect a schema for additional details.
       </p>
       <p className="usa-paragraph">
         Schema are one step in the process for setting up New Notice Producers.

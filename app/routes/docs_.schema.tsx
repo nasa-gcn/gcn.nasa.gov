@@ -11,15 +11,17 @@ import { Link, Outlet, useLoaderData, useParams } from '@remix-run/react'
 import {
   CardBody,
   CardHeader,
+  Grid,
   GridContainer,
-  Icon,
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
+import { useWindowSize } from 'usehooks-ts'
 
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 import { getVersionRefs } from '~/lib/schema-data.server'
+import BreadcrumbNav from '~/routes/docs_.schema.$version.$/BreadcrumbNav'
 
 export async function loader({
   params: { version, '*': path },
@@ -39,29 +41,31 @@ export async function loader({
 
 export default function Schema() {
   const { version, '*': path } = useParams()
+  if (!path) throw new Error('Path is not defined.')
 
   const [showVersions, setShowVersions] = useState(false)
   const { versions } = useLoaderData()
+  const windowSize = useWindowSize()
+  const isSchema = path.endsWith('.schema.json')
 
   return (
     <GridContainer>
-      <div className="grid-row grid-gap margin-y-2">
-        <Link to="/docs">
-          <div className="position-relative">
-            <Icon.ArrowBack
-              role="presentation"
-              className="position-absolute top-0 left-0"
-            />
-          </div>
-          <span className="padding-left-2">Back</span>
-        </Link>
-      </div>
-      <div className="grid-row grid-gap margin-y-1">
-        <div className="tablet:grid-col-3">
+      <Grid
+        row
+        className="position-sticky top-0 usa-breadcrumb z-100 padding-y-0"
+      >
+        <BreadcrumbNav
+          path={path.replace('.schema.json', '')}
+          className="tablet:grid-col-fill"
+          pathPrepend={`/docs/schema/${version}`}
+        />
+        {windowSize.width < 480 && !isSchema && (
+          <h2 className="margin-y-0">{path.split('/').slice(-1)[0]}</h2>
+        )}
+        <div className="tablet:grid-col-auto tablet:margin-top-2">
           <DetailsDropdownButton
             className="width-full"
             onClick={() => setShowVersions(!showVersions)}
-            outline
           >
             {<>Version: {version}</>}
           </DetailsDropdownButton>
@@ -73,14 +77,19 @@ export default function Schema() {
               <CardBody className="padding-y-0">
                 {versions.map((x: { name: string; ref: string }) => (
                   <div key={x.name}>
-                    <Link to={`/docs/schema/${x.ref}/${path}`}>{x.name}</Link>
+                    <Link
+                      to={`/docs/schema/${x.ref}/${path}`}
+                      onClick={() => setShowVersions(!setShowVersions)}
+                    >
+                      {x.name}
+                    </Link>
                   </div>
                 ))}
               </CardBody>
             </DetailsDropdownContent>
           )}
         </div>
-      </div>
+      </Grid>
       <div className="grid-row grid-gap">
         <Outlet />
       </div>

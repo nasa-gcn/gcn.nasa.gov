@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Link } from '@remix-run/react'
+import { Link, useResolvedPath } from '@remix-run/react'
 import { Icon, Table } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
@@ -36,9 +36,16 @@ export type Schema = {
   required?: string[]
 }
 
+function useLinkString(path: string) {
+  return useResolvedPath(`../${path}`, {
+    relative: 'path',
+  })
+}
+
 function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
   const [showHiddenRow, toggleHiddenRow] = useState(false)
   const locallyDefined = item.$ref?.startsWith('#')
+  const linkString = useLinkString(item.$ref ?? '')
   return (
     <>
       <tr onClick={() => toggleHiddenRow(!showHiddenRow)}>
@@ -57,7 +64,7 @@ function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
               ) : (
                 <Icon.ExpandMore aria-label="Expand" />
               )}
-              <Link to={formatLinkString(item.$ref ?? '')}>
+              <Link to={linkString}>
                 {item.$ref && item.$ref.split('/').slice(-1)[0]}
               </Link>
             </td>
@@ -129,10 +136,6 @@ export function SchemaPropertiesTableBody({
         ))}
     </>
   )
-}
-
-function formatLinkString(schemaLinkString: string) {
-  return schemaLinkString.replace('schema', 'docs/schema')
 }
 
 export function formatFieldName(name: string, requiredProps?: string[]) {
