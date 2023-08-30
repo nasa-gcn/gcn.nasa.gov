@@ -8,7 +8,7 @@
 import { RequestError } from '@octokit/request-error'
 import { Octokit } from '@octokit/rest'
 import memoizee from 'memoizee'
-import { extname, join } from 'path'
+import { basename, dirname, extname, join } from 'path'
 import { relative } from 'path/posix'
 
 import { getEnvOrDieInProduction } from './env.server'
@@ -29,7 +29,8 @@ export const getVersionRefs = memoizee(
     const releases = (await octokit.rest.repos.listReleases(repoData)).data.map(
       (x) => ({ name: x.name, ref: x.tag_name })
     )
-    return [...releases, { name: 'main', ref: 'main' }]
+    const defaultBranch = await getDefaultBranch()
+    return [...releases, { name: defaultBranch, ref: defaultBranch }]
   },
   { promise: true }
 )
@@ -119,9 +120,9 @@ export type GitContentDataResponse = {
 }
 
 export const loadSchemaExamples = memoizee(
-  async function (path: string, ref: string): Promise<ExampleFiles[]> {
-    const dirPath = path.substring(0, path.lastIndexOf('/'))
-    const schemaName = path.substring(path.lastIndexOf('/') + 1)
+  async function (schemaPath: string, ref: string): Promise<ExampleFiles[]> {
+    const dirPath = dirname(schemaPath)
+    const schemaName = basename(schemaPath)
     const exampleFiles = (await getGithubDir(dirPath, ref)).filter(
       (x) =>
         x.name.startsWith(`${schemaName.split('.')[0]}.`) &&
@@ -130,7 +131,7 @@ export const loadSchemaExamples = memoizee(
 
     const result: ExampleFiles[] = []
     for (const exampleFile of exampleFiles) {
-      const exPath = join(dirPath, '/', exampleFile.name)
+      const exPath = join(dirPath, exampleFile.name)
       const example = await loadContentFromGithub(exPath, ref)
       result.push({
         name: exampleFile.name.replace('.example.json', ''),

@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { DataFunctionArgs } from '@remix-run/node'
+import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import {
   Card,
@@ -15,7 +16,8 @@ import {
   Icon,
   Table,
 } from '@trussworks/react-uswds'
-import { json, redirect, useParams } from 'react-router'
+import { dirname } from 'path'
+import { useParams } from 'react-router'
 import { useWindowSize } from 'usehooks-ts'
 
 import SchemaDefinition from '../docs_.schema.$version._index'
@@ -35,7 +37,6 @@ import type {
 } from '~/lib/schema-data.server'
 import {
   getGithubDir,
-  getVersionRefs,
   loadJson,
   loadSchemaExamples,
 } from '~/lib/schema-data.server'
@@ -43,17 +44,12 @@ import {
 export async function loader({
   params: { version, '*': path },
 }: DataFunctionArgs) {
-  if (!version) throw new Response(null, { status: 404 })
-  if (path?.endsWith('/')) {
-    return redirect(`${path.slice(0, -1)}`)
-  }
+  if (!version) throw new Response('Missing version', { status: 404 })
   let jsonContent
   let data: GitContentDataResponse[]
   let examples: ExampleFiles[] = []
-  const versions = await getVersionRefs()
   if (path?.endsWith('.schema.json')) {
-    const fileName = path.split('/').at(-1)
-    const parentPath = path.replace(`/${fileName}`, '')
+    const parentPath = dirname(path)
     jsonContent = await loadJson(path, version)
     examples = await loadSchemaExamples(path, version)
     data = await getGithubDir(parentPath, version)
@@ -62,7 +58,7 @@ export async function loader({
   }
   data = data.filter((x) => !x.name.endsWith('.example.json'))
   return json(
-    { data, jsonContent, examples, versions },
+    { data, jsonContent, examples },
     { headers: publicStaticShortTermCacheControlHeaders }
   )
 }
@@ -75,41 +71,39 @@ export default function () {
   }
 
   return (
-    <>
-      <div className="grid-col-12">
-        {jsonContent ? (
-          <SchemaBody
-            path={path ?? ''}
-            result={jsonContent}
-            selectedVersion={version ?? ''}
-            examples={examples}
-          />
-        ) : (
-          <>
-            <SchemaDefinition />
-            <CardGroup>
-              {...data.map((x: GitContentDataResponse) => (
-                <Link key={x.path} to={x.path} className="tablet:grid-col-3">
-                  <Card key={x.path} className="">
-                    <CardHeader>
-                      <h3 className="display-flex flex-align-center">
-                        {x.type == 'dir' && (
-                          <span className="margin-top-05 padding-right-05">
-                            <Icon.FolderOpen />
-                          </span>
-                        )}
-                        <span>{x.name.replace('.schema.json', '')}</span>
-                      </h3>
-                    </CardHeader>
-                    <CardBody></CardBody>
-                  </Card>
-                </Link>
-              ))}
-            </CardGroup>
-          </>
-        )}
-      </div>
-    </>
+    <div className="grid-col-12">
+      {jsonContent ? (
+        <SchemaBody
+          path={path ?? ''}
+          result={jsonContent}
+          selectedVersion={version ?? ''}
+          examples={examples}
+        />
+      ) : (
+        <>
+          <SchemaDefinition />
+          <CardGroup>
+            {...data.map((x) => (
+              <Link key={x.path} to={x.path} className="tablet:grid-col-3">
+                <Card key={x.path} className="">
+                  <CardHeader>
+                    <h3 className="display-flex flex-align-center">
+                      {x.type == 'dir' && (
+                        <span className="margin-top-05 padding-right-05">
+                          <Icon.FolderOpen />
+                        </span>
+                      )}
+                      <span>{x.name.replace('.schema.json', '')}</span>
+                    </h3>
+                  </CardHeader>
+                  <CardBody></CardBody>
+                </Card>
+              </Link>
+            ))}
+          </CardGroup>
+        </>
+      )}
+    </div>
   )
 }
 
