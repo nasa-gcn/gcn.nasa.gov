@@ -13,6 +13,11 @@ circulars
 support
   src build/email-incoming/support
 
+@scheduled
+ads
+  rate 1 day
+  src build/scheduled/ads
+
 @tables-streams
 circulars
   src build/table-streams/circulars
