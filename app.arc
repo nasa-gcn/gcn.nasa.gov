@@ -17,6 +17,8 @@ support
 ads
   rate 1 day
   src build/scheduled/ads
+tarUpload cron(0 06 * * *)
+tarUpload cron(0 18 * * *)
 
 @tables-streams
 circulars
@@ -116,10 +118,6 @@ instanceType t3.small.search
 instanceCount 2
 availabilityZoneCount 2
 volumeSize 10
-
-@scheduled
-tarUpload cron(0 06 * * *)
-tarUpload cron(0 18 * * *)
 
 @plugins
 plugin-remix
