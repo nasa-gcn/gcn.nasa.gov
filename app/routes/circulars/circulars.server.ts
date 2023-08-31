@@ -12,15 +12,21 @@ import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
+import type { User } from '../_auth/user.server'
 import { getUser } from '../_auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
-import type { Circular, CircularMetadata } from './circulars.lib'
+import type {
+  Circular,
+  CircularMetadata,
+  RevisionRequest,
+} from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
 export const group = 'gcn.nasa.gov/circular-submitter'
+export const moderatorGroup = 'gcn.nasa.gov/circular-moderator'
 
 export const getDynamoDBAutoIncrement = memoizee(
   async function () {
@@ -187,6 +193,25 @@ export async function get(circularId: number): Promise<Circular> {
   return result
 }
 
+/** Get an old version of a circular by circular ID and versionId. */
+export async function getCircularVersion(
+  circularId: number,
+  version: number
+): Promise<Circular> {
+  if (isNaN(circularId) || isNaN(version))
+    throw new Response(null, { status: 404 })
+  const db = await tables()
+  const result = await db.circulars_history.get({
+    circularId,
+    version,
+  })
+  if (!result)
+    throw new Response(null, {
+      status: 404,
+    })
+  return result
+}
+
 /** Delete a circular by ID.
  * Throws an HTTP error if:
  *  - The current user is not signed in
@@ -262,4 +287,140 @@ export async function circularRedirect(query: string) {
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL)
   }
+}
+
+export async function putDeprecatedVersion(
+  circular: Omit<Circular, 'createdOn' | 'submitter'>,
+  request: Request
+) {
+  const user = await getUser(request)
+  if (!user?.groups.includes(group))
+    throw new Response('User is not in the submitters group', {
+      status: 403,
+    })
+
+  if (!subjectIsValid(circular.subject))
+    throw new Response('subject is invalid', { status: 400 })
+  if (!bodyIsValid(circular.body))
+    throw new Response('body is invalid', { status: 400 })
+
+  // Create a copy of the old version
+  const existingCircular = await createCircularHistory(circular.circularId)
+
+  await updateCircular(
+    circular.circularId,
+    circular.body,
+    circular.subject,
+    user,
+    existingCircular.version
+  )
+}
+
+/**
+ *
+ * @param circularId
+ * @returns an array of previous Circulars sorted by descending version
+ */
+export async function getCircularHistory(
+  circularId: number
+): Promise<Circular[]> {
+  const db = await tables()
+  const result = await db.circulars_history.query({
+    KeyConditionExpression: 'circularId = :circularId',
+    ExpressionAttributeValues: {
+      ':circularId': circularId,
+    },
+    ScanIndexForward: false,
+  })
+  return result.Items as Circular[]
+}
+
+export async function putChangeRequest(
+  circularId: number,
+  body: string,
+  subject: string,
+  request: Request
+) {
+  const user = await getUser(request)
+  if (!user)
+    throw new Response('User is not signed in', {
+      status: 403,
+    })
+  const requestor = formatAuthor(user)
+  const db = await tables()
+  await db.circulars_requested_edits.put({
+    circularId,
+    body,
+    subject,
+    requestor,
+  })
+}
+
+export async function approveChangeRequest(
+  circularId: number,
+  requestor: string,
+  request: Request
+) {
+  const user = await getUser(request)
+  if (!user)
+    throw new Response('User is not signed in', {
+      status: 403,
+    })
+
+  if (!user.groups.includes(moderatorGroup))
+    throw new Response('User is not in the moderators group', {
+      status: 403,
+    })
+
+  const db = await tables()
+  const requestedEdits = (await db.circulars_requested_edits.get({
+    circularId,
+    requestor,
+  })) as RevisionRequest
+
+  const existingCircular = await createCircularHistory(circularId)
+
+  await updateCircular(
+    circularId,
+    requestedEdits.body,
+    requestedEdits.subject,
+    user,
+    existingCircular.version
+  )
+}
+
+async function createCircularHistory(
+  circularId: number
+): Promise<Require<Circular, 'version'>> {
+  const existingCircular = await get(circularId)
+  const db = await tables()
+  if (!existingCircular.version) {
+    existingCircular.version = 1
+  }
+  await db.circulars_history.put({
+    ...existingCircular,
+  })
+  return existingCircular as Require<Circular, 'version'>
+}
+
+async function updateCircular(
+  circularId: number,
+  body: string,
+  subject: string,
+  user: User,
+  version: number
+) {
+  const db = await tables()
+  await db.circulars.update({
+    Key: { circularId },
+    UpdateExpression:
+      'set body = :body, subject = :subject, editedBy = :editedBy, createdOn = :createdOn, version = :version',
+    ExpressionAttributeValues: {
+      ':body': body,
+      ':subject': subject,
+      ':editedBy': formatAuthor(user),
+      ':createdOn': Date.now(),
+      ':version': version + 1,
+    },
+  })
 }

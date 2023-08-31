@@ -36,31 +36,50 @@ import {
   formatAuthor,
   subjectIsValid,
 } from './circulars/circulars.lib'
-import { group } from './circulars/circulars.server'
+import { get, group } from './circulars/circulars.server'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
-import { origin } from '~/lib/env.server'
-import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
+import { feature } from '~/lib/env.server'
+import { pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
 import { useUrl } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
-  breadcrumb: 'New',
+  breadcrumb: 'Edit',
 }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({
+  request,
+  params: { circularId },
+}: DataFunctionArgs) {
   const user = await getUser(request)
-  let isAuthenticated, isAuthorized, formattedAuthor
+  let isAuthenticated, isAuthorized, formattedAuthor, isModUser, result
+
   if (user) {
     isAuthenticated = true
     if (user.groups.includes(group)) isAuthorized = true
     formattedAuthor = formatAuthor(user)
+    isModUser = user.groups.includes('gcn.nasa.gov/circular-moderator')
+
+    if (!feature('CIRCULAR_VERSIONS') && circularId)
+      throw new Response(null, { status: 404 })
+
+    if (circularId) {
+      if (!isModUser)
+        throw new Response('you may not directly edit this circular', {
+          status: 403,
+        })
+      result = await get(parseFloat(circularId))
+    }
   }
-  return json(
-    { isAuthenticated, isAuthorized, formattedAuthor },
-    { headers: getCanonicalUrlHeaders(new URL(`/circulars/new`, origin)) }
-  )
+  return json({
+    isAuthenticated,
+    isAuthorized,
+    formattedAuthor,
+    isModUser,
+    result,
+  })
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
@@ -83,13 +102,13 @@ function useBodyPlaceholder() {
 }
 
 export default function () {
-  const { isAuthenticated, isAuthorized, formattedAuthor } =
+  const { isAuthenticated, isAuthorized, formattedAuthor, result } =
     useLoaderData<typeof loader>()
 
   // Get default subject from search params, then strip out
   let [searchParams] = useSearchParams()
-  const defaultSubject = searchParams.get('subject') || ''
-  const defaultBody = searchParams.get('body') || ''
+  const defaultSubject = searchParams.get('subject') || result?.subject || ''
+  const defaultBody = searchParams.get('body') || result?.body || ''
   searchParams = new URLSearchParams(searchParams)
   searchParams.delete('subject')
   searchParams.delete('body')
@@ -100,9 +119,20 @@ export default function () {
     subjectIsValid(defaultSubject)
   )
   const [bodyValid, setBodyValid] = useState(bodyIsValid(defaultBody))
+  const [editSaveType, setEditSaveType] = useState<'save' | 'distribute'>(
+    'save'
+  )
   const [showKeywords, setShowKeywords] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
+
+  const duplicateBodyMessage =
+    'This circular has been marked as a duplicate. \
+  See previous versions to view the original content.'
+
+  const mistakeBodyMessage =
+    'This circular was submitted accidentally. \
+  See previous versions to view the original content.'
 
   function toggleShowKeywords() {
     setShowKeywords(!showKeywords)
@@ -110,10 +140,63 @@ export default function () {
 
   return (
     <>
-      <h1>New GCN Circular</h1>
+      <h1>{result ? 'Edit' : 'New'} GCN Circular</h1>
+      {result && (
+        <>
+          <CircularRevisionWarning />
+          <ButtonGroup>
+            <Form method="POST" action={`/circulars${searchString}`}>
+              <input
+                id="circularId"
+                name="circularId"
+                value={result?.circularId}
+                readOnly
+                hidden
+              />
+              <input type="hidden" name="body" value={duplicateBodyMessage} />
+              <input
+                type="hidden"
+                name="subject"
+                value="Duplicate Submission"
+              />
+              <Button type="submit" outline disabled={sending}>
+                Mark as Duplicate Submission
+              </Button>
+            </Form>
+            <Form method="POST" action={`/circulars${searchString}`}>
+              <input
+                id="circularId"
+                name="circularId"
+                value={result?.circularId}
+                readOnly
+                hidden
+              />
+              <input type="hidden" name="body" value={mistakeBodyMessage} />
+              <input type="hidden" name="subject" value="Mistaken Submission" />
+              <Button type="submit" outline disabled={sending}>
+                Mark as Accidental Submission
+              </Button>
+            </Form>
+          </ButtonGroup>
+        </>
+      )}
       <Form method="POST" action={`/circulars${searchString}`}>
+        <input type="hidden" name="editSaveType" value={editSaveType} />
+        {result && (
+          <InputGroup className="border-0 maxw-full">
+            <InputPrefix>From</InputPrefix>
+            <span className="padding-1">{result.submitter}</span>
+          </InputGroup>
+        )}
         <InputGroup className="border-0 maxw-full">
-          <InputPrefix>From</InputPrefix>
+          <input
+            id="circularId"
+            name="circularId"
+            value={result?.circularId}
+            readOnly
+            hidden
+          />
+          <InputPrefix>{result ? 'Editor' : 'From'}</InputPrefix>
           <span className="padding-1">{formattedAuthor}</span>
           <Link
             to="/user"
@@ -196,9 +279,32 @@ export default function () {
           >
             Back
           </Link>
-          <Button disabled={sending || !valid} type="submit">
-            Send
-          </Button>
+          {/* TODO: Moderation options for save or save and 
+              distribute when edits are made */}
+
+          {result ? (
+            <ButtonGroup>
+              <Button
+                disabled={sending || !valid}
+                type="submit"
+                onClick={() => setEditSaveType('save')}
+              >
+                Save Changes
+              </Button>
+              <Button
+                disabled={sending || !valid}
+                type="submit"
+                onClick={() => setEditSaveType('distribute')}
+              >
+                Save Changes and Distribute
+              </Button>
+            </ButtonGroup>
+          ) : (
+            <Button disabled={sending || !valid} type="submit">
+              Send
+            </Button>
+          )}
+
           {sending && (
             <div className="padding-top-1 padding-bottom-1">
               <Spinner /> Sending...
@@ -257,5 +363,17 @@ function ModalUnauthorized({ isAuthenticated }: { isAuthenticated?: boolean }) {
         {isAuthenticated ? <PeerEndorsementButton /> : <SignInButton />}
       </ModalFooter>
     </Modal>
+  )
+}
+
+export function CircularRevisionWarning() {
+  return (
+    <div className="text-base margin-bottom-1">
+      Edits should be restricted to fixing author lists, misspellings, typos, or
+      event names, and correcting data that doesn't have substantive impact on
+      follow up. If the entry is a duplicate or otherwise accidental submission,
+      use these quick-edit buttons to quickly make the respecive changes.
+      Otherwise, update and submit the form to create a new version.
+    </div>
   )
 }

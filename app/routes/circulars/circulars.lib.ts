@@ -21,6 +21,22 @@ export interface Circular extends CircularMetadata {
   submitter: string
   submittedHow?: SubmittedHow
   bibcode?: string
+  editedBy?: string
+  version?: number // 1: Original
+}
+
+export interface CircularChangeRequest {
+  circularId: number
+  subject: string
+  body: string
+  requestor: string
+}
+
+export interface RevisionRequest {
+  circularId: number
+  body: string
+  subject: string
+  requestor: string
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
@@ -116,6 +132,7 @@ export const validSubjectKeywords = [
   'Baksan Neutrino Observatory Alert',
   'CALET',
   'Chandra',
+  'Duplicate Submission',
   'Fermi',
   'FXT',
   'GRB',
@@ -137,6 +154,7 @@ export const validSubjectKeywords = [
   'MAGIC',
   'MASTER',
   'MAXI',
+  'Mistaken Submission',
   'Pan-STARRS',
   'POLAR',
   'RATIR',

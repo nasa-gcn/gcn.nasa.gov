@@ -39,8 +39,9 @@ import { usePagination } from '~/lib/pagination'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-export async function loader({ request: { url } }: DataFunctionArgs) {
-  const { searchParams } = new URL(url)
+export async function loader({ request }: DataFunctionArgs) {
+  const { searchParams } = new URL(request.url)
+
   const query = searchParams.get('query') || undefined
   if (query) {
     await circularRedirect(query)
@@ -317,7 +318,7 @@ export default function () {
             />
           </Button>
         </Form>
-        <Link to={`/circulars/new${searchString}`}>
+        <Link to={`/circulars/edit${searchString}`}>
           <Button
             type="button"
             className="height-4 padding-top-0 padding-bottom-0"
