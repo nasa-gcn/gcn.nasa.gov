@@ -101,7 +101,7 @@ export default function () {
             type="button"
             disabled
             outline
-            title="The ADS entry for this Circular is not yet available. ADS entries are updated daily. Please check back later."
+            title="The ADS entry for this Circular is not yet available. ADS entries are updated every week on Monday at 08:00 UTC. Please check back later."
           >
             Cite (ADS)
           </Button>
