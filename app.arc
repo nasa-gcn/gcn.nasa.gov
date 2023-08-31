@@ -17,8 +17,7 @@ support
 ads
   rate 1 day
   src build/scheduled/ads
-tarUpload cron(0 06 * * *)
-tarUpload cron(0 18 * * *)
+tarUpload cron(0 06 * * * *)
 
 @tables-streams
 circulars

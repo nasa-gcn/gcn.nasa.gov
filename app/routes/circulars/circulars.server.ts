@@ -6,18 +6,14 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import { paginateScan, type DynamoDB } from '@aws-sdk/client-dynamodb'
+import { type DynamoDB } from '@aws-sdk/client-dynamodb'
 import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
 import { getUser } from '../_auth/user.server'
-import {
-  bodyIsValid,
-  formatAuthor,
-  subjectIsValid,
-} from './circulars.lib'
+import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 

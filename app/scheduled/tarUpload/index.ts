@@ -7,13 +7,13 @@
  */
 import { tables } from '@architect/functions'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
+import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import { createReadableStreamFromReadable } from '@remix-run/node'
 import { Readable } from 'stream'
 import { pack as tarPack } from 'tar-stream'
 
 import { getEnvOrDie } from '~/lib/env.server'
-import { Circular, formatCircular } from '~/routes/circulars/circulars.lib'
+import { type Circular, formatCircular } from '~/routes/circulars/circulars.lib'
 
 async function uploadStream(fileType: 'json' | 'txt') {
   const s3 = new S3Client({})
