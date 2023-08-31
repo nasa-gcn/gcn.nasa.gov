@@ -63,6 +63,9 @@ export default function () {
                     <NavLink key="index" to="contributing" end>
                       Getting Started
                     </NavLink>,
+                    <NavLink key="github" to="contributing/github">
+                      GitHub
+                    </NavLink>,
                     <NavLink
                       key="configuration"
                       to="contributing/configuration"
