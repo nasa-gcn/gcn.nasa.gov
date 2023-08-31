@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import { type DynamoDB } from '@aws-sdk/client-dynamodb'
-import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import type { DynamoDB } from '@aws-sdk/client-dynamodb'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
