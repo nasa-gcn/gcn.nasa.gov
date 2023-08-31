@@ -22,7 +22,12 @@
     "clean": "rimraf --glob build/static app/css \"build/**/index.*\" \"build/**/metafile.*\" \"app/**/*.css\" \"app/**/*.css.map\" sam.json sam.yaml .cache",
     "test": "jest",
     "test-coverage": "jest --coverage",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "lint": "eslint \"app/**/*.+(ts|tsx)\"",
+    "lint:fix": "npm run lint -- --fix",
+    "prettier": "prettier app --check",
+    "prettier:fix": "prettier app --write",
+    "format-code": "npm run prettier:fix & npm run lint:fix"
   },
   "dependencies": {
     "@architect/functions": "^5.3.4",

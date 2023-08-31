@@ -6,15 +6,23 @@
  * SPDX-License-Identifier: NASA-1.3
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-
-import { makeTarFile } from './circulars/circulars.server'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import { GetObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getEnvOrDie } from '~/lib/env.server'
 
 export async function loader({ request }: DataFunctionArgs) {
-  const tarFile = await makeTarFile('json')
+  const client = new S3Client({})
+  const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
+  const command = new GetObjectCommand({
+    Bucket: Bucket,
+    Key: 'circulars.archive.json.tar'
+  })
+  
+  const response = await client.send(command);
+  const result = response.Body?.transformToWebStream();
   const headers = {
     ...publicStaticShortTermCacheControlHeaders,
     'Content-Type': 'application/x-tar',
   }
-  return new Response(tarFile, { headers })
+  return new Response(result, { headers })
 }

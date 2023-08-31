@@ -117,6 +117,10 @@ instanceCount 2
 availabilityZoneCount 2
 volumeSize 10
 
+@scheduled
+tarUpload cron(0 06 * * *)
+tarUpload cron(0 18 * * *)
+
 @plugins
 plugin-remix
 sandboxOidcIdp  # Sandbox identity provider

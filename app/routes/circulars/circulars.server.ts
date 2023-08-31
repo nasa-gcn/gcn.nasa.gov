@@ -6,18 +6,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import type { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
+import { paginateScan, type DynamoDB } from '@aws-sdk/client-dynamodb'
+import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
-import { pack as tarPack } from 'tar-stream'
 
 import { getUser } from '../_auth/user.server'
 import {
   bodyIsValid,
   formatAuthor,
-  formatCircular,
   subjectIsValid,
 } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
@@ -268,57 +266,4 @@ export async function circularRedirect(query: string) {
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL)
   }
-}
-
-async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('circulars')
-  const pages = paginateScan({ client }, { TableName })
-
-  for await (const page of pages) {
-    const items: Circular[] = page.Items as Circular[]
-    yield items
-  }
-}
-
-export async function makeTarFile(fileType: 'json' | 'txt'): Promise<Blob> {
-  return new Promise(async (resolve, reject) => {
-    const pack = tarPack()
-    const chunks: Uint8Array[] = []
-
-    pack.on('data', (chunk) => {
-      chunks.push(chunk)
-    })
-
-    pack.on('end', () => {
-      const tarData = new Uint8Array(Buffer.concat(chunks))
-      resolve(new Blob([tarData], { type: 'application/x-tar' }))
-    })
-
-    pack.on('error', (err) => {
-      reject(err)
-    })
-
-    for await (const circularArray of getAllRecords()) {
-      for (const circular of circularArray) {
-        if (fileType === 'txt') {
-          const txt_entry = pack.entry(
-            { name: `archive.txt/${circular.circularId}.txt` },
-            formatCircular(circular)
-          )
-          txt_entry.end()
-        } else if (fileType === 'json') {
-          delete circular.sub
-          const json_entry = pack.entry(
-            { name: `archive.json/${circular.circularId}.json` },
-            JSON.stringify(circular, null, 2)
-          )
-          json_entry.end()
-        }
-      }
-    }
-
-    pack.finalize()
-  })
 }
