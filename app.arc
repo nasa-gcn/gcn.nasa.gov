@@ -15,7 +15,7 @@ support
 
 @scheduled
 ads
-  rate 1 day
+  cron 0 8 * * MON *
   src build/scheduled/ads
 
 @tables-streams
