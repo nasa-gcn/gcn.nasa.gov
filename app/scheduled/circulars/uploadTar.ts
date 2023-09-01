@@ -88,7 +88,6 @@ export function setupTar() {
 }
 
 export async function finalizeTar(context: CircularActionContext) {
-  // const client = db._doc as unknown as DynamoDBDocument
   const finalContext = context as unknown as TarContextObject
   finalContext.pack.finalize()
   const readableTar = createReadableStreamFromReadable(
