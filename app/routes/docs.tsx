@@ -52,9 +52,6 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="code-samples" to="samples">
-                Code Samples
-              </NavLink>,
               <>
                 <NavLink key="contributing" to="contributing">
                   Contributing
@@ -136,6 +133,9 @@ export default function () {
                     </Link>,
                     <Link key="c-1" to="client#c-1">
                       C#
+                    </Link>,
+                    <Link key="code-samples" to="client/samples">
+                      Code Samples
                     </Link>,
                   ]}
                 />

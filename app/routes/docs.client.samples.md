@@ -3,8 +3,6 @@ handle:
   breadcrumb: Code Samples
 ---
 
-import { Highlight } from '~/components/Highlight'
-
 # Code Samples
 
 We have collected a short list of functions and examples that may be useful
@@ -22,7 +20,9 @@ content of <code>message.value()</code> into other data types.
 <code>xmltodict</code> is not a standard python package, it must be installed with
 pip:
 
-<Highlight language="sh" code="pip install xmltodict" />
+```sh
+pip install xmltodict
+```
 
 ```python
 
@@ -43,7 +43,7 @@ def parse_voevent_alert_to_dict(message_value):
 
 ## Saving
 
-Once parsed, the following can be used to save the data to a local file.
+The following can be used to save the data to a local file:
 
 ```python
 import json
@@ -74,12 +74,15 @@ def save_voevent_alert(message_value):
 A key feature of kafka consumer clients is the ability to perform persistent
 tracking of which messages have been read. This allows clients to recover
 missed messages after a restart by beginning at the earliest unread message
-rather than the next available message from the stream. In order to enable
-this feature, you will need to set a client Group ID using the configuration
-dictionary argument for the Consumer class as well as change the auto offset
-reset option to the 'earliest' setting. Once this is done, every new client
-with the given Group ID will begin reading the specified topic at the earliest
-unread message. When doing this, it is recommended to turn OFF the auto commit
+rather than the next available message from the stream.
+
+In order to enable this feature, you will need to set a client Group ID using
+the configuration dictionary argument for the Consumer class as well as change
+the auto offset reset option to the 'earliest' setting. Once this is done,
+every new client with the given Group ID will begin reading the specified topic
+at the earliest unread message.
+
+When doing this, it is recommended to turn OFF the auto commit
 feature because it can lose track of the last read message if the client
 crashes before the auto commit interval (5 seconds by default) occurs.
 Manually committing messages (i.e. storing the state of the last read message)
@@ -139,9 +142,8 @@ while True:
 
 ## Search for messages occurring within a given date range
 
-To search for messages in a given date range, you can use the{' '}
-
-<code>offsets_for_times()</code> function from the Consumer class to get the message
+To search for messages in a given date range, you can use
+the <code>offsets_for_times()</code> function from the Consumer class to get the message
 offsets for the desired date range. You can then assign the starting offset to the
 Consumer and read the desired number of messages. When doing so, keep in mind that
 the stream buffers are finite in size. It is not possible to recover messages prior
