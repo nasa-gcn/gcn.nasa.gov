@@ -17,6 +17,9 @@ support
 ads
   cron 0 8 * * MON *
   src build/scheduled/ads
+circulars
+  rate 1 day
+  src build/scheduled/circulars
 
 @tables-streams
 circulars
