@@ -117,10 +117,3 @@ export async function uploadJsonTar(circularArray: Circular[], context: any) {
     fileType: 'json',
   })
 }
-
-// FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
-// See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-export async function uploadTar(circularArray: Circular[], context: any) {
-  uploadTxtTar(circularArray, context)
-  uploadJsonTar(circularArray, context)
-}
