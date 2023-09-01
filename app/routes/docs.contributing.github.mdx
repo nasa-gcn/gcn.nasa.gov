@@ -1,30 +1,50 @@
+---
+handle:
+  breadcrumb: GitHub
+---
+
+import copyUrl from '~/img/contributing/copy-url.png'
+import githubFork from '~/img/contributing/github-fork.png'
+import githubImage from '~/img/contributing/github.png'
+import newFork from '~/img/contributing/new-fork.png'
+
 # GitHub
 
-For all projects in the [nasa-gcn](https://github.com/nasa-gcn) GitHub organization, contributors should adhere to the following steps:
+We maintain several repositories under the [nasa-gcn](https://github.com/nasa-gcn) GitHub organization. These include kafka wrappers for [python](https://github.com/nasa-gcn/gcn-kafka-python) and [JavaScript](https://github.com/nasa-gcn/gcn-kafka-js), the new [email distribution service](https://github.com/nasa-gcn/gcn-email), and several other projects that support the new GCN.
 
-- Fork a copy of our repo
+For all projects in the [nasa-gcn](https://github.com/nasa-gcn) GitHub organization, contributors are encouraged to follow these steps:
 
-- Clone your repo to your machine
+- [Fork a copy of our repo](#forking-a-repo)
 
-- Create a branch for your new changes
+- [Clone your repo to your machine](#cloning-a-repo)
 
-- Create a Pull Request to contribute to the original project
+- [Create a branch for your new changes](#branching-off-main)
 
-For more information, check out our [web-dev-bootcamp](https://github.com/nasa-gcn/web-dev-bootcamp) repository. In the syllabus folder you will find some instructive lectures and examples to help understand our workflow.
+- [Create a Pull Request to contribute to the original project](#pull-requests)
+
+You will need to install git on your development machine. Check out [this guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git) for installation instructions.
 
 ## Forking a Repo
 
-Navigate to the page repository page for whichever project you wish to contribute to, for example: [gcn.nasa.gov](https://github.com/nasa-gcn/gcn.nasa.gov)
+Navigate to the page repository page for whichever project you wish to contribute to, for example: [gcn.nasa.gov](https://github.com/nasa-gcn/gcn.nasa.gov).
 
-Click the Fork button
+<img src={githubImage} alt="gcn.nasa.gov GitHub page" />
 
-Click Create Fork to create a new repo in your account
+Click the Fork button.
+
+<img src={githubFork} alt="Highlighted fork button" />
+
+Click Create Fork to create a new repo in your account.
+
+<img src={newFork} alt="Highlighted new fork" />
 
 ## Cloning a Repo
 
 We recommend checking out [this guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) on adding an SSH key to your github account.
 
 With your new fork now created, click the Code button and copy the URL in the SSH tab.
+
+<img src={copyUrl} alt="Highlighted URL" />
 
 Open a terminal window and run the following
 
@@ -34,10 +54,28 @@ git clone <your copied repo url>
 
 ## Branching off main
 
-Within your cloned repo on your local machine, run the following to create and switch to a new branch for your code changes:
+In a terminal, set your current working directory to the cloned directory and run the following to create and switch to a new branch for your code changes:
 
 ```sh
 git checkout -b <your branch name>
+```
+
+To stage your changes:
+
+```sh
+git add .
+```
+
+Create a new local commit and add a descriptive comment:
+
+```sh
+git commit -m "Your descriptive comment"
+```
+
+Push your commits out to your remote fork:
+
+```sh
+git push
 ```
 
 ## Pull Requests
@@ -48,6 +86,6 @@ To create a pull request, navigate to your fork in your own github repo. Click t
 
 ## Issues
 
-We use the GitHub issues pages to track bugs and other problems. To submit a new issue, navigate to the appropriate [nasa-gcn](https://github.com/nasa-gcn/) and click on Issues.
+We use the GitHub issues pages to track bugs and other problems. To submit a new issue, navigate to the appropriate [nasa-gcn](https://github.com/nasa-gcn/) repository and click on Issues.
 
 Click New Issue and fill out the form. Please include a concise and descriptive title and as much relevant information in the comment as possible. This includes steps to reproduce issues, screenshots, error messages, and anything else that may be helpful for us or others to pinpoint the cause of an issue.
