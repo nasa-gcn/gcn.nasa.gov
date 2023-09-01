@@ -5,35 +5,35 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-// import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-// import { createReadableStreamFromReadable } from '@remix-run/node'
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { createReadableStreamFromReadable } from '@remix-run/node'
 import { Readable } from 'stream'
 import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
 import type { CircularActionContext } from './circularAction'
-// import { getEnvOrDie } from '~/lib/env.server'
+import { getEnvOrDie } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircular } from '~/routes/circulars/circulars.lib'
 
 interface TarContextObject {
   pack: Pack
-  readableTar: ReadableStream<Uint8Array>
+  readableTar: Readable | ReadableStream<Uint8Array>
   fileType: string
 }
 
-// async function uploadStream(tarContext: TarContextObject) {
-//   const s3 = new S3Client({})
-//   const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
+async function uploadStream(tarContext: TarContextObject) {
+  const s3 = new S3Client({})
+  const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
 
-//   await s3.send(
-//     new PutObjectCommand({
-//       Bucket,
-//       Key: `circulars.archive.${tarContext.fileType}.tar`,
-//       Body: tarContext.readableTar,
-//     })
-//   )
-// }
+  await s3.send(
+    new PutObjectCommand({
+      Bucket,
+      Key: `circulars.archive.${tarContext.fileType}.tar`,
+      Body: tarContext.readableTar,
+    })
+  )
+}
 
 export async function makeTarFile({
   pack,
@@ -91,9 +91,14 @@ export async function finalizeTar(context: CircularActionContext) {
   // const client = db._doc as unknown as DynamoDBDocument
   const finalContext = context as unknown as TarContextObject
   finalContext.pack.finalize()
-  // COUREY: these lines are still broken.
-  // const readableTar = createReadableStreamFromReadable(Readable.from(finalContext.readableTar))
-  // await uploadStream({readableTar, fileType: finalContext.fileType, pack: finalContext.pack})
+  const readableTar = createReadableStreamFromReadable(
+    Readable.from(finalContext.readableTar as Readable)
+  )
+  await uploadStream({
+    readableTar,
+    fileType: finalContext.fileType,
+    pack: finalContext.pack,
+  })
 }
 
 export async function uploadTxtTar(circularArray: Circular[], context: any) {

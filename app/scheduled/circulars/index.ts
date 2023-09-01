@@ -22,7 +22,7 @@ async function mapCirculars(
       const context = action.currentContext
         ? action.currentContext
         : action.initialContext()
-      const results = await action.callback(circularArray, context)
+      const results = await action.action(circularArray, context)
       action.currentContext = results
     }
   }
@@ -49,13 +49,13 @@ async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
 module.exports.handler = async () => {
   const actions: CircularAction<CircularActionContext>[] = [
     {
-      callback: uploadJsonTar,
+      action: uploadJsonTar,
       initialContext: setupTar,
       finalize: finalizeTar,
       currentContext: { context: {} },
     },
     {
-      callback: uploadTxtTar,
+      action: uploadTxtTar,
       initialContext: setupTar,
       finalize: finalizeTar,
       currentContext: { context: {} },

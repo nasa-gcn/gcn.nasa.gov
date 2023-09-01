@@ -10,7 +10,7 @@ import type { Circular } from '~/routes/circulars/circulars.lib'
 export interface CircularAction<CircularActionContext> {
   initialContext: () => CircularActionContext
   currentContext: CircularActionContext
-  callback: (
+  action: (
     circularArray: Circular[],
     context: CircularActionContext
   ) => Promise<CircularActionContext>
