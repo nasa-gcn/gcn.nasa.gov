@@ -9,22 +9,9 @@ import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
 
+import type { CircularAction, CircularActionContext } from './circularAction'
 import { finalizeTar, setupTar, uploadJsonTar, uploadTxtTar } from './uploadTar'
 import { type Circular } from '~/routes/circulars/circulars.lib'
-
-interface CircularAction<CircularActionContext> {
-  initialContext: () => CircularActionContext
-  currentContext: CircularActionContext
-  callback: (
-    circularArray: Circular[],
-    context: CircularActionContext
-  ) => Promise<CircularActionContext>
-  finalize: (context: CircularActionContext) => Promise<void>
-}
-
-export interface CircularActionContext {
-  context: object
-}
 
 async function mapCirculars(
   ...actions: CircularAction<CircularActionContext>[]

@@ -11,7 +11,7 @@ import { Readable } from 'stream'
 import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
-import type { CircularActionContext } from '.'
+import type { CircularActionContext } from './circularAction'
 // import { getEnvOrDie } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircular } from '~/routes/circulars/circulars.lib'
