@@ -5,42 +5,35 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { createReadableStreamFromReadable } from '@remix-run/node'
+// import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+// import { createReadableStreamFromReadable } from '@remix-run/node'
 import { Readable } from 'stream'
+import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
-import { getEnvOrDie } from '~/lib/env.server'
+import type { CircularActionContext } from '.'
+// import { getEnvOrDie } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircular } from '~/routes/circulars/circulars.lib'
 
-async function uploadStream({
-  pack,
-  readableTar,
-  circularArray,
-  fileType,
-}: {
-  pack: any
-  readableTar: Readable
-  circularArray: Circular[]
-  fileType: 'txt' | 'json'
-}) {
-  const s3 = new S3Client({})
-  const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
-  const tarball = await makeTarFile({
-    pack,
-    readableTar,
-    circularArray,
-    fileType,
-  })
-  await s3.send(
-    new PutObjectCommand({
-      Bucket,
-      Key: `circulars.archive.${fileType}.tar`,
-      Body: tarball,
-    })
-  )
+interface TarContextObject {
+  pack: Pack
+  readableTar: ReadableStream<Uint8Array>
+  fileType: string
 }
+
+// async function uploadStream(tarContext: TarContextObject) {
+//   const s3 = new S3Client({})
+//   const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
+
+//   await s3.send(
+//     new PutObjectCommand({
+//       Bucket,
+//       Key: `circulars.archive.${tarContext.fileType}.tar`,
+//       Body: tarContext.readableTar,
+//     })
+//   )
+// }
 
 export async function makeTarFile({
   pack,
@@ -52,7 +45,7 @@ export async function makeTarFile({
   readableTar: Readable
   circularArray: Circular[]
   fileType: 'txt' | 'json'
-}): Promise<ReadableStream> {
+}) {
   for (const circular of circularArray) {
     if (fileType === 'txt') {
       const txt_entry = pack.entry(
@@ -69,12 +62,10 @@ export async function makeTarFile({
       json_entry.end()
     }
   }
-  pack.finalize()
-
-  return createReadableStreamFromReadable(Readable.from(readableTar))
+  return { context: { pack, readableTar } }
 }
 
-async function setup() {
+export function setupTar() {
   const tarStream = new Readable({
     read() {},
   })
@@ -93,23 +84,39 @@ async function setup() {
     tarStream.push(null)
   })
 
-  const readableTar = Readable.from(tarStream)
-  return { pack, readableTar }
+  return { context: { pack, tarStream } }
 }
 
-async function uploadTxtTar(circularArray: Circular[]) {
-  const { pack, readableTar } = await setup()
-  await uploadStream({ pack, readableTar, circularArray, fileType: 'txt' })
+export async function finalizeTar(context: CircularActionContext) {
+  // const client = db._doc as unknown as DynamoDBDocument
+  const finalContext = context as unknown as TarContextObject
+  finalContext.pack.finalize()
+  // COUREY: these lines are still broken.
+  // const readableTar = createReadableStreamFromReadable(Readable.from(finalContext.readableTar))
+  // await uploadStream({readableTar, fileType: finalContext.fileType, pack: finalContext.pack})
 }
 
-async function uploadJsonTar(circularArray: Circular[]) {
-  const { pack, readableTar } = await setup()
-  await uploadStream({ pack, readableTar, circularArray, fileType: 'json' })
+export async function uploadTxtTar(circularArray: Circular[], context: any) {
+  return await makeTarFile({
+    pack: context.pack,
+    readableTar: context.readableTar,
+    circularArray,
+    fileType: 'txt',
+  })
+}
+
+export async function uploadJsonTar(circularArray: Circular[], context: any) {
+  return await makeTarFile({
+    pack: context.pack,
+    readableTar: context.readableTar,
+    circularArray,
+    fileType: 'json',
+  })
 }
 
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-export async function uploadTar(circularArray: Circular[]) {
-  uploadTxtTar(circularArray)
-  uploadJsonTar(circularArray)
+export async function uploadTar(circularArray: Circular[], context: any) {
+  uploadTxtTar(circularArray, context)
+  uploadJsonTar(circularArray, context)
 }

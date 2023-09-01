@@ -9,18 +9,39 @@ import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
 
-import { uploadTar } from './uploadTar'
+import { finalizeTar, setupTar, uploadJsonTar, uploadTxtTar } from './uploadTar'
 import { type Circular } from '~/routes/circulars/circulars.lib'
 
-interface CircularAction {
-  callback: (circularArray: Circular[]) => void
+interface CircularAction<CircularActionContext> {
+  initialContext: () => CircularActionContext
+  currentContext: CircularActionContext
+  callback: (
+    circularArray: Circular[],
+    context: CircularActionContext
+  ) => Promise<CircularActionContext>
+  finalize: (context: CircularActionContext) => Promise<void>
 }
 
-async function mapCirculars(...actions: CircularAction[]) {
+export interface CircularActionContext {
+  context: object
+}
+
+async function mapCirculars(
+  ...actions: CircularAction<CircularActionContext>[]
+) {
   for await (const circularArray of getAllRecords()) {
     for (const action of actions) {
-      action.callback(circularArray)
+      // the context is based on either the initial setup context or the context of the callback return
+      const context = action.currentContext
+        ? action.currentContext
+        : action.initialContext()
+      const results = await action.callback(circularArray, context)
+      action.currentContext = results
     }
+  }
+  for (const action of actions) {
+    // the finalize context is based the final results of the callback function
+    await action.finalize(action.currentContext)
   }
 }
 
@@ -39,7 +60,20 @@ async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = async () => {
-  const actions: CircularAction[] = [{ callback: uploadTar }]
+  const actions: CircularAction<CircularActionContext>[] = [
+    {
+      callback: uploadJsonTar,
+      initialContext: setupTar,
+      finalize: finalizeTar,
+      currentContext: { context: {} },
+    },
+    {
+      callback: uploadTxtTar,
+      initialContext: setupTar,
+      finalize: finalizeTar,
+      currentContext: { context: {} },
+    },
+  ]
 
   await mapCirculars(...actions)
 }
