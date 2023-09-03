@@ -39,9 +39,7 @@ export default {
   postcss: true,
   ignoredRouteFiles: ['**/.*'],
   assetsBuildDirectory: 'build/static',
-  // FIXME: Architect currently does not respect the 'prefix' setting in sandbox mode.
-  // See https://github.com/architect/architect/issues/1450
-  publicPath: isProduction ? '/_static/app/' : '/_static/',
+  publicPath: '/_static/app/',
   server: './server.ts',
   serverBuildPath: 'build/server/index.js',
   serverMinify: isProduction,
