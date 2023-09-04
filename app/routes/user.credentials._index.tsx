@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
@@ -14,7 +15,7 @@ import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 
-export const handle = { getSitemapEntries: () => null }
+export const handle: SEOHandle = { getSitemapEntries: () => null }
 
 export async function loader({ request }: DataFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)

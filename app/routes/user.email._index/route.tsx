@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
@@ -27,7 +28,7 @@ import { getFormDataString } from '~/lib/utils'
 import { useEmail, useHostname } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 
-export const handle = { getSitemapEntries: () => null }
+export const handle: SEOHandle = { getSitemapEntries: () => null }
 
 export async function action({ request }: DataFunctionArgs) {
   const user = await getUser(request)

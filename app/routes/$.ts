@@ -1,6 +1,9 @@
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { LoaderFunction } from '@remix-run/node'
 
-export const handle = {
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Page Not Found',
   getSitemapEntries: () => null,
 }

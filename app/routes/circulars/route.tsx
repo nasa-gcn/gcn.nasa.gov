@@ -11,8 +11,9 @@ import { GridContainer } from '@trussworks/react-uswds'
 
 import { put } from './circulars.server'
 import { getFormDataString } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
+export const handle: BreadcrumbHandle = {
   breadcrumb: 'Circulars',
 }
 

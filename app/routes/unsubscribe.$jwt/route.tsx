@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import {
   Form,
@@ -28,8 +29,9 @@ import { unsubscribeActions } from './actions.server'
 import { maxTokenAge } from './jwt.lib'
 import { decodeFromURLParams } from './jwt.server'
 import Hint from '~/components/Hint'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
+export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Unsubscribe',
   getSitemapEntries: () => null,
 }

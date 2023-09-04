@@ -5,8 +5,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { BreadcrumbHandle } from '~/root/Title'
+
 export { Outlet as default } from '@remix-run/react'
 
-export const handle = {
+export const handle: BreadcrumbHandle = {
   breadcrumb: 'Contributing',
 }

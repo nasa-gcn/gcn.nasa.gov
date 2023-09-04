@@ -25,7 +25,9 @@ import type {
   TagRendererProps,
 } from 'react-tag-autocomplete'
 
-export const handle = { breadcrumb: 'Notices' }
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle = { breadcrumb: 'Notices' }
 
 function NoticeCard({
   children,
