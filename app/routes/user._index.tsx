@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import {
@@ -24,8 +25,12 @@ import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { cognito, maybeThrow } from '~/lib/cognito.server'
 import { getFormDataString } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = { breadcrumb: 'Profile', getSitemapEntries: () => null }
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Profile',
+  getSitemapEntries: () => null,
+}
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)

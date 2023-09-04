@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import {
@@ -36,10 +37,11 @@ import type {
 import { EndorsementsServer } from './endorsements.server'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
 
 import loaderImage from '~/../node_modules/nasawds/src/img/loader.gif'
 
-export const handle = {
+export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Peer Endorsements',
   getSitemapEntries: () => null,
 }

@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
 import {
@@ -24,8 +25,9 @@ import { updatePassword } from './password.server'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useUserIdp } from '~/root'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
+export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Reset Password',
   getSitemapEntries: () => null,
 }

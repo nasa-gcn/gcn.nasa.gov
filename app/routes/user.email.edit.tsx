@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
@@ -31,9 +32,13 @@ import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import { useRecaptchaSiteKey } from '~/root'
+import type { BreadcrumbHandle } from '~/root/Title'
 import { getUser } from '~/routes/_auth/user.server'
 
-export const handle = { breadcrumb: 'Edit', getSitemapEntries: () => null }
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Edit',
+  getSitemapEntries: () => null,
+}
 
 export async function action({ request }: DataFunctionArgs) {
   const user = await getUser(request)

@@ -9,8 +9,9 @@ import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { NavStepIndicator } from '~/components/NavStepIndicator'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
+export const handle: BreadcrumbHandle = {
   breadcrumb: 'Start Streaming GCN Notices',
 }
 
