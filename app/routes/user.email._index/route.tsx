@@ -72,7 +72,7 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
   const fetcher = useFetcher<typeof action>()
 
   let valuePending
-  switch (fetcher.submission?.formData?.get('intent')?.toString()) {
+  switch (fetcher.formData?.get('intent')?.toString()) {
     case 'subscribe':
       valuePending = true
       break
