@@ -6,8 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@balavishnuvj/remix-seo'
-import type { LoaderArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
+import { type LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import {
   Button,
@@ -22,7 +21,7 @@ export const handle: SEOHandle = {
   getSitemapEntries: () => null,
 }
 
-export async function loader({ request: { headers } }: LoaderArgs) {
+export async function loader({ request: { headers } }: LoaderFunctionArgs) {
   const session = await storage.getSession(headers.get('Cookie'))
   const existingIdp = session.get('existingIdp')
   if (session.id) await storage.destroySession(session)
