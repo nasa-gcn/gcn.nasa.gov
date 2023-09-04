@@ -22,7 +22,7 @@ import { cssBundleHref } from '@remix-run/css-bundle'
 import type {
   DataFunctionArgs,
   LinksFunction,
-  V2_MetaFunction,
+  MetaFunction,
 } from '@remix-run/node'
 import {
   Link,
@@ -98,7 +98,7 @@ export const handle: BreadcrumbHandle = {
   breadcrumb: 'GCN',
 }
 
-export const meta: V2_MetaFunction<typeof loader> = ({ data }) => {
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const result = [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width,initial-scale=1' },

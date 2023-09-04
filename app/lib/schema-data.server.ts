@@ -109,7 +109,7 @@ function resolveRelativePath(
 
 export type ExampleFile = {
   name: string
-  content: object
+  content: any
 }
 export type GitContentDataResponse = {
   name: string

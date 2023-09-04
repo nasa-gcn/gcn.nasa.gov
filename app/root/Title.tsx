@@ -5,26 +5,20 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { AppData, SerializeFrom } from '@remix-run/node'
-import {
-  type RouteMatch as RemixRouteMatch,
-  useMatches,
-} from '@remix-run/react'
+import type { SerializeFrom } from '@remix-run/node'
+import { useMatches } from '@remix-run/react'
+import type { UIMatch as UIMatchRR } from 'react-router'
 
-// FIXME: https://github.com/remix-run/remix/pull/7333
-type RouteMatch<T = AppData> = Omit<RemixRouteMatch, 'data'> & {
-  data: SerializeFrom<T>
-}
+type UIMatch<D = unknown> = UIMatchRR<SerializeFrom<D>, BreadcrumbHandle<D>>
 
-export type BreadcrumbHandle<T = AppData> = {
-  breadcrumb?: string | ((match: RouteMatch<T>) => string | undefined)
+export type BreadcrumbHandle<D = unknown> = {
+  breadcrumb?: string | ((match: UIMatch<D>) => string | undefined)
 }
 
 export function Title() {
-  const title = useMatches()
+  const title = (useMatches() as UIMatch[])
     .map((match) => {
-      let breadcrumb = (match.handle as BreadcrumbHandle | undefined)
-        ?.breadcrumb
+      let breadcrumb = match.handle?.breadcrumb
       if (typeof breadcrumb === 'function') breadcrumb = breadcrumb(match)
       return breadcrumb
     })
