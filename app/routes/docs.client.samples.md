@@ -10,7 +10,7 @@ when working with GCN Notices. These include conversions from
 text and VOEvent alert formats to JSON and XML (for VOEvent alerts), how to save alerts,
 and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
 
-For more examples, or to contribute your own ideas, see our [Utility Samples](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md) and the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
+To contribute your own ideas, make a GitHub pull request to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md), or [contact us](/contact).
 
 ## Parsing
 
