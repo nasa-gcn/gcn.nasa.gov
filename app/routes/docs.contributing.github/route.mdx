@@ -8,6 +8,12 @@ import githubFork from './github-fork.png'
 import githubImage from './github.png'
 import newFork from './new-fork.png'
 
+# Prerequisites
+
+You will need to install Git on your development machine. Check out [the official installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+
+We recommend checking out [this guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) on adding an SSH key to your github account.
+
 # GitHub
 
 GCN consists of several open-source projects grouped into the [nasa-gcn](https://github.com/nasa-gcn) GitHub organization. These include:
@@ -19,19 +25,17 @@ GCN consists of several open-source projects grouped into the [nasa-gcn](https:/
 
 To contribute to any project in the [nasa-gcn](https://github.com/nasa-gcn) GitHub organization, follow these steps:
 
-- [Fork a copy of our repo](#forking-a-repo)
+- [Forking a Repository](#forking-a-repository)
 
-- [Clone your repo to your machine](#cloning-a-repo)
+- [Cloning a Repository](#cloning-a-repository)
 
-- [Create a branch for your new changes](#branching-off-main)
+- [Creating a Branch](#creating-a-branch)
 
-- [Create a Pull Request to contribute to the original project](#pull-requests)
+- [Pull Requests](#pull-requests)
 
-You will need to install Git on your development machine. Check out [the official installation instructions](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git).
+## Forking a Repository
 
-## Forking a Repo
-
-Navigate to the page repository page for whichever project you wish to contribute to, for example: [gcn.nasa.gov](https://github.com/nasa-gcn/gcn.nasa.gov).
+Navigate to the repository page for whichever project you wish to contribute to, for example: [gcn.nasa.gov](https://github.com/nasa-gcn/gcn.nasa.gov).
 
 <img
   src={githubImage}
@@ -51,7 +55,7 @@ Click the Fork button.
   alt="Highlighted fork button"
 />
 
-Click Create Fork to create a new repo in your account.
+Click Create Fork to create a new repository in your account.
 
 <img
   src={newFork}
@@ -61,9 +65,7 @@ Click Create Fork to create a new repo in your account.
   alt="Highlighted new fork"
 />
 
-## Cloning a Repo
-
-We recommend checking out [this guide](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account) on adding an SSH key to your github account.
+## Cloning a Repository
 
 With your new fork now created, click the Code button and copy the URL in the SSH tab.
 
@@ -81,7 +83,7 @@ Open a terminal window and run the following
 git clone <your copied repo url>
 ```
 
-## Branching off main
+## Creating a Branch
 
 In a terminal, set your current working directory to the cloned directory and run the following to create and switch to a new branch for your code changes:
 
@@ -111,10 +113,10 @@ git push
 
 Once you have completed your changes on your branch, create a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls).
 
-To create a pull request, navigate to your fork in your own github repo. Click the "branches" link in the upper left hand secondary nav menu. Once you are on the branches index, click the "New pull request" button on the right hand side of the branch you would like to use. Once you have filled in your pull request title and description, click the "Create pull request" button on the lower left hand side to create the pull request.
+To create a pull request, navigate to your fork in your own github repository. Click the "branches" link in the upper left hand secondary nav menu. Once you are on the branches index, click the "New pull request" button on the right hand side of the branch you would like to use. Once you have filled in your pull request title and description, click the "Create pull request" button on the lower left hand side to create the pull request.
 
 ## Issues
 
-We use the GitHub issues pages to track bugs and other problems. To submit a new issue, navigate to the appropriate [nasa-gcn](https://github.com/nasa-gcn/) repository and click on Issues.
+We use GitHub issues to track bugs and feature requests. To submit a new issue, navigate to the appropriate [nasa-gcn](https://github.com/nasa-gcn/) repository and click on Issues.
 
-Click New Issue and fill out the form. Please include a concise and descriptive title and as much relevant information in the comment as possible. This includes steps to reproduce issues, screenshots, error messages, and anything else that may be helpful for us or others to pinpoint the cause of an issue.
+Click New Issue and fill out the form. Please include a concise and descriptive title and as much relevant information in the comment as possible. If relevant, include steps to reproduce, screenshots, error messages, and anything else that may be helpful for us or others to pinpoint the cause of an issue.
