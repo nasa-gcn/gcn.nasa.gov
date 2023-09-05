@@ -107,7 +107,7 @@ function resolveRelativePath(
   return { resolvedPath, ref }
 }
 
-export type ExampleFiles = {
+export type ExampleFile = {
   name: string
   content: object
 }
@@ -120,7 +120,7 @@ export type GitContentDataResponse = {
 }
 
 export const loadSchemaExamples = memoizee(
-  async function (schemaPath: string, ref: string): Promise<ExampleFiles[]> {
+  async function (schemaPath: string, ref: string): Promise<ExampleFile[]> {
     const dirPath = dirname(schemaPath)
     const schemaName = basename(schemaPath)
     const exampleFiles = (await getGithubDir(dirPath, ref)).filter(
@@ -129,7 +129,7 @@ export const loadSchemaExamples = memoizee(
         x.name.endsWith('.example.json')
     )
 
-    const result: ExampleFiles[] = []
+    const result: ExampleFile[] = []
     for (const exampleFile of exampleFiles) {
       const exPath = join(dirPath, exampleFile.name)
       const example = await loadContentFromGithub(exPath, ref)
