@@ -221,5 +221,16 @@
     "last 2 versions",
     "IE 11",
     "not dead"
-  ]
+  ],
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {
+        "cascade": false,
+        "grid": true
+      },
+      "csso": {
+        "forceMediaMerge": false
+      }
+    }
+  }
 }
