@@ -15,7 +15,7 @@ To contribute your own ideas, make a GitHub pull request to add it to [the Markd
 ## Parsing
 
 Within your consumer loop, use the following functions to convert the
-content of <code>message.value()</code> into other data types.
+content of `message.value()` into other data types.
 
 The `xmltodict` package is not part of the Python standard library. You must install it by running:
 pip:
@@ -79,15 +79,18 @@ config = {'group.id': 'my group name',
           'enable.auto.commit': False}
 
 consumer = Consumer(config=config,
-client_id='fill me in',
-client_secret='fill me in',
-domain='gcn.nasa.gov')
+                    client_id='fill me in',
+                    client_secret='fill me in',
+                    domain='gcn.nasa.gov')
 
 topics = ['gcn.classic.voevent.FERMI_GBM_SUBTHRESH']
 consumer.subscribe(topics)
 
 while True:
     for message in consumer.consume(timeout=1):
+        if message.error():
+            print(message.error())
+            continue
         print(message.value())
         consumer.commit(message)
 ```
@@ -119,6 +122,9 @@ consumer.subscribe(topics)
 
 while True:
     for message in consumer.consume(timeout=1):
+        if message.error():
+            print(message.error())
+            continue
         print(message.value())
 
 ```
@@ -153,5 +159,8 @@ end = consumer.offsets_for_times(
 
 consumer.assign(start)
 for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
+    if message.error():
+            print(message.error())
+            continue
     print(message.value())
 ```
