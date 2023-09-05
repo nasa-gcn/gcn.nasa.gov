@@ -64,7 +64,7 @@ the auto offset reset option to the 'earliest' setting. Once this is done,
 every new client with the given Group ID will begin reading the specified topic
 at the earliest unread message.
 
-When doing this, it is recommended to turn OFF the auto commit
+When doing this, it is recommended to turn **off** the auto commit
 feature because it can lose track of the last read message if the client
 crashes before the auto commit interval (5 seconds by default) occurs.
 Manually committing messages (i.e. storing the state of the last read message)
