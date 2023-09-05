@@ -5,8 +5,8 @@ handle:
 
 # Code Samples
 
-We have collected a short list of functions and examples that may be useful
-when working with GCN Notices in your code. These include conversions from
+Here is a collection of functions and example code that may be useful
+when working with GCN Notices. These include conversions from
 text and VOEvent alert formats to JSON and XML (for VOEvent alerts), how to save alerts,
 and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
 
