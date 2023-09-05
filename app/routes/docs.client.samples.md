@@ -126,7 +126,7 @@ while True:
 ## Search for messages occurring within a given date range
 
 To search for messages in a given date range, use the `offsets_for_times()`
-function from the Consumer class to get the message offsets for the desired date range.
+method from the Consumer class to get the message offsets for the desired date range.
 Then assign the starting offset to the Consumer and read the desired number of messages.
 When doing so, keep in mind that the stream buffers are finite in size. It is not
 possible to recover messages prior to the start of the stream buffer. The GCN stream
