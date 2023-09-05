@@ -135,7 +135,7 @@ export default function () {
                       C#
                     </Link>,
                     <Link key="code-samples" to="client/samples">
-                      Code Samples
+                      Sample Code
                     </Link>,
                   ]}
                 />
