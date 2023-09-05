@@ -32,7 +32,7 @@ import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 import type {
-  ExampleFiles,
+  ExampleFile,
   GitContentDataResponse,
 } from '~/lib/schema-data.server'
 import {
@@ -47,7 +47,7 @@ export async function loader({
   if (!version) throw new Response('Missing version', { status: 404 })
   let jsonContent
   let data: GitContentDataResponse[]
-  let examples: ExampleFiles[] = []
+  let examples: ExampleFile[] = []
   if (path?.endsWith('.schema.json')) {
     const parentPath = dirname(path)
     jsonContent = await loadJson(path, version)
@@ -116,7 +116,7 @@ function SchemaBody({
   path: string
   result: Schema
   selectedVersion: string
-  examples: ExampleFiles[]
+  examples: ExampleFile[]
 }) {
   const windowSize = useWindowSize()
 
