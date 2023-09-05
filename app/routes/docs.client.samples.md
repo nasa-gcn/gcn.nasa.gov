@@ -7,14 +7,14 @@ handle:
 
 We have collected a short list of functions and examples that may be useful
 when working with GCN Notices in your code. These include conversions from
-text and VOEvent alert formats to JSON and XML (for VOEvent alerts) and
-examples for how to save alerts in these formats.
+text and VOEvent alert formats to JSON and XML (for VOEvent alerts), how to save alerts,
+and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
 
-For more examples, or to contribute your own ideas, see our [Utility Sample](https://github.com/nasa-gcn/utility-samples) and [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repositories.
+For more examples, or to contribute your own ideas, see our [Utility Samples](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md) and the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
 
 ## Parsing
 
-Within your consumer loop, the following functions can be used to convert the
+Within your consumer loop, use the following functions to convert the
 content of <code>message.value()</code> into other data types.
 
 <code>xmltodict</code> is not a standard python package, it must be installed with
@@ -43,30 +43,15 @@ def parse_voevent_alert_to_dict(message_value):
 
 ## Saving
 
-The following can be used to save the data to a local file:
+Use the following to save the data to a local file:
 
 ```python
 import json
 
-def save_text_alert(message_value):
-    # Save incoming event message as text file:
-    with open('path/to/your/file.txt', 'w') as file:
-        file.write(message_value.decode())
+def save_alert(message):
+    with open('path/to/your/file', 'wb') as file:
+        file.write(message.value())
 
-    # Save incoming event message as json file:
-    alert_data = parse_text_alert_to_dict(message_value)
-    with open("path/to/your/file.json", "wb") as file:
-        file.write(json.dumps(alert_data))
-
-def save_voevent_alert(message_value):
-    # Save incoming vo event as a json file
-    dataDict = parse_voevent_alert_to_dict(message_value)
-    with open('path/to/your/file.json', "w") as file:
-        file.write(json.dumps(dataDict))
-
-    # Or save incoming vo event as xml
-    with open('path/to/your/file.xml', "w") as file:
-        file.write(message_value.decode())
 ```
 
 ## Keep track of the last read message when restarting a client
@@ -142,16 +127,16 @@ while True:
 
 ## Search for messages occurring within a given date range
 
-To search for messages in a given date range, you can use
-the <code>offsets_for_times()</code> function from the Consumer class to get the message
-offsets for the desired date range. You can then assign the starting offset to the
-Consumer and read the desired number of messages. When doing so, keep in mind that
-the stream buffers are finite in size. It is not possible to recover messages prior
-to the start of the stream buffer. The GCN stream buffers are currently set to hold
-messages from the past few days.
+To search for messages in a given date range, use the <code>offsets_for_times()</code>
+function from the Consumer class to get the message offsets for the desired date range.
+Then assign the starting offset to the Consumer and read the desired number of messages.
+When doing so, keep in mind that the stream buffers are finite in size. It is not
+possible to recover messages prior to the start of the stream buffer. The GCN stream
+buffers are currently set to hold messages from the past few days.
 
 ```python
-import datetime from gcn_kafka import Consumer from confluent_kafka
+import datetime from gcn_kafka
+import Consumer from confluent_kafka
 import TopicPartition
 
 consumer = Consumer(client_id='fill me in',
