@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { LoaderArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
@@ -17,7 +18,7 @@ import {
 
 import { storage } from './_auth/auth.server'
 
-export const handle = {
+export const handle: SEOHandle = {
   getSitemapEntries: () => null,
 }
 

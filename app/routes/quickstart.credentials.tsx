@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -15,8 +16,9 @@ import {
   handleCredentialLoader,
 } from '~/components/NewCredentialForm'
 import SegmentedCards from '~/components/SegmentedCards'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
+export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Select Credentials',
   getSitemapEntries: () => null,
 }

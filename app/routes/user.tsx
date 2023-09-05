@@ -5,13 +5,18 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav } from '~/components/SideNav'
 import { useUserIdp } from '~/root'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = { breadcrumb: 'User', getSitemapEntries: () => null }
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'User',
+  getSitemapEntries: () => null,
+}
 
 export default function () {
   const idp = useUserIdp()

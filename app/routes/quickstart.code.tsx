@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@balavishnuvj/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, FormGroup } from '@trussworks/react-uswds'
@@ -13,8 +14,9 @@ import { ClientCredentialVendingMachine } from './user.credentials/client_creden
 import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
+export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Get Sample Code',
   getSitemapEntries: () => null,
 }

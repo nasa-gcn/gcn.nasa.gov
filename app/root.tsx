@@ -34,7 +34,6 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   useLocation,
-  useMatches,
   useNavigation,
   useRouteError,
   useRouteLoaderData,
@@ -55,6 +54,7 @@ import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import NewsBanner from './components/NewsBanner'
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
+import { type BreadcrumbHandle, Title } from './root/Title'
 import { getUser } from './routes/_auth/user.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
@@ -94,7 +94,7 @@ TopBarProgress.config({
   },
 })
 
-export const handle = {
+export const handle: BreadcrumbHandle = {
   breadcrumb: 'GCN',
 }
 
@@ -201,18 +201,6 @@ export function useOrigin() {
 
 export function useHostname() {
   return new URL(useLoaderDataRoot().origin).hostname
-}
-
-function Title() {
-  const title = useMatches()
-    .map((match) => {
-      let breadcrumb = match.handle?.breadcrumb
-      if (typeof breadcrumb === 'function') breadcrumb = breadcrumb(match)
-      return breadcrumb
-    })
-    .filter(Boolean)
-    .join(' - ')
-  return <title>{title}</title>
 }
 
 function Progress() {

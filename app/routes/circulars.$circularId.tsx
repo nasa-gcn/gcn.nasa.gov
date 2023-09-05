@@ -5,11 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type {
-  DataFunctionArgs,
-  HeadersFunction,
-  SerializeFrom,
-} from '@remix-run/node'
+import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
@@ -20,9 +16,10 @@ import TimeAgo from '~/components/TimeAgo'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
-  breadcrumb({ data }: { data: SerializeFrom<typeof loader> }) {
+export const handle: BreadcrumbHandle<typeof loader> = {
+  breadcrumb({ data }) {
     if (data) {
       const { circularId, subject } = data
       return `${circularId}: ${subject}`

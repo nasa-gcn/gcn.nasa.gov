@@ -32,8 +32,9 @@ import {
 } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useName, useRecaptchaSiteKey } from '~/root'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle = {
+export const handle: BreadcrumbHandle = {
   breadcrumb: 'Contact Us',
 }
 
