@@ -17,7 +17,7 @@ For more examples, or to contribute your own ideas, see our [Utility Samples](ht
 Within your consumer loop, use the following functions to convert the
 content of <code>message.value()</code> into other data types.
 
-<code>xmltodict</code> is not a standard python package, it must be installed with
+The `xmltodict` package is not part of the Python standard library. You must install it by running:
 pip:
 
 ```sh
