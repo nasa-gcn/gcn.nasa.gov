@@ -3,7 +3,7 @@ handle:
   breadcrumb: Sample Code
 ---
 
-# Code Samples
+# Sample Code
 
 Here is a collection of functions and example code that may be useful
 when working with GCN Notices. These include conversions from
