@@ -37,7 +37,6 @@ def parse_voevent_alert_to_xml_root(message_value):
 
 def parse_voevent_alert_to_dict(message_value):
     return xmltodict.parse(message_value)
-
 ```
 
 ## Saving
