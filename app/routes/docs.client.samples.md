@@ -61,7 +61,7 @@ missed messages after a restart by beginning at the earliest unread message
 rather than the next available message from the stream.
 
 To enable this feature, you will need to set a client Group ID using
-the configuration dictionary argument for the Consumer class as well as change
+the configuration dictionary argument for the Consumer and change
 the auto offset reset option to the 'earliest' setting. Once this is done,
 every new client with the given Group ID will begin reading the specified topic
 at the earliest unread message.
