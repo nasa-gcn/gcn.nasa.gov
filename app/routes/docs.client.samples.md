@@ -96,13 +96,14 @@ while True:
 
 ## Read messages beginning at the earliest available messages for a given stream
 
-You can begin reading a given topic stream from the earliest message that is
-present in the stream buffer by setting the Group ID to an empty string and
+To read a given topic stream from the earliest message that is
+present in the stream buffer, set the Group ID to an empty string and
 applying the 'earliest' setting for the auto offset reset option in the
-configuration dictionary argument for the Consumer class. This feature allows
-the user to scan for older messages for testing purposes or to recover
-messages that may have been missed due to a crash or network outage. Just keep
-in mind that the stream buffers are finite in size. They currently hold
+configuration dictionary argument for the Consumer class.
+
+This feature allows the user to scan for older messages for testing purposes or
+to recover messages that may have been missed due to a crash or network outage.
+Keep in mind that the stream buffers are finite in size. They currently hold
 messages from the past few days.
 
 ```python
