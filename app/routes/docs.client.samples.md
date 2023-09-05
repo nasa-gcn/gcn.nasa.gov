@@ -60,7 +60,7 @@ Kafka can keep track of which messages your client has read, allowing your clien
 missed messages after a restart by beginning at the earliest unread message
 rather than the next available message from the stream.
 
-In order to enable this feature, you will need to set a client Group ID using
+To enable this feature, you will need to set a client Group ID using
 the configuration dictionary argument for the Consumer class as well as change
 the auto offset reset option to the 'earliest' setting. Once this is done,
 every new client with the given Group ID will begin reading the specified topic
