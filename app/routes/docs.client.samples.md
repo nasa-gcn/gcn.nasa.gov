@@ -56,8 +56,7 @@ def save_alert(message):
 
 ## Keep track of the last read message when restarting a client
 
-A key feature of kafka consumer clients is the ability to perform persistent
-tracking of which messages have been read. This allows clients to recover
+Kafka can keep track of which messages your client has read, allowing your client to recover
 missed messages after a restart by beginning at the earliest unread message
 rather than the next available message from the stream.
 
