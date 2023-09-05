@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: Code Samples
+  breadcrumb: Sample Code
 ---
 
 # Code Samples
