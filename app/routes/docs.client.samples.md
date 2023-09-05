@@ -154,5 +154,4 @@ end = consumer.offsets_for_times(
 consumer.assign(start)
 for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
     print(message.value())
-
 ```
