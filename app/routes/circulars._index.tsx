@@ -275,7 +275,7 @@ export default function () {
                   <>
                     <Button
                       type="button"
-                      className="usa-button usa-button--unstyled"
+                      className="usa-button usa-button"
                       onClick={(value) => {
                         setInputDateGte('hour')
                         setInputDateLte('now')
@@ -286,7 +286,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button--unstyled"
+                      className="usa-button usa-button"
                       onClick={(value) => {
                         setInputDateGte('today')
                         setInputDateLte('now')
@@ -297,7 +297,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button--unstyled"
+                      className="usa-button usa-button"
                       onClick={(value) => {
                         setInputDateGte('day')
                         setInputDateLte('now')
@@ -308,7 +308,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button--unstyled"
+                      className="usa-button usa-button"
                       onClick={(value) => {
                         setInputDateGte('month')
                         setInputDateLte('now')
@@ -319,7 +319,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button--unstyled"
+                      className="usa-button usa-button"
                       onClick={(value) => {
                         setInputDateGte('year')
                         setInputDateLte('now')
@@ -330,7 +330,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button--unstyled"
+                      className="usa-button usa-button"
                       onClick={(value) => {
                         setInputDateGte('ytd')
                         setInputDateLte('now')
