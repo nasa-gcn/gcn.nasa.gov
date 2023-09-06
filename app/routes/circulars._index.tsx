@@ -216,6 +216,31 @@ export default function () {
       action: '/circulars',
     })
   }
+  const timeRangeLabel = (startDate?: string, endDate?: string) => {
+    if (!startDate || !endDate) {
+      return <Icon.CalendarToday />
+    }
+    switch (startDate) {
+      case 'hour':
+        return 'Last Hour'
+      case 'today':
+        return 'Today'
+      case 'day':
+        return 'Last 24 Hours'
+      case 'week':
+        return 'Last 7 Days'
+      case 'month':
+        return 'Last 30 Days'
+      case 'year':
+        return 'Past Year'
+      case 'mtd':
+        return 'Month to Date' // would like to change this so it shows the month name
+      case 'ytd':
+        return 'Year to Date' // would like to change this so it shows the current year
+      default:
+        return `${startDate} - ${endDate}`
+    }
+  }
 
   return (
     <>
@@ -267,7 +292,7 @@ export default function () {
               aria-expanded={showContent}
               aria-controls="searchFilters"
             >
-              <Icon.CalendarToday />
+              {timeRangeLabel(startDate, endDate)}
             </DetailsDropdownButton>
             {showContent && (
               <DetailsDropdownContent className="position-absolute margin-left-15 margin-top-5">
