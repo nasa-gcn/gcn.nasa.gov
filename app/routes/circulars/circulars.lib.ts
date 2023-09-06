@@ -180,6 +180,7 @@ export const emailAutoReplyChecklist = [
   'fwd: ',
   ' r: ',
   ' ris: ',
+  'subject:',
 ]
 
 export function formatAuthor({
