@@ -38,15 +38,15 @@ async function uploadStream(tarContext: TarContextObject) {
 export async function makeTarFile({
   pack,
   readableTar,
-  circularArray,
+  circulars,
   fileType,
 }: {
   pack: any
   readableTar: Readable
-  circularArray: Circular[]
+  circulars: Circular[]
   fileType: 'txt' | 'json'
 }) {
-  for (const circular of circularArray) {
+  for (const circular of circulars) {
     if (fileType === 'txt') {
       const txt_entry = pack.entry(
         { name: `archive.txt/${circular.circularId}.txt` },
@@ -100,20 +100,20 @@ export async function finalizeTar(context: CircularActionContext) {
   })
 }
 
-export async function uploadTxtTar(circularArray: Circular[], context: any) {
+export async function uploadTxtTar(circulars: Circular[], context: any) {
   return await makeTarFile({
     pack: context.pack,
     readableTar: context.readableTar,
-    circularArray,
+    circulars,
     fileType: 'txt',
   })
 }
 
-export async function uploadJsonTar(circularArray: Circular[], context: any) {
+export async function uploadJsonTar(circulars: Circular[], context: any) {
   return await makeTarFile({
     pack: context.pack,
     readableTar: context.readableTar,
-    circularArray,
+    circulars,
     fileType: 'json',
   })
 }

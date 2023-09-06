@@ -11,7 +11,7 @@ export interface CircularAction<CircularActionContext> {
   initialContext: () => CircularActionContext
   currentContext: CircularActionContext
   action: (
-    circularArray: Circular[],
+    circulars: Circular[],
     context: CircularActionContext
   ) => Promise<CircularActionContext>
   finalize: (context: CircularActionContext) => Promise<void>

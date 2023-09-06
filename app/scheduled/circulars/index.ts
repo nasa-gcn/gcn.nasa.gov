@@ -16,13 +16,13 @@ import { type Circular } from '~/routes/circulars/circulars.lib'
 async function mapCirculars(
   ...actions: CircularAction<CircularActionContext>[]
 ) {
-  for await (const circularArray of getAllRecords()) {
+  for await (const circulars of getAllRecords()) {
     for (const action of actions) {
       // the context is based on either the initial setup context or the context of the callback return
       const context = action.currentContext
         ? action.currentContext
         : action.initialContext()
-      const results = await action.action(circularArray, context)
+      const results = await action.action(circulars, context)
       action.currentContext = results
     }
   }
