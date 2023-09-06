@@ -11,7 +11,6 @@ import { Readable } from 'stream'
 import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
-import type { CircularActionContext } from './circularAction'
 import { getEnvOrDie } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircular } from '~/routes/circulars/circulars.lib'
@@ -22,10 +21,10 @@ interface TarContextObject {
   fileType: string
 }
 
-async function uploadStream(tarContext: TarContextObject) {
-  const s3 = new S3Client({})
-  const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
+const s3 = new S3Client({})
+const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
 
+async function uploadStream(tarContext: TarContextObject) {
   await s3.send(
     new PutObjectCommand({
       Bucket,
@@ -37,7 +36,6 @@ async function uploadStream(tarContext: TarContextObject) {
 
 export async function makeTarFile({
   pack,
-  readableTar,
   circulars,
   fileType,
 }: {
@@ -62,10 +60,9 @@ export async function makeTarFile({
       json_entry.end()
     }
   }
-  return { context: { pack, readableTar } }
 }
 
-export function setupTar() {
+export async function setupTar() {
   const tarStream = new Readable({
     read() {},
   })
@@ -87,7 +84,7 @@ export function setupTar() {
   return { context: { pack, tarStream } }
 }
 
-export async function finalizeTar(context: CircularActionContext) {
+export async function finalizeTar(context: object) {
   const finalContext = context as unknown as TarContextObject
   finalContext.pack.finalize()
   const readableTar = createReadableStreamFromReadable(
@@ -116,4 +113,16 @@ export async function uploadJsonTar(circulars: Circular[], context: any) {
     circulars,
     fileType: 'json',
   })
+}
+
+export const jsonUploadAction = {
+  action: uploadJsonTar,
+  initialize: setupTar,
+  finalize: finalizeTar,
+}
+
+export const txtUploadAction = {
+  action: uploadTxtTar,
+  initialize: setupTar,
+  finalize: finalizeTar,
 }

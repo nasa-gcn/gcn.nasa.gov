@@ -10,26 +10,21 @@ import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
 
 import type { CircularAction, CircularActionContext } from './circularAction'
-import { finalizeTar, setupTar, uploadJsonTar, uploadTxtTar } from './uploadTar'
+import { jsonUploadAction, txtUploadAction } from './uploadTar'
 import { type Circular } from '~/routes/circulars/circulars.lib'
 
 async function mapCirculars(
   ...actions: CircularAction<CircularActionContext>[]
 ) {
+  const contexts = await Promise.all(
+    actions.map((action) => action.initialize())
+  )
   for await (const circulars of getAllRecords()) {
-    for (const action of actions) {
-      // the context is based on either the initial setup context or the context of the callback return
-      const context = action.currentContext
-        ? action.currentContext
-        : action.initialContext()
-      const results = await action.action(circulars, context)
-      action.currentContext = results
-    }
+    await Promise.all(
+      actions.map(({ action }, i) => action(circulars, contexts[i]))
+    )
   }
-  for (const action of actions) {
-    // the finalize context is based the final results of the callback function
-    await action.finalize(action.currentContext)
-  }
+  await Promise.all(actions.map(({ finalize }, i) => finalize(contexts[i])))
 }
 
 async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
@@ -48,18 +43,8 @@ async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = async () => {
   const actions: CircularAction<CircularActionContext>[] = [
-    {
-      action: uploadJsonTar,
-      initialContext: setupTar,
-      finalize: finalizeTar,
-      currentContext: { context: {} },
-    },
-    {
-      action: uploadTxtTar,
-      initialContext: setupTar,
-      finalize: finalizeTar,
-      currentContext: { context: {} },
-    },
+    jsonUploadAction,
+    txtUploadAction,
   ]
 
   await mapCirculars(...actions)
