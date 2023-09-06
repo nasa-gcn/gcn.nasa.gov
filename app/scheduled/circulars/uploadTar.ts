@@ -16,9 +16,11 @@ import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircular } from '~/routes/circulars/circulars.lib'
 
 interface TarContextObject {
-  pack: Pack
-  readableTar: Readable | ReadableStream<Uint8Array>
-  fileType: string
+  context: {
+    pack: Pack
+    tarStream: Readable | ReadableStream<Uint8Array>
+    fileType: string
+  }
 }
 
 const formatters: Record<string, (circular: Circular) => string> = {
@@ -35,8 +37,8 @@ async function uploadStream(tarContext: TarContextObject) {
   await s3.send(
     new PutObjectCommand({
       Bucket,
-      Key: `circulars.archive.${tarContext.fileType}.tar`,
-      Body: tarContext.readableTar,
+      Key: `circulars.archive.${tarContext.context.fileType}.tar`,
+      Body: tarContext.context.tarStream,
     })
   )
 }
@@ -46,8 +48,7 @@ export async function makeTarFile({
   circulars,
   fileType,
 }: {
-  pack: any
-  readableTar: Readable
+  pack: Pack
   circulars: Circular[]
   fileType: 'txt' | 'json'
 }) {
@@ -82,21 +83,22 @@ export async function setupTar() {
 
 export async function finalizeTar(context: object) {
   const finalContext = context as unknown as TarContextObject
-  finalContext.pack.finalize()
+  finalContext.context.pack.finalize()
   const readableTar = createReadableStreamFromReadable(
-    Readable.from(finalContext.readableTar as Readable)
+    Readable.from(finalContext.context.tarStream as Readable)
   )
   await uploadStream({
-    readableTar,
-    fileType: finalContext.fileType,
-    pack: finalContext.pack,
+    context: {
+      pack: finalContext.context.pack,
+      tarStream: readableTar,
+      fileType: finalContext.context.fileType,
+    },
   })
 }
 
 export async function uploadTxtTar(circulars: Circular[], context: any) {
   return await makeTarFile({
-    pack: context.pack,
-    readableTar: context.readableTar,
+    pack: context.context.pack,
     circulars,
     fileType: 'txt',
   })
@@ -104,8 +106,7 @@ export async function uploadTxtTar(circulars: Circular[], context: any) {
 
 export async function uploadJsonTar(circulars: Circular[], context: any) {
   return await makeTarFile({
-    pack: context.pack,
-    readableTar: context.readableTar,
+    pack: context.context.pack,
     circulars,
     fileType: 'json',
   })
