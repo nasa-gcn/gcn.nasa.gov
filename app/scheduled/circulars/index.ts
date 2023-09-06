@@ -9,13 +9,11 @@ import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
 
-import type { CircularAction, CircularActionContext } from './circularAction'
+import type { CircularAction } from './circularAction'
 import { jsonUploadAction, txtUploadAction } from './uploadTar'
 import { type Circular } from '~/routes/circulars/circulars.lib'
 
-async function mapCirculars(
-  ...actions: CircularAction<CircularActionContext>[]
-) {
+async function mapCirculars(...actions: CircularAction[]) {
   const contexts = await Promise.all(
     actions.map((action) => action.initialize())
   )
@@ -27,25 +25,21 @@ async function mapCirculars(
   await Promise.all(actions.map(({ finalize }, i) => finalize(contexts[i])))
 }
 
-async function* getAllRecords(): AsyncGenerator<Circular[], void, unknown> {
+async function* getAllRecords() {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('circulars')
   const pages = paginateScan({ client }, { TableName })
 
   for await (const page of pages) {
-    const items: Circular[] = page.Items as Circular[]
-    yield items
+    yield page.Items as Circular[]
   }
 }
 
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = async () => {
-  const actions: CircularAction<CircularActionContext>[] = [
-    jsonUploadAction,
-    txtUploadAction,
-  ]
+  const actions: CircularAction[] = [jsonUploadAction, txtUploadAction]
 
   await mapCirculars(...actions)
 }

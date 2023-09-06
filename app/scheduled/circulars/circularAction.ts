@@ -7,15 +7,8 @@
  */
 import type { Circular } from '~/routes/circulars/circulars.lib'
 
-export interface CircularAction<CircularActionContext> {
-  initialize: () => Promise<CircularActionContext>
-  action: (
-    circulars: Circular[],
-    context: CircularActionContext
-  ) => Promise<void>
-  finalize: (context: CircularActionContext) => Promise<void>
-}
-
-export interface CircularActionContext {
-  context: object
+export interface CircularAction {
+  initialize: () => Promise<object>
+  action: (circulars: Circular[], context: object) => Promise<void>
+  finalize: (context: object) => Promise<void>
 }

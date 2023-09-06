@@ -21,6 +21,13 @@ interface TarContextObject {
   fileType: string
 }
 
+const formatters: Record<string, (circular: Circular) => string> = {
+  json({ sub, ...circular }) {
+    return JSON.stringify(circular, null, 2)
+  },
+  txt: formatCircular,
+}
+
 const s3 = new S3Client({})
 const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
 
@@ -44,21 +51,10 @@ export async function makeTarFile({
   circulars: Circular[]
   fileType: 'txt' | 'json'
 }) {
+  const formatter = formatters[fileType]
   for (const circular of circulars) {
-    if (fileType === 'txt') {
-      const txt_entry = pack.entry(
-        { name: `archive.txt/${circular.circularId}.txt` },
-        formatCircular(circular)
-      )
-      txt_entry.end()
-    } else if (fileType === 'json') {
-      delete circular.sub
-      const json_entry = pack.entry(
-        { name: `archive.json/${circular.circularId}.json` },
-        JSON.stringify(circular, null, 2)
-      )
-      json_entry.end()
-    }
+    const name = `archive.${fileType}/${circular.circularId}.${fileType}`
+    pack.entry({ name }, formatter(circular)).end()
   }
 }
 
