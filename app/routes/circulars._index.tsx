@@ -272,11 +272,10 @@ export default function () {
             {showContent && (
               <DetailsDropdownContent className="position-absolute margin-left-15 margin-top-5">
                 {!showDateRange && (
-                  <>
+                  <div className="display-flex flex-column ">
                     <Button
                       type="button"
-                      className="usa-button usa-button"
-                      onClick={(value) => {
+                      onClick={() => {
                         setInputDateGte('hour')
                         setInputDateLte('now')
                         setDateRange()
@@ -286,8 +285,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button"
-                      onClick={(value) => {
+                      onClick={() => {
                         setInputDateGte('today')
                         setInputDateLte('now')
                         setDateRange()
@@ -297,8 +295,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button"
-                      onClick={(value) => {
+                      onClick={() => {
                         setInputDateGte('day')
                         setInputDateLte('now')
                         setDateRange()
@@ -306,10 +303,10 @@ export default function () {
                     >
                       Last 24 Hours
                     </Button>
+
                     <Button
                       type="button"
-                      className="usa-button usa-button"
-                      onClick={(value) => {
+                      onClick={() => {
                         setInputDateGte('month')
                         setInputDateLte('now')
                         setDateRange()
@@ -319,8 +316,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button"
-                      onClick={(value) => {
+                      onClick={() => {
                         setInputDateGte('year')
                         setInputDateLte('now')
                         setDateRange()
@@ -330,8 +326,7 @@ export default function () {
                     </Button>
                     <Button
                       type="button"
-                      className="usa-button usa-button"
-                      onClick={(value) => {
+                      onClick={() => {
                         setInputDateGte('ytd')
                         setInputDateLte('now')
                         setDateRange()
@@ -339,59 +334,61 @@ export default function () {
                     >
                       Year to Date
                     </Button>
+
                     <Button
                       type="button"
-                      className="usa-button"
                       onClick={() => setShowDateRange(!showDateRange)}
                     >
                       Custom Date Range
                     </Button>
-                  </>
+                  </div>
                 )}
-                {showDateRange && (
-                  <>
-                    <Button
-                      type="button"
-                      className="usa-button width-10 height-5 margin-bottom-neg-2"
-                      onClick={() => setShowDateRange(!showDateRange)}
-                    >
-                      <Icon.ArrowBack />
-                    </Button>
-                    <DateRangePicker
-                      startDateHint="dd/mm/yyyy"
-                      startDateLabel="Start Date"
-                      className="margin-bottom-2"
-                      startDatePickerProps={{
-                        id: 'event-date-start',
-                        name: 'event-date-start',
-                        defaultValue: 'startDate',
-                        onChange: (value) => {
-                          setInputDateGte(value)
-                        },
-                      }}
-                      endDateHint="dd/mm/yyyy"
-                      endDateLabel="End Date"
-                      endDatePickerProps={{
-                        id: 'event-date-end',
-                        name: 'event-date-end',
-                        defaultValue: 'endDate',
-                        onChange: (value) => {
-                          setInputDateLte(value)
-                        },
-                      }}
-                    />
-                    <Button
-                      type="button"
-                      className="usa-button width-auto height-5"
-                      form="searchForm"
-                      onClick={() => {
-                        setDateRange()
-                      }}
-                    >
-                      <Icon.CalendarToday /> Submit
-                    </Button>
-                  </>
-                )}
+                <div>
+                  {showDateRange && (
+                    <>
+                      <Button
+                        type="button"
+                        className="usa-button width-10 height-5 margin-bottom-neg-2"
+                        onClick={() => setShowDateRange(!showDateRange)}
+                      >
+                        <Icon.ArrowBack />
+                      </Button>
+                      <DateRangePicker
+                        startDateHint="dd/mm/yyyy"
+                        startDateLabel="Start Date"
+                        className="margin-bottom-2"
+                        startDatePickerProps={{
+                          id: 'event-date-start',
+                          name: 'event-date-start',
+                          defaultValue: 'startDate',
+                          onChange: (value) => {
+                            setInputDateGte(value)
+                          },
+                        }}
+                        endDateHint="dd/mm/yyyy"
+                        endDateLabel="End Date"
+                        endDatePickerProps={{
+                          id: 'event-date-end',
+                          name: 'event-date-end',
+                          defaultValue: 'endDate',
+                          onChange: (value) => {
+                            setInputDateLte(value)
+                          },
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        className="width-auto height-5"
+                        form="searchForm"
+                        onClick={() => {
+                          setDateRange()
+                        }}
+                      >
+                        <Icon.CalendarToday /> Submit
+                      </Button>
+                    </>
+                  )}
+                </div>
               </DetailsDropdownContent>
             )}
           </div>
@@ -418,15 +415,17 @@ export default function () {
               {totalItems} result{totalItems != 1 && 's'} found.
             </h3>
           )}
-          <ol>
-            {allItems.map(({ circularId, subject }) => (
-              <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}${searchString}`}>
-                  {subject}
-                </Link>
-              </li>
-            ))}
-          </ol>
+          <div className="minh-mobile">
+            <ol>
+              {allItems.map(({ circularId, subject }) => (
+                <li key={circularId} value={circularId}>
+                  <Link to={`/circulars/${circularId}${searchString}`}>
+                    {subject}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </div>
           <div className="display-flex flex-row flex-wrap">
             <div className="display-flex flex-align-self-center margin-right-2 width-auto">
               <div>
