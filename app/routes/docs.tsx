@@ -135,9 +135,9 @@ export default function () {
                     <Link key="c-1" to="client#c-1">
                       C#
                     </Link>,
-                    <Link key="code-samples" to="client/samples">
+                    <NavLink key="code-samples" to="client/samples">
                       Sample Code
-                    </Link>,
+                    </NavLink>,
                   ]}
                 />
               </>,
