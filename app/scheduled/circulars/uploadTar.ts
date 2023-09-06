@@ -15,7 +15,7 @@ import { getEnvOrDie } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircular } from '~/routes/circulars/circulars.lib'
 
-interface TarContextObject {
+interface TarContext {
   context: {
     pack: Pack
     tarStream: Readable | ReadableStream<Uint8Array>
@@ -33,7 +33,7 @@ const formatters: Record<string, (circular: Circular) => string> = {
 const s3 = new S3Client({})
 const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
 
-async function uploadStream(tarContext: TarContextObject) {
+async function uploadStream(tarContext: TarContext) {
   await s3.send(
     new PutObjectCommand({
       Bucket,
@@ -82,7 +82,7 @@ export async function setupTar() {
 }
 
 export async function finalizeTar(context: object) {
-  const finalContext = context as unknown as TarContextObject
+  const finalContext = context as unknown as TarContext
   finalContext.context.pack.finalize()
   const readableTar = createReadableStreamFromReadable(
     Readable.from(finalContext.context.tarStream as Readable)

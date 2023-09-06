@@ -39,7 +39,5 @@ async function* getAllRecords() {
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = async () => {
-  const actions: CircularAction[] = [jsonUploadAction, txtUploadAction]
-
-  await mapCirculars(...actions)
+  await mapCirculars(jsonUploadAction, txtUploadAction)
 }
