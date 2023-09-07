@@ -81,15 +81,14 @@ export async function setupTar() {
 }
 
 export async function finalizeTar(context: TarContext) {
-  const finalContext = context as unknown as TarContext
-  finalContext.pack.finalize()
+  context.pack.finalize()
   const readableTar = createReadableStreamFromReadable(
-    Readable.from(finalContext.tarStream as Readable)
+    Readable.from(context.tarStream as Readable)
   )
   await uploadStream({
-    pack: finalContext.pack,
+    pack: context.pack,
     tarStream: readableTar,
-    fileType: finalContext.fileType,
+    fileType: context.fileType,
   })
 }
 
