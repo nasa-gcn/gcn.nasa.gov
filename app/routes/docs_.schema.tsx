@@ -44,7 +44,7 @@ export default function Schema() {
   if (!path) throw new Error('Path is not defined.')
 
   const [showVersions, setShowVersions] = useState(false)
-  const { versions } = useLoaderData()
+  const { versions } = useLoaderData<typeof loader>()
   const windowSize = useWindowSize()
   const isSchema = path.endsWith('.schema.json')
 
@@ -75,13 +75,13 @@ export default function Schema() {
                 <h3>Versions</h3>
               </CardHeader>
               <CardBody className="padding-y-0">
-                {versions.map((x: { name: string; ref: string }) => (
-                  <div key={x.name}>
+                {versions.map(({ name, ref }) => (
+                  <div key={ref}>
                     <Link
-                      to={`/docs/schema/${x.ref}/${path}`}
+                      to={`/docs/schema/${ref}/${path}`}
                       onClick={() => setShowVersions(!setShowVersions)}
                     >
-                      {x.name}
+                      {name || ref}
                     </Link>
                   </div>
                 ))}
