@@ -7,10 +7,13 @@
  */
 import { type DataFunctionArgs, redirect } from '@remix-run/node'
 
+import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+
 /* Make all JSON files at https://github.com/nasa-gcn/gcn-schema available from
  * https://gcn.nasa.gov/schema */
 export async function loader({ params: { '*': path } }: DataFunctionArgs) {
   return redirect(
-    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${path ?? ''}`
+    `https://raw.githubusercontent.com/nasa-gcn/gcn-schema/${path ?? ''}`,
+    { headers: publicStaticShortTermCacheControlHeaders }
   )
 }
