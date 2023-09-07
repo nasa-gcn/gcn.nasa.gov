@@ -15,7 +15,7 @@ support
 
 @scheduled
 ads
-  cron 0 8 * * MON *
+  cron 0 8 ? * MON *
   src build/scheduled/ads
 circulars
   rate 1 day
