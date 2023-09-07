@@ -7,19 +7,13 @@
  */
 import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
+import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
-import { pack as tarPack } from 'tar-stream'
 
 import { getUser } from '../_auth/user.server'
-import {
-  bodyIsValid,
-  formatAuthor,
-  formatCircular,
-  subjectIsValid,
-} from './circulars.lib'
+import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
@@ -268,51 +262,4 @@ export async function circularRedirect(query: string) {
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL)
   }
-}
-
-async function* getAllRecords() {
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('circulars')
-  const pages = paginateScan({ client }, { TableName })
-
-  for await (const page of pages) {
-    yield page.Items as Circular[]
-  }
-}
-
-const formatters: Record<string, (circular: Circular) => string> = {
-  json({ sub, ...circular }) {
-    return JSON.stringify(circular, null, 2)
-  },
-  txt: formatCircular,
-}
-
-export async function makeTarFile(fileType: 'json' | 'txt'): Promise<Blob> {
-  return new Promise(async (resolve, reject) => {
-    const formatter = formatters[fileType]
-    const pack = tarPack()
-    const chunks: Buffer[] = []
-
-    pack.on('data', (chunk) => {
-      chunks.push(chunk)
-    })
-
-    pack.on('end', () => {
-      resolve(new Blob(chunks, { type: 'application/x-tar' }))
-    })
-
-    pack.on('error', (err) => {
-      reject(err)
-    })
-
-    for await (const circularArray of getAllRecords()) {
-      for (const circular of circularArray) {
-        const name = `archive.${fileType}/${circular.circularId}.${fileType}`
-        pack.entry({ name }, formatter(circular)).end()
-      }
-    }
-
-    pack.finalize()
-  })
 }
