@@ -6,18 +6,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { DataFunctionArgs } from '@remix-run/node'
+import invariant from 'tiny-invariant'
 
-import { formatCircular } from './circulars/circulars.lib'
+import { formatCircularText } from './circulars/circulars.lib'
 import { get } from './circulars/circulars.server'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 
 export async function loader({ params: { circularId } }: DataFunctionArgs) {
-  if (!circularId)
-    throw new Response('circularId must be defined', { status: 400 })
+  invariant(circularId)
   const result = await get(parseFloat(circularId))
-  delete result.sub
-  return new Response(formatCircular(result), {
+  return new Response(formatCircularText(result), {
     headers: getCanonicalUrlHeaders(
       new URL(`/circulars/${circularId}`, origin)
     ),

@@ -47,7 +47,7 @@ const subjectMatchers: SubjectMatcher[] = [
 ]
 
 /** Format a Circular as plain text. */
-export function formatCircular({
+export function formatCircularText({
   circularId,
   subject,
   createdOn,
@@ -73,6 +73,11 @@ export function formatCircular({
 
   ${body}
   `
+}
+
+/** Format a Circular as JSON. */
+export function formatCircularJson({ sub, ...props }: Circular) {
+  return JSON.stringify(props, null, 2)
 }
 
 /** Convert a date to an ISO 8601 string with seconds precision. */
