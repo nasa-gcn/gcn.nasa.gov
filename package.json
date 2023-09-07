@@ -76,6 +76,7 @@
     "@aws-sdk/client-s3": "^3.319.0",
     "@aws-sdk/client-sesv2": "^3.319.0",
     "@aws-sdk/lib-dynamodb": "^3.319.0",
+    "@aws-sdk/lib-storage": "^3.319.0",
     "@aws-sdk/util-dynamodb": "^3.319.0",
     "@babel/preset-typescript": "^7.22.11",
     "@nasa-gcn/architect-plugin-search": "^1.0.0",

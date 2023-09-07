@@ -11,7 +11,7 @@ import {
   bodyIsValid,
   emailIsAutoReply,
   formatAuthor,
-  formatCircular,
+  formatCircularText,
   parseEventFromSubject,
   subjectIsValid,
 } from '../app/routes/circulars/circulars.lib'
@@ -43,7 +43,7 @@ describe('formatAuthor', () => {
 describe('formatCircular', () => {
   test('formats a toy circular', () => {
     expect(
-      formatCircular({
+      formatCircularText({
         circularId: 123,
         subject: 'GRB 170817A: The most amazing GRB ever',
         body: "You're never going to believe this...",

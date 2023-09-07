@@ -5,120 +5,52 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import { createReadableStreamFromReadable } from '@remix-run/node'
-import { Readable } from 'stream'
+import { S3Client } from '@aws-sdk/client-s3'
+import { Upload } from '@aws-sdk/lib-storage'
+import { PassThrough } from 'node:stream'
 import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
 import type { CircularAction } from './circularAction'
 import { getEnvOrDie } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
-import { formatCircular } from '~/routes/circulars/circulars.lib'
-
-interface TarContext {
-  pack: Pack
-  tarStream: Readable | ReadableStream<Uint8Array>
-  fileType: string
-}
-
-const formatters: Record<string, (circular: Circular) => string> = {
-  json({ sub, ...circular }) {
-    return JSON.stringify(circular, null, 2)
-  },
-  txt: formatCircular,
-}
+import {
+  formatCircularJson,
+  formatCircularText,
+} from '~/routes/circulars/circulars.lib'
 
 const s3 = new S3Client({})
 const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
 
-async function uploadStream(tarContext: TarContext) {
-  await s3.send(
-    new PutObjectCommand({
-      Bucket,
-      Key: `circulars.archive.${tarContext.fileType}.tar`,
-      Body: tarContext.tarStream,
-    })
-  )
-}
+function createUploadAction(
+  suffix: string,
+  formatter: (circular: Circular) => string
+): CircularAction<{ pack: Pack; promise: Promise<any> }> {
+  const baseFilename = `circulars-archive.${suffix}`
 
-export async function makeTarFile({
-  pack,
-  circulars,
-  fileType,
-}: {
-  pack: Pack
-  circulars: Circular[]
-  fileType: 'txt' | 'json'
-}) {
-  const formatter = formatters[fileType]
-  for (const circular of circulars) {
-    const name = `archive.${fileType}/${circular.circularId}.${fileType}`
-    pack.entry({ name }, formatter(circular)).end()
+  return {
+    initialize() {
+      const pack = tarPack()
+      const Body = new PassThrough()
+      pack.pipe(Body)
+      const promise = new Upload({
+        client: s3,
+        params: { Body, Bucket, Key: `${baseFilename}.tar` },
+      }).done()
+      return { pack, promise }
+    },
+    action(circulars, { pack }) {
+      for (const circular of circulars) {
+        const name = `${baseFilename}/${circular.circularId}.${suffix}`
+        pack.entry({ name }, formatter(circular)).end()
+      }
+    },
+    async finalize({ pack, promise }) {
+      pack.finalize()
+      await promise
+    },
   }
 }
 
-export async function setupTar() {
-  const tarStream = new Readable({
-    read() {},
-  })
-
-  const pack = tarPack()
-
-  pack.on('error', (err: Error) => {
-    tarStream.emit('error', err)
-  })
-
-  pack.on('data', (chunk: Uint8Array) => {
-    tarStream.push(chunk)
-  })
-
-  pack.on('end', () => {
-    tarStream.push(null)
-  })
-
-  return { pack, tarStream } as TarContext
-}
-
-export async function finalizeTar(context: TarContext) {
-  context.pack.finalize()
-  const readableTar = createReadableStreamFromReadable(
-    Readable.from(context.tarStream as Readable)
-  )
-  await uploadStream({
-    pack: context.pack,
-    tarStream: readableTar,
-    fileType: context.fileType,
-  })
-}
-
-export async function uploadTxtTar(circulars: Circular[], context: TarContext) {
-  return await makeTarFile({
-    pack: context.pack,
-    circulars,
-    fileType: 'txt',
-  })
-}
-
-export async function uploadJsonTar(
-  circulars: Circular[],
-  context: TarContext
-) {
-  return await makeTarFile({
-    pack: context.pack,
-    circulars,
-    fileType: 'json',
-  })
-}
-
-export const jsonUploadAction: CircularAction<TarContext> = {
-  action: uploadJsonTar,
-  initialize: setupTar,
-  finalize: finalizeTar,
-}
-
-export const txtUploadAction: CircularAction<TarContext> = {
-  action: uploadTxtTar,
-  initialize: setupTar,
-  finalize: finalizeTar,
-}
+export const jsonUploadAction = createUploadAction('json', formatCircularJson)
+export const txtUploadAction = createUploadAction('txt', formatCircularText)

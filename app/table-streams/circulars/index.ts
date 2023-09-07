@@ -20,7 +20,7 @@ import { sendEmailBulk } from '~/lib/email.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import { search as getSearchClient } from '~/lib/search.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
-import { formatCircular } from '~/routes/circulars/circulars.lib'
+import { formatCircularText } from '~/routes/circulars/circulars.lib'
 
 const index = 'circulars'
 const fromName = 'GCN Circulars'
@@ -99,7 +99,7 @@ async function send(circular: Circular) {
     fromName,
     to,
     subject: circular.subject,
-    body: formatCircular(circular),
+    body: formatCircularText(circular),
     topic: 'circulars',
   })
 }
