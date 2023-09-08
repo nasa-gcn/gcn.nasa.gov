@@ -230,7 +230,7 @@
         "cascade": false,
         "grid": true
       },
-      "csso": {
+      "postcss-csso": {
         "forceMediaMerge": false
       }
     }
