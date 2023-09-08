@@ -25,7 +25,7 @@ const s3 = new S3Client({})
 const archiveSuffix = '.tar.gz'
 
 function getBucketKey(suffix: string) {
-  return `circulars/archive.${suffix}${archiveSuffix}`
+  return `generated/circulars/archive.${suffix}${archiveSuffix}`
 }
 
 function getBucketUrl(region: string, bucket: string, key: string) {
