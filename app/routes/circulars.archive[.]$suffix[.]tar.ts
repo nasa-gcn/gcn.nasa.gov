@@ -12,7 +12,7 @@ import { region, staticBucket } from '~/lib/env.server'
 import { getBucketKey } from '~/scheduled/circulars/uploadTar'
 
 function getBucketUrl(region: string, bucket: string, key: string) {
-  return `https://s3.${region}.amazonaws.com/${bucket}/key`
+  return `https://s3.${region}.amazonaws.com/${bucket}/${key}`
 }
 
 export async function loader({ params: { suffix } }: LoaderArgs) {
