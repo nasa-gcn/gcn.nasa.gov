@@ -13,7 +13,7 @@ import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
 import type { CircularAction } from './circularAction'
-import { staticBucket as Bucket } from '~/lib/env.server'
+import { staticBucket as Bucket, region } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import {
   formatCircularJson,
@@ -22,8 +22,16 @@ import {
 
 const s3 = new S3Client({})
 
-export function getBucketKey(suffix: string) {
+function getBucketKey(suffix: string) {
   return `circulars/archive.${suffix}.tar`
+}
+
+function getBucketUrl(region: string, bucket: string, key: string) {
+  return `https://s3.${region}.amazonaws.com/${bucket}/${key}`
+}
+
+export function getArchiveURL(suffix: string) {
+  return getBucketUrl(region, Bucket, getBucketKey(suffix))
 }
 
 function createUploadAction(
