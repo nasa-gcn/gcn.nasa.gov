@@ -7,12 +7,13 @@
  */
 import { S3Client } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
+import { basename } from 'node:path'
 import { PassThrough } from 'node:stream'
 import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
 import type { CircularAction } from './circularAction'
-import { getEnvOrDie } from '~/lib/env.server'
+import { staticBucket as Bucket } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import {
   formatCircularJson,
@@ -20,13 +21,17 @@ import {
 } from '~/routes/circulars/circulars.lib'
 
 const s3 = new S3Client({})
-const Bucket = getEnvOrDie('ARC_STATIC_BUCKET')
+
+export function getBucketKey(suffix: string) {
+  return `circulars/archive.${suffix}.tar`
+}
 
 function createUploadAction(
   suffix: string,
   formatter: (circular: Circular) => string
 ): CircularAction<{ pack: Pack; promise: Promise<any> }> {
-  const baseFilename = `circulars-archive.${suffix}`
+  const Key = getBucketKey(suffix)
+  const tarDir = basename(Key, '.tar')
 
   return {
     initialize() {
@@ -35,13 +40,13 @@ function createUploadAction(
       pack.pipe(Body)
       const promise = new Upload({
         client: s3,
-        params: { Body, Bucket, Key: `${baseFilename}.tar` },
+        params: { Body, Bucket, Key },
       }).done()
       return { pack, promise }
     },
     action(circulars, { pack }) {
       for (const circular of circulars) {
-        const name = `${baseFilename}/${circular.circularId}.${suffix}`
+        const name = `${tarDir}/${circular.circularId}.${suffix}`
         pack.entry({ name }, formatter(circular)).end()
       }
     },
