@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { S3Client } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
 import { basename } from 'node:path'
 import { PassThrough } from 'node:stream'
@@ -13,7 +12,8 @@ import { createGzip } from 'node:zlib'
 import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
-import type { CircularAction } from './circularAction'
+import type { CircularAction } from '../actions'
+import { keyPrefix, s3 } from '../storage'
 import { staticBucket as Bucket, region } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import {
@@ -21,11 +21,10 @@ import {
   formatCircularText,
 } from '~/routes/circulars/circulars.lib'
 
-const s3 = new S3Client({})
 const archiveSuffix = '.tar.gz'
 
 function getBucketKey(suffix: string) {
-  return `generated/circulars/archive.${suffix}${archiveSuffix}`
+  return `${keyPrefix}/archive.${suffix}${archiveSuffix}`
 }
 
 function getBucketUrl(region: string, bucket: string, key: string) {
