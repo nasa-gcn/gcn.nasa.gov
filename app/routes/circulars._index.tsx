@@ -218,7 +218,7 @@ function DownloadModal() {
             <ModalToggleButton modalRef={modalRef} closer>
               <a
                 className="text-no-underline text-white"
-                href="/circulars/archive.txt.tar"
+                href="/circulars/archive.txt.tar.gz"
               >
                 Text
               </a>
@@ -227,7 +227,7 @@ function DownloadModal() {
             <ModalToggleButton modalRef={modalRef} closer>
               <a
                 className="text-no-underline text-white"
-                href="/circulars/archive.json.tar"
+                href="/circulars/archive.json.tar.gz"
               >
                 JSON
               </a>
