@@ -125,7 +125,7 @@ volumeSize 10
 plugin-remix
 sandboxOidcIdp  # Sandbox identity provider
 lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
-lambdaMayNotWriteToStaticBucket  # the Lambda function should not be able to modify the deployment folder in the static bucket
+staticBucketPermissions  # Functions may only write to the /generated directory in the static bucket.
 missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
 emailOutgoing  # Grant the Lambda function permission to send email; add email templates.
 email-incoming  # Enable Lambda handlers for incoming emails
