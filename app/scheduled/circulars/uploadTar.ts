@@ -9,6 +9,7 @@ import { S3Client } from '@aws-sdk/client-s3'
 import { Upload } from '@aws-sdk/lib-storage'
 import { basename } from 'node:path'
 import { PassThrough } from 'node:stream'
+import { createGzip } from 'node:zlib'
 import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
@@ -21,9 +22,10 @@ import {
 } from '~/routes/circulars/circulars.lib'
 
 const s3 = new S3Client({})
+const archiveSuffix = '.tar.gz'
 
 function getBucketKey(suffix: string) {
-  return `circulars/archive.${suffix}.tar`
+  return `circulars/archive.${suffix}${archiveSuffix}`
 }
 
 function getBucketUrl(region: string, bucket: string, key: string) {
@@ -39,13 +41,14 @@ function createUploadAction(
   formatter: (circular: Circular) => string
 ): CircularAction<{ pack: Pack; promise: Promise<any> }> {
   const Key = getBucketKey(suffix)
-  const tarDir = basename(Key, '.tar')
+  const tarDir = basename(Key, archiveSuffix)
 
   return {
     initialize() {
       const pack = tarPack()
+      const gzip = createGzip()
       const Body = new PassThrough()
-      pack.pipe(Body)
+      pack.pipe(gzip).pipe(Body)
       const promise = new Upload({
         client: s3,
         params: { Body, Bucket, Key },
