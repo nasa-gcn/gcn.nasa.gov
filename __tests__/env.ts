@@ -15,6 +15,14 @@ afterEach(() => {
   process.env = { ...oldEnv }
 })
 
+beforeEach(() => {
+  setEnv('ORIGIN', 'http://example.gov')
+  setEnv('ARC_STATIC_BUCKET', 'example-bucket')
+  setEnv('AWS_REGION', 'example-region')
+  setEnv('AWS_DEFAULT_REGION', 'example-default-region')
+  setEnv('SESSION_SECRET', 'example-secret')
+})
+
 function importEnv() {
   let result: typeof EnvModule
   jest.isolateModules(() => {
@@ -31,11 +39,6 @@ function setEnv(key: string, value: string | undefined) {
 
 describe('features', () => {
   const key = 'GCN_FEATURES'
-
-  // ORIGIN must be defined
-  beforeEach(() => {
-    setEnv('ORIGIN', 'http://example.gov')
-  })
 
   test.each([undefined, '', ',', ',,,'])(
     'environment variable is %p',
@@ -74,10 +77,6 @@ describe('features', () => {
 describe('getEnvOrDie', () => {
   const key = 'FOO'
 
-  beforeEach(() => {
-    setEnv('ORIGIN', 'http://example.gov')
-  })
-
   test('returns the value if the environment variable exists', () => {
     setEnv(key, 'BAR')
     const { getEnvOrDie } = importEnv()
@@ -97,36 +96,29 @@ describe('getEnvOrDie', () => {
 })
 
 describe('getOrigin', () => {
-  const key = 'ORIGIN'
-
   test('gets sandbox origin when ORIGIN is not defined', () => {
+    setEnv('ORIGIN', undefined)
     setEnv('ARC_SANDBOX', JSON.stringify({ ports: { http: 1234 } }))
     const { origin } = importEnv()
     expect(origin).toBe('http://localhost:1234')
   })
 
   test('gets env.ORIGIN when ORIGIN is defined', () => {
-    setEnv(key, 'https://gcn.nasa.gov')
+    setEnv('ORIGIN', 'https://gcn.nasa.gov')
     const { origin } = importEnv()
     expect(origin).toBe('https://gcn.nasa.gov')
   })
 })
 
 describe('getSessionSecret', () => {
-  const key = 'SESSION_SECRET'
-
-  beforeAll(() => {
-    setEnv('ARC_SANDBOX', JSON.stringify({ ports: { http: 1234 } }))
-  })
-
   test('gets sandbox value when SESSION_SECRET is not defined', () => {
-    setEnv(key, undefined)
+    setEnv('SESSION_SECRET', undefined)
     const { sessionSecret } = importEnv()
     expect(sessionSecret).toBe('fallback-secret-for-dev')
   })
 
   test('gets env.SESSION_SECRET when SESSION_SECRET is defined', () => {
-    setEnv(key, 'xyzzy')
+    setEnv('SESSION_SECRET', 'xyzzy')
     const { sessionSecret } = importEnv()
     expect(sessionSecret).toBe('xyzzy')
   })
@@ -148,14 +140,28 @@ describe('getHostname', () => {
   })
 })
 
+describe('getRegion', () => {
+  test('returns the value of AWS_REGION if it is defined', () => {
+    const { region } = importEnv()
+    expect(region).toBe('example-region')
+  })
+
+  test('returns the value of AWS_DEFAULT_REGION if AWS_REGION is undefined', () => {
+    setEnv('AWS_REGION', undefined)
+    const { region } = importEnv()
+    expect(region).toBe('example-default-region')
+  })
+})
+
+describe('getStaticBucket', () => {
+  test('returns the value of ARC_STATIC_BUCKET', () => {
+    const { staticBucket } = importEnv()
+    expect(staticBucket).toBe('example-bucket')
+  })
+})
+
 describe('getEnvOrDieInProduction', () => {
   const key = 'FOO'
-
-  // ORIGIN must be defined
-  beforeEach(() => {
-    setEnv('ORIGIN', 'http://example.gov')
-    setEnv('SESSION_SECRET', 'foobar')
-  })
 
   test('returns undefined if the variable does not exist', () => {
     setEnv('TEST', undefined)

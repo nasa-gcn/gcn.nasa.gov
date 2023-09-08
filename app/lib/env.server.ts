@@ -50,10 +50,23 @@ function getSessionSecret() {
   return getEnvOrDieInProduction('SESSION_SECRET') || 'fallback-secret-for-dev'
 }
 
+function getStaticBucket() {
+  return getEnvOrDie('ARC_STATIC_BUCKET')
+}
+
+function getRegion() {
+  const result = process.env.AWS_REGION || process.env.AWS_DEFAULT_REGION
+  if (!result)
+    throw new Error('Either AWS_REGION or AWS_DEFAULT_REGION must be defined')
+  return result
+}
+
 export const origin = /* @__PURE__ */ getOrigin()
 export const hostname = /* @__PURE__ */ getHostname()
 export const features = /* @__PURE__ */ getFeatures()
 export const sessionSecret = /* @__PURE__ */ getSessionSecret()
+export const staticBucket = /* @__PURE__ */ getStaticBucket()
+export const region = /* @__PURE__ */ getRegion()
 
 /**
  * Return true if the given feature flag is enabled.
