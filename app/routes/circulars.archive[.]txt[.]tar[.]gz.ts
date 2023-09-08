@@ -8,7 +8,7 @@
 import { redirect } from '@remix-run/node'
 
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
-import { getArchiveURL } from '~/scheduled/circulars/uploadTar'
+import { getArchiveURL } from '~/scheduled/circulars/actions/tar'
 
 export function loader() {
   return redirect(getArchiveURL('txt'), {
