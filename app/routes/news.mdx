@@ -42,8 +42,8 @@ import { Anchor } from '~/components/Anchor'
           ```python
           while True:
               for message in consumer.consume(timeout=1):
-              value = message.value()
-              # add your code to process the alert here
+                  value = message.value()
+                  # add your code to process the alert here
           ```
 
           then add an `if` statement to skip normal processing for errors, like this:
@@ -51,11 +51,11 @@ import { Anchor } from '~/components/Anchor'
           ```python
           while True:
               for message in consumer.consume(timeout=1):
-              if message.error():
-                  print(message.error())
-                  continue
-              value = message.value()
-              # add your code to process the alert here
+                  if message.error():
+                      print(message.error())
+                      continue
+                  value = message.value()
+                  # add your code to process the alert here
           ```
         * **New version of Python client.** We have released version 0.3.3 of our [official Python client, gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python). This version improves the reliability of authentication for long-lived connections. Please update to the latest version. If you are not using our official client but you are using [confluent-kafka-python](https://github.com/confluentinc/confluent-kafka-python) directly, then please update to the latest version of confluent-kafka-python (2.2.0 or newer).
       </CollectionDescription>
