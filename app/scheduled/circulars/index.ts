@@ -10,6 +10,7 @@ import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
 
 import type { CircularAction } from './circularAction'
+import { statsAction } from './stats'
 import { jsonUploadAction, txtUploadAction } from './uploadTar'
 import { type Circular } from '~/routes/circulars/circulars.lib'
 
@@ -39,5 +40,5 @@ async function* getAllRecords() {
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = async () => {
-  await mapCirculars(jsonUploadAction, txtUploadAction)
+  await mapCirculars(jsonUploadAction, txtUploadAction, statsAction)
 }
