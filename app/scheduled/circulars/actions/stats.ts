@@ -5,13 +5,13 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
 
-import type { CircularAction } from './circularAction'
+import type { CircularAction } from '../actions'
+import { keyPrefix, s3 } from '../storage'
 import { staticBucket as Bucket } from '~/lib/env.server'
 
-const s3 = new S3Client({})
-const Key = 'generated/circulars/stats.json'
+const Key = `${keyPrefix}/stats.json`
 
 export const statsAction: CircularAction<Record<string, number>> = {
   initialize() {

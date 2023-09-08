@@ -5,40 +5,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { paginateScan } from '@aws-sdk/lib-dynamodb'
-
-import type { CircularAction } from './circularAction'
-import { statsAction } from './stats'
-import { jsonUploadAction, txtUploadAction } from './uploadTar'
-import { type Circular } from '~/routes/circulars/circulars.lib'
-
-async function mapCirculars(...actions: CircularAction[]) {
-  const contexts = await Promise.all(
-    actions.map((action) => action.initialize())
-  )
-  for await (const circulars of getAllRecords()) {
-    await Promise.all(
-      actions.map(({ action }, i) => action(circulars, contexts[i]))
-    )
-  }
-  await Promise.all(actions.map(({ finalize }, i) => finalize(contexts[i])))
-}
-
-async function* getAllRecords() {
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('circulars')
-  const pages = paginateScan({ client }, { TableName })
-
-  for await (const page of pages) {
-    yield page.Items as Circular[]
-  }
-}
+import { forAllCirculars } from './actions'
+import { statsAction } from './actions/stats'
+import { jsonUploadAction, txtUploadAction } from './actions/tar'
 
 // FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
 // See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
 module.exports.handler = async () => {
-  await mapCirculars(jsonUploadAction, txtUploadAction, statsAction)
+  await forAllCirculars(jsonUploadAction, txtUploadAction, statsAction)
 }
