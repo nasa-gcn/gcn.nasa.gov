@@ -1,4 +1,4 @@
-import type { SEOHandle } from '@balavishnuvj/remix-seo'
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunction } from '@remix-run/node'
 
 import type { BreadcrumbHandle } from '~/root/Title'

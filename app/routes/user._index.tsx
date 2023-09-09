@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
-import type { SEOHandle } from '@balavishnuvj/remix-seo'
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import {

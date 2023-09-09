@@ -26,9 +26,9 @@
   },
   "dependencies": {
     "@architect/functions": "^5.3.4",
-    "@balavishnuvj/remix-seo": "github:lpsinger/remix-seo#prepare-remix-2.0.0",
     "@nasa-gcn/architect-functions-search": "^1.0.0",
     "@nasa-gcn/dynamodb-autoincrement": "^1.0.0",
+    "@nasa-gcn/remix-seo": "^2.0.0",
     "@octokit/request-error": "^5.0.0",
     "@octokit/rest": "^20.0.1",
     "@opensearch-project/opensearch": "^2.2.0",
