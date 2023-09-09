@@ -11,7 +11,7 @@ import { origin } from '~/lib/env.server'
 
 export function loader() {
   return generateRobotsTxt([
-    { type: 'sitemap', value: `${origin}/sitemap.xml` },
+    { type: 'sitemap', value: `${origin}/sitemap_index.xml` },
     { type: 'disallow', value: '/user' },
   ])
 }
