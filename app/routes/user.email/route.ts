@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@balavishnuvj/remix-seo'
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 
 import type { BreadcrumbHandle } from '~/root/Title'
 
