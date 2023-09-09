@@ -8,10 +8,10 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 import type { CircularAction } from '../actions'
-import { keyPrefix, s3 } from '../storage'
+import { Prefix, s3 } from '../storage'
 import { staticBucket as Bucket } from '~/lib/env.server'
 
-const Key = `${keyPrefix}/stats.json`
+const Key = `${Prefix}/stats.json`
 
 export const statsAction: CircularAction<Record<string, number>> = {
   initialize() {

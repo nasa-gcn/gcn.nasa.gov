@@ -13,7 +13,7 @@ import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
 import type { CircularAction } from '../actions'
-import { keyPrefix, s3 } from '../storage'
+import { Prefix, s3 } from '../storage'
 import { staticBucket as Bucket, region } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import {
@@ -24,7 +24,7 @@ import {
 const archiveSuffix = '.tar.gz'
 
 function getBucketKey(suffix: string) {
-  return `${keyPrefix}/archive.${suffix}${archiveSuffix}`
+  return `${Prefix}/archive.${suffix}${archiveSuffix}`
 }
 
 function getBucketUrl(region: string, bucket: string, key: string) {
