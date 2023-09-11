@@ -86,7 +86,7 @@
     "@testing-library/jest-dom": "^6.1.2",
     "@testing-library/react": "^14.0.0",
     "@trivago/prettier-plugin-sort-imports": "^4.2.0",
-    "@types/color-convert": "^2.0.0",
+    "@types/color-convert": "^2.0.1",
     "@types/grecaptcha": "^3.0.4",
     "@types/jest": "^29.5.4",
     "@types/lodash": "^4.14.198",
