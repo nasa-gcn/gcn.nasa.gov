@@ -17,6 +17,7 @@ import type {
 } from 'aws-lambda'
 
 import { sendEmailBulk } from '~/lib/email.server'
+import { origin } from '~/lib/env.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import { search as getSearchClient } from '~/lib/search.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
@@ -99,7 +100,11 @@ async function send(circular: Circular) {
     fromName,
     to,
     subject: circular.subject,
-    body: formatCircularText(circular),
+    body: `${formatCircularText(
+      circular
+    )}\n\n\nView this GCN Circular online at ${origin}/circulars/${
+      circular.circularId
+    }.`,
     topic: 'circulars',
   })
 }
