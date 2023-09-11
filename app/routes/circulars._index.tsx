@@ -217,28 +217,31 @@ export default function () {
     })
   }
   const timeRangeLabel = (startDate?: string, endDate?: string) => {
-    if (!startDate || !endDate) {
+    const now = new Date()
+    const month = now.toLocaleString('default', { month: 'long' })
+    const year = now.getFullYear()
+    if (!startDate && !endDate) {
       return <Icon.CalendarToday />
     }
     switch (startDate) {
       case 'hour':
-        return 'Last Hour'
+        return 'Past Hour'
       case 'today':
         return 'Today'
       case 'day':
-        return 'Last 24 Hours'
+        return 'Past Day'
       case 'week':
-        return 'Last 7 Days'
+        return 'Past Week'
       case 'month':
-        return 'Last 30 Days'
+        return 'Past Month'
       case 'year':
         return 'Past Year'
       case 'mtd':
-        return 'Month to Date' // would like to change this so it shows the month name
+        return month
       case 'ytd':
-        return 'Year to Date' // would like to change this so it shows the current year
+        return year
       default:
-        return `${startDate} - ${endDate}`
+        return `${startDate ?? 'Start'} to ${endDate ?? 'Now'}`
     }
   }
 
@@ -287,7 +290,7 @@ export default function () {
               />
             </Button>
             <DetailsDropdownButton
-              className="height-4 padding-top-0 padding-bottom-0"
+              className="height-4 padding-top-0 padding-bottom-0 width-webkit-fill-available"
               onClick={() => setShowContent(!showContent)}
               aria-expanded={showContent}
               aria-controls="searchFilters"
