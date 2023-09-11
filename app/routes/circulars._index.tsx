@@ -316,7 +316,6 @@ export default function () {
                       onClick={() => {
                         setInputDateGte('today')
                         setInputDateLte('now')
-                        setDateRange()
                       }}
                     >
                       Today
@@ -326,7 +325,6 @@ export default function () {
                       onClick={() => {
                         setInputDateGte('day')
                         setInputDateLte('now')
-                        setDateRange()
                       }}
                     >
                       Last 24 Hours
@@ -337,7 +335,6 @@ export default function () {
                       onClick={() => {
                         setInputDateGte('month')
                         setInputDateLte('now')
-                        setDateRange()
                       }}
                     >
                       Last Month
@@ -347,7 +344,6 @@ export default function () {
                       onClick={() => {
                         setInputDateGte('year')
                         setInputDateLte('now')
-                        setDateRange()
                       }}
                     >
                       Last Year
@@ -357,7 +353,6 @@ export default function () {
                       onClick={() => {
                         setInputDateGte('ytd')
                         setInputDateLte('now')
-                        setDateRange()
                       }}
                     >
                       Year to Date
@@ -404,18 +399,18 @@ export default function () {
                           },
                         }}
                       />
-                      <Button
-                        type="button"
-                        className="width-auto height-5"
-                        form="searchForm"
-                        onClick={() => {
-                          setDateRange()
-                        }}
-                      >
-                        <Icon.CalendarToday /> Submit
-                      </Button>
                     </>
                   )}
+                  <Button
+                    type="button"
+                    className=""
+                    form="searchForm"
+                    onClick={() => {
+                      setDateRange()
+                    }}
+                  >
+                    <Icon.CalendarToday /> Submit
+                  </Button>
                 </div>
               </DetailsDropdownContent>
             )}
