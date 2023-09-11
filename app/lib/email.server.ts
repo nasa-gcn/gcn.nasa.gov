@@ -110,7 +110,7 @@ export async function sendEmailBulk({
           ReplacementEmailContent: {
             ReplacementTemplate: {
               ReplacementTemplateData: JSON.stringify({
-                perUserBody: `\n\n\n---\nTo unsubscribe, open this link in a web browser:\n${await encodeToURL(
+                perUserBody: `\n---\nTo unsubscribe, open this link in a web browser:\n${await encodeToURL(
                   { email: address, topics: [topic] }
                 )}`,
               }),
