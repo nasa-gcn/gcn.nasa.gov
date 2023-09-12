@@ -8,9 +8,15 @@
 import type { LoaderFunction } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { generators } from 'openid-client'
+import invariant from 'tiny-invariant'
 
 import { getOpenIDClient, oidcStorage, storage } from './_auth/auth.server'
 import { parseTokenSet, updateSession } from './_auth/user.server'
+import { origin } from '~/lib/env.server'
+
+function ensureSameOrigin(url: string) {
+  invariant(new URL(url).origin === origin)
+}
 
 export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
   const parsedUrl = new URL(url)
@@ -32,6 +38,7 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
 
         const localRedirect = parsedUrl.searchParams.get('redirect')
         if (localRedirect) {
+          ensureSameOrigin(localRedirect)
           oidcSession.set('redirect', localRedirect)
           parsedUrl.searchParams.delete('redirect')
         }
@@ -65,6 +72,7 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
           const nonce = oidcSession.get('nonce')
           const state = oidcSession.get('state')
           const localRedirect = oidcSession.get('redirect')
+          if (localRedirect) ensureSameOrigin(localRedirect)
           if (!code_verifier || !nonce || !state)
             throw new Response(
               'Your session timed out. Please try logging in again.',
