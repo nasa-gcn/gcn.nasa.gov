@@ -21,12 +21,29 @@ export interface Circular extends CircularMetadata {
   submitter: string
   submittedHow?: SubmittedHow
   bibcode?: string
+  eventId?: string
+  synonyms?: string[]
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
   [/GRB[.\s_-]*(\d{6}[a-z|.]\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [/GRB[.\s_-]*(\d{6})/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [
+    /IBAS Alert No[.](\d{4})/i,
+    ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`,
+  ],
+  [/IBAS Alert n[.](\d{4})/i, ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`],
+  [
+    /IBAS Alert n[.] (\d{4})/i,
+    ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`,
+  ],
+  [/XRF(\d{6})/i, ([, id]) => `XRF ${id.toUpperCase()}`],
+  [/XRF (\d{6})/i, ([, id]) => `XRF ${id.toUpperCase()}`],
+  [/Swift Trigger(\d{6})/i, ([, id]) => `Swift trigger ${id.toUpperCase()}`],
+  [/Swift Trigger (\d{6})/i, ([, id]) => `Swift trigger ${id.toUpperCase()}`],
+  [/SGR (\d{4}[-]\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [
     /SGR[.\s_-]*Swift[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i,
@@ -39,10 +56,46 @@ const subjectMatchers: SubjectMatcher[] = [
     /LIGO\/Virgo[.\s_-]*([S|G|GW])(\d{6}[a-z]+)/i,
     ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
   ],
-  [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id}`.toUpperCase()],
+  [
+    /LIGO\/Virgo ([S|G|GW])(\d{6}[a-z]+)/i,
+    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
+  ],
+  [
+    /LIGO\/VIRGO ([S|G|GW])(\d{6}[a-z]+)/i,
+    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
+  ],
+  [
+    /LIGO\/VIRGO ([S|G|GW])(\d{6})/i,
+    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
+  ],
+  [
+    /LIGO\/Virgo ([S|G|GW])(\d{5}[a-z]+)/i,
+    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
+  ],
+  [
+    /LIGO\/Virgo ([S|G|GW])(\d{5})/i,
+    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
+  ],
+  [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id.toUpperCase()}`],
   [
     /Baksan\sNeutrino\sObservatory\sAlert[.\s_-]*(\d{6}.\d{2})/i,
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
+  ],
+  [
+    /IceCube Alert[.\s_-]*(\d{6}[a-z|.]\d*)/i,
+    ([, id]) => `IceCube Alert ${id.toUpperCase()}`,
+  ],
+  [
+    /IceCube-Cascade [.\s_-]*(\d{6}[a-z|.]\d*)/i,
+    ([, id]) => `IceCube-Casade ${id.toUpperCase()}`,
+  ],
+  [
+    /Fermi  trigger No[.\s_-]*(\d{9})/i,
+    ([, id]) => `Fermi trigger No ${id.toUpperCase()}`,
+  ],
+  [
+    /LIGO\/Virgo\/KAGRA [[S|G|GW]*\d{6}[a-zA-Z]{1,2}/i,
+    ([, id]) => `LIGO/Virgo/KAGRA ${id.toUpperCase()}`,
   ],
 ]
 

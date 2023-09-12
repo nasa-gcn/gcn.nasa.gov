@@ -11,9 +11,15 @@ import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
+import natsort from 'natsort'
 
 import { getUser } from '../_auth/user.server'
-import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
+import {
+  bodyIsValid,
+  formatAuthor,
+  parseEventFromSubject,
+  subjectIsValid,
+} from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
@@ -241,12 +247,55 @@ export async function put(
     throw new Response('subject is invalid', { status: 400 })
   if (!bodyIsValid(item.body))
     throw new Response('body is invalid', { status: 400 })
+  const eventId = parseEventFromSubject(item.subject)
+  const synonyms = eventId ? [eventId] : []
 
   return await putRaw({
     sub: user.sub,
     submitter: formatAuthor(user),
+    eventId,
+    synonyms,
     ...item,
   })
+}
+
+function formatSynonyms(synonyms?: string[]) {
+  if (!synonyms) return []
+  const strippedStrings = synonyms.map((x) => {
+    return x.trim()
+  })
+  return strippedStrings.sort(natsort({ insensitive: true }))
+}
+
+export async function updateSynonyms(
+  circularId: number,
+  eventId?: string,
+  synonyms?: string[]
+) {
+  const db = await tables()
+  let synonymsList = synonyms || []
+  if (!eventId && !synonyms) {
+    return await db.circulars.get({ circularId })
+  }
+  if (eventId && synonyms?.length == 0) {
+    synonymsList = [eventId]
+  }
+  if (eventId && !synonyms?.includes(eventId)) {
+    synonymsList.push(eventId)
+  }
+  await db.circulars.update({
+    Key: { circularId },
+    UpdateExpression: 'set #eventId = :eventId, #synonyms = :synonyms',
+    ExpressionAttributeNames: {
+      '#eventId': 'eventId',
+      '#synonyms': 'synonyms',
+    },
+    ExpressionAttributeValues: {
+      ':eventId': eventId,
+      ':synonyms': formatSynonyms(synonymsList),
+    },
+  })
+  return await db.circulars.get({ circularId })
 }
 
 export async function circularRedirect(query: string) {
