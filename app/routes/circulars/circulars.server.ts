@@ -267,7 +267,7 @@ function formatSynonyms(synonyms?: string[]) {
   return strippedStrings.sort(natsort({ insensitive: true }))
 }
 
-export async function updateSynonyms(
+export async function updateEventData(
   circularId: number,
   eventId?: string,
   synonyms?: string[]

@@ -19,7 +19,7 @@ import {
 import { useRef, useState } from 'react'
 
 import { formatDateISO } from './circulars/circulars.lib'
-import { get, updateSynonyms } from './circulars/circulars.server'
+import { get, updateEventData } from './circulars/circulars.server'
 import Spinner from '~/components/Spinner'
 import TimeAgo from '~/components/TimeAgo'
 import { origin } from '~/lib/env.server'
@@ -54,7 +54,7 @@ export async function action({ request }: DataFunctionArgs) {
   const synonyms = getFormDataString(data, 'synonyms')
   const synonymsArray = synonyms ? synonyms.split(',') : []
   if (!circularId) return null
-  const updatedCircular = await updateSynonyms(
+  const updatedCircular = await updateEventData(
     parseInt(circularId),
     eventId,
     synonymsArray
