@@ -95,7 +95,7 @@ function Edit({
           placeholder={eventId || 'Event Id'}
         />
         <Label htmlFor="synonyms">
-          Alternate search terms (comma separated values):
+          Related Event Ids (comma separated values):
         </Label>
         <TextInput
           data-focus
@@ -147,7 +147,7 @@ function View({
       {synonyms.length > 0 && (
         <Grid row>
           <Grid tablet={{ col: 2 }}>
-            <b>Synonymous Events</b>
+            <b>Related Events</b>
           </Grid>
           <Grid col="fill">{synonyms.join(', ')}</Grid>
         </Grid>
