@@ -9,7 +9,27 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 // These packages only work in ESM mode, so we *must* bundle them
 // (at least until we switch the serverModuleFormat to ESM).
-const esmOnlyModules = ['github-slugger']
+const esmOnlyModules = [
+  '@nasa-gcn/remark-rehype-astro',
+  'bail',
+  'comma-separated-tokens',
+  'escape-string-regexp',
+  'github-slugger',
+  'is-plain-obj',
+  'property-information',
+  'space-separated-tokens',
+  'trim-lines',
+  'trough',
+  'unified',
+  'web-namespaces',
+  /^hast/,
+  /^mdast/,
+  /^micromark/,
+  /^rehype/,
+  /^remark/,
+  /^unist/,
+  /^vfile/,
+]
 
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {

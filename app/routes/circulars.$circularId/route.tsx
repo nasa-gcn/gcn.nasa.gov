@@ -10,8 +10,9 @@ import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
-import { formatDateISO } from './circulars/circulars.lib'
-import { get } from './circulars/circulars.server'
+import { formatDateISO } from '../circulars/circulars.lib'
+import { get } from '../circulars/circulars.server'
+import { Body } from './body'
 import TimeAgo from '~/components/TimeAgo'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
@@ -136,7 +137,9 @@ export default function () {
           <Grid col="fill">{submittedHowMap[submittedHow]}</Grid>
         </Grid>
       )}
-      <div className="text-pre-wrap margin-top-2">{body}</div>
+      <div className="text-pre-wrap margin-top-2">
+        <Body>{body}</Body>
+      </div>
     </>
   )
 }
