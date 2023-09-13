@@ -20,6 +20,7 @@ import {
   DateRangePicker,
   Icon,
   Label,
+  Radio,
   Select,
   TextInput,
 } from '@trussworks/react-uswds'
@@ -206,8 +207,8 @@ export default function () {
   const submit = useSubmit()
 
   const setDateRange = () => {
-    setShowContent(!showContent)
-    if (showDateRange) setShowDateRange(!showDateRange)
+    setShowContent(false)
+    if (showDateRange) setShowDateRange(false)
     const params = new URLSearchParams(location.search)
     if (inputDateGte) params.set('startDate', inputDateGte)
     if (inputDateLte) params.set('endDate', inputDateLte)
@@ -220,7 +221,7 @@ export default function () {
     const now = new Date()
     const month = now.toLocaleString('default', { month: 'long' })
     const year = now.getFullYear()
-    if (!startDate && !endDate) {
+    if (!startDate) {
       return <Icon.CalendarToday />
     }
     switch (startDate) {
@@ -244,6 +245,11 @@ export default function () {
         return `${startDate ?? 'Start'} to ${endDate ?? 'Now'}`
     }
   }
+  const setFuzzyTime = (startDate?: string) => {
+    console.log(startDate)
+    setInputDateGte(startDate)
+    setInputDateLte('now')
+  }
 
   return (
     <>
@@ -260,6 +266,213 @@ export default function () {
         <Link to="/docs/circulars">documentation</Link> for help with
         subscribing to or submitting Circulars.
       </p>
+      <div className="display-flex flex-row">
+        <div className="display-flex flex-column flex-align-start margin-1">
+          <Radio
+            id="radio-alltime"
+            name="radio-date"
+            value="undefined"
+            defaultChecked={true}
+            label="All Time"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-hour"
+            name="radio-date"
+            value="hour"
+            label="Past hour"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-today"
+            name="radio-date"
+            value="today"
+            label="Today"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+        </div>
+        <div className="display-flex flex-column margin-1">
+          <Radio
+            id="radio-day"
+            name="radio-date"
+            value="day"
+            label="Past 24 Hours"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-week"
+            name="radio-date"
+            value="week"
+            label="Past Week"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-month"
+            name="radio-date"
+            value="month"
+            label="Past Month"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+        </div>
+
+        <div className="display-flex flex-column margin-1">
+          <Radio
+            id="radio-year"
+            name="radio-date"
+            value="year"
+            label="Past Year"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-ytd"
+            name="radio-date"
+            value="ytd"
+            label="Year to Date"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Button
+            type="button"
+            className="usa-button margin-top-1 height-5"
+            onClick={() => setShowDateRange(!showDateRange)}
+          >
+            Custom Range
+          </Button>
+        </div>
+      </div>
+      <div className="display-flex flex-row">
+        <Button
+          type="button"
+          className=""
+          form="searchForm"
+          onClick={() => {
+            setDateRange()
+          }}
+        >
+          <Icon.CalendarToday /> Submit
+        </Button>
+      </div>
+
+      {/* <div className="display-flex flex-column">
+        <div className="display-flex flex-row flex-align-start">
+          <Radio
+            id="radio-alltime"
+            name="radio-date"
+            value="undefined"
+            defaultChecked={true}
+            label="All Time"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-hour"
+            name="radio-date"
+            value="hour"
+            label="Past hour"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-today"
+            name="radio-date"
+            value="today"
+            label="Today"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+        </div>
+        <div className="display-flex flex-row flex-align-start">
+          <Radio
+            id="radio-day"
+            name="radio-date"
+            value="day"
+            label="Past 24 Hours"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-week"
+            name="radio-date"
+            value="week"
+            label="Past Week"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-month"
+            name="radio-date"
+            value="month"
+            label="Past Month"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+        </div>
+
+        <div className="display-flex flex-row">
+          <Radio
+            id="radio-year"
+            name="radio-date"
+            value="year"
+            label="Past Year"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Radio
+            id="radio-ytd"
+            name="radio-date"
+            value="ytd"
+            label="Year to Date"
+            className="usa-search__filter-button"
+            onChange={(e) => {
+              setFuzzyTime(e.target.value)
+            }}
+          ></Radio>
+          <Button
+            type="button"
+            className="usa-button"
+            onClick={() => setShowDateRange(!showDateRange)}
+          >
+            Custom Date Range...
+          </Button>
+        </div>
+      </div> */}
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <Form id="searchForm">
           <div
