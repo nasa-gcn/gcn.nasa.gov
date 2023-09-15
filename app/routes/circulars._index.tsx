@@ -320,6 +320,14 @@ export default function () {
             <Icon.Edit role="presentation" /> New
           </Button>
         </Link>
+        <Link to={`/circulars/groups`}>
+          <Button
+            type="button"
+            className="height-4 padding-top-0 padding-bottom-0"
+          >
+            View by Related Events
+          </Button>
+        </Link>
       </ButtonGroup>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
@@ -335,8 +343,8 @@ export default function () {
             </h3>
           )}
           <ol>
-            {allItems.map(({ circularId, subject }) => (
-              <li key={circularId} value={circularId}>
+            {allItems.map(({ circularId, subject }, index) => (
+              <li key={circularId} value={index + 1}>
                 <Link to={`/circulars/${circularId}${searchString}`}>
                   {subject}
                 </Link>

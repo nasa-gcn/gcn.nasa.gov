@@ -12,6 +12,15 @@ export interface CircularMetadata {
   subject: string
 }
 
+export interface CircularGroupingMetadata {
+  id: string
+  circulars: CircularMetadata[]
+}
+
+export interface CircularGroupMetadata {
+  groups: CircularGroupingMetadata[]
+}
+
 export type SubmittedHow = 'web' | 'email' | 'email-legacy'
 
 export interface Circular extends CircularMetadata {
@@ -29,7 +38,7 @@ type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
   [/GRB[.\s_-]*(\d{6}[a-z|.]\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
-  [/GRB[.\s_-]*(\d{6})/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [/GRB[.\s_-]*(\d{6}[a-z|.]\d*):/i, ([, id]) => `GRB ${id.toUpperCase()}`],
   [
     /IBAS Alert No[.](\d{4})/i,
     ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`,

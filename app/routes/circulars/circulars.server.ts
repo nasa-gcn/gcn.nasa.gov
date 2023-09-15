@@ -20,7 +20,11 @@ import {
   parseEventFromSubject,
   subjectIsValid,
 } from './circulars.lib'
-import type { Circular, CircularMetadata } from './circulars.lib'
+import type {
+  Circular,
+  CircularGroupingMetadata,
+  CircularMetadata,
+} from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
 // A type with certain keys required.
@@ -116,6 +120,62 @@ export async function search({
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
+  const esQuery = query
+    ? {
+        function_score: {
+          query: {
+            bool: {
+              must: [
+                {
+                  query_string: {
+                    query: `*${query}*`,
+                    fields: [
+                      'eventId^4',
+                      'synonyms^3',
+                      'subject^2',
+                      'body^1',
+                      'submitter',
+                    ],
+                    fuzzy_max_expansions: 50,
+                  },
+                },
+                {
+                  range: {
+                    createdOn: {
+                      gte: startTime,
+                      lte: endTime,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          functions: [
+            {
+              filter: { exists: { field: 'eventId' } },
+              weight: 4,
+            },
+            {
+              filter: { exists: { field: 'synonyms' } },
+              weight: 3,
+            },
+            {
+              filter: { exists: { field: 'subject' } },
+              weight: 2,
+            },
+            {
+              filter: { exists: { field: 'body' } },
+              weight: 1,
+            },
+          ],
+          score_mode: 'sum',
+          boost_mode: 'sum',
+        },
+      }
+    : {
+        match_all: {}, // Match all documents when query is undefined
+      }
+
   const {
     body: {
       hits: {
@@ -126,29 +186,11 @@ export async function search({
   } = await client.search({
     index: 'circulars',
     body: {
-      query: {
-        bool: {
-          must: query
-            ? {
-                multi_match: {
-                  query,
-                  fields: ['submitter', 'subject', 'body'],
-                },
-              }
-            : undefined,
-          filter: {
-            range: {
-              createdOn: {
-                gte: startTime,
-                lte: endTime,
-              },
-            },
-          },
-        },
-      },
+      query: esQuery,
       fields: ['subject'],
       _source: false,
       sort: {
+        _score: 'desc', // Sort by score in descending order
         circularId: {
           order: 'desc',
         },
@@ -177,6 +219,82 @@ export async function search({
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
 
   return { items, totalPages, totalItems }
+}
+
+export async function getCircularsGroupedByEvent({
+  page,
+  limit,
+}: {
+  page?: number
+  limit?: number
+}): Promise<{
+  items: CircularGroupingMetadata[]
+  totalPages: number
+  totalItems: number
+}> {
+  const client = await getSearch()
+
+  const query = {
+    index: 'circulars',
+    body: {
+      size: 0,
+      aggs: {
+        synonyms_group: {
+          terms: {
+            field: 'synonyms.keyword',
+          },
+          aggs: {
+            circulars: {
+              top_hits: {
+                size: limit,
+                from: page,
+              },
+            },
+          },
+        },
+      },
+    },
+  }
+
+  let groups: CircularGroupingMetadata[] = []
+  let totalPages = 0
+  let totalItems = 0
+
+  try {
+    const {
+      body: {
+        hits: {
+          total: { value: itemCount },
+        },
+        aggregations: {
+          synonyms_group: { buckets },
+        },
+      },
+    } = await client.search(query)
+
+    totalItems = itemCount
+    const synonymGroups = buckets
+
+    groups = synonymGroups.map((group: any) => {
+      const items = group.circulars.hits.hits.map((circular: any) => ({
+        circularId: circular._id,
+        subject: circular._source.subject,
+      }))
+
+      return {
+        id: group.key,
+        circulars: items,
+      }
+    })
+
+    totalPages = limit ? Math.ceil(itemCount / limit) : 1
+  } catch (error) {
+    console.error('Error executing query:', error)
+  } finally {
+    await client.close()
+  }
+
+  return { items: groups, totalPages, totalItems }
 }
 
 /** Get a circular by ID. */
