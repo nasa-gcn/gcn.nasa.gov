@@ -12,7 +12,7 @@ import {
   DescribeUserPoolClientCommand,
   ListGroupsCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
-import { generate } from 'generate-password'
+import { generators } from 'openid-client'
 
 import { cognito, maybeThrow } from '~/lib/cognito.server'
 import { getUser } from '~/routes/_auth/user.server'
@@ -156,8 +156,8 @@ export class ClientCredentialVendingMachine {
       response = await cognito.send(command)
     } catch (e) {
       maybeThrow(e, 'creating fake client credentials')
-      const client_id = generate({ length: 26 })
-      const client_secret = generate({ length: 51 })
+      const client_id = generators.random(26)
+      const client_secret = generators.random(51)
       return { client_id, client_secret }
     }
 
@@ -179,7 +179,7 @@ export class ClientCredentialVendingMachine {
       response = await cognito.send(command)
     } catch (e) {
       maybeThrow(e, 'creating fake client secret')
-      const client_secret = generate({ length: 51 })
+      const client_secret = generators.random(51)
       return client_secret
     }
 
