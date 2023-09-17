@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { generate } from 'generate-password'
+import { generators } from 'openid-client'
 
 let server
 
@@ -17,10 +17,10 @@ export const set = {
     const env = {}
     if (process.env.ARC_ENV === 'testing' && !orig_env?.COGNITO_USER_POOL_ID) {
       if (!orig_env?.OIDC_CLIENT_ID) {
-        env.OIDC_CLIENT_ID = generate({ length: 26 })
+        env.OIDC_CLIENT_ID = generators.random(26)
       }
       if (!orig_env?.OIDC_CLIENT_SECRET) {
-        env.OIDC_CLIENT_SECRET = generate({ length: 51 })
+        env.OIDC_CLIENT_SECRET = generators.random(51)
       }
       if (!process.env.ARC_OIDC_IDP_PORT) {
         env.ARC_OIDC_IDP_PORT = 3334
@@ -73,7 +73,7 @@ export const sandbox = {
           ],
         },
       ],
-      cookies: { keys: [generate({ length: 32 })] },
+      cookies: { keys: [generators.random(32)] },
       // Always issue refresh token
       issueRefreshToken() {
         return true
