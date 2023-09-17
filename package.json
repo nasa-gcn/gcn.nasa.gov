@@ -107,7 +107,7 @@
     "glob": "^10.3.4",
     "husky": "^8.0.3",
     "jest": "^29.6.4",
-    "jest-environment-jsdom": "^29.6.4",
+    "jest-environment-jsdom": "^29.7.0",
     "jest-transform-stub": "^2.0.0",
     "lint-staged": "^14.0.0",
     "nasawds": "^4.0.1",
