@@ -225,6 +225,8 @@ export default function () {
       return <Icon.CalendarToday />
     }
     switch (startDate) {
+      case 'undefined':
+        return <Icon.CalendarToday />
       case 'hour':
         return 'Past Hour'
       case 'today':
