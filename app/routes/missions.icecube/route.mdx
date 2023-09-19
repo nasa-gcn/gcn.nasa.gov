@@ -75,7 +75,8 @@ sources and seed electromagnetic followup up observations[^4] [^5].
 These searches are performed as quickly as possible, as soon as the realtime neutrino information for the 1000 second window
 are available, and are repeated for each update
 to the LVK alert information. The results from each repeated search will sent as a GCN notice,
-including identifying information to the corresponding LVK alert version.
+including identifying information to the corresponding LVK alert version. Results from all searches
+in LVK Runs 03 and 04 are available on the [IceCube Realtime Gravitational Wave Followup page](https://roc.icecube.wisc.edu/public/LvkNuTrackSearch/)
 
 For high-significance LVK alerts, two hypothesis tests
 are conducted. The first search is a maximum likelihood analysis which searches for a
@@ -98,17 +99,15 @@ The GCN Notice will highlight:
 - 'most_probable_direction' - RA/DEC (deg., J2000) for the most likely direction from the generic neutrino source coincidence search.
 - 'neutrino_flux_sensitivity_range' - Time integrated flux sensitivity range (min, max) [GeV cm<sup>-2</sup>] and energy sensitivity range (lower, upper) [GeV], assuming an E<sup>-2</sup> neutrino spectrum (E<sup>2</sup> dN/dE) found within the points in the 90% region of GW map localization"
 
-The [GCN schema](/schema/gcn/notices/icecube/LvkNuTrackSearch.schema.json) and
-example [JSON message](https://raw.githubusercontent.com/nasa-gcn/gcn-schema/main/gcn/notices/icecube/LvkNuTrackSearch.example.json)
+The [GCN schema](/schema/stable/gcn/notices/icecube/LvkNuTrackSearch.schema.json) and
+example [JSON message](/schema/stable/gcn/notices/icecube/LvkNuTrackSearch.example.json)
 are available.
 
 Please note: The reported p-values here do not account for any trials correction (multiple hypotheses
-testing). The false alarm rate of these coincidences can be obtained by multiplying the p-
-values with their corresponding GW trigger rates. The triggering event rate for the
-LLAMA pipeline which uses confident and subthreshold GW triggers is about 16/day (8
-pipelines with 2/day FAR for each). The triggering event rate for the UML pipeline which
-only uses the confident GW triggers is the expected astrophysical GW detection rate
-(see [LIGO/Virgo/KAGRA Public Alerts User Guide](https://emfollow.docs.ligo.org/userguide/changes.html)).
+testing). The false alarm rate of these coincidences can be obtained by multiplying the p-values
+with their corresponding GW trigger rates. All neutrino searches performed to date for
+Run O3 and O4 are cataloged on the [IceCube Realtime Gravitational Wave Followup page](https://roc.icecube.wisc.edu/public/LvkNuTrackSearch/).
+Rate estimates and more information on the LVK alerts can be found in the [LIGO/Virgo/KAGRA Public Alerts User Guide](https://emfollow.docs.ligo.org/).
 
 ## Common GCN Circular Types
 
