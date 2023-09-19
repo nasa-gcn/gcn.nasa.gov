@@ -25,6 +25,23 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
+        <CollectionCalendarDate datetime={'September 19, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New features for September 2023</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        This September, we've added some new features to [GCN Circulars](/circulars):
+
+        - **Cross References.** Navigate the GCN Circulars archive faster with Circulars cross-references, arXiv preprints, DOIs, and other URLs displayed as hyperlinks.
+        - **Bibliographies.** Cite GCN Circulars by retrieving their [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu) bibcodes and BibTeX records from the GCN Circulars archive. See the [documentation](/docs/circulars/archive#citing-gcn-circulars) for details.
+        - **Archive Download.** Download the entire GCN Circulars archive as a tarball. See the [Advanced options](/circulars#advanced) section of the GCN Circulars archive.
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
         <CollectionCalendarDate datetime={'August 23, 2023'} />
       }
     >
