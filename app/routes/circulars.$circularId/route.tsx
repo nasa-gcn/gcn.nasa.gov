@@ -137,7 +137,7 @@ export default function () {
           <Grid col="fill">{submittedHowMap[submittedHow]}</Grid>
         </Grid>
       )}
-      <div className="text-pre-wrap margin-top-2">
+      <div className="text-pre-wrap font-mono-sm">
         <Body>{body}</Body>
       </div>
     </>
