@@ -225,8 +225,8 @@ function Document({ children }: { children?: React.ReactNode }) {
         <GovBanner />
         <DevBanner />
         <Header />
-        <NewsBanner to="/news#important-notes-for-gcn-kafka-client-users">
-          Important notes for GCN Kafka client users.
+        <NewsBanner to="/news#new-features-for-september-2023">
+          New GCN Circulars features for September 2023!
         </NewsBanner>
         <main id="main-content">{children}</main>
         <Footer />
