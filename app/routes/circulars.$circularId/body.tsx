@@ -14,6 +14,8 @@ import remarkRehype from 'remark-rehype'
 import { type Plugin, unified } from 'unified'
 import { u } from 'unist-builder'
 
+import rehypeAutolinkLiteral from './rehypeAutolinkLiteral'
+
 /** A Unified.js parser plugin that just returns a canned tree. */
 const remarkFromMdast: Plugin<[Root], string, Root> = function (tree) {
   this.Parser = () => tree
@@ -65,6 +67,7 @@ export function Body({ children }: { children: string }) {
     .use(remarkFromMdast, tree)
     .use(remarkRehype)
     .use(rehypeAstro)
+    .use(rehypeAutolinkLiteral)
     .use(rehypeReact, {
       Fragment,
       createElement,
