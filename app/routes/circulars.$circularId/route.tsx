@@ -12,7 +12,7 @@ import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import { formatDateISO } from '../circulars/circulars.lib'
 import { get } from '../circulars/circulars.server'
-import { Body } from './body'
+import { PlainTextBody } from './PlainTextBody'
 import TimeAgo from '~/components/TimeAgo'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
@@ -137,9 +137,7 @@ export default function () {
           <Grid col="fill">{submittedHowMap[submittedHow]}</Grid>
         </Grid>
       )}
-      <div className="text-pre-wrap font-mono-sm">
-        <Body>{body}</Body>
-      </div>
+      <PlainTextBody>{body}</PlainTextBody>
     </>
   )
 }
