@@ -7,7 +7,7 @@
  */
 import dedent from 'ts-dedent'
 
-import { Highlight } from './Highlight'
+import { Highlight } from '~/components/Highlight'
 import { useFeature } from '~/root'
 
 export function ProducerSampleCode() {
