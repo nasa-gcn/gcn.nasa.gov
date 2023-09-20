@@ -16,6 +16,8 @@ import { u } from 'unist-builder'
 
 import rehypeAutolinkLiteral from './rehypeAutolinkLiteral'
 
+import styles from './PlainTextBody.module.css'
+
 /** A Unified.js parser plugin that just returns a canned tree. */
 const remarkFromMdast: Plugin<[Root], string, Root> = function (tree) {
   this.Parser = () => tree
@@ -60,10 +62,10 @@ function AstroData({
   }
 }
 
-export function Body({ children }: { children: string }) {
-  const tree = u('root', [u('paragraph', [u('text', children)])])
+export function PlainTextBody({ children }: { children: string }) {
+  const tree = u('root', [u('code', children)])
 
-  return unified()
+  const { result } = unified()
     .use(remarkFromMdast, tree)
     .use(remarkRehype)
     .use(rehypeAstro)
@@ -73,5 +75,7 @@ export function Body({ children }: { children: string }) {
       createElement,
       components: { a: LinkWrapper, data: AstroData },
     })
-    .processSync().result
+    .processSync()
+
+  return <div className={styles.PlainTextBody}>{result}</div>
 }

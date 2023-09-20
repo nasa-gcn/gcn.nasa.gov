@@ -1,0 +1,9 @@
+.PlainTextBody {
+  &,
+  & pre,
+  & code {
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    background: none;
+  }
+}
