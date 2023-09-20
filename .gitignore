@@ -5,6 +5,7 @@ node_modules
 /build/static
 /build/**/metafile.*
 /build/**/index.*
+/build/**/version.txt
 /coverage
 *.tsbuildinfo
 
