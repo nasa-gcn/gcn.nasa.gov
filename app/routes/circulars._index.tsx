@@ -33,6 +33,7 @@ import { useRef, useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
+import { Anchor } from '~/components/Anchor'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 
@@ -183,7 +184,9 @@ function DownloadModal() {
   const modalRef = useRef<ModalRef>(null)
   return (
     <>
-      <h2>Advanced</h2>
+      <h2>
+        <Anchor>Advanced</Anchor>
+      </h2>
       <ModalToggleButton
         modalRef={modalRef}
         opener
