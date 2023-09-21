@@ -190,7 +190,7 @@ export async function search({
       fields: ['subject'],
       _source: false,
       sort: {
-        _score: 'desc', // Sort by score in descending order
+        _score: 'desc',
         circularId: {
           order: 'desc',
         },
@@ -226,11 +226,13 @@ export async function getCircularsGroupedByEvent({
   pageSize = 100,
   afterKeyHistory,
   afterKey,
+  eventId,
 }: {
   page: number
   pageSize?: number
   afterKey?: any
   afterKeyHistory: object[]
+  eventId?: string
 }): Promise<{
   items: CircularGroupingMetadata[]
   page: number
@@ -240,12 +242,16 @@ export async function getCircularsGroupedByEvent({
 }> {
   const client = await getSearch()
   const newAfterKeyHistory = afterKeyHistory
-  if (afterKey && !newAfterKeyHistory[page - 1])
-    newAfterKeyHistory[page - 1] = afterKey
+
   const query = {
     index: 'circulars',
     body: {
       size: 0,
+      query: {
+        bool: {
+          filter: [] as any[],
+        },
+      },
       aggs: {
         synonyms_group: {
           composite: {
@@ -272,6 +278,14 @@ export async function getCircularsGroupedByEvent({
         },
       },
     },
+  }
+
+  if (eventId) {
+    query.body.query.bool.filter.push({
+      terms: {
+        'synonyms.keyword': [eventId],
+      },
+    })
   }
 
   const {
