@@ -103,8 +103,8 @@ const subjectMatchers: SubjectMatcher[] = [
     ([, id]) => `Fermi trigger No ${id.toUpperCase()}`,
   ],
   [
-    /LIGO\/Virgo\/KAGRA [[S|G|GW]*\d{6}[a-zA-Z]{1,2}/i,
-    ([, id]) => `LIGO/Virgo/KAGRA ${id.toUpperCase()}`,
+    /LIGO\/Virgo\/KAGRA [SGGW]*\d{6}[a-zA-Z]{1,2}/i,
+    ([id]) => `LIGO/Virgo/KAGRA ${id.toUpperCase()}`,
   ],
 ]
 

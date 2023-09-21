@@ -223,31 +223,49 @@ export async function search({
 
 export async function getCircularsGroupedByEvent({
   page,
-  limit,
+  pageSize = 100,
+  afterKeyHistory,
+  afterKey,
 }: {
-  page?: number
-  limit?: number
+  page: number
+  pageSize?: number
+  afterKey?: any
+  afterKeyHistory: object[]
 }): Promise<{
   items: CircularGroupingMetadata[]
-  totalPages: number
-  totalItems: number
+  page: number
+  hasNextPage: boolean
+  afterKeyHistory: object[]
+  afterKey?: object
 }> {
   const client = await getSearch()
-
+  const newAfterKeyHistory = afterKeyHistory
+  if (afterKey && !newAfterKeyHistory[page - 1])
+    newAfterKeyHistory[page - 1] = afterKey
   const query = {
     index: 'circulars',
     body: {
       size: 0,
       aggs: {
         synonyms_group: {
-          terms: {
-            field: 'synonyms.keyword',
+          composite: {
+            sources: [
+              {
+                synonyms: {
+                  terms: {
+                    field: 'synonyms.keyword',
+                  },
+                },
+              },
+            ],
+            size: 25,
+            after: afterKey ? afterKey : undefined,
           },
           aggs: {
             circulars: {
               top_hits: {
-                size: limit,
-                from: page,
+                size: pageSize,
+                sort: [{ circularId: 'desc' }],
               },
             },
           },
@@ -256,45 +274,43 @@ export async function getCircularsGroupedByEvent({
     },
   }
 
-  let groups: CircularGroupingMetadata[] = []
-  let totalPages = 0
-  let totalItems = 0
-
-  try {
-    const {
-      body: {
-        hits: {
-          total: { value: itemCount },
-        },
-        aggregations: {
-          synonyms_group: { buckets },
-        },
+  const {
+    body: {
+      hits: {
+        total: { value: itemCount },
       },
-    } = await client.search(query)
+      aggregations: {
+        synonyms_group: { buckets, after_key },
+      },
+    },
+  } = await client.search(query)
 
-    totalItems = itemCount
-    const synonymGroups = buckets
+  const synonymGroups = buckets
 
-    groups = synonymGroups.map((group: any) => {
-      const items = group.circulars.hits.hits.map((circular: any) => ({
-        circularId: circular._id,
-        subject: circular._source.subject,
-      }))
+  const groups = synonymGroups.map((group: any) => {
+    const items = group.circulars.hits.hits.map((circular: any) => ({
+      circularId: circular._id,
+      subject: circular._source.subject,
+    }))
 
-      return {
-        id: group.key,
-        circulars: items,
-      }
-    })
+    return {
+      id: group.key.synonyms,
+      circulars: items,
+    }
+  })
 
-    totalPages = limit ? Math.ceil(itemCount / limit) : 1
-  } catch (error) {
-    console.error('Error executing query:', error)
-  } finally {
-    await client.close()
+  const totalPages = Math.ceil(itemCount / pageSize)
+  const hasNextPage = page <= totalPages
+
+  await client.close()
+
+  return {
+    items: groups,
+    page,
+    hasNextPage,
+    afterKeyHistory: newAfterKeyHistory,
+    afterKey: after_key,
   }
-
-  return { items: groups, totalPages, totalItems }
 }
 
 /** Get a circular by ID. */
