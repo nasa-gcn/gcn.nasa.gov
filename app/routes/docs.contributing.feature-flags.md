@@ -3,8 +3,6 @@ handle:
   breadcrumb: Feature Flags
 ---
 
-import { Highlight } from '~/components/Highlight.tsx'
-
 # Feature Flags
 
 The GCN project uses [feature flags](https://www.atlassian.com/continuous-delivery/principles/feature-flags) to turn on parts of the web site that are under development. Feature flags allow us to merge new capabilities into the Git main branch without exposing them immediately to end users.
