@@ -59,14 +59,13 @@ function getPageLink({
       JSON.stringify(afterKeyHistory).toString()
     )
   const previousPage = page - 1
-  const previousPageIndex = previousPage - 1
   const nextPage = page + 1
 
   if (action === 'prev') {
     if (page) searchParams.set('page', previousPage.toString())
     const newAfterKey =
-      afterKeyHistory && afterKeyHistory[previousPageIndex]
-        ? JSON.stringify(afterKeyHistory[previousPageIndex]).toString()
+      afterKeyHistory && afterKeyHistory[previousPage]
+        ? JSON.stringify(afterKeyHistory[previousPage]).toString()
         : ''
     searchParams.set('after-key', newAfterKey)
   } else {
@@ -148,8 +147,6 @@ export default function () {
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
-
-  // const clean = inputQuery === query
 
   const submit = useSubmit()
   return (

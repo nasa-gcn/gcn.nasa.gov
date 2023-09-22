@@ -173,7 +173,7 @@ export async function search({
         },
       }
     : {
-        match_all: {}, // Match all documents when query is undefined
+        match_all: {}, // Matches all documents when query is undefined
       }
 
   const {
@@ -242,6 +242,7 @@ export async function getCircularsGroupedByEvent({
 }> {
   const client = await getSearch()
   const newAfterKeyHistory = afterKeyHistory
+  const currentAfterKey = page === 1 ? null : afterKey
 
   const query = {
     index: 'circulars',
@@ -265,7 +266,7 @@ export async function getCircularsGroupedByEvent({
               },
             ],
             size: 25,
-            after: afterKey ? afterKey : undefined,
+            after: currentAfterKey ? afterKey : undefined,
           },
           aggs: {
             circulars: {
@@ -312,7 +313,7 @@ export async function getCircularsGroupedByEvent({
       circulars: items,
     }
   })
-
+  newAfterKeyHistory.push(after_key)
   const totalPages = Math.ceil(itemCount / pageSize)
   const hasNextPage = page <= totalPages
 
