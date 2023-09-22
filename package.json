@@ -130,7 +130,7 @@
     "rehype-slug": "^6.0.0",
     "remark-gfm": "^3.0.1",
     "rimraf": "^5.0.0",
-    "sass": "^1.64.2",
+    "sass": "^1.68.0",
     "ts-jest": "^29.1.0",
     "typescript": "^5.2.2"
   },
