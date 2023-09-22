@@ -5,7 +5,7 @@ import { logDevReady } from '@remix-run/node'
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 
-const buildPath = 'build/server/index.js'
+const buildPath = 'build/server/index.cjs'
 
 let lastTimeout
 

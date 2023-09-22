@@ -40,9 +40,7 @@ async function* getAdsEntries() {
   } while (length)
 }
 
-// FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
-// See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-module.exports.handler = async () => {
+export async function handler() {
   const db = await tables()
   for await (const entries of getAdsEntries()) {
     await Promise.all(

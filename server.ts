@@ -6,9 +6,7 @@ import sourceMapSupport from 'source-map-support'
 sourceMapSupport.install()
 installGlobals()
 
-// FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
-// See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-module.exports.handler = createRequestHandler({
+export const handler = createRequestHandler({
   build,
   mode: process.env.NODE_ENV,
 })

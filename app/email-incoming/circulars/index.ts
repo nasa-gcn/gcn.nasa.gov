@@ -47,9 +47,7 @@ interface EmailProps {
 
 const fromName = 'GCN Circulars'
 
-// FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
-// See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-module.exports.handler = createEmailIncomingMessageHandler(
+export const handler = createEmailIncomingMessageHandler(
   async ({ content }) => {
     const parsed = await parseEmailContentFromSource(content)
     const { address: userEmail, submittedHow } = getFromAddress(parsed.from)

@@ -16,6 +16,7 @@ const options = {
   logLevel: 'info',
   outdir: 'build',
   outbase: 'app',
+  outExtension: { '.js': '.cjs' },
   external: ['@aws-sdk/*', 'aws-sdk'],
   platform: 'node',
   target: ['node18'],
