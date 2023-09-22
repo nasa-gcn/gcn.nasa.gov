@@ -61,7 +61,7 @@ export default {
   assetsBuildDirectory: 'build/static',
   publicPath: '/_static/app/',
   server: './server.ts',
-  serverBuildPath: 'build/server/index.js',
+  serverBuildPath: 'build/server/index.cjs',
   serverMinify: isProduction,
   serverModuleFormat: 'cjs',
   serverDependenciesToBundle: [
