@@ -17,3 +17,7 @@ updates:
       # See https://docs.aws.amazon.com/lambda/latest/dg/lambda-runtimes.html
       - dependency-name: '@aws-sdk/*'
       - dependency-name: aws-sdk
+    groups:
+      remix:
+        patterns:
+          - '@remix-run/*'
