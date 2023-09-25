@@ -1,10 +1,10 @@
 .node {
   & {
-    list-style: url('~/../node_modules/nasawds/src/img/usa-icons/chevron_right.svg');
+    list-style: url('nasawds/src/img/usa-icons/chevron_right.svg');
   }
 
   &[aria-expanded='true'] {
-    list-style: url('~/../node_modules/nasawds/src/img/usa-icons/expand_more.svg');
+    list-style: url('nasawds/src/img/usa-icons/expand_more.svg');
   }
 
   & [data-testid='checkbox'] {
