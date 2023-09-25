@@ -5,10 +5,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { readFile } from 'fs/promises'
 
-const { readFile } = require('fs/promises')
-
-module.exports = async function () {
+export default async function () {
   const text = await readFile('sandbox-seed.json', { encoding: 'utf-8' })
   const { circulars } = JSON.parse(text)
   return circulars.flatMap((item) => [

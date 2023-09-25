@@ -109,9 +109,7 @@ async function send(circular: Circular) {
   })
 }
 
-// FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
-// See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
-module.exports.handler = createTriggerHandler(
+export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     const id = unmarshallTrigger(dynamodb!.Keys).circularId as number
     const promises = []

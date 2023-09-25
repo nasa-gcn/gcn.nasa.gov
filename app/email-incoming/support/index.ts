@@ -33,11 +33,8 @@ const origData = {
 
 /**
  * Forward incoming emails to Zendesk.
- *
- * FIXME: must use module.exports here for OpenTelemetry shim to work correctly.
- * See https://dev.to/heymarkkop/how-to-solve-cannot-redefine-property-handler-on-aws-lambda-3j67
  */
-module.exports.handler = createEmailIncomingMessageHandler(
+export const handler = createEmailIncomingMessageHandler(
   async ({ content, receipt: { recipients } }) => {
     let data = { recipients, emailData: content.toString(), ...origData }
     data = await transformRecipients(data)
