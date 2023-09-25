@@ -647,7 +647,7 @@ export default function () {
                     value="custom"
                     label="Custom Range..."
                     className="usa-search__filter-button"
-                    onChange={(e) => setShowDateRange(true)}
+                    onChange={(e) => setShowDateRange(e.target.checked)}
                   ></Radio>
                 </div>
               </div>
