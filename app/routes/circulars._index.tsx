@@ -37,7 +37,7 @@ import { Anchor } from '~/components/Anchor'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 
-import searchImg from '~/../node_modules/nasawds/src/img/usa-icons-bg/search--white.svg'
+import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ request: { url } }: DataFunctionArgs) {
   const { searchParams } = new URL(url)

@@ -8,8 +8,8 @@
 
 @use 'styles' with (
   $theme-show-notifications: false,
-  $theme-image-path: '~/../node_modules/nasawds/src/img',
-  $theme-font-path: '~/../node_modules/nasawds/src/fonts'
+  $theme-image-path: 'nasawds/src/img',
+  $theme-font-path: 'nasawds/src/fonts'
 );
 
 @use 'uswds-core' as *;
@@ -110,7 +110,7 @@ h6 {
   }
 
   & > a:hover::after {
-    content: url('~/../node_modules/nasawds/src/img/usa-icons/link.svg');
+    content: url('nasawds/src/img/usa-icons/link.svg');
     position: absolute;
     padding-left: 1ex;
   }

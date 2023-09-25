@@ -67,13 +67,13 @@ import highlightStyle from 'highlight.js/styles/github.css'
 //     ])
 //   )
 // )
-import favicon_16 from '~/../node_modules/nasawds/src/img/favicons/favicon-16.png'
-import favicon_40 from '~/../node_modules/nasawds/src/img/favicons/favicon-40.png'
-import favicon_57 from '~/../node_modules/nasawds/src/img/favicons/favicon-57.png'
-import favicon_72 from '~/../node_modules/nasawds/src/img/favicons/favicon-72.png'
-import favicon_114 from '~/../node_modules/nasawds/src/img/favicons/favicon-114.png'
-import favicon_144 from '~/../node_modules/nasawds/src/img/favicons/favicon-144.png'
-import favicon_192 from '~/../node_modules/nasawds/src/img/favicons/favicon-192.png'
+import favicon_16 from 'nasawds/src/img/favicons/favicon-16.png'
+import favicon_40 from 'nasawds/src/img/favicons/favicon-40.png'
+import favicon_57 from 'nasawds/src/img/favicons/favicon-57.png'
+import favicon_72 from 'nasawds/src/img/favicons/favicon-72.png'
+import favicon_114 from 'nasawds/src/img/favicons/favicon-114.png'
+import favicon_144 from 'nasawds/src/img/favicons/favicon-144.png'
+import favicon_192 from 'nasawds/src/img/favicons/favicon-192.png'
 import themeStyle from '~/theme.css'
 
 const favicons = {
