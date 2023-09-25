@@ -653,31 +653,31 @@ export default function () {
               </div>
 
               {showDateRange && (
-                <>
-                  <DateRangePicker
-                    startDateHint="dd/mm/yyyy"
-                    startDateLabel="Start Date"
-                    className="margin-bottom-2"
-                    startDatePickerProps={{
-                      id: 'event-date-start',
-                      name: 'event-date-start',
-                      defaultValue: 'startDate',
-                      onChange: (value) => {
-                        setInputDateGte(value)
-                      },
-                    }}
-                    endDateHint="dd/mm/yyyy"
-                    endDateLabel="End Date"
-                    endDatePickerProps={{
-                      id: 'event-date-end',
-                      name: 'event-date-end',
-                      defaultValue: 'endDate',
-                      onChange: (value) => {
-                        setInputDateLte(value)
-                      },
-                    }}
-                  />
-                </>
+                <DateRangePicker
+                  startDateHint="dd/mm/yyyy"
+                  startDateLabel="Start Date"
+                  className="margin-bottom-2"
+                  startDatePickerProps={{
+                    id: 'event-date-start',
+                    name: 'event-date-start',
+                    defaultValue: 'startDate',
+                    onChange: (value) => {
+                      setInputDateGte(value)
+                    },
+                    style: { height: '15px' }, // Adjust the height as needed
+                  }}
+                  endDateHint="dd/mm/yyyy"
+                  endDateLabel="End Date"
+                  endDatePickerProps={{
+                    id: 'event-date-end',
+                    name: 'event-date-end',
+                    defaultValue: 'endDate',
+                    onChange: (value) => {
+                      setInputDateLte(value)
+                    },
+                    style: { height: '15px' },
+                  }}
+                />
               )}
               <div className="display-flex flex-row">
                 <Button
