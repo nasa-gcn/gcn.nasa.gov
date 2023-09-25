@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "@architect/functions": "^5.3.4",
+    "@esbuild/win32-x64": "^0.19.3",
     "@nasa-gcn/architect-functions-search": "^1.0.0",
     "@nasa-gcn/dynamodb-autoincrement": "^1.0.0",
     "@nasa-gcn/remark-rehype-astro": "^0.1.3",
