@@ -12,7 +12,7 @@ import {
   ListUsersCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import dedent from 'ts-dedent'
+import { dedent } from 'ts-dedent'
 
 import { clearUserToken, getUser } from '../_auth/user.server'
 import { group } from '../circulars/circulars.server'
