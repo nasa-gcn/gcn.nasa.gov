@@ -105,6 +105,9 @@ export default function () {
                     <Link key="accounts" to="faq#accounts">
                       Accounts
                     </Link>,
+                    <Link key="accounts" to="faq#operations">
+                      Operations
+                    </Link>,
                   ]}
                 />
               </>,

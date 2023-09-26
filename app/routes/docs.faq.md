@@ -83,3 +83,15 @@ Note that it used to be common practice for Circulars submitters to add line bre
 ### How do I sign in as a legacy GCN Classic Circulars user?
 
 If you had a GCN Circulars account prior to April 17, 2023, your account was migrated to the new GCN. Your receiving preferences, submitting permission, name and affiliation will be associated with your account as soon as you sign in for the first time. If you choose to sign in via email address and password, tap "Sign up" not "Forgot your password?".
+
+## Operations
+
+### Does GCN keep working during a U.S. federal government shutdown?
+
+**Yes.** All GCN services (GCN Circulars, GCN Notices, Kafka cluster, the web site) remain fully operational during a U.S. federal government shutdown. During a government shutdown, essential GCN personnel remain on call to monitor GCN operations and intervene in the event of incidents, outages, or emergencies.
+
+However, there are some minor impacts to GCN users during a government shutdown:
+
+- Responses to questions and requests through the [GCN help desk](/contact) may be delayed.
+- Issues and pull requests on https://github.com/nasa-gcn repositories may not be promptly reviewed.
+- There will be no [redeployments](/docs/contributing/deployment) of the GCN web site except to address emergencies.
