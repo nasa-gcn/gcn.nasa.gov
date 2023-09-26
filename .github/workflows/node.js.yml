@@ -26,6 +26,9 @@ jobs:
         run: npm run typecheck
       - name: Run Prettier code style checks
         run: npx prettier -c .
+        # Skip prettier checks on Windows due to line endings.
+        # See https://prettier.io/docs/en/options.html#end-of-line
+        if: ${{ runner.os != 'Windows' }}
       - name: Run unit tests
         run: npm run test-coverage
       - name: Upload to Codecov.io
