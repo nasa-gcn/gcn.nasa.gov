@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import dedent from 'ts-dedent'
+import { dedent } from 'ts-dedent'
 
 export interface CircularMetadata {
   circularId: number

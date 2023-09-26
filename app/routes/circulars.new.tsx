@@ -28,7 +28,7 @@ import {
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
 import { useState } from 'react'
-import dedent from 'ts-dedent'
+import { dedent } from 'ts-dedent'
 
 import { getUser } from './_auth/user.server'
 import {
