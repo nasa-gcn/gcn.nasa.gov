@@ -225,8 +225,11 @@ function Document({ children }: { children?: React.ReactNode }) {
         <GovBanner />
         <DevBanner />
         <Header />
-        <NewsBanner to="/news#new-features-for-september-2023">
-          New GCN Circulars features for September 2023!
+        <NewsBanner>
+          Notes on GCN service during a U.S. federal government shutdown. See{' '}
+          <Link to="/docs/faq#does-gcn-keep-working-during-a-us-federal-government-shutdown">
+            Frequently Asked Questions
+          </Link>
         </NewsBanner>
         <main id="main-content">{children}</main>
         <Footer />
