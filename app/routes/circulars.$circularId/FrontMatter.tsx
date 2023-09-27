@@ -51,7 +51,7 @@ export function FrontMatter({
       </FrontMatterItem>
       <FrontMatterItem label="From">{submitter}</FrontMatterItem>
       {submittedHow && (
-        <FrontMatterItem label="Submitted By">
+        <FrontMatterItem label="Via">
           {submittedHowMap[submittedHow]}
         </FrontMatterItem>
       )}
