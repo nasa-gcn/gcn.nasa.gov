@@ -32,7 +32,10 @@ export function CircularsKeywords() {
         ))}
       </ul>
       <p className="usa-paragraph">
-        <Link to="/contact">Contact us</Link> to add new keywords.
+        <Link className="usa-link" to="/contact">
+          Contact us
+        </Link>{' '}
+        to add new keywords.
       </p>
     </>
   )

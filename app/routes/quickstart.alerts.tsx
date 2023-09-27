@@ -32,7 +32,10 @@ export default function () {
         Choose how you would like your results returned. Select a Format and
         Notice type for each alert you would like to subscribe to. More details
         on the Notice Types can be found their respective pages under{' '}
-        <Link to="/missions">Missions</Link>.
+        <Link className="usa-link" to="/missions">
+          Missions
+        </Link>
+        .
       </p>
       <Label htmlFor="noticeFormat">Notice Format</Label>
       <NoticeFormatInput

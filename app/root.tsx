@@ -227,7 +227,7 @@ function Document({ children }: { children?: React.ReactNode }) {
         <Header />
         <NewsBanner>
           New GCN Circulars features for September 2023! See{' '}
-          <Link to="/news#new-features-for-september-2023">
+          <Link className="usa-link" to="/news#new-features-for-september-2023">
             news and announcements
           </Link>
         </NewsBanner>

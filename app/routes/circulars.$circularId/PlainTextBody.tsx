@@ -29,7 +29,7 @@ function LinkWrapper({
 }: Omit<JSX.IntrinsicElements['a'], 'ref'>) {
   if (props.href) {
     return (
-      <Link to={props.href} {...props}>
+      <Link className="usa-link" to={props.href} {...props}>
         {children}
       </Link>
     )
@@ -44,16 +44,24 @@ function AstroData({
   className,
 }: JSX.IntrinsicElements['data']) {
   if (className === 'gcn-circular') {
-    return <Link to={`/circulars/${value}`}>{children}</Link>
+    return (
+      <Link className="usa-link" to={`/circulars/${value}`}>
+        {children}
+      </Link>
+    )
   } else if (className === 'arXiv') {
     return (
-      <a rel="external" href={`https://arxiv.org/abs/${value}`}>
+      <a
+        className="usa-link"
+        rel="external"
+        href={`https://arxiv.org/abs/${value}`}
+      >
         {children}
       </a>
     )
   } else if (className === 'doi') {
     return (
-      <a rel="external" href={`https://doi.org/${value}`}>
+      <a className="usa-link" rel="external" href={`https://doi.org/${value}`}>
         {children}
       </a>
     )

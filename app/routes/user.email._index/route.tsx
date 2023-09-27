@@ -171,7 +171,10 @@ export default function () {
           https://gcn.gsfc.nasa.gov/
         </a>
         . To change your GCN Classic Notice subscriptions, please{' '}
-        <Link to="/contact?service=gcn-classic">send us a message</Link>.
+        <Link className="usa-link" to="/contact?service=gcn-classic">
+          send us a message
+        </Link>
+        .
       </p>
       {data.length > 0 && (
         <SegmentedCards>

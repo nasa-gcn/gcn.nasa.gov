@@ -64,7 +64,7 @@ function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
               ) : (
                 <Icon.ExpandMore aria-label="Expand" />
               )}
-              <Link to={linkString}>
+              <Link className="usa-link" to={linkString}>
                 {item.$ref && item.$ref.split('/').slice(-1)[0]}
               </Link>
             </td>

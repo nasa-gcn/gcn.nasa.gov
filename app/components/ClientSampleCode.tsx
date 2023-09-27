@@ -46,13 +46,17 @@ export function ClientSampleCode({
       return (
         <>
           Open a terminal and run this command to install with{' '}
-          <Link rel="external" href="https://pip.pypa.io/">
+          <Link className="usa-link" rel="external" href="https://pip.pypa.io/">
             pip
           </Link>
           :
           <Highlight language="sh" code="pip install gcn-kafka" />
           or this command to install with with{' '}
-          <Link rel="external" href="https://docs.conda.io/">
+          <Link
+            className="usa-link"
+            rel="external"
+            href="https://docs.conda.io/"
+          >
             conda
           </Link>
           :
@@ -107,7 +111,11 @@ export function ClientSampleCode({
       return (
         <>
           Open a terminal and run this command to install with{' '}
-          <Link rel="external" href="https://www.npmjs.com">
+          <Link
+            className="usa-link"
+            rel="external"
+            href="https://www.npmjs.com"
+          >
             npm
           </Link>
           :
@@ -180,7 +188,11 @@ export function ClientSampleCode({
       return (
         <>
           Open a terminal and run this command to install with{' '}
-          <Link rel="external" href="https://www.npmjs.com">
+          <Link
+            className="usa-link"
+            rel="external"
+            href="https://www.npmjs.com"
+          >
             npm
           </Link>
           :
@@ -256,6 +268,7 @@ export function ClientSampleCode({
         <>
           First,{' '}
           <Link
+            className="usa-link"
             rel="external"
             href="https://github.com/edenhill/librdkafka#installation"
           >
