@@ -88,9 +88,7 @@ If you had a GCN Circulars account prior to April 17, 2023, your account was mig
 
 ### Does GCN keep working during a U.S. federal government shutdown?
 
-**Yes.** All GCN services (GCN Circulars, GCN Notices, Kafka cluster, the web site) remain fully operational during a U.S. federal government shutdown. During a government shutdown, essential GCN personnel remain on call to monitor GCN operations and intervene in the event of incidents, outages, or emergencies.
-
-However, there are some minor impacts to GCN users during a government shutdown:
+**Yes.** During a U.S. federal government shutdown, all GCN services (GCN Circulars, GCN Notices, Kafka cluster, the web site) remain fully operational. However, there may be the following minor impacts to GCN users:
 
 - Responses to questions and requests through the [GCN help desk](/contact) may be delayed.
 - Issues and pull requests on https://github.com/nasa-gcn repositories may not be promptly reviewed.
