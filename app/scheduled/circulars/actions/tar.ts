@@ -13,7 +13,7 @@ import type { Pack } from 'tar-stream'
 import { pack as tarPack } from 'tar-stream'
 
 import type { CircularAction } from '../actions'
-import { Prefix, s3 } from '../storage'
+import { Prefix, putParams, s3 } from '../storage'
 import { staticBucket as Bucket, region } from '~/lib/env.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import {
@@ -50,7 +50,12 @@ function createUploadAction(
       pack.pipe(gzip).pipe(Body)
       const promise = new Upload({
         client: s3,
-        params: { Body, Bucket, Key },
+        params: {
+          Body,
+          Key,
+          ContentType: 'application/gzip',
+          ...putParams,
+        },
       }).done()
       return { pack, promise }
     },

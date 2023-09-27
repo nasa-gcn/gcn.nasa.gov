@@ -8,8 +8,7 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 import type { CircularAction } from '../actions'
-import { Prefix, s3 } from '../storage'
-import { staticBucket as Bucket } from '~/lib/env.server'
+import { Prefix, putParams, s3 } from '../storage'
 
 const Key = `${Prefix}/stats.json`
 
@@ -27,6 +26,13 @@ export const statsAction: CircularAction<Record<string, number>> = {
   },
   async finalize(context) {
     const Body = JSON.stringify(context)
-    await s3.send(new PutObjectCommand({ Bucket, Key, Body }))
+    await s3.send(
+      new PutObjectCommand({
+        Key,
+        Body,
+        ContentType: 'application/json',
+        ...putParams,
+      })
+    )
   },
 }

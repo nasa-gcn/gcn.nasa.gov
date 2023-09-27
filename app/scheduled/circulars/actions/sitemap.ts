@@ -8,8 +8,8 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 
 import type { CircularAction } from '../actions'
-import { Prefix as parentPrefix, s3 } from '../storage'
-import { staticBucket as Bucket, origin } from '~/lib/env.server'
+import { Prefix as parentPrefix, putParams, s3 } from '../storage'
+import { origin } from '~/lib/env.server'
 import { maxEntriesPerSitemap, sitemap } from '~/lib/sitemap.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 
@@ -26,7 +26,14 @@ async function flush(context: SitemapContext) {
     context.items.map(({ circularId }) => `${origin}/circulars/${circularId}`)
   )
   const Body = await response.text()
-  await s3.send(new PutObjectCommand({ Body, Bucket, Key }))
+  await s3.send(
+    new PutObjectCommand({
+      Body,
+      Key,
+      ContentType: response.headers.get('Content-Type')!,
+      ...putParams,
+    })
+  )
   context.items.length = 0
   context.page += 1
 }
