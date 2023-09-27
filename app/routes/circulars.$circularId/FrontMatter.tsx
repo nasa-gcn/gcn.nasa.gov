@@ -26,7 +26,7 @@ function FrontMatterItem({
 }) {
   return (
     <Grid row>
-      <Grid tablet={{ col: 2 }}>
+      <Grid desktop={{ col: 1 }}>
         <b>{label}</b>
       </Grid>
       <Grid col="fill">{children}</Grid>
