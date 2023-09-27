@@ -163,6 +163,13 @@ export default function () {
                     <NavLink key="producing" to="notices/producers">
                       Producing
                     </NavLink>,
+                    ...(enableSchemaBrowser
+                      ? [
+                          <NavLink key="schema" to="notices/schema">
+                            Schema
+                          </NavLink>,
+                        ]
+                      : []),
                     <NavLink key="archive" to="notices/archive">
                       Archive
                     </NavLink>,

@@ -9,6 +9,10 @@ import {
   ProcessListItem,
 } from '@trussworks/react-uswds'
 
+import { ProducerSampleCode } from './ProducerSampleCode'
+
+import { WithFeature } from '~/root'
+
 # New Notice Producers
 
 The following steps guide new instrument, mission, or observatory producers
@@ -44,6 +48,14 @@ also happy to work with the mission teams to help construct your alerts.
    your list of team members from Step 1 and your chosen Kafka topic prefix from Step 2.
       The GCN Team will reply after they have configured producer permissions for your team.
    </ProcessListItem>
+   <WithFeature schema>
+      <ProcessListItem>
+         <ProcessListHeading type="h3">
+            Draft Your Schema 
+         </ProcessListHeading>
+         As a GCN Notice producer, you can create your own instrument-specific schema. Please contribute your schema to our [GitHub repository](https://github.com/nasa-gcn/gcn-schema), placing it in a folder under <code>gcn/notices/<i>mission</i></code> and submit a pull request for the GCN Team to review. For details, please refer to the [schema documentation](/docs/producers/schema).
+      </ProcessListItem>
+   </WithFeature>
    <ProcessListItem>
       <ProcessListHeading type="h3">
          Build Producer Code
@@ -56,16 +68,7 @@ also happy to work with the mission teams to help construct your alerts.
       can be found in Step 4 client example code.
       - Start from this and adjust the `client_id`, `client_secret`, `topic` and `data` content:
 
-      ```python
-      from gcn_kafka import Producer
-      # Connect as a producer.
-      # Warning: don't share the client secret with others.
-      producer = Producer(client_id='fill me in', client_secret='fill me in')
-      # any topic starting with 'mission.'
-      topic = 'gcn.notices.mission.example'
-      data = b'...'  # any bytes
-      producer.produce(topic, data)
-      ```
+      <ProducerSampleCode />
 
    </ProcessListItem>
    <ProcessListItem>
