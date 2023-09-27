@@ -149,7 +149,7 @@ export default function () {
                     </NavLink>,
                     ...(enableSchemaBrowser
                       ? [
-                          <NavLink key="schema" to="notices/unifiedschema">
+                          <NavLink key="schema" to="notices/schema">
                             Schema
                           </NavLink>,
                         ]
