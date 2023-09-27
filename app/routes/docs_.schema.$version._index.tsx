@@ -25,7 +25,11 @@ export default function () {
       <p className="usa-paragraph">
         We welcome your feedback on the schema! Don't hesitate to open an issue
         on{' '}
-        <Link rel="external" to="https://github.com/nasa-gcn/gcn-schema">
+        <Link
+          className="usa-link"
+          rel="external"
+          to="https://github.com/nasa-gcn/gcn-schema"
+        >
           Github
         </Link>{' '}
         as our documentation is based on the content of the repository.

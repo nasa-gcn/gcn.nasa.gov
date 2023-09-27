@@ -127,6 +127,7 @@ function SchemaBody({
       <div>
         View the source on{' '}
         <Link
+          className="usa-link"
           rel="external"
           to={`https://github.com/nasa-gcn/gcn-schema/blob/${selectedVersion}/${path}`}
         >
@@ -160,6 +161,7 @@ function SchemaBody({
             In order to validate, all of the following schemas must be
             individually valid, based on their respective properties. See{' '}
             <Link
+              className="usa-link"
               rel="external"
               to="https://json-schema.org/understanding-json-schema/reference/combining.html#allof"
             >
@@ -179,6 +181,7 @@ function SchemaBody({
             In order to validate, at least one of the following schemas must be
             individually valid based on their respective properties. See{' '}
             <Link
+              className="usa-link"
               rel="external"
               to="https://json-schema.org/understanding-json-schema/reference/combining.html#anyof"
             >
@@ -198,6 +201,7 @@ function SchemaBody({
             In order to validate, exactly one of the following schemas must be
             individually valid based on their respective properties. See{' '}
             <Link
+              className="usa-link"
               rel="external"
               to="https://json-schema.org/understanding-json-schema/reference/combining.html#oneof"
             >

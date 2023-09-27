@@ -78,6 +78,7 @@ export default function Schema() {
                 {versions.map(({ name, ref }) => (
                   <div key={ref}>
                     <Link
+                      className="usa-link"
                       to={`/docs/schema/${ref}/${path}`}
                       onClick={() => setShowVersions(!setShowVersions)}
                     >

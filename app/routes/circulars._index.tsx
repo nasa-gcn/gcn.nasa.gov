@@ -282,8 +282,10 @@ export default function () {
         predictions, requests for follow-up observations, or future observing
         plans related to high-energy, multi-messenger, and variable or transient
         astrophysical events. See the{' '}
-        <Link to="/docs/circulars">documentation</Link> for help with
-        subscribing to or submitting Circulars.
+        <Link className="usa-link" to="/docs/circulars">
+          documentation
+        </Link>{' '}
+        for help with subscribing to or submitting Circulars.
       </p>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
         <Form
@@ -340,7 +342,10 @@ export default function () {
           <ol>
             {allItems.map(({ circularId, subject }) => (
               <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}${searchString}`}>
+                <Link
+                  className="usa-link"
+                  to={`/circulars/${circularId}${searchString}`}
+                >
                   {subject}
                 </Link>
               </li>
