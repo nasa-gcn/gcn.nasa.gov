@@ -13,7 +13,7 @@ export const deploy = {
 
     Policies.find(
       ({ PolicyName }) => PolicyName === 'ArcStaticBucketPolicy'
-    ).PolicyDocument.Statement[0].Action = ['s3:GetObject']
+    ).PolicyDocument.Statement[0].Action = ['s3:GetObject', 's3:ListBucket']
 
     Policies.push({
       PolicyName: 'ArcStaticBucketWriteGeneratedDirectoryPolicy',
@@ -21,12 +21,7 @@ export const deploy = {
         Statement: [
           {
             Effect: 'Allow',
-            Action: [
-              's3:ListBucket',
-              's3:PutObject',
-              's3:PutObjectAcl',
-              's3:DeleteObject',
-            ],
+            Action: ['s3:PutObject', 's3:PutObjectAcl', 's3:DeleteObject'],
             Resource: [
               {
                 'Fn::Sub': [
