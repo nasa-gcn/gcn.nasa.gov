@@ -16,7 +16,7 @@ async function getCircularsSitemapEntries() {
   const response = await s3.send(new ListObjectsV2Command({ Bucket, Prefix }))
   return (
     response.Contents?.map(({ Key }) => ({
-      url: `${origin}/_static/${Prefix}/${Key}`,
+      url: `${origin}/_static/${Key}`,
     })) ?? []
   )
 }
