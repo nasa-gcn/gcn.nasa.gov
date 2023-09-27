@@ -23,7 +23,11 @@ async function getCircularsSitemapEntries() {
 
 export async function loader() {
   return sitemapIndex(
-    [{ url: `${origin}/sitemap.xml` }, ...(await getCircularsSitemapEntries())],
+    [
+      { url: `${origin}/sitemap.xml` },
+      { url: `${origin}/circulars.atom` },
+      ...(await getCircularsSitemapEntries()),
+    ],
     {
       headers: {
         'Cache-Control': `public, max-age=${60 * 5}`,
