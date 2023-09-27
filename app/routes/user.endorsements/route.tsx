@@ -139,9 +139,11 @@ export default function () {
           <h2>Approve Endorsements</h2>
           <p className="usa-paragraph">
             <b>You are a GCN Circulars submitter.</b> You can{' '}
-            <Link to="/circulars/new">submit GCN Circulars</Link>, and other
-            users can request peer endorsements from you. You may take any of
-            the following actions for peer endorsement requests:
+            <Link className="usa-link" to="/circulars/new">
+              submit GCN Circulars
+            </Link>
+            , and other users can request peer endorsements from you. You may
+            take any of the following actions for peer endorsement requests:
           </p>
           <ol className="usa-list">
             <li>
@@ -188,7 +190,10 @@ export default function () {
           </p>
           <p className="usa-paragraph">
             If you don't find anyone who you recognize, then{' '}
-            <Link to="/contact">contact us for help</Link>.
+            <Link className="usa-link" to="/contact">
+              contact us for help
+            </Link>
+            .
           </p>
           <EndorsementRequestForm />
           {requestedEndorsements.length > 0 && (

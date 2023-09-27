@@ -116,8 +116,10 @@ export default function () {
       <p className="usa-paragraph">
         GCN Notices are real-time, machine-readable alerts that are submitted by
         participating facilities and redistributed publicly. See the{' '}
-        <Link to="/docs/notices"> documentation</Link> for help with consuming,
-        producing, or archiving of Notices.
+        <Link className="usa-link" to="/docs/notices">
+          documentation
+        </Link>{' '}
+        for help with consuming, producing, or archiving of Notices.
       </p>
       <div className="margin-bottom-2">
         <ReactTags

@@ -55,9 +55,15 @@ export default function () {
         Manage your client credentials here. Client credentials allow your
         scripts to interact with GCN on your behalf. You can also create client
         credentials through the{' '}
-        <Link to="/quickstart">Start Streaming GCN Notices</Link> quick start
-        guide. For sample code demonstrating usage of client credentials, see
-        the <Link to="/docs/client">client documentation</Link>.
+        <Link className="usa-link" to="/quickstart">
+          Start Streaming GCN Notices
+        </Link>{' '}
+        quick start guide. For sample code demonstrating usage of client
+        credentials, see the{' '}
+        <Link className="usa-link" to="/docs/client">
+          client documentation
+        </Link>
+        .
       </p>
       <SegmentedCards>
         {client_credentials.map((credential) => (

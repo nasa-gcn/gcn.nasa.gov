@@ -82,6 +82,7 @@ function NestedCheckboxNode({
             <span className="padding-right-1">{topLevelNodeProps.label}</span>
             {link && (
               <Link
+                className="usa-link"
                 to={link}
                 target={isExternal ? '_blank' : undefined}
                 rel={isExternal ? 'noreferrer' : undefined}
