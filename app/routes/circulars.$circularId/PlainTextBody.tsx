@@ -14,6 +14,7 @@ import remarkRehype from 'remark-rehype'
 import { type Plugin, unified } from 'unified'
 import { u } from 'unist-builder'
 
+import { AstroData } from './AstroData'
 import rehypeAutolinkLiteral from './rehypeAutolinkLiteral'
 
 import styles from './PlainTextBody.module.css'
@@ -35,38 +36,6 @@ function LinkWrapper({
     )
   } else {
     return <a {...props}>{children}</a>
-  }
-}
-
-function AstroData({
-  children,
-  value,
-  className,
-}: JSX.IntrinsicElements['data']) {
-  if (className === 'gcn-circular') {
-    return (
-      <Link className="usa-link" to={`/circulars/${value}`}>
-        {children}
-      </Link>
-    )
-  } else if (className === 'arXiv') {
-    return (
-      <a
-        className="usa-link"
-        rel="external"
-        href={`https://arxiv.org/abs/${value}`}
-      >
-        {children}
-      </a>
-    )
-  } else if (className === 'doi') {
-    return (
-      <a className="usa-link" rel="external" href={`https://doi.org/${value}`}>
-        {children}
-      </a>
-    )
-  } else {
-    return <>{children}</>
   }
 }
 
