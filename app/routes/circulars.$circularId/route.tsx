@@ -8,12 +8,11 @@
 import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
+import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds'
 
-import { formatDateISO } from '../circulars/circulars.lib'
 import { get } from '../circulars/circulars.server'
+import { FrontMatter } from './FrontMatter'
 import { PlainTextBody } from './PlainTextBody'
-import TimeAgo from '~/components/TimeAgo'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
@@ -42,22 +41,9 @@ export async function loader({ params: { circularId } }: DataFunctionArgs) {
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
-const submittedHowMap = {
-  web: 'Web form',
-  email: 'email',
-  'email-legacy': 'legacy email',
-}
-
 export default function () {
-  const {
-    circularId,
-    subject,
-    submitter,
-    createdOn,
-    body,
-    submittedHow,
-    bibcode,
-  } = useLoaderData<typeof loader>()
+  const { circularId, body, bibcode, ...frontMatter } =
+    useLoaderData<typeof loader>()
   const searchString = useSearchString()
   return (
     <>
@@ -106,37 +92,7 @@ export default function () {
         )}
       </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
-      <Grid row>
-        <Grid tablet={{ col: 2 }}>
-          <b>Subject</b>
-        </Grid>
-        <Grid col="fill">{subject}</Grid>
-      </Grid>
-      <Grid row>
-        <Grid tablet={{ col: 2 }}>
-          <b>Date</b>
-        </Grid>
-        <Grid col="fill">
-          {formatDateISO(createdOn)}{' '}
-          <small className="text-base-light">
-            (<TimeAgo time={createdOn}></TimeAgo>)
-          </small>
-        </Grid>
-      </Grid>
-      <Grid row>
-        <Grid tablet={{ col: 2 }}>
-          <b>From</b>
-        </Grid>
-        <Grid col="fill">{submitter}</Grid>
-      </Grid>
-      {submittedHow && (
-        <Grid row>
-          <Grid tablet={{ col: 2 }}>
-            <b>Submitted By</b>
-          </Grid>
-          <Grid col="fill">{submittedHowMap[submittedHow]}</Grid>
-        </Grid>
-      )}
+      <FrontMatter {...frontMatter} />
       <PlainTextBody>{body}</PlainTextBody>
     </>
   )
