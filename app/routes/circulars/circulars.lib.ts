@@ -12,7 +12,7 @@ export interface CircularMetadata {
   subject: string
 }
 
-export type SubmittedHow = 'web' | 'email' | 'email-legacy'
+export type SubmittedHow = 'web' | 'email' | 'email-legacy' | 'api'
 
 export interface Circular extends CircularMetadata {
   sub?: string

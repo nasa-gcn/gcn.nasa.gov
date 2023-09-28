@@ -12,7 +12,7 @@ import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
-import { getUser } from '../_auth/user.server'
+import { type User, getUser } from '../_auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
@@ -230,9 +230,8 @@ export async function put(
     Omit<Circular, 'sub' | 'submitter' | 'createdOn' | 'circularId'>,
     'submittedHow'
   >,
-  request: Request
+  user?: User
 ) {
-  const user = await getUser(request)
   if (!user?.groups.includes(group))
     throw new Response('User is not in the submitters group', {
       status: 403,

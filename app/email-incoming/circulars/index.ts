@@ -117,15 +117,16 @@ async function getCognitoUserData(
   userEmail: string
 ): Promise<UserData | undefined> {
   const users = await listUsersInGroup(group)
-  const userTypeData = users.find(
-    (user) => extractAttributeRequired(user, 'email') == userEmail
-  )
+  const Attributes = users.find(
+    ({ Attributes }) =>
+      extractAttributeRequired(Attributes, 'email') == userEmail
+  )?.Attributes
   return (
-    userTypeData && {
-      sub: extractAttributeRequired(userTypeData, 'sub'),
-      email: extractAttributeRequired(userTypeData, 'email'),
-      name: extractAttribute(userTypeData, 'name'),
-      affiliation: extractAttribute(userTypeData, 'custom:affiliation'),
+    Attributes && {
+      sub: extractAttributeRequired(Attributes, 'sub'),
+      email: extractAttributeRequired(Attributes, 'email'),
+      name: extractAttribute(Attributes, 'name'),
+      affiliation: extractAttribute(Attributes, 'custom:affiliation'),
       submit: true,
     }
   )
