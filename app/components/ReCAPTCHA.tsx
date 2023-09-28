@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import BaseReCAPTCHA from 'react-google-recaptcha'
+import { ReCAPTCHA as BaseReCAPTCHA } from 'react-google-recaptcha'
 import type { ReCAPTCHAProps } from 'react-google-recaptcha'
 
 import { getEnvOrDieInProduction } from '~/lib/env.server'
