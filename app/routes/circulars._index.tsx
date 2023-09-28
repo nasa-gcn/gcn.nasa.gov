@@ -129,12 +129,10 @@ function getPageLink({
 function Pagination({
   page,
   totalPages,
-  filter,
   ...queryStringProps
 }: {
   page: number
   totalPages: number
-  filter: string
   limit?: number
   query?: string
   startDate?: string
@@ -259,8 +257,18 @@ function GroupedView({
   totalItems: number
 }) {
   if (searchString) searchString = `?${searchString}`
+  const [detailsToggle, setDetailsToggle] = useState(false)
+  const expandAllText = detailsToggle ? 'Close All' : 'Open All'
   return (
     <>
+      <details
+        className="margin-top-1"
+        onClick={() => {
+          setDetailsToggle(!detailsToggle)
+        }}
+      >
+        <summary className="text-base">{expandAllText}</summary>
+      </details>
       {query && (
         <h3>
           {totalItems} result{totalItems != 1 && 's'} found.
@@ -269,7 +277,7 @@ function GroupedView({
       <div className="margin-top-2">
         {allItems.map(({ circulars }) => (
           <>
-            <details>
+            <details open={detailsToggle}>
               <summary>{circulars[0].synonyms?.join(', ')}</summary>
               <ol className="">
                 {circulars.map(({ circularId, subject }) => (
@@ -412,10 +420,10 @@ function Search({
   const [inputQuery, setInputQuery] = useState(query)
   const [groupsChecked, setGroupsChecked] = useState(false)
   const [circularsChecked, setCircularsChecked] = useState(true)
-  const [filter, setFilter] = useState('circulars')
-  const filteredPage = filter === 'circulars' ? index.page : groups.page
-  const filteredTotalPages =
-    filter === 'circulars' ? index.totalPages : groups.totalPages
+  const filteredPage = circularsChecked ? index.page : groups.page
+  const filteredTotalPages = circularsChecked
+    ? index.totalPages
+    : groups.totalPages
   const clean = inputQuery === query
   const submit = useSubmit()
   return (
@@ -469,45 +477,43 @@ function Search({
         <summary className="">Advanced Search Filters</summary>
         <div className="margin-left-3">
           <fieldset className="usa-fieldset">
-            <div className="usa-radio maxw-card-lg">
+            <div className="usa-checkbox maxw-card-lg">
               <input
-                className="usa-radio__input usa-radio__input--tile"
+                className="usa-checkbox__input usa-radio__input--tile"
                 id="circulars"
-                type="radio"
+                type="checkbox"
                 name="circulars"
                 value={circularsChecked.toString()}
                 checked={circularsChecked}
                 onClick={() => {
                   setCircularsChecked(!circularsChecked)
                   setGroupsChecked(!groupsChecked)
-                  if (filter === 'groups') setFilter('circulars')
                 }}
                 onChange={({ target: { form } }) => {
                   submit(form)
                 }}
               />
-              <label className="usa-radio__label" htmlFor="circulars">
+              <label className="usa-checkbox__label" htmlFor="circulars">
                 Circulars
                 <span className="usa-checkbox__label-description">
                   View Circulars index.
                 </span>
               </label>
             </div>
-            <div className="usa-radio maxw-card-lg">
+            <div className="usa-checkbox maxw-card-lg">
               <input
-                className="usa-radio__input usa-radio__input--tile"
+                className="usa-checkbox__input usa-checkbox__input--tile"
                 id="groups"
-                type="radio"
+                type="checkbox"
                 name="groups"
                 value={groupsChecked.toString()}
                 checked={groupsChecked}
                 onChange={() => {
                   setCircularsChecked(!circularsChecked)
                   setGroupsChecked(!groupsChecked)
-                  if (filter === 'circulars') setFilter('groups')
                 }}
               />
-              <label className="usa-radio__label" htmlFor="groups">
+              <label className="usa-checkbox__label" htmlFor="groups">
                 Groups
                 <span className="usa-checkbox__label-description">
                   View Circulars grouped by synonymous events.
@@ -517,7 +523,7 @@ function Search({
           </fieldset>
         </div>
       </details>
-      {clean && filter === 'circulars' && (
+      {clean && circularsChecked && (
         <CircularsIndex
           query={query}
           totalItems={index.totalItems}
@@ -525,7 +531,7 @@ function Search({
           searchString={searchString}
         ></CircularsIndex>
       )}
-      {clean && filter === 'groups' && (
+      {clean && groupsChecked && (
         <GroupedView
           allItems={allGroups}
           searchString={searchString}
@@ -542,7 +548,6 @@ function Search({
             totalPages={filteredTotalPages}
             startDate={startDate}
             endDate={endDate}
-            filter={filter || 'groups'}
           />
         </div>
       </div>
