@@ -21,6 +21,16 @@ export interface Circular extends CircularMetadata {
   submitter: string
   submittedHow?: SubmittedHow
   bibcode?: string
+  editedBy?: string
+  version?: number // 1: Original
+}
+
+export interface CircularChangeRequest {
+  circularId: number
+  subject: string
+  body: string
+  requestor: string
+  requestorSub: string
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
@@ -156,6 +166,11 @@ export const validSubjectKeywords = [
   'Virgo',
   'VLA',
   'ZTF',
+]
+
+export const erroneousSubmissionSubjects = [
+  'Duplicate Submission',
+  'Mistaken Submission',
 ]
 
 export const emailAutoReplyChecklist = [
