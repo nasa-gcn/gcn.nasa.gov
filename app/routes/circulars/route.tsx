@@ -9,6 +9,7 @@ import type { DataFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
+import { getUser } from '../_auth/user.server'
 import { put } from './circulars.server'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
@@ -23,7 +24,10 @@ export async function action({ request }: DataFunctionArgs) {
   const subject = getFormDataString(data, 'subject')
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
-  return await put({ subject, body, submittedHow: 'web' }, request)
+  return await put(
+    { subject, body, submittedHow: 'web' },
+    await getUser(request)
+  )
 }
 
 export default function () {
