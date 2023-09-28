@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { Link, type LinkProps } from '@remix-run/react'
 import {
   Breadcrumb,
   BreadcrumbBar,
@@ -31,7 +32,7 @@ export default function BreadcrumbNav({
           cumulativePath = `${cumulativePath}/${breadcrumb}`
           return (
             <Breadcrumb key={cumulativePath}>
-              <BreadcrumbLink href={cumulativePath}>
+              <BreadcrumbLink<LinkProps> asCustom={Link} to={cumulativePath}>
                 {breadcrumb}
               </BreadcrumbLink>
             </Breadcrumb>
