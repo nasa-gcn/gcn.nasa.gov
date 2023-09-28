@@ -23,7 +23,11 @@ export const statsAction: CircularAction<Record<string, number>> = {
       if (!eventId && !synonyms) {
         return
       }
-      updateEventData(circular.circularId, eventId, synonyms)
+      updateEventData({
+        circularId: circular.circularId,
+        eventId,
+        synonyms,
+      })
     }
   },
   async finalize() {

@@ -24,6 +24,8 @@ circulars
 @tables-streams
 circulars
   src build/table-streams/circulars
+synonyms
+  src build/table-streams/synonyms
 
 @static
 fingerprint external
@@ -63,6 +65,9 @@ circular_endorsements
 circulars
   circularId *Number
   PointInTimeRecovery true
+
+synonyms
+  id *String
 
 auto_increment_metadata
   tableName *String

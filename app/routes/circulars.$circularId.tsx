@@ -52,14 +52,13 @@ export async function action({ request }: DataFunctionArgs) {
   const circularId = getFormDataString(data, 'circular-id')
   const eventId = getFormDataString(data, 'event-id')
   const synonyms = getFormDataString(data, 'synonyms')
-  const synonymsArray = synonyms ? synonyms.split(',') : []
+  const synonymsArray = synonyms ? synonyms.split(',') : undefined
   if (!circularId) return null
-  const updatedCircular = await updateEventData(
-    parseInt(circularId),
+  return await updateEventData({
+    circularId: parseInt(circularId),
     eventId,
-    synonymsArray
-  )
-  return updatedCircular
+    synonyms: synonymsArray,
+  })
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) =>

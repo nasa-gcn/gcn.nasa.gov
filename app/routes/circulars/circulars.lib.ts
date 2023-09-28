@@ -10,6 +10,7 @@ import dedent from 'ts-dedent'
 export interface CircularMetadata {
   circularId: number
   subject: string
+  synonyms?: string[]
 }
 
 export interface CircularGroupingMetadata {
@@ -19,6 +20,23 @@ export interface CircularGroupingMetadata {
 
 export interface CircularGroupMetadata {
   groups: CircularGroupingMetadata[]
+}
+
+export interface FilteredMetadata {
+  groups: {
+    items: CircularGroupingMetadata[]
+    page: number
+    hasNextPage?: boolean
+    afterKey?: object
+    totalPages: number
+    totalItems: number
+  }
+  index: {
+    items: CircularMetadata[]
+    page: number
+    totalPages: number
+    totalItems: number
+  }
 }
 
 export type SubmittedHow = 'web' | 'email' | 'email-legacy'
@@ -32,6 +50,10 @@ export interface Circular extends CircularMetadata {
   bibcode?: string
   eventId?: string
   synonyms?: string[]
+}
+
+export interface Synonym {
+  id: string
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]

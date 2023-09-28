@@ -22,7 +22,7 @@ import {
 } from './circulars.lib'
 import type {
   Circular,
-  CircularGroupingMetadata,
+  CircularGroupMetadata,
   CircularMetadata,
 } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
@@ -56,6 +56,20 @@ export const getDynamoDBAutoIncrement = memoizee(
   },
   { promise: true }
 )
+
+export async function syncSynonyms({ synonyms }: { synonyms: string[] }) {
+  const db = await tables()
+  const doc = db._doc as unknown as DynamoDBDocument
+
+  const tableName = db.name('synonyms')
+
+  return doc.put({
+    TableName: tableName,
+    Item: {
+      synonyms,
+    },
+  })
+}
 
 /** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
 function parseDate(date?: string) {
@@ -115,6 +129,9 @@ export async function search({
   items: CircularMetadata[]
   totalPages: number
   totalItems: number
+  hasNextPage?: boolean
+  afterKey?: object
+  page: number
 }> {
   const client = await getSearch()
 
@@ -173,7 +190,7 @@ export async function search({
         },
       }
     : {
-        match_all: {}, // Matches all documents when query is undefined
+        match_all: {},
       }
 
   const {
@@ -217,62 +234,106 @@ export async function search({
   )
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
-
-  return { items, totalPages, totalItems }
+  const currentPage = page || 1
+  return { items, totalPages, totalItems, page: currentPage }
 }
 
-export async function getCircularsGroupedByEvent({
+export async function getUniqueSynonymsArrays({
+  limit = 10,
   page,
-  pageSize = 100,
-  afterKeyHistory,
-  afterKey,
   eventId,
 }: {
+  limit?: number
   page: number
-  pageSize?: number
-  afterKey?: any
-  afterKeyHistory: object[]
   eventId?: string
 }): Promise<{
-  items: CircularGroupingMetadata[]
+  synonyms: string[][]
+  totalItems: number
+  totalPages: number
   page: number
-  hasNextPage: boolean
-  afterKeyHistory: object[]
-  afterKey?: object
 }> {
   const client = await getSearch()
-  const newAfterKeyHistory = afterKeyHistory
-  const currentAfterKey = page === 1 ? null : afterKey
+  const from = (page - 1) * limit
+  const {
+    body: {
+      hits: {
+        total: { value: totalItems },
+        hits,
+      },
+    },
+  } = await client.search({
+    index: 'synonyms',
+    from,
+    size: limit,
+    body: {
+      query: {
+        bool: {
+          must: eventId
+            ? {
+                match: {
+                  id: `*${eventId}*`,
+                },
+              }
+            : { match_all: {} },
+        },
+      },
+    },
+  })
 
+  const totalPages: number = Math.ceil(totalItems / limit)
+  const items = hits.map(
+    ({ _id: id }: { _id: string; fields: { id: string } }) =>
+      id.split(',').map((s) => s.trim())
+  )
+
+  return {
+    synonyms: items,
+    totalItems,
+    totalPages,
+    page,
+  }
+}
+
+export async function getCircularsGroupedBySynonyms({
+  synonyms,
+  limit = 10,
+}: {
+  synonyms?: string[][]
+  limit?: number
+}): Promise<{
+  totalPages: number
+  results: CircularGroupMetadata
+}> {
+  if (!synonyms) {
+    return {
+      totalPages: 0,
+      results: {} as CircularGroupMetadata,
+    }
+  }
+  const client = await getSearch()
+
+  const shouldClauses = synonyms.map((synonym) => ({
+    terms: { 'synonyms.keyword': synonym },
+  }))
   const query = {
     index: 'circulars',
     body: {
-      size: 0,
+      size: limit,
       query: {
         bool: {
-          filter: [] as any[],
+          should: shouldClauses,
         },
       },
       aggs: {
         synonyms_group: {
-          composite: {
-            sources: [
-              {
-                synonyms: {
-                  terms: {
-                    field: 'synonyms.keyword',
-                  },
-                },
-              },
-            ],
-            size: 25,
-            after: currentAfterKey ? afterKey : undefined,
+          terms: {
+            field: 'synonyms.keyword',
+            size: 100,
           },
           aggs: {
             circulars: {
               top_hits: {
-                size: pageSize,
-                sort: [{ circularId: 'desc' }],
+                size: 100,
               },
             },
           },
@@ -281,50 +342,36 @@ export async function getCircularsGroupedByEvent({
     },
   }
 
-  if (eventId) {
-    query.body.query.bool.filter.push({
-      terms: {
-        'synonyms.keyword': [eventId],
-      },
-    })
-  }
+  const response = await client.search(query)
 
   const {
     body: {
-      hits: {
-        total: { value: itemCount },
-      },
       aggregations: {
-        synonyms_group: { buckets, after_key },
+        synonyms_group: { buckets },
       },
+      hits: { total },
     },
-  } = await client.search(query)
-
-  const synonymGroups = buckets
-
-  const groups = synonymGroups.map((group: any) => {
-    const items = group.circulars.hits.hits.map((circular: any) => ({
-      circularId: circular._id,
-      subject: circular._source.subject,
-    }))
-
-    return {
-      id: group.key.synonyms,
-      circulars: items,
-    }
-  })
-  newAfterKeyHistory.push(after_key)
-  const totalPages = Math.ceil(itemCount / pageSize)
-  const hasNextPage = page <= totalPages
+  } = response
 
   await client.close()
 
+  const totalPages = Math.ceil(total.value / limit)
+
+  const results = buckets.map((bucket: any) => {
+    const synonym = bucket.key
+    const circulars = bucket.circulars.hits.hits.map(
+      (hit: any) => hit._source
+    ) as Circular[]
+    return {
+      id: synonym,
+      circulars,
+    }
+  })
+  const groupResult = { groups: results } as CircularGroupMetadata
+
   return {
-    items: groups,
-    page,
-    hasNextPage,
-    afterKeyHistory: newAfterKeyHistory,
-    afterKey: after_key,
+    totalPages,
+    results: groupResult,
   }
 }
 
@@ -367,6 +414,7 @@ export async function putRaw(
   const autoincrement = await getDynamoDBAutoIncrement()
   const createdOn = Date.now()
   const circularId = await autoincrement.put({ createdOn, ...item })
+  if (item.synonyms) syncSynonyms({ synonyms: item.synonyms })
   return { ...item, createdOn, circularId }
 }
 
@@ -416,11 +464,15 @@ function formatSynonyms(synonyms?: string[]) {
   return strippedStrings.sort(natsort({ insensitive: true }))
 }
 
-export async function updateEventData(
-  circularId: number,
-  eventId?: string,
+export async function updateEventData({
+  circularId,
+  eventId,
+  synonyms,
+}: {
+  circularId: number
+  eventId?: string
   synonyms?: string[]
-) {
+}) {
   const db = await tables()
   let synonymsList = synonyms || []
   if (!eventId && !synonyms) {
