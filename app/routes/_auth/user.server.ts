@@ -21,6 +21,17 @@ export interface User {
   affiliation: string | undefined
 }
 
+export function parseIdp(identities: unknown) {
+  if (!(identities instanceof Array)) return null
+  const providerName = identities[0]?.providerName
+  if (!(typeof providerName === 'string')) return null
+  return providerName
+}
+
+export function parseGroups(groups?: string[]) {
+  return (groups ?? []).filter((group) => group.startsWith('gcn.nasa.gov/'))
+}
+
 export function parseTokenSet(tokenSet: TokenSet): {
   user: User
   accessToken?: string
@@ -47,13 +58,8 @@ export function parseTokenSet(tokenSet: TokenSet): {
   //
   // See https://openid.net/specs/openid-connect-core-1_0.html#ClaimStability
   const { sub, email, 'cognito:username': cognitoUserName } = claims
-  const idp =
-    claims.identities instanceof Array && claims.identities.length > 0
-      ? (claims.identities[0].providerName as string)
-      : null
-  const groups = ((claims['cognito:groups'] ?? []) as string[]).filter(
-    (group) => group.startsWith('gcn.nasa.gov/')
-  )
+  const idp = parseIdp(claims.identities)
+  const groups = parseGroups(claims['cognito:groups'] as string[] | undefined)
   const name = claims.name
   const affiliation = claims['affiliation'] as string | undefined
   const accessToken = tokenSet.access_token

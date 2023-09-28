@@ -15,6 +15,7 @@ const submittedHowMap = {
   web: 'Web form',
   email: 'email',
   'email-legacy': 'legacy email',
+  api: 'API',
 }
 
 function FrontMatterItem({
