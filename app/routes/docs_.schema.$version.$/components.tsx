@@ -17,7 +17,7 @@ export type ReferencedSchema = {
 
 export type SchemaProperty = {
   description: string
-  type?: string
+  type?: string | string[]
   enum?: string[]
   $ref?: string
 }
@@ -145,6 +145,7 @@ export function formatFieldName(name: string, requiredProps?: string[]) {
 }
 
 export function formatFieldType(item: SchemaProperty): string {
+  if (typeof item.type === 'object') return item.type.join(' | ')
   if (item.type) return item.type
   if (item.enum) return 'enum'
   if (item.$ref) return item.$ref.split('/').slice(-1)[0]
