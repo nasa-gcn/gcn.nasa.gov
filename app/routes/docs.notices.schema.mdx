@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: Schema
+  breadcrumb: Unified Schema
 ---
 
 import { Highlight } from '~/components/Highlight'
@@ -12,29 +12,31 @@ export function loader() {
   return feature('SCHEMA') || new Response(null, { status: 404 })
 }
 
-# GCN Unified Schema
+# Unified Schema
 
-Introducing the Unified Schema, a standardized framework that simplifies the creation of new GCN Notice types across various missions, observatories, and instruments, incorporating both common and mission-specific properties. We employ JavaScript Object Notation (JSON) for these Notices, a versatile internet data format with minimal ties to JavaScript. JSON offers flexibility in data representation with few structural constraints. Meanwhile, JSON Schema serves as the standard for specifying the structure, data types, and validation rules for JSON documents.
+The GCN Unified Schema is a framework for defining GCN Notice types using a common format, standardized field names, uniform data types, and consistent physical units across multiple missions. If you are [joining GCN as a new notice producer](/docs/notices/producers), then you can contribute your own notice types to the Unified Schema present at [GitHub](https://github.com/nasa-gcn/gcn-schema).
 
-The process of crafting each mission schema involves the utilization of a set of core JSON schemas, forming the foundational building blocks for generating JSON-format Notices. This approach allows the flexibility of inclusion of mission-specific parameters while maximizing the use of the core schema. As a result, it ensures a consistent unit system for common properties across all missions.
+The over-the-wire format for GCN Notices in the Unified Schema is [JavaScript Object Notation (JSON)](https://en.wikipedia.org/wiki/JSON), an Internet standard for encoding arbitrary data as human-readable text. (Despite having "JavaScript" in its name, JSON is ubiquitous, and many programming languages have standard library support for JSON.)
+
+The definition of the GCN Unified Schema is itself expressed in JSON format using the [JSON Schema](https://json-schema.org) standard. JSON Schema makes it possible for us to provide automatic, interactive documentation of the schema in our [Schema Browser](/docs/schema/stable/gcn).
+
+Crafting a schema for a new notice type involves selecting one or more of the predefined [core schema](/docs/schema/stable/gcn/notices/core) and adding your own optional mission-specific fields. This approach allows the flexibility of inclusion of mission-specific parameters while ensuring consistency where possible. We encourage producers to utilize the core schema as much as possible.
+
+As you are develping your schema, don't hesitate to [contact us](/contact) with any questions!
 
 ## Fork the GitHub Repository
 
-To begin, initiate by forking your own copy of the [nasa-gcn/gcn-schema](https://github.com/nasa-gcn/gcn-schema) repository on GitHub. Next, proceed to clone a local version and follow the project configuration instructions available at [GitHub primer](/docs/contributing/github).
+To get started, fork the [nasa-gcn/gcn-schema](https://github.com/nasa-gcn/gcn-schema) repository on GitHub and check it out on your computer. If you are new to GitHub, see our [GitHub primer](/docs/contributing/github).
 
-## Setting Up Your Repository
+## File Naming Conventions
 
-The repository's structure allows producers to create their own folders to define schemas on an instrument-specific level. The schema folder is named according to the format <code>gcn.notices.<i>mission</i></code>, where <i>mission</i> is your [Kafka Topic](/docs/notices/producers). Within it, you can define your own schema and example files. For example, schema definitions for IceCube alerts are located in the directory [`gcn/notices/icecube/`](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/icecube).
+Create a folder in the repository for your mission following the naming convention <code>gcn/notices/<i>mission</i></code>. Add one or more files for schema definitions named <code>gcn/notices/<i>mission</i>/<i>SchemaName</i>.schema.json</code>. The mission name should be lowercase and the schema name should be [CamelCase](https://en.wikipedia.org/wiki/Camel_case). Each file corresponds to a [Kafka topic](/docs/notices/producers) named <code>gcn.notices.<i>mission</i>.<i>SchemaName</i></code>.
 
-## Schema File Naming
+We encourage you to add files containing example data. The naming convention for example files is <code>gcn/notices/<i>mission</i>/<i>SchemaName</i>.<i>OptionalDescription</i>.example.json</code>. We will automatically validate your example files against your schema.
 
-Your new schema definition files should follow the naming convention <code><i>SchemaName</i>.schema.json</code>.
-Examples corresponding to these schemas should follow the format, <code><i>SchemaName[.OptionalSpecification]</i>.example.json</code>. Both the <i>SchemaName</i> and <i>OptionalSpecification</i> example should be written in CamelCase formatting (ex., YourSchemaName, thisIsAlsoValid, etc.). This naming convention allows our [schema-browser](/docs/schema/stable/gcn) to generate pages based directly on the files in the latest tag.
+## Define Your Schema
 
-## Sample Code
-
-After setting up your local version, you can use the provided code samples to get started, which already include commonly used keys. Note that the `$schema` field in the example has the same value as the `$id` field in the schema.
-This allows our validator script to identify which schema examples to compare. Make sure to update these files to reflect the mission and schema names. Then, you can update the `title` and `definition` fields to provide context for other users who will use this schema.
+Here is a basic schema file, `Sample.schema.json`, and an example file, `Sample.example.json`, to start from. Place these files in the <code>gcn/notices/<i>mission</i></code> directory and customize them. Read on for a description of each parameter.
 
 <Tabs>
   <Tab label="Sample.schema.json">
@@ -42,17 +44,30 @@ This allows our validator script to identify which schema examples to compare. M
       language="json"
       code={JSON.stringify(
         {
-          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/<mission>/<schema name>.schema.json',
+          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/mission/Sample.schema.json',
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           type: 'object',
+          unevaluatedProperties: false,
           title: 'Your Schema Name',
           description: 'A description for your schema',
           allOf: [
             {
-              $ref: '/schema/gcn/notices/core/Alert.schema.json',
+              $ref: '../core/Alert.schema.json',
+            },
+            {
+              $ref: '../core/Localization.schema.json',
             },
           ],
-          properties: {},
+          properties: {
+            example_field_1: {
+              type: 'string',
+              description: 'A custom field that can hold text',
+            },
+            example_field_2: {
+              type: 'number',
+              description: 'A custom field that holds a number',
+            },
+          },
         },
         null,
         2
@@ -65,8 +80,13 @@ This allows our validator script to identify which schema examples to compare. M
       code={JSON.stringify(
         {
           $schema:
-            'https://gcn.nasa.gov/schema/main/gcn/notices/<mission>/<schema name>.schema.json',
-          alert_datetime: 'yyyy-mm-ddThh:mm:ssZ',
+            'https://gcn.nasa.gov/schema/main/gcn/notices/mission/Sample.schema.json',
+          alert_datetime: '2023-09-28T01:40:30Z',
+          ra: 197.44871198,
+          dec: -23.38397612,
+          example_field_1:
+            'The ultimate answer to life, the universe, and everything',
+          example_field_2: 42,
         },
         null,
         2
@@ -75,11 +95,43 @@ This allows our validator script to identify which schema examples to compare. M
   </Tab>
 </Tabs>
 
-## Defining Schema
+### JSON Schema Quick Reference
 
-We recommend exploring our [schema browser](/docs/schema/stable/gcn) to get an idea of what common fields have already been defined in the [Core schema](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/core). Additionally, please review the [JSON Schema documentation](https://json-schema.org/) to familiarize yourself with the various keywords and types.
+#### `$id`
 
-A good method to start formulating your structure is to think first of your data product as JSON fields. Consider the possible values that your pipelines will have for each field. In the following example, we have a schema definition for Swift/BAT-GUANO alerts. They have included the `unevaluatedProperties` property and set it to `false`, which our validator can use to verify that there are no extra properties that are undefined in the examples:
+The URL at which this schema can be retrieved.
+
+#### `$schema`
+
+Identifies this document as conforming to [JSON Schema](https://json-schema.org). (Leave as is.)
+
+#### `type`
+
+Declares that this schema describes a compound data type. (Leave as is.)
+
+#### `unevaluatedProperties`
+
+Declares that fields other than those listed above or inherited from the listed core schema are not allowed. (Leave as is.)
+
+#### `title`
+
+A short, human-friendly name for your schema: a short phrase.
+
+#### `description`
+
+A longer description of your schema: a sentence or a short paragraph.
+
+#### `allOf`
+
+List of core schema to include fields from. [Browse the core schema](/docs/schema/stable/gcn/notices/core) or [view their source on GitHub](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/core) for options.
+
+#### `properties`
+
+Optional mapping of custom, mission-specific fields. Field names should use [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each entry should at least have a description and a type. See the [list of available data types](https://json-schema.org/understanding-json-schema/reference/type.html).
+
+## Extended Example
+
+We recommend exploring our [schema browser](/docs/schema/stable/gcn/notices) and [GitHub repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices) for more examples. Here is an extended example from Swift/BAT-GUANO:
 
 <Tabs>
   <Tab label="Alert.schema.json">
@@ -87,34 +139,20 @@ A good method to start formulating your structure is to think first of your data
       language="json"
       code={JSON.stringify(
         {
-          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/alert.schema.json',
+          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/Alert.schema.json',
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           title: 'Swift/BAT-GUANO Alert',
           description:
             'Candidate gamma-ray transient reported from the BAT-GUANO targeted search',
           type: 'object',
           allOf: [
-            {
-              $ref: '/schema/gcn/notices/core/Alert.schema.json',
-            },
-            {
-              $ref: '/schema/gcn/notices/core/Event.schema.json',
-            },
-            {
-              $ref: '/schema/gcn/notices/core/DateTime.schema.json',
-            },
-            {
-              $ref: '/schema/gcn/notices/core/Localization.schema.json',
-            },
-            {
-              $ref: '/schema/gcn/notices/core/Statistics.schema.json',
-            },
-            {
-              $ref: '/schema/gcn/notices/core/Reporter.schema.json',
-            },
-            {
-              $ref: '/schema/gcn/notices/core/AdditionalInfo.schema.json',
-            },
+            { $ref: '../../../core/Alert.schema.json' },
+            { $ref: '../../../core/Event.schema.json' },
+            { $ref: '../../../core/DateTime.schema.json' },
+            { $ref: '../../../core/Localization.schema.json' },
+            { $ref: '../../../core/Statistics.schema.json' },
+            { $ref: '../../../core/Reporter.schema.json' },
+            { $ref: '../../../core/AdditionalInfo.schema.json' },
           ],
           properties: {
             $schema: true,
@@ -142,7 +180,7 @@ A good method to start formulating your structure is to think first of your data
       code={JSON.stringify(
         {
           $schema:
-            'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/alert.schema.json',
+            'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/Alert.schema.json',
           mission: 'Swift',
           instrument: 'BAT-GUANO',
           messenger: 'EM',
@@ -169,19 +207,18 @@ A good method to start formulating your structure is to think first of your data
   </Tab>
 </Tabs>
 
-While defining JSON schema structures, please don't hesitate to [reach out](https://gcn.nasa.gov/contact) with any
-questions about Schema field definitions or specific fields you are looking for.
-
 ## Validating Schema
 
 The Git repository is configured to automatically format and validate your code at the time that you commit it. This means when you commit your updates, the validator will run to make sure that all of the schemas and their respective examples function correctly. This step also checks general formatting using the [Prettier](https://prettier.io/) formatter, which adjusts spacing, line-breaks, etc. as needed.
 
-To validate your schemas and examples, execute the following command in the same location:
+You can also validate your schemas and examples manually by executing the following command:
 
-<Highlight language="sh" code="npm run validate" />
+```sh
+npm run validate
+```
 
 ## Submit Your Schema
 
-Once your schema and examples are validated, you can proceed to commit and push your local code to your GitHub repository.
+Once your schema and examples are validated, commit your changes and open a GitHub pull request. See our [GitHub primer](/docs/contributing/github) for help with GitHub.
 
-Next, create a pull request to our [GitHub repository](https://github.com/nasa-gcn/gcn-schema), for details see [GitHub primer](/docs/contributing/github). The GCN team will review and provide feedback as needed. Once you have incorporated the feedback, we will merge your pull request into main branch. Congratulations on successfully creating your mission schema! It is now ready for production and send alerts to GCN as described in [New Notice Producers](/docs/notices/producers).
+The GCN team will review and provide feedback. Once you have incorporated the feedback, we will merge your pull request into the main branch. Congratulations on successfully creating your mission schema! You can now use it to send notices to GCN as described in [New Notice Producers](/docs/notices/producers).
