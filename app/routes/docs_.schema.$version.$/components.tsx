@@ -9,6 +9,8 @@ import { Link, useResolvedPath } from '@remix-run/react'
 import { Icon, Table } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
+import styles from './TableColumns.module.css'
+
 export type ReferencedSchema = {
   $ref: string
   type: string
@@ -68,7 +70,7 @@ function ReferencedElementRow({ item }: { item: ReferencedSchema }) {
                 {item.$ref && item.$ref.split('/').slice(-1)[0]}
               </Link>
             </td>
-            <td>
+            <td className={styles.TableColumns}>
               {item.$ref && item.$ref.split('/').slice(-2)[0]} schema object{' '}
               <small>(click to {showHiddenRow ? 'collapse' : 'expand'})</small>
             </td>
@@ -122,7 +124,7 @@ export function SchemaPropertiesTableBody({
             <td>
               {schema.properties && formatFieldType(schema.properties[itemKey])}
             </td>
-            <td>
+            <td className={styles.TableColumns}>
               {(schema.properties && schema.properties[itemKey].description) ??
                 ''}
               {schema.properties && schema.properties[itemKey].enum && (
