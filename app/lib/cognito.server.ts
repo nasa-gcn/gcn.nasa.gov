@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type {
+  AttributeType,
   CognitoIdentityProviderServiceException,
   UserType,
 } from '@aws-sdk/client-cognito-identity-provider'
@@ -22,8 +23,11 @@ export const cognito = new CognitoIdentityProviderClient({})
  * @param Attributes Derived from a provided user profile in a Amazon Cognito user pool.
  * @param key The string name of the Cognito Attribute
  */
-export function extractAttribute({ Attributes }: UserType, key: string) {
-  return Attributes?.find(({ Name }) => key === Name)?.Value
+export function extractAttribute(
+  attributes: AttributeType[] | undefined,
+  key: string
+) {
+  return attributes?.find(({ Name }) => key === Name)?.Value
 }
 
 /**
@@ -34,8 +38,11 @@ export function extractAttribute({ Attributes }: UserType, key: string) {
  * @param user A user profile in a Amazon Cognito user pool.
  * @param key The string name of the Cognito Attribute
  */
-export function extractAttributeRequired(user: UserType, key: string) {
-  const value = extractAttribute(user, key)
+export function extractAttributeRequired(
+  attributes: AttributeType[] | undefined,
+  key: string
+) {
+  const value = extractAttribute(attributes, key)
   if (value === undefined)
     throw new Error(`required user attribute ${key} is missing`)
   return value

@@ -110,7 +110,7 @@ export class EndorsementsServer {
         status: 400,
       })
 
-    const endorserEmail = extractAttributeRequired(user, 'email')
+    const endorserEmail = extractAttributeRequired(user.Attributes, 'email')
 
     const db = await tables()
 
@@ -417,10 +417,10 @@ async function getUsersInGroup(): Promise<EndorsementUser[]> {
     ]
   }
 
-  return users.map((user) => ({
-    sub: extractAttributeRequired(user, 'sub'),
-    email: extractAttributeRequired(user, 'email'),
-    name: extractAttribute(user, 'name'),
-    affiliation: extractAttribute(user, 'custom:affiliation'),
+  return users.map(({ Attributes }) => ({
+    sub: extractAttributeRequired(Attributes, 'sub'),
+    email: extractAttributeRequired(Attributes, 'email'),
+    name: extractAttribute(Attributes, 'name'),
+    affiliation: extractAttribute(Attributes, 'custom:affiliation'),
   }))
 }

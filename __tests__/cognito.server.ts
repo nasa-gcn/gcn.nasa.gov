@@ -21,46 +21,40 @@ const mockUserAttribues: AttributeType[] = [
 
 describe('extractAttribute', () => {
   test('extracts name attribute', () => {
-    expect(extractAttribute({ Attributes: mockUserAttribues }, 'name')).toBe(
-      'Example User'
-    )
+    expect(extractAttribute(mockUserAttribues, 'name')).toBe('Example User')
   })
 
   test('extracts affiliation attribute', () => {
-    expect(
-      extractAttribute({ Attributes: mockUserAttribues }, 'custom:affiliation')
-    ).toBe('The Example Institute')
+    expect(extractAttribute(mockUserAttribues, 'custom:affiliation')).toBe(
+      'The Example Institute'
+    )
   })
 
   test('returns undefined if missing attribute', () => {
-    expect(
-      extractAttribute({ Attributes: mockUserAttribues }, 'username')
-    ).toBe(undefined)
+    expect(extractAttribute(mockUserAttribues, 'username')).toBe(undefined)
   })
 
   test('returns undefined if attributes array is undefined', () => {
-    expect(extractAttribute({ Attributes: undefined }, 'username')).toBe(
-      undefined
-    )
+    expect(extractAttribute(undefined, 'username')).toBe(undefined)
   })
 })
 
 describe('extractAttributeRequired', () => {
   test('extracts email attribute', () => {
-    expect(
-      extractAttributeRequired({ Attributes: mockUserAttribues }, 'email')
-    ).toBe('example@example.com')
+    expect(extractAttributeRequired(mockUserAttribues, 'email')).toBe(
+      'example@example.com'
+    )
   })
 
   test('extracts sub attribute', () => {
-    expect(
-      extractAttributeRequired({ Attributes: mockUserAttribues }, 'sub')
-    ).toBe('00000000-0000-0000-0000-000000000000')
+    expect(extractAttributeRequired(mockUserAttribues, 'sub')).toBe(
+      '00000000-0000-0000-0000-000000000000'
+    )
   })
 
   test('throws error when attribute key is missing', () => {
     expect(() =>
-      extractAttributeRequired({ Attributes: mockUserAttribues }, 'username')
+      extractAttributeRequired(mockUserAttribues, 'username')
     ).toThrow(new Error('required user attribute username is missing'))
   })
 })
