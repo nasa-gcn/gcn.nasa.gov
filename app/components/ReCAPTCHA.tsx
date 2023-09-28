@@ -5,11 +5,20 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { ReCAPTCHA as BaseReCAPTCHA } from 'react-google-recaptcha'
+import { FormGroup } from '@trussworks/react-uswds'
+import BaseReCAPTCHA from 'react-google-recaptcha'
 import type { ReCAPTCHAProps } from 'react-google-recaptcha'
 
 import { getEnvOrDieInProduction } from '~/lib/env.server'
 import { useRecaptchaSiteKey } from '~/root'
+
+// Something really weird is going on with default imports here.
+// On the server side, BaseReCAPTCHA is the module itself.
+// On the client side, BaseReCAPTCAH is the module's default import.
+const BaseRECAPTCHAComponent =
+  'ReCAPTCHA' in BaseReCAPTCHA
+    ? (BaseReCAPTCHA.ReCAPTCHA as typeof BaseReCAPTCHA)
+    : BaseReCAPTCHA
 
 export async function verifyRecaptcha(response?: string) {
   const secret = getEnvOrDieInProduction('RECAPTCHA_SITE_SECRET')
@@ -32,9 +41,9 @@ export function ReCAPTCHA(props: Omit<ReCAPTCHAProps, 'sitekey'>) {
   const recaptchaSiteKey = useRecaptchaSiteKey()
 
   return recaptchaSiteKey ? (
-    <p className="usa-paragraph">
-      <BaseReCAPTCHA sitekey={recaptchaSiteKey} {...props} />
-    </p>
+    <FormGroup>
+      <BaseRECAPTCHAComponent sitekey={recaptchaSiteKey} {...props} />
+    </FormGroup>
   ) : (
     <p className="text-base">
       You are working in a development environment, the ReCaptcha is currently
