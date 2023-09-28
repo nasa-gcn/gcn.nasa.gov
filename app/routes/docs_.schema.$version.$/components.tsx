@@ -145,8 +145,8 @@ export function formatFieldName(name: string, requiredProps?: string[]) {
 }
 
 export function formatFieldType(item: SchemaProperty): string {
-  if (item.type)
-    return typeof item.type == 'object' ? item.type.join(' | ') : item.type
+  if (item.type === 'object') return item.type.join(' | ')
+  if (item.type) return item.type
   if (item.enum) return 'enum'
   if (item.$ref) return item.$ref.split('/').slice(-1)[0]
   return ''
