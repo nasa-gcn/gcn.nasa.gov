@@ -275,27 +275,28 @@ function GroupedView({
         </h3>
       )}
       <div className="margin-top-2">
-        {allItems.map(({ circulars }) => (
-          <>
-            <details open={detailsToggle}>
-              <summary>{circulars[0].synonyms?.join(', ')}</summary>
-              <ol className="">
-                {circulars.map(({ circularId, subject }) => (
-                  <li
-                    id={circularId.toString()}
-                    value={circularId}
-                    key={circularId.toString()}
-                    className="border-base-lighter"
-                  >
-                    <Link className="" to={`/circulars/${circularId}`}>
-                      {subject}
-                    </Link>
-                  </li>
-                ))}
-              </ol>
-            </details>
-          </>
-        ))}
+        {totalItems > 0 &&
+          allItems.map(({ circulars }) => (
+            <>
+              <details open={detailsToggle}>
+                <summary>{circulars[0].synonyms?.join(', ')}</summary>
+                <ol className="">
+                  {circulars.map(({ circularId, subject }) => (
+                    <li
+                      id={circularId.toString()}
+                      value={circularId}
+                      key={circularId.toString()}
+                      className="border-base-lighter"
+                    >
+                      <Link className="" to={`/circulars/${circularId}`}>
+                        {subject}
+                      </Link>
+                    </li>
+                  ))}
+                </ol>
+              </details>
+            </>
+          ))}
       </div>
     </>
   )
@@ -488,9 +489,6 @@ function Search({
                 onClick={() => {
                   setCircularsChecked(!circularsChecked)
                   setGroupsChecked(!groupsChecked)
-                }}
-                onChange={({ target: { form } }) => {
-                  submit(form)
                 }}
               />
               <label className="usa-checkbox__label" htmlFor="circulars">
