@@ -261,20 +261,23 @@ function GroupedView({
   const expandAllText = detailsToggle ? 'Close All' : 'Open All'
   return (
     <>
-      <details
-        className="margin-top-1"
-        onClick={() => {
-          setDetailsToggle(!detailsToggle)
-        }}
-      >
-        <summary className="text-base">{expandAllText}</summary>
-      </details>
       {query && (
         <h3>
           {totalItems} result{totalItems != 1 && 's'} found.
         </h3>
       )}
-      <div className="margin-top-2">
+      <div>
+        <details
+          className="margin-bottom-2 margin-top-1"
+          aria-label="view all toggle"
+          onClick={() => {
+            setDetailsToggle(!detailsToggle)
+          }}
+        >
+          <summary className="text-base border-base-lighter">
+            {expandAllText}
+          </summary>
+        </details>
         {totalItems > 0 &&
           allItems.map(({ circulars }) => (
             <>
