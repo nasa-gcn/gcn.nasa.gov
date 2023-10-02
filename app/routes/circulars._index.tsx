@@ -197,7 +197,7 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const [inputDateGte, setInputDateGte] = useState(startDate)
   const [inputDateLte, setInputDateLte] = useState(endDate)
-  // const [showContent, setShowContent] = useState(false)
+  // const [showContent, setShowContent] = useState(false) // for the custom date range dropdown
   const [showDateRange, setShowDateRange] = useState(false)
   const clean =
     inputQuery === query &&
@@ -217,6 +217,7 @@ export default function () {
       action: '/circulars',
     })
   }
+  // for the custom date range dropdown button label
   // const timeRangeLabel = (startDate?: string, endDate?: string) => {
   //   const now = new Date()
   //   const month = now.toLocaleString('default', { month: 'long' })
@@ -248,8 +249,13 @@ export default function () {
   //   }
   // }
   const setFuzzyTime = (startDate?: string) => {
-    console.log(startDate)
-    setInputDateGte(startDate)
+    // console.log(startDate)
+    if (startDate === 'custom') {
+      setShowDateRange(true)
+    } else {
+      setShowDateRange(false)
+      setInputDateGte(startDate)
+    }
     setInputDateLte('now')
   }
 
@@ -647,7 +653,9 @@ export default function () {
                     value="custom"
                     label="Custom Range..."
                     className="usa-search__filter-button"
-                    onChange={(e) => setShowDateRange(e.target.checked)}
+                    onChange={(e) => {
+                      setShowDateRange(e.target.checked)
+                    }}
                   ></Radio>
                 </div>
               </div>
