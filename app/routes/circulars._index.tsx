@@ -36,6 +36,7 @@ import type { action } from './circulars/route'
 import { Anchor } from '~/components/Anchor'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
+import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -249,9 +250,55 @@ function DownloadModal() {
   )
 }
 
+const dateSelectorLabels: Record<string, string> = {
+  hour: 'Last hour',
+  day: 'Last day',
+  week: 'Last week',
+  month: 'Last month',
+  year: 'Last year',
+  today: 'Today',
+  mtd: 'Month to date',
+  ytd: 'Year to date',
+}
+
+function DateSelectorButton({
+  startDate,
+  endDate,
+  expanded,
+}: {
+  startDate?: string
+  endDate?: string
+  expanded?: boolean
+}) {
+  const slimClasses = 'height-4 padding-y-0'
+
+  return (
+    <ButtonGroup type="segmented">
+      <Button type="button" className={`${slimClasses} padding-x-2`}>
+        {(startDate && dateSelectorLabels[startDate]) ||
+          (startDate && endDate && (
+            <>
+              {startDate}—{endDate}
+            </>
+          )) ||
+          'Filter by date'}
+      </Button>
+      <Button type="button" className={`${slimClasses} padding-x-1`}>
+        <Icon.CalendarToday role="presentation" />
+        {expanded ? (
+          <Icon.ExpandLess role="presentation" />
+        ) : (
+          <Icon.ExpandMore role="presentation" />
+        )}
+      </Button>
+    </ButtonGroup>
+  )
+}
+
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
+  const featureCircularsFilterByDate = useFeature('CIRCULARS_FILTER_BY_DATE')
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
@@ -317,6 +364,9 @@ export default function () {
             />
           </Button>
         </Form>
+        {featureCircularsFilterByDate && (
+          <DateSelectorButton startDate={startDate} endDate={endDate} />
+        )}
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
