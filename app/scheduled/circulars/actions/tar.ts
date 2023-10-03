@@ -23,7 +23,7 @@ import {
 
 const archiveSuffix = '.tar.gz'
 
-function getBucketKey(suffix: string) {
+export function getBucketKey(suffix: string) {
   return `${Prefix}/archive.${suffix}${archiveSuffix}`
 }
 

@@ -14,26 +14,20 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
-import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
   ButtonGroup,
   Icon,
   Label,
-  Modal,
-  ModalFooter,
-  ModalHeading,
-  ModalToggleButton,
   Select,
   TextInput,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import clamp from 'lodash/clamp'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
-import { Anchor } from '~/components/Anchor'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 import { useFeature } from '~/root'
@@ -178,75 +172,6 @@ function Pagination({
         })}
       </ul>
     </nav>
-  )
-}
-
-function DownloadModal() {
-  const modalRef = useRef<ModalRef>(null)
-  return (
-    <>
-      <h2>
-        <Anchor>Advanced</Anchor>
-      </h2>
-      <ModalToggleButton
-        modalRef={modalRef}
-        opener
-        outline
-        className="text-middle"
-      >
-        <Icon.FileDownload
-          role="presentation"
-          className="bottom-aligned margin-right-05"
-        />
-        Download Archive
-      </ModalToggleButton>
-      <Modal
-        renderToPortal={false}
-        ref={modalRef}
-        id="example-modal-1"
-        aria-labelledby="modal-1-heading"
-        aria-describedby="modal-1-description"
-      >
-        <ModalHeading id="modal-1-heading">
-          GCN Circulars Database Download
-        </ModalHeading>
-        <div className="usa-prose">
-          <p id="modal-1-description">
-            This is a download of the entire GCN Circulars database.
-          </p>
-          <p>Select a file format to begin download.</p>
-        </div>
-        <ModalFooter>
-          <ButtonGroup>
-            <ModalToggleButton modalRef={modalRef} closer>
-              <a
-                className="text-no-underline text-white"
-                href="/circulars/archive.txt.tar.gz"
-              >
-                Text
-              </a>
-            </ModalToggleButton>
-
-            <ModalToggleButton modalRef={modalRef} closer>
-              <a
-                className="text-no-underline text-white"
-                href="/circulars/archive.json.tar.gz"
-              >
-                JSON
-              </a>
-            </ModalToggleButton>
-            <ModalToggleButton
-              modalRef={modalRef}
-              closer
-              outline
-              className="text-center"
-            >
-              Cancel
-            </ModalToggleButton>
-          </ButtonGroup>
-        </ModalFooter>
-      </Modal>
-    </>
   )
 }
 
@@ -435,7 +360,6 @@ export default function () {
               )}
             </div>
           </div>
-          <DownloadModal />
         </>
       )}
     </>
