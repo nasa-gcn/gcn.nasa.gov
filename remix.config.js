@@ -16,6 +16,7 @@ const esmOnlyModules = [
   'escape-string-regexp',
   'github-slugger',
   'is-plain-obj',
+  'pretty-bytes',
   'property-information',
   'space-separated-tokens',
   'trim-lines',
