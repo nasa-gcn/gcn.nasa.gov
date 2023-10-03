@@ -265,15 +265,16 @@ function DateSelectorButton({
   startDate,
   endDate,
   expanded,
+  ...props
 }: {
   startDate?: string
   endDate?: string
   expanded?: boolean
-}) {
+} & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
   const slimClasses = 'height-4 padding-y-0'
 
   return (
-    <ButtonGroup type="segmented">
+    <ButtonGroup type="segmented" {...props}>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         {(startDate && dateSelectorLabels[startDate]) ||
           (startDate && endDate && (
