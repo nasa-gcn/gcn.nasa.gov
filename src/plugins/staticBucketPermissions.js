@@ -13,7 +13,11 @@ export const deploy = {
 
     Policies.find(
       ({ PolicyName }) => PolicyName === 'ArcStaticBucketPolicy'
-    ).PolicyDocument.Statement[0].Action = ['s3:GetObject', 's3:ListBucket']
+    ).PolicyDocument.Statement[0].Action = [
+      's3:GetObject',
+      's3:GetObjectAttributes',
+      's3:ListBucket',
+    ]
 
     Policies.push({
       PolicyName: 'ArcStaticBucketWriteGeneratedDirectoryPolicy',
