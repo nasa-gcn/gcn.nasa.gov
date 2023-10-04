@@ -110,6 +110,62 @@ export async function search({
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
+  const esQuery = query
+    ? {
+        function_score: {
+          query: {
+            bool: {
+              must: [
+                {
+                  query_string: {
+                    query: `*${query}*`,
+                    fields: [
+                      'eventId^4',
+                      'synonyms^3',
+                      'subject^2',
+                      'body^1',
+                      'submitter',
+                    ],
+                    fuzzy_max_expansions: 50,
+                  },
+                },
+                {
+                  range: {
+                    createdOn: {
+                      gte: startTime,
+                      lte: endTime,
+                    },
+                  },
+                },
+              ],
+            },
+          },
+          functions: [
+            {
+              filter: { exists: { field: 'eventId' } },
+              weight: 4,
+            },
+            {
+              filter: { exists: { field: 'synonyms' } },
+              weight: 3,
+            },
+            {
+              filter: { exists: { field: 'subject' } },
+              weight: 2,
+            },
+            {
+              filter: { exists: { field: 'body' } },
+              weight: 1,
+            },
+          ],
+          score_mode: 'sum',
+          boost_mode: 'sum',
+        },
+      }
+    : {
+        match_all: {},
+      }
+
   const {
     body: {
       hits: {
@@ -120,33 +176,10 @@ export async function search({
   } = await client.search({
     index: 'circulars',
     body: {
-      query: {
-        bool: {
-          must: query
-            ? {
-                multi_match: {
-                  query,
-                  fields: ['submitter', 'subject', 'body'],
-                },
-              }
-            : undefined,
-          filter: {
-            range: {
-              createdOn: {
-                gte: startTime,
-                lte: endTime,
-              },
-            },
-          },
-        },
-      },
+      query: esQuery,
       fields: ['subject'],
       _source: false,
-      sort: {
-        circularId: {
-          order: 'desc',
-        },
-      },
+      sort: { _score: 'desc' },
       from: page && limit && page * limit,
       size: limit,
       track_total_hits: true,
