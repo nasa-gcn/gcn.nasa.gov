@@ -24,6 +24,8 @@ circulars
 @tables-streams
 circulars
   src build/table-streams/circulars
+synonyms
+  src build/table-streams/synonyms
 
 @static
 fingerprint external
@@ -104,6 +106,9 @@ circulars_subscriptions
 legacy_users
   receive *Number
   name legacyReceivers
+
+synonyms
+  id *String
 
 @aws
 runtime nodejs18.x

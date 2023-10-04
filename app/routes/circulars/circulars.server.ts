@@ -13,7 +13,12 @@ import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
 import { getUser } from '../_auth/user.server'
-import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
+import {
+  bodyIsValid,
+  formatAuthor,
+  parseEventFromSubject,
+  subjectIsValid,
+} from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
 import { search as getSearch } from '~/lib/search.server'
 
@@ -46,6 +51,23 @@ export const getDynamoDBAutoIncrement = memoizee(
   },
   { promise: true }
 )
+
+export async function syncSynonyms({ synonyms }: { synonyms: string[] }) {
+  if (synonyms.length === 0) {
+    return
+  }
+  const db = await tables()
+  const doc = db._doc as unknown as DynamoDBDocument
+
+  const tableName = db.name('synonyms')
+
+  doc.put({
+    TableName: tableName,
+    Item: {
+      synonyms: synonyms.join(','),
+    },
+  })
+}
 
 /** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
 function parseDate(date?: string) {
@@ -212,6 +234,7 @@ export async function putRaw(
   const autoincrement = await getDynamoDBAutoIncrement()
   const createdOn = Date.now()
   const circularId = await autoincrement.put({ createdOn, ...item })
+  if (item.synonyms) syncSynonyms({ synonyms: item.synonyms })
   return { ...item, createdOn, circularId }
 }
 
@@ -242,9 +265,13 @@ export async function put(
   if (!bodyIsValid(item.body))
     throw new Response('body is invalid', { status: 400 })
 
+  const eventId = parseEventFromSubject(item.subject)
+  const synonyms = eventId ? [eventId] : []
   return await putRaw({
     sub: user.sub,
     submitter: formatAuthor(user),
+    eventId,
+    synonyms,
     ...item,
   })
 }
