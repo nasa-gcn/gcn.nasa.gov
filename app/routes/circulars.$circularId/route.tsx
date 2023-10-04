@@ -6,16 +6,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds'
+import { useState } from 'react'
 
-import { get } from '../circulars/circulars.server'
 import { PlainTextBody } from './Body'
+import { getUser } from '../_auth/user.server'
+import { get, updateEventData } from '../circulars/circulars.server'
+import { Edit } from './Edit'
 import { FrontMatter } from './FrontMatter'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
-import { useSearchString } from '~/lib/utils'
+import { getFormDataString, useSearchString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> = {
@@ -27,14 +29,35 @@ export const handle: BreadcrumbHandle<typeof loader> = {
   },
 }
 
-export async function loader({ params: { circularId } }: DataFunctionArgs) {
+export async function loader({
+  request,
+  params: { circularId },
+}: DataFunctionArgs) {
   if (!circularId)
     throw new Response('circularId must be defined', { status: 400 })
+  const user = await getUser(request)
+  const isModerator = user?.groups.includes('gcn.nasa.gov/circular-moderator')
   const result = await get(parseFloat(circularId))
-  return json(result, {
+  return {
+    isModerator,
+    ...result, // Include the existing data
     headers: getCanonicalUrlHeaders(
       new URL(`/circulars/${circularId}`, origin)
     ),
+  }
+}
+
+export async function action({ request }: DataFunctionArgs) {
+  const data = await request.formData()
+  const circularId = getFormDataString(data, 'circular-id')
+  const eventId = getFormDataString(data, 'event-id')
+  const synonyms = getFormDataString(data, 'synonyms')
+  const synonymsArray = synonyms ? synonyms.split(',') : undefined
+  if (!circularId) return null
+  return await updateEventData({
+    circularId: parseInt(circularId),
+    eventId,
+    synonyms: synonymsArray,
   })
 }
 
@@ -42,9 +65,11 @@ export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
-  const { circularId, body, bibcode, ...frontMatter } =
+  const { circularId, body, bibcode, isModerator, ...frontMatter } =
     useLoaderData<typeof loader>()
+  const [isEdit, setIsEdit] = useState(false)
   const searchString = useSearchString()
+
   return (
     <>
       <ButtonGroup>
@@ -90,10 +115,29 @@ export default function () {
             Cite (ADS)
           </Button>
         )}
+        {isModerator && (
+          <Button
+            className="usa-button usa-button--outline"
+            type="button"
+            onClick={(e) => {
+              setIsEdit(!isEdit)
+            }}
+          >
+            {isEdit ? (
+              <Icon.Visibility className="margin-bottom-neg-05" />
+            ) : (
+              <Icon.Edit className="margin-bottom-neg-05" />
+            )}
+          </Button>
+        )}
       </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
-      <PlainTextBody className="margin-y-2">{body}</PlainTextBody>
+      {isEdit ? (
+        <Edit {...frontMatter} circularId={circularId}></Edit>
+      ) : (
+        <PlainTextBody className="margin-y-2">{body}</PlainTextBody>
+      )}
     </>
   )
 }

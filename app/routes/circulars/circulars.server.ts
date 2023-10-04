@@ -12,6 +12,7 @@ import { search as getSearch } from '@nasa-gcn/architect-functions-search'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
+import { orderBy } from 'natural-orderby'
 
 import { type User, getUser } from '../_auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
@@ -261,4 +262,47 @@ export async function circularRedirect(query: string) {
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL)
   }
+}
+
+function formatSynonyms(synonyms?: string[]) {
+  if (!synonyms) return []
+  const strippedStrings = synonyms.map((x) => {
+    return x.trim()
+  })
+  return orderBy(strippedStrings)
+}
+
+export async function updateEventData({
+  circularId,
+  eventId,
+  synonyms,
+}: {
+  circularId: number
+  eventId?: string
+  synonyms?: string[]
+}) {
+  const db = await tables()
+  let synonymsList = synonyms || []
+  if (!eventId && !synonyms) {
+    return await db.circulars.get({ circularId })
+  }
+  if (eventId && synonyms?.length == 0) {
+    synonymsList = [eventId]
+  }
+  if (eventId && !synonyms?.includes(eventId)) {
+    synonymsList.push(eventId)
+  }
+  await db.circulars.update({
+    Key: { circularId },
+    UpdateExpression: 'set #eventId = :eventId, #synonyms = :synonyms',
+    ExpressionAttributeNames: {
+      '#eventId': 'eventId',
+      '#synonyms': 'synonyms',
+    },
+    ExpressionAttributeValues: {
+      ':eventId': eventId,
+      ':synonyms': formatSynonyms(synonymsList),
+    },
+  })
+  return await db.circulars.get({ circularId })
 }

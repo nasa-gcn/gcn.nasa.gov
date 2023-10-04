@@ -21,6 +21,8 @@ export interface Circular extends CircularMetadata {
   submitter: string
   submittedHow?: SubmittedHow
   bibcode?: string
+  eventId?: string
+  synonyms?: string[]
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
