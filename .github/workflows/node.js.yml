@@ -8,28 +8,4 @@ on:
       - main
 jobs:
   build:
-    strategy:
-      matrix:
-        os: [macos-latest, windows-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - name: NPM Install
-        run: npm ci
-      - name: Run eslint linter
-        run: npx eslint --max-warnings 0 .
-      - name: Run TypeScript compiler
-        run: npm run typecheck
-      - name: Run Prettier code style checks
-        run: npx prettier -c .
-        # Skip prettier checks on Windows due to line endings.
-        # See https://prettier.io/docs/en/options.html#end-of-line
-        if: ${{ runner.os != 'Windows' }}
-      - name: Run unit tests
-        run: npm run test-coverage
-      - name: Upload to Codecov.io
-        uses: codecov/codecov-action@v3
+    uses: nasa-gcn/.github/.github/workflows/node.yml@main
