@@ -25,6 +25,10 @@ export interface Circular extends CircularMetadata {
   synonyms?: string[]
 }
 
+export interface Synonym {
+  id: string
+}
+
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
