@@ -17,8 +17,10 @@ import {
 import {
   Button,
   ButtonGroup,
+  DateRangePicker,
   Icon,
   Label,
+  Radio,
   Select,
   TextInput,
 } from '@trussworks/react-uswds'
@@ -28,6 +30,7 @@ import { useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
+import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
 import { usePagination } from '~/lib/pagination'
 import { useFeature } from '~/root'
@@ -239,9 +242,39 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
+  const [inputDateGte, setInputDateGte] = useState(startDate)
+  const [inputDateLte, setInputDateLte] = useState(endDate)
+  const [showContent, setShowContent] = useState(false) // for the custom date range dropdown
+  const [showDateRange, setShowDateRange] = useState(false)
+  const clean =
+    inputQuery === query &&
+    inputDateGte === startDate &&
+    inputDateLte === endDate
 
   const submit = useSubmit()
+
+  const setFuzzyTime = (startDate?: string) => {
+    // console.log(startDate)
+    if (startDate === 'custom') {
+      setShowDateRange(true)
+    } else {
+      setShowDateRange(false)
+      setInputDateGte(startDate)
+    }
+    setInputDateLte('now')
+  }
+
+  const setDateRange = () => {
+    // setShowContent(false)
+    if (showDateRange) setShowDateRange(false)
+    const params = new URLSearchParams(location.search)
+    if (inputDateGte) params.set('startDate', inputDateGte)
+    if (inputDateLte) params.set('endDate', inputDateLte)
+    submit(params, {
+      method: 'get',
+      action: '/circulars',
+    })
+  }
 
   return (
     <>
@@ -291,7 +324,160 @@ export default function () {
           </Button>
         </Form>
         {featureCircularsFilterByDate && (
-          <DateSelectorButton startDate={startDate} endDate={endDate} />
+          <>
+            <DateSelectorButton
+              startDate={startDate}
+              endDate={endDate}
+              onClick={() => setShowContent(!showContent)}
+              expanded={showContent}
+            />
+            {showContent && (
+              <DetailsDropdownContent className="margin-top-1">
+                <div className="usa-radio maxw-card-xlg">
+                  <div className="display-flex flex-row">
+                    <div className="display-flex flex-column flex-align-start margin-1">
+                      <Radio
+                        id="radio-alltime"
+                        name="radio-date"
+                        value="undefined"
+                        defaultChecked={true}
+                        label="All Time"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                      <Radio
+                        id="radio-hour"
+                        name="radio-date"
+                        value="hour"
+                        label="Past hour"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                      <Radio
+                        id="radio-today"
+                        name="radio-date"
+                        value="today"
+                        label="Today"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                    </div>
+                    <div className="display-flex flex-column margin-1">
+                      <Radio
+                        id="radio-day"
+                        name="radio-date"
+                        value="day"
+                        label="Past 24 Hours"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                      <Radio
+                        id="radio-week"
+                        name="radio-date"
+                        value="week"
+                        label="Past Week"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                      <Radio
+                        id="radio-month"
+                        name="radio-date"
+                        value="month"
+                        label="Past Month"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                    </div>
+
+                    <div className="display-flex flex-column margin-1">
+                      <Radio
+                        id="radio-year"
+                        name="radio-date"
+                        value="year"
+                        label="Past Year"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                      <Radio
+                        id="radio-ytd"
+                        name="radio-date"
+                        value="ytd"
+                        label="Year to Date"
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setFuzzyTime(e.target.value)
+                        }}
+                      ></Radio>
+                      <Radio
+                        id="radio-custom"
+                        name="radio-date"
+                        value="custom"
+                        label="Custom Range..."
+                        className="usa-search__filter-button"
+                        onChange={(e) => {
+                          setShowDateRange(e.target.checked)
+                        }}
+                      ></Radio>
+                    </div>
+                  </div>
+
+                  {showDateRange && (
+                    <DateRangePicker
+                      startDateHint="dd/mm/yyyy"
+                      startDateLabel="Start Date"
+                      className="margin-bottom-2"
+                      startDatePickerProps={{
+                        id: 'event-date-start',
+                        name: 'event-date-start',
+                        defaultValue: 'startDate',
+                        onChange: (value) => {
+                          setInputDateGte(value)
+                        },
+                        // style: { height: '15px' }, // Adjust the height as needed
+                      }}
+                      endDateHint="dd/mm/yyyy"
+                      endDateLabel="End Date"
+                      endDatePickerProps={{
+                        id: 'event-date-end',
+                        name: 'event-date-end',
+                        defaultValue: 'endDate',
+                        onChange: (value) => {
+                          setInputDateLte(value)
+                        },
+                        // style: { height: '15px' },
+                      }}
+                    />
+                  )}
+                  <div className="display-flex flex-row">
+                    <Button
+                      type="button"
+                      className=""
+                      form="searchForm"
+                      onClick={() => {
+                        setDateRange()
+                      }}
+                    >
+                      <Icon.CalendarToday /> Submit
+                    </Button>
+                  </div>
+                </div>
+              </DetailsDropdownContent>
+            )}
+          </>
         )}
         <Link to={`/circulars/new${searchString}`}>
           <Button
