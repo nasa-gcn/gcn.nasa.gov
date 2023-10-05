@@ -15,7 +15,8 @@ import { getUser } from '../_auth/user.server'
 import { get, updateEventData } from '../circulars/circulars.server'
 import { Edit } from './Edit'
 import { FrontMatter } from './FrontMatter'
-import { origin } from '~/lib/env.server'
+
+import { feature, origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { getFormDataString, useSearchString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
@@ -38,7 +39,10 @@ export async function loader({
   const user = await getUser(request)
   const isModerator = user?.groups.includes('gcn.nasa.gov/circular-moderator')
   const result = await get(parseFloat(circularId))
+  const hasSynonyms = feature('SYNONYM_GROUPING')
+
   return {
+    hasSynonyms,
     isModerator,
     ...result, // Include the existing data
     headers: getCanonicalUrlHeaders(
@@ -65,8 +69,14 @@ export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
-  const { circularId, body, bibcode, isModerator, ...frontMatter } =
-    useLoaderData<typeof loader>()
+  const {
+    circularId,
+    body,
+    bibcode,
+    isModerator,
+    hasSynonyms,
+    ...frontMatter
+  } = useLoaderData<typeof loader>()
   const [isEdit, setIsEdit] = useState(false)
   const searchString = useSearchString()
 
@@ -115,7 +125,7 @@ export default function () {
             Cite (ADS)
           </Button>
         )}
-        {isModerator && (
+        {isModerator && hasSynonyms && (
           <Button
             className="usa-button usa-button--outline"
             type="button"
