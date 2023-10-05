@@ -142,7 +142,7 @@ export default function () {
         )}
       </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
-      <FrontMatter {...frontMatter} />
+      <FrontMatter {...frontMatter} hasSynonyms={hasSynonyms} />
       {isEdit ? (
         <Edit {...frontMatter} circularId={circularId}></Edit>
       ) : (

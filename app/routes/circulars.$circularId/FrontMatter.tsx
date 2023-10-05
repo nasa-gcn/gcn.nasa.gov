@@ -42,6 +42,7 @@ export function FrontMatter({
   submittedHow,
   eventId,
   synonyms,
+  hasSynonyms,
 }: Pick<
   Circular,
   | 'subject'
@@ -50,7 +51,7 @@ export function FrontMatter({
   | 'submittedHow'
   | 'eventId'
   | 'synonyms'
->) {
+> & { hasSynonyms?: boolean }) {
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
@@ -66,10 +67,14 @@ export function FrontMatter({
           {submittedHowMap[submittedHow]}
         </FrontMatterItem>
       )}
-      <FrontMatterItem label="Event ID">{eventId}</FrontMatterItem>
-      <FrontMatterItem label="Related">
-        {synonyms ? synonyms.join(',') : ''}
-      </FrontMatterItem>
+      {hasSynonyms && (
+        <>
+          <FrontMatterItem label="Event ID">{eventId}</FrontMatterItem>
+          <FrontMatterItem label="Related">
+            {synonyms ? synonyms.join(',') : ''}
+          </FrontMatterItem>
+        </>
+      )}
     </>
   )
 }
