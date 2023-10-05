@@ -44,7 +44,7 @@ export async function loader({
   return {
     hasSynonyms,
     isModerator,
-    ...result, // Include the existing data
+    ...result,
     headers: getCanonicalUrlHeaders(
       new URL(`/circulars/${circularId}`, origin)
     ),
