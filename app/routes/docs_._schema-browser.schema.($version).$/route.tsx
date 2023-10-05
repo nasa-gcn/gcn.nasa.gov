@@ -6,21 +6,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { json, redirect } from '@remix-run/node'
+import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import {
   Card,
   CardBody,
   CardGroup,
   CardHeader,
+  Grid,
   Icon,
   Table,
 } from '@trussworks/react-uswds'
 import { dirname } from 'path'
+import { useState } from 'react'
 import { useParams } from 'react-router'
+import invariant from 'tiny-invariant'
 import { useWindowSize } from 'usehooks-ts'
 
-import SchemaDefinition from '../docs_.schema.$version._index'
+import type { loader as parentLoader } from '../docs_._schema-browser'
+import BreadcrumbNav from './BreadcrumbNav'
+import { SchemaDocumentation } from './SchemaDocumentation'
 import type { Schema } from './components'
 import {
   ReferencedElementTable,
@@ -28,6 +33,8 @@ import {
   formatFieldName,
   formatFieldType,
 } from './components'
+import DetailsDropdownButton from '~/components/DetailsDropdownButton'
+import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
@@ -37,6 +44,7 @@ import type {
 } from '~/lib/schema-data.server'
 import {
   getGithubDir,
+  getLatestRelease,
   loadJson,
   loadSchemaExamples,
 } from '~/lib/schema-data.server'
@@ -44,7 +52,15 @@ import {
 export async function loader({
   params: { version, '*': path },
 }: DataFunctionArgs) {
-  if (!version) throw new Response('Missing version', { status: 404 })
+  if (version === 'stable') version = undefined
+  if (!version || !path) {
+    version ||= await getLatestRelease()
+    path ||= 'gcn/notices'
+    return redirect(`/docs/schema/${version}/${path}`, {
+      headers: publicStaticShortTermCacheControlHeaders,
+    })
+  }
+
   let jsonContent
   let data: GitContentDataResponse[]
   let examples: ExampleFile[] = []
@@ -66,44 +82,97 @@ export async function loader({
 export default function () {
   const { version, '*': path } = useParams()
   const { data, jsonContent, examples } = useLoaderData<typeof loader>()
-  if (!path) {
-    throw new Error('Path is not defined.')
-  }
+  const [showVersions, setShowVersions] = useState(false)
+  const versions = useRouteLoaderData<typeof parentLoader>(
+    'routes/docs_._schema-browser'
+  )
+  const windowSize = useWindowSize()
+
+  invariant(version)
+  invariant(path)
+  invariant(versions)
+
+  const isSchema = path.endsWith('.schema.json')
 
   return (
-    <div className="grid-col-12">
-      {jsonContent ? (
-        <SchemaBody
-          path={path ?? ''}
-          result={jsonContent}
-          selectedVersion={version ?? ''}
-          examples={examples}
+    <>
+      <Grid
+        row
+        className="position-sticky top-0 usa-breadcrumb z-100 padding-y-0"
+      >
+        <BreadcrumbNav
+          path={path.replace('.schema.json', '')}
+          className="tablet:grid-col-fill"
+          pathPrepend={`/docs/schema/${version}`}
         />
-      ) : (
-        <>
-          <SchemaDefinition />
-          <CardGroup>
-            {...data.map((x) => (
-              <Link key={x.path} to={x.path} className="tablet:grid-col-3">
-                <Card key={x.path} className="">
-                  <CardHeader>
-                    <h3 className="display-flex flex-align-center">
-                      {x.type == 'dir' && (
-                        <span className="margin-top-05 padding-right-05">
-                          <Icon.FolderOpen />
-                        </span>
-                      )}
-                      <span>{x.name.replace('.schema.json', '')}</span>
-                    </h3>
-                  </CardHeader>
-                  <CardBody></CardBody>
-                </Card>
-              </Link>
-            ))}
-          </CardGroup>
-        </>
-      )}
-    </div>
+        {windowSize.width < 480 && !isSchema && (
+          <h2 className="margin-y-0">{path.split('/').slice(-1)[0]}</h2>
+        )}
+        <div className="tablet:grid-col-auto tablet:margin-top-2">
+          <DetailsDropdownButton
+            className="width-full"
+            onClick={() => setShowVersions(!showVersions)}
+          >
+            {<>Version: {version}</>}
+          </DetailsDropdownButton>
+          {showVersions && (
+            <DetailsDropdownContent>
+              <CardHeader>
+                <h3>Versions</h3>
+              </CardHeader>
+              <CardBody className="padding-y-0">
+                {versions.map(({ name, ref }) => (
+                  <div key={ref}>
+                    <Link
+                      className="usa-link"
+                      to={`/docs/schema/${ref}/${path}`}
+                      onClick={() => setShowVersions(!setShowVersions)}
+                    >
+                      {name || ref}
+                    </Link>
+                  </div>
+                ))}
+              </CardBody>
+            </DetailsDropdownContent>
+          )}
+        </div>
+      </Grid>
+      <div className="grid-row grid-gap">
+        <div className="grid-col-12">
+          {jsonContent ? (
+            <SchemaBody
+              path={path}
+              result={jsonContent}
+              selectedVersion={version}
+              examples={examples}
+            />
+          ) : (
+            <>
+              <SchemaDocumentation />
+              <CardGroup>
+                {...data.map((x) => (
+                  <Link key={x.path} to={x.path} className="tablet:grid-col-3">
+                    <Card key={x.path} className="">
+                      <CardHeader>
+                        <h3 className="display-flex flex-align-center">
+                          {x.type == 'dir' && (
+                            <span className="margin-top-05 padding-right-05">
+                              <Icon.FolderOpen />
+                            </span>
+                          )}
+                          <span>{x.name.replace('.schema.json', '')}</span>
+                        </h3>
+                      </CardHeader>
+                      <CardBody></CardBody>
+                    </Card>
+                  </Link>
+                ))}
+              </CardGroup>
+            </>
+          )}
+        </div>
+      </div>
+    </>
   )
 }
 
