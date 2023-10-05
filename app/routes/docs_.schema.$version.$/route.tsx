@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { DataFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import { json, redirect } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import {
   Card,
@@ -48,7 +48,8 @@ export async function loader({
   let jsonContent
   let data: GitContentDataResponse[]
   let examples: ExampleFile[] = []
-  if (path?.endsWith('.schema.json')) {
+  if (!path) return redirect(`/docs/schema/${version}/gcn`)
+  if (path.endsWith('.schema.json')) {
     const parentPath = dirname(path)
     jsonContent = await loadJson(path, version)
     examples = await loadSchemaExamples(path, version)

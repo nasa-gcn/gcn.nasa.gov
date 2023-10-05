@@ -26,8 +26,9 @@ import BreadcrumbNav from '~/routes/docs_.schema.$version.$/BreadcrumbNav'
 export async function loader({
   params: { version, '*': path },
 }: DataFunctionArgs) {
-  if (!version) throw new Response(null, { status: 404 })
-  if (path?.endsWith('/')) {
+  if (!version) return redirect('/docs/schema/stable/gcn')
+  if (!path) return redirect(`/docs/schema/${version}/gcn`)
+  if (path.endsWith('/')) {
     return redirect(`${path.slice(0, -1)}`)
   }
 
