@@ -7,7 +7,7 @@
  */
 import { Link } from '@remix-run/react'
 
-export default function () {
+export function SchemaDocumentation() {
   return (
     <>
       <h2>Schema Browser</h2>
