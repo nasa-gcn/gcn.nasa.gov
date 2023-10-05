@@ -113,7 +113,7 @@ export default function () {
               </>,
               ...(enableSchemaBrowser
                 ? [
-                    <NavLink key="schema" to="schema/stable/gcn">
+                    <NavLink key="schema" to="schema">
                       Schema Browser
                     </NavLink>,
                   ]
