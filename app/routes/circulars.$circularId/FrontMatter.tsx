@@ -71,7 +71,7 @@ export function FrontMatter({
         <>
           <FrontMatterItem label="Event ID">{eventId}</FrontMatterItem>
           <FrontMatterItem label="Related">
-            {synonyms ? synonyms.join(',') : ''}
+            {synonyms ? synonyms.join(', ') : ''}
           </FrontMatterItem>
         </>
       )}
