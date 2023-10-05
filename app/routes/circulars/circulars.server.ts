@@ -107,39 +107,42 @@ export async function search({
   totalItems: number
 }> {
   const client = await getSearch()
+  const isLuceneSyntax = query ? query.includes(':') : false
+  const sortOrder = query
+    ? { _score: 'desc' }
+    : { circularId: { order: 'desc' } }
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
   const esQuery = query
     ? {
         function_score: {
-          query: {
-            bool: {
-              must: [
-                {
-                  query_string: {
-                    query: `*${query}*`,
-                    fields: [
-                      'eventId^4',
-                      'synonyms^3',
-                      'subject^2',
-                      'body^1',
-                      'submitter',
-                    ],
-                    fuzzy_max_expansions: 50,
-                  },
+          query: isLuceneSyntax
+            ? {
+                query_string: {
+                  query,
                 },
-                {
-                  range: {
-                    createdOn: {
-                      gte: startTime,
-                      lte: endTime,
+              }
+            : {
+                bool: {
+                  must: [
+                    {
+                      query_string: {
+                        query,
+                        default_field: '*',
+                      },
                     },
-                  },
+                    {
+                      range: {
+                        createdOn: {
+                          gte: startTime,
+                          lte: endTime,
+                        },
+                      },
+                    },
+                  ],
                 },
-              ],
-            },
-          },
+              },
           functions: [
             {
               filter: { exists: { field: 'eventId' } },
@@ -179,7 +182,7 @@ export async function search({
       query: esQuery,
       fields: ['subject'],
       _source: false,
-      sort: { _score: 'desc' },
+      sort: sortOrder,
       from: page && limit && page * limit,
       size: limit,
       track_total_hits: true,
