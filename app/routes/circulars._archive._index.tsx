@@ -306,7 +306,9 @@ export default function () {
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
         GRB'). <br />
         To navigate to a specific circular, enter the associated Circular ID
-        (e.g. 'gcn123', 'Circular 123', or '123').
+        (e.g. 'gcn123', 'Circular 123', or '123'). <br />
+        To search a specific field, specify the field followed by a colon and
+        then the search terms. (e.g. 'subject: Circular 123')
       </Hint>
       {clean && (
         <>
