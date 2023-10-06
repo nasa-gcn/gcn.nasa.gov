@@ -19,11 +19,7 @@
  *
  */
 import { cssBundleHref } from '@remix-run/css-bundle'
-import type {
-  DataFunctionArgs,
-  LinksFunction,
-  MetaFunction,
-} from '@remix-run/node'
+import type { DataFunctionArgs, LinksFunction } from '@remix-run/node'
 import {
   Link,
   Links,
@@ -96,17 +92,6 @@ TopBarProgress.config({
 
 export const handle: BreadcrumbHandle = {
   breadcrumb: 'GCN',
-}
-
-export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  const result = [
-    { charset: 'utf-8' },
-    { name: 'viewport', content: 'width=device-width,initial-scale=1' },
-  ]
-  // Exclude non-production deployments from indexing by search engines
-  if (data && new URL(data.origin).hostname !== 'gcn.nasa.gov')
-    result.push({ name: 'robots', content: 'noindex' })
-  return result
 }
 
 export const links: LinksFunction = () => [
@@ -210,9 +195,14 @@ function Progress() {
 }
 
 function Document({ children }: { children?: React.ReactNode }) {
+  const noIndex = useHostname() !== 'gcn.nasa.gov'
+
   return (
     <html lang="en-US">
       <head>
+        <meta charSet="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        {noIndex && <meta name="robots" content="noindex" />}
         <Meta />
         <Links />
         <Title />
