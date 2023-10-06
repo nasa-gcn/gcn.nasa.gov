@@ -346,7 +346,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                       <Radio
                         id="radio-hour"
                         name="radio-date"
@@ -356,7 +356,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                       <Radio
                         id="radio-today"
                         name="radio-date"
@@ -366,7 +366,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                     </div>
                     <div className="display-flex flex-column margin-1">
                       <Radio
@@ -378,7 +378,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                       <Radio
                         id="radio-week"
                         name="radio-date"
@@ -388,7 +388,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                       <Radio
                         id="radio-month"
                         name="radio-date"
@@ -398,7 +398,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                     </div>
 
                     <div className="display-flex flex-column margin-1">
@@ -411,7 +411,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                       <Radio
                         id="radio-ytd"
                         name="radio-date"
@@ -421,7 +421,7 @@ export default function () {
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
-                      ></Radio>
+                      />
                       <Radio
                         id="radio-custom"
                         name="radio-date"
@@ -431,7 +431,7 @@ export default function () {
                         onChange={(e) => {
                           setShowDateRange(e.target.checked)
                         }}
-                      ></Radio>
+                      />
                     </div>
                   </div>
 
