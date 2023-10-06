@@ -6,12 +6,6 @@ handle:
 import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/tabs/Tabs'
 
-import { feature } from '~/lib/env.server'
-
-export function loader() {
-  return feature('SCHEMA') || new Response(null, { status: 404 })
-}
-
 # Unified Schema
 
 The GCN Unified Schema is a framework for defining GCN Notices types using a common format, standardized field names, uniform data types, and consistent physical units across multiple missions. If you are joining GCN as a [new notice producer](/docs/notices/producers), then you can contribute your own notice types to the Unified Schema present at [GitHub](https://github.com/nasa-gcn/gcn-schema).
