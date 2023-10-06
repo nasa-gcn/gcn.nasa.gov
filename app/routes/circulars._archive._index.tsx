@@ -254,7 +254,6 @@ export default function () {
   const submit = useSubmit()
 
   const setFuzzyTime = (startDate?: string) => {
-    // console.log(startDate)
     if (startDate === 'custom') {
       setShowDateRange(true)
     } else {
