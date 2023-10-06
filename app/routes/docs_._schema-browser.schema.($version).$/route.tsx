@@ -113,7 +113,7 @@ export default function () {
             className="width-full"
             onClick={() => setShowVersions(!showVersions)}
           >
-            {<>Version: {version}</>}
+            Version: {version}
           </DetailsDropdownButton>
           {showVersions && (
             <DetailsDropdownContent>
