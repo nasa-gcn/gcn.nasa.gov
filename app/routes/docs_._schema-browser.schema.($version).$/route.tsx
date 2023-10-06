@@ -150,7 +150,7 @@ export default function () {
             <>
               <SchemaDocumentation />
               <CardGroup>
-                {...data.map((x) => (
+                {data.map((x) => (
                   <Link key={x.path} to={x.path} className="tablet:grid-col-3">
                     <Card key={x.path} className="">
                       <CardHeader>
