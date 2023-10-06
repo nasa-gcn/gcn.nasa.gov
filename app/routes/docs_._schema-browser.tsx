@@ -11,6 +11,11 @@ import { GridContainer } from '@trussworks/react-uswds'
 
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 import { getVersionRefs } from '~/lib/schema-data.server'
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle = {
+  breadcrumb: 'Documentation - Schema Browser',
+}
 
 export async function loader() {
   return json(await getVersionRefs(), {
