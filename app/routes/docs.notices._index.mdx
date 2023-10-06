@@ -13,8 +13,6 @@ import {
   CardMedia,
 } from '@trussworks/react-uswds'
 
-import { WithFeature } from '~/root'
-
 import gcn_classic_over_kafka from './_index/gcn-classic-over-kafka.svg'
 import gcn_classic from './_index/gcn-classic.svg'
 import gcn_kafka from './_index/gcn-kafka.svg'
@@ -138,7 +136,7 @@ GCN Classic binary and text schema are bespoke for each notice type with some co
 
 The GCN team has created new JSON format custom schema designed specifically for the types of transients reported by current and upcoming GCN producer missions. The core schema are designed to be building blocks containing most of the common fields used by the majority of instruments. Additional parameters can be added, but we encourage only including fields useful for informing consumers about the properties of the event useful for alerting and follow-up observations. They should not include fields that can easily be calculated using common software packages (e.g. coordinate transformations, distance from Sun or Moon).
 
-More details on schema are available on the individual [Mission](/missions) pages<WithFeature schema> and in the [Schema Browser](schema/latest/gcn)</WithFeature>.
+More details on schema are available on the individual [Mission](/missions) pages and in the [Schema Browser](schema/latest/gcn).
 
 ## For more details on how to use GCN Notices, see:
 
