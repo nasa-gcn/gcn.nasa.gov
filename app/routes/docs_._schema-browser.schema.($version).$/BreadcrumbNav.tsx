@@ -39,10 +39,8 @@ export default function BreadcrumbNav({
           )
         })}
       </>
-      <Breadcrumb>
-        <Breadcrumb current>
-          <h2 className="margin-y-0 display-inline">{lastBreadcrumb}</h2>
-        </Breadcrumb>
+      <Breadcrumb current>
+        <h2 className="margin-y-0 display-inline">{lastBreadcrumb}</h2>
       </Breadcrumb>
     </BreadcrumbBar>
   )
