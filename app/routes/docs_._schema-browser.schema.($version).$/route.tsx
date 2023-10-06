@@ -47,6 +47,13 @@ import {
   loadJson,
   loadSchemaExamples,
 } from '~/lib/schema-data.server'
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle = {
+  breadcrumb({ params: { version, '*': path } }) {
+    return `${version} - ${path?.replace('.schema.json', '')}`
+  },
+}
 
 export async function loader({
   params: { version, '*': path },
