@@ -1,4 +1,4 @@
-## Schema Browser
+# Schema Browser
 
 Browse the schema definitions for GCN Notices as distributed by GCN Kafka. Choose an option below to navigate through the schema directory or inspect a schema for additional details.
 
