@@ -38,7 +38,7 @@
     "@remix-run/css-bundle": "^2.0.1",
     "@remix-run/node": "^2.0.0",
     "@remix-run/react": "^2.0.1",
-    "@trussworks/react-uswds": "^5.1.1",
+    "@trussworks/react-uswds": "^5.4.0",
     "addresscompiler": "^1.0.1",
     "aws-lambda-ses-forwarder": "github:lpsinger/aws-lambda-ses-forwarder#aws-sdk-v3",
     "classnames": "^2.3.2",
