@@ -9,7 +9,6 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
-import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
@@ -17,8 +16,6 @@ export const handle: BreadcrumbHandle = {
 }
 
 export default function () {
-  const enableSchemaBrowser = useFeature('SCHEMA')
-
   return (
     <GridContainer className="usa-section">
       <div className="grid-row grid-gap">
@@ -111,13 +108,6 @@ export default function () {
                   ]}
                 />
               </>,
-              ...(enableSchemaBrowser
-                ? [
-                    <NavLink key="schema" to="schema">
-                      Schema Browser
-                    </NavLink>,
-                  ]
-                : []),
               <NavLink key="history" to="history">
                 History
               </NavLink>,
@@ -163,13 +153,9 @@ export default function () {
                     <NavLink key="producing" to="notices/producers">
                       Producing
                     </NavLink>,
-                    ...(enableSchemaBrowser
-                      ? [
-                          <NavLink key="schema" to="notices/schema">
-                            Unified Schema
-                          </NavLink>,
-                        ]
-                      : []),
+                    <NavLink key="schema" to="notices/schema">
+                      Unified Schema
+                    </NavLink>,
                     <NavLink key="archive" to="notices/archive">
                       Archive
                     </NavLink>,
@@ -178,6 +164,9 @@ export default function () {
               </>,
               <NavLink key="roadmap" to="roadmap">
                 Road Map
+              </NavLink>,
+              <NavLink key="schema" to="schema">
+                Schema Browser
               </NavLink>,
             ]}
           />
