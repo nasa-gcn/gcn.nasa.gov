@@ -17,14 +17,13 @@ import {
   Icon,
   Table,
 } from '@trussworks/react-uswds'
+import classNames from 'classnames'
 import { dirname } from 'path'
 import { useState } from 'react'
 import { useParams } from 'react-router'
 import invariant from 'tiny-invariant'
-import { useWindowSize } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../docs_._schema-browser'
-import BreadcrumbNav from './BreadcrumbNav'
 import type { Schema } from './components'
 import {
   ReferencedElementTable,
@@ -79,63 +78,106 @@ export async function loader({
   )
 }
 
+function Breadcrumbs({
+  className,
+  path,
+}: {
+  className?: string
+  path: string
+}) {
+  const parts = path.split('/')
+  const last = parts.pop()
+  return (
+    <>
+      {parts.map((part, i) => (
+        <span key={`${part}-${i}`}>
+          <Link
+            className={classNames('usa-link text-no-underline', className)}
+            to={new Array(parts.length - i).fill('..').join('/')}
+            relative="path"
+          >
+            {part}
+          </Link>
+          <Icon.NavigateNext role="presentation" className="text-base" />
+        </span>
+      ))}
+      <b className={className}>{last}</b>
+    </>
+  )
+}
+
+function VersionSelector({
+  version,
+  versions,
+  path,
+}: {
+  version: string
+  versions: { name: string | null; ref: string }[]
+  path: string
+}) {
+  const [showVersions, setShowVersions] = useState(false)
+
+  return (
+    <>
+      <DetailsDropdownButton
+        onClick={() => {
+          setShowVersions((shown) => shown)
+        }}
+      >
+        {<>Version: {version}</>}
+      </DetailsDropdownButton>
+      {showVersions && (
+        <DetailsDropdownContent>
+          <CardHeader>
+            <h3>Versions</h3>
+          </CardHeader>
+          <CardBody className="padding-y-0">
+            {versions.map(({ name, ref }) => (
+              <div key={ref}>
+                <Link
+                  className="usa-link"
+                  to={`/docs/schema/${ref}/${path}`}
+                  onClick={() => {
+                    setShowVersions(false)
+                  }}
+                >
+                  {name || ref}
+                </Link>
+              </div>
+            ))}
+          </CardBody>
+        </DetailsDropdownContent>
+      )}
+    </>
+  )
+}
+
 export default function () {
   const { version, '*': path } = useParams()
   const { data, jsonContent, examples } = useLoaderData<typeof loader>()
-  const [showVersions, setShowVersions] = useState(false)
   const versions = useRouteLoaderData<typeof parentLoader>(
     'routes/docs_._schema-browser'
   )
-  const windowSize = useWindowSize()
 
   invariant(version)
   invariant(path)
   invariant(versions)
 
-  const isSchema = path.endsWith('.schema.json')
-
   return (
     <>
-      <Grid
-        row
-        className="position-sticky top-0 usa-breadcrumb z-100 padding-y-0"
-      >
-        <BreadcrumbNav
-          path={path.replace('.schema.json', '')}
-          className="tablet:grid-col-fill"
-          pathPrepend={`/docs/schema/${version}`}
-        />
-        {windowSize.width < 480 && !isSchema && (
-          <h2 className="margin-y-0">{path.split('/').slice(-1)[0]}</h2>
-        )}
-        <div className="tablet:grid-col-auto tablet:margin-top-2">
-          <DetailsDropdownButton
-            className="width-full"
-            onClick={() => setShowVersions(!showVersions)}
-          >
-            {<>Version: {version}</>}
-          </DetailsDropdownButton>
-          {showVersions && (
-            <DetailsDropdownContent>
-              <CardHeader>
-                <h3>Versions</h3>
-              </CardHeader>
-              <CardBody className="padding-y-0">
-                {versions.map(({ name, ref }) => (
-                  <div key={ref}>
-                    <Link
-                      className="usa-link"
-                      to={`/docs/schema/${ref}/${path}`}
-                      onClick={() => setShowVersions(!setShowVersions)}
-                    >
-                      {name || ref}
-                    </Link>
-                  </div>
-                ))}
-              </CardBody>
-            </DetailsDropdownContent>
-          )}
-        </div>
+      <Grid row className="position-sticky top-0 z-100 padding-y-0 bg-white">
+        <Grid
+          tablet={{ col: 'fill' }}
+          className="flex-align-self-center padding-y-1"
+        >
+          <Breadcrumbs
+            path={path.replace('.schema.json', '')}
+            className="font-ui-lg"
+          />
+        </Grid>
+        <Grid tablet={{ col: 'auto' }} className="padding-y-1">
+          <VersionSelector version={version} versions={versions} path={path} />
+        </Grid>
       </Grid>
       <div className="grid-row grid-gap">
         <div className="grid-col-12">
@@ -187,11 +229,9 @@ function SchemaBody({
   selectedVersion: string
   examples: ExampleFile[]
 }) {
-  const windowSize = useWindowSize()
-
   return (
     <>
-      {windowSize.width < 480 && <h1>{result.title}</h1>}
+      <h1>{result.title}</h1>
       <p className="usa-paragraph">{result.description}</p>
       <div>
         View the source on{' '}
