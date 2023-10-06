@@ -25,7 +25,6 @@ import { useWindowSize } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../docs_._schema-browser'
 import BreadcrumbNav from './BreadcrumbNav'
-import { SchemaDocumentation } from './SchemaDocumentation'
 import type { Schema } from './components'
 import {
   ReferencedElementTable,
@@ -33,6 +32,7 @@ import {
   formatFieldName,
   formatFieldType,
 } from './components'
+import Documentation from './documentation.md'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { Highlight } from '~/components/Highlight'
@@ -148,7 +148,7 @@ export default function () {
             />
           ) : (
             <>
-              <SchemaDocumentation />
+              <Documentation />
               <CardGroup>
                 {...data.map((x) => (
                   <Link key={x.path} to={x.path} className="tablet:grid-col-3">
