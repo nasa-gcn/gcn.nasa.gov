@@ -306,7 +306,8 @@ input.react-tags__combobox-input:focus {
 }
 
 /*
- * Indeterminate checkboxes
+ * Indeterminate checkboxes.
+ * FIXME: remove if/when https://github.com/uswds/uswds/pull/5549 is merged
  */
 
 .usa-checkbox__input:indeterminate {
