@@ -308,7 +308,7 @@ export default function () {
         To navigate to a specific circular, enter the associated Circular ID
         (e.g. 'gcn123', 'Circular 123', or '123'). <br />
         To search a specific field, specify the field followed by a colon and
-        then the search terms. (e.g. 'subject: Circular 123')
+        then the search terms. (e.g. 'subject: GRB 123')
       </Hint>
       {clean && (
         <>
