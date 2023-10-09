@@ -130,6 +130,7 @@ export async function search({
                       query_string: {
                         query,
                         default_field: '*',
+                        fuzziness: 'AUTO',
                       },
                     },
                     {
