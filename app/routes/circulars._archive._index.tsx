@@ -187,6 +187,7 @@ const dateSelectorLabels: Record<string, string> = {
   today: 'Today',
   mtd: 'Month to date',
   ytd: 'Year to date',
+  undefined: 'All time',
 }
 
 function DateSelectorButton({
