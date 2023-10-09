@@ -327,7 +327,7 @@ export default function () {
             <DateSelectorButton
               startDate={startDate}
               endDate={endDate}
-              onClick={() => setShowContent(!showContent)}
+              onClick={() => { setShowContent((shown) => !shown) }}
               expanded={showContent}
             />
             {showContent && (
