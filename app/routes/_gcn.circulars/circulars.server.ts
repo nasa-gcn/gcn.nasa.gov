@@ -12,10 +12,19 @@ import { search as getSearch } from '@nasa-gcn/architect-functions-search'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
-
-import { type User, getUser } from '../_gcn._auth/user.server'
-import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
-import type { Circular, CircularMetadata } from './circulars.lib'
+import {
+  bodyIsValid,
+  formatAuthor,
+  parseEventFromSubject,
+  subjectIsValid,
+} from './circulars.lib'
+import type {
+  Circular,
+  CircularGroupingMetadata,
+  CircularMetadata,
+} from './circulars.lib'
+import type { User} from '../_gcn._auth/user.server';
+import { getUser } from '../_gcn._auth/user.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -226,7 +235,10 @@ export async function putRaw(
  */
 export async function put(
   item: Require<
-    Omit<Circular, 'sub' | 'submitter' | 'createdOn' | 'circularId'>,
+    Omit<
+      Circular,
+      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId' | 'synonyms'
+    >,
     'submittedHow'
   >,
   user?: User
@@ -240,9 +252,11 @@ export async function put(
   if (!bodyIsValid(item.body))
     throw new Response('body is invalid', { status: 400 })
 
+  const eventId = parseEventFromSubject(item.subject)
   return await putRaw({
     sub: user.sub,
     submitter: formatAuthor(user),
+    eventId,
     ...item,
   })
 }
@@ -260,4 +274,55 @@ export async function circularRedirect(query: string) {
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL)
   }
+}
+
+export async function getCircularsByEventIds(
+  eventIds: string[]
+): Promise<Circular[]> {
+  const db = await tables()
+  const promises = eventIds.map(async (eventId) => {
+    const params = {
+      TableName: 'circulars',
+      IndexName: 'circularEventId',
+      KeyConditionExpression: 'eventId = :eventId',
+      ExpressionAttributeValues: {
+        ':eventId': eventId,
+      },
+    }
+
+    const result = await db.circulars.query(params)
+
+    if (result.Items) {
+      const circulars: Circular[] = result.Items as Circular[]
+      return circulars
+    } else {
+      return [] as Circular[]
+    }
+  })
+  const results = await Promise.all(promises)
+  const circulars: Circular[] = []
+  return circulars.concat(...results)
+}
+
+export async function groupCircularsBySynonyms({
+  synonyms,
+  circulars,
+}: {
+  synonyms: Record<string, string[]>
+  circulars: Circular[]
+}) {
+  const circularDictionary = {} as Record<string, Circular>
+  circulars.forEach((circular) => {
+    if (!circular.eventId) return
+    circularDictionary[circular.eventId] = circular
+  })
+  const groupedCirculars = [] as CircularGroupingMetadata[]
+  Object.keys(synonyms).forEach((synonymKey: string) => {
+    const circularArray = [] as Circular[]
+    synonyms[synonymKey].forEach((event) => {
+      circularArray.push(circularDictionary[event])
+    })
+    groupedCirculars.push({ id: synonymKey, circulars: circularArray })
+  })
+  return { groups: groupedCirculars }
 }

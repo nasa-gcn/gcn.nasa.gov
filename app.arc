@@ -29,6 +29,9 @@ circulars
 circulars
   src build/table-streams/circulars
 
+synonyms
+  src build/table-streams/synonyms
+
 @static
 fingerprint external
 folder build/static
@@ -68,6 +71,11 @@ circulars
   circularId *Number
   PointInTimeRecovery true
 
+synonyms
+  eventId *String
+  synonymId **String
+  PointInTimeRecovery true
+
 auto_increment_metadata
   tableName *String
   PointInTimeRecovery true
@@ -101,6 +109,10 @@ circulars
   email *String
   name circularsByEmail
 
+circulars
+  eventId *String
+  name circularEventId
+
 circulars_subscriptions
   sub *String
   name circularsSubscriptionsBySub
@@ -108,6 +120,10 @@ circulars_subscriptions
 legacy_users
   receive *Number
   name legacyReceivers
+
+synonyms
+  synonymId *String
+  name synonymsById
 
 @aws
 runtime nodejs18.x

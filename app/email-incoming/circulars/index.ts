@@ -10,6 +10,7 @@ import { tables } from '@architect/functions'
 import {
   bodyIsValid,
   formatAuthor,
+  parseEventFromSubject,
   subjectIsValid,
 } from '../../routes/_gcn.circulars/circulars.lib'
 import { createEmailIncomingMessageHandler } from '../handler'
@@ -84,12 +85,14 @@ export const handler = createEmailIncomingMessageHandler(
       return
     }
 
+    const eventId = parseEventFromSubject(parsed.subject)
     const circular = {
       subject: parsed.subject,
       body: parsed.text,
       sub: userData.sub,
       submitter: formatAuthor(userData),
       submittedHow,
+      eventId,
     }
 
     // Removes sub as a property if it is undefined from the legacy users

@@ -30,47 +30,82 @@ import {
 import clamp from 'lodash/clamp'
 import { useState } from 'react'
 
-import { circularRedirect, search } from '../_gcn.circulars/circulars.server'
-import type { action } from '../_gcn.circulars/route'
+import type { action } from '../_gcn.api.circulars'
+import type { FilteredMetadata } from '../_gcn.circulars/circulars.lib'
+import {
+  circularRedirect,
+  getCircularsByEventIds,
+  groupCircularsBySynonyms,
+  search,
+} from '../_gcn.circulars/circulars.server'
+import { getSynonyms } from '../_gcn.synonyms/synonyms.server'
 import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
 import DateSelectorButton from './DateSelectorButton'
+import GroupedView from './GroupedView'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
 import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-export async function loader({ request: { url } }: DataFunctionArgs) {
-  const { searchParams } = new URL(url)
+export async function loader({ request }: DataFunctionArgs) {
+  const { searchParams } = new URL(request.url)
   const query = searchParams.get('query') || undefined
   if (query) {
     await circularRedirect(query)
   }
+  const currentPage = parseInt(searchParams.get('page') || '1')
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
-  const page = parseInt(searchParams.get('page') || '1')
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
-  const results = await search({
+
+  const searchResponse = await search({
     query,
-    page: page - 1,
+    page: currentPage - 1,
     limit,
     startDate,
     endDate,
   })
+  const { synonyms, totalItems, totalPages } = await getSynonyms({
+    page: currentPage - 1,
+    eventId: query,
+    limit,
+  })
+  const eventIds = [] as string[]
 
-  return { page, ...results }
+  Object.keys(synonyms).forEach((value: string) => {
+    synonyms[value].forEach((event) => {
+      eventIds.push(event)
+    })
+  })
+
+  const circulars = await getCircularsByEventIds(eventIds)
+  const { groups } = await groupCircularsBySynonyms({ synonyms, circulars })
+  const combinedResults: FilteredMetadata = {
+    groups: {
+      page: currentPage,
+      items: groups,
+      totalPages: totalPages || 0,
+      totalItems: totalItems || 0,
+    },
+    index: {
+      page: currentPage,
+      items: searchResponse.items,
+      totalPages: searchResponse.totalPages,
+      totalItems: searchResponse.totalItems,
+    },
+  }
+  return { ...combinedResults }
 }
 
 export default function () {
   const newItem = useActionData<typeof action>()
-  const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
+  const { groups, index } = useLoaderData<typeof loader>()
+  const featureSynonyms = useFeature('SYNONYM_GROUPING')
   const featureCircularsFilterByDate = useFeature('CIRCULARS_FILTER_BY_DATE')
-
-  // Concatenate items from the action and loader functions
-  const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
-
+  const allItems = [...(newItem ? [newItem] : []), ...(index.items || [])]
   const [searchParams] = useSearchParams()
   const limit = searchParams.get('limit') || '100'
   const query = searchParams.get('query') || undefined
@@ -85,6 +120,12 @@ export default function () {
   const [inputDateLte, setInputDateLte] = useState(endDate)
   const [showContent, setShowContent] = useState(false)
   const [showDateRange, setShowDateRange] = useState(false)
+  const [groupsChecked, setGroupsChecked] = useState(false)
+  const [circularsChecked, setCircularsChecked] = useState(true)
+  const filteredPage = circularsChecked ? index.page : groups.page
+  const filteredTotalPages = circularsChecked
+    ? index.totalPages
+    : groups.totalPages
   const clean = inputQuery === query
 
   const submit = useSubmit()
@@ -263,14 +304,73 @@ export default function () {
         To navigate to a specific circular, enter the associated Circular ID
         (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
+      {featureSynonyms && (
+        <details className="margin-top-1 open">
+          <summary className="">Advanced Search Filters</summary>
+          <div className="margin-left-3">
+            <fieldset className="usa-fieldset">
+              <div className="usa-checkbox maxw-card-lg">
+                <input
+                  className="usa-checkbox__input usa-radio__input--tile"
+                  id="circulars"
+                  type="checkbox"
+                  name="circulars"
+                  value={circularsChecked.toString()}
+                  checked={circularsChecked}
+                  onChange={() => {
+                    setGroupsChecked(!groupsChecked)
+                    setCircularsChecked(!circularsChecked)
+                  }}
+                />
+                <label className="usa-checkbox__label" htmlFor="circulars">
+                  Circulars
+                  <span className="usa-checkbox__label-description">
+                    View Circulars index.
+                  </span>
+                </label>
+              </div>
+              <div className="usa-checkbox maxw-card-lg">
+                <input
+                  className="usa-checkbox__input usa-checkbox__input--tile"
+                  id="groups"
+                  type="checkbox"
+                  name="groups"
+                  value={groupsChecked.toString()}
+                  checked={groupsChecked}
+                  onChange={() => {
+                    setCircularsChecked(!circularsChecked)
+                    setGroupsChecked(!groupsChecked)
+                  }}
+                />
+                <label className="usa-checkbox__label" htmlFor="groups">
+                  Groups
+                  <span className="usa-checkbox__label-description">
+                    View Circulars grouped by synonymous events.
+                  </span>
+                </label>
+              </div>
+            </fieldset>
+          </div>
+        </details>
+      )}
+      {clean && circularsChecked && (
+        <CircularsIndex
+          allItems={allItems}
+          searchString={searchString}
+          totalItems={index.totalItems}
+          query={query}
+        />
+      )}
+      {clean && groupsChecked && featureSynonyms && (
+        <GroupedView
+          allItems={groups.items}
+          searchString={searchString}
+          query={query}
+          totalItems={groups.totalItems}
+        />
+      )}
       {clean && (
         <>
-          <CircularsIndex
-            allItems={allItems}
-            searchString={searchString}
-            totalItems={totalItems}
-            query={query}
-          />
           <div className="display-flex flex-row flex-wrap">
             <div className="display-flex flex-align-self-center margin-right-2 width-auto">
               <div>
@@ -292,12 +392,12 @@ export default function () {
               </div>
             </div>
             <div className="display-flex flex-fill">
-              {totalPages > 1 && (
+              {filteredTotalPages > 1 && (
                 <CircularPagination
                   query={query}
-                  page={page}
+                  page={filteredPage}
                   limit={parseInt(limit)}
-                  totalPages={totalPages}
+                  totalPages={filteredTotalPages}
                   startDate={startDate}
                   endDate={endDate}
                 />

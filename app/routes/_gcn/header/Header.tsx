@@ -5,7 +5,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Link, NavLink } from '@remix-run/react'
+import type { DataFunctionArgs } from '@remix-run/node'
+import { Link, NavLink, useLoaderData } from '@remix-run/react'
 import {
   Menu,
   NavMenuButton,
@@ -14,11 +15,17 @@ import {
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
-
 import { Meatball } from '~/components/meatball/Meatball'
-import { useEmail, useUserIdp } from '~/root'
-
+import { useEmail, useFeature, useUserIdp } from '~/root'
 import styles from './header.module.css'
+import { getUser } from '~/routes/_gcn._auth/user.server'
+
+export async function loader({ request }: DataFunctionArgs) {
+  const user = await getUser(request)
+  const isModerator =
+    user?.groups.includes('gcn.nasa.gov/circular-moderator') || false
+  return isModerator
+}
 
 /**
  * A variation on the NavDropDownButton component from @trussworks/react-uswds
@@ -70,6 +77,7 @@ export function Header() {
   const idp = useUserIdp()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
+  const featureSynonyms = useFeature('SYNONYM_GROUPING')
 
   function toggleMobileNav() {
     setExpanded((expanded) => !expanded)
@@ -83,6 +91,8 @@ export function Header() {
     if (userMenuIsOpen && !expanded) setUserMenuIsOpen(false)
     hideMobileNav()
   }
+
+  const isModerator = useLoaderData<typeof loader>()
 
   return (
     <>
@@ -130,6 +140,16 @@ export function Header() {
               >
                 Circulars
               </NavLink>,
+              featureSynonyms && isModerator && (
+                <NavLink
+                  className="usa-nav__link"
+                  to="/synonyms"
+                  key="/synonyms"
+                  onClick={hideMobileNav}
+                >
+                  Synonyms
+                </NavLink>
+              ),
               <NavLink
                 className="usa-nav__link"
                 to="/docs"
