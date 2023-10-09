@@ -145,19 +145,19 @@ export async function search({
               },
           functions: [
             {
-              filter: { exists: { field: 'eventId' } },
+              filter: { wildcard: { eventId: `*${query}*` } },
               weight: 4,
             },
             {
-              filter: { exists: { field: 'synonyms' } },
+              filter: { wildcard: { synonyms: `*${query}*` } },
               weight: 3,
             },
             {
-              filter: { exists: { field: 'subject' } },
+              filter: { wildcard: { subject: `*${query}*` } },
               weight: 2,
             },
             {
-              filter: { exists: { field: 'body' } },
+              filter: { wildcard: { body: `*${query}*` } },
               weight: 1,
             },
           ],
