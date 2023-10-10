@@ -265,7 +265,7 @@ export default function () {
   }
 
   const setDateRange = () => {
-    // setShowContent(false)
+    setShowContent(false)
     if (showDateRange) setShowDateRange(false)
     const params = new URLSearchParams(location.search)
     if (inputDateGte) params.set('startDate', inputDateGte)
@@ -328,12 +328,14 @@ export default function () {
             <DateSelectorButton
               startDate={startDate}
               endDate={endDate}
-              onClick={() => { setShowContent((shown) => !shown) }}
+              onClick={() => {
+                setShowContent((shown) => !shown)
+              }}
               expanded={showContent}
             />
             {showContent && (
               <DetailsDropdownContent className="margin-top-1">
-                <div className="usa-radio maxw-card-xlg">
+                <div className="maxw-card-xlg">
                   <div className="display-flex flex-row">
                     <div className="display-flex flex-column flex-align-start margin-1">
                       <Radio
@@ -342,7 +344,6 @@ export default function () {
                         value="undefined"
                         defaultChecked={true}
                         label="All Time"
-                        className="usa-search__filter-button"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -351,8 +352,7 @@ export default function () {
                         id="radio-hour"
                         name="radio-date"
                         value="hour"
-                        label="Past hour"
-                        className="usa-search__filter-button"
+                        label="Last hour"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -362,7 +362,6 @@ export default function () {
                         name="radio-date"
                         value="today"
                         label="Today"
-                        className="usa-search__filter-button"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -373,8 +372,7 @@ export default function () {
                         id="radio-day"
                         name="radio-date"
                         value="day"
-                        label="Past 24 Hours"
-                        className="usa-search__filter-button"
+                        label="Last 24 Hours"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -383,8 +381,7 @@ export default function () {
                         id="radio-week"
                         name="radio-date"
                         value="week"
-                        label="Past Week"
-                        className="usa-search__filter-button"
+                        label="Last Week"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -393,8 +390,7 @@ export default function () {
                         id="radio-month"
                         name="radio-date"
                         value="month"
-                        label="Past Month"
-                        className="usa-search__filter-button"
+                        label="Last Month"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -406,8 +402,7 @@ export default function () {
                         id="radio-year"
                         name="radio-date"
                         value="year"
-                        label="Past Year"
-                        className="usa-search__filter-button"
+                        label="Last Year"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -417,7 +412,6 @@ export default function () {
                         name="radio-date"
                         value="ytd"
                         label="Year to Date"
-                        className="usa-search__filter-button"
                         onChange={(e) => {
                           setFuzzyTime(e.target.value)
                         }}
@@ -427,7 +421,6 @@ export default function () {
                         name="radio-date"
                         value="custom"
                         label="Custom Range..."
-                        className="usa-search__filter-button"
                         onChange={(e) => {
                           setShowDateRange(e.target.checked)
                         }}
@@ -447,7 +440,6 @@ export default function () {
                         onChange: (value) => {
                           setInputDateGte(value)
                         },
-                        // style: { height: '15px' }, // Adjust the height as needed
                       }}
                       endDateHint="dd/mm/yyyy"
                       endDateLabel="End Date"
@@ -458,7 +450,6 @@ export default function () {
                         onChange: (value) => {
                           setInputDateLte(value)
                         },
-                        // style: { height: '15px' },
                       }}
                     />
                   )}
