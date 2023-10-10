@@ -245,7 +245,7 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const [inputDateGte, setInputDateGte] = useState(startDate)
   const [inputDateLte, setInputDateLte] = useState(endDate)
-  const [showContent, setShowContent] = useState(false) // for the custom date range dropdown
+  const [showContent, setShowContent] = useState(false)
   const [showDateRange, setShowDateRange] = useState(false)
   const clean =
     inputQuery === query &&
@@ -266,7 +266,6 @@ export default function () {
 
   const setDateRange = () => {
     setShowContent(false)
-    if (showDateRange) setShowDateRange(false)
     const params = new URLSearchParams(location.search)
     if (inputDateGte) params.set('startDate', inputDateGte)
     if (inputDateLte) params.set('endDate', inputDateLte)
@@ -278,11 +277,19 @@ export default function () {
 
   useEffect(() => {
     const radiobuttons = document.querySelectorAll('input[name="radio-date"]')
+    let radioSelected = false
     radiobuttons.forEach((button) => {
       if ((button as HTMLInputElement).value === inputDateGte) {
         ;(button as HTMLInputElement).checked = true
-      } // may not address edge case of selecting custom range
+        radioSelected = true
+      }
     })
+    if (!radioSelected) {
+      const customButton = document.getElementById('radio-custom')
+      if (customButton) {
+        ;(customButton as HTMLInputElement).checked = true
+      } // does not address the need for the custom date range button to be expanded if this button is checked
+    }
   })
 
   return (
