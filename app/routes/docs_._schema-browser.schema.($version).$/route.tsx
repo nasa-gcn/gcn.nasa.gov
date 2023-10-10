@@ -128,7 +128,7 @@ function VersionSelector({
     <>
       <DetailsDropdownButton
         onClick={() => {
-          setShowVersions((shown) => shown)
+          setShowVersions((shown) => !shown)
         }}
       >
         {<>Version: {version}</>}
