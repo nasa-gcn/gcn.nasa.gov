@@ -113,14 +113,13 @@ export async function search({
     : { circularId: { order: 'desc' } }
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
-
   const esQuery = query
     ? {
         function_score: {
           query: isLuceneSyntax
             ? {
                 query_string: {
-                  query,
+                  query: `${query}~`,
                   fuzziness: 'AUTO',
                 },
               }
@@ -129,7 +128,7 @@ export async function search({
                   must: [
                     {
                       query_string: {
-                        query,
+                        query: `*${query}*`,
                         default_field: '*',
                         fuzziness: 'AUTO',
                       },
