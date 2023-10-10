@@ -26,7 +26,7 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import clamp from 'lodash/clamp'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
@@ -276,6 +276,15 @@ export default function () {
     })
   }
 
+  useEffect(() => {
+    const radiobuttons = document.querySelectorAll('input[name="radio-date"]')
+    radiobuttons.forEach((button) => {
+      if ((button as HTMLInputElement).value === inputDateGte) {
+        ;(button as HTMLInputElement).checked = true
+      } // may not address edge case of selecting custom range
+    })
+  })
+
   return (
     <>
       <h1>GCN Circulars</h1>
@@ -330,6 +339,7 @@ export default function () {
               endDate={endDate}
               onClick={() => {
                 setShowContent((shown) => !shown)
+                setShowDateRange(false)
               }}
               expanded={showContent}
             />
