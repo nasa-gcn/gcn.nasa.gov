@@ -28,7 +28,7 @@ import {
   updateEmailNotification,
 } from './user.email/email_notices.server'
 import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
-import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
+import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import { useRecaptchaSiteKey } from '~/root'

@@ -12,7 +12,7 @@ import { useState } from 'react'
 
 import type { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeFormatInput } from '~/components/NoticeFormat'
-import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes'
+import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
