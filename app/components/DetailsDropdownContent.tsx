@@ -9,16 +9,11 @@ import { Card, CardGroup } from '@trussworks/react-uswds'
 
 export default function DetailsDropdownContent({
   children,
-  className,
   ...props
-}: Omit<JSX.IntrinsicElements['ul'], 'role'>) {
+}: Parameters<typeof Card>[0]) {
   return (
-    <CardGroup
-      {...props}
-      className={`position-absolute z-top ${className ?? ''}`}
-      role="menu"
-    >
-      <Card>{children}</Card>
+    <CardGroup className="position-absolute margin-top-1 z-top" role="menu">
+      <Card {...props}>{children}</Card>
     </CardGroup>
   )
 }
