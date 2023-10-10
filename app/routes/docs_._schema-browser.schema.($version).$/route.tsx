@@ -131,7 +131,7 @@ function VersionSelector({
           setShowVersions((shown) => !shown)
         }}
       >
-        {<>Version: {version}</>}
+        Version: {version}
       </DetailsDropdownButton>
       {showVersions && (
         <DetailsDropdownContent>
