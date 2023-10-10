@@ -10,6 +10,7 @@ import type { AttributeValue } from '@aws-sdk/client-dynamodb'
 import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
+import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import { errors } from '@opensearch-project/opensearch'
 import type {
   DynamoDBRecord,
@@ -19,7 +20,6 @@ import type {
 import { sendEmailBulk } from '~/lib/email.server'
 import { origin } from '~/lib/env.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
-import { search as getSearchClient } from '~/lib/search.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircularText } from '~/routes/circulars/circulars.lib'
 

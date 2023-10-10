@@ -8,6 +8,7 @@
 import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { search as getSearch } from '@nasa-gcn/architect-functions-search'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
@@ -15,7 +16,6 @@ import memoizee from 'memoizee'
 import { type User, getUser } from '../_auth/user.server'
 import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
 import type { Circular, CircularMetadata } from './circulars.lib'
-import { search as getSearch } from '~/lib/search.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
