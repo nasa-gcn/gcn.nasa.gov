@@ -121,6 +121,7 @@ export async function search({
             ? {
                 query_string: {
                   query,
+                  fuzziness: 'AUTO',
                 },
               }
             : {
