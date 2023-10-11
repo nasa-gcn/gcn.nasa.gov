@@ -20,6 +20,7 @@ import {
   CardBody,
   CardFooter,
   DateRangePicker,
+  Grid,
   Icon,
   Label,
   Radio,
@@ -355,8 +356,8 @@ export default function () {
             {showContent && (
               <DetailsDropdownContent className="maxw-card-xlg">
                 <CardBody>
-                  <div className="display-flex flex-row">
-                    <div className="display-flex flex-column flex-align-start margin-1">
+                  <Grid row>
+                    <Grid col={4}>
                       <Radio
                         id="radio-alltime"
                         name="radio-date"
@@ -367,6 +368,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-hour"
                         name="radio-date"
@@ -376,6 +379,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-today"
                         name="radio-date"
@@ -385,8 +390,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
-                    </div>
-                    <div className="display-flex flex-column margin-1">
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-day"
                         name="radio-date"
@@ -396,6 +401,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-week"
                         name="radio-date"
@@ -405,6 +412,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-month"
                         name="radio-date"
@@ -414,9 +423,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
-                    </div>
-
-                    <div className="display-flex flex-column margin-1">
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-year"
                         name="radio-date"
@@ -426,6 +434,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-ytd"
                         name="radio-date"
@@ -435,6 +445,8 @@ export default function () {
                           setFuzzyTime(e.target.value)
                         }}
                       />
+                    </Grid>
+                    <Grid col={4}>
                       <Radio
                         id="radio-custom"
                         name="radio-date"
@@ -444,8 +456,8 @@ export default function () {
                           setShowDateRange(e.target.checked)
                         }}
                       />
-                    </div>
-                  </div>
+                    </Grid>
+                  </Grid>
 
                   {showDateRange && (
                     <DateRangePicker
