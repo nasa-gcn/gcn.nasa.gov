@@ -127,6 +127,7 @@ export async function search({
                 multi_match: {
                   query,
                   fields: ['submitter', 'subject', 'body'],
+                  fuzziness: 'AUTO',
                 },
               }
             : undefined,
