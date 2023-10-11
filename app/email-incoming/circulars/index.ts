@@ -159,7 +159,7 @@ function successMessage(
   explanation: string
 ) {
   return `Your GCN Circular from ${userEmail} (subject: ${subject}) was received and distributed.
-  
+
   ${explanation}`
 }
 
@@ -169,7 +169,7 @@ function failedMessage(
   explanation: string
 ) {
   return `Your GCN Circular from ${userEmail} (subject: ${subject}) was not processed for the following reasons:
-  
+
 ${explanation}
 
 If you believe this to be a mistake, please contact us using the form at ${origin}/contact, and we will look into resolving it as soon as possible.`
@@ -184,7 +184,7 @@ const sharedEmailBody = `
 
 
 As of April 12, 2023, GCN Circulars are being administered through the new General Coordinates Network (GCN; ${origin}), and no longer through the GCN Classic service (https://gcn.gsfc.nasa.gov).
-      
+
 The new GCN Circulars allow you to:
 
 - Browse and search Circulars in our all-new archive.

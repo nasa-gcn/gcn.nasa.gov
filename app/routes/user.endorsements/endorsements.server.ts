@@ -29,7 +29,7 @@ import { origin } from '~/lib/env.server'
 const fromName = 'GCN Endorsements'
 // Call-to-action
 const endorsementsCTA = `
-      
+
 View your pending endorsements here: ${origin}/user/endorsements`
 
 // models
@@ -143,8 +143,8 @@ export class EndorsementsServer {
       subject: 'GCN Peer Endorsements: New Request',
       body: dedent`You have a new peer endorsement request for NASA's General Coordinates Network (GCN) from ${
         this.#currentUserEmail
-      }. 
-      
+      }.
+
       ${note && `Comments from the user: ${note}`}
 
       Approval of an endorsement means that the requestor, ${
@@ -154,7 +154,7 @@ export class EndorsementsServer {
       Please approve this request if you are familiar with the requester, and agree with the criteria. Thank you for your contributions to the GCN community.
 
       If you are not familiar with this user, or believe it to be spam, you may reject or report the endorsement request.
-      
+
       View all of your pending endorsement requests here: ${origin}/user/endorsements`,
     })
   }
@@ -226,7 +226,7 @@ export class EndorsementsServer {
       )
       requestorMessage +=
         `
-      
+
       As an approved user, you may now submit GCN Circulars at ${origin}/circulars/new and be requested for endorsement by other users.` +
         endorsementsCTA
     } else if (status === 'reported')
@@ -256,7 +256,7 @@ export class EndorsementsServer {
         subject: `GCN Peer Endorsements: Endorsement ${status}`,
         body:
           dedent`Your changes to ${requestorEmail}'s peer endorsement request have been processed. They will receive an email as well to confirm the new status.
-        
+
         No further action is required on your part for this user's request.` +
           endorsementsCTA,
       })

@@ -473,7 +473,7 @@ export function ClientSampleCode({
             listTopics
               ? `
               // List all topics
-              consumer.Subscription.ForEach(topic => Console.WriteLine(topic));    
+              consumer.Subscription.ForEach(topic => Console.WriteLine(topic));
               `
               : ''
           }
