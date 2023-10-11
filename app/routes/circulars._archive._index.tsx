@@ -195,16 +195,6 @@ const dateSelectorLabels: Record<string, string> = {
   undefined: 'All Time',
 }
 
-const radioOptions = [
-  ...Object.entries(dateSelectorLabels)
-    .filter(([value]) => value !== 'undefined') // don't include the undefined option as a button
-    .map(([value, label]) => ({
-      id: `radio-${value}`,
-      value,
-      label,
-    })),
-]
-
 function DateSelectorButton({
   startDate,
   endDate,
@@ -352,24 +342,31 @@ export default function () {
               <DetailsDropdownContent className="maxw-card-xlg">
                 <CardBody>
                   <Grid row>
-                    {radioOptions.map((option) => (
-                      <Grid col={4} key={option.id}>
-                        <Radio
-                          id={option.id}
-                          name="radio-date"
-                          value={option.value}
-                          label={option.label}
-                          checked={option.value === inputDateGte}
-                          onChange={(e) => {
-                            if (option.value === 'custom') {
-                              setShowDateRange(e.target.checked)
-                            } else {
-                              setFuzzyTime(option.value)
-                            }
-                          }}
-                        />
-                      </Grid>
-                    ))}
+                    {Object.entries(dateSelectorLabels)
+                      .filter(([value]) => value !== 'undefined') // don't include the undefined option as a button
+                      .map(([value, label]) => ({
+                        id: `radio-${value}`,
+                        value,
+                        label,
+                      }))
+                      .map((option) => (
+                        <Grid col={4} key={option.id}>
+                          <Radio
+                            id={option.id}
+                            name="radio-date"
+                            value={option.value}
+                            label={option.label}
+                            checked={option.value === inputDateGte}
+                            onChange={(e) => {
+                              if (option.value === 'custom') {
+                                setShowDateRange(e.target.checked)
+                              } else {
+                                setFuzzyTime(option.value)
+                              }
+                            }}
+                          />
+                        </Grid>
+                      ))}
                   </Grid>
                   {showDateRange && (
                     <DateRangePicker
