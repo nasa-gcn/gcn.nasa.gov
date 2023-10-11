@@ -20,11 +20,7 @@ export function GcnCircular({
 
 export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <a
-      className="usa-link"
-      rel="external"
-      href={`https://arxiv.org/abs/${value}`}
-    >
+    <a className="usa-link" href={`https://arxiv.org/abs/${value}`}>
       {children}
     </a>
   )
@@ -32,7 +28,7 @@ export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
 
 export function Doi({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <a className="usa-link" rel="external" href={`https://doi.org/${value}`}>
+    <a className="usa-link" href={`https://doi.org/${value}`}>
       {children}
     </a>
   )
@@ -40,11 +36,7 @@ export function Doi({ children, value }: JSX.IntrinsicElements['data']) {
 
 export function Tns({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <a
-      className="usa-link"
-      rel="external"
-      href={`https://www.wis-tns.org/object/${value}`}
-    >
+    <a className="usa-link" href={`https://www.wis-tns.org/object/${value}`}>
       {children}
     </a>
   )
