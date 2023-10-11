@@ -89,6 +89,13 @@ function getValidDates(startDate?: string, endDate?: string) {
   return [startTimestamp, endTimestamp]
 }
 
+function isLuceneSyntax(query?: string) {
+  if (!query) return false
+  const luceneRegex =
+    /[\w.]+:[\w.]+|\w+\s(AND|OR)\s\w+|\?|\*|\w*~\w+|\w+\s*\[\w+\s*TO\s*\w+\]|\w+\^|\+\w+|\w+\sNOT\s\w+|\w+-\w+|\(.+\)|\w+~/
+  return luceneRegex.test(query)
+}
+
 export async function search({
   query,
   page,
@@ -107,7 +114,7 @@ export async function search({
   totalItems: number
 }> {
   const client = await getSearch()
-  const isLuceneSyntax = query ? query.includes(':') : false
+  const useLuceneSyntax = isLuceneSyntax(query)
   const sortOrder = query
     ? { _score: 'desc' }
     : { circularId: { order: 'desc' } }
@@ -116,7 +123,7 @@ export async function search({
   const esQuery = query
     ? {
         function_score: {
-          query: isLuceneSyntax
+          query: useLuceneSyntax
             ? {
                 query_string: {
                   query: `${query}~`,
