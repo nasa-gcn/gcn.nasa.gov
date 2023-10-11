@@ -29,7 +29,7 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import clamp from 'lodash/clamp'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { circularRedirect, search } from './circulars/circulars.server'
 import type { action } from './circulars/route'
@@ -182,24 +182,20 @@ function Pagination({
 }
 
 const dateSelectorLabels: Record<string, string> = {
-  hour: 'Last hour',
+  alltime: 'All Time',
+  hour: 'Last Hour',
   today: 'Today',
-  day: 'Last day',
-  week: 'Last week',
-  month: 'Last month',
-  year: 'Last year',
+  day: 'Last Day',
+  week: 'Last Week',
+  month: 'Last Month',
+  year: 'Last Year',
   // mtd: 'Month to date',
-  ytd: 'Year to date',
-  undefined: 'All time',
+  ytd: 'Year to Date',
+  custom: 'Custom Range',
+  undefined: 'All Time',
 }
 
 const radioOptions = [
-  {
-    // default/alltime option
-    id: 'radio-alltime',
-    value: 'undefined',
-    label: 'All Time',
-  },
   ...Object.entries(dateSelectorLabels)
     .filter(([value]) => value !== 'undefined') // don't include the undefined option as a button
     .map(([value, label]) => ({
@@ -207,12 +203,6 @@ const radioOptions = [
       value,
       label,
     })),
-  {
-    // custom range option
-    id: 'radio-custom',
-    value: 'custom',
-    label: 'Custom Range...',
-  },
 ]
 
 function DateSelectorButton({
@@ -300,23 +290,6 @@ export default function () {
     })
   }
 
-  useEffect(() => {
-    const radiobuttons = document.querySelectorAll('input[name="radio-date"]')
-    let radioSelected = false
-    radiobuttons.forEach((button) => {
-      if ((button as HTMLInputElement).value === inputDateGte) {
-        ;(button as HTMLInputElement).checked = true
-        radioSelected = true
-      }
-    })
-    if (!radioSelected) {
-      const customButton = document.getElementById('radio-custom')
-      if (customButton) {
-        ;(customButton as HTMLInputElement).checked = true
-      } // does not address the need for the custom date range button to be expanded if this button is checked
-    }
-  })
-
   return (
     <>
       <h1>GCN Circulars</h1>
@@ -386,6 +359,7 @@ export default function () {
                           name="radio-date"
                           value={option.value}
                           label={option.label}
+                          checked={option.value === inputDateGte}
                           onChange={(e) => {
                             if (option.value === 'custom') {
                               setShowDateRange(e.target.checked)
