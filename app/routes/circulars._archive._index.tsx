@@ -18,6 +18,7 @@ import {
   Button,
   ButtonGroup,
   CardBody,
+  CardFooter,
   DateRangePicker,
   Icon,
   Label,
@@ -471,7 +472,8 @@ export default function () {
                       }}
                     />
                   )}
-                  <div className="display-flex flex-row">
+
+                  <CardFooter>
                     <Button
                       type="button"
                       className=""
@@ -482,7 +484,7 @@ export default function () {
                     >
                       <Icon.CalendarToday /> Submit
                     </Button>
-                  </div>
+                  </CardFooter>
                 </CardBody>
               </DetailsDropdownContent>
             )}
