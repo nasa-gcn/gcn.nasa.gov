@@ -31,7 +31,7 @@ h1:first-child {
 }
 
 /*
- * Size and position the NASA meatball logo in the header. 
+ * Size and position the NASA meatball logo in the header.
  */
 
 #site-logo {
@@ -331,8 +331,8 @@ input.react-tags__combobox-input:focus {
 }
 
 /*
- Hero formatting
-*/
+ * Hero formatting
+ */
 
 .gcn-hero-background {
   background-image: none;
@@ -374,24 +374,24 @@ input.react-tags__combobox-input:focus {
 }
 
 /*
-  General Responsiveness in missions page
-*/
+ * General Responsiveness in missions page
+ */
 
 .overflow-table {
   overflow-x: scroll;
 }
 
-/* 
-  Bottom aligned header rows 
-*/
+/*
+ * Bottom aligned header rows
+ */
 .bottom-aligned {
   display: inline;
   vertical-align: bottom;
 }
 
 /*
-  Fully span the row width for segmented columns
-*/
+ * Fully span the row width for segmented columns
+ */
 .full-width-span {
   flex: 1 1 100%;
 }
