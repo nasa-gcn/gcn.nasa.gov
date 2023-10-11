@@ -41,15 +41,3 @@ export function Tns({ children, value }: JSX.IntrinsicElements['data']) {
     </a>
   )
 }
-
-export function Tns({ children, value }: JSX.IntrinsicElements['data']) {
-  return (
-    <a
-      className="usa-link"
-      rel="external"
-      href={`https://www.wis-tns.org/object/${value}`}
-    >
-      {children}
-    </a>
-  )
-}
