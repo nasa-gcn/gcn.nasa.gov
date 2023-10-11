@@ -17,6 +17,7 @@ import {
 import {
   Button,
   ButtonGroup,
+  CardBody,
   DateRangePicker,
   Icon,
   Label,
@@ -351,8 +352,8 @@ export default function () {
               expanded={showContent}
             />
             {showContent && (
-              <DetailsDropdownContent className="margin-top-1">
-                <div className="maxw-card-xlg">
+              <DetailsDropdownContent className="maxw-card-xlg">
+                <CardBody>
                   <div className="display-flex flex-row">
                     <div className="display-flex flex-column flex-align-start margin-1">
                       <Radio
@@ -482,7 +483,7 @@ export default function () {
                       <Icon.CalendarToday /> Submit
                     </Button>
                   </div>
-                </div>
+                </CardBody>
               </DetailsDropdownContent>
             )}
           </>
