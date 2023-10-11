@@ -191,7 +191,7 @@ const dateSelectorLabels: Record<string, string> = {
   year: 'Last Year',
   // mtd: 'Month to date',
   ytd: 'Year to Date',
-  custom: 'Custom Range',
+  custom: 'Custom Range...',
   undefined: 'All Time',
 }
 
@@ -357,6 +357,7 @@ export default function () {
                             value={option.value}
                             label={option.label}
                             checked={option.value === inputDateGte}
+                            defaultChecked={option.value === 'alltime'}
                             onChange={(e) => {
                               if (option.value === 'custom') {
                                 setShowDateRange(e.target.checked)
