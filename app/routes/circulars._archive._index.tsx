@@ -183,15 +183,37 @@ function Pagination({
 
 const dateSelectorLabels: Record<string, string> = {
   hour: 'Last hour',
+  today: 'Today',
   day: 'Last day',
   week: 'Last week',
   month: 'Last month',
   year: 'Last year',
-  today: 'Today',
-  mtd: 'Month to date',
+  // mtd: 'Month to date',
   ytd: 'Year to date',
   undefined: 'All time',
 }
+
+const radioOptions = [
+  {
+    // default/alltime option
+    id: 'radio-alltime',
+    value: 'undefined',
+    label: 'All Time',
+  },
+  ...Object.entries(dateSelectorLabels)
+    .filter(([value]) => value !== 'undefined') // don't include the undefined option as a button
+    .map(([value, label]) => ({
+      id: `radio-${value}`,
+      value,
+      label,
+    })),
+  {
+    // custom range option
+    id: 'radio-custom',
+    value: 'custom',
+    label: 'Custom Range...',
+  },
+]
 
 function DateSelectorButton({
   startDate,
@@ -357,108 +379,24 @@ export default function () {
               <DetailsDropdownContent className="maxw-card-xlg">
                 <CardBody>
                   <Grid row>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-alltime"
-                        name="radio-date"
-                        value="undefined"
-                        defaultChecked={true}
-                        label="All Time"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-hour"
-                        name="radio-date"
-                        value="hour"
-                        label="Last hour"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-today"
-                        name="radio-date"
-                        value="today"
-                        label="Today"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-day"
-                        name="radio-date"
-                        value="day"
-                        label="Last 24 Hours"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-week"
-                        name="radio-date"
-                        value="week"
-                        label="Last Week"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-month"
-                        name="radio-date"
-                        value="month"
-                        label="Last Month"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-year"
-                        name="radio-date"
-                        value="year"
-                        label="Last Year"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-ytd"
-                        name="radio-date"
-                        value="ytd"
-                        label="Year to Date"
-                        onChange={(e) => {
-                          setFuzzyTime(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-custom"
-                        name="radio-date"
-                        value="custom"
-                        label="Custom Range..."
-                        onChange={(e) => {
-                          setShowDateRange(e.target.checked)
-                        }}
-                      />
-                    </Grid>
+                    {radioOptions.map((option) => (
+                      <Grid col={4} key={option.id}>
+                        <Radio
+                          id={option.id}
+                          name="radio-date"
+                          value={option.value}
+                          label={option.label}
+                          onChange={(e) => {
+                            if (option.value === 'custom') {
+                              setShowDateRange(e.target.checked)
+                            } else {
+                              setFuzzyTime(option.value)
+                            }
+                          }}
+                        />
+                      </Grid>
+                    ))}
                   </Grid>
-
                   {showDateRange && (
                     <DateRangePicker
                       startDateHint="dd/mm/yyyy"
