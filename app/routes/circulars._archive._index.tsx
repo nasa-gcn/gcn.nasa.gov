@@ -344,25 +344,20 @@ export default function () {
                   <Grid row>
                     {Object.entries(dateSelectorLabels)
                       .filter(([value]) => value !== 'undefined') // don't include the undefined option as a button
-                      .map(([value, label]) => ({
-                        id: `radio-${value}`,
-                        value,
-                        label,
-                      }))
-                      .map((option) => (
-                        <Grid col={4} key={option.id}>
+                      .map(([value, label]) => (
+                        <Grid col={4} key={`radio-${value}`}>
                           <Radio
-                            id={option.id}
+                            id={`radio-${value}`}
                             name="radio-date"
-                            value={option.value}
-                            label={option.label}
-                            checked={option.value === inputDateGte}
-                            defaultChecked={option.value === 'alltime'}
+                            value={value}
+                            label={label}
+                            checked={value === inputDateGte}
+                            defaultChecked={value === 'alltime'}
                             onChange={(e) => {
-                              if (option.value === 'custom') {
+                              if (value === 'custom') {
                                 setShowDateRange(e.target.checked)
                               } else {
-                                setFuzzyTime(option.value)
+                                setFuzzyTime(value)
                               }
                             }}
                           />
@@ -398,7 +393,6 @@ export default function () {
                   <CardFooter>
                     <Button
                       type="button"
-                      className=""
                       form="searchForm"
                       onClick={() => {
                         setDateRange()
