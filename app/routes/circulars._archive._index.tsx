@@ -182,7 +182,6 @@ function Pagination({
 }
 
 const dateSelectorLabels: Record<string, string> = {
-  alltime: 'All Time',
   hour: 'Last Hour',
   today: 'Today',
   day: 'Last Day',
@@ -192,7 +191,6 @@ const dateSelectorLabels: Record<string, string> = {
   // mtd: 'Month to date',
   ytd: 'Year to Date',
   custom: 'Custom Range...',
-  undefined: 'All Time',
 }
 
 function DateSelectorButton({
@@ -342,9 +340,20 @@ export default function () {
               <DetailsDropdownContent className="maxw-card-xlg">
                 <CardBody>
                   <Grid row>
-                    {Object.entries(dateSelectorLabels)
-                      .filter(([value]) => value !== 'undefined') // don't include the undefined option as a button
-                      .map(([value, label]) => (
+                    <Grid col={4} key={`radio-alltime`}>
+                      <Radio
+                        id={`radio-alltime`}
+                        name="radio-date"
+                        value=""
+                        label="All Time"
+                        defaultChecked={true}
+                        onChange={(e) => {
+                          setInputDateGte(e.target.value)
+                        }}
+                      />
+                    </Grid>
+                    {Object.entries(dateSelectorLabels).map(
+                      ([value, label]) => (
                         <Grid col={4} key={`radio-${value}`}>
                           <Radio
                             id={`radio-${value}`}
@@ -356,13 +365,15 @@ export default function () {
                             onChange={(e) => {
                               if (value === 'custom') {
                                 setShowDateRange(e.target.checked)
+                                setInputDateGte('') // clear the start date
                               } else {
                                 setFuzzyTime(value)
                               }
                             }}
                           />
                         </Grid>
-                      ))}
+                      )
+                    )}
                   </Grid>
                   {showDateRange && (
                     <DateRangePicker
