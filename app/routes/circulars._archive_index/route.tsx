@@ -140,6 +140,7 @@ export default function () {
             allItems={allItems}
             searchString={searchString}
             totalItems={totalItems}
+            query={query}
           />
           <div className="display-flex flex-row flex-wrap">
             <div className="display-flex flex-align-self-center margin-right-2 width-auto">
