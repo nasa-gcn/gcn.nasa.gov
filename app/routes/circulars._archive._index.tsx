@@ -274,10 +274,7 @@ export default function () {
     else params.delete('startDate')
     if (inputDateLte) params.set('endDate', inputDateLte)
     else params.delete('endDate')
-    submit(params, {
-      method: 'get',
-      action: '/circulars',
-    })
+    window.location.search = params.toString()
   }
 
   return (
