@@ -11,8 +11,8 @@ import { Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds'
 
 import { get } from '../circulars/circulars.server'
+import { PlainTextBody } from './Body'
 import { FrontMatter } from './FrontMatter'
-import { PlainTextBody } from './PlainTextBody'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
@@ -93,7 +93,7 @@ export default function () {
       </ButtonGroup>
       <h1>GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
-      <PlainTextBody>{body}</PlainTextBody>
+      <PlainTextBody className="margin-y-2">{body}</PlainTextBody>
     </>
   )
 }
