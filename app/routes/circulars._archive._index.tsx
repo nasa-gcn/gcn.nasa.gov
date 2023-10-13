@@ -188,7 +188,6 @@ const dateSelectorLabels: Record<string, string> = {
   week: 'Last Week',
   month: 'Last Month',
   year: 'Last Year',
-  // mtd: 'Month to date',
   ytd: 'Year to Date',
 }
 
