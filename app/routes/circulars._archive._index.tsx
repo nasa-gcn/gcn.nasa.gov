@@ -190,7 +190,6 @@ const dateSelectorLabels: Record<string, string> = {
   year: 'Last Year',
   // mtd: 'Month to date',
   ytd: 'Year to Date',
-  custom: 'Custom Range...',
 }
 
 function DateSelectorButton({
@@ -361,19 +360,25 @@ export default function () {
                             value={value}
                             label={label}
                             checked={value === inputDateGte}
-                            defaultChecked={value === 'alltime'}
-                            onChange={(e) => {
-                              if (value === 'custom') {
-                                setShowDateRange(e.target.checked)
-                                setInputDateGte('') // clear the start date
-                              } else {
-                                setFuzzyTime(value)
-                              }
+                            onChange={() => {
+                              setFuzzyTime(value)
                             }}
                           />
                         </Grid>
                       )
                     )}
+                    <Grid col={4}>
+                      <Radio
+                        id="radio-custom"
+                        name="radio-date"
+                        value="custom"
+                        label="Custom Range..."
+                        checked={showDateRange}
+                        onChange={(e) => {
+                          setShowDateRange(e.target.checked)
+                        }}
+                      />
+                    </Grid>
                   </Grid>
                   {showDateRange && (
                     <DateRangePicker
