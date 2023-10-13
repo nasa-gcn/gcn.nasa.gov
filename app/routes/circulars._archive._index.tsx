@@ -213,6 +213,8 @@ function DateSelectorButton({
               {startDate}—{endDate}
             </>
           )) ||
+          (startDate && <>After {startDate}</>) ||
+          (endDate && <>Before {endDate}</>) ||
           'Filter by date'}
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-1`}>
@@ -263,14 +265,16 @@ export default function () {
       setShowDateRange(false)
       setInputDateGte(startDate)
     }
-    setInputDateLte('now')
+    setInputDateLte('')
   }
 
   const setDateRange = () => {
     setShowContent(false)
     const params = new URLSearchParams(location.search)
     if (inputDateGte) params.set('startDate', inputDateGte)
+    else params.delete('startDate')
     if (inputDateLte) params.set('endDate', inputDateLte)
+    else params.delete('endDate')
     submit(params, {
       method: 'get',
       action: '/circulars',
