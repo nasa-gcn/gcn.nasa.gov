@@ -25,7 +25,6 @@ import {
 import clamp from 'lodash/clamp'
 import { useState } from 'react'
 
-import type { Circular } from '../circulars/circulars.lib'
 import { circularRedirect, search } from '../circulars/circulars.server'
 import type { action } from '../circulars/route'
 import CircularPagination from './CircularPagination'
@@ -64,10 +63,7 @@ export default function () {
   const featureCircularsFilterByDate = useFeature('CIRCULARS_FILTER_BY_DATE')
 
   // Concatenate items from the action and loader functions
-  const allItems = [
-    ...(newItem ? [newItem] : []),
-    ...(items || []),
-  ] as Circular[]
+  const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
   const limit = searchParams.get('limit') || '100'

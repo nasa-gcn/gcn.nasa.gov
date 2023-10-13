@@ -7,7 +7,7 @@
  */
 import { Link } from '@remix-run/react'
 
-import type { Circular } from '../circulars/circulars.lib'
+import type { CircularMetadata } from '../circulars/circulars.lib'
 
 export default function ({
   allItems,
@@ -15,7 +15,7 @@ export default function ({
   totalItems,
   query,
 }: {
-  allItems: Circular[]
+  allItems: CircularMetadata[]
   searchString: string
   totalItems: number
   query?: string
