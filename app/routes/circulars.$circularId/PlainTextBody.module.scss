@@ -6,4 +6,9 @@
     white-space: pre-wrap;
     background: none;
   }
+
+  & pre,
+  &code {
+    margin: 0;
+  }
 }

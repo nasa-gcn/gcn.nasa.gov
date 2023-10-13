@@ -5,39 +5,33 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Link } from '@remix-run/react'
+import { AstroDataLink } from './AstroDataContext'
 
 export function GcnCircular({
   children,
   value,
 }: JSX.IntrinsicElements['data']) {
-  return (
-    <Link className="usa-link" to={`/circulars/${value}`}>
-      {children}
-    </Link>
-  )
+  return <AstroDataLink to={`/circulars/${value}`}>{children}</AstroDataLink>
 }
 
 export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <a className="usa-link" href={`https://arxiv.org/abs/${value}`}>
+    <AstroDataLink to={`https://arxiv.org/abs/${value}`}>
       {children}
-    </a>
+    </AstroDataLink>
   )
 }
 
 export function Doi({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <a className="usa-link" href={`https://doi.org/${value}`}>
-      {children}
-    </a>
+    <AstroDataLink to={`https://doi.org/${value}`}>{children}</AstroDataLink>
   )
 }
 
 export function Tns({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <a className="usa-link" href={`https://www.wis-tns.org/object/${value}`}>
+    <AstroDataLink to={`https://www.wis-tns.org/object/${value}`}>
       {children}
-    </a>
+    </AstroDataLink>
   )
 }

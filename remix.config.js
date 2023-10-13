@@ -12,7 +12,9 @@ const isProduction = process.env.NODE_ENV === 'production'
 const esmOnlyModules = [
   '@nasa-gcn/remark-rehype-astro',
   'bail',
+  'character-entities',
   'comma-separated-tokens',
+  'decode-named-character-reference',
   'escape-string-regexp',
   'github-slugger',
   'is-plain-obj',
