@@ -87,7 +87,7 @@
     "@aws-sdk/lib-dynamodb": "^3.421.0",
     "@aws-sdk/lib-storage": "^3.421.0",
     "@aws-sdk/util-dynamodb": "^3.319.0",
-    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-env": "^7.23.2",
     "@babel/preset-typescript": "^7.23.0",
     "@nasa-gcn/architect-plugin-search": "^1.0.0",
     "@nasa-gcn/eslint-config-gitignore": "^0.0.1",
