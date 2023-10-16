@@ -192,9 +192,9 @@ const JsonNoticeTypes = {
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
-  IceCube: 'icecube',
+  IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
-  Swift: 'swift',
+  Swift: '/missions/swift',
 }
 
 interface NoticeTypeCheckboxProps {
