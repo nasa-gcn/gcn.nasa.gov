@@ -128,7 +128,7 @@ export default function () {
   return (
     <>
       <CircularsHeader />
-      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1">
+      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-top">
         <Form
           className="display-inline-block usa-search usa-search--small"
           role="search"
