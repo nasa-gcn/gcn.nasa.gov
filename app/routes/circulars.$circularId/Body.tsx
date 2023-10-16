@@ -6,15 +6,17 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { rehypeAstro } from '@nasa-gcn/remark-rehype-astro'
-import { Link } from '@remix-run/react'
+import classNames from 'classnames'
 import type { Root } from 'mdast'
 import { Fragment, createElement } from 'react'
 import rehypeReact from 'rehype-react'
+import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { type Plugin, unified } from 'unified'
 import { u } from 'unist-builder'
 
 import { AstroData } from './AstroData'
+import { AstroDataLink } from './AstroDataContext'
 import rehypeAutolinkLiteral from './rehypeAutolinkLiteral'
 
 import styles from './PlainTextBody.module.css'
@@ -30,16 +32,44 @@ function LinkWrapper({
 }: Omit<JSX.IntrinsicElements['a'], 'ref'>) {
   if (props.href) {
     return (
-      <Link className="usa-link" to={props.href} {...props}>
+      <AstroDataLink to={props.href} {...props}>
         {children}
-      </Link>
+      </AstroDataLink>
     )
   } else {
     return <a {...props}>{children}</a>
   }
 }
 
-export function PlainTextBody({ children }: { children: string }) {
+export function MarkdownBody({
+  className,
+  children,
+}: {
+  className?: string
+  children: string
+}) {
+  const { result } = unified()
+    .use(remarkParse)
+    .use(remarkRehype)
+    .use(rehypeAstro)
+    .use(rehypeAutolinkLiteral)
+    .use(rehypeReact, {
+      Fragment,
+      createElement,
+      components: { a: LinkWrapper, data: AstroData },
+    })
+    .processSync(children)
+
+  return <div className={className}>{result}</div>
+}
+
+export function PlainTextBody({
+  className,
+  children,
+}: {
+  className?: string
+  children: string
+}) {
   const tree = u('root', [u('code', children)])
 
   const { result } = unified()
@@ -54,5 +84,7 @@ export function PlainTextBody({ children }: { children: string }) {
     })
     .processSync()
 
-  return <div className={styles.PlainTextBody}>{result}</div>
+  return (
+    <div className={classNames(styles.PlainTextBody, className)}>{result}</div>
+  )
 }

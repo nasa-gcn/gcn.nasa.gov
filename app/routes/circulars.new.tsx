@@ -23,14 +23,17 @@ import {
   Modal,
   ModalFooter,
   ModalHeading,
+  Table,
   TextInput,
   Textarea,
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
-import { useState } from 'react'
+import { type ReactNode, useContext, useState } from 'react'
 import { dedent } from 'ts-dedent'
 
 import { getUser } from './_auth/user.server'
+import { AstroDataContext } from './circulars.$circularId/AstroDataContext'
+import { MarkdownBody, PlainTextBody } from './circulars.$circularId/Body'
 import {
   bodyIsValid,
   formatAuthor,
@@ -82,6 +85,46 @@ function useBodyPlaceholder() {
     `)
 }
 
+function ToggleButton<T extends Record<string, ReactNode>>({
+  defaultValue,
+  options,
+  onChange,
+}: {
+  defaultValue: keyof T
+  options: T
+  onChange?: (value: keyof T) => void
+}) {
+  const [value, setValue] = useState(defaultValue)
+
+  return (
+    <ButtonGroup type="segmented">
+      {Object.entries(options).map(([key, label]) => (
+        <Button
+          key={key}
+          type="button"
+          outline={key !== value}
+          onClick={() => {
+            setValue(key)
+            if (onChange && key !== value) onChange(key)
+          }}
+        >
+          {label}
+        </Button>
+      ))}
+    </ButtonGroup>
+  )
+}
+
+function useStateToggle(value: boolean) {
+  const [state, setState] = useState(value)
+
+  function toggle() {
+    setState((state) => !state)
+  }
+
+  return [state, toggle] as const
+}
+
 export default function () {
   const { isAuthenticated, isAuthorized, formattedAuthor } =
     useLoaderData<typeof loader>()
@@ -99,17 +142,16 @@ export default function () {
   const [subjectValid, setSubjectValid] = useState(
     subjectIsValid(defaultSubject)
   )
-  const [bodyValid, setBodyValid] = useState(bodyIsValid(defaultBody))
-  const [showKeywords, setShowKeywords] = useState(false)
+  const [body, setBody] = useState(defaultBody)
+  const bodyValid = bodyIsValid(body)
+  const [showKeywords, toggleShowKeywords] = useStateToggle(false)
+  const [showBodySyntax, toggleShowBodySyntax] = useStateToggle(false)
+  const [showPreview, setShowPreview] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
 
-  function toggleShowKeywords() {
-    setShowKeywords(!showKeywords)
-  }
-
   return (
-    <>
+    <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>New GCN Circular</h1>
       <Form method="POST" action={`/circulars${searchString}`}>
         <InputGroup className="border-0 maxw-full">
@@ -169,7 +211,15 @@ export default function () {
         <label hidden htmlFor="body">
           Body
         </label>
+        <ToggleButton
+          defaultValue="edit"
+          options={{ edit: 'Edit', preview: 'Preview' }}
+          onChange={(value) => {
+            setShowPreview(value === 'preview')
+          }}
+        />
         <Textarea
+          hidden={showPreview}
           name="body"
           id="body"
           aria-describedby="bodyDescription"
@@ -180,15 +230,35 @@ export default function () {
             'usa-input--success': bodyValid,
           })}
           onChange={({ target: { value } }) => {
-            setBodyValid(bodyIsValid(value))
+            setBody(value)
           }}
         />
+        {showPreview && (
+          <PlainTextBody className="border padding-1 margin-top-1">
+            {body}
+          </PlainTextBody>
+        )}
         <div className="text-base margin-bottom-1" id="bodyDescription">
           <small>
             Body text. If this is your first Circular, please review the{' '}
-            <Link to="/docs/circulars/styleguide">style guide</Link>.
+            <Link to="/docs/circulars/styleguide">style guide</Link>. References
+            to Circulars, DOIs, arXiv preprints, and transients are
+            automatically shown as links; see{' '}
+            <button
+              type="button"
+              className="usa-banner__button margin-left-0"
+              aria-expanded={showBodySyntax}
+              onClick={toggleShowBodySyntax}
+            >
+              <span className="usa-banner__button-text">syntax.</span>
+            </button>
           </small>
         </div>
+        {showBodySyntax && (
+          <div className="text-base padding-x-2 padding-bottom-2">
+            <SyntaxReference />
+          </div>
+        )}
         <ButtonGroup>
           <Link
             to={`/circulars${searchString}`}
@@ -207,7 +277,7 @@ export default function () {
         </ButtonGroup>
       </Form>
       {isAuthorized || <ModalUnauthorized isAuthenticated={isAuthenticated} />}
-    </>
+    </AstroDataContext.Provider>
   )
 }
 
@@ -216,6 +286,75 @@ function PeerEndorsementButton() {
     <Link to="/user/endorsements">
       <Button type="button">Get a peer endorsement</Button>
     </Link>
+  )
+}
+
+function SyntaxExample({
+  label,
+  children,
+  href,
+  ...props
+}: {
+  label: ReactNode
+  children: string
+} & Pick<JSX.IntrinsicElements['a'], 'href' | 'rel'>) {
+  const { target, rel } = useContext(AstroDataContext)
+  return (
+    <tr>
+      <td>
+        {href ? (
+          <a href={href} {...props} target={target} rel={rel}>
+            {label}
+          </a>
+        ) : (
+          label
+        )}
+      </td>
+      <td>
+        <code>{children}</code>
+      </td>
+      <td>
+        <MarkdownBody>{children}</MarkdownBody>
+      </td>
+    </tr>
+  )
+}
+
+function SyntaxReference() {
+  return (
+    <>
+      <h3>GCN Circulars cross-reference syntax</h3>
+      <Table>
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Example</th>
+            <th>Output</th>
+          </tr>
+        </thead>
+        <tbody>
+          <SyntaxExample label="GCN Circulars" href="/circulars">
+            GCN 34653, 34660, and 34677
+          </SyntaxExample>
+          <SyntaxExample label="DOI" href="https://www.doi.org" rel="external">
+            doi:10.1103/PhysRevLett.116.061102
+          </SyntaxExample>
+          <SyntaxExample label="arXiv" href="https://arxiv.org" rel="external">
+            arXiv:1602.03837
+          </SyntaxExample>
+          <SyntaxExample
+            label="TNS"
+            href="https://www.wis-tns.org"
+            rel="external"
+          >
+            AT2017gfo
+          </SyntaxExample>
+          <SyntaxExample label="Web address">
+            https://www.swift.psu.edu
+          </SyntaxExample>
+        </tbody>
+      </Table>
+    </>
   )
 }
 

@@ -76,7 +76,7 @@ legacy_users
 email_notification_subscription
   topic *String
   name byTopic
-  
+
 email_notification
   recipient *String
   name byRecipient
