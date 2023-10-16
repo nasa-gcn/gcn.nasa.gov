@@ -143,7 +143,7 @@ export default function () {
     subjectIsValid(defaultSubject)
   )
   const [body, setBody] = useState(defaultBody)
-  const bodyValid = bodyIsValid(defaultBody)
+  const bodyValid = bodyIsValid(body)
   const [showKeywords, toggleShowKeywords] = useStateToggle(false)
   const [showBodySyntax, toggleShowBodySyntax] = useStateToggle(false)
   const [showPreview, setShowPreview] = useState(false)
