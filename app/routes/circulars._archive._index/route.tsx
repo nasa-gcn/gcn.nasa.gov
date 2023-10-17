@@ -101,12 +101,11 @@ export default function () {
 
   function setDateRange() {
     setShowContent(false)
-    const params = new URLSearchParams(location.search)
-    if (inputDateGte) params.set('startDate', inputDateGte)
-    else params.delete('startDate')
-    if (inputDateLte) params.set('endDate', inputDateLte)
-    else params.delete('endDate')
-    submit(params, {
+    if (inputDateGte) searchParams.set('startDate', inputDateGte)
+    else searchParams.delete('startDate')
+    if (inputDateLte) searchParams.set('endDate', inputDateLte)
+    else searchParams.delete('endDate')
+    submit(searchParams, {
       method: 'get',
       action: '/circulars',
     })
