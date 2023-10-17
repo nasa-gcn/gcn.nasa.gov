@@ -102,7 +102,7 @@ export default function () {
     setInputDateLte('')
   }
 
-  const setDateRange = () => {
+  function setDateRange() {
     setShowContent(false)
     const params = new URLSearchParams(location.search)
     if (inputDateGte) params.set('startDate', inputDateGte)
