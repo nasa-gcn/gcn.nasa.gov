@@ -90,12 +90,8 @@ export default function () {
   const submit = useSubmit()
 
   function setFuzzyTime(startDate?: string) {
-    if (startDate === 'custom') {
-      setShowDateRange(true)
-    } else {
-      setShowDateRange(false)
-      setInputDateGte(startDate)
-    }
+    setShowDateRange(false)
+    setInputDateGte(startDate)
     setInputDateLte('')
   }
 
