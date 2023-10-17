@@ -85,10 +85,7 @@ export default function () {
   const [inputDateLte, setInputDateLte] = useState(endDate)
   const [showContent, setShowContent] = useState(false)
   const [showDateRange, setShowDateRange] = useState(false)
-  const clean =
-    inputQuery === query &&
-    inputDateGte === startDate &&
-    inputDateLte === endDate
+  const clean = inputQuery === query
 
   const submit = useSubmit()
 
