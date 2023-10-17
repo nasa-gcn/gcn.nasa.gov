@@ -183,11 +183,15 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 }
 
 const JsonNoticeTypes = {
+  IceCube: ['gcn.notices.icecube.LvkNuTrackSearch'],
   LVK: ['igwn.gwalert'],
+  Swift: ['gcn.notices.swift.bat.guano.Alert'],
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
+  IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
+  Swift: '/missions/swift',
 }
 
 interface NoticeTypeCheckboxProps {
