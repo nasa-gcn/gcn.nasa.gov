@@ -8,14 +8,13 @@
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds'
 
 const dateSelectorLabels: Record<string, string> = {
-  hour: 'Last hour',
-  day: 'Last day',
-  week: 'Last week',
-  month: 'Last month',
-  year: 'Last year',
+  hour: 'Last Hour',
   today: 'Today',
-  mtd: 'Month to date',
-  ytd: 'Year to date',
+  day: 'Last Day',
+  week: 'Last Week',
+  month: 'Last Month',
+  year: 'Last Year',
+  ytd: 'Year to Date',
 }
 
 export default function ({
@@ -39,6 +38,8 @@ export default function ({
               {startDate}—{endDate}
             </>
           )) ||
+          (startDate && <>After {startDate}</>) ||
+          (endDate && <>Before {endDate}</>) ||
           'Filter by date'}
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-1`}>
