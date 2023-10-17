@@ -184,7 +184,6 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 
 const JsonNoticeTypes = {
   IceCube: [
-    'gcn.notices.icecube.GoldAndBronze',
     'gcn.notices.icecube.LvkNuTrackSearch',
   ],
   LVK: ['igwn.gwalert'],
