@@ -25,6 +25,34 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
+        <CollectionCalendarDate datetime={'October 27, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New Swift-BAT/GUANO and IceCube Notices Available via GCN Kafka</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        The Swift-BAT/GUANO, IceCube, and GCN teams are pleased to announce the availability of new GCN notice types via the new GCN in JSON format.  JSON format notices can be streamed via [Kafka](/quickstart). [Self-service email subscription](/user/email) will be available soon.  These new notice types are *not* available via GCN Classic.
+
+        [**Swift-BAT/GUANO:**](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) gcn.notices.swift.bat.guano
+
+        - *Summary:* The GUANO system is a family of gamma-ray transient search pipelines that supplement the onboard triggering capabilities of Swift/BAT, significantly enhancing the sensitivity and sky area covered by the instrument.
+        - *Occurence Rate:* The Swift/BAT-GUANO notices occur at a rate of 50 times per year.
+        - *Time Delay:* The post-event processing and communication of alert is distributed to GCN within 10 minutes - 5 hours of detection, depending on data downlink method and space-to-ground communications resource availability.
+        - *Notice Type:* The new [Swift/BAT-GUANO notice type](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) (gcn.notices.swift.bat.guano) provides timestamps, sky locations, durations, and other supplementary information on gamma-ray transients discovered through this system, to enable prompt follow-up by observers and other instruments.  The 'initial' notice distributed for any detection will not include localization information. In the majority of cases later 'update' notices will follow with a localization attached. ~1/4 of GUANO bursts will have arcminute-scale localizations, distributed in the form [RA, Dec, Error] the remainder will be more poorly localized and may be distributed as HEALPix maps.
+
+        [**IceCube LVK Neutrino Track Search:**](/missions/icecube#gcn-notice-types-in-gcn-over-kafka) gcn.notices.icecube.lvk_nu_track_search
+        - *Summary:* IceCube is a is a cubic-kilometer Cherenkov particle detector deployed in the Antarctic ice beneath the Amundsen-Scott South Pole Station. IceCube detects neutrinos by observing the light produced by relativistic charged particles produced by neutrino interactions in or near the instrumented volume of ice.
+        - *Occurrence Rate:* The LVK Nu Track Search notices are triggered by LVK alerts (missions/lvk) and occur at the same rate of these alerts, searching for neutrino signals from both significant and low significance LVK alerts.
+        - *Time Delay:* Neutrino searches are performed in a +/- 500 second time window about the LVK alert, and Nu Track search results are generally available within ~1000 seconds of the LVK GW event time.
+        - *Notice Type:* The new [LVK Nu Track Search notice type](/missions/icecube#gcn-notice-types-in-gcn-over-kafka) (gcn.notices.icecube.lvk_nu_track_search) provides results from realtime searches for coincident neutrino signals from all LIGO/Virgo/KAGRA gravitational-wave alerts, using a realtime muon neutrino track-like event selection and the sky maps from gravitational wave detectors. Search results will include neutrino directions for observed coincident events with the aim to identify multi-messenger transient sources and seed electromagnetic followup up observations.
+
+        *Notice Schema and Examples:* The JSON schema defining the notice format and examples can be viewed in the [Schema Browser](/docs/schema) or the [GCN schema repository](https://github.com/nasa-gcn/gcn-schema).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
         <CollectionCalendarDate datetime={'October 25, 2023'} />
       }
     >
