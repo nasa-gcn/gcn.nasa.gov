@@ -9,20 +9,14 @@ import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { DataFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
   ButtonGroup,
   FormGroup,
-  Icon,
   Label,
-  Modal,
-  ModalFooter,
-  ModalHeading,
-  ModalToggleButton,
   TextInput,
 } from '@trussworks/react-uswds'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import type {
   EmailNotification,
@@ -122,134 +116,91 @@ export default function () {
   const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
-  const deleteModalRef = useRef<ModalRef>(null)
 
   return (
-    <>
-      <Modal
-        id="modal-delete"
-        ref={deleteModalRef}
-        aria-labelledby="modal-delete-heading"
-        aria-describedby="modal-delete-description"
-        renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
-      >
-        <Form method="POST">
-          <input type="hidden" name="uuid" value={notification.uuid} />
-          <input type="hidden" name="intent" value="delete" />
-          <input type="hidden" name="name" value={notification.name} />
-          <input
-            type="hidden"
-            name="recipient"
-            value={notification.recipient}
-          />
-          <ModalHeading id="modal-delete-heading">
-            Delete Email Notification
-          </ModalHeading>
-          <p id="modal-delete-description">
-            Are you sure that you want to delete the email notification named “
-            {notification.name}”?
-          </p>
-          <p>This action cannot be undone.</p>
-          <ModalFooter>
-            <ModalToggleButton modalRef={deleteModalRef} closer outline>
-              Cancel
-            </ModalToggleButton>
-            <Button data-close-modal type="submit">
+    <Form method="POST">
+      <h1>Edit Email Notification</h1>
+      <input type="hidden" name="uuid" value={notification.uuid} />
+      <input type="hidden" name="intent" value={intent} />
+      <Label htmlFor="name">
+        Name
+        <span title="required" className="usa-label--required">
+          *
+        </span>
+      </Label>
+      <TextInput
+        autoFocus
+        id="name"
+        name="name"
+        type="text"
+        inputSize="small"
+        autoCapitalize="off"
+        autoCorrect="off"
+        defaultValue={notification.name}
+        required={true}
+        onChange={(e) => setNameValid(Boolean(e.target.value))}
+      />
+      <Label htmlFor="recipient">
+        Recipient
+        <span title="required" className="usa-label--required">
+          *
+        </span>
+      </Label>
+      <TextInput
+        id="recipient"
+        name="recipient"
+        type="email"
+        autoCapitalize="off"
+        autoCorrect="off"
+        required={true}
+        placeholder="email"
+        defaultValue={notification.recipient}
+        onChange={(e) => setrecipientValid(Boolean(e.target.value))}
+      />
+      <Label htmlFor="format">Format</Label>
+      <NoticeFormatInput name="noticeFormat" value={format} showJson={false} />
+      <Label htmlFor="noticeTypes">Types</Label>
+      <NoticeTypeCheckboxes
+        defaultSelected={notification.noticeTypes}
+        validationFunction={setAlertsValid}
+      ></NoticeTypeCheckboxes>
+      <ReCAPTCHA
+        onChange={(value) => {
+          setRecaptchaValid(Boolean(value))
+        }}
+      />
+
+      <FormGroup>
+        <ButtonGroup>
+          <Link
+            to=".."
+            type="button"
+            className="usa-button usa-button--outline"
+          >
+            Cancel
+          </Link>
+          <Button
+            name="intent"
+            value={notification.uuid ? 'update' : 'create'}
+            disabled={
+              !(nameValid && recipientValid && alertsValid && recaptchaValid)
+            }
+            type="submit"
+          >
+            {notification.uuid ? 'Update' : 'Save'}
+          </Button>
+          {notification.uuid && (
+            <Button
+              name="intent"
+              value="delete"
+              type="submit"
+              className="usa-button--secondary"
+            >
               Delete
             </Button>
-          </ModalFooter>
-        </Form>
-      </Modal>
-      <Form method="POST">
-        <h1>Edit Email Notification</h1>
-        <input type="hidden" name="uuid" value={notification.uuid} />
-        <input type="hidden" name="intent" value={intent} />
-        <Label htmlFor="name">
-          Name
-          <span title="required" className="usa-label--required">
-            *
-          </span>
-        </Label>
-        <TextInput
-          autoFocus
-          id="name"
-          name="name"
-          type="text"
-          inputSize="small"
-          autoCapitalize="off"
-          autoCorrect="off"
-          defaultValue={notification.name}
-          required={true}
-          onChange={(e) => setNameValid(Boolean(e.target.value))}
-        />
-        <Label htmlFor="recipient">
-          Recipient
-          <span title="required" className="usa-label--required">
-            *
-          </span>
-        </Label>
-        <TextInput
-          id="recipient"
-          name="recipient"
-          type="email"
-          autoCapitalize="off"
-          autoCorrect="off"
-          required={true}
-          placeholder="email"
-          defaultValue={notification.recipient}
-          onChange={(e) => setrecipientValid(Boolean(e.target.value))}
-        />
-        <Label htmlFor="format">Format</Label>
-        <NoticeFormatInput
-          name="noticeFormat"
-          value={format}
-          showJson={false}
-        />
-        <Label htmlFor="noticeTypes">Types</Label>
-        <NoticeTypeCheckboxes
-          defaultSelected={notification.noticeTypes}
-          validationFunction={setAlertsValid}
-        ></NoticeTypeCheckboxes>
-        <ReCAPTCHA
-          onChange={(value) => {
-            setRecaptchaValid(Boolean(value))
-          }}
-        />
-
-        <FormGroup>
-          <ButtonGroup>
-            <Link
-              to=".."
-              type="button"
-              className="usa-button usa-button--outline"
-            >
-              Cancel
-            </Link>
-            <Button
-              disabled={
-                !(nameValid && recipientValid && alertsValid && recaptchaValid)
-              }
-              type="submit"
-            >
-              Save
-            </Button>
-            {notification.uuid && (
-              <ModalToggleButton
-                opener
-                modalRef={deleteModalRef}
-                type="button"
-                className="usa-button--secondary margin-right-0"
-              >
-                <Icon.Delete
-                  role="presentation"
-                  className="bottom-aligned margin-right-05"
-                />
-                Delete
-              </ModalToggleButton>
-            )}
-          </ButtonGroup>
-        </FormGroup>
-      </Form>
-    </>
+          )}
+        </ButtonGroup>
+      </FormGroup>
+    </Form>
   )
 }
