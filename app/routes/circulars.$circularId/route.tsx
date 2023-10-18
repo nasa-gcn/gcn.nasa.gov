@@ -10,12 +10,11 @@ import { Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-import { PlainTextBody } from './Body'
 import { getUser } from '../_auth/user.server'
 import { get, updateEventData } from '../circulars/circulars.server'
+import { PlainTextBody } from './Body'
 import { Edit } from './Edit'
 import { FrontMatter } from './FrontMatter'
-
 import { feature, origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { getFormDataString, useSearchString } from '~/lib/utils'
