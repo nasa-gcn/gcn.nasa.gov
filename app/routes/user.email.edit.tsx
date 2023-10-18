@@ -179,16 +179,6 @@ export default function () {
           >
             Cancel
           </Link>
-          <Button
-            name="intent"
-            value={notification.uuid ? 'update' : 'create'}
-            disabled={
-              !(nameValid && recipientValid && alertsValid && recaptchaValid)
-            }
-            type="submit"
-          >
-            {notification.uuid ? 'Update' : 'Save'}
-          </Button>
           {notification.uuid && (
             <Button
               name="intent"
@@ -199,6 +189,16 @@ export default function () {
               Delete
             </Button>
           )}
+          <Button
+            name="intent"
+            value={notification.uuid ? 'update' : 'create'}
+            disabled={
+              !(nameValid && recipientValid && alertsValid && recaptchaValid)
+            }
+            type="submit"
+          >
+            {notification.uuid ? 'Update' : 'Save'}
+          </Button>
         </ButtonGroup>
       </FormGroup>
     </Form>
