@@ -7,6 +7,7 @@
  */
 import {
   AdminGetUserCommand,
+  AdminListGroupsForUserCommand,
   type AttributeType,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { ActionFunctionArgs } from '@remix-run/node'
@@ -56,7 +57,6 @@ async function parseAccessToken(jwt: string): Promise<{
   exp: string
   iat: string
   scope: string
-  'cognito:groups': string[]
   username: string
 }> {
   const client = await getOpenIDClient()
@@ -69,7 +69,6 @@ async function parseAccessToken(jwt: string): Promise<{
     'exp',
     'iat',
     'scope',
-    'cognito:groups',
     'username',
   ])
   return payload
@@ -101,6 +100,18 @@ async function getUserAttributes(Username: string) {
   }
 }
 
+async function getUserGroups(Username: string) {
+  const UserPoolId = getEnvOrDie('COGNITO_USER_POOL_ID')
+
+  const { Groups } = await cognito.send(
+    new AdminListGroupsForUserCommand({ UserPoolId, Username })
+  )
+
+  return Groups?.map(({ GroupName }) => GroupName).filter(Boolean) as
+    | string[]
+    | undefined
+}
+
 /**
  * GCN Circulars submission by third parties on behalf of users via an API.
  *
@@ -116,10 +127,10 @@ async function getUserAttributes(Username: string) {
  *      needs to "renew" permission for user account linking
  *    - Allowed callback URLs: must be provided by the third party
  *    - Identity providers: select all
- *    - OpenID Connect Scopes: Phone, Email, OpenID. Do NOT select
+ *    - OpenID Connect Scopes: Phone, Email, OpenID, Profile. Do NOT select
  *      aws.cognito.signin.user.admin.
  *    - Custom scopes: gcn.nasa.gov/circular-submitter
- *    - Attribute read and write permissions: turn off all write permissions
+ *    - Attribute read and write permissions: turn on all
  *
  * 2. We send the client ID, client secret, and OIDC autodiscovery URL to the
  *    third party. The client secret must be encrypted.
@@ -129,8 +140,8 @@ async function getUserAttributes(Username: string) {
  *
  *    a. Do the [authorization code flow] to sign the user in with GCN's IdP.
  *       When requesting the authorization endpoint, be sure to reuqest
- *       scope=gcn.nasa.gov/circular-submitter. (Note: the name of this scope
- *       may change in the future.)
+ *       scope="openid profile gcn.nasa.gov/circular-submitter". (Note: the
+ *       name of the last scope may change in the future.)
  *
  *    b. For now, if resulting ID token contains the 'existingIdp' claim, then
  *       the third party MUST redo the authentication code flow passing the
@@ -163,7 +174,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const {
     username: cognitoUserName,
-    'cognito:groups': groups,
     sub,
     scope,
   } = await parseAccessToken(bearer)
@@ -172,7 +182,10 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!scope.split(' ').includes(group))
     throw new Response('Invalid scope', { status: 403 })
 
-  const { existingIdp, ...attrs } = await getUserAttributes(cognitoUserName)
+  const [{ existingIdp, ...attrs }, groups] = await Promise.all([
+    getUserAttributes(cognitoUserName),
+    getUserGroups(cognitoUserName),
+  ])
   if (existingIdp) throw new Response('Wrong IdP', { status: 400 })
 
   const user: User = {
