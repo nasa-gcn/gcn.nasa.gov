@@ -112,7 +112,7 @@ function NestedCheckboxNode({
       />
       <ul hidden={!expanded} className={styles.leaf}>
         {nodes.map((node, index) => (
-          <li role="treeitem" key={index} aria-selected={false}>
+          <li role="treeitem" key={node.id} aria-selected={false}>
             <Checkbox
               {...node}
               inputRef={(instance) => {
@@ -142,9 +142,9 @@ export function NestedCheckboxes({
 }: NestedCheckboxesProps) {
   return (
     <ul role="tree" aria-multiselectable>
-      {nodes.map((node, index) => (
+      {nodes.map((node) => (
         <NestedCheckboxNode
-          key={index}
+          key={node.id}
           {...node}
           childoncheckhandler={childoncheckhandler}
         />

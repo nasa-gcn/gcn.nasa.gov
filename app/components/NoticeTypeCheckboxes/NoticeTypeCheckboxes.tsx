@@ -234,6 +234,7 @@ export function NoticeTypeCheckboxes({
   return (
     <>
       <NestedCheckboxes
+        key={selectedFormat}
         nodes={Object.entries(
           selectedFormat == 'json' ? JsonNoticeTypes : NoticeTypes
         ).map(([mission, noticeTypes]) => ({
