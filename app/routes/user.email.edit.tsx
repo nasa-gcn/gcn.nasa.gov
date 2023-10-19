@@ -109,7 +109,7 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export default function () {
-  const { notification, intent, format } = useLoaderData<typeof loader>()
+  const { notification, format } = useLoaderData<typeof loader>()
   const defaultNameValid = Boolean(notification.name)
   const [nameValid, setNameValid] = useState(defaultNameValid)
   const defaultRecipientValid = Boolean(notification.recipient)
@@ -121,7 +121,6 @@ export default function () {
     <Form method="POST">
       <h1>Edit Email Notification</h1>
       <input type="hidden" name="uuid" value={notification.uuid} />
-      <input type="hidden" name="intent" value={intent} />
       <Label htmlFor="name">
         Name
         <span title="required" className="usa-label--required">
