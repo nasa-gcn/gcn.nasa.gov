@@ -171,6 +171,9 @@ export default function () {
               <NavLink key="schema" to="schema">
                 Schema Browser
               </NavLink>,
+              <NavLink key="terms-of-service" to="terms-of-service">
+                Terms of Service
+              </NavLink>,
             ]}
           />
         </div>
