@@ -24,6 +24,7 @@ import type {
 } from './user.email/email_notices.server'
 import {
   createEmailNotification,
+  deleteEmailNotification,
   getEmailNotification,
   updateEmailNotification,
 } from './user.email/email_notices.server'
@@ -53,7 +54,7 @@ export async function action({ request }: DataFunctionArgs) {
     'g-recaptcha-response': recaptchaResponse,
     ...rest
   } = Object.fromEntries(data)
-  await verifyRecaptcha(recaptchaResponse?.toString())
+  if (intent !== 'delete') await verifyRecaptcha(recaptchaResponse?.toString())
   const noticeTypes = Object.keys(rest)
   const topics = noticeTypes.map((noticeType) =>
     formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
@@ -74,7 +75,10 @@ export async function action({ request }: DataFunctionArgs) {
       await updateEmailNotification(emailNotification)
       return redirect('/user/email')
     case 'delete':
-      return null
+      if (emailNotification.uuid) {
+        await deleteEmailNotification(emailNotification.uuid, user.sub)
+      }
+      return redirect('/user/email')
     default:
       throw new Response('unknown intent', { status: 400 })
   }
@@ -105,7 +109,7 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 export default function () {
-  const { notification, intent, format } = useLoaderData<typeof loader>()
+  const { notification, format } = useLoaderData<typeof loader>()
   const defaultNameValid = Boolean(notification.name)
   const [nameValid, setNameValid] = useState(defaultNameValid)
   const defaultRecipientValid = Boolean(notification.recipient)
@@ -117,7 +121,6 @@ export default function () {
     <Form method="POST">
       <h1>Edit Email Notification</h1>
       <input type="hidden" name="uuid" value={notification.uuid} />
-      <input type="hidden" name="intent" value={intent} />
       <Label htmlFor="name">
         Name
         <span title="required" className="usa-label--required">
@@ -175,13 +178,25 @@ export default function () {
           >
             Cancel
           </Link>
+          {notification.uuid && (
+            <Button
+              name="intent"
+              value="delete"
+              type="submit"
+              className="usa-button--secondary"
+            >
+              Delete
+            </Button>
+          )}
           <Button
+            name="intent"
+            value={notification.uuid ? 'update' : 'create'}
             disabled={
               !(nameValid && recipientValid && alertsValid && recaptchaValid)
             }
             type="submit"
           >
-            Save
+            {notification.uuid ? 'Update' : 'Save'}
           </Button>
         </ButtonGroup>
       </FormGroup>
