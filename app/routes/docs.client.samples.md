@@ -139,9 +139,9 @@ possible to recover messages prior to the start of the stream buffer. The GCN st
 buffers are currently set to hold messages from the past few days.
 
 ```python
-import datetime from gcn_kafka
-import Consumer from confluent_kafka
-import TopicPartition
+import datetime
+from gcn_kafka import Consumer
+from confluent_kafka import TopicPartition
 
 consumer = Consumer(client_id='fill me in',
                     client_secret='fill me in',
