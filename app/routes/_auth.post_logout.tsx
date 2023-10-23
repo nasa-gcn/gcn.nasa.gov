@@ -27,11 +27,11 @@ export async function loader({ request: { headers } }: LoaderFunctionArgs) {
   if (session.id) await storage.destroySession(session)
 
   if (existingIdp) return { existingIdp }
-  else return redirect('/')
+  throw redirect('/')
 }
 
 export default function PostLogout() {
-  const { existingIdp } = useLoaderData()
+  const { existingIdp } = useLoaderData<typeof loader>()
   const friendlyExistingIdp =
     existingIdp == 'COGNITO' ? 'email and password' : existingIdp
   return (
