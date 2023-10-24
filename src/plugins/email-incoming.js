@@ -167,9 +167,6 @@ export const deploy = {
               {
                 S3Action: {
                   BucketName: { Ref: 'EmailIncomingBucket' },
-                  KmsKeyArn: {
-                    'Fn::Sub': `arn:\${AWS::Partition}:kms:\${AWS::Region}:\${AWS::AccountId}:alias/aws/ses`,
-                  },
                   ObjectKeyPrefix: `${key}/`,
                   TopicArn: { Ref: `${logicalID}EventTopic` },
                 },
