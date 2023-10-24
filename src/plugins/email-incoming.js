@@ -117,6 +117,32 @@ export const deploy = {
       },
     }
 
+    cloudformation.Resources.Role.Properties.Policies.push({
+      PolicyName: 'EmailIncomingBucketAccess',
+      PolicyDocument: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Action: ['s3:GetObject'],
+            Resource: [
+              {
+                'Fn::Sub': [
+                  `arn:aws:s3:::\${bukkit}`,
+                  { bukkit: { Ref: 'EmailIncomingBucket' } },
+                ],
+              },
+              {
+                'Fn::Sub': [
+                  `arn:aws:s3:::\${bukkit}/*`,
+                  { bukkit: { Ref: 'EmailIncomingBucket' } },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    })
+
     emailIncoming.forEach((item) => {
       const [key] = Object.keys(item)
       const logicalID = toLogicalID(getLambdaName(key))
