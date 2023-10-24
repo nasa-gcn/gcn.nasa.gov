@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
-import type { SESMessage, SNSMessage } from 'aws-lambda'
+import type { SESMessage, SNSEventRecord } from 'aws-lambda'
 
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 
@@ -21,7 +21,7 @@ interface SESMessageWithContent extends SESMessage {
 export function createEmailIncomingMessageHandler(
   messageHandler: (message: SESMessageWithContent) => Promise<void>
 ) {
-  return createTriggerHandler(async ({ Message }: SNSMessage) => {
+  return createTriggerHandler(async ({ Sns: { Message } }: SNSEventRecord) => {
     const message: SESMessage = JSON.parse(Message)
 
     if (message.receipt.spamVerdict.status !== 'PASS')
