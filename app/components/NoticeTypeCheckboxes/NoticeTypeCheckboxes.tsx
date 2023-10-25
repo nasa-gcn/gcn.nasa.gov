@@ -256,7 +256,9 @@ export function NoticeTypeCheckboxes({
                   <small className="text-base-light">
                     {humanizedRate(
                       triggerRate[
-                        `gcn.classic.${selectedFormat}.${noticeType}`
+                        selectedFormat === 'json'
+                          ? noticeType
+                          : `gcn.classic.${selectedFormat}.${noticeType}`
                       ] ?? 0,
                       'alert'
                     )}
