@@ -17,14 +17,11 @@ import {
   TextInput,
   Textarea,
 } from '@trussworks/react-uswds'
-// @ts-expect-error: no type definitions for addresscompiler
-import { compile } from 'addresscompiler'
 import { validate } from 'email-validator'
 import { useState } from 'react'
 
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
-import { sendEmail } from '~/lib/email.server'
-import { feature, getEnvOrDie, origin } from '~/lib/env.server'
+import { getEnvOrDie, origin } from '~/lib/env.server'
 import {
   getBasicAuthHeaders,
   getCanonicalUrlHeaders,
@@ -61,36 +58,25 @@ export async function action({ request }: DataFunctionArgs) {
     }
   )
 
-  if (feature('zendesk')) {
-    const response = await fetch(
-      'https://nasa-gcn.zendesk.com/api/v2/requests.json',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          ...getBasicAuthHeaders(
-            `${getEnvOrDie('ZENDESK_TOKEN_EMAIL')}/token`,
-            getEnvOrDie('ZENDESK_TOKEN')
-          ),
-        },
-        body: JSON.stringify({
-          request: { requester: { name, email }, subject, comment: { body } },
-        }),
-      }
-    )
-    if (!response.ok) {
-      console.error(response)
-      throw new Error(`Reqeust failed with status ${response.status}`)
+  const response = await fetch(
+    'https://nasa-gcn.zendesk.com/api/v2/requests.json',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getBasicAuthHeaders(
+          `${getEnvOrDie('ZENDESK_TOKEN_EMAIL')}/token`,
+          getEnvOrDie('ZENDESK_TOKEN')
+        ),
+      },
+      body: JSON.stringify({
+        request: { requester: { name, email }, subject, comment: { body } },
+      }),
     }
-  } else {
-    const to = ['gcnkafka@lists.nasa.gov']
-    await sendEmail({
-      body,
-      subject,
-      to,
-      fromName: 'GCN Support',
-      replyTo: [compile({ name, address: email }), ...to],
-    })
+  )
+  if (!response.ok) {
+    console.error(response)
+    throw new Error(`Reqeust failed with status ${response.status}`)
   }
 
   return { email, subject }
