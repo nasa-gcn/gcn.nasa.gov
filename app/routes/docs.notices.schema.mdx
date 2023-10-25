@@ -24,21 +24,21 @@ To get started, fork the [nasa-gcn/gcn-schema](https://github.com/nasa-gcn/gcn-s
 
 ## File Naming Conventions
 
-Create a folder in the repository for your mission following the naming convention <code>gcn/notices/<i>mission</i></code>. Add one or more files for schema definitions named <code>gcn/notices/<i>mission</i>/<i>SchemaName</i>.schema.json</code>. The mission name should be lowercase and the schema name should be [CamelCase](https://en.wikipedia.org/wiki/Camel_case). Each file corresponds to a [Kafka topic](/docs/notices/producers) named <code>gcn.notices.<i>mission</i>.<i>SchemaName</i></code>.
+Create a folder in the repository for your mission following the naming convention <code>gcn/notices/<i>mission</i></code>. Add one or more files for schema definitions named <code>gcn/notices/<i>mission</i>/<i>schema_name</i>.schema.json</code>. The mission name should be lowercase and the schema name should be [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each file corresponds to a [Kafka topic](/docs/notices/producers) named <code>gcn.notices.<i>mission</i>.<i>schema_name</i></code>.
 
-We encourage you to add files containing example data. The naming convention for example files is <code>gcn/notices/<i>mission</i>/<i>SchemaName</i>.<i>OptionalDescription</i>.example.json</code>. We will automatically validate your example files against your schema.
+We encourage you to add files containing example data. The naming convention for example files is <code>gcn/notices/<i>mission</i>/<i>schema_name</i>.<i>optional_description</i>.example.json</code>. We will automatically validate your example files against your schema.
 
 ## Define Your Schema
 
-Here is a basic schema file, `Sample.schema.json`, and an example file, `Sample.example.json`, to start from. Place these files in the <code>gcn/notices/<i>mission</i></code> directory and customize them. Read on for a description of each parameter.
+Here is a basic schema file, `sample.schema.json`, and an example file, `sample.example.json`, to start from. Place these files in the <code>gcn/notices/<i>mission</i></code> directory and customize them. Read on for a description of each parameter.
 
 <Tabs>
-  <Tab label="Sample.schema.json">
+  <Tab label="sample.schema.json">
     <Highlight
       language="json"
       code={JSON.stringify(
         {
-          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/mission/Sample.schema.json',
+          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/mission/sample.schema.json',
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           type: 'object',
           unevaluatedProperties: false,
@@ -68,13 +68,13 @@ Here is a basic schema file, `Sample.schema.json`, and an example file, `Sample.
       )}
     />
   </Tab>
-  <Tab label="Sample.example.json">
+  <Tab label="sample.example.json">
     <Highlight
       language="json"
       code={JSON.stringify(
         {
           $schema:
-            'https://gcn.nasa.gov/schema/main/gcn/notices/mission/Sample.schema.json',
+            'https://gcn.nasa.gov/schema/main/gcn/notices/mission/sample.schema.json',
           alert_datetime: '2023-09-28T01:40:30Z',
           ra: 197.44871198,
           dec: -23.38397612,
@@ -128,25 +128,25 @@ Optional mapping of custom, mission-specific fields. Field names should use [sna
 We recommend exploring our [schema browser](/docs/schema/stable/gcn/notices) and [GitHub repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices) for more examples. Here is an extended example from Swift/BAT-GUANO:
 
 <Tabs>
-  <Tab label="Alert.schema.json">
+  <Tab label="guano.schema.json">
     <Highlight
       language="json"
       code={JSON.stringify(
         {
-          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/Alert.schema.json',
+          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano.schema.json',
           $schema: 'https://json-schema.org/draft/2020-12/schema',
           title: 'Swift/BAT-GUANO Alert',
           description:
             'Candidate gamma-ray transient reported from the BAT-GUANO targeted search',
           type: 'object',
           allOf: [
-            { $ref: '../../../core/Alert.schema.json' },
-            { $ref: '../../../core/Event.schema.json' },
-            { $ref: '../../../core/DateTime.schema.json' },
-            { $ref: '../../../core/Localization.schema.json' },
-            { $ref: '../../../core/Statistics.schema.json' },
-            { $ref: '../../../core/Reporter.schema.json' },
-            { $ref: '../../../core/AdditionalInfo.schema.json' },
+            { $ref: '../../core/Alert.schema.json' },
+            { $ref: '../../core/Event.schema.json' },
+            { $ref: '../../core/DateTime.schema.json' },
+            { $ref: '../../core/Localization.schema.json' },
+            { $ref: '../../core/Statistics.schema.json' },
+            { $ref: '../../core/Reporter.schema.json' },
+            { $ref: '../../core/AdditionalInfo.schema.json' },
           ],
           properties: {
             $schema: true,
@@ -168,13 +168,13 @@ We recommend exploring our [schema browser](/docs/schema/stable/gcn/notices) and
       )}
     />
   </Tab>
-  <Tab label="Alert.example.json">
+  <Tab label="guano.example.json">
     <Highlight
       language="json"
       code={JSON.stringify(
         {
           $schema:
-            'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano/Alert.schema.json',
+            'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano.schema.json',
           mission: 'Swift',
           instrument: 'BAT-GUANO',
           messenger: 'EM',
