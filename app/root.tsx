@@ -216,8 +216,8 @@ function Document({ children }: { children?: React.ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New GCN Circulars features for September 2023! See{' '}
-          <Link className="usa-link" to="/news#new-features-for-september-2023">
+          New GCN features for October 2023! See{' '}
+          <Link className="usa-link" to="/news#new-features-for-october-2023">
             news and announcements
           </Link>
         </NewsBanner>
