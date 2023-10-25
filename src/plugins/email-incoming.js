@@ -59,6 +59,90 @@ export const deploy = {
       Type: 'AWS::SES::ReceiptRuleSet',
     }
 
+    cloudformation.Resources.EmailIncomingBucket = {
+      Type: 'AWS::S3::Bucket',
+      Properties: {
+        OwnershipControls: {
+          Rules: [
+            {
+              ObjectOwnership: 'BucketOwnerEnforced',
+            },
+          ],
+        },
+        PublicAccessBlockConfiguration: {
+          BlockPublicAcls: true,
+          BlockPublicPolicy: true,
+          IgnorePublicAcls: true,
+          RestrictPublicBuckets: true,
+        },
+      },
+    }
+
+    cloudformation.Resources.EmailIncomingBucketPolicy = {
+      Type: 'AWS::S3::BucketPolicy',
+      Properties: {
+        Bucket: { Ref: 'EmailIncomingBucket' },
+        PolicyDocument: {
+          Version: '2012-10-17',
+          Statement: [
+            {
+              Sid: 'AllowSESPuts',
+              Effect: 'Allow',
+              Principal: {
+                Service: 'ses.amazonaws.com',
+              },
+              Action: 's3:PutObject',
+              Resource: {
+                'Fn::Sub': [
+                  `\${bukkit}/*`,
+                  { bukkit: { 'Fn::GetAtt': 'EmailIncomingBucket.Arn' } },
+                ],
+              },
+              Condition: {
+                StringEquals: {
+                  'AWS:SourceAccount': { Ref: 'AWS::AccountId' },
+                },
+                StringLike: {
+                  'AWS:SourceArn': {
+                    'Fn::Sub': [
+                      `arn:\${AWS::Partition}:ses:\${AWS::Region}:\${AWS::AccountId}:receipt-rule-set/\${RuleSetName}:receipt-rule/*`,
+                      { RuleSetName: { Ref: 'EmailIncomingReceiptRuleSet' } },
+                    ],
+                  },
+                },
+              },
+            },
+          ],
+        },
+      },
+    }
+
+    cloudformation.Resources.Role.Properties.Policies.push({
+      PolicyName: 'EmailIncomingBucketAccess',
+      PolicyDocument: {
+        Statement: [
+          {
+            Effect: 'Allow',
+            Action: ['s3:GetObject'],
+            Resource: [
+              {
+                'Fn::Sub': [
+                  `arn:aws:s3:::\${bukkit}`,
+                  { bukkit: { Ref: 'EmailIncomingBucket' } },
+                ],
+              },
+              {
+                'Fn::Sub': [
+                  `arn:aws:s3:::\${bukkit}/*`,
+                  { bukkit: { Ref: 'EmailIncomingBucket' } },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    })
+
     emailIncoming.forEach((item) => {
       const [key] = Object.keys(item)
       const logicalID = toLogicalID(getLambdaName(key))
@@ -72,20 +156,22 @@ export const deploy = {
 
       cloudformation.Resources[`${logicalID}ReceiptRule`] = {
         Type: 'AWS::SES::ReceiptRule',
+        DependsOn: ['EmailIncomingBucketPolicy'],
         Properties: {
           RuleSetName: { Ref: 'EmailIncomingReceiptRuleSet' },
           Rule: {
             Enabled: true,
+            ScanEnabled: true,
             Recipients: [`${key}@${hostname}`],
             Actions: [
               {
-                SNSAction: {
-                  Encoding: 'Base64',
+                S3Action: {
+                  BucketName: { Ref: 'EmailIncomingBucket' },
+                  ObjectKeyPrefix: `${key}/`,
                   TopicArn: { Ref: `${logicalID}EventTopic` },
                 },
               },
             ],
-            ScanEnabled: true,
           },
         },
       }
