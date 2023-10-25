@@ -4,6 +4,7 @@ import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHighlight from 'rehype-highlight'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
+import { flatRoutes } from 'remix-flat-routes'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -60,7 +61,10 @@ export default {
     remarkPlugins: [remarkGfm],
   },
   postcss: true,
-  ignoredRouteFiles: ['**/.*'],
+  ignoredRouteFiles: ['**/*'],
+  routes(defineRoutes) {
+    return flatRoutes('routes', defineRoutes)
+  },
   assetsBuildDirectory: 'build/static',
   publicPath: '/_static/app/',
   server: './server.ts',
