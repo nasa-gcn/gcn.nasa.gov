@@ -9,7 +9,7 @@ import { useState } from 'react'
 
 import type { NoticeFormat } from '../NoticeFormat'
 import { NestedCheckboxes } from '../nested-checkboxes/NestedCheckboxes'
-import { triggerRate } from './prometheus'
+import { triggerRate } from './rates'
 
 function humanizedCount(count: number, singular: string, plural?: string) {
   const noun = count === 1 ? singular : plural ?? `${singular}s`
