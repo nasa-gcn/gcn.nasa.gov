@@ -1,4 +1,4 @@
-name: Node.js CI
+name: Pull Request
 on:
   push:
     branches:
@@ -7,5 +7,10 @@ on:
     branches:
       - main
 jobs:
-  build:
+  node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: psf/black@stable

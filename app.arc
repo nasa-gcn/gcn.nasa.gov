@@ -6,6 +6,10 @@ remix-gcn
   method any
   src build/server
 
+/labs/api/*
+  method any
+  src python
+
 @email-incoming
 circulars
   src build/email-incoming/circulars
@@ -111,6 +115,7 @@ region us-east-1
 architecture arm64
 memory 256
 timeout 30
+hydrate false
 
 @search
 instanceType t3.small.search
