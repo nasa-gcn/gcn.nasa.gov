@@ -1,0 +1,4 @@
+astropy
+black
+fastapi
+mangum

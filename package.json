@@ -19,7 +19,7 @@
     "dev:esbuild": "node esbuild.js --dev",
     "dev": "run-p \"dev:*\"",
     "prepare": "husky install",
-    "deploy": "arc deploy --no-hydrate --prune --production",
+    "deploy": "arc deploy --prune --production",
     "clean": "rimraf --glob build/static app/css \"build/**/index.*\" \"build/**/metafile.*\" \"build/**/version.txt\" \"app/**/*.css\" \"app/**/*.css.map\" sam.json sam.yaml .cache",
     "test": "jest",
     "test-coverage": "jest --coverage",
@@ -134,6 +134,10 @@
     "sass": "^1.64.2",
     "ts-jest": "^29.1.0",
     "typescript": "^5.2.2"
+  },
+  "overrides": {
+    "@architect/hydrate": "github:lpsinger/hydrate#hydrate-per-function-config",
+    "@architect/sandbox": "github:lpsinger/sandbox#x-forwarded-port-string"
   },
   "engines": {
     "node": ">=18"
