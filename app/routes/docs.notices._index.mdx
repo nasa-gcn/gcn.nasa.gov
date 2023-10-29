@@ -23,14 +23,16 @@ Notices are real-time, machine-readable alerts that are submitted by participati
 
 GCN Classic and the new GCN offer multiple file formats and protocols for receiving notices. We strongly encourage use of the new GCN, as we gradually migrate all services, and new notice types will only be available via the new GCN.
 
-| Protocol                      | File Format                              | System      | Subscription        | Status                                 |
-| ----------------------------- | ---------------------------------------- | ----------- | ------------------- | -------------------------------------- |
-| Kafka                         | 160-byte binary, VOEvent XML, Text, JSON | New GCN     | Self Service        | Preferred                              |
-| Email (no-reply@gcn.nasa.gov) | 160-byte binary, VOEvent XML, Text       | New GCN     | Self Service        | Preferred                              |
-| Socket                        | 160-byte binary                          | GCN Classic | Manual              | Active but recommend Kafka instead     |
-| VOEvent                       | VOEvent XML                              | GCN Classic | Manual or Anonymous | Active but recommend Kafka instead     |
-| Email (capella2)              | Text                                     | GCN Classic | Manual              | Active but recommend email via new GCN |
-| SMS                           | Short Text                               | GCN Classic | Manual              | Active (future new GCN enhancement)    |
+| Protocol                        | File Format                              | System      | Subscription        | Status                                 |
+| ------------------------------- | ---------------------------------------- | ----------- | ------------------- | -------------------------------------- |
+| Kafka\*                         | 160-byte binary, VOEvent XML, Text, JSON | New GCN     | Self Service        | Preferred                              |
+| Email\* (no-reply@gcn.nasa.gov) | 160-byte binary, VOEvent XML, Text       | New GCN     | Self Service        | Preferred                              |
+| Socket                          | 160-byte binary                          | GCN Classic | Manual              | Active but recommend Kafka instead     |
+| VOEvent                         | VOEvent XML                              | GCN Classic | Manual or Anonymous | Active but recommend Kafka instead     |
+| Email (capella2)                | Text                                     | GCN Classic | Manual              | Active but recommend email via new GCN |
+| SMS                             | Short Text                               | GCN Classic | Manual              | Active (future new GCN enhancement)    |
+
+\*Note that GCN Classic attachments are **not** available via the New GCN.
 
 <br />
 <CardGroup>
