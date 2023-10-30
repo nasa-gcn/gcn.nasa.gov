@@ -61,9 +61,9 @@ export default {
     remarkPlugins: [remarkGfm],
   },
   postcss: true,
-  ignoredRouteFiles: ['**/*'],
+  ignoredRouteFiles: ['**/*', '**/.*'],
   routes(defineRoutes) {
-    return flatRoutes('routes', defineRoutes)
+    return flatRoutes('routes', defineRoutes, { ignoredRouteFiles: ['**/.*'] })
   },
   assetsBuildDirectory: 'build/static',
   publicPath: '/_static/app/',
