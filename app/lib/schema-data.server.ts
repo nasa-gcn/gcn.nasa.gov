@@ -12,7 +12,7 @@ import { basename, dirname, extname, join } from 'path'
 import { relative } from 'path/posix'
 
 import { getEnvOrDieInProduction } from './env.server'
-import { exampleSuffix } from './schema-data'
+import { exampleSuffix, schemaSuffix } from './schema-data'
 import type {
   ReferencedSchema,
   Schema,
@@ -123,23 +123,17 @@ export type GitContentDataResponse = {
 export const loadSchemaExamples = memoizee(
   async function (schemaPath: string, ref: string): Promise<ExampleFile[]> {
     const dirPath = dirname(schemaPath)
-    const schemaName = basename(schemaPath)
+    const prefix = `${basename(schemaPath, schemaSuffix)}.`
     const exampleFiles = (await getGithubDir(dirPath, ref)).filter(
-      (x) =>
-        x.name.startsWith(`${schemaName.split('.')[0]}.`) &&
-        x.name.endsWith(exampleSuffix)
+      (x) => x.name.startsWith(prefix) && x.name.endsWith(exampleSuffix)
     )
 
-    const result: ExampleFile[] = []
-    for (const exampleFile of exampleFiles) {
-      const exPath = join(dirPath, exampleFile.name)
-      const example = await loadContentFromGithub(exPath, ref)
-      result.push({
-        name: exampleFile.name.replace(exampleSuffix, ''),
-        content: example,
-      })
-    }
-    return result
+    return await Promise.all(
+      exampleFiles.map(async ({ name }) => ({
+        name: name.replace(exampleSuffix, ''),
+        content: await loadContentFromGithub(join(dirPath, name), ref),
+      }))
+    )
   },
   { promise: true }
 )
