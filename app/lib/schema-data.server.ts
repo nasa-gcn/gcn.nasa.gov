@@ -63,12 +63,12 @@ export const loadJson = memoizee(
   { promise: true }
 )
 
-async function loadContentFromGithub(path: string, ref?: string) {
+async function loadContentFromGithub(path: string, ref: string) {
   const ghData = (
     await octokit.repos.getContent({
       ...repoData,
-      path: path.replaceAll('\\', '/'),
-      ref: ref ?? 'main',
+      path,
+      ref,
       mediaType: {
         format: 'raw',
       },
@@ -145,13 +145,13 @@ export const loadSchemaExamples = memoizee(
 
 export const getGithubDir = memoizee(
   async function (
-    path?: string,
+    path: string,
     ref = 'main'
   ): Promise<GitContentDataResponse[]> {
     return (
       await octokit.repos.getContent({
         ...repoData,
-        path: path ?? 'gcn',
+        path,
         ref,
       })
     ).data as GitContentDataResponse[]
