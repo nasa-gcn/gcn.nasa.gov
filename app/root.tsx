@@ -216,8 +216,11 @@ function Document({ children }: { children?: React.ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New GCN features for October 2023! See{' '}
-          <Link className="usa-link" to="/news#new-features-for-october-2023">
+          New Swift-BAT/GUANO and IceCube Notice Types Available! See{' '}
+          <Link
+            className="usa-link"
+            to="/news#new-swift-bat/guano-and-icecube-notices-available-via-kafka"
+          >
             news and announcements
           </Link>
         </NewsBanner>
