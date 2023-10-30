@@ -120,17 +120,25 @@ export type GitContentDataResponse = {
   children?: GitContentDataResponse[]
 }
 
+function normalizeExampleName(name: string, schemaName: string) {
+  name = name.slice(schemaName.length, -exampleSuffix.length)
+  if (name.startsWith('.')) name = name.slice(1)
+  name ||= 'Example'
+  return name
+}
+
 export const loadSchemaExamples = memoizee(
   async function (schemaPath: string, ref: string): Promise<ExampleFile[]> {
     const dirPath = dirname(schemaPath)
-    const prefix = `${basename(schemaPath, schemaSuffix)}.`
+    const schemaName = basename(schemaPath, schemaSuffix)
+    const prefix = `${schemaName}.`
     const exampleFiles = (await getGithubDir(dirPath, ref)).filter(
       (x) => x.name.startsWith(prefix) && x.name.endsWith(exampleSuffix)
     )
 
     return await Promise.all(
       exampleFiles.map(async ({ name }) => ({
-        name: name.replace(exampleSuffix, ''),
+        name: normalizeExampleName(name, schemaName),
         content: await loadContentFromGithub(join(dirPath, name), ref),
       }))
     )
