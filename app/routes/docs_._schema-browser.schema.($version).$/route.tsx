@@ -37,6 +37,7 @@ import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/tabs/Tabs'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import { exampleSuffix, schemaSuffix } from '~/lib/schema-data'
 import type {
   ExampleFile,
   GitContentDataResponse,
@@ -51,7 +52,7 @@ import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
   breadcrumb({ params: { version, '*': path } }) {
-    return `${version} - ${path?.replace('.schema.json', '')}`
+    return `${version} - ${path?.replace(schemaSuffix, '')}`
   },
 }
 
@@ -78,7 +79,7 @@ export async function loader({
   } else {
     data = await getGithubDir(path, version)
   }
-  data = data.filter((x) => !x.name.endsWith('.example.json'))
+  data = data.filter((x) => !x.name.endsWith(exampleSuffix))
   return json(
     { data, jsonContent, examples },
     { headers: publicStaticShortTermCacheControlHeaders }
@@ -178,7 +179,7 @@ export default function () {
           className="flex-align-self-center padding-y-1"
         >
           <Breadcrumbs
-            path={path.replace('.schema.json', '')}
+            path={path.replace(schemaSuffix, '')}
             className="font-ui-lg"
           />
         </Grid>

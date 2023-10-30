@@ -12,6 +12,7 @@ import { basename, dirname, extname, join } from 'path'
 import { relative } from 'path/posix'
 
 import { getEnvOrDieInProduction } from './env.server'
+import { exampleSuffix } from './schema-data'
 import type {
   ReferencedSchema,
   Schema,
@@ -126,7 +127,7 @@ export const loadSchemaExamples = memoizee(
     const exampleFiles = (await getGithubDir(dirPath, ref)).filter(
       (x) =>
         x.name.startsWith(`${schemaName.split('.')[0]}.`) &&
-        x.name.endsWith('.example.json')
+        x.name.endsWith(exampleSuffix)
     )
 
     const result: ExampleFile[] = []
@@ -134,7 +135,7 @@ export const loadSchemaExamples = memoizee(
       const exPath = join(dirPath, exampleFile.name)
       const example = await loadContentFromGithub(exPath, ref)
       result.push({
-        name: exampleFile.name.replace('.example.json', ''),
+        name: exampleFile.name.replace(exampleSuffix, ''),
         content: example,
       })
     }
