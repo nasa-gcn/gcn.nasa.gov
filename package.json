@@ -136,7 +136,7 @@
     "typescript": "^5.2.2"
   },
   "overrides": {
-    "@architect/hydrate": "github:lpsinger/hydrate#hydrate-per-function-config",
+    "@architect/hydrate": "^3.5.0",
     "@architect/sandbox": "github:lpsinger/sandbox#x-forwarded-port-string"
   },
   "engines": {
