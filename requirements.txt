@@ -2,3 +2,4 @@ astropy
 black
 fastapi
 mangum
+pipdeptree
