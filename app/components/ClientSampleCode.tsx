@@ -24,6 +24,7 @@ export function useDomain() {
 }
 
 export function ClientSampleCode({
+  clientName,
   clientId = 'fill me in',
   clientSecret = 'fill me in',
   listTopics = true,
@@ -33,6 +34,7 @@ export function ClientSampleCode({
   ],
   language,
 }: {
+  clientName?: string
   clientId?: string
   clientSecret?: string
   listTopics?: boolean
@@ -71,7 +73,9 @@ export function ClientSampleCode({
             code={dedent(`
             from gcn_kafka import Consumer
 
-            # Connect as a consumer.
+            # Connect as a consumer${
+              clientName ? ` (client "${clientName}")` : ''
+            }
             # Warning: don't share the client secret with others.
             consumer = Consumer(client_id='${clientId}',
                                 client_secret='${clientSecret}'${

@@ -37,6 +37,7 @@ export async function loader({ request }: DataFunctionArgs) {
 
 export default function () {
   const {
+    name: clientName,
     client_id: clientId,
     client_secret: clientSecret,
     noticeFormat,
@@ -54,31 +55,31 @@ export default function () {
       <Tabs>
         <Tab label="Python">
           <ClientSampleCode
-            {...{ clientId, clientSecret, topics, listTopics }}
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="py"
           />
         </Tab>
         <Tab label="Node.js (ESM)">
           <ClientSampleCode
-            {...{ clientId, clientSecret, topics, listTopics }}
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="mjs"
           />
         </Tab>
         <Tab label="Node.js (CommonJS)">
           <ClientSampleCode
-            {...{ clientId, clientSecret, topics, listTopics }}
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="cjs"
           />
         </Tab>
         <Tab label="C/C++">
           <ClientSampleCode
-            {...{ clientId, clientSecret, topics, listTopics }}
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="c"
           />
         </Tab>
         <Tab label="C#">
           <ClientSampleCode
-            {...{ clientId, clientSecret, topics, listTopics }}
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="cs"
           />
         </Tab>
