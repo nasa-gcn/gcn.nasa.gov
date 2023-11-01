@@ -40,7 +40,7 @@ export const storage = createArcTableSessionStorage({
     secure: process.env.NODE_ENV === 'production',
     secrets: [sessionSecret],
     path: '/',
-    maxAge: 3600,
+    maxAge: 30 * 24 * 3600,
     httpOnly: true,
   },
   table: 'sessions',
