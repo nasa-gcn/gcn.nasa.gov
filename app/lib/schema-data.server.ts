@@ -108,10 +108,11 @@ function resolveRelativePath(
   return { resolvedPath, ref }
 }
 
-export type ExampleFile = {
+export interface ExampleFile<T extends {} = {}> {
   name: string
-  content: any
+  content: T
 }
+
 export type GitContentDataResponse = {
   name: string
   path: string
