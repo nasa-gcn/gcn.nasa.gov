@@ -11,7 +11,7 @@ import {
   bodyIsValid,
   formatAuthor,
   subjectIsValid,
-} from '../../routes/circulars/circulars.lib'
+} from '../../routes/_gcn+/circulars/circulars.lib'
 import { createEmailIncomingMessageHandler } from '../handler'
 import {
   getFromAddress,
@@ -25,7 +25,7 @@ import {
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { hostname, origin } from '~/lib/env.server'
-import { group, putRaw } from '~/routes/circulars/circulars.server'
+import { group, putRaw } from '~/routes/_gcn+/circulars/circulars.server'
 
 interface UserData {
   email: string

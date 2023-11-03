@@ -15,7 +15,7 @@ import {
 import { generators } from 'openid-client'
 
 import { cognito, maybeThrow } from '~/lib/cognito.server'
-import { getUser } from '~/routes/_auth/user.server'
+import { getUser } from '~/routes/_gcn+/_auth/user.server'
 
 export interface RedactedClientCredential {
   name: string

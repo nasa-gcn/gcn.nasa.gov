@@ -51,7 +51,7 @@ import { Header } from './components/Header'
 import NewsBanner from './components/NewsBanner'
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
 import { type BreadcrumbHandle, Title } from './root/Title'
-import { getUser } from './routes/_auth/user.server'
+import { getUser } from './routes/_gcn+/_auth/user.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 // FIXME: no top-level await, no import function

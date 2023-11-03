@@ -26,7 +26,7 @@ import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useHostname } from '~/root'
-import { getUser } from '~/routes/_auth/user.server'
+import { getUser } from '~/routes/_gcn+/_auth/user.server'
 
 export const handle: SEOHandle = { getSitemapEntries: () => null }
 

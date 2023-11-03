@@ -11,7 +11,7 @@ import { FormGroup } from '@trussworks/react-uswds'
 
 import { useUrl } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
-import { getUser } from '~/routes/_auth/user.server'
+import { getUser } from '~/routes/_gcn+/_auth/user.server'
 
 export const handle: BreadcrumbHandle = {
   breadcrumb: 'Sign in / Sign up',
