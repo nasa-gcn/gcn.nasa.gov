@@ -119,9 +119,11 @@ hydrate false
 
 @search
 instanceType t3.small.search
-instanceCount 2
+instanceCount 3
 availabilityZoneCount 2
 volumeSize 10
+dedicatedMasterCount 3
+dedicatedMasterType t3.small.search
 
 @plugins
 plugin-remix
