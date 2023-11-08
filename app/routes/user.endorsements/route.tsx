@@ -233,7 +233,7 @@ export function EndorsementRequestCard({
   const [showMore, setShowMore] = useState(false)
 
   const [noteRef, { width }] = useElementSize()
-  const [noteConatinerRef, { width: containerWidth }] = useElementSize()
+  const [noteContainerRef, { width: containerWidth }] = useElementSize()
 
   return (
     <fetcher.Form method="POST">
@@ -306,7 +306,7 @@ export function EndorsementRequestCard({
           </div>
           {endorsementRequest.note && (
             <div
-              ref={noteConatinerRef}
+              ref={noteContainerRef}
               aria-label="Additional comments provided by the requestor"
               className={
                 'grid-col-12 tablet:order-last ' +

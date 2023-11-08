@@ -13,7 +13,7 @@ The unified schema is a modern and standards-based format for GCN Notices. The s
 
 ## GRB Name Server
 
-In parnership with the [Transient Name Server](https://www.wis-tns.org), the GCN team is building a GRB name server that will allow GRB-detecting instruments to both name GRBs and retreive names of already discovered GRBs. These names will be automatically ingested into GCN and associated with GCN Notices and Circulars for the same event.
+In partnership with the [Transient Name Server](https://www.wis-tns.org), the GCN team is building a GRB name server that will allow GRB-detecting instruments to both name GRBs and retrieve names of already discovered GRBs. These names will be automatically ingested into GCN and associated with GCN Notices and Circulars for the same event.
 
 ## Archive
 
