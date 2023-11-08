@@ -15,7 +15,7 @@ In recent years, Apache Kafka has seen wide adoption by the astronomy community,
 
 The Kafka platform itself does not care about the format of the records. However, [Avro](https://avro.apache.org) and [JSON](https://www.json.org) are very common formats for Kafka records because of a rich ecosystem of open-source and commercial tools for them built on Kafka (for example: [Kafka Streams](https://kafka.apache.org/documentation/streams/), [ksqldb](https://ksqldb.io), [Kafka Connect](https://www.confluent.io/product/confluent-connectors/)). [The Vera C. Rubin Observatory's alert system](https://dmtn-093.lsst.io) uses Avro over the [Confluent Wire Format](https://docs.confluent.io/platform/current/schema-registry/serdes-develop/index.html). GCN is developing a unified schema for communicating Notices as JSON records (see [roadmap](/docs/roadmap)).
 
-### How do I start receving GCN notices via Kafka?
+### How do I start receiving GCN notices via Kafka?
 
 See [Kafka Client Setup](/docs/client).
 

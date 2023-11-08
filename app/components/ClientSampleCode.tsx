@@ -442,7 +442,7 @@ export function ClientSampleCode({
           {'>'} Project. After the project initializes, right click the solution
           in the Solution Explorer and click Manage NuGet packages for solution.
           Browse for and install Confluent.Kafka. Copy the following into your
-          Progam.cs file.
+          Program.cs file.
           <Highlight
             language="cs"
             filename={`example.${language}`}

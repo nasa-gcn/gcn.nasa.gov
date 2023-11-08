@@ -113,7 +113,7 @@ export default function () {
   const defaultNameValid = Boolean(notification.name)
   const [nameValid, setNameValid] = useState(defaultNameValid)
   const defaultRecipientValid = Boolean(notification.recipient)
-  const [recipientValid, setrecipientValid] = useState(defaultRecipientValid)
+  const [recipientValid, setRecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
 
@@ -154,7 +154,7 @@ export default function () {
         required={true}
         placeholder="email"
         defaultValue={notification.recipient}
-        onChange={(e) => setrecipientValid(Boolean(e.target.value))}
+        onChange={(e) => setRecipientValid(Boolean(e.target.value))}
       />
       <Label htmlFor="format">Format</Label>
       <NoticeFormatInput name="noticeFormat" value={format} showJson={false} />
