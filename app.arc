@@ -120,7 +120,7 @@ hydrate false
 @search
 instanceType t3.small.search
 instanceCount 3
-availabilityZoneCount 2
+availabilityZoneCount 3
 volumeSize 10
 dedicatedMasterCount 3
 dedicatedMasterType t3.small.search
