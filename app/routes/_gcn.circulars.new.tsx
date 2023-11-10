@@ -97,20 +97,25 @@ function ToggleButton<T extends Record<string, ReactNode>>({
   const [value, setValue] = useState(defaultValue)
 
   return (
-    <ButtonGroup type="segmented">
-      {Object.entries(options).map(([key, label]) => (
-        <Button
-          key={key}
-          type="button"
-          outline={key !== value}
-          onClick={() => {
-            setValue(key)
-            if (onChange && key !== value) onChange(key)
-          }}
-        >
-          {label}
-        </Button>
-      ))}
+    <ButtonGroup type="segmented" role="radiogroup">
+      {Object.entries(options).map(([key, label]) => {
+        const checked = key === value
+        return (
+          <Button
+            key={key}
+            type="button"
+            role="radio"
+            aria-checked={checked}
+            outline={!checked}
+            onClick={() => {
+              setValue(key)
+              if (onChange && !checked) onChange(key)
+            }}
+          >
+            {label}
+          </Button>
+        )
+      })}
     </ButtonGroup>
   )
 }
