@@ -31,32 +31,6 @@ h1:first-child {
 }
 
 /*
- * Size and position the NASA meatball logo in the header.
- */
-
-#site-logo {
-  height: 2em;
-  padding-right: 0.25em;
-}
-
-@media all and (max-width: 64em) {
-  #site-logo {
-    vertical-align: middle;
-  }
-}
-
-@media all and (min-width: 64em) {
-  .usa-header--basic .usa-navbar {
-    width: 50%;
-  }
-
-  #site-title {
-    display: inline-block;
-    max-width: 70%;
-  }
-}
-
-/*
  * Without this, the mobile nav menu button seems to extend one pixel below
  * the header.
  */
@@ -338,7 +312,8 @@ input.react-tags__combobox-input:focus {
   background-image: none;
 
   @include at-media('tablet-lg') {
-    background-image: url('~/img/hero/center.jpg'), url('~/img/hero/left.jpg');
+    background-image: url('~/routes/_gcn._index/hero/center.jpg'),
+      url('~/routes/_gcn._index/hero/left.jpg');
     background-repeat: no-repeat, repeat-x;
     background-size: auto 100%;
     background-position-x: right;
@@ -359,7 +334,7 @@ input.react-tags__combobox-input:focus {
 
 .gcn-hero-background-right {
   @include at-media('tablet-lg') {
-    background-image: url('~/img/hero/right.jpg');
+    background-image: url('~/routes/_gcn._index/hero/right.jpg');
     background-repeat: repeat-x;
     background-size: auto 100%;
     background-position-x: left;

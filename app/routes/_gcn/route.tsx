@@ -14,9 +14,9 @@ import {
 import { ButtonGroup, FormGroup, GridContainer } from '@trussworks/react-uswds'
 import { type ReactNode } from 'react'
 
-import { Footer } from '~/components/Footer'
-import { Header } from '~/components/Header'
-import NewsBanner from '~/components/NewsBanner'
+import { Footer } from './Footer'
+import NewsBanner from './NewsBanner'
+import { Header } from './header/Header'
 import { useUrl } from '~/root'
 import { type BreadcrumbHandle } from '~/root/Title'
 
