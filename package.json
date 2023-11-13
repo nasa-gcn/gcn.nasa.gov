@@ -44,7 +44,7 @@
     "color-convert": "^2.0.1",
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.10",
-    "downshift": "^7.2.1",
+    "downshift": "^8.2.3",
     "email-validator": "^2.0.4",
     "github-slugger": "^2.0.0",
     "hast-util-find-and-replace": "^5.0.1",
