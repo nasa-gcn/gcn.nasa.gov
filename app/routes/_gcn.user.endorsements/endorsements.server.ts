@@ -215,9 +215,7 @@ export class EndorsementsServer {
 
     const promiseArray: Promise<void>[] = []
 
-    let requestorMessage = `You are receiving this email because the status of your peer endorsment requested from ${
-      this.#currentUserEmail
-    } has been updated to ${status}.`
+    let requestorMessage = `You are receiving this email because the status of your peer endorsment requested from ${this.#currentUserEmail} has been updated to ${status}.`
 
     if (status === 'approved') {
       promiseArray.push(
@@ -235,9 +233,7 @@ export class EndorsementsServer {
           fromName,
           to: ['gcnkafka@lists.nasa.gov'],
           subject: 'GCN Peer Endorsements: Endorsement Request Reported',
-          body: `${
-            this.#currentUserEmail
-          } has reported the endorsement request from ${requestorEmail}.`,
+          body: `${this.#currentUserEmail} has reported the endorsement request from ${requestorEmail}.`,
         })
       )
     else if (status == 'rejected') {
