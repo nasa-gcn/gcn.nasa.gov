@@ -327,7 +327,7 @@ export async function getSpecificCircularVersion(
  * @param circularId
  * @returns an array of previous versions of a Circular sorted by version
  */
-export async function getCircularHistory(
+export async function getVersions(
   circularId: number
 ): Promise<Circular[]> {
   const db = await tables()
