@@ -54,9 +54,7 @@ const getDynamoDBAutoIncrement = memoizee(
   { promise: true }
 )
 
-export const getDynamoDBVersionAutoIncrement = memoizee(async function (
-  circularId: number
-) {
+export async function getDynamoDBVersionAutoIncrement(circularId: number) {
   const db = await tables()
   const doc = db._doc as unknown as DynamoDBDocument
   const counterTableName = db.name('circulars')
@@ -74,7 +72,7 @@ export const getDynamoDBVersionAutoIncrement = memoizee(async function (
     initialValue: 1,
     dangerously,
   })
-})
+}
 
 /** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
 function parseDate(date?: string) {
@@ -203,12 +201,30 @@ export async function search({
 }
 
 /** Get a circular by ID. */
-export async function get(circularId: number): Promise<Circular> {
+export async function get(
+  circularId: number,
+  version?: number
+): Promise<Circular> {
   if (isNaN(circularId)) throw new Response(null, { status: 404 })
   const db = await tables()
-  const result = await db.circulars.get({
-    circularId,
-  })
+
+  let result: Circular
+
+  if (version) {
+    if (isNaN(version)) throw new Response(null, { status: 404 })
+    result = await db.circulars_history.get({
+      circularId,
+      version,
+    })
+    if (!result)
+      throw new Response('Specified version does not exist for this circular', {
+        status: 404,
+      })
+  } else {
+    result = await db.circulars.get({
+      circularId,
+    })
+  }
   if (!result)
     throw new Response(null, {
       status: 404,
@@ -265,10 +281,8 @@ export async function put(
     throw new Response('User is not in the submitters group', {
       status: 403,
     })
-  if (!subjectIsValid(item.subject))
-    throw new Response('subject is invalid', { status: 400 })
-  if (!bodyIsValid(item.body))
-    throw new Response('body is invalid', { status: 400 })
+
+  validateCircular(item.subject, item.body)
 
   return await putRaw({
     sub: user.sub,
@@ -293,43 +307,11 @@ export async function circularRedirect(query: string) {
 }
 
 /**
- * Gets a specific version of a given circular
- *
- * Throws an HTTP error if:
- *  - The provided circularId isNaN
- *  - The provided version isNaN
- *  - No version is found matching the provided circularId and version
- *
- * @param circularId
- * @param version
- * @returns a Circular corresponding to the specific version and Id
- */
-export async function getSpecificCircularVersion(
-  circularId: number,
-  version: number
-): Promise<Circular> {
-  if (isNaN(circularId) || isNaN(version))
-    throw new Response(null, { status: 404 })
-  const db = await tables()
-  const result = await db.circulars_history.get({
-    circularId,
-    version,
-  })
-  if (!result)
-    throw new Response(null, {
-      status: 404,
-    })
-  return result
-}
-
-/**
  * Gets all entries in circulars_history for a given circularId
  * @param circularId
  * @returns an array of previous versions of a Circular sorted by version
  */
-export async function getVersions(
-  circularId: number
-): Promise<Circular[]> {
+export async function getVersions(circularId: number): Promise<Circular[]> {
   const db = await tables()
   const result = await db.circulars_history.query({
     KeyConditionExpression: 'circularId = :circularId',
@@ -360,10 +342,7 @@ export async function createChangeRequest(
   subject: string,
   request: Request
 ) {
-  if (!subjectIsValid(subject))
-    throw new Response('subject is invalid', { status: 400 })
-  if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
-
+  validateCircular(subject, body)
   const user = await getUser(request)
   if (!user)
     throw new Response('User is not signed in', {
@@ -395,6 +374,7 @@ export async function getChangeRequests(
       ExpressionAttributeValues: {
         ':circularId': circularId,
       },
+      ProjectionExpression: 'circularId, requestor, requestorSub',
     })
   ).Items
 }
@@ -485,4 +465,10 @@ export async function approveChangeRequest(
   })
 
   await deleteChangeRequest(circularId, requestorSub)
+}
+
+function validateCircular(subject: string, body: string) {
+  if (!subjectIsValid(subject))
+    throw new Response('subject is invalid', { status: 400 })
+  if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
 }

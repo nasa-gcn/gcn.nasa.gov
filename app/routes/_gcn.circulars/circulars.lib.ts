@@ -25,9 +25,7 @@ export interface Circular extends CircularMetadata {
   version?: number // 1: Original
 }
 
-export interface CircularChangeRequest {
-  circularId: number
-  subject: string
+export interface CircularChangeRequest extends CircularMetadata {
   body: string
   requestor: string
   requestorSub: string
