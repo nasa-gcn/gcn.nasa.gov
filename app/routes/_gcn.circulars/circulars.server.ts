@@ -453,7 +453,6 @@ export async function approveChangeRequest(
   if (!changeRequest)
     throw new Response('No change request found', { status: 404 })
 
-  // const existingCircular = await createCircularHistory(circularId)
   const autoincrementVersion = await getDynamoDBVersionAutoIncrement(circularId)
 
   await autoincrementVersion.put({
