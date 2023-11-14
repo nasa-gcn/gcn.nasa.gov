@@ -211,19 +211,19 @@ export async function get(
   let result: Circular | undefined
 
   if (version) {
-    if (isNaN(version)) throw new Response(null, { status: 404 })
     result = await db.circulars_history.get({
       circularId,
       version,
     })
-    if (!result)
-      throw new Response('Specified version does not exist for this circular', {
-        status: 404,
-      })
-  } else {
+  }
+  if (!result && !isNaN(version)) {
     result = await db.circulars.get({
-      circularId,
+      circularId
     })
+  }
+  if (version && result?.version !== version)
+  {
+    result = undefined
   }
   if (!result)
     throw new Response(null, {
