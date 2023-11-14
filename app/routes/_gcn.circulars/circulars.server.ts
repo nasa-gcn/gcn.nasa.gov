@@ -22,7 +22,7 @@ type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
 export const group = 'gcn.nasa.gov/circular-submitter'
 
-export const getDynamoDBAutoIncrement = memoizee(
+const getDynamoDBAutoIncrement = memoizee(
   async function () {
     const db = await tables()
     const doc = db._doc as unknown as DynamoDBDocument
