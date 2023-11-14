@@ -168,11 +168,6 @@ export const validSubjectKeywords = [
   'ZTF',
 ]
 
-export const erroneousSubmissionSubjects = [
-  'Duplicate Submission',
-  'Mistaken Submission',
-]
-
 export const emailAutoReplyChecklist = [
   'this is an automatic reply',
   'automatic reply: ',
