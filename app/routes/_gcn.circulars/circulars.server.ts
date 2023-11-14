@@ -54,7 +54,7 @@ const getDynamoDBAutoIncrement = memoizee(
   { promise: true }
 )
 
-export async function getDynamoDBVersionAutoIncrement(circularId: number) {
+async function getDynamoDBVersionAutoIncrement(circularId: number) {
   const db = await tables()
   const doc = db._doc as unknown as DynamoDBDocument
   const counterTableName = db.name('circulars')
