@@ -337,7 +337,7 @@ export async function getCircularHistory(
       ':circularId': circularId,
     },
   })
-  return result.Items as Circular[]
+  return result.Items
 }
 
 /**
