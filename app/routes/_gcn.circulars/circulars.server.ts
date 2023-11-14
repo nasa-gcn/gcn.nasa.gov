@@ -208,7 +208,7 @@ export async function get(
   if (isNaN(circularId)) throw new Response(null, { status: 404 })
   const db = await tables()
 
-  let result: Circular
+  let result: Circular | undefined
 
   if (version) {
     if (isNaN(version)) throw new Response(null, { status: 404 })
