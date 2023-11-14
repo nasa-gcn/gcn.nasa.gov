@@ -216,13 +216,12 @@ export async function get(
       version,
     })
   }
-  if (!result && !isNaN(version)) {
+  if (!result && version && !isNaN(version)) {
     result = await db.circulars.get({
-      circularId
+      circularId,
     })
   }
-  if (version && result?.version !== version)
-  {
+  if (version && result?.version !== version) {
     result = undefined
   }
   if (!result)
