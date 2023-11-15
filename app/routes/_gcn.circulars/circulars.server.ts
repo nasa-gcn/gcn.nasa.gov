@@ -396,7 +396,7 @@ export async function verifyAndDeleteChangeRequest(
   request: Request
 ): Promise<void> {
   const user = await getUser(request)
-  if (!user) throw new Response('User must be signed in')
+  if (!user) throw new Response(null, { status: 403 })
   if (requestorSub != user.sub || !user.groups.includes(moderatorGroup))
     throw new Response(
       'Change requests may only be deleted by the user that submitted them or moderators',
