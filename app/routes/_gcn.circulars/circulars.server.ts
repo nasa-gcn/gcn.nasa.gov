@@ -208,19 +208,21 @@ export async function get(
   if (isNaN(circularId)) throw new Response(null, { status: 404 })
   const db = await tables()
 
-  let result: Circular | undefined
+  let result = version
+    ? await db.circulars_history.get({
+        circularId,
+        version,
+      })
+    : await db.circulars.get({
+        circularId,
+      })
 
-  if (version) {
-    result = await db.circulars_history.get({
-      circularId,
-      version,
-    })
-  }
   if (!result && version && !isNaN(version)) {
     result = await db.circulars.get({
       circularId,
     })
   }
+
   if (version && result?.version !== version) {
     result = undefined
   }
@@ -310,15 +312,19 @@ export async function circularRedirect(query: string) {
  * @param circularId
  * @returns an array of previous versions of a Circular sorted by version
  */
-export async function getVersions(circularId: number): Promise<Circular[]> {
+export async function getVersions(circularId: number): Promise<number[]> {
   const db = await tables()
-  const result = await db.circulars_history.query({
-    KeyConditionExpression: 'circularId = :circularId',
-    ExpressionAttributeValues: {
-      ':circularId': circularId,
-    },
-  })
-  return result.Items
+  const versions = (
+    await db.circulars_history.query({
+      KeyConditionExpression: 'circularId = :circularId',
+      ExpressionAttributeValues: {
+        ':circularId': circularId,
+      },
+      ProjectionExpression: 'version',
+    })
+  ).Items
+
+  return [...versions.map((x) => x.version), versions.length + 1]
 }
 
 /**
@@ -390,7 +396,7 @@ export async function getChangeRequests(
  * @param requestorSub
  * @param request
  */
-export async function verifyAndDeleteChangeRequest(
+export async function deleteChangeRequest(
   circularId: number,
   requestorSub: string,
   request: Request
@@ -403,7 +409,7 @@ export async function verifyAndDeleteChangeRequest(
       { status: 403 }
     )
 
-  await deleteChangeRequest(circularId, requestorSub)
+  await deleteChangeRequestRaw(circularId, requestorSub)
 }
 
 /**
@@ -411,7 +417,10 @@ export async function verifyAndDeleteChangeRequest(
  * @param circularId
  * @param requestorSub
  */
-async function deleteChangeRequest(circularId: number, requestorSub: string) {
+async function deleteChangeRequestRaw(
+  circularId: number,
+  requestorSub: string
+) {
   const db = await tables()
   await db.circulars_change_requests.delete({
     circularId,
@@ -444,14 +453,7 @@ export async function approveChangeRequest(
       status: 403,
     })
 
-  const db = await tables()
-  const changeRequest = (await db.circulars_change_requests.get({
-    circularId,
-    requestorSub,
-  })) as CircularChangeRequest
-
-  if (!changeRequest)
-    throw new Response('No change request found', { status: 404 })
+  const changeRequest = await getChangeRequest(circularId, requestorSub)
 
   const autoincrementVersion = await getDynamoDBVersionAutoIncrement(circularId)
 
@@ -462,7 +464,19 @@ export async function approveChangeRequest(
     createdOn: Date.now(),
   })
 
-  await deleteChangeRequest(circularId, requestorSub)
+  await deleteChangeRequestRaw(circularId, requestorSub)
+}
+
+async function getChangeRequest(circularId: number, requestorSub: string) {
+  const db = await tables()
+  const changeRequest = (await db.circulars_change_requests.get({
+    circularId,
+    requestorSub,
+  })) as CircularChangeRequest
+
+  if (!changeRequest)
+    throw new Response('No change request found', { status: 404 })
+  return changeRequest
 }
 
 function validateCircular(subject: string, body: string) {
