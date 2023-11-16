@@ -37,8 +37,8 @@ import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
 import invariant from 'tiny-invariant'
 
-import { DevBanner } from './components/DevBanner'
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
+import { DevBanner } from './root/DevBanner'
 import { Title } from './root/Title'
 import { getUser } from './routes/_gcn._auth/user.server'
 

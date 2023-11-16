@@ -23,7 +23,7 @@ import {
 } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 
-import { Meatball } from './meatball/Meatball'
+import { Meatball } from '~/components/meatball/Meatball'
 
 function ContactLink({
   children,

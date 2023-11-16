@@ -15,8 +15,10 @@ import {
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-import { Meatball } from './meatball/Meatball'
+import { Meatball } from '~/components/meatball/Meatball'
 import { useEmail, useUserIdp } from '~/root'
+
+import styles from './header.module.css'
 
 /**
  * A variation on the NavDropDownButton component from @trussworks/react-uswds
@@ -87,13 +89,16 @@ export function Header() {
       {expanded && (
         <div className="usa-overlay is-visible" onClick={hideMobileNav} />
       )}
-      <USWDSHeader basic className="usa-header usa-header--dark">
+      <USWDSHeader
+        basic
+        className={`usa-header usa-header--dark ${styles.header}`}
+      >
         <div className="usa-nav-container">
           <div className="usa-navbar">
             <Title>
               <Link to="/">
-                <Meatball id="site-logo" className="width-auto" />
-                <span id="site-title">General Coordinates Network</span>
+                <Meatball className="width-auto" />
+                <span>General Coordinates Network</span>
               </Link>
             </Title>
             <NavMenuButton onClick={toggleMobileNav} label="Menu" />

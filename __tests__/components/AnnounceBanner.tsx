@@ -6,7 +6,7 @@ import { fireEvent, render, screen } from '@testing-library/react'
 
 import AnnounceBanner, {
   AnnouncementEvent,
-} from '../../app/components/AnnounceBanner'
+} from '../../app/routes/_gcn/AnnounceBanner'
 
 const linkString = 'Register'
 

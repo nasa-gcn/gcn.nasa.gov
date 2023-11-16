@@ -8,7 +8,7 @@
 import { Link } from '@remix-run/react'
 import { ButtonGroup, FormGroup, Grid } from '@trussworks/react-uswds'
 
-import center_cropped from '~/img/hero/center-cropped.jpg'
+import center_cropped from './center-cropped.jpg'
 
 export function Hero() {
   return (
