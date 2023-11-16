@@ -30,7 +30,6 @@ import {
 import clamp from 'lodash/clamp'
 import { useState } from 'react'
 
-import type { action } from '../_gcn.api.circulars'
 import type { FilteredMetadata } from '../_gcn.circulars/circulars.lib'
 import {
   circularRedirect,
@@ -38,6 +37,7 @@ import {
   groupCircularsBySynonyms,
   search,
 } from '../_gcn.circulars/circulars.server'
+import type { action } from '../_gcn.circulars/route'
 import { getSynonyms } from '../_gcn.synonyms/synonyms.server'
 import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
