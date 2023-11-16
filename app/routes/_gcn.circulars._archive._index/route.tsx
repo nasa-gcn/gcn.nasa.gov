@@ -50,8 +50,8 @@ import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-export async function loader({ request }: DataFunctionArgs) {
-  const { searchParams } = new URL(request.url)
+export async function loader({ request: { url } }: DataFunctionArgs) {
+  const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   if (query) {
     await circularRedirect(query)

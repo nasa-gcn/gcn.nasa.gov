@@ -15,10 +15,12 @@ import {
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
+
 import { Meatball } from '~/components/meatball/Meatball'
 import { useEmail, useFeature, useUserIdp } from '~/root'
-import styles from './header.module.css'
 import { getUser } from '~/routes/_gcn._auth/user.server'
+
+import styles from './header.module.css'
 
 export async function loader({ request }: DataFunctionArgs) {
   const user = await getUser(request)

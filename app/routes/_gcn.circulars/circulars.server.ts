@@ -12,6 +12,9 @@ import { search as getSearch } from '@nasa-gcn/architect-functions-search'
 import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
+
+import type { User } from '../_gcn._auth/user.server'
+import { getUser } from '../_gcn._auth/user.server'
 import {
   bodyIsValid,
   formatAuthor,
@@ -23,8 +26,6 @@ import type {
   CircularGroupingMetadata,
   CircularMetadata,
 } from './circulars.lib'
-import type { User} from '../_gcn._auth/user.server';
-import { getUser } from '../_gcn._auth/user.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -237,7 +238,7 @@ export async function put(
   item: Require<
     Omit<
       Circular,
-      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId' | 'synonyms'
+      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId'
     >,
     'submittedHow'
   >,
