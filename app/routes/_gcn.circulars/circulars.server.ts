@@ -206,6 +206,9 @@ export async function get(
   version?: number
 ): Promise<Circular> {
   if (isNaN(circularId)) throw new Response(null, { status: 404 })
+  if (version === 0 || (version !== undefined && isNaN(version)))
+    throw new Response(null, { status: 404 })
+
   const db = await tables()
 
   let result = version
@@ -217,7 +220,7 @@ export async function get(
         circularId,
       })
 
-  if (!result && version !== undefined && !version && !isNaN(version)) {
+  if (!result && version) {
     result = await db.circulars.get({
       circularId,
     })
