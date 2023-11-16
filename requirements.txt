@@ -3,3 +3,4 @@ black
 fastapi
 mangum
 pipdeptree
+pytest

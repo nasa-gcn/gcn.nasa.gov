@@ -13,4 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: psf/black@stable
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Pip Install
+        run: pip install -r requirements.txt
+
+      - name: Pytest
+        run: pytest python
+
+      - name: Upload to Codecov.io
+        uses: codecov/codecov-action@v3

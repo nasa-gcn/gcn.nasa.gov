@@ -6,6 +6,8 @@
 from fastapi import FastAPI
 from mangum import Mangum
 
+from env import feature
+
 app = FastAPI()
 
 
@@ -14,4 +16,7 @@ async def example():
     return {"greeting": "Hello, world!"}
 
 
-handler = Mangum(app, api_gateway_base_path="/labs/api", lifespan="off")
+if feature("LABS"):
+    handler = Mangum(app, api_gateway_base_path="/labs/api", lifespan="off")
+else:
+    handler = lambda *_, **__: {"statusCode": 404}
