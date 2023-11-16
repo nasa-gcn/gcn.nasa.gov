@@ -217,7 +217,7 @@ export async function get(
         circularId,
       })
 
-  if (!result && version && !isNaN(version)) {
+  if (!result && version !== undefined && !version && !isNaN(version)) {
     result = await db.circulars.get({
       circularId,
     })
