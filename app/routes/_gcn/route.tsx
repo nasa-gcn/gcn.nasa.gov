@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { DataFunctionArgs } from '@remix-run/node'
 import {
   Link,
   Outlet,
@@ -14,6 +15,7 @@ import {
 import { ButtonGroup, FormGroup, GridContainer } from '@trussworks/react-uswds'
 import { type ReactNode } from 'react'
 
+import { getUser } from '../_gcn._auth/user.server'
 import { Footer } from './Footer'
 import NewsBanner from './NewsBanner'
 import { Header } from './header/Header'
@@ -24,10 +26,17 @@ export const handle: BreadcrumbHandle = {
   breadcrumb: 'GCN',
 }
 
+export async function loader({ request }: DataFunctionArgs) {
+  const user = await getUser(request)
+  const isModerator =
+    user?.groups.includes('gcn.nasa.gov/circular-moderator') || false
+  return isModerator
+}
+
 function Document({ children }: { children?: ReactNode }) {
   return (
     <>
-      <Header />
+      <Header isModerator />
       <NewsBanner>
         New Swift-BAT/GUANO and IceCube Notice Types Available! See{' '}
         <Link

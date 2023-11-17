@@ -5,8 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
-import { Link, NavLink, useLoaderData } from '@remix-run/react'
+import { Link, NavLink } from '@remix-run/react'
 import {
   Menu,
   NavMenuButton,
@@ -18,16 +17,8 @@ import { useState } from 'react'
 
 import { Meatball } from '~/components/meatball/Meatball'
 import { useEmail, useFeature, useUserIdp } from '~/root'
-import { getUser } from '~/routes/_gcn._auth/user.server'
 
 import styles from './header.module.css'
-
-export async function loader({ request }: DataFunctionArgs) {
-  const user = await getUser(request)
-  const isModerator =
-    user?.groups.includes('gcn.nasa.gov/circular-moderator') || false
-  return isModerator
-}
 
 /**
  * A variation on the NavDropDownButton component from @trussworks/react-uswds
@@ -74,7 +65,7 @@ function NavDropDownButton({
   )
 }
 
-export function Header() {
+export function Header({ isModerator }: { isModerator: boolean }) {
   const email = useEmail()
   const idp = useUserIdp()
   const [expanded, setExpanded] = useState(false)
@@ -93,8 +84,6 @@ export function Header() {
     if (userMenuIsOpen && !expanded) setUserMenuIsOpen(false)
     hideMobileNav()
   }
-
-  const isModerator = useLoaderData<typeof loader>()
 
   return (
     <>
