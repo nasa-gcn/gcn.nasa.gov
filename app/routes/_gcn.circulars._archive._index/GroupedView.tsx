@@ -7,7 +7,8 @@
  */
 import { Link } from '@remix-run/react'
 import { useState } from 'react'
-import type { CircularGroupingMetadata } from '../_gcn.circulars/circulars.lib'
+
+import { type CircularGroupingMetadata } from '../_gcn.circulars/circulars.lib'
 
 export default function ({
   allItems,
@@ -48,9 +49,9 @@ export default function ({
               <summary>
                 {circulars.map((circular, index) =>
                   circular ? (
-                    <span
-                      key={circular.eventId}
-                    >{`${circular.eventId}, `}</span>
+                    <span key={circular.eventId}>
+                      {`${circular.eventId}, `}
+                    </span>
                   ) : undefined
                 )}
               </summary>
