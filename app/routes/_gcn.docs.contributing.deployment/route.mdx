@@ -11,13 +11,13 @@ import deploymentScreenshot from './screenshot.png'
 
 This web site is deployed **in the cloud** on [Amazon Web Services (AWS)](https://aws.amazon.com) in order resist outages due to local network conditions or distasters.
 
-Site assets are replicated and cached through a global **[content delivery network](https://en.wikipedia.org/wiki/Content_delivery_network)** ([AWS CloudFront](https://aws.amazon.com/cloudfront/)) to provide the fastest experience possible to scientists everywhere regardless of their country and location.
+Site assets are replicated and cached through a global content delivery network([AWS CloudFront](https://aws.amazon.com/cloudfront/)) to provide the fastest experience possible to scientists everywhere regardless of their country and location.
 
-The site's architecture within AWS is entirely **[serverless](https://en.wikipedia.org/wiki/Serverless_computing)**: we run on fully managed AWS computing, storage, and database services so that resource usage and cost adjust dynamically with user demand and so that we do not have to patch or maintain the operating systems on our own machine instances.
+The site's architecture within AWS is entirely serverless: we run on fully managed AWS computing, storage, and database services so that resource usage and cost adjust dynamically with user demand and so that we do not have to patch or maintain the operating systems on our own machine instances.
 
-We provision all AWS resources using **[infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code)** so that the configuration of cloud services is automated and under version control. We use the [Architect](https://arc.codes/) serverless framework to model, generate, and orchestrate the AWS resources.
+We provision all AWS resources using **[infrastructure as code](https://aws.amazon.com/cloudformation/)** so that the configuration of cloud services is automated and under version control. We use the [Architect](https://arc.codes/) serverless framework to model, generate, and orchestrate the AWS resources.
 
-We perform code and infrastructure changes automatically using **[continuous deployment](https://en.wikipedia.org/wiki/Continuous_deployment)** on [GitHub Actions](https://github.com/features/actions) (see our [deployment workflow](https://github.com/nasa-gcn/gcn.nasa.gov/blob/main/.github/workflows/deploy.yml)).
+We perform code and infrastructure changes automatically using **[continuous deployment](https://resources.github.com/ci-cd/)** on [GitHub Actions](https://github.com/features/actions) (see our [deployment workflow](https://github.com/nasa-gcn/gcn.nasa.gov/blob/main/.github/workflows/deploy.yml)).
 
 ## Stages
 

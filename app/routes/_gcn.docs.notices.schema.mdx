@@ -24,7 +24,7 @@ To get started, fork the [nasa-gcn/gcn-schema](https://github.com/nasa-gcn/gcn-s
 
 ## File Naming Conventions
 
-Create a folder in the repository for your mission following the naming convention <code>gcn/notices/<i>mission</i></code>. Add one or more files for schema definitions named <code>gcn/notices/<i>mission</i>/<i>schema_name</i>.schema.json</code>. The mission name should be lowercase and the schema name should be [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each file corresponds to a [Kafka topic](/docs/notices/producers) named <code>gcn.notices.<i>mission</i>.<i>schema_name</i></code>.
+Create a folder in the repository for your mission following the naming convention <code>gcn/notices/<i>mission</i></code>. Add one or more files for schema definitions named <code>gcn/notices/<i>mission</i>/<i>schema_name</i>.schema.json</code>. The mission name should be lowercase and the schema name should be `snake_case` (lowercase words separated by underscores, e.g. lvk_nu_track_search). Each file corresponds to a [Kafka topic](/docs/notices/producers) named <code>gcn.notices.<i>mission</i>.<i>schema_name</i></code>.
 
 We encourage you to add files containing example data. The naming convention for example files is <code>gcn/notices/<i>mission</i>/<i>schema_name</i>.<i>optional_description</i>.example.json</code>. We will automatically validate your example files against your schema.
 
@@ -121,7 +121,7 @@ List of core schema to include fields from. [Browse the core schema](/docs/schem
 
 #### `properties`
 
-Optional mapping of custom, mission-specific fields. Field names should use [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each entry should at least have a description and a type. See the [list of available data types](https://json-schema.org/understanding-json-schema/reference/type.html).
+Optional mapping of custom, mission-specific fields. Field names should use `snake_case`. Each entry should at least have a description and a type. See the [list of available data types](https://json-schema.org/understanding-json-schema/reference/type.html).
 
 ## Extended Example
 
