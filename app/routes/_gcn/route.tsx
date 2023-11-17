@@ -10,6 +10,7 @@ import {
   Link,
   Outlet,
   isRouteErrorResponse,
+  useLoaderData,
   useRouteError,
 } from '@remix-run/react'
 import { ButtonGroup, FormGroup, GridContainer } from '@trussworks/react-uswds'
@@ -34,9 +35,11 @@ export async function loader({ request }: DataFunctionArgs) {
 }
 
 function Document({ children }: { children?: ReactNode }) {
+  const isModerator = useLoaderData<typeof loader>()
+
   return (
     <>
-      <Header isModerator />
+      <Header isModerator={isModerator} />
       <NewsBanner>
         New Swift-BAT/GUANO and IceCube Notice Types Available! See{' '}
         <Link
