@@ -206,34 +206,19 @@ export async function get(
   version?: number
 ): Promise<Circular> {
   if (isNaN(circularId)) throw new Response(null, { status: 404 })
-  if (version === 0 || (version !== undefined && isNaN(version)))
-    throw new Response(null, { status: 404 })
 
-  const db = await tables()
+  const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
+  let result = await circularVersions.get(version)
 
-  let result = version
-    ? await db.circulars_history.get({
-        circularId,
-        version,
-      })
-    : await db.circulars.get({
-        circularId,
-      })
+  if (!result && version) result = await circularVersions.get()
 
-  if (!result && version) {
-    result = await db.circulars.get({
-      circularId,
-    })
-  }
+  if (version && result?.version !== version) result = undefined
 
-  if (version && result?.version !== version) {
-    result = undefined
-  }
   if (!result)
     throw new Response(null, {
       status: 404,
     })
-  return result
+  return result as Circular
 }
 
 /** Delete a circular by ID.
@@ -316,18 +301,11 @@ export async function circularRedirect(query: string) {
  * @returns an array of previous versions of a Circular sorted by version
  */
 export async function getVersions(circularId: number): Promise<number[]> {
-  const db = await tables()
-  const versions = (
-    await db.circulars_history.query({
-      KeyConditionExpression: 'circularId = :circularId',
-      ExpressionAttributeValues: {
-        ':circularId': circularId,
-      },
-      ProjectionExpression: 'version',
-    })
-  ).Items
+  const circularVersionsAutoIncrement =
+    await getDynamoDBVersionAutoIncrement(circularId)
+  const versions = await circularVersionsAutoIncrement.list()
 
-  return [...versions.map((x) => x.version), versions.length + 1]
+  return [...versions, versions.length + 1]
 }
 
 /**
