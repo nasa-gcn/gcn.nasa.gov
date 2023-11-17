@@ -164,9 +164,8 @@ export default function () {
   const { version, '*': path } = useParams()
   const { data, jsonContent, examples } = useLoaderData<typeof loader>()
   const versions = useRouteLoaderData<typeof parentLoader>(
-    'routes/docs_._schema-browser'
+    'routes/_gcn.docs_._schema-browser'
   )
-
   invariant(version)
   invariant(path)
   invariant(versions)
