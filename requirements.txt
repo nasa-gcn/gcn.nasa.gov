@@ -1,6 +1,3 @@
-astropy
 black
-fastapi
-mangum
-pipdeptree
 pytest
+-r python/requirements.txt
