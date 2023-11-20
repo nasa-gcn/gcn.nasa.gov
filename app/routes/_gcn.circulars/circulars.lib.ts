@@ -21,6 +21,14 @@ export interface Circular extends CircularMetadata {
   submitter: string
   submittedHow?: SubmittedHow
   bibcode?: string
+  editedBy?: string
+  version?: number // 1: Original
+}
+
+export interface CircularChangeRequest extends CircularMetadata {
+  body: string
+  requestor: string
+  requestorSub: string
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]

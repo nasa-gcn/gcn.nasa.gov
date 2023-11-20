@@ -72,6 +72,16 @@ auto_increment_metadata
   tableName *String
   PointInTimeRecovery true
 
+circulars_history
+  circularId *Number
+  version **Number
+  PointInTimeRecovery true
+
+circulars_change_requests
+  circularId *Number
+  requestorSub **String
+  PointInTimeRecovery true
+
 legacy_users
   email *String
   PointInTimeRecovery true
