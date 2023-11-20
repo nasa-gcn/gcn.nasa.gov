@@ -40,7 +40,11 @@ export function FrontMatter({
   createdOn,
   submitter,
   submittedHow,
-}: Pick<Circular, 'subject' | 'createdOn' | 'submitter' | 'submittedHow'>) {
+  editedBy,
+}: Pick<
+  Circular,
+  'subject' | 'createdOn' | 'submitter' | 'submittedHow' | 'editedBy'
+>) {
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
@@ -51,6 +55,9 @@ export function FrontMatter({
         </small>
       </FrontMatterItem>
       <FrontMatterItem label="From">{submitter}</FrontMatterItem>
+      {editedBy && (
+        <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
+      )}
       {submittedHow && (
         <FrontMatterItem label="Via">
           {submittedHowMap[submittedHow]}

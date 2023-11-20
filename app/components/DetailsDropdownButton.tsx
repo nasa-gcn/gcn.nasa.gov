@@ -18,7 +18,10 @@ export default function DetailsDropdownButton({
   return (
     <Button type="button" {...props}>
       {children}
-      <Icon.ExpandMore role="presentation" />
+      <Icon.ExpandMore
+        role="presentation"
+        className="margin-top-neg-1 bottom-aligned"
+      />
     </Button>
   )
 }
