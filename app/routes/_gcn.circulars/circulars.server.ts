@@ -205,15 +205,8 @@ export async function get(
   circularId: number,
   version?: number
 ): Promise<Circular> {
-  if (isNaN(circularId)) throw new Response(null, { status: 404 })
-
   const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
-  let result = await circularVersions.get(version)
-
-  if (!result && version) result = await circularVersions.get()
-
-  if (version && result?.version !== version) result = undefined
-
+  const result = await circularVersions.get(version)
   if (!result)
     throw new Response(null, {
       status: 404,
@@ -303,9 +296,7 @@ export async function circularRedirect(query: string) {
 export async function getVersions(circularId: number): Promise<number[]> {
   const circularVersionsAutoIncrement =
     await getDynamoDBVersionAutoIncrement(circularId)
-  const versions = await circularVersionsAutoIncrement.list()
-
-  return [...versions, versions.length + 1]
+  return await circularVersionsAutoIncrement.list()
 }
 
 /**
