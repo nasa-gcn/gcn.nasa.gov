@@ -23,7 +23,8 @@ To customize the server-side behavior of the code, use the `feature()` function.
 import { feature } from '~/lib/env.server'
 
 export function loader() {
-  return feature('PYROKINESIS') || new Response(null, { status: 404 })
+  if (feature('PYROKINESIS')) return null
+  else throw new Response(null, { status: 404 })
 }
 
 # Pyrokinesis

@@ -15,7 +15,8 @@ export const handle: BreadcrumbHandle = {
 }
 
 export function loader() {
-  return feature('LABS') || new Response(null, { status: 404 })
+  if (feature('LABS')) return null
+  else throw new Response(null, { status: 404 })
 }
 
 export default function () {
