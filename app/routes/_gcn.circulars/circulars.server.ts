@@ -80,46 +80,46 @@ async function getDynamoDBVersionAutoIncrement(circularId: number) {
 }
 
 /** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
-function parseDate(date?: string) {
-  return date ? new Date(date).getTime() : NaN
-}
+// function parseDate(date?: string) {
+//   return date ? new Date(date).getTime() : NaN
+// }
 
 /** take input string and return start/end times based on string value */
-function fuzzyTimeRange(fuzzyTime?: string) {
-  const now = Date.now()
-  switch (fuzzyTime) {
-    case 'now': // current time
-      return now
-    case 'hour': // 1 hour ago
-      return now - 3600000
-    case 'today': // 00:00:00 of same day
-      return new Date().setHours(0, 0, 0, 0)
-    case 'day': // 24 hours ago
-      return now - 86400000
-    case 'week': // 7 days ago
-      return now - 86400000 * 7
-    case 'month': // 30 days ago
-      return now - 86400000 * 30
-    case 'year': // 365 days ago
-      return now - 86400000 * 365
-    case 'mtd': // month to date
-      return new Date(
-        new Date().getFullYear(),
-        new Date().getMonth(),
-        1
-      ).getTime()
-    case 'ytd': // year to date
-      return new Date(new Date().getFullYear(), 0).getTime()
-    default:
-      return NaN
-  }
-}
+// function fuzzyTimeRange(fuzzyTime?: string) {
+//   const now = Date.now()
+//   switch (fuzzyTime) {
+//     case 'now': // current time
+//       return now
+//     case 'hour': // 1 hour ago
+//       return now - 3600000
+//     case 'today': // 00:00:00 of same day
+//       return new Date().setHours(0, 0, 0, 0)
+//     case 'day': // 24 hours ago
+//       return now - 86400000
+//     case 'week': // 7 days ago
+//       return now - 86400000 * 7
+//     case 'month': // 30 days ago
+//       return now - 86400000 * 30
+//     case 'year': // 365 days ago
+//       return now - 86400000 * 365
+//     case 'mtd': // month to date
+//       return new Date(
+//         new Date().getFullYear(),
+//         new Date().getMonth(),
+//         1
+//       ).getTime()
+//     case 'ytd': // year to date
+//       return new Date(new Date().getFullYear(), 0).getTime()
+//     default:
+//       return NaN
+//   }
+// }
 
-function getValidDates(startDate?: string, endDate?: string) {
-  const startTimestamp = fuzzyTimeRange(startDate) || parseDate(startDate)
-  const endTimestamp = fuzzyTimeRange(endDate) || parseDate(endDate) + 86400000
-  return [startTimestamp, endTimestamp]
-}
+// function getValidDates(startDate?: string, endDate?: string) {
+//   const startTimestamp = fuzzyTimeRange(startDate) || parseDate(startDate)
+//   const endTimestamp = fuzzyTimeRange(endDate) || parseDate(endDate) + 86400000
+//   return [startTimestamp, endTimestamp]
+// }
 
 export async function search({
   query,
@@ -139,8 +139,41 @@ export async function search({
   totalItems: number
 }> {
   const client = await getSearch()
+  // const [startTime, endTime] = getValidDates(startDate, endDate)
 
-  const [startTime, endTime] = getValidDates(startDate, endDate)
+  const get_model_id_request = {
+    method: 'GET',
+    path: '/_ingest/pipeline',
+  }
+
+  let model_id = ''
+  try {
+    const resp = await client.transport.request(get_model_id_request)
+
+    if (resp && resp.statusCode == 200) {
+      model_id =
+        resp.body['nlp-ingest-pipeline'].processors[0].text_embedding.model_id
+    } else {
+      console.log(
+        'Error. Could not deploy model. Returned with response: ',
+        resp
+      )
+    }
+  } catch (e) {
+    console.log('Error: ', e)
+  }
+
+  const searchQuery = query
+    ? {
+        neural: {
+          circular_embedding: {
+            query_text: query,
+            model_id,
+            k: 20,
+          },
+        },
+      }
+    : { match_all: {} }
 
   const {
     body: {
@@ -152,26 +185,27 @@ export async function search({
   } = await client.search({
     index: 'circulars',
     body: {
-      query: {
-        bool: {
-          must: query
-            ? {
-                multi_match: {
-                  query,
-                  fields: ['submitter', 'subject', 'body'],
-                },
-              }
-            : undefined,
-          filter: {
-            range: {
-              createdOn: {
-                gte: startTime,
-                lte: endTime,
-              },
-            },
-          },
-        },
-      },
+      query: searchQuery,
+      // query: {
+      //   bool: {
+      //     must: query
+      //       ? {
+      //           multi_match: {
+      //             query,
+      //             fields: ['submitter', 'subject', 'body'],
+      //           },
+      //         }
+      //       : undefined,
+      //     filter: {
+      //       range: {
+      //         createdOn: {
+      //           gte: startTime,
+      //           lte: endTime,
+      //         },
+      //       },
+      //     },
+      //   },
+      // },
       fields: ['subject'],
       _source: false,
       sort: {

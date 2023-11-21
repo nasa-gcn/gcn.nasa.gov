@@ -156,6 +156,8 @@ availabilityZoneCount 3
 volumeSize 10
 dedicatedMasterCount 3
 dedicatedMasterType t3.small.search
+# Use OpenSearch in sandbox mode; default is Elasticsearch.
+sandboxEngine opensearch
 
 @plugins
 plugin-remix
