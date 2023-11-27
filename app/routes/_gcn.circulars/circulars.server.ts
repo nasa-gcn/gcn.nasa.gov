@@ -21,6 +21,7 @@ import { bodyIsValid, formatAuthor, parseEventFromSubject, subjectIsValid } from
 import type {
   Circular,
   CircularChangeRequest,
+  CircularGroupingMetadata,
   CircularMetadata,
 } from './circulars.lib'
 
