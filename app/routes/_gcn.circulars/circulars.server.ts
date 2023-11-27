@@ -342,6 +342,7 @@ export async function groupCircularsBySynonyms({
     groupedCirculars.push({ id: synonymKey, circulars: circularArray })
   })
   return { groups: groupedCirculars }
+}
 
 /**
  * Gets all entries in circulars_history for a given circularId
