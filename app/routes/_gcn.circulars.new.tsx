@@ -142,7 +142,11 @@ export default function () {
   searchParams.delete('subject')
   searchParams.delete('body')
   let searchString = searchParams.toString()
-  if (searchString) searchString = `?${searchString}`
+  let formSearchString = '?index'
+  if (searchString) {
+    formSearchString = `${formSearchString}&${searchString}`
+    searchString = `?${searchString}`
+  }
 
   const [subjectValid, setSubjectValid] = useState(
     subjectIsValid(defaultSubject)
@@ -158,7 +162,7 @@ export default function () {
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>New GCN Circular</h1>
-      <Form method="POST" action={`/circulars${searchString}`}>
+      <Form method="POST" action={`/circulars${formSearchString}`}>
         <InputGroup className="border-0 maxw-full">
           <InputPrefix>From</InputPrefix>
           <span className="padding-1">{formattedAuthor}</span>

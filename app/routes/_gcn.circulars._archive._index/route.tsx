@@ -30,14 +30,19 @@ import {
 import clamp from 'lodash/clamp'
 import { useState } from 'react'
 
-import { circularRedirect, search } from '../_gcn.circulars/circulars.server'
-import type { action } from '../_gcn.circulars/route'
+import { getUser } from '../_gcn._auth/user.server'
+import {
+  circularRedirect,
+  put,
+  search,
+} from '../_gcn.circulars/circulars.server'
 import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
 import DateSelectorButton from './DateSelectorButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
+import { getFormDataString } from '~/lib/utils'
 import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
@@ -63,6 +68,18 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   return { page, ...results }
 }
 
+export async function action({ request }: DataFunctionArgs) {
+  const data = await request.formData()
+  const body = getFormDataString(data, 'body')
+  const subject = getFormDataString(data, 'subject')
+  if (!body || !subject)
+    throw new Response('Body and subject are required', { status: 400 })
+  return await put(
+    { subject, body, submittedHow: 'web' },
+    await getUser(request)
+  )
+}
+
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
@@ -72,6 +89,11 @@ export default function () {
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
+
+  // Strip off the ?index param if we navigated here from a form.
+  // See https://remix.run/docs/en/main/guides/index-query-param.
+  searchParams.delete('index')
+
   const limit = searchParams.get('limit') || '100'
   const query = searchParams.get('query') || undefined
   const startDate = searchParams.get('startDate') || undefined
