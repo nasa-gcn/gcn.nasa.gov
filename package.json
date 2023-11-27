@@ -20,7 +20,7 @@
     "dev": "run-p \"dev:*\"",
     "prepare": "husky install",
     "deploy": "arc deploy --prune --production",
-    "clean": "rimraf --glob build/static app/css \"build/**/index.*\" \"build/**/metafile.*\" \"build/**/version.txt\" \"app/**/*.css\" \"app/**/*.css.map\" sam.json sam.yaml .cache",
+    "clean": "rimraf --glob build/static app/css \"build/**/index.*\" \"build/**/metafile.*\" \"build/**/version.txt\" \"app/**/*.css\" \"app/**/*.css.map\" sam.json sam.yaml .cache python/vendor",
     "test": "jest",
     "test-coverage": "jest --coverage",
     "typecheck": "tsc"
@@ -28,16 +28,16 @@
   "dependencies": {
     "@architect/functions": "^5.3.4",
     "@nasa-gcn/architect-functions-search": "^1.0.0",
-    "@nasa-gcn/dynamodb-autoincrement": "^2.1.0",
+    "@nasa-gcn/dynamodb-autoincrement": "^2.2.0",
     "@nasa-gcn/remark-rehype-astro": "^1.1.0",
     "@nasa-gcn/remix-seo": "^2.0.0",
     "@octokit/request-error": "^5.0.1",
     "@octokit/rest": "^20.0.2",
     "@opensearch-project/opensearch": "^2.4.0",
-    "@remix-run/architect": "^2.2.0",
-    "@remix-run/css-bundle": "^2.2.0",
-    "@remix-run/node": "^2.2.0",
-    "@remix-run/react": "^2.2.0",
+    "@remix-run/architect": "^2.3.1",
+    "@remix-run/css-bundle": "^2.3.1",
+    "@remix-run/node": "^2.3.1",
+    "@remix-run/react": "^2.3.1",
     "@trussworks/react-uswds": "^5.1.1",
     "aws-lambda-ses-forwarder": "github:lpsinger/aws-lambda-ses-forwarder#aws-sdk-v3",
     "classnames": "^2.3.2",
@@ -50,7 +50,7 @@
     "hast-util-find-and-replace": "^5.0.1",
     "hastscript": "^8.0.0",
     "highlight.js": "^11.8.0",
-    "isbot": "^3.6.13",
+    "isbot": "^3.7.1",
     "lodash": "^4.17.21",
     "mailparser": "^3.6.5",
     "memoizee": "^0.4.15",
@@ -75,7 +75,7 @@
     "usehooks-ts": "^2.9.1"
   },
   "devDependencies": {
-    "@architect/architect": "^10.16.0",
+    "@architect/architect": "^10.16.3",
     "@architect/plugin-lambda-invoker": "^1.2.0",
     "@architect/utils": "^3.1.9",
     "@aws-sdk/client-cognito-identity-provider": "^3.421.0",
@@ -89,10 +89,10 @@
     "@babel/preset-typescript": "^7.23.3",
     "@nasa-gcn/architect-plugin-search": "^1.1.0",
     "@nasa-gcn/eslint-config-gitignore": "^0.0.1",
-    "@remix-run/dev": "^2.2.0",
-    "@remix-run/eslint-config": "^2.2.0",
+    "@remix-run/dev": "^2.3.1",
+    "@remix-run/eslint-config": "^2.3.1",
     "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.0.0",
+    "@testing-library/react": "^14.1.2",
     "@trivago/prettier-plugin-sort-imports": "^4.2.1",
     "@types/color-convert": "^2.0.1",
     "@types/grecaptcha": "^3.0.6",
@@ -109,7 +109,7 @@
     "@types/source-map-support": "^0.5.8",
     "@types/tar-stream": "^3.1.1",
     "autoprefixer": "^10.4.16",
-    "eslint": "^8.53.0",
+    "eslint": "^8.54.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-jest": "^27.6.0",
     "glob": "^10.3.4",
@@ -132,10 +132,7 @@
     "rimraf": "^5.0.0",
     "sass": "^1.64.2",
     "ts-jest": "^29.1.0",
-    "typescript": "^5.2.2"
-  },
-  "overrides": {
-    "@architect/sandbox": "github:lpsinger/sandbox#x-forwarded-port-string"
+    "typescript": "^5.3.2"
   },
   "engines": {
     "node": ">=18"

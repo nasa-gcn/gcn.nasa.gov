@@ -1,5 +1,6 @@
 {
   "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.tabSize": 4
   },
   "editor.tabSize": 2,
@@ -7,5 +8,8 @@
   "typescript.preferences.quoteStyle": "single",
   "javascript.preferences.quoteStyle": "single",
   "typescript.format.semicolons": "remove",
-  "explorer.sortOrder": "mixed"
+  "explorer.sortOrder": "mixed",
+  "python.testing.pytestArgs": ["python"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true
 }

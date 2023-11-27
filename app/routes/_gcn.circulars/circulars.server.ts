@@ -9,21 +9,18 @@ import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
 import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearch } from '@nasa-gcn/architect-functions-search'
-import { DynamoDBAutoIncrement } from '@nasa-gcn/dynamodb-autoincrement'
+import {
+  DynamoDBAutoIncrement,
+  DynamoDBHistoryAutoIncrement,
+} from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
-import type { User } from '../_gcn._auth/user.server'
-import { getUser } from '../_gcn._auth/user.server'
-import {
-  bodyIsValid,
-  formatAuthor,
-  parseEventFromSubject,
-  subjectIsValid,
-} from './circulars.lib'
+import { type User, getUser } from '../_gcn._auth/user.server'
+import { bodyIsValid, formatAuthor, parseEventFromSubject, subjectIsValid } from './circulars.lib'
 import type {
   Circular,
-  CircularGroupingMetadata,
+  CircularChangeRequest,
   CircularMetadata,
 } from './circulars.lib'
 
@@ -31,6 +28,7 @@ import type {
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
 export const group = 'gcn.nasa.gov/circular-submitter'
+export const moderatorGroup = 'gcn.nasa.gov/circular-moderator'
 
 const getDynamoDBAutoIncrement = memoizee(
   async function () {
@@ -55,6 +53,26 @@ const getDynamoDBAutoIncrement = memoizee(
   },
   { promise: true }
 )
+
+async function getDynamoDBVersionAutoIncrement(circularId: number) {
+  const db = await tables()
+  const doc = db._doc as unknown as DynamoDBDocument
+  const counterTableName = db.name('circulars')
+  const tableName = db.name('circulars_history')
+  const dangerously =
+    (await (db._db as unknown as DynamoDB).config.endpoint?.())?.hostname ==
+    'localhost'
+
+  return new DynamoDBHistoryAutoIncrement({
+    doc,
+    counterTableName,
+    counterTableKey: { circularId },
+    attributeName: 'version',
+    tableName,
+    initialValue: 1,
+    dangerously,
+  })
+}
 
 /** convert a date in format mm-dd-yyyy (or YYYY-MM_DD) to ms since 01/01/1970 */
 function parseDate(date?: string) {
@@ -183,17 +201,17 @@ export async function search({
 }
 
 /** Get a circular by ID. */
-export async function get(circularId: number): Promise<Circular> {
-  if (isNaN(circularId)) throw new Response(null, { status: 404 })
-  const db = await tables()
-  const result = await db.circulars.get({
-    circularId,
-  })
+export async function get(
+  circularId: number,
+  version?: number
+): Promise<Circular> {
+  const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
+  const result = await circularVersions.get(version)
   if (!result)
     throw new Response(null, {
       status: 404,
     })
-  return result
+  return result as Circular
 }
 
 /** Delete a circular by ID.
@@ -248,10 +266,8 @@ export async function put(
     throw new Response('User is not in the submitters group', {
       status: 403,
     })
-  if (!subjectIsValid(item.subject))
-    throw new Response('subject is invalid', { status: 400 })
-  if (!bodyIsValid(item.body))
-    throw new Response('body is invalid', { status: 400 })
+
+  validateCircular(item.subject, item.body)
 
   const eventId = parseEventFromSubject(item.subject)
   return await putRaw({
@@ -326,4 +342,172 @@ export async function groupCircularsBySynonyms({
     groupedCirculars.push({ id: synonymKey, circulars: circularArray })
   })
   return { groups: groupedCirculars }
+
+/**
+ * Gets all entries in circulars_history for a given circularId
+ * @param circularId
+ * @returns an array of previous versions of a Circular sorted by version
+ */
+export async function getVersions(circularId: number): Promise<number[]> {
+  const circularVersionsAutoIncrement =
+    await getDynamoDBVersionAutoIncrement(circularId)
+  return await circularVersionsAutoIncrement.list()
+}
+
+/**
+ * Creates a set of changes in circulars_change_requests for users
+ * who do not have moderator permissions
+ *
+ * Throws an HTTP error if:
+ *  - The subject is invalid
+ *  - The body is invalid
+ *  - The user is not signed in
+ *
+ * @param circularId
+ * @param body
+ * @param subject
+ * @param request
+ */
+export async function createChangeRequest(
+  circularId: number,
+  body: string,
+  subject: string,
+  request: Request
+) {
+  validateCircular(subject, body)
+  const user = await getUser(request)
+  if (!user)
+    throw new Response('User is not signed in', {
+      status: 403,
+    })
+  const requestor = formatAuthor(user)
+  const db = await tables()
+  await db.circulars_change_requests.put({
+    circularId,
+    body,
+    subject,
+    requestorSub: user.sub,
+    requestor,
+  })
+}
+
+/**
+ * Gets all change requests for a given circular
+ * @param circularId
+ * @returns
+ */
+export async function getChangeRequests(
+  circularId: number
+): Promise<CircularChangeRequest[]> {
+  const db = await tables()
+  return (
+    await db.circulars_change_requests.query({
+      KeyConditionExpression: 'circularId = :circularId',
+      ExpressionAttributeValues: {
+        ':circularId': circularId,
+      },
+      ProjectionExpression: 'circularId, requestor, requestorSub',
+    })
+  ).Items
+}
+
+/**
+ * Verifies the current user and deletes a specific change request.
+ *
+ * Throws an HTTP error if:
+ *  - The current user is not signed in
+ *  - The current user is not the same as the user who requested
+ *    the changed, OR the current user is not a moderator
+ *
+ * @param circularId
+ * @param requestorSub
+ * @param request
+ */
+export async function deleteChangeRequest(
+  circularId: number,
+  requestorSub: string,
+  request: Request
+): Promise<void> {
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+  if (requestorSub !== user.sub || !user.groups.includes(moderatorGroup))
+    throw new Response(
+      'Change requests may only be deleted by the user that submitted them or moderators',
+      { status: 403 }
+    )
+
+  await deleteChangeRequestRaw(circularId, requestorSub)
+}
+
+/**
+ * Delete a specific change request
+ * @param circularId
+ * @param requestorSub
+ */
+async function deleteChangeRequestRaw(
+  circularId: number,
+  requestorSub: string
+) {
+  const db = await tables()
+  await db.circulars_change_requests.delete({
+    circularId,
+    requestorSub,
+  })
+}
+
+/**
+ * Applies a change request on behalf of another user. This
+ * method creates a new version and deletes the change
+ * request once completed
+ *
+ * Throws an HTTP error if:
+ *  - The current user is not a moderator
+ *  - No change request is found with the provided requestor
+ *    information
+ *
+ * @param circularId
+ * @param requestorSub
+ * @param request
+ */
+export async function approveChangeRequest(
+  circularId: number,
+  requestorSub: string,
+  request: Request
+) {
+  const user = await getUser(request)
+  if (!user?.groups.includes(moderatorGroup))
+    throw new Response('User is not in the moderators group', {
+      status: 403,
+    })
+
+  const changeRequest = await getChangeRequest(circularId, requestorSub)
+
+  const autoincrementVersion = await getDynamoDBVersionAutoIncrement(circularId)
+
+  await autoincrementVersion.put({
+    body: changeRequest.body,
+    subject: changeRequest.subject,
+    editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
+    createdOn: Date.now(),
+  })
+
+  await deleteChangeRequestRaw(circularId, requestorSub)
+}
+
+async function getChangeRequest(circularId: number, requestorSub: string) {
+  const db = await tables()
+  const changeRequest = (await db.circulars_change_requests.get({
+    circularId,
+    requestorSub,
+  })) as CircularChangeRequest
+
+  if (!changeRequest)
+    throw new Response('No change request found', { status: 404 })
+  return changeRequest
+}
+
+function validateCircular(subject: string, body: string) {
+  if (!subjectIsValid(subject))
+    throw new Response('subject is invalid', { status: 400 })
+  if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
 }
