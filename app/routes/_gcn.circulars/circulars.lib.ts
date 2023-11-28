@@ -10,6 +10,7 @@ import { dedent } from 'ts-dedent'
 export interface CircularMetadata {
   circularId: number
   subject: string
+  eventId?: string
 }
 
 export type SubmittedHow = 'web' | 'email' | 'email-legacy' | 'api'
