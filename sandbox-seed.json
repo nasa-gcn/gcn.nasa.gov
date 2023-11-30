@@ -4752,631 +4752,363 @@
   ],
   "synonyms": [
     {
-      "synonymId": "69f6374f-8dee-4d19-b95e-e4e0452c906a",
+      "synonymId": "471b4932-6bf7-46bd-8ae9-937579351d40",
       "eventId": "GRB 230911C"
     },
     {
-      "synonymId": "69f6374f-8dee-4d19-b95e-e4e0452c906a",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230927L"
-    },
-    {
-      "synonymId": "69f6374f-8dee-4d19-b95e-e4e0452c906a",
+      "synonymId": "471b4932-6bf7-46bd-8ae9-937579351d40",
       "eventId": "GRB 230728A"
     },
     {
-      "synonymId": "69f6374f-8dee-4d19-b95e-e4e0452c906a",
-      "eventId": "Fermi trigger No 712143685"
-    },
-    {
-      "synonymId": "8c611faa-f682-4294-b964-8f5cd342f142",
+      "synonymId": "471b4932-6bf7-46bd-8ae9-937579351d40",
       "eventId": "GRB 230919A"
     },
     {
-      "synonymId": "8c611faa-f682-4294-b964-8f5cd342f142",
+      "synonymId": "090aa925-0276-47c0-96f9-a3027a9be761",
       "eventId": "GRB 230904A"
     },
     {
-      "synonymId": "204899ab-b5e7-4fdb-9ad0-d491c959081e",
+      "synonymId": "090aa925-0276-47c0-96f9-a3027a9be761",
       "eventId": "GRB 230824A"
     },
     {
-      "synonymId": "204899ab-b5e7-4fdb-9ad0-d491c959081e",
+      "synonymId": "090aa925-0276-47c0-96f9-a3027a9be761",
       "eventId": "IceCube-230914A"
     },
     {
-      "synonymId": "936156f3-5b1a-46e0-b94a-8a11edeaf09f",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230805B"
     },
     {
-      "synonymId": "936156f3-5b1a-46e0-b94a-8a11edeaf09f",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230827.256"
     },
     {
-      "synonymId": "63eb289d-9eb8-48e6-9805-3922a53ab82b",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230803A"
     },
     {
-      "synonymId": "63eb289d-9eb8-48e6-9805-3922a53ab82b",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230918A"
     },
     {
-      "synonymId": "49db82bd-f332-4b7d-ac0f-be3553e78c9f",
+      "synonymId": "5ed66644-3615-4870-9a09-d15a1dee2e0c",
       "eventId": "GRB 230818A"
     },
     {
-      "synonymId": "49db82bd-f332-4b7d-ac0f-be3553e78c9f",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230805X"
-    },
-    {
-      "synonymId": "49db82bd-f332-4b7d-ac0f-be3553e78c9f",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230807F"
-    },
-    {
-      "synonymId": "37782423-8ace-4be2-8ce5-2aae64989520",
+      "synonymId": "5ed66644-3615-4870-9a09-d15a1dee2e0c",
       "eventId": "GRB 230816A"
     },
     {
-      "synonymId": "37782423-8ace-4be2-8ce5-2aae64989520",
-      "eventId": "Fermi trigger No 712651827"
-    },
-    {
-      "synonymId": "cdfd5a87-4366-4096-a9e3-e7314df1445e",
+      "synonymId": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
       "eventId": "GRB 230916B"
     },
     {
-      "synonymId": "cdfd5a87-4366-4096-a9e3-e7314df1445e",
-      "eventId": "Swift trigger 118690"
-    },
-    {
-      "synonymId": "9eed4bf1-4194-452f-9ea6-8b21264e3e0c",
+      "synonymId": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
       "eventId": "GRB 230812B"
     },
     {
-      "synonymId": "9eed4bf1-4194-452f-9ea6-8b21264e3e0c",
+      "synonymId": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
       "eventId": "GRB 230727A"
     },
     {
-      "synonymId": "f0fcad44-ebb9-4187-b791-388e3e9a2898",
+      "synonymId": "f9a356be-911c-414c-b58b-7fa870af6b6e",
       "eventId": "GRB 230913A"
     },
     {
-      "synonymId": "f0fcad44-ebb9-4187-b791-388e3e9a2898",
-      "eventId": "Swift trigger 118719"
-    },
-    {
-      "synonymId": "f0fcad44-ebb9-4187-b791-388e3e9a2898",
+      "synonymId": "f9a356be-911c-414c-b58b-7fa870af6b6e",
       "eventId": "GRB 230913.70"
     },
     {
-      "synonymId": "f0fcad44-ebb9-4187-b791-388e3e9a2898",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230927BE"
-    },
-    {
-      "synonymId": "f93d8993-a9fd-4a42-b2ad-a85a3ffdae8e",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230822BM"
-    },
-    {
-      "synonymId": "f93d8993-a9fd-4a42-b2ad-a85a3ffdae8e",
+      "synonymId": "8acd5039-f27c-4d0e-b82a-0b289ed02981",
       "eventId": "GRB 230918B"
     },
     {
-      "synonymId": "f50c4d4d-f6fe-4bd6-9a24-f29d6dbfb2f2",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230904N"
-    },
-    {
-      "synonymId": "f50c4d4d-f6fe-4bd6-9a24-f29d6dbfb2f2",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230911AE"
-    },
-    {
-      "synonymId": "09427208-f2b4-4847-94f4-7f92b275f015",
+      "synonymId": "8acd5039-f27c-4d0e-b82a-0b289ed02981",
       "eventId": "GRB 230906A"
     },
     {
-      "synonymId": "09427208-f2b4-4847-94f4-7f92b275f015",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230806AK"
-    },
-    {
-      "synonymId": "535e11e8-0c08-42fc-ad04-61fb48368c56",
+      "synonymId": "5f8fcbda-2405-4e62-89b7-57ccdb08782f",
       "eventId": "GRB 230804A"
     },
     {
-      "synonymId": "535e11e8-0c08-42fc-ad04-61fb48368c56",
-      "eventId": "Fermi trigger No 715552087"
-    },
-    {
-      "synonymId": "3dc8be71-cf79-4f97-88cc-ddcb4b556b5c",
+      "synonymId": "5f8fcbda-2405-4e62-89b7-57ccdb08782f",
       "eventId": "IceCube-230727A"
     },
     {
-      "synonymId": "3dc8be71-cf79-4f97-88cc-ddcb4b556b5c",
-      "eventId": "IceCube Alert 230914.22"
-    },
-    {
-      "synonymId": "3dc8be71-cf79-4f97-88cc-ddcb4b556b5c",
+      "synonymId": "c43a6d5e-217b-44da-8354-c1be125e47b1",
       "eventId": "GRB 230805A"
     },
     {
-      "synonymId": "3dc8be71-cf79-4f97-88cc-ddcb4b556b5c",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230917AF"
-    },
-    {
-      "synonymId": "fb6c4bc4-af12-40f2-ac22-dad4b10e1a56",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230824R"
-    },
-    {
-      "synonymId": "fb6c4bc4-af12-40f2-ac22-dad4b10e1a56",
+      "synonymId": "c43a6d5e-217b-44da-8354-c1be125e47b1",
       "eventId": "GRB 230908A"
     },
     {
-      "synonymId": "603b0d88-db78-4643-9652-477c651a6c60",
+      "synonymId": "13e6c344-cc20-430d-b2a9-cbb453abd233",
       "eventId": "GRB 230903A"
     },
     {
-      "synonymId": "603b0d88-db78-4643-9652-477c651a6c60",
+      "synonymId": "13e6c344-cc20-430d-b2a9-cbb453abd233",
       "eventId": "IceCube-230823A"
     },
     {
-      "synonymId": "603b0d88-db78-4643-9652-477c651a6c60",
+      "synonymId": "13e6c344-cc20-430d-b2a9-cbb453abd233",
       "eventId": "GRB 230728.12"
     },
     {
-      "synonymId": "68b2e0bb-a35e-4e6b-9a29-de933df78498",
-      "eventId": "Fermi trigger No 716145795"
-    },
-    {
-      "synonymId": "68b2e0bb-a35e-4e6b-9a29-de933df78498",
+      "synonymId": "260ff8fc-7e86-4c35-8b5f-f0bbaeb88179",
       "eventId": "GRB 230911D"
     },
     {
-      "synonymId": "68b2e0bb-a35e-4e6b-9a29-de933df78498",
+      "synonymId": "260ff8fc-7e86-4c35-8b5f-f0bbaeb88179",
       "eventId": "GRB 230824.72"
     },
     {
-      "synonymId": "4a1ddae8-7476-4ed2-bc79-1efb1712b876",
-      "eventId": "Fermi trigger No 713525317"
-    },
-    {
-      "synonymId": "4a1ddae8-7476-4ed2-bc79-1efb1712b876",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230922G"
-    },
-    {
-      "synonymId": "4a1ddae8-7476-4ed2-bc79-1efb1712b876",
+      "synonymId": "94ea437d-ff4c-4cbb-8e1b-2ecdc87e737b",
       "eventId": "GRB 230904B"
     },
     {
-      "synonymId": "3470855d-6883-4b6d-818e-e183cf6dab2b",
+      "synonymId": "94ea437d-ff4c-4cbb-8e1b-2ecdc87e737b",
       "eventId": "GRB 230917A"
     },
     {
-      "synonymId": "3470855d-6883-4b6d-818e-e183cf6dab2b",
+      "synonymId": "4b9c2382-f5d5-4d4d-8dea-eccaa1c1f9d2",
       "eventId": "GRB 230815A"
     },
     {
-      "synonymId": "3f487894-2bc2-4dc9-9a64-8f3c274b2807",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230802AQ"
-    },
-    {
-      "synonymId": "3f487894-2bc2-4dc9-9a64-8f3c274b2807",
+      "synonymId": "4b9c2382-f5d5-4d4d-8dea-eccaa1c1f9d2",
       "eventId": "GRB 230902.00"
     },
     {
-      "synonymId": "07435093-fb7f-4df3-9122-6b611c3a9882",
-      "eventId": "Fermi trigger No 712390645"
-    },
-    {
-      "synonymId": "07435093-fb7f-4df3-9122-6b611c3a9882",
+      "synonymId": "fb5e4482-020c-4907-8984-b4cff2b594c1",
       "eventId": "GRB 230915A"
     },
     {
-      "synonymId": "171c5f47-da17-4281-9b8d-0a1017e77988",
-      "eventId": "Fermi trigger No 714809315"
-    },
-    {
-      "synonymId": "171c5f47-da17-4281-9b8d-0a1017e77988",
+      "synonymId": "fb5e4482-020c-4907-8984-b4cff2b594c1",
       "eventId": "GRB 230911A"
     },
     {
-      "synonymId": "171c5f47-da17-4281-9b8d-0a1017e77988",
+      "synonymId": "8f9e97c0-ebed-4616-9446-4851bd2de2cb",
       "eventId": "GRB 230802A"
     },
     {
-      "synonymId": "7fe4872c-311a-470d-9e3f-89a1828b69c0",
-      "eventId": "Fermi trigger No 712718833"
-    },
-    {
-      "synonymId": "7fe4872c-311a-470d-9e3f-89a1828b69c0",
-      "eventId": "Fermi trigger No 712991593"
-    },
-    {
-      "synonymId": "e814080f-6176-4da6-b779-9456ae518be0",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230731AN"
-    },
-    {
-      "synonymId": "e814080f-6176-4da6-b779-9456ae518be0",
+      "synonymId": "8f9e97c0-ebed-4616-9446-4851bd2de2cb",
       "eventId": "GRB 230806A"
     },
     {
-      "synonymId": "e814080f-6176-4da6-b779-9456ae518be0",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230814AH"
-    },
-    {
-      "synonymId": "6dc5551a-c50a-40a8-a79e-21eb7310fbf8",
+      "synonymId": "8040d18b-90f1-4a87-bdf8-c9e3867064a1",
       "eventId": "GRB 230905B"
     },
     {
-      "synonymId": "6dc5551a-c50a-40a8-a79e-21eb7310fbf8",
-      "eventId": "Fermi trigger No 713974668"
-    },
-    {
-      "synonymId": "8f5f7649-ff74-45de-9431-e8cd2453315c",
+      "synonymId": "8040d18b-90f1-4a87-bdf8-c9e3867064a1",
       "eventId": "GRB 230826A"
     },
     {
-      "synonymId": "8f5f7649-ff74-45de-9431-e8cd2453315c",
+      "synonymId": "bac2b5ea-2b18-4270-92e1-ad9356842b04",
       "eventId": "GRB 230904C"
     },
     {
-      "synonymId": "090193ed-f41e-413a-887c-502b686f151a",
+      "synonymId": "bac2b5ea-2b18-4270-92e1-ad9356842b04",
       "eventId": "GRB 230921A"
     },
     {
-      "synonymId": "090193ed-f41e-413a-887c-502b686f151a",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230914AK"
-    },
-    {
-      "synonymId": "090193ed-f41e-413a-887c-502b686f151a",
-      "eventId": "Swift trigger 118639"
-    },
-    {
-      "synonymId": "b8baa513-edb7-438a-9cfa-885266934cf8",
+      "synonymId": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
       "eventId": "GRB 230827B"
     },
     {
-      "synonymId": "b8baa513-edb7-438a-9cfa-885266934cf8",
-      "eventId": "Fermi trigger No 714618399"
-    },
-    {
-      "synonymId": "ff3db864-92f4-48c9-8c01-824f5ec915ad",
+      "synonymId": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
       "eventId": "GRB 230723A"
     },
     {
-      "synonymId": "ff3db864-92f4-48c9-8c01-824f5ec915ad",
+      "synonymId": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
       "eventId": "GRB 230814A"
     },
     {
-      "synonymId": "4f5692f7-7077-4091-b733-a3397f60ecf7",
-      "eventId": "Fermi trigger No 716572242"
-    },
-    {
-      "synonymId": "4f5692f7-7077-4091-b733-a3397f60ecf7",
+      "synonymId": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
       "eventId": "GRB 230818B"
     },
     {
-      "synonymId": "4f5692f7-7077-4091-b733-a3397f60ecf7",
+      "synonymId": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
       "eventId": "GRB 230911B"
     },
     {
-      "synonymId": "f737846a-51a3-4ec7-bc16-b57e4b1d362e",
+      "synonymId": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
       "eventId": "GRB 230812.79"
     },
     {
-      "synonymId": "f737846a-51a3-4ec7-bc16-b57e4b1d362e",
+      "synonymId": "1e61d317-c2bf-469c-838a-ad1d79161fef",
       "eventId": "GRB 230802B"
     },
     {
-      "synonymId": "8a486435-81c1-4dc4-a2f4-c888ccd7a8de",
+      "synonymId": "1e61d317-c2bf-469c-838a-ad1d79161fef",
       "eventId": "GRB 230807A"
     },
     {
-      "synonymId": "8a486435-81c1-4dc4-a2f4-c888ccd7a8de",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230908B"
-    },
-    {
-      "synonymId": "76369760-9790-40b5-8f79-62b329e748d8",
+      "synonymId": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
       "eventId": "IceCube-230707A"
     },
     {
-      "synonymId": "76369760-9790-40b5-8f79-62b329e748d8",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230830B"
-    },
-    {
-      "synonymId": "8b8b5183-510a-4c91-89d7-fd9384468f22",
+      "synonymId": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
       "eventId": "GRB 230824.10"
     },
     {
-      "synonymId": "8b8b5183-510a-4c91-89d7-fd9384468f22",
+      "synonymId": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
       "eventId": "IceCube-230724A"
     },
     {
-      "synonymId": "9bd24a0b-593b-41b2-a410-767e2e733d1e",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230825K"
-    },
-    {
-      "synonymId": "9bd24a0b-593b-41b2-a410-767e2e733d1e",
-      "eventId": "Fermi trigger No 716544961"
-    },
-    {
-      "synonymId": "9bd24a0b-593b-41b2-a410-767e2e733d1e",
-      "eventId": "Swift trigger 118808"
-    },
-    {
-      "synonymId": "edf3ad23-3756-482b-bc22-69aee93b06a5",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230819AX"
-    },
-    {
-      "synonymId": "edf3ad23-3756-482b-bc22-69aee93b06a5",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230919BJ"
-    },
-    {
-      "synonymId": "9c425341-8001-4df1-9d12-d18a37b24e11",
+      "synonymId": "d0066bdb-de52-4843-a3f1-813609ada880",
       "eventId": "GRB 230828A"
     },
     {
-      "synonymId": "9c425341-8001-4df1-9d12-d18a37b24e11",
+      "synonymId": "d0066bdb-de52-4843-a3f1-813609ada880",
       "eventId": "IceCube-230725A"
     },
     {
-      "synonymId": "cb3b0c54-738b-41d3-9086-55c7b9dccef7",
+      "synonymId": "b4e3c88b-0eca-4402-94aa-e5f4ec1b4f91",
       "eventId": "GRB 230827A"
     },
     {
-      "synonymId": "cb3b0c54-738b-41d3-9086-55c7b9dccef7",
+      "synonymId": "b4e3c88b-0eca-4402-94aa-e5f4ec1b4f91",
       "eventId": "GRB 230820.80"
     },
     {
-      "synonymId": "efee81e2-3fcb-4320-9d78-8b2cb736eb2e",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230922Q"
-    },
-    {
-      "synonymId": "efee81e2-3fcb-4320-9d78-8b2cb736eb2e",
+      "synonymId": "4389eb57-8b14-42e4-952a-2e1da985ffbc",
       "eventId": "GRB 230808A"
     },
     {
-      "synonymId": "4f2fc63f-418e-450f-80b5-f39ff46574ba",
+      "synonymId": "4389eb57-8b14-42e4-952a-2e1da985ffbc",
       "eventId": "GRB 230916.18"
     },
     {
-      "synonymId": "4f2fc63f-418e-450f-80b5-f39ff46574ba",
+      "synonymId": "d0fb4eb0-9f75-43b6-ab57-cce09f0a330a",
       "eventId": "GRB 230817A"
     },
     {
-      "synonymId": "b4f9936d-0fc6-498c-bb3a-68adacb0e2fa",
+      "synonymId": "d0fb4eb0-9f75-43b6-ab57-cce09f0a330a",
       "eventId": "GRB 230916.19"
     },
     {
-      "synonymId": "b4f9936d-0fc6-498c-bb3a-68adacb0e2fa",
+      "synonymId": "70b23e5f-3a50-47ae-ab04-3fcb628f3419",
       "eventId": "GRB 230820.82"
     },
     {
-      "synonymId": "b4f9936d-0fc6-498c-bb3a-68adacb0e2fa",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230924AN"
-    },
-    {
-      "synonymId": "a8982865-aaba-4355-9208-74469dc79114",
+      "synonymId": "70b23e5f-3a50-47ae-ab04-3fcb628f3419",
       "eventId": "GRB 230910A"
     },
     {
-      "synonymId": "a8982865-aaba-4355-9208-74469dc79114",
+      "synonymId": "b47ee2bd-a230-4054-a109-59731cdcba2a",
       "eventId": "GRB 230816.67"
     },
     {
-      "synonymId": "e7cff58b-1fcc-434d-815c-465e2c7626a2",
+      "synonymId": "b47ee2bd-a230-4054-a109-59731cdcba2a",
       "eventId": "GRB 230820.81"
     },
     {
-      "synonymId": "e7cff58b-1fcc-434d-815c-465e2c7626a2",
+      "synonymId": "d015209c-9750-47c6-b8e9-180ae8a85f01",
       "eventId": "GRB 230808B"
     },
     {
-      "synonymId": "a8b5a26f-c1e4-4993-a07b-a47b3c9953c6",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230812AJ"
-    },
-    {
-      "synonymId": "a8b5a26f-c1e4-4993-a07b-a47b3c9953c6",
+      "synonymId": "d015209c-9750-47c6-b8e9-180ae8a85f01",
       "eventId": "ZTF23aaoohpy"
     },
     {
-      "synonymId": "719298e8-780d-4b61-903e-9736e42b62f6",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230814R"
-    },
-    {
-      "synonymId": "719298e8-780d-4b61-903e-9736e42b62f6",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230729Z"
-    },
-    {
-      "synonymId": "a2cff5d9-4554-4454-bb5b-a05ca1b3524c",
-      "eventId": "Swift trigger 119223"
-    },
-    {
-      "synonymId": "a2cff5d9-4554-4454-bb5b-a05ca1b3524c",
+      "synonymId": "1c340fe1-b776-4318-84c6-5472597339f0",
       "eventId": "GRB 230731A"
     },
     {
-      "synonymId": "1167774a-9467-4011-8f3a-a3ca9d813cc2",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230831E"
-    },
-    {
-      "synonymId": "1167774a-9467-4011-8f3a-a3ca9d813cc2",
+      "synonymId": "1c340fe1-b776-4318-84c6-5472597339f0",
       "eventId": "GRB 230815B"
     },
     {
-      "synonymId": "e3318177-2c58-404d-a412-043a72cb80b7",
+      "synonymId": "58867707-d4e8-41f2-83e8-eb547901d365",
       "eventId": "GRB 230915B"
     },
     {
-      "synonymId": "e3318177-2c58-404d-a412-043a72cb80b7",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230820BQ"
-    },
-    {
-      "synonymId": "6dcba34e-1a0f-450d-8afa-92d8c49e7a17",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230920AL"
-    },
-    {
-      "synonymId": "6dcba34e-1a0f-450d-8afa-92d8c49e7a17",
-      "eventId": "Fermi trigger No 713136868"
-    },
-    {
-      "synonymId": "59cf0c91-4c6f-4656-8685-79eff5b2e440",
+      "synonymId": "58867707-d4e8-41f2-83e8-eb547901d365",
       "eventId": "GRB 230818.98"
     },
     {
-      "synonymId": "59cf0c91-4c6f-4656-8685-79eff5b2e440",
+      "synonymId": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
       "eventId": "GRB 230916.13"
     },
     {
-      "synonymId": "0d86aad9-f44b-44b8-8026-f897e45eba7a",
+      "synonymId": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
       "eventId": "GRB 230816.80"
     },
     {
-      "synonymId": "0d86aad9-f44b-44b8-8026-f897e45eba7a",
+      "synonymId": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
       "eventId": "GRB 230822A"
     },
     {
-      "synonymId": "b37d0faa-15af-4c35-ad6b-ba00e22998b3",
+      "synonymId": "1b669a28-08ff-47f8-a3ae-b2572007ca99",
       "eventId": "GRB 230825.85"
     },
     {
-      "synonymId": "b37d0faa-15af-4c35-ad6b-ba00e22998b3",
-      "eventId": "Swift trigger 119190"
-    },
-    {
-      "synonymId": "bba7cb88-9e49-4800-82c8-996555e4abdb",
+      "synonymId": "1b669a28-08ff-47f8-a3ae-b2572007ca99",
       "eventId": "GRB 230820A"
     },
     {
-      "synonymId": "bba7cb88-9e49-4800-82c8-996555e4abdb",
-      "eventId": "Fermi trigger No 713134237"
-    },
-    {
-      "synonymId": "9a660164-127b-4db8-a046-d4dfe09bc808",
-      "eventId": "Swift trigger 119208"
-    },
-    {
-      "synonymId": "9a660164-127b-4db8-a046-d4dfe09bc808",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230715BW"
-    },
-    {
-      "synonymId": "9a660164-127b-4db8-a046-d4dfe09bc808",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230808I"
-    },
-    {
-      "synonymId": "ef552401-2287-40d8-b558-f36d947899ab",
+      "synonymId": "be25482a-dd6a-4963-8952-11953dfa7b0c",
       "eventId": "GRB 230821.64"
     },
     {
-      "synonymId": "ef552401-2287-40d8-b558-f36d947899ab",
+      "synonymId": "be25482a-dd6a-4963-8952-11953dfa7b0c",
       "eventId": "GRB 230824B"
     },
     {
-      "synonymId": "ef552401-2287-40d8-b558-f36d947899ab",
+      "synonymId": "ff7ff6ea-0106-47bb-8ce0-600ebefdecfd",
       "eventId": "GRB 230205A"
     },
     {
-      "synonymId": "ef552401-2287-40d8-b558-f36d947899ab",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230810AF"
-    },
-    {
-      "synonymId": "8aa64968-02fa-4b99-a455-ac19117978cf",
+      "synonymId": "ff7ff6ea-0106-47bb-8ce0-600ebefdecfd",
       "eventId": "LIGO/Virgo S230917af"
     },
     {
-      "synonymId": "8aa64968-02fa-4b99-a455-ac19117978cf",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230918AQ"
-    },
-    {
-      "synonymId": "2c91e852-0088-4afc-b5e9-fe193134a80f",
+      "synonymId": "4d073e7c-7d58-4139-8e89-e058fc083423",
       "eventId": "GRB 230825.75"
     },
     {
-      "synonymId": "2c91e852-0088-4afc-b5e9-fe193134a80f",
-      "eventId": "Fermi trigger No 716419312"
-    },
-    {
-      "synonymId": "53fc573f-a697-477e-8795-13b7901cc8e1",
-      "eventId": "Fermi trigger No 716449174"
-    },
-    {
-      "synonymId": "53fc573f-a697-477e-8795-13b7901cc8e1",
+      "synonymId": "4d073e7c-7d58-4139-8e89-e058fc083423",
       "eventId": "GRB 230916.12"
     },
     {
-      "synonymId": "6850d00f-3a05-4aaf-94c1-5511a90b1e48",
+      "synonymId": "a3afaf30-bcc7-4f00-8048-6dcde44039aa",
       "eventId": "GRB 230723B"
     },
     {
-      "synonymId": "6850d00f-3a05-4aaf-94c1-5511a90b1e48",
+      "synonymId": "a3afaf30-bcc7-4f00-8048-6dcde44039aa",
       "eventId": "GRB 230824.58"
     },
     {
-      "synonymId": "8efb6516-81fe-4dc7-874d-4df3ed0b7a34",
-      "eventId": "LIGO/Virgo/KAGRA LIGO/VIRGO/KAGRA S230811N"
-    },
-    {
-      "synonymId": "8efb6516-81fe-4dc7-874d-4df3ed0b7a34",
-      "eventId": "Fermi trigger No 712987357"
-    },
-    {
-      "synonymId": "384df78c-7875-4f9f-84b6-57fbe5753537",
-      "eventId": "Fermi trigger No 712713532"
-    },
-    {
-      "synonymId": "384df78c-7875-4f9f-84b6-57fbe5753537",
+      "synonymId": "6ffdc88b-9817-4318-8aaa-14b52794fb5d",
       "eventId": "GRB 230916.11"
     },
     {
-      "synonymId": "d35f6cc1-985b-4b72-a3cc-61b61314091c",
+      "synonymId": "6ffdc88b-9817-4318-8aaa-14b52794fb5d",
       "eventId": "GRB 230903.72"
     },
     {
-      "synonymId": "d35f6cc1-985b-4b72-a3cc-61b61314091c",
-      "eventId": "Swift trigger 119199"
-    },
-    {
-      "synonymId": "b21658e8-d04f-462f-8938-8ea672a9adf0",
+      "synonymId": "9ca71208-0a81-47b0-88a0-88d103df330e",
       "eventId": "GRB 230811D"
     },
     {
-      "synonymId": "b21658e8-d04f-462f-8938-8ea672a9adf0",
+      "synonymId": "9ca71208-0a81-47b0-88a0-88d103df330e",
       "eventId": "GRB 230916A"
     },
     {
-      "synonymId": "08b77bfd-457d-431b-a583-2a3107b537cb",
-      "eventId": "Swift trigger 118638"
-    },
-    {
-      "synonymId": "08b77bfd-457d-431b-a583-2a3107b537cb",
-      "eventId": "Fermi trigger No 712927418"
-    },
-    {
-      "synonymId": "82c18e47-74e4-41e8-9c90-e8303399269c",
+      "synonymId": "3702f560-30fa-4aa8-88f0-d27205fd23c6",
       "eventId": "GRB 230905A"
     },
     {
-      "synonymId": "82c18e47-74e4-41e8-9c90-e8303399269c",
-      "eventId": "Fermi trigger No 715429986"
-    },
-    {
-      "synonymId": "db584d15-05f8-4f5f-b0db-9ac2825ba0fe",
+      "synonymId": "3702f560-30fa-4aa8-88f0-d27205fd23c6",
       "eventId": "LIGO/Virgo S230802aq"
     },
     {
-      "synonymId": "db584d15-05f8-4f5f-b0db-9ac2825ba0fe",
-      "eventId": "Fermi trigger No 713205976"
-    },
-    {
-      "synonymId": "13cd35b6-4a6d-4120-bff5-27515c771d04",
+      "synonymId": "62fe8590-42e4-4917-afea-db6a0a84079a",
       "eventId": "GRB 230826.81"
     },
     {
-      "synonymId": "13cd35b6-4a6d-4120-bff5-27515c771d04",
-      "eventId": "Fermi trigger No 712798043"
-    },
-    {
-      "synonymId": "3d8d52e6-1860-49ee-8190-2d7aa8dcb73f",
-      "eventId": "Fermi trigger No 712306969"
-    },
-    {
-      "synonymId": "3d8d52e6-1860-49ee-8190-2d7aa8dcb73f",
+      "synonymId": "62fe8590-42e4-4917-afea-db6a0a84079a",
       "eventId": "GRB 230812A"
     }
   ],
