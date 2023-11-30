@@ -30,7 +30,7 @@ export async function loader({ request: { headers } }: LoaderFunctionArgs) {
   throw redirect('/')
 }
 
-export default function PostLogout() {
+export default function () {
   const { existingIdp } = useLoaderData<typeof loader>()
   const friendlyExistingIdp =
     existingIdp == 'COGNITO' ? 'email and password' : existingIdp
