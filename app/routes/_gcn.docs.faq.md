@@ -76,7 +76,7 @@ Some email clients in some configurations are known to add extra line breaks to 
 - [Microsoft Outlook for Mac](https://it.cornell.edu/outlook2016mac/choose-plain-text-or-formatted-text-outlook-mac)
 - [Microsoft Outlook for Windows](https://support.microsoft.com/en-us/office/change-the-message-format-to-html-rich-text-format-or-plain-text-338a389d-11da-47fe-b693-cf41f792fefa)
 
-Note that it used to be common practice for Circulars submitters to add line breaks to manually wrap long paragraphs in GCN Circulars. This practice is no longer recommended in the [GCN Circulars style guide](/circulars/styleguide).
+Note that it used to be common practice for Circulars submitters to add line breaks to manually wrap long paragraphs in GCN Circulars. This practice is no longer recommended in the [GCN Circulars style guide](circulars/styleguide).
 
 ## Accounts
 
