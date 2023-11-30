@@ -121,7 +121,7 @@ circulars
 
 circulars
   eventId *String
-  name circularEventId
+  name circularsByEventId
 
 circulars_subscriptions
   sub *String
