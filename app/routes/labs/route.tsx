@@ -7,6 +7,8 @@
  */
 import { Outlet } from '@remix-run/react'
 
+import { Footer } from './Footer'
+import { Header } from './header/Header'
 import { feature } from '~/lib/env.server'
 import { type BreadcrumbHandle } from '~/root/Title'
 
@@ -22,10 +24,12 @@ export function loader() {
 export default function () {
   return (
     <>
+      <Header />
       <h1>ACROSS</h1>
       <main>
         <Outlet />
       </main>
+      <Footer />
     </>
   )
 }
