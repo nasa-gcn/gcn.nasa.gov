@@ -59,7 +59,7 @@ const subjectMatchers: SubjectMatcher[] = [
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
-    /LIGO\/Virgo|LIGO\/VIRGO\s([S|G|GW])(\d{6}[a-z]+|\d{6}|\d{5}[a-z]+|\d{5})/i,
+    /LIGO\/VIRGO ([S|G|GW])(\d{5,6}[a-z]?)?/i,
     ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
   ],
   [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id.toUpperCase()}`],
