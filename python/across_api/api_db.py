@@ -16,7 +16,6 @@ from .api_secrets import (
 
 # Database connection string
 DATABASE = f"postgresql://{ACROSS_DB_USER}:{ACROSS_DB_PASSWD}@{ACROSS_DB_HOST}:{ACROSS_DB_PORT}/{ACROSS_DB_NAME}"
-DATABASE = "sqlite:////Users/jak51/ACROSS/api.sqlite3"
 
 engine = create_engine(DATABASE, echo=False)
 
