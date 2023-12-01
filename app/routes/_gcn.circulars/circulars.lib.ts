@@ -48,8 +48,7 @@ const subjectMatchers: SubjectMatcher[] = [
   ],
   [/XRF(\d{6})/i, ([, id]) => `XRF ${id.toUpperCase()}`],
   [/XRF (\d{6})/i, ([, id]) => `XRF ${id.toUpperCase()}`],
-  [/Swift Trigger(\d{6})/i, ([, id]) => `Swift trigger ${id.toUpperCase()}`],
-  [/Swift Trigger (\d{6})/i, ([, id]) => `Swift trigger ${id.toUpperCase()}`],
+  [/Swift Trigger ?(\d{6})/i, ([, id]) => `Swift trigger ${id.toUpperCase()}`],
   [/SGR (\d{4}[-]\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [
@@ -60,28 +59,7 @@ const subjectMatchers: SubjectMatcher[] = [
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
-    /LIGO\/Virgo[.\s_-]*([S|G|GW])(\d{6}[a-z]+)/i,
-    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
-  ],
-  [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id}`.toUpperCase()],
-  [
-    /LIGO\/Virgo ([S|G|GW])(\d{6}[a-z]+)/i,
-    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
-  ],
-  [
-    /LIGO\/VIRGO ([S|G|GW])(\d{6}[a-z]+)/i,
-    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
-  ],
-  [
-    /LIGO\/VIRGO ([S|G|GW])(\d{6})/i,
-    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
-  ],
-  [
-    /LIGO\/Virgo ([S|G|GW])(\d{5}[a-z]+)/i,
-    ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
-  ],
-  [
-    /LIGO\/Virgo ([S|G|GW])(\d{5})/i,
+    /LIGO\/Virgo|LIGO\/VIRGO\s([S|G|GW])(\d{6}[a-z]+|\d{6}|\d{5}[a-z]+|\d{5})/i,
     ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
   ],
   [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id.toUpperCase()}`],
