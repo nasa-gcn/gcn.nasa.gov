@@ -59,7 +59,7 @@ const subjectMatchers: SubjectMatcher[] = [
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
-    /\.*LIGO\/Virgo[-_ ]?([S|G|GW])(\d{5,6}[a-z]{0,2}).*/i,
+    /\.*LIGO\/Virgo[/KAGRA]?[-_ ]?([S|G|GW])(\d{5,6}[a-z]{0,2}).*/i,
     ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
   ],
   [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id.toUpperCase()}`],
@@ -78,10 +78,6 @@ const subjectMatchers: SubjectMatcher[] = [
   [
     /Fermi  trigger No[.\s_-]*(\d{9})/i,
     ([, id]) => `Fermi trigger No ${id.toUpperCase()}`,
-  ],
-  [
-    /LIGO\/Virgo\/KAGRA [SGGW]*\d{6}[a-zA-Z]{1,2}/i,
-    ([id]) => `LIGO/Virgo/KAGRA ${id.toUpperCase()}`,
   ],
 ]
 
