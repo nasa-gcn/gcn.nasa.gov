@@ -63,10 +63,3 @@ class SwiftTLEEntryModel(BaseSchema, TLEEntryModelBase):
     """TLE Entry for Mission"""
 
     __tablename__ = "swift_tle"
-
-
-# FIXME: It's not clear to me why I have to create the tables here, they should be created by including them in api.arc?
-try:
-    SwiftTLEEntryModel.create_table()
-except Exception:
-    pass

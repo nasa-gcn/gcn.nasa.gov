@@ -5,8 +5,7 @@ from typing import Any
 from boto3.dynamodb.conditions import Key  # type: ignore
 from sqlalchemy import DateTime, Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
-
-from ..api_db import dynamodb
+import arc  # type: ignore
 
 
 class PlanEntryModelBase:
@@ -28,12 +27,12 @@ class DynamoDBBase:
     __tablename__: str
 
     def save(self):
-        table = dynamodb.Table(self.__tablename__)
+        table = arc.tables.table(self.__tablename__)
         table.put_item(Item=self.model_dump())
 
     @classmethod
     def get_by_key(cls, value: str, key: str):
-        table = dynamodb.Table(cls.__tablename__)
+        table = arc.tables.table(cls.__tablename__)
         response = table.query(KeyConditionExpression=Key(key).eq(value))
         items = response["Items"]
         if items:
@@ -43,7 +42,7 @@ class DynamoDBBase:
 
     @classmethod
     def delete_entry(cls, value: Any, key: str) -> bool:
-        table = dynamodb.Table(cls.__tablename__)
+        table = arc.tables.table(cls.__tablename__)
         return table.delete_item(Key={key: value})
 
 
@@ -57,19 +56,8 @@ class TLEEntryModelBase(DynamoDBBase):
     tle2: str
 
     @classmethod
-    def create_table(cls):
-        table = dynamodb.create_table(
-            TableName=cls.__tablename__,
-            KeySchema=[{"AttributeName": "epoch", "KeyType": "HASH"}],
-            AttributeDefinitions=[{"AttributeName": "epoch", "AttributeType": "S"}],
-            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
-        )
-        table.wait_until_exists()
-        print("Database created.")
-
-    @classmethod
     def find_keys_between_epochs(cls, start_epoch, end_epoch):
-        table = dynamodb.Table(cls.__tablename__)
+        table = arc.tables.table(cls.__tablename__)
         response = table.scan(
             FilterExpression=Key("epoch").between(str(start_epoch), str(end_epoch))
         )

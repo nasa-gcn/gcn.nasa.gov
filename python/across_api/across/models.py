@@ -4,9 +4,10 @@ from typing import Optional
 
 from boto3.dynamodb.conditions import Key  # type: ignore
 
-from ..api_db import dynamodb, session
+from ..api_db import session
 from ..base.models import DynamoDBBase  # type: ignore
 from ..base.schema import BaseSchema
+import arc  # type: ignore
 
 # Conntect to S3
 s3 = session.resource("s3")
@@ -31,27 +32,6 @@ class UserModel(BaseSchema, DynamoDBBase):
     username: str
     api_key: str
     userlevel: int = 1
-
-    @classmethod
-    def create_table(cls) -> bool:
-        """
-        Create the DynamoDB table for UserModel.
-
-        Returns:
-            bool: True if the table is created successfully, False otherwise.
-        """
-        table = dynamodb.create_table(
-            TableName=cls.__tablename__,
-            KeySchema=[
-                {"AttributeName": "username", "KeyType": "HASH"},  # Partition key
-            ],
-            AttributeDefinitions=[
-                {"AttributeName": "username", "AttributeType": "S"},
-            ],
-            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
-        )
-        print("Table status:", table.table_status)
-        return True
 
 
 class JobModel(BaseSchema, DynamoDBBase):
@@ -92,26 +72,6 @@ class JobModel(BaseSchema, DynamoDBBase):
     params: str
     result: str
 
-    @classmethod
-    def create_table(cls) -> bool:
-        """
-        Creates a new DynamoDB table for storing job data.
-
-        Returns:
-            The newly created DynamoDB table object.
-        """
-        _ = dynamodb.create_table(
-            TableName=cls.__tablename__,
-            KeySchema=[
-                {"AttributeName": "jobnumber", "KeyType": "HASH"},
-            ],
-            AttributeDefinitions=[
-                {"AttributeName": "jobnumber", "AttributeType": "S"},
-            ],
-            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
-        )
-        return True
-
     def save(self) -> dict:
         """
         Save the job to the database.
@@ -122,7 +82,7 @@ class JobModel(BaseSchema, DynamoDBBase):
             A dictionary containing information about the result of the database write operation.
         """
         # DynamoDB table
-        table = dynamodb.Table(self.__tablename__)
+        table = arc.tables.table(self.__tablename__)
 
         # Create a unique key based on params, username, reqtype, and apiversion.
         idstr = str(self.params) + self.username + self.reqtype + self.apiversion
@@ -142,7 +102,6 @@ class JobModel(BaseSchema, DynamoDBBase):
 
         # Write the job to the database
         result = table.put_item(
-            TableName=self.__tablename__,
             Item={
                 "jobnumber": self.jobnumber,
                 "username": self.username,
@@ -202,8 +161,7 @@ class JobModel(BaseSchema, DynamoDBBase):
             The job object if found, None otherwise.
         """
         # Get the DynamoDB table
-        table = dynamodb.Table(cls.__tablename__)
-
+        table = arc.tables.table(cls.__tablename__)
         # Get the job from the database
         response = table.query(KeyConditionExpression=Key("jobnumber").eq(jobnumber))
         items = response.get("Items")
@@ -218,11 +176,3 @@ class JobModel(BaseSchema, DynamoDBBase):
             item["result"] = obj.get()["Body"].read().decode("utf-8")
 
         return cls(**item)
-
-
-# FIXME: It's not clear to me why I have to create the tables here, they should be created by including them in api.arc?
-try:
-    UserModel.create_table()
-    JobModel.create_table()
-except Exception:
-    pass
