@@ -2,12 +2,12 @@ import hashlib
 from datetime import datetime
 from typing import Optional
 
+import arc  # type: ignore
 from boto3.dynamodb.conditions import Key  # type: ignore
 
 from ..api_db import session
 from ..base.models import DynamoDBBase  # type: ignore
 from ..base.schema import BaseSchema
-import arc  # type: ignore
 
 # Conntect to S3
 s3 = session.resource("s3")

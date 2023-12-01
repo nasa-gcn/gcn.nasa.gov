@@ -1,10 +1,11 @@
 from datetime import datetime, timedelta
 from typing import List, Optional
 
+import arc  # type: ignore
 import requests
 
 from ..api_db import engine
-from .models import TLEEntryModelBase, dynamodb
+from .models import TLEEntryModelBase
 from .schema import TLEEntry
 
 
@@ -258,7 +259,7 @@ class TLEBase:
 
         """
         # Load everything already in the table
-        table = dynamodb.Table(self.tlemodel.__tablename__)
+        table = arc.tables.table(self.tlemodel.__tablename__)
         existing = table.scan()
         epochs = [e["epoch"] for e in existing["Items"]]
         # Write TLEs to database
