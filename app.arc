@@ -43,6 +43,31 @@ client_credentials
   client_id **String
   PointInTimeRecovery true
 
+acrossapi_users
+  username *String
+  api_key String
+  userlevel Number
+
+acrossapi_jobs
+  jobnumber *String
+  username **String
+  reqtype String
+  began String
+  created String
+  expires String
+  params String
+  result String
+
+burstcube_tle
+  epoch *String
+  tle1 String
+  tle2 String
+
+swift_tle
+  epoch *String
+  tle1 String
+  tle2 String
+
 sessions
   _idx *String
   _ttl TTL
