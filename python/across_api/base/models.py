@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
+import arc  # type: ignore
 from boto3.dynamodb.conditions import Key  # type: ignore
 from sqlalchemy import DateTime, Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
-import arc  # type: ignore
 
 
 class PlanEntryModelBase:
