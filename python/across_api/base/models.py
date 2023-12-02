@@ -2,10 +2,11 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import Any
 
-import arc  # type: ignore
 from boto3.dynamodb.conditions import Key  # type: ignore
 from sqlalchemy import DateTime, Float, Integer, String
 from sqlalchemy.orm import Mapped, mapped_column
+
+from ..api_db import dydbtable
 
 
 class PlanEntryModelBase:
@@ -27,12 +28,12 @@ class DynamoDBBase:
     __tablename__: str
 
     def save(self):
-        table = arc.tables.table(self.__tablename__)
+        table = dydbtable(self.__tablename__)
         table.put_item(Item=self.model_dump())
 
     @classmethod
     def get_by_key(cls, value: str, key: str):
-        table = arc.tables.table(cls.__tablename__)
+        table = dydbtable(cls.__tablename__)
         response = table.query(KeyConditionExpression=Key(key).eq(value))
         items = response["Items"]
         if items:
@@ -42,7 +43,7 @@ class DynamoDBBase:
 
     @classmethod
     def delete_entry(cls, value: Any, key: str) -> bool:
-        table = arc.tables.table(cls.__tablename__)
+        table = dydbtable(cls.__tablename__)
         return table.delete_item(Key={key: value})
 
 
@@ -57,7 +58,7 @@ class TLEEntryModelBase(DynamoDBBase):
 
     @classmethod
     def find_keys_between_epochs(cls, start_epoch, end_epoch):
-        table = arc.tables.table(cls.__tablename__)
+        table = dydbtable(cls.__tablename__)
         response = table.scan(
             FilterExpression=Key("epoch").between(str(start_epoch), str(end_epoch))
         )

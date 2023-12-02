@@ -15,19 +15,23 @@ from .api_secrets import (
 )
 
 # Database connection string
-DATABASE = f"postgresql://{ACROSS_DB_USER}:{ACROSS_DB_PASSWD}@{ACROSS_DB_HOST}:{ACROSS_DB_PORT}/{ACROSS_DB_NAME}"
-
-engine = create_engine(DATABASE, echo=False)
-
 
 if os.environ.get("ARC_SANDBOX") is None:
     # DyanmoDB connection
-    session = boto3.session.Session()  # profile_name="across-local-2")
-    dynamodb = session.resource("dynamodb", region_name="us-east-1")
+    session = boto3.session.Session()
+    # Conntect to S3 bucket
+    s3 = session.resource("s3")
+    # Alias the dynamodb table method
+    dydbtable = session.resource("dynamodb").Table
+    DATABASE = f"postgresql://{ACROSS_DB_USER}:{ACROSS_DB_PASSWD}@{ACROSS_DB_HOST}:{ACROSS_DB_PORT}/{ACROSS_DB_NAME}"
 else:
-    session = boto3.session.Session()  # profile_name="across-local-2")
-    dynamodb = session.resource("dynamodb", endpoint_url="http://localhost:5555")
-    print("ACROSSAPI: Using local DynamoDB instance.")
+    import arc  # type: ignore
+
+    dydbtable = arc.tables.table
+    DATABASE = "sqlite+pysqlite:///:memory:"
+    s3 = None
+
+engine = create_engine(DATABASE, echo=False)
 
 
 class Base(DeclarativeBase):
