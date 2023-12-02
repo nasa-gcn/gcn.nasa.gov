@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from typing import List, Optional, Type, Union
 
@@ -140,3 +141,8 @@ class SwiftPlan(PlanBase):
 Plan = SwiftPlan
 PlanSchema = SwiftPlanSchema
 PlanEntry = SwiftPlanEntry
+
+
+# If we're in a dev environment, create the table if it doesn't exist
+if os.environ.get("ARC_SANDBOX") is not None:
+    SwiftPlanEntryModel.create_table()

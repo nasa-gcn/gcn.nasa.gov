@@ -1,10 +1,9 @@
 from datetime import datetime, timedelta
 from typing import List, Optional
 
-import arc  # type: ignore
 import requests
 
-from ..api_db import engine
+from ..api_db import dydbtable, engine
 from .models import TLEEntryModelBase
 from .schema import TLEEntry
 
@@ -259,7 +258,7 @@ class TLEBase:
 
         """
         # Load everything already in the table
-        table = arc.tables.table(self.tlemodel.__tablename__)
+        table = dydbtable(self.tlemodel.__tablename__)
         existing = table.scan()
         epochs = [e["epoch"] for e in existing["Items"]]
         # Write TLEs to database

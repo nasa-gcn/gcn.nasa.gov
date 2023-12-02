@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from typing import Optional, Union
 
@@ -104,3 +105,8 @@ class NICERPlan(PlanBase):
 Plan = NICERPlan
 PlanEntry = NICERPlanEntry
 PlanSchema = NICERPlanSchema
+
+
+# If we're in a dev environment, create the table if it doesn't exist
+if os.environ.get("ARC_SANDBOX") is not None:
+    NICERPlanEntryModel.create_table()

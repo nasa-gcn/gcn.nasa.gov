@@ -1,3 +1,4 @@
+import os
 from datetime import datetime
 from typing import Optional, Union
 
@@ -112,3 +113,8 @@ class SwiftObservations(PlanBase):
 Observations = SwiftObservations
 ObservationsSchema = SwiftObservationsSchema
 ObsEntry = SwiftObsEntry
+
+
+# If we're in a dev environment, create the table if it doesn't exist
+if os.environ.get("ARC_SANDBOX") is not None:
+    SwiftObsEntryModel.create_table()
