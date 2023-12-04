@@ -35,21 +35,17 @@ export interface CircularChangeRequest extends CircularMetadata {
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
-  [/GRB[.\s_-]*(\d{6}[a-z|.]\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
-  [/GRB[.\s_-]*(\d{6}[a-z|.]\d*):/i, ([, id]) => `GRB ${id.toUpperCase()}`],
   [
-    /IBAS Alert No[.](\d{4})/i,
+    /GRB[.\s_-]*(\d{6,7})([A-Za-z]?|\.\d{1,2})?\S*/i,
+    ([, id, letter]) => `GRB ${id.toUpperCase()}${letter || ''}`,
+  ],
+  [
+    /IBAS Alert (?:n|No)?[.]?\s*(\d{4})/i,
     ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`,
   ],
-  [/IBAS Alert n[.](\d{4})/i, ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`],
-  [
-    /IBAS Alert n[.] (\d{4})/i,
-    ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`,
-  ],
-  [/XRF(\d{6})/i, ([, id]) => `XRF ${id.toUpperCase()}`],
-  [/XRF (\d{6})/i, ([, id]) => `XRF ${id.toUpperCase()}`],
+  [/XRF\s*(\d{6})/i, ([, id]) => `XRF ${id.toUpperCase()}`],
   [/Swift Trigger ?(\d{6})/i, ([, id]) => `Swift trigger ${id.toUpperCase()}`],
-  [/SGR (\d{4}[-]\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
+  [/SGR (\d{4}[-]\d{2,4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [
     /SGR[.\s_-]*Swift[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i,
@@ -59,8 +55,13 @@ const subjectMatchers: SubjectMatcher[] = [
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
-    /\.*LIGO\/Virgo[/KAGRA]?[-_ ]?([S|G|GW])(\d{5,6}[a-z]{0,2}).*/i,
+    /LIGO\/Virgo[-_ ]?(S|G|GW)(\d{5,6}[a-z]{0,2}).*/i,
     ([, flag, id]) => `LIGO/Virgo ${flag.toUpperCase()}${id.toLowerCase()}`,
+  ],
+  [
+    /LIGO\/Virgo\/KAGRA[-_ ]?([S|G|GW])(\d{5,6}[a-z]{0,2}).*/i,
+    ([, flag, id]) =>
+      `LIGO/Virgo/KAGRA ${flag.toUpperCase()}${id.toLowerCase()}`,
   ],
   [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id.toUpperCase()}`],
   [

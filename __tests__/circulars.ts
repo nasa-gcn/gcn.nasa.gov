@@ -125,6 +125,24 @@ describe('parseEventFromSubject', () => {
       'Swift GRB-230228A detection of a possibly short burst'
     expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(grbEvent)
   })
+
+  test('handles GRB event in a Fermi Trigger', () => {
+    const grbInsideFermiTrigger =
+      'Fermi TriggNum 576054086 (GRB 1904204.29) / MASTER OT J071404.52+550304.2: CrAO optical observations'
+    expect(parseEventFromSubject(grbInsideFermiTrigger)).toBe('GRB 1904204.29')
+  })
+
+  test('handles fermi GRB event with no space and a decimal', () => {
+    const fermiGrbWithDecimal =
+      'Fermi GRB190515.49 Global MASTER-Net observations report'
+    expect(parseEventFromSubject(fermiGrbWithDecimal)).toBe('GRB 190515.49')
+  })
+
+  test('handles an ingtegral GRB event', () => {
+    const integralGrbSubject =
+      'Integral GRB221013.04: Global MASTER-Net observations report'
+    expect(parseEventFromSubject(integralGrbSubject)).toBe('GRB 221013.04')
+  })
   //#endregion
 
   //#region SGR
@@ -172,6 +190,14 @@ describe('parseEventFromSubject', () => {
     const sgrSubjectWithSwift = 'SGR Swift J1234+5678 refined analysis'
     expect(parseEventFromSubject(sgrSubjectWithSwift)).toBe(
       'SGR Swift J1234+5678'
+    )
+  })
+
+  test('handles SGR event name with a hyphen and two digits', () => {
+    const sgrSubjectWithHyphenTwoDigits =
+      'SGR 1806-20: Low frequency GMRT results; submission to GCN circulars'
+    expect(parseEventFromSubject(sgrSubjectWithHyphenTwoDigits)).toBe(
+      'SGR 1806-20'
     )
   })
   //#endregion
@@ -373,6 +399,22 @@ describe('parseEventFromSubject', () => {
       'upper limits from AGILE/MCAL LIGO/Virgo-S200224ca observations'
     expect(parseEventFromSubject(lvkSubjectWithHyphen)).toBe(lvkEvent)
   })
+
+  test('handles LVK event name with six digits and a flag', () => {
+    const lvkSubjectWithSixDigits =
+      'LIGO/Virgo G211117: Further Swift-XRT sources'
+    expect(parseEventFromSubject(lvkSubjectWithSixDigits)).toBe(
+      'LIGO/Virgo G211117'
+    )
+  })
+
+  test('handles LVK event name with GW flag', () => {
+    const lvkSubjectWithGwFlag =
+      'LIGO/Virgo GW170817: Chandra X-ray brightening of the counterpart 108 days since merger'
+    expect(parseEventFromSubject(lvkSubjectWithGwFlag)).toBe(
+      'LIGO/Virgo GW170817'
+    )
+  })
   //#endregion
 
   //#region ANTARES
@@ -464,6 +506,50 @@ describe('parseEventFromSubject', () => {
     const baksanSubjectWithHyphen =
       'Global Baksan Neutrino Observatory Alert-201228.36 MASTER-Net observations report'
     expect(parseEventFromSubject(baksanSubjectWithHyphen)).toBe(baksanEvent)
+  })
+  //#endregion
+
+  //#region XRF
+  test('handles XRF event name with six digits', () => {
+    const xrfSubject = 'Swift-UVOT Optical Counterpart Candidate to XRF 050406'
+    expect(parseEventFromSubject(xrfSubject)).toBe('XRF 050406')
+  })
+  //#endregion
+
+  //#region IBAS
+  test('handles IBAS alerts with n and space', () => {
+    const ibasSubjectWithSpace = 'IBAS Alert n. 3422: not a GRB'
+    expect(parseEventFromSubject(ibasSubjectWithSpace)).toBe(
+      'IBAS Alert No. 3422'
+    )
+  })
+  test('handles IBAS alerts with n and no space', () => {
+    const ibasSubjectWithNoSpace = 'IBAS Alert n.3422: not a GRB'
+    expect(parseEventFromSubject(ibasSubjectWithNoSpace)).toBe(
+      'IBAS Alert No. 3422'
+    )
+  })
+  test('handles IBAS alert with No', () => {
+    const ibasSubjectWithSpaceAndNo = 'IBAS Alert No. 3422: not a GRB'
+    expect(parseEventFromSubject(ibasSubjectWithSpaceAndNo)).toBe(
+      'IBAS Alert No. 3422'
+    )
+  })
+  test('handles IBAS alert with no signifier', () => {
+    const ibasSubjectWithNoNumberSignifier = 'IBAS Alert 3422: not a GRB'
+    expect(parseEventFromSubject(ibasSubjectWithNoNumberSignifier)).toBe(
+      'IBAS Alert No. 3422'
+    )
+  })
+  //#endregion
+
+  //#region LIGO/Virgo/KAGRA
+  test('handles LIGO/Virgo/KAGRA alert with no signifier', () => {
+    const ligoVirgoKagra =
+      'LIGO/Virgo/KAGRA S231127cg: Identification of a GW compact binary merger candidate'
+    expect(parseEventFromSubject(ligoVirgoKagra)).toBe(
+      'LIGO/Virgo/KAGRA S231127cg'
+    )
   })
   //#endregion
 })
