@@ -47,15 +47,6 @@ export async function getSynonyms({
     })
   }
 
-  const search = await client.search({
-    index: 'synonyms',
-    from: page && limit && (page - 1) * limit,
-    size: limit,
-    body: {
-      query,
-    },
-  })
-
   const {
     body: {
       hits: {
@@ -63,7 +54,14 @@ export async function getSynonyms({
         hits,
       },
     },
-  } = search
+  } = await client.search({
+    index: 'synonyms',
+    from: page && limit && (page - 1) * limit,
+    size: limit,
+    body: {
+      query,
+    },
+  })
 
   const totalPages: number = Math.ceil(totalItems / limit)
   const results: Record<string, string[]> = {}
