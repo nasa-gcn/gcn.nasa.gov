@@ -377,7 +377,7 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(lvkSubjectWithHyphen)).toBe(lvkEvent)
     })
 
-    test('handles LIGO/Virgo/KAGRA alert with no signifier', () => {
+    test('handles LIGO/Virgo/KAGRA alert', () => {
       const ligoVirgoKagra =
         'LIGO/Virgo/KAGRA S231127cg: Identification of a GW compact binary merger candidate'
       expect(parseEventFromSubject(ligoVirgoKagra)).toBe(
