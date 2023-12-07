@@ -419,6 +419,14 @@ describe('parseEventFromSubject', () => {
         'LIGO/Virgo GW170817'
       )
     })
+
+    test('handles LVK event name with S flag and one letter', () => {
+      const lvkSubjectWithGwFlag =
+        'LIGO/Virgo/KAGRA S230521k: Zwicky Transient Facility observations'
+      expect(parseEventFromSubject(lvkSubjectWithGwFlag)).toBe(
+        'LIGO/Virgo/KAGRA S230521k'
+      )
+    })
   })
 
   describe('ANTARES', () => {
