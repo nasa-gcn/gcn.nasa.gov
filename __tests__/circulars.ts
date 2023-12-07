@@ -76,6 +76,7 @@ describe('parseEventFromSubject', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
     expect(parseEventFromSubject('Sunday Brunch')).toBe(undefined)
     expect(parseEventFromSubject('Reminder-etc ')).toBe(undefined)
+    expect(parseEventFromSubject('S231127cg')).toBe(undefined)
   })
 
   describe('GRB', () => {
@@ -375,6 +376,32 @@ describe('parseEventFromSubject', () => {
       const lvkSubjectWithHyphen =
         'upper limits from AGILE/MCAL LIGO/Virgo-S200224ca observations'
       expect(parseEventFromSubject(lvkSubjectWithHyphen)).toBe(lvkEvent)
+    })
+
+    test('handles LIGO/Virgo/KAGRA alert', () => {
+      const ligoVirgoKagra =
+        'LIGO/Virgo/KAGRA S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe(
+        'LIGO/Virgo/KAGRA S231127cg'
+      )
+    })
+
+    test('handles LIGO alert', () => {
+      const ligoVirgoKagra =
+        'LIGO S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe('LIGO S231127cg')
+    })
+
+    test('handles LIGO/Virgo alert', () => {
+      const ligoVirgoKagra =
+        'LIGO/Virgo S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles LIGO/KAGRA alert', () => {
+      const ligoVirgoKagra =
+        'LIGO/KAGRA S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe('LIGO/KAGRA S231127cg')
     })
   })
 
