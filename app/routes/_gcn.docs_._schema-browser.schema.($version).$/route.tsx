@@ -95,20 +95,23 @@ function Breadcrumbs({
 }) {
   const parts = path.split('/')
   const last = parts.pop()
+  let cumulativePath: string | undefined
   return (
     <>
-      {parts.map((part, i) => (
-        <span key={`${part}-${i}`}>
-          <Link
-            className={classNames('usa-link text-no-underline', className)}
-            to={new Array(parts.length - i).fill('..').join('/')}
-            relative="path"
-          >
-            {part}
-          </Link>
-          <Icon.NavigateNext role="presentation" className="text-base" />
-        </span>
-      ))}
+      {parts.map((part) => {
+        cumulativePath = cumulativePath ? `${cumulativePath}/${part}` : part
+        return (
+          <span key={cumulativePath}>
+            <Link
+              className={classNames('usa-link text-no-underline', className)}
+              to={cumulativePath}
+            >
+              {part}
+            </Link>
+            <Icon.NavigateNext role="presentation" className="text-base" />
+          </span>
+        )
+      })}
       <b className={className}>{last}</b>
     </>
   )
