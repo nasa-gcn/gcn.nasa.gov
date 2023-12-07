@@ -76,6 +76,7 @@ describe('parseEventFromSubject', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
     expect(parseEventFromSubject('Sunday Brunch')).toBe(undefined)
     expect(parseEventFromSubject('Reminder-etc ')).toBe(undefined)
+    expect(parseEventFromSubject('S231127cg')).toBe(undefined)
   })
 
   describe('GRB', () => {
