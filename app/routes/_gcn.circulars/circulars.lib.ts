@@ -45,10 +45,9 @@ const subjectMatchers: SubjectMatcher[] = [
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
-    /LIGO\/Virgo(?:\/(KAGRA))?[-_ ]?(S|G|GW)(\d{5,6}[a-z]{0,2}).*/i,
-    ([, kagra, flag, id]) => {
-      const site = kagra ? 'LIGO/Virgo/KAGRA' : 'LIGO/Virgo'
-      return `${site} ${flag.toUpperCase()}${id.toLowerCase()}`
+    /((?:LIGO|Virgo|KAGRA)(?:[/-](?:LIGO|Virgo|KAGRA))*)[-_ \s]?(S|G|GW)(\d{5,}[a-z]+)/i,
+    ([, instrument, flag, id]) => {
+      return `${instrument} ${flag.toUpperCase()}${id.toLowerCase()}`
     },
   ],
   [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id}`.toUpperCase()],

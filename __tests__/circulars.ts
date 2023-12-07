@@ -384,6 +384,24 @@ describe('parseEventFromSubject', () => {
         'LIGO/Virgo/KAGRA S231127cg'
       )
     })
+
+    test('handles LIGO alert', () => {
+      const ligoVirgoKagra =
+        'LIGO S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe('LIGO S231127cg')
+    })
+
+    test('handles LIGO/Virgo alert', () => {
+      const ligoVirgoKagra =
+        'LIGO/Virgo S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles LIGO/KAGRA alert', () => {
+      const ligoVirgoKagra =
+        'LIGO/KAGRA S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe('LIGO/KAGRA S231127cg')
+    })
   })
 
   describe('ANTARES', () => {
