@@ -7,10 +7,10 @@ import {
   IdentifierMasthead,
 } from '@trussworks/react-uswds'
 
-import fleet2 from './AstrophysicsFleet2.jpg'
 import fermiHeroImage from './Fermi_Earth_GWs.jpg'
 import type { BreadcrumbHandle } from '~/root/Title'
 
+import fleet from './AstroFleetChart.png'
 import meatball from '~/components/meatball/logo.svg'
 
 export const handle: BreadcrumbHandle = {
@@ -56,7 +56,7 @@ export default function () {
           <div>
             <img
               alt="a diagram depicting all the missions in the fleet over time shaped as a swirl"
-              src={fleet2}
+              src={fleet}
             />
             <figcaption className="text-italic">
               The current NASA Astrophysics Fleet, flying and in development.
