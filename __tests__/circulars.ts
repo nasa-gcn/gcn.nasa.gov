@@ -376,6 +376,14 @@ describe('parseEventFromSubject', () => {
         'upper limits from AGILE/MCAL LIGO/Virgo-S200224ca observations'
       expect(parseEventFromSubject(lvkSubjectWithHyphen)).toBe(lvkEvent)
     })
+
+    test('handles LIGO/Virgo/KAGRA alert with no signifier', () => {
+      const ligoVirgoKagra =
+        'LIGO/Virgo/KAGRA S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgoKagra)).toBe(
+        'LIGO/Virgo/KAGRA S231127cg'
+      )
+    })
   })
 
   describe('ANTARES', () => {
