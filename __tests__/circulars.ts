@@ -127,6 +127,26 @@ describe('parseEventFromSubject', () => {
         'Swift GRB-230228A detection of a possibly short burst'
       expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(grbEvent)
     })
+
+    test('handles GRB event in a Fermi Trigger', () => {
+      const grbInsideFermiTrigger =
+        'Fermi TriggNum 576054086 (GRB 1904204.29) / MASTER OT J071404.52+550304.2: CrAO optical observations'
+      expect(parseEventFromSubject(grbInsideFermiTrigger)).toBe(
+        'GRB 1904204.29'
+      )
+    })
+
+    test('handles fermi GRB event with no space and a decimal', () => {
+      const fermiGrbWithDecimal =
+        'Fermi GRB190515.49 Global MASTER-Net observations report'
+      expect(parseEventFromSubject(fermiGrbWithDecimal)).toBe('GRB 190515.49')
+    })
+
+    test('handles an ingtegral GRB event', () => {
+      const integralGrbSubject =
+        'Integral GRB221013.04: Global MASTER-Net observations report'
+      expect(parseEventFromSubject(integralGrbSubject)).toBe('GRB 221013.04')
+    })
   })
 
   describe('SGR', () => {

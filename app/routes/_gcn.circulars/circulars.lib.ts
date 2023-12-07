@@ -35,7 +35,10 @@ export interface CircularChangeRequest extends CircularMetadata {
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
-  [/GRB[.\s_-]*(\d{6}[a-z|.]\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [
+    /GRB[.\s_-]*(\d{6,7})([A-Za-z]?|\.\d{1,2})?\S*/i,
+    ([, id, letter]) => `GRB ${id.toUpperCase()}${letter}`,
+  ],
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [
     /SGR[.\s_-]*Swift[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i,
