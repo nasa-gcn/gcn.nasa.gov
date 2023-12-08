@@ -50,6 +50,10 @@ const subjectMatchers: SubjectMatcher[] = [
       return `${instrument} ${flag.toUpperCase()}${id.toLowerCase()}`
     },
   ],
+  [
+    /IBAS Alert (?:n|No)?[.]?\s*(\d{4})/i,
+    ([, id]) => `IBAS Alert No. ${id.toUpperCase()}`,
+  ],
   [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id}`.toUpperCase()],
   [
     /Baksan\sNeutrino\sObservatory\sAlert[.\s_-]*(\d{6}.\d{2})/i,

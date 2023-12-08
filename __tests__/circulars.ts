@@ -500,6 +500,32 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(baksanSubjectWithHyphen)).toBe(baksanEvent)
     })
   })
+  describe('IBAS', () => {
+    test('handles IBAS alerts with n and space', () => {
+      const ibasSubjectWithSpace = 'IBAS Alert n. 3422: not a GRB'
+      expect(parseEventFromSubject(ibasSubjectWithSpace)).toBe(
+        'IBAS Alert No. 3422'
+      )
+    })
+    test('handles IBAS alerts with n and no space', () => {
+      const ibasSubjectWithNoSpace = 'IBAS Alert n.3422: not a GRB'
+      expect(parseEventFromSubject(ibasSubjectWithNoSpace)).toBe(
+        'IBAS Alert No. 3422'
+      )
+    })
+    test('handles IBAS alert with No', () => {
+      const ibasSubjectWithSpaceAndNo = 'IBAS Alert No. 3422: not a GRB'
+      expect(parseEventFromSubject(ibasSubjectWithSpaceAndNo)).toBe(
+        'IBAS Alert No. 3422'
+      )
+    })
+    test('handles IBAS alert with no signifier', () => {
+      const ibasSubjectWithNoNumberSignifier = 'IBAS Alert 3422: not a GRB'
+      expect(parseEventFromSubject(ibasSubjectWithNoNumberSignifier)).toBe(
+        'IBAS Alert No. 3422'
+      )
+    })
+  })
 })
 
 describe('emailIsAutoReply', () => {
