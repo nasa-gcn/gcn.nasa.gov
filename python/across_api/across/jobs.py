@@ -1,7 +1,7 @@
 import json
 from datetime import datetime, timedelta
 from functools import wraps
-from typing import Any, Union
+from typing import Callable, Union
 
 from ..base.common import ACROSSAPIBase  # type: ignore
 from ..functions import convert_to_dt
@@ -9,9 +9,9 @@ from ..version import API_VERSION
 from .models import JobModel
 
 
-def api_call_params(func: Any, instance: ACROSSAPIBase) -> Union[str, bool]:
+def api_call_params(func: Callable, instance: ACROSSAPIBase) -> Union[str, bool]:
     """
-    Record parameters of job before running.
+    Convert parameters of job into a JSON format.
 
     Parameters
     ----------
@@ -42,8 +42,17 @@ def api_call_params(func: Any, instance: ACROSSAPIBase) -> Union[str, bool]:
     return job_params
 
 
-def register_job(func):
-    """Decorator to record details of API job in api_jobs database."""
+def register_job(func: Callable) -> Callable:
+    """
+    Decorator to record details of API job in api_jobs database.
+
+    Parameters:
+        func (Callable): The function to be decorated.
+
+    Returns:
+        Callable: The decorated function.
+
+    """
 
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -83,8 +92,21 @@ def register_job(func):
     return wrapper
 
 
-def check_cache(func):
-    """Decorator  to record details of API job in api_jobs database."""
+def check_cache(func: Callable) -> Callable:
+    """
+    Decorator to record details of API job in api_jobs database.
+
+    Parameters
+    ----------
+    func : function
+        The function to be decorated.
+
+    Returns
+    -------
+    function: func
+        The decorated function.
+
+    """
 
     @wraps(func)
     def wrapper(*args, **kwargs):
