@@ -342,23 +342,23 @@ class TLESchema(BaseSchema):
 
 class SAAEntry(DateRangeSchema):
     """
-    Simple class to hold a single SAA ...age.
+    Simple class to hold a single SAA passage.
 
     Parameters
     ----------
     begin : datetime
-        The start datetime of the SAA ...age.
+        The start datetime of the SAA passage.
     end : datetime
-        The end datetime of the SAA ...age.
+        The end datetime of the SAA passage.
     """
 
     @property
     def length(self) -> float:
         """
-        Calculate the length of the SAA ...age in days.
+        Calculate the length of the SAA passage in days.
 
         Returns:
-            float: The length of the SAA ...age in days.
+            float: The length of the SAA passage in days.
         """
         return (self.end - self.begin).total_seconds() / 86400
 
