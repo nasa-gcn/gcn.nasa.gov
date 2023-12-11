@@ -1,11 +1,11 @@
-import {
-  Grid,
-  GridContainer,
-  Identifier,
-  IdentifierIdentity,
-  IdentifierLogos,
-  IdentifierMasthead,
-} from '@trussworks/react-uswds'
+/*!
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+import { Grid, GridContainer } from '@trussworks/react-uswds'
 
 import fermiHeroImage from './Fermi_Earth_GWs.jpg'
 import type { BreadcrumbHandle } from '~/root/Title'
@@ -72,21 +72,25 @@ export default function () {
               astrophysics draw on observations from several of these
               observatories simultaneously."
             </p>
-            <Identifier>
-              <IdentifierMasthead aria-label="Agency identifier">
-                <IdentifierLogos>
+            <div>
+              <div className="">
+                <div className="float-left">
                   <img
                     alt="nasa meatball logo"
                     width="50"
                     height="50"
                     src={meatball}
+                    className="margin-x-1"
                   />
-                </IdentifierLogos>
-                <IdentifierIdentity domain="Executive Summary, Page 2">
-                  2019 Astrophysics Senior Review
-                </IdentifierIdentity>
-              </IdentifierMasthead>
-            </Identifier>
+                </div>
+              </div>
+              <GridContainer>
+                <Grid row>2019 Astrophysics Senior Review</Grid>
+                <Grid row className="text-italic">
+                  Executive Summary, Page 2
+                </Grid>
+              </GridContainer>
+            </div>
           </div>
         </Grid>
       </GridContainer>
