@@ -60,7 +60,6 @@ class VisibilityBase(ACROSSAPIBase):
     @property
     def inearthcons(self) -> List[bool]:
         if not hasattr(self, "_inearthcons"):
-            print("Calculating Earth constraint")
             earthang = self.ephem.earth[self.ephstart : self.ephstop].separation(
                 self.skycoord
             )
