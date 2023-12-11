@@ -59,34 +59,39 @@ class VisibilityBase(ACROSSAPIBase):
 
     @property
     def inearthcons(self) -> List[bool]:
-        earthang = self.ephem.earth[self.ephstart : self.ephstop].separation(
-            self.skycoord
-        )
+        if not hasattr(self, "_inearthcons"):
+            print("Calculating Earth constraint")
+            earthang = self.ephem.earth[self.ephstart : self.ephstop].separation(
+                self.skycoord
+            )
 
-        earth_cons = self.earthoccult * u.deg  # type: ignore
-        if not self.isat:
-            earth_cons += self.earthextra * u.deg  # type: ignore
-        return (
-            earthang < earth_cons + self.ephem.earthsize[self.ephstart : self.ephstop] * u.deg  # type: ignore
-        )
+            earth_cons = self.earthoccult * u.deg  # type: ignore
+            if not self.isat:
+                earth_cons += self.earthextra * u.deg  # type: ignore
+
+            self._inearthcons = earthang < earth_cons + self.ephem.earthsize[self.ephstart : self.ephstop] * u.deg  # type: ignore
+
+        return self._inearthcons
 
     @property
     def inramcons(self) -> Optional[np.ndarray]:
         """Calculate Ram constraint (avoidance of direction of motion)"""
         if self.ephem.velocity is not False and self.ephem.velvec is not None:
-            # calculate the angle between the velocity vector and the RA/Dec vector
-            self.ramang = SkyCoord(
-                CartesianRepresentation(
-                    x=self.ephem.velvec[self.ephstart : self.ephstop].T
-                )
-            ).separation(self.skycoord)
+            if not hasattr(self, "_inramcons"):
+                # calculate the angle between the velocity vector and the RA/Dec vector
+                self.ramang = SkyCoord(
+                    CartesianRepresentation(
+                        x=self.ephem.velvec[self.ephstart : self.ephstop].T
+                    )
+                ).separation(self.skycoord)
 
-            # calculate the size of the ram constraint
-            ram_cons = self.ramsize * u.deg  # type: ignore
-            if not self.isat:
-                ram_cons += self.ramextra * u.deg  # type: ignore
-            # return the constraint
-            return self.ramang < ram_cons
+                # calculate the size of the ram constraint
+                ram_cons = self.ramsize * u.deg  # type: ignore
+                if not self.isat:
+                    ram_cons += self.ramextra * u.deg  # type: ignore
+                # return the constraint
+                self._inramcons = self.ramang < ram_cons
+            return self._inramcons
         return None
 
     @property
@@ -94,51 +99,60 @@ class VisibilityBase(ACROSSAPIBase):
         """Determine if a source is in pole constraint"""
         # Calculate the size of the pole constraint
         if self.ephem.velocity is not False and self.ephem.polevec is not None:
-            pole_cons = (
-                self.ephem.earthsize[self.ephstart : self.ephstop]
-                + self.earthoccult
-                - 90
-            ) * u.deg  # type: ignore
-            if not self.isat:
-                pole_cons += self.earthextra * u.deg
+            if not hasattr(self, "_inpolecons"):
+                pole_cons = (
+                    self.ephem.earthsize[self.ephstart : self.ephstop]
+                    + self.earthoccult
+                    - 90
+                ) * u.deg  # type: ignore
+                if not self.isat:
+                    pole_cons += self.earthextra * u.deg
 
-            # Calculate the angular distance from the North and South poles
-            north_dist = self.ephem.pole[self.ephstart : self.ephstop].separation(
-                self.skycoord
-            )
-
-            south_dist = SkyCoord(
-                CartesianRepresentation(
-                    -self.ephem.polevec[self.ephstart : self.ephstop].T
+                # Calculate the angular distance from the North and South poles
+                north_dist = self.ephem.pole[self.ephstart : self.ephstop].separation(
+                    self.skycoord
                 )
-            ).separation(self.skycoord)
 
-            # Create an array of pole constraints
-            inpolecons = np.logical_or(south_dist < pole_cons, north_dist < pole_cons)
-            return inpolecons
+                south_dist = SkyCoord(
+                    CartesianRepresentation(
+                        -self.ephem.polevec[self.ephstart : self.ephstop].T
+                    )
+                ).separation(self.skycoord)
+
+                # Create an array of pole constraints
+                self._inpolecons = np.logical_or(
+                    south_dist < pole_cons, north_dist < pole_cons
+                )
+            return self._inpolecons
         return None
 
     @property
     def insuncons(self):
         """Calculate Sun constraint"""
-        sunang = self.ephem.sun[self.ephstart : self.ephstop].separation(self.skycoord)
+        if not hasattr(self, "_insuncons"):
+            sunang = self.ephem.sun[self.ephstart : self.ephstop].separation(
+                self.skycoord
+            )
 
-        sun_cons = self.sunoccult * u.deg  # type: ignore
-        if not self.isat:
-            sun_cons += self.sunextra * u.deg  # type: ignore
-        return sunang < sun_cons
+            sun_cons = self.sunoccult * u.deg  # type: ignore
+            if not self.isat:
+                sun_cons += self.sunextra * u.deg  # type: ignore
+            self._insuncons = sunang < sun_cons
+        return self._insuncons
 
     @property
     def inmooncons(self):
         """Calculate Moon constraint"""
-        moonang = self.ephem.moon[self.ephstart : self.ephstop].separation(
-            self.skycoord
-        )
+        if not hasattr(self, "_inmooncons"):
+            moonang = self.ephem.moon[self.ephstart : self.ephstop].separation(
+                self.skycoord
+            )
 
-        moon_cons = self.moonoccult * u.deg  # type: ignore
-        if not self.isat:
-            moon_cons += self.moonextra * u.deg  # type: ignore
-        return moonang < moon_cons
+            moon_cons = self.moonoccult * u.deg  # type: ignore
+            if not self.isat:
+                moon_cons += self.moonextra * u.deg  # type: ignore
+            self._inmooncons = moonang < moon_cons
+        return self._inmooncons
 
     @property
     def skycoord(self):
@@ -160,7 +174,9 @@ class VisibilityBase(ACROSSAPIBase):
     @property
     def saa_windows(self):
         """Calculate SAA windows"""
-        return self.make_windows([not s for s in self.insaacons])
+        if not hasattr(self, "_saa_windows"):
+            self._saa_windows = self.make_windows([not s for s in self.insaacons])
+        return self._saa_windows
 
     def insaa(self, dttime):
         """For a given datetime, are we in the SAA as calculated by saa_windows?"""
