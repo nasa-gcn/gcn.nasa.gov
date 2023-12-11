@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Optional
 
 from shapely import Point, Polygon  # type: ignore
@@ -7,6 +7,7 @@ from ..across.jobs import check_cache, register_job
 from .common import ACROSSAPIBase
 from .ephem import EphemBase
 from .schema import JobInfo, SAAEntry, SAAGetSchema, SAASchema
+from .window import MakeWindowBase
 
 
 class SAAPolygonBase:
@@ -45,7 +46,7 @@ class SAAPolygonBase:
         return self.saapoly.contains(Point(lat, lon))
 
 
-class SAABase(ACROSSAPIBase):
+class SAABase(ACROSSAPIBase, MakeWindowBase):
     """
     Base class for SAA calculations.
 
@@ -74,7 +75,7 @@ class SAABase(ACROSSAPIBase):
     ephem: EphemBase
     status: JobInfo
     stepsize: int
-    _insaa: Optional[list]
+    _insaacons: Optional[list]
     entries: Optional[list]  # type: ignore
 
     @check_cache
@@ -92,46 +93,29 @@ class SAABase(ACROSSAPIBase):
             return False
 
         # Calculate SAA windows
-        self.entries = self.make_windows([not s for s in self.insaacons])
+        self.entries = self.make_windows(
+            [not s for s in self.insaacons], wintype=SAAEntry
+        )
 
         return True
 
-    def make_windows(self, inconstraint: list, wintype=SAAEntry) -> list:
+    def insaawindow(self, dttime):
         """
-        Record VisWindows from inconstraint array
+        Check if the given datetime falls within any of the SAA windows in list.
 
-        Parameters
-        ----------
-        inconstraint : list
-            List of booleans indicating if the spacecraft is in the SAA
-        wintype : VisWindow
-            Type of window to create (default: VisWindow)
+        Arguments
+        ---------
+        dttime : datetime
+            The datetime to check.
 
         Returns
         -------
-        list
-            List of VisWindow objects
+        bool
+            True if the datetime falls within any SAA window, False otherwise.
         """
-        windows = []
-        inocc = True
-        istart = self.ephem.ephindex(self.begin)
-        istop = self.ephem.ephindex(self.end) + 1
-        for i in range(istart, istop):
-            dttime = self.ephem.timestamp[i]
-            if inconstraint[i] is False:
-                lastgood = dttime
-            if inocc is True and not inconstraint[i]:
-                inocc = False
-                intime = dttime
-            elif inocc is False and inconstraint[i]:
-                inocc = True
-                if intime != dttime - timedelta(seconds=self.ephem.stepsize):  # type: ignore
-                    windows.append(wintype(begin=intime, end=lastgood))  # type: ignore
-        if not inocc:
-            win = wintype(begin=intime, end=lastgood)  # type: ignore
-            if win.length > 0:
-                windows.append(win)
-        return windows
+        return True in [
+            True for win in self.entries if dttime >= win.begin and dttime <= win.end
+        ]
 
     @property
     def insaacons(self) -> list:
@@ -144,26 +128,15 @@ class SAABase(ACROSSAPIBase):
             List of booleans indicating if the spacecraft is in the SAA
 
         """
-        if self._insaa is None:
+        if self._insaacons is None:
             if self.entries is None:
-                self._insaa = [
+                self._insaacons = [
                     self.saa.insaa(self.ephem.longitude[i], self.ephem.latitude[i])
                     for i in range(len(self.ephem))
                 ]
             else:
-                # Calculate insaacons array if windows already exist
-                begin = self.begin
-                end = self.end
-                self._insaa = []
-                for i in range(0, int((end - begin).total_seconds()), self.stepsize):
-                    dt = begin + timedelta(seconds=i * self.stepsize)
-                    inwin = [
-                        True
-                        for win in self.entries
-                        if dt >= win.begin and dt <= win.end
-                    ]
-                    if True in inwin:
-                        self._insaa.append(1)
-                    else:
-                        self._insaa.append(0)
-        return self._insaa
+                ephstart = self.ephem.ephindex(self.begin)
+                ephstop = self.ephem.ephindex(self.end) + 1
+                times = self.ephem.timestamp[ephstart:ephstop]
+                self._insaacons = [self.insaawindow(t) for t in times]
+        return self._insaacons
