@@ -11,10 +11,11 @@ from ..functions import round_time
 from .common import ACROSSAPIBase
 from .ephem import EphemBase
 from .saa import SAABase
-from .schema import JobInfo, VisibilityGetSchema, VisibilitySchema, VisWindow
+from .schema import JobInfo, VisibilityGetSchema, VisibilitySchema
+from .window import MakeWindowBase
 
 
-class VisibilityBase(ACROSSAPIBase):
+class VisibilityBase(ACROSSAPIBase, MakeWindowBase):
     """Calculate visibility of a given object."""
 
     _schema = VisibilitySchema
@@ -241,14 +242,15 @@ class VisibilityBase(ACROSSAPIBase):
             self.inconstraint += self.inramcons
 
         # Calculate good windows from combined constraints
-        self.entries = self.make_windows([not i for i in self.inconstraint])
+        self.entries = self.make_windows(self.inconstraint)
         if len(self.entries) == 0:
             self.status.warning("No visibility for target in given time period.")
 
     def constraint(self, index: int) -> str:
         """Tell you what kind of constraints are in place at a given time index"""
         # Check if index is out of bounds
-        if index < 0 or index >= len(self.timestamp):
+        if self.timestamp[index] <= self.begin or self.timestamp[index] >= self.end:
+            print("constraint:", self.timestamp[index], self.begin, self.end)
             return "Window"
         # Return what constraint is causing the window to open/close
         if self.inconstraint[index]:
@@ -264,31 +266,6 @@ class VisibilityBase(ACROSSAPIBase):
                 return "Unknown"
         else:
             return "None"
-
-    # Make windows from a boolean array and put into VisWindow objects
-    def make_windows(self, boolarray):
-        """Make windows from a boolean array and put into VisWindow objects"""
-        # Find the indices where the boolean array changes
-        indices = np.where(np.diff(boolarray))[0] + 1
-        # If the boolean array starts with True, add 0 to the beginning
-        if boolarray[0]:
-            indices = np.insert(indices, 0, 0)
-        # If the boolean array ends with True, add the last index to the end
-        if boolarray[-1]:
-            indices = np.append(indices, len(boolarray))
-        # Reshape the indices into pairs
-        indices = indices.reshape((len(indices) // 2, 2))
-        # Create a list of VisWindow objects
-        windows = [
-            VisWindow(
-                begin=self.timestamp[win[0]],
-                end=self.timestamp[win[1] - 1],
-                initial=self.constraint(win[0] - 1),
-                final=self.constraint(win[1] + 1),
-            )
-            for win in indices
-        ]
-        return windows
 
     @property
     def insaacons(self) -> list:

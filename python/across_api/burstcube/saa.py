@@ -88,7 +88,7 @@ class BurstCubeSAA(SAABase):
     ):
         # Attributes
         self.status: JobInfo = JobInfo()
-        self._insaa: Optional[list] = None
+        self._insaacons: Optional[list] = None
         self.entries = None
 
         # Parameters
