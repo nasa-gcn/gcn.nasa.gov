@@ -137,6 +137,9 @@ async def burstcube_fov_check(
     return fov.schema
 
 
+# Start of BurstCube API Endpoints
+
+
 @app.get("/BurstCube/SAA")
 async def burstcube_saa(
     daterange: DateRangeDep,
@@ -167,7 +170,41 @@ async def burstcube_too_submit(
     ] = b"",
 ) -> BurstCubeTOOSchema:
     """
-    Resolve the name of an astronomical object to its coordinates.
+    Submits a BurstCube Target of Opportunity (TOO) request.
+
+    Parameters
+    ----------
+    user : LoginDep
+        The user's login credentials.
+    ra_dec : OptionalRaDecDep
+        The right ascension and declination of the target.
+    error : ErrorRadiusDep
+        The error radius of the target position.
+    trigger_time : TriggerTimeDep
+        The trigger time of the event.
+    trigger_mission : TriggerMissionDep
+        The mission associated with the trigger.
+    trigger_instrument : TriggerInstrumentDep
+        The instrument associated with the trigger.
+    trigger_id : TriggerIdDep
+        The ID of the trigger.
+    classification : ClassificationDep
+        The classification of the event.
+    justification : JustificationDep
+        The justification for the TOO request.
+    date_range : OptionalDateRangeDep
+        The date range for the TOO request.
+    exposure : ExposureDep
+        The exposure time for the observation.
+    offset : OffsetDep
+        The offset from the target position.
+    healpix_file : Annotated[bytes, File], optional
+        The HEALPix file describing the localization.
+
+    Returns
+    -------
+    BurstCubeTOOSchema
+        The schema of the submitted TOO request.
     """
     # Construct the TOO object.
     too = BurstCubeTOO(
@@ -205,6 +242,22 @@ async def burstcube_too_update(
 ) -> BurstCubeTOOSchema:
     """
     Update a BurstCube TOO object with the given ID number.
+
+    Parameters
+    ----------
+
+    user : LoginDep
+        The user object containing the API key.
+    id : IdDep
+        The ID number of the BurstCube TOO object to update.
+    data : BurstCubeTOOPutSchema
+        The updated data for the BurstCube TOO object.
+
+    Returns
+    -------
+    BurstCubeTOOSchema
+        The updated BurstCube TOO object.
+
     """
     too = BurstCubeTOO(api_key=user["api_key"], **data.model_dump())
     too.post()
@@ -218,6 +271,18 @@ async def burstcube_too(
 ) -> BurstCubeTOOSchema:
     """
     Retrieve a BurstCube Target of Opportunity (TOO) by ID.
+
+    Parameters
+    ----------
+    user : LoginDep
+        The user's login details.
+    id : IdDep
+        The ID of the Target of Opportunity.
+
+    Returns
+    -------
+    BurstCubeTOOSchema
+        The schema representing the retrieved Target of Opportunity.
     """
     too = BurstCubeTOO(username=user["username"], api_key=user["api_key"], id=id)
     too.get()
@@ -231,6 +296,18 @@ async def burstcube_delete_too(
 ) -> BurstCubeTOOSchema:
     """
     Delete a BurstCube Target of Opportunity (TOO) with the given ID.
+
+    Parameters
+    ----------
+    user : LoginDep
+        The user information containing the username and API key.
+    id : IdDep
+        The ID of the BurstCube Target of Opportunity (TOO) to be deleted.
+
+    Returns
+    -------
+    BurstCubeTOOSchema
+        The schema of the deleted BurstCube Target of Opportunity (TOO).
     """
     too = BurstCubeTOO(username=user["username"], api_key=user["api_key"], id=id)
     too.delete()
@@ -250,6 +327,30 @@ async def burstcube_too_requests(
 ) -> BurstCubeTOORequestsSchema:
     """
     Endpoint to retrieve BurstCube TOO requests.
+
+    Parameters
+    ----------
+    user : LoginDep
+        User login information.
+    daterange : OptionalDateRangeDep
+        Optional date range for filtering the requests.
+    ra_dec : OptionalRaDecDep
+        Optional RA and Dec coordinates for filtering the requests.
+    trigger_time : OptionalTriggerTimeDep
+        Optional trigger time for filtering the requests.
+    trigger_instrument : OptionalTriggerInstrumentDep
+        Optional trigger instrument for filtering the requests.
+    trigger_mission : OptionalTriggerMissionDep
+        Optional trigger mission for filtering the requests.
+    trigger_id : OptionalTriggerIdDep
+        Optional trigger ID for filtering the requests.
+    limit : LimitDep, optional
+        Optional limit for the number of requests to retrieve.
+
+    Returns
+    -------
+    BurstCubeTOORequestsSchema
+        Schema representing the retrieved BurstCube TOO requests.
     """
     return BurstCubeTOORequests(
         username=user["username"],
@@ -273,6 +374,19 @@ async def burstcube_visibility(
 ) -> BurstCubeVisibilitySchema:
     """
     Returns the visibility of an astronomical object to BurstCube for a given date range and RA/Dec coordinates.
+
+    Parameters
+    ----------
+    daterange : DateRangeDep
+        The date range for which the visibility is calculated.
+    ra_dec : RaDecDep
+        The RA/Dec coordinates of the astronomical object.
+
+    Returns
+    -------
+    BurstCubeVisibilitySchema
+        The visibility of the astronomical object to BurstCube.
+
     """
     return BurstCubeVisibility(
         begin=daterange["begin"],
