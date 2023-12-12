@@ -10,23 +10,23 @@ from .schema import HelloSchema, ResolveSchema
 
 # Depends functions for FastAPI calls.
 async def name(
-    sourcename: Annotated[
+    name: Annotated[
         str, Query(description="Name of astronomical object to convert to coordinates.")
     ]
 ) -> str:
-    return sourcename
+    return name
 
 
 async def your_name(
-    your_name: Annotated[
+    name: Annotated[
         Optional[str],
         Query(
-            description="Your name of person to greet.",
+            description="Name of person to greet.",
             title="Your Name",
         ),
     ] = None
 ) -> Optional[str]:
-    return your_name
+    return name
 
 
 SourceNameDep = Annotated[str, Depends(name)]
