@@ -3,7 +3,7 @@ from typing import List, Optional
 
 import requests
 
-from ..api_db import dydbtable, engine
+from ..api_db import dydbtable
 from .models import TLEEntryModelBase
 from .schema import TLEEntry
 
@@ -59,7 +59,6 @@ class TLEBase:
 
     def __init__(self):
         self.tlemodel = TLEEntryModelBase
-        self.engine = engine
 
     def read_tle_web(self) -> bool:
         """Read TLE from dedicated weblink"""
