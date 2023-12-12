@@ -2,9 +2,10 @@ import hashlib
 from datetime import datetime
 from typing import Optional
 
+import arc  # type: ignore
 from boto3.dynamodb.conditions import Key  # type: ignore
 
-from ..api_db import dydbtable, s3
+from ..api_db import s3
 from ..base.models import DynamoDBBase  # type: ignore
 from ..base.schema import BaseSchema
 
@@ -78,15 +79,15 @@ class JobModel(BaseSchema, DynamoDBBase):
             A dictionary containing information about the result of the database write operation.
         """
         # DynamoDB table
-        table = dydbtable(self.__tablename__)
+        table = arc.tables.table(self.__tablename__)
 
         # Create a unique key based on params, username, reqtype, and apiversion.
         idstr = str(self.params) + self.username + self.reqtype + self.apiversion
         self.jobnumber = hashlib.md5(idstr.encode()).hexdigest()
 
         # If result is too large, write to S3 bucket and put URI into result
-        if len(self.result) > 400000 and s3 is not None:
-            bucket = s3.Bucket("across-api-results")
+        if len(self.result) > 400000:
+            bucket = s3.Bucket("acrossapi-jobcache")
             bucket.put_object(
                 Key=self.jobnumber,
                 Body=self.result,
@@ -94,7 +95,7 @@ class JobModel(BaseSchema, DynamoDBBase):
                 ACL="public-read",
             )
             # Use S3 URI as result, using s3: format
-            self.result = f"s3://across-api-results/{self.jobnumber}"
+            self.result = f"s3://acrossapi-jobcache/{self.jobnumber}"
 
         # Write the job to the database
         result = table.put_item(
@@ -157,7 +158,7 @@ class JobModel(BaseSchema, DynamoDBBase):
             The job object if found, None otherwise.
         """
         # Get the DynamoDB table
-        table = dydbtable(cls.__tablename__)
+        table = arc.tables.table(cls.__tablename__)
         # Get the job from the database
         response = table.query(KeyConditionExpression=Key("jobnumber").eq(jobnumber))
         items = response.get("Items")
@@ -166,8 +167,8 @@ class JobModel(BaseSchema, DynamoDBBase):
         item = items[0]
 
         # If result is an S3 URI, load from S3
-        if item["result"].startswith("s3://"):
-            bucket = s3.Bucket("across-api-results")
+        if item["result"].startswith("s3://acrossapi-jobcache"):
+            bucket = s3.Bucket("acrossapi-jobcache")
             obj = bucket.Object(jobnumber)
             item["result"] = obj.get()["Body"].read().decode("utf-8")
 
