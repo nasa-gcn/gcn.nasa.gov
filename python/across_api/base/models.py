@@ -27,25 +27,3 @@ class DynamoDBBase:
     def delete_entry(cls, value: Any, key: str) -> bool:
         table = dydbtable(cls.__tablename__)
         return table.delete_item(Key={key: value})
-
-
-@dataclass
-class TLEEntryModelBase(DynamoDBBase):
-    """Base for TLEEntry"""
-
-    __tablename__ = ""
-    epoch: str
-    tle1: str
-    tle2: str
-
-    @classmethod
-    def find_keys_between_epochs(cls, start_epoch, end_epoch):
-        table = dydbtable(cls.__tablename__)
-        # FIXME: Replace scan with a query here?
-        response = table.scan(
-            FilterExpression=Key("epoch").between(str(start_epoch), str(end_epoch))
-        )
-        items = response["Items"]
-        tles = [cls(**item) for item in items]
-        tles.sort(key=lambda x: x.epoch)
-        return tles
