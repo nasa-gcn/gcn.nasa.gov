@@ -49,10 +49,18 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
 
 
 def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
-    """Given a object name, return the Simbad coordinates in degrees.
+    """
+    Given a object name, return the Simbad coordinates in degrees.
 
-    Returns:
-        tuple: RA/Dec in decimal degrees (float)
+    Parameters
+    ----------
+    name : str
+        Name of object to search for
+
+    Returns
+    -------
+    tuple
+        RA/Dec in decimal degrees (float or None)
     """
     url = "http://simbad.u-strasbg.fr/simbad/sim-script?script="
     script = 'format object "%IDLIST(1) | %COO(d;A D)\n' + "query id %s" % name
@@ -78,6 +86,7 @@ class Resolve(ACROSSAPIBase):
     """
     Resolve class for resolving astronomical object names.
 
+<<<<<<< HEAD
     Parameters
     ----------
     name
@@ -97,6 +106,29 @@ class Resolve(ACROSSAPIBase):
     Methods
     -------
     get():
+=======
+    Parameters:
+    -----------
+    name : str
+        The name of the astronomical object to resolve.
+
+    Attributes:
+    -----------
+    status : JobInfo
+        The status of the job.
+    ra : Optional[float]
+        The right ascension of the resolved object.
+    dec : Optional[float]
+        The declination of the resolved object.
+    name : str
+        The name of the astronomical object.
+    resolver : Optional[str]
+        The resolver used for resolving the object.
+
+    Methods:
+    --------
+    get() -> bool:
+>>>>>>> 3d1b8fc (Minor updates to docstrings etc.)
         Retrieves the resolved object information.
     """
 
@@ -125,7 +157,17 @@ class Resolve(ACROSSAPIBase):
 
         Returns
         -------
+<<<<<<< HEAD
             True if the name is successfully resolved, False otherwise.
+=======
+        bool
+            True if the name is successfully resolved, False otherwise.
+
+        Raises
+        ------
+        HTTPException
+            If the name couldn't be resolved.
+>>>>>>> 3d1b8fc (Minor updates to docstrings etc.)
         """
         # Make sure the required parameters are given in the correct format
         if not self.validate_get():
@@ -139,16 +181,32 @@ class Resolve(ACROSSAPIBase):
                 self.ra, self.dec = ra, dec
                 self.resolver = "ANTARES"
                 return True
+<<<<<<< HEAD
 
         # Check using the CDS resolver
         try:
             skycoord = SkyCoord.from_name(self.name)
             self.ra, self.dec = skycoord.ra.deg, skycoord.dec.deg
             self.resolver = "CDS"
+=======
+        # Check against Simbad
+        ra, dec = simbad_radec(self.name)
+        if ra is not None:
+            self.ra, self.dec = ra, dec
+            self.resolver = "Simbad"
+>>>>>>> 3d1b8fc (Minor updates to docstrings etc.)
             return True
         except NameResolveError:
             pass
 
+<<<<<<< HEAD
         # If no resolution occurred, report None for resolver
         self.resolver = None
         return False
+=======
+        # Send a warning if name couldn't be resolved
+        raise HTTPException(status_code=404, detail="Could not resolve name.")
+
+
+ACROSSAPIResolve = Resolve
+>>>>>>> 3d1b8fc (Minor updates to docstrings etc.)

@@ -10,7 +10,29 @@ from .models import UserModel
 def check_api_key(anon: bool = True, userlevel: int = 0, requser: list = []):
     """Decorator to check api_key is valid. Also can disable use
     of anonymous user, and require a minimum userlevel, or
-    require a specific username."""
+    require a specific username.
+
+    Arguments
+    ---------
+
+    anon : bool, optional
+        Flag to allow or disallow anonymous usage. Defaults to True.
+    userlevel : int, optional
+        Minimum user level required. Defaults to 0.
+    requser : list, optional
+        List of usernames allowed to access the API call. Defaults to [].
+
+    Returns
+    -------
+    function
+        Decorated function.
+
+    Raises
+    ------
+    HTTPException
+        If the API call is not allowed for the user, or if the API key is not
+        valid, or if the user level is insufficient.
+    """
 
     def Inner(func):
         def wrapper(*args, **kwargs):
@@ -63,16 +85,44 @@ def check_api_key(anon: bool = True, userlevel: int = 0, requser: list = []):
 
 
 class APIUserInfo(ACROSSAPIBase):
-    """Class for holding basic information about a API User: username and api_key"""
-
-    """_summary_
     """
+    Class for holding basic information about an API User: username and
+    api_key. Exposes the usual GET, POST, PUT, and DELETE methods for
+    adding, updating, and deleting users.
+
+    Parameters
+    ----------
+    username : str, optional
+        The username of the API user, by default "anonymous"
+
+    Attributes
+    ----------
+    username : str
+        The username of the API user.
+    api_key : str
+        The API key associated with the user.
+    userlevel : int
+        The user level. Defaults to 1.
+    status : JobInfo
+        The status of the job.
+
+    Methods
+    -------
+    get
+        Get information for a user, including userlevel and api_key.
+    post
+        Add a user to the usertable. Creates a random api key for the user
+        if one isn't given.
+    put
+        Update a user in the usertable. Create a random api key for the user.
+    delete
+        Delete a user from the usertable.
+    """
+
     username: str
     api_key: str
-    id: int
     userlevel: int
     status: JobInfo
-    add: bool
 
     def __init__(self, username="anonymous"):
         ACROSSAPIBase.__init__(self)
@@ -82,14 +132,15 @@ class APIUserInfo(ACROSSAPIBase):
         self.status = JobInfo()
 
     def get(self) -> bool:
-        """Perform a query on supplied user name.
+        """
+        Perform a query on the supplied user name.
 
         Returns
         -------
         bool
-            Did it work?
+            True if the query was successful, False otherwise.
         """
-        # If were anonymous, then just return api_key as 'anonymous'
+        # If we're anonymous, then just return api_key as 'anonymous'
         if self.username == "anonymous":
             self.api_key = "anonymous"
             return True
@@ -104,38 +155,72 @@ class APIUserInfo(ACROSSAPIBase):
         return False
 
     def post(self):
-        """Add a user to the usertable. Create a random api key for the user."""
-        # Check if there's already a user of this name
+        """
+        Add a user to the usertable. Create a random api key for the user.
+
+        Returns
+        -------
+        bool
+            True if the user is successfully added, False otherwise.
+
+        Raises
+        ------
+        HTTPException
+            If the username already exists in the user table.
+        """
+        # Check if there's already a user with this name
         if UserModel.get_by_key(value=self.username, key="username") is not None:
             raise HTTPException(status_code=400, detail="Username already exists.")
 
         # Create API_KEY
         self.api_key = token_urlsafe(30)
-        newuser = UserModel(
-            username=self.username, api_key=self.api_key, userlevel=0, id=0
-        )
+        newuser = UserModel(username=self.username, api_key=self.api_key, userlevel=0)
         newuser.save()
         self.api_key = newuser.api_key
         return True
 
     def put(self):
-        """Update a user in the usertable. Create a random api key for the user."""
-        # Check if there's already a user of this name
+        """
+        Update a user in the usertable. Create a random api key for the user.
+
+        Returns
+        -------
+        bool
+            True if the user was successfully updated.
+
+        Raises
+        ------
+        HTTPException
+            If the username does not exist.
+        """
+        # Check if there's already a user with this name
         user = UserModel.get_by_key(value=self.username, key="username")
         if user is None:
             raise HTTPException(status_code=404, detail="Username does not exist.")
 
-        # Create API_KEY
-        newuser = UserModel(
-            username=self.username, api_key=self.api_key, userlevel=self.userlevel
-        )
-        newuser.save()
-        self.api_key = newuser.api_key
-        return True
+            # Create API_KEY
+            newuser = UserModel(
+                username=self.username, api_key=self.api_key, userlevel=self.userlevel
+            )
+            newuser.save()
+            self.api_key = newuser.api_key
+            return True
 
     def delete(self):
-        """Delete a user in the usertable."""
-        # Check if there's already a user of this name
+        """
+        Delete a user from the usertable.
+
+        Returns
+        -------
+        bool
+            True if the user is successfully deleted.
+
+        Raises
+        ------
+        HTTPException
+            If the username does not exist.
+        """
+        # Check if there's already a user with this name
         user = UserModel.get_by_key(value=self.username, key="username")
         if user is None:
             raise HTTPException(status_code=404, detail="Username does not exist.")
@@ -146,7 +231,24 @@ class APIUserInfo(ACROSSAPIBase):
 
     @classmethod
     def get_api_key(cls, username: str):
-        """Get the API key for a user."""
+        """
+        Get the API key for a user.
+
+        Parameters
+        ----------
+        username : str
+            The username of the user.
+
+        Returns
+        -------
+        str
+            The API key of the user.
+
+        Raises
+        ------
+        HTTPException
+            If the username does not exist.
+        """
         user = UserModel.get_by_key(value=username, key="username")
         if user is None:
             raise HTTPException(status_code=404, detail="Username does not exist.")
