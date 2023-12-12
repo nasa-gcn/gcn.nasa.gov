@@ -1,27 +1,9 @@
 from dataclasses import dataclass
-from datetime import datetime
 from typing import Any
 
 from boto3.dynamodb.conditions import Key  # type: ignore
-from sqlalchemy import DateTime, Float, Integer, String
-from sqlalchemy.orm import Mapped, mapped_column
 
 from ..api_db import dydbtable
-
-
-class PlanEntryModelBase:
-    """Base for PlanEntry."""
-
-    begin: Mapped[datetime] = mapped_column(DateTime(timezone=False), primary_key=True)
-    end: Mapped[datetime] = mapped_column(
-        DateTime(
-            timezone=False,
-        )
-    )
-    targname: Mapped[str] = mapped_column(String(30))
-    ra: Mapped[float] = mapped_column(Float())
-    dec: Mapped[float] = mapped_column(Float())
-    exposure: Mapped[int] = mapped_column(Integer())
 
 
 class DynamoDBBase:
