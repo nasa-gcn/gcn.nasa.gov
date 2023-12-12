@@ -2,9 +2,9 @@ import hashlib
 from decimal import Decimal
 from typing import Optional
 
+import arc  # type: ignore
 from pydantic import computed_field
 
-from ..api_db import dydbtable, dynamodb
 from ..base.models import DynamoDBBase, TLEEntryModelBase
 from ..base.schema import BaseSchema, OptionalCoordSchema
 
@@ -66,23 +66,8 @@ class BurstCubeTOOModel(OptionalCoordSchema, DynamoDBBase):
         ).hexdigest()
 
     @classmethod
-    def create_table(cls):
-        # Create this DynamoDB table
-
-        dynamodb.create_table(
-            AttributeDefinitions=[
-                {"AttributeName": "id", "AttributeType": "S"},
-            ],
-            TableName=cls.__tablename__,
-            KeySchema=[
-                {"AttributeName": "id", "KeyType": "HASH"},
-            ],
-            ProvisionedThroughput={"ReadCapacityUnits": 5, "WriteCapacityUnits": 5},
-        )
-
-    @classmethod
     def delete_table(cls):
-        dydbtable(cls.__tablename__).delete()
+        arc.tables.table(cls.__tablename__).delete()
 
 
 class BurstCubeTLEEntryModel(BaseSchema, TLEEntryModelBase):
