@@ -64,7 +64,6 @@ class TLEBase:
         """Read TLE from dedicated weblink"""
 
         # Download TLE from internet
-        print(f"Downloading latest TLE for {self.tle_name}")
         try:
             tlefile = requests.get(self.tle_url).text.splitlines()
         except Exception:
@@ -131,7 +130,6 @@ class TLEBase:
         if req.status_code == 200:
             urltles = req.text
         else:
-            print(f"ERROR: Celestrack returned {req.status_code}.")
             return False
 
         # Read in Celestrak combined TLE and fetch the one we want

@@ -119,8 +119,6 @@ def check_cache(func: Callable) -> Callable:
         job_params = api_call_params(func, instance)
 
         # Find recent instances of jobs with the same type
-        print(f"Checking for cached {reqtype} {instance.api_name}")
-
         job = JobModel.get_by_username_param_reqtype_apiversion(
             username=instance.username,
             params=job_params,
@@ -135,10 +133,8 @@ def check_cache(func: Callable) -> Callable:
                 instance.loads(job.result)
                 instance.status.created = job.created
                 instance.status.expires = job.expires
-                print(f"Used cached job: {job.jobnumber} {job.reqtype}")
                 return True
 
-        print("No cached job found.")
         result = func(*args, **kwargs)
         return result
 

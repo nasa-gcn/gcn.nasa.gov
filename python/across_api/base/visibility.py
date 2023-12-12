@@ -250,7 +250,6 @@ class VisibilityBase(ACROSSAPIBase, MakeWindowBase):
         """Tell you what kind of constraints are in place at a given time index"""
         # Check if index is out of bounds
         if self.timestamp[index] <= self.begin or self.timestamp[index] >= self.end:
-            print("constraint:", self.timestamp[index], self.begin, self.end)
             return "Window"
         # Return what constraint is causing the window to open/close
         if self.inconstraint[index]:
