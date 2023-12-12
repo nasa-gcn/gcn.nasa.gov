@@ -442,65 +442,6 @@ class PointingGetSchemaBase(DateRangeSchema):
     stepsize: int = 60
 
 
-# Plan Schema
-class PlanEntryBase(DateRangeSchema, CoordSchema):
-    """
-    Represents a base class for plan entries.
-
-    Parameters
-    ----------
-    DateRangeSchema : class
-        The class representing the date range of the plan entry.
-    CoordSchema : class
-        The class representing the coordinates of the plan entry.
-
-    Attributes
-    ----------
-    targname: str
-        The target name.
-    exposure: int
-        The exposure length in seconds.
-    """
-
-    targname: str
-    exposure: int
-
-
-class PlanGetSchemaBase(OptionalDateRangeSchema, OptionalCoordSchema):
-    """
-    Schema for retrieving plan information.
-
-    Parameters
-    ----------
-    obsid : Union[str, int, None], optional
-        The observation ID. Defaults to None.
-    radius : Optional[float], optional
-        The radius for searching plans. Defaults to None.
-    """
-
-    obsid: Union[str, int, None] = None
-    radius: Optional[float] = None
-
-
-class PlanSchemaBase(BaseSchema):
-    """
-    Base schema for a plan.
-
-    Parameters
-    ----------
-    entries : List[PlanEntryBase]
-        List of plan entries.
-    status : Optional[JobInfo], optional
-        Status of the plan.
-    """
-
-    entries: List[PlanEntryBase]
-    status: Optional[JobInfo] = None
-
-
-# Ephem Schema
-
-
 class EphemSchema(BaseSchema):
     """
     Schema for ephemeral data.
