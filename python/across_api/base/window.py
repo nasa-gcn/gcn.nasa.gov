@@ -52,14 +52,14 @@ class MakeWindowBase:
                 windows.append(
                     wintype(
                         begin=self.ephem.timestamp[inindex],
-                        end=self.ephem.timestamp[i],
+                        end=self.ephem.timestamp[i - 1],
                         initial=self.constraint(inindex - 1),
                         final=self.constraint(i),
                     )
                 )  # type: ignore
 
         if not inocc:
-            win = wintype(begin=self.ephem.timestamp[inindex], end=self.ephem.timestamp[i], initial=self.constraint(inindex), final=self.constraint(i))  # type: ignore
+            win = wintype(begin=self.ephem.timestamp[inindex], end=self.ephem.timestamp[i], initial=self.constraint(inindex - 1), final=self.constraint(i))  # type: ignore
             if (win.end - win.begin).total_seconds() > 0:
                 windows.append(win)
         return windows
