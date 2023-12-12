@@ -96,6 +96,19 @@ class OptionalCoordSchema(BaseSchema):
         return data
 
 
+class OptionalPositionSchema(OptionalCoordSchema):
+    """
+    Schema for representing position information with an error radius.
+
+    Attributes
+    ----------
+    error : Optional[float]
+        The error associated with the position. Defaults to None.
+    """
+
+    error: Optional[float] = None
+
+
 class DateRangeSchema(BaseSchema):
     """Schema that defines date range
 

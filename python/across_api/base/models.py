@@ -59,6 +59,7 @@ class TLEEntryModelBase(DynamoDBBase):
     @classmethod
     def find_keys_between_epochs(cls, start_epoch, end_epoch):
         table = dydbtable(cls.__tablename__)
+        # FIXME: Replace scan with a query here?
         response = table.scan(
             FilterExpression=Key("epoch").between(str(start_epoch), str(end_epoch))
         )
