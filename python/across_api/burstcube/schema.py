@@ -1,16 +1,17 @@
 from datetime import datetime
 from enum import Enum
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from ..base.schema import (
     BaseSchema,
     DateRangeSchema,
     JobInfo,
     OptionalCoordSchema,
+    OptionalDateRangeSchema,
+    OptionalPositionSchema,
     PointBase,
     PointingGetSchemaBase,
     PointingSchemaBase,
-    PositionSchema,
     UserSchema,
 )
 
@@ -73,13 +74,13 @@ class TOOStatus(str, Enum):
     other = "Other"
 
 
-class BurstCubeTOOCoordSchema(PositionSchema):
+class BurstCubeTOOCoordSchema(OptionalPositionSchema):
     """
     Schema for BurstCube Target of Opportunity (TOO) coordinates.
 
     Inherits
     --------
-    PositionSchema : schema
+    OptionalPositionSchema : schema
         Schema for the position of a target with circular error.
     """
 
@@ -128,7 +129,7 @@ class BurstCubeTOOModelSchema(BurstCubeTOOCoordSchema):
         Additional information about the BurstCubeTOO Request, by default ""
     """
 
-    id: Optional[int] = None
+    id: Union[str, int, None] = None
     username: str
     timestamp: Optional[datetime] = None
     trigger_mission: Optional[str] = None
@@ -147,7 +148,7 @@ class BurstCubeTOOModelSchema(BurstCubeTOOCoordSchema):
     too_info: str = ""
 
 
-class BurstCubeTOOPutSchema(BurstCubeTOOCoordSchema):
+class BurstCubeTOOPutSchema(UserSchema, BurstCubeTOOCoordSchema):
     """Schema to retrieve all information about a BurstCubeTOO Request
 
     Parameters
@@ -187,7 +188,6 @@ class BurstCubeTOOPutSchema(BurstCubeTOOCoordSchema):
     """
 
     id: Optional[int] = None
-    username: str
     timestamp: Optional[datetime] = None
     trigger_mission: Optional[str] = None
     trigger_instrument: Optional[str] = None
@@ -204,7 +204,7 @@ class BurstCubeTOOPutSchema(BurstCubeTOOCoordSchema):
     too_status: TOOStatus = TOOStatus.requested
 
 
-class BurstCubeTOODelSchema(BaseSchema):
+class BurstCubeTOODelSchema(UserSchema):
     """
     Schema for BurstCubeTOO DELETE API call.
 
@@ -214,10 +214,10 @@ class BurstCubeTOODelSchema(BaseSchema):
         The ID of the BurstCubeTOODel object.
     """
 
-    id: int
+    id: str
 
 
-class BurstCubeTOOPostSchema(BurstCubeTOOCoordSchema):
+class BurstCubeTOOPostSchema(UserSchema, BurstCubeTOOCoordSchema):
     """
     Schema to submit a TOO request for BurstCube.
 
@@ -249,7 +249,6 @@ class BurstCubeTOOPostSchema(BurstCubeTOOCoordSchema):
         The offset value, default is -50.
     """
 
-    username: str
     trigger_mission: str
     trigger_instrument: str
     trigger_id: str
@@ -328,7 +327,7 @@ class BurstCubeFOVCheckSchema(BaseSchema):
     status: JobInfo
 
 
-class BurstCubeTOOGetSchema(BaseSchema):
+class BurstCubeTOOGetSchema(UserSchema):
     """
     Schema for BurstCubeTOO GET request.
 
@@ -338,15 +337,23 @@ class BurstCubeTOOGetSchema(BaseSchema):
         The ID of the BurstCube TOO.
     """
 
-    id: int
+    id: str
 
 
-class BurstCubeTOORequestsGetSchema(UserSchema):
+class BurstCubeTOORequestsGetSchema(
+    UserSchema, OptionalPositionSchema, OptionalDateRangeSchema
+):
     """
     Schema for GET requests to retrieve BurstCube Target of Opportunity (TOO) requests.
 
     Parameters:
     -----------
+    ra : Optional[float]
+        The right ascension of the TOO requests.
+    dec : Optional[float]
+        The declination of the TOO requests.
+    radius : Optional[float]
+        The radius around the target coordinates to search for TOO requests.
     begin : Optional[datetime]
         The start time of the TOO requests.
     end : Optional[datetime]
@@ -361,24 +368,13 @@ class BurstCubeTOORequestsGetSchema(UserSchema):
         The ID of the trigger associated with the TOO requests.
     limit : Optional[int]
         The maximum number of TOO requests to retrieve.
-    ra : Optional[float]
-        The right ascension of the TOO requests.
-    dec : Optional[float]
-        The declination of the TOO requests.
-    radius : Optional[float]
-        The radius around the target coordinates to search for TOO requests.
     """
 
-    begin: Optional[datetime] = None
-    end: Optional[datetime] = None
     trigger_time: Optional[datetime] = None
     trigger_mission: Optional[str] = None
     trigger_instrument: Optional[str] = None
     trigger_id: Optional[str] = None
     limit: Optional[int] = None
-    ra: Optional[float] = None
-    dec: Optional[float] = None
-    radius: Optional[float] = None
 
 
 class BurstCubeTOORequestsSchema(BaseSchema):
