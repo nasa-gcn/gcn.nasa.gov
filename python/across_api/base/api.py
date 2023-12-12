@@ -231,7 +231,7 @@ async def earth_occult(
 
 EarthOccultDep = Annotated[bool, Depends(earth_occult)]
 
-IdDep = Annotated[int, Path(description="TOO ID number")]
+IdDep = Annotated[str, Path(description="TOO ID string")]
 
 
 async def trigger_time(
