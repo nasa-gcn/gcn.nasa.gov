@@ -4,13 +4,13 @@ from typing import Optional
 
 import astropy.units as u  # type: ignore
 import numpy as np  # type: ignore
+from astropy.coordinates import SkyCoord  # type: ignore
+from boto3.dynamodb.conditions import Key  # type: ignore
 from fastapi import HTTPException
-from sqlalchemy import between, select
-from sqlalchemy.orm import Session
 
 from ..across.jobs import register_job
 from ..across.user import check_api_key
-from ..api_db import engine, sa_angular_distance
+from ..api_db import dydbtable
 from ..base.common import ACROSSAPIBase
 from ..base.config import set_observatory
 from ..base.schema import JobInfo
@@ -55,7 +55,7 @@ class BurstCubeTOO(ACROSSAPIBase):
     _del_schema = BurstCubeTOODelSchema
     _post_schema = BurstCubeTOOPostSchema
 
-    id: Optional[int]
+    id: Optional[str]
     username: str
     timestamp: Optional[datetime]
     ra: Optional[float]
@@ -79,7 +79,7 @@ class BurstCubeTOO(ACROSSAPIBase):
     too_status: TOOStatus
     too_info: str
 
-    def __init__(self, username: str, api_key: str, id: Optional[int] = None, **kwargs):
+    def __init__(self, username: str, api_key: str, id: Optional[str] = None, **kwargs):
         # Set Optional Parameters to None
         self.begin = None
         self.end = None
@@ -101,6 +101,9 @@ class BurstCubeTOO(ACROSSAPIBase):
         self.username = username
         self.api_key = api_key
         self.id = id
+        # Connect to the DynamoDB table
+        self.table = dydbtable("burstcube_too")
+
         # Parse other keyword arguments
         for k, v in kwargs.items():
             if k in self._schema.model_fields.keys():
@@ -117,22 +120,17 @@ class BurstCubeTOO(ACROSSAPIBase):
         bool
             Did this work? True | False
         """
-        if self.validate_get():
-            with Session(engine) as sess:
-                too = (
-                    sess.query(BurstCubeTOOModel)
-                    .where(BurstCubeTOOModel.id == self.id)
-                    .scalar()
-                )
-                if too is not None:
-                    # Load the BurstCubeTOO parameters into this class
-                    for k, v in BurstCubeTOOModelSchema.model_validate(too):
-                        setattr(self, k, v)
-                    return True
-                else:
-                    raise HTTPException(404, "BurstCubeTOO not found.")
 
-        return False
+        # Fetch BurstCubeTOO from database
+
+        response = self.table.get_item(Key={"id": self.id})
+        if "Item" not in response:
+            raise HTTPException(404, "BurstCubeTOO not found.")
+
+        too = BurstCubeTOOModelSchema.model_validate(response["Item"])
+        for k, v in too:
+            setattr(self, k, v)
+        return True
 
     @check_api_key(anon=False)
     @register_job
@@ -146,19 +144,19 @@ class BurstCubeTOO(ACROSSAPIBase):
             Did this work? True | False
         """
         if self.validate_del():
-            with Session(engine) as sess:
-                too = (
-                    sess.query(BurstCubeTOOModel)
-                    .where(BurstCubeTOOModel.id == self.id)
-                    .scalar()
-                )
-                if too is None:
-                    raise HTTPException(404, "BurstCubeTOO not found.")
-                elif too.username != self.username:
+            username = self.username
+            if self.get():
+                if self.username != username:
                     raise HTTPException(401, "BurstCubeTOO not owned by user.")
+
+                response = self.table.delete_item(Key={"id": self.id})
+                if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
+                    return True
                 else:
-                    sess.delete(too)
-                    sess.commit()
+                    HTTPException(
+                        response["ResponseMetadata"]["HTTPStatusCode"],
+                        "BurstCubeTOO not deleted.",
+                    )
             return True
         return False
 
@@ -171,57 +169,57 @@ class BurstCubeTOO(ACROSSAPIBase):
         bool
             Does a previous BurstCubeTOO match this one? True | False
         """
-        with Session(engine, expire_on_commit=False) as sess:
-            # Fetch previous BurstCubeTOOs
-            previous = (
-                sess.query(BurstCubeTOOModel)
-                .filter_by(trigger_mission=self.trigger_mission)
-                .filter(
-                    BurstCubeTOOModel.trigger_time.between(
-                        self.trigger_time - timedelta(seconds=1),
-                        self.trigger_time + timedelta(seconds=1),
-                    )
+
+        # Fetch previous BurstCubeTOOs
+
+        response = self.table.scan(
+            FilterExpression=Key("epoch").between(
+                str(self.trigger_time - timedelta(seconds=1)),
+                str(self.trigger_time + timedelta(seconds=1)),
+            )
+        )
+
+        if "Items" not in response:
+            # If there's none, we're good
+            return False
+
+        # Check if any of the previous BurstCubeTOOs match this one
+        found = len(response["Items"])
+        deleted = 0
+        for resp in response["Items"]:
+            too = BurstCubeTOOModelSchema.model_validate(resp)
+            # If this BurstCubeTOO gives RA/Dec and the previous didn't then we
+            # should override the previous one
+            if too.ra is None and self.ra is not None:
+                print(f"deleting old BurstCubeTOO {too.id} as RA now given")
+                self.table.delete_item(Key={"id": too.id})
+                deleted += 1
+                continue
+
+            # Check if burst time is more accurate
+            if (
+                too.trigger_time is not None
+                and too.trigger_time.microsecond == 0
+                and self.trigger_time.microsecond != 0
+            ):
+                print(
+                    f"deleting old BurstCubeTOO {too.id} as triggertime more accurate."
                 )
-            ).all()
+                self.table.delete_item(Key={"id": too.id})
+                deleted += 1
+                continue
 
-            found = len(previous)
-            if found == 0:
-                # If there's none, we're good
-                return False
-            else:
-                deleted = 0
-                for too in previous:
-                    # If this BurstCubeTOO gives RA/Dec and the previous didn't then we
-                    # should override the previous one
-                    if too.ra is None and self.ra is not None:
-                        print(f"deleting old BurstCubeTOO {too.id} as RA now given")
-                        sess.delete(too)
-                        deleted += 1
-                        continue
+            # Check if more exposure time requested
+            if too.exposure > self.exposure:
+                print(
+                    f"deleting old BurstCubeTOO {too.id} as triggertime as more exposure time requested."
+                )
+                self.table.delete_item(Key={"id": too.id})
+                deleted += 1
+                continue
 
-                    # Check if burst time is more accurate
-                    if (
-                        too.trigger_time.microsecond == 0
-                        and self.trigger_time.microsecond != 0
-                    ):
-                        print(
-                            f"deleting old BurstCubeTOO {too.id} as triggertime more accurate."
-                        )
-                        sess.delete(too)
-                        deleted += 1
-                        continue
-
-                    # Check if more exposure time requested
-                    if too.exposure > self.exposure:
-                        print(
-                            f"deleting old BurstCubeTOO {too.id} as triggertime as more exposure time requested."
-                        )
-                        sess.delete(too)
-                        deleted += 1
-                        continue
-                sess.commit()
-            if deleted == found:
-                return False
+        if deleted == found:
+            return False
 
         return True
 
@@ -236,32 +234,29 @@ class BurstCubeTOO(ACROSSAPIBase):
         bool
             Did this work? True | False
         """
-        # Insert this BurstCubeTOO
+        # Make sure the PUT request validates
+        if not self.validate_put():
+            return False
+
+        # If this is just a POST (i.e. no ID set), then just POST it
         if self.id is None:
             return self.post()
 
         # If id is given, assume we're modifying an existing BurstCubeTOO.
         # Check if this BurstCubeTOO exists and is of the same username
-        with Session(engine) as sess:
-            stmt = (
-                select(BurstCubeTOOModel)
-                .where(BurstCubeTOOModel.id == self.id)
-                .where(BurstCubeTOOModel.username == self.username)
-            )
-            too = sess.scalar(stmt)
-            if too is None:
-                raise HTTPException(404, "BurstCubeTOO not found.")
 
-            # Update the BurstCubeTOO Model with the set parameters
-            for k, v in (
-                BurstCubeTOOModelSchema.model_validate(self).model_dump().items()
-            ):
-                if v is not None:
-                    setattr(too, k, v)
+        response = self.table.delete_item(Key={"id": self.id})
+        # Check if the TOO exists
+        if "Item" not in response:
+            raise HTTPException(404, "BurstCubeTOO not found.")
 
-            # Update in database
-            sess.merge(too)
-            sess.commit()
+        # Check if the username matches
+        if response["Item"]["username"] != self.username:
+            raise HTTPException(401, "BurstCubeTOO not owned by user.")
+
+        # Write BurstCubeTOO to the database
+        too = BurstCubeTOOModel(**self.schema.model_dump(mode="json"))
+        too.save()
 
         return True
 
@@ -378,21 +373,23 @@ class BurstCubeTOO(ACROSSAPIBase):
         self.too_info = self.too_info + " ".join(self.status.warnings)
 
         # Write BurstCubeTOO to the database
+        self.timestamp = datetime.utcnow()
         too = BurstCubeTOOModel(
-            **BurstCubeTOOModelSchema.model_validate(self).model_dump()
+            **BurstCubeTOOModelSchema.model_validate(self).model_dump(mode="json")
         )
-        with Session(engine) as sess:
-            sess.add(too)
-            sess.commit()
-            self.id = too.id
-            self.timestamp = too.timestamp
+
+        too.save()
+        self.id = too.id
 
         return True
 
 
 class BurstCubeTOORequests(ACROSSAPIBase):
     """
-    Class to handle multiple BurstCubeTOO requests
+    Class to fetch multiple BurstCubeTOO requests, based on various filters.
+
+    Note that the filtering right now is based on DynamoDB scan, which is not
+    very efficient. This should be replaced with a query at some point.
 
     Parameters
     ----------
@@ -408,6 +405,12 @@ class BurstCubeTOORequests(ACROSSAPIBase):
         Limit number of searches
     trigger_time : Optional[datetime]
         Time of trigger
+    trigger_mission : Optional[str]
+        Mission of trigger
+    trigger_instrument : Optional[str]
+        Instrument of trigger
+    trigger_id : Optional[str]
+        ID of trigger
     ra : Optional[float]
         Right ascension of trigger search
     dec : Optional[float]
@@ -482,68 +485,81 @@ class BurstCubeTOORequests(ACROSSAPIBase):
         # Validate query
         if not self.validate_get():
             return False
+        table = dydbtable("burstcube_too")
 
-        stmt = select(BurstCubeTOOModel)
+        filters = list()
 
         # Search for events that cover a given trigger_time
         if self.trigger_time is not None:
-            stmt = stmt.where(
-                between(
-                    self.trigger_time, BurstCubeTOOModel.begin, BurstCubeTOOModel.end
-                )
+            filters.append(
+                Key("begin").lte(str(self.trigger_time))
+                & Key("end").gte(str(self.trigger_time))
             )
 
         # Search for events that overlap a given date range
         if self.begin is not None and self.end is not None:
-            stmt = stmt.where(BurstCubeTOOModel.end > self.begin).where(
-                BurstCubeTOOModel.begin < self.end
+            filters.append(
+                Key("begin").between(str(self.begin), str(self.end))
+                | Key("end").between(str(self.begin), str(self.end))
             )
-
-        # Set the order that requests are returned
-        stmt = stmt.order_by(BurstCubeTOOModel.trigger_time.desc())
-
-        # Set a limit on the number of searches
-        if self.limit is not None:
-            stmt = stmt.limit(self.limit)
 
         # Select on trigger_mission if given
         if self.trigger_mission is not None:
-            stmt = stmt.where(BurstCubeTOOModel.trigger_mission == self.trigger_mission)
+            filters.append(Key("trigger_mission").eq(self.trigger_mission))
 
         # Select on trigger_instrument if given
         if self.trigger_instrument is not None:
-            stmt = stmt.where(
-                BurstCubeTOOModel.trigger_instrument == self.trigger_instrument
-            )
+            filters.append(Key("trigger_instrument").eq(self.trigger_instrument))
 
         # Select on trigger_id if given
         if self.trigger_id is not None:
-            stmt = stmt.where(BurstCubeTOOModel.trigger_id == self.trigger_id)
+            filters.append(Key("trigger_id").eq(self.trigger_id))
+
+        # Select on trigger_time if given
+        if self.trigger_time is not None:
+            filters.append(
+                Key("begin").lte(str(self.trigger_time))
+                & Key("end").gte(str(self.trigger_time))
+            )
 
         # Check if a radius has been set, if not use default
         # FIXME: Set to specific instrument FOV
         if self.ra is not None and self.dec is not None and self.radius is None:
             self.radius = 1
 
-        # Search on RA/Dec/radius
-        if self.ra is not None and self.dec is not None:
-            # Convert radius to decimal degrees float
-            if type(self.radius) is u.Quantity:
-                radius = self.radius.to(u.deg).value
-            else:
-                radius = self.radius
-            stmt = stmt.where(
-                sa_angular_distance(
-                    self.ra, self.dec, BurstCubeTOOModel.ra, BurstCubeTOOModel.dec
-                )
-                < radius
-            )
+        # Build the filter expression and query the table
+        if len(filters) > 0:
+            f = filters[0]
+            for filt in filters[1:]:
+                f = f & filt
+            toos = table.scan(FilterExpression=f)
+        else:
+            toos = table.scan()
 
-        with Session(engine) as sess:
-            result = sess.execute(stmt)
+        # Convert entries for return
+        self.entries = [
+            BurstCubeTOOModelSchema.model_validate(too) for too in toos["Items"]
+        ]
+
+        # Only include entries where the RA/Dec is within the given self.radius value
+        # NOTE: This filters out any entries where RA/Dec is not given
+        # FIXME: This is not very efficient, we should do this in the query
+        if self.ra is not None and self.dec is not None and self.radius is not None:
             self.entries = [
-                BurstCubeTOOModelSchema.model_validate(r[0]) for r in result.fetchall()
+                too
+                for too in self.entries
+                if too.ra is not None
+                and (
+                    SkyCoord(too.ra, too.dec, unit="deg").separation(
+                        SkyCoord(self.ra, self.dec, unit="deg")
+                    )
+                    < self.radius * u.deg
+                )
             ]
+
+        # Sort and limit the results
+        self.entries.sort(key=lambda x: x.trigger_time, reverse=True)
+        self.entries = self.entries[: self.limit]
 
         return True
 
