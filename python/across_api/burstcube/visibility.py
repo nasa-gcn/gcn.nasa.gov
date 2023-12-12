@@ -65,7 +65,9 @@ class BurstCubeVisibility(VisibilityBase, ACROSSAPIBase):
 
         # Run GET automatically if parameters are valid, this is a GET only API
         if self.validate_get():
-            # Calculate Ephemeris and SAA information.
+            # Calculate Ephemeris and SAA information. Calculate for an entire day
+            # steps to aid with better caching of these computationally intensive
+            # tasks.
             daybegin = datetime.combine(self.begin.date(), time())
             dayend = datetime.combine(self.end.date(), time()) + timedelta(days=1)
             self.ephem = Ephem(begin=daybegin, end=dayend, stepsize=self.stepsize)
