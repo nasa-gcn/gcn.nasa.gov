@@ -44,39 +44,6 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         return None, None
 
 
-def sextodeg(x: str) -> float:
-    """Convert Sexagesimal string to degrees"""
-    x = x.strip()
-    if x[0] == "-":
-        degsign = -1
-    else:
-        degsign = 1
-    if len(x.split()) == 3:
-        [h, m, s] = x.split()
-        return degsign * (abs(float(h)) + (float(m) / 60) + (float(s) / 3600))
-    elif len(x.split()) == 2:  # assume simbad hh mm.m format?
-        [h, m] = x.split()
-        return degsign * (abs(float(h)) + (float(m) / 60))
-    else:
-        return float(x)
-
-
-# def simbad_radec(simname: str) -> Tuple[Optional[float], Optional[float]]:
-#     try:
-#         table = Simbad.query_object(simname)
-#     except Exception:
-#         return None, None
-#     if table is not None:
-#         sra = table[0]["RA"]  # type: ignore
-#         sdec = table[0]["DEC"]  # type: ignore
-#         # Apparently things can be in Simbad with no coordinates, so check this
-#         if sra != "" and sdec != "":
-#             ra = sextodeg(sra) * 15.0
-#             dec = sextodeg(sdec)
-#             return ra, dec
-#     return None, None
-
-
 def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
     """Given a object name, return the Simbad coordinates in degrees.
 
