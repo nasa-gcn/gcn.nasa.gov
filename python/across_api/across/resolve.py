@@ -41,8 +41,37 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         ra = antares_data["data"][0]["attributes"]["ra"]
         dec = antares_data["data"][0]["attributes"]["dec"]
     else:
+<<<<<<< HEAD
         ra = dec = None
     return ra, dec
+=======
+        return None, None
+
+
+def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
+    """Given a object name, return the Simbad coordinates in degrees.
+
+    Returns:
+        tuple: RA/Dec in decimal degrees (float)
+    """
+    url = "http://simbad.u-strasbg.fr/simbad/sim-script?script="
+    script = 'format object "%IDLIST(1) | %COO(d;A D)\n' + "query id %s" % name
+
+    lines = requests.get(url + script).text.splitlines()
+
+    ddec = None
+    dra = None
+    for line in lines:
+        x = line.split("|")
+        try:
+            name = x[0]
+            numbers = x[1].split(" ")
+            dra = float(numbers[1])
+            ddec = float(numbers[2].strip())
+        except (ValueError, IndexError):
+            pass
+    return dra, ddec
+>>>>>>> 529c540 (Resolve clean up)
 
 
 class Resolve(ACROSSAPIBase):
