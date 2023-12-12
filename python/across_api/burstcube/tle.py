@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from ..api_db import engine
 from ..base.config import set_observatory
 from ..base.tle import TLEBase
 from .config import BURSTCUBE
@@ -34,7 +33,6 @@ class BurstCubeTLE(TLEBase):
     """
 
     tlemodel = BurstCubeTLEEntryModel
-    engine = engine
 
     def __init__(self, epoch: datetime):
         self.epoch = epoch
