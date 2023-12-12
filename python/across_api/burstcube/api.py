@@ -56,6 +56,51 @@ async def optional_trigger_time(
 OptionalTriggerTimeDep = Annotated[datetime, Depends(optional_trigger_time)]
 
 
+async def optional_trigger_instrument(
+    trigger_instrument: Annotated[
+        Optional[str],
+        Query(
+            title="Trigger Instrument",
+            description="Instrument that triggered the TOO.",
+        ),
+    ] = None,
+) -> Optional[str]:
+    return trigger_instrument
+
+
+OptionalTriggerInstrumentDep = Annotated[str, Depends(optional_trigger_instrument)]
+
+
+async def optional_trigger_mission(
+    trigger_mission: Annotated[
+        Optional[str],
+        Query(
+            title="Trigger Mission",
+            description="Mission that triggered the TOO.",
+        ),
+    ] = None,
+) -> Optional[str]:
+    return trigger_mission
+
+
+OptionalTriggerMissionDep = Annotated[str, Depends(optional_trigger_mission)]
+
+
+async def optional_trigger_id(
+    trigger_id: Annotated[
+        Optional[str],
+        Query(
+            title="Trigger ID",
+            description="ID of the trigger.",
+        ),
+    ] = None,
+) -> Optional[str]:
+    return trigger_id
+
+
+OptionalTriggerIdDep = Annotated[str, Depends(optional_trigger_id)]
+
+
 # BurstCube endpoints
 @app.get("/BurstCube/Ephem")
 async def burstcube_ephemeris(
@@ -198,6 +243,9 @@ async def burstcube_too_requests(
     daterange: OptionalDateRangeDep,
     ra_dec: OptionalRaDecDep,
     trigger_time: OptionalTriggerTimeDep,
+    trigger_instrument: OptionalTriggerInstrumentDep,
+    trigger_mission: OptionalTriggerMissionDep,
+    trigger_id: OptionalTriggerIdDep,
     limit: LimitDep = None,
 ) -> BurstCubeTOORequestsSchema:
     """
@@ -211,6 +259,9 @@ async def burstcube_too_requests(
         ra=ra_dec["ra"],
         dec=ra_dec["dec"],
         trigger_time=trigger_time,
+        trigger_instrument=trigger_instrument,
+        trigger_mission=trigger_mission,
+        trigger_id=trigger_id,
         limit=limit,
     ).schema
 
