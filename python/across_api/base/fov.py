@@ -7,7 +7,6 @@ import numpy as np
 from astropy.coordinates import CartesianRepresentation  # type: ignore
 from astropy.coordinates import Latitude, Longitude, SkyCoord
 from astropy.coordinates.matrix_utilities import rotation_matrix  # type: ignore
-from astropy.io import fits  # type: ignore
 from erfa import pdp  # type: ignore
 from fastapi import HTTPException
 
@@ -333,253 +332,10 @@ class FOVBase(ACROSSAPIBase):
             return float(round(np.sum(healpix_loc[visible_pixels]), 5))
 
 
-class HealFOV(FOVBase):
-    """
-    Class that defines an instrument FOV using a healpix map. Designed
-    for instruments that have very large fields of view, where we can
-    define them using a healpix map.
-    """
-
-    sc_ra: Optional[float]
-    sc_dec: Optional[float]
-    sc_roll: Optional[float]
-    healmap: Optional[np.ndarray]
-    healmapfile: Optional[str]
-    nest: str
-    nside: int
-
-    def __init__(
-        self,
-        sc_ra: Optional[float] = None,
-        sc_dec: Optional[float] = None,
-        sc_roll: Optional[float] = None,
-        healmap: Optional[np.ndarray] = None,
-        healmapfile: Optional[str] = None,
-        ordering: str = "NESTED",
-        nside: int = 512,
-        boresight: Optional[FOVOffsetSchema] = None,
-    ):
-        if healmap is not None:
-            self.healmap = healmap
-        if healmapfile is not None:
-            self.read_healpix_fits(healmapfile)
-        self.boresight = boresight
-        self.nside = nside
-        self.ordering = ordering
-        self.sc_ra = sc_ra
-        self.sc_dec = sc_dec
-        self.sc_roll = sc_roll
-        # Minimum good value to be considered inside FOV
-        self.mingood = 0
-
-    def read_healpix_fits(self, filename: str) -> bool:
-        """Load in healpix FOV file
-
-        Parameters
-        ----------
-        filename : str
-            Healpix FITS file to load
-
-        Returns
-        -------
-        bool
-            Did this work? True | False
-        """
-        hdu = fits.open(filename)
-        self.nside = hdu[1].header["NSIDE"]
-        self.ordering = hdu[1].header["ORDERING"]
-        self.healmap = np.concatenate(hdu[1].data, axis=1)[0]
-        return True
-
-    def collecting_area_ra_dec(self, ra: float, dec: float) -> float:
-        """
-        For a given RA/Dec value, return the collecting area value for that part of the FOV.
-
-        Parameters
-        ----------
-        ra : float
-            Right Asc_enscion ICRS decimal degrees
-        dec : float
-            Declination ICRS decimal degrees
-
-        Returns
-        -------
-        float
-            Collecting area in units of cm**2
-        """
-        # Figure out the corresponding body coordinates
-        bodyra, bodydec = self.radec2body(ra, dec)
-
-        # Fetch and return the value from this healpix map
-        # FIXME: Should be doing some sort of interpolation?
-        if bodyra is not None and bodydec is not None:
-            pix = ah.lonlat_to_healpix(
-                bodyra * u.deg, bodydec * u.deg, nside=self.nside, order=self.ordering
-            )
-
-            return self.healmap[pix]  # type: ignore
-        # If required parameters are not set, just assume no visibility
-        return 0
-
-    def infov(
-        self,
-        ra: Optional[float] = None,
-        dec: Optional[float] = None,
-        skycoord: Optional[SkyCoord] = None,
-        earth_ra: Optional[float] = None,
-        earth_dec: Optional[float] = None,
-        earth: Optional[SkyCoord] = None,
-        earth_size: Union[float, u.Quantity, None] = None,
-    ) -> Union[bool, np.ndarray]:
-        """Is given the current spacecraft pointing, is the target at the
-        given coordinates inside the FOV.
-
-        Parameters
-        ----------
-        ra : float
-            Right Asc_enscion ICRS decimal degrees
-        dec : float
-            Declination ICRS decimal degrees
-        skycoord: SkyCoord, optional
-            SkyCoord object representing the celestial object.
-        earth : SkyCoord, optional
-            SkyCoord object representing the Earth.
-        earth_ra : float, optional
-            Right ascension of the Earth.
-        earth_dec : float, optional
-            Declination of the Earth.
-        earth_size : float, u.Quantity, None
-            Angular size of the Earth (default degrees if float).
-
-        Returns
-        -------
-        bool
-            True or False
-        """
-        # Check for Earth occultation
-        earth_occultation = self.earth_occulted(
-            ra=ra,
-            dec=dec,
-            skycoord=skycoord,
-            earth=earth,
-            earth_ra=earth_ra,
-            earth_dec=earth_dec,
-            earth_size=earth_size,
-        )
-
-        # Extract ra/dec from SkyCoord if not provided
-        if skycoord is not None:
-            ra = skycoord.ra.deg
-            dec = skycoord.dec.deg
-
-        if ra is not None and dec is not None:
-            infov = self.collecting_area_ra_dec(ra, dec) > self.mingood
-        else:
-            infov = False
-
-        return infov * np.logical_not(earth_occultation)
-
-
-class CircularFOV(FOVBase):
-    """
-    Class that defines an instrument FOV using a circular FOV
-    of a given radius.
-
-    Parameters
-    ----------
-    radius : float
-        Radius of the FOV in decimal degrees
-    sc_ra : float
-        Spacecraft pointing Right Ascension in decimal degrees
-    sc_dec : float
-        Spacecraft pointing Right Ascension in decimal degrees
-    sc_roll : float
-        Spacecraft pointing Right Ascension in decimal degrees
-    """
-
-    def __init__(
-        self,
-        sc_ra: Optional[float] = None,
-        sc_dec: Optional[float] = None,
-        sc_roll: Optional[float] = None,
-        radius: Union[float, u.Quantity, None] = None,
-        boresight: Optional[FOVOffsetSchema] = None,
-    ):
-        self.radius = radius
-        self.sc_ra = sc_ra
-        self.sc_dec = sc_dec
-        self.sc_roll = sc_roll
-        self.boresight = boresight
-
-    def infov(
-        self,
-        ra: Optional[float] = None,
-        dec: Optional[float] = None,
-        skycoord: Optional[SkyCoord] = None,
-        earth_ra: Optional[float] = None,
-        earth_dec: Optional[float] = None,
-        earth: Optional[SkyCoord] = None,
-        earth_size: Union[float, u.Quantity, None] = None,
-    ) -> Union[bool, np.ndarray]:
-        """Is given the current spacecraft pointing, is the target at the
-        given coordinates inside the FOV.
-
-        Parameters
-        ----------
-        ra : float
-            Right Asc_enscion ICRS decimal degrees
-        dec : float
-            Declination ICRS decimal degrees
-        skycoord: SkyCoord, optional
-            SkyCoord object representing the celestial object.
-        earth : SkyCoord, optional
-            SkyCoord object representing the Earth.
-        earth_ra : float, optional
-            Right ascension of the Earth.
-        earth_dec : float, optional
-            Declination of the Earth.
-        earth_size : float, u.Quantity, None
-            Angular size of the Earth (default degrees if float).
-
-        Returns
-        -------
-        bool
-            True or False
-        """
-        # Check for Earth occultation
-        earth_occultation = self.earth_occulted(
-            ra=ra,
-            dec=dec,
-            skycoord=skycoord,
-            earth=earth,
-            earth_ra=earth_ra,
-            earth_dec=earth_dec,
-            earth_size=earth_size,
-        )
-
-        # Convert radius float to astropy Quantity in degrees
-        if type(self.radius) is float:
-            radius = self.radius * u.deg
-        else:
-            radius = self.radius
-
-        # If we're not pointing, then return False
-        if self.sc_skycoord is None:
-            return False
-
-        # Position SkyCoord
-        if skycoord is None:
-            skycoord = SkyCoord(ra=ra, dec=dec, unit="deg")
-
-        # See if the target is inside the FOV and not Earth occulted
-        return self.sc_skycoord.separation(skycoord).deg < radius * np.logical_not(
-            earth_occultation
-        )
-
-
 class AllSkyFOV(FOVBase):
     """
-    All sky instrument FOV.
+    All sky instrument FOV. This is a simple FOV that is always visible unless
+    Earth occulted.
     """
 
     def __init__(self, **kwargs):
@@ -587,150 +343,16 @@ class AllSkyFOV(FOVBase):
         pass
 
 
-class SquareFOV(FOVBase):
-    """
-    Class that defines an instrument FOV using a square FOV
-    of a given FOV size, which is defined as the angular extent of
-    one side of the square.
-
-    Parameters
-    ----------
-    size : float
-        angular size of the square FOV in decimal degrees,
-        this is the angular size of one side of the square.
-    sc_ra : float
-        Spacecraft pointing Right Ascension in decimal degrees
-    sc_dec : float
-        Spacecraft pointing Right Ascension in decimal degrees
-    sc_roll : float
-        Spacecraft pointing Right Ascension in decimal degrees
-    """
-
-    def __init__(
-        self,
-        size: float,
-        sc_ra: Optional[float] = None,
-        sc_dec: Optional[float] = None,
-        sc_roll: Optional[float] = None,
-        boresight: Optional[FOVOffsetSchema] = None,
-    ):
-        self.size = size
-        self.sc_ra = sc_ra
-        self.sc_dec = sc_dec
-        self.sc_roll = sc_roll
-        self.boresight = boresight
-
-    def infov(
-        self,
-        ra: Optional[float] = None,
-        dec: Optional[float] = None,
-        skycoord: Optional[SkyCoord] = None,
-        earth_ra: Optional[float] = None,
-        earth_dec: Optional[float] = None,
-        earth: Optional[SkyCoord] = None,
-        earth_size: Union[float, u.Quantity, None] = None,
-    ) -> Union[bool, np.ndarray]:
-        """
-        Given the current spacecraft pointing, is the target at the
-        given coordinates inside the FOV and not Earth occulted. This
-        defines a square FOV.
-
-        Parameters
-        ----------
-        ra : float
-            Right Asc_enscion ICRS decimal degrees
-        dec : float
-            Declination ICRS decimal degrees
-        skycoord: SkyCoord, optional
-            SkyCoord object representing the celestial object.
-        earth : SkyCoord, optional
-            SkyCoord object representing the Earth.
-        earth_ra : float, optional
-            Right ascension of the Earth.
-        earth_dec : float, optional
-            Declination of the Earth.
-        earth_size : float, u.Quantity, None
-            Angular size of the Earth (default degrees if float).
-
-        Returns
-        -------
-        bool
-            True or False
-        """
-        # Check for Earth occultation
-        earth_occultation = self.earth_occulted(
-            ra=ra,
-            dec=dec,
-            skycoord=skycoord,
-            earth=earth,
-            earth_ra=earth_ra,
-            earth_dec=earth_dec,
-            earth_size=earth_size,
-        )
-
-        # If we're not pointing, then return False
-        if self.sc_skycoord is None:
-            return False
-
-        # Use sc
-        if skycoord is not None:
-            ra = skycoord.ra.deg
-            dec = skycoord.dec.deg
-
-        # Convert astropy Latitude/Longitude to float
-        if type(ra) is Latitude:
-            ra = ra.deg
-        if type(dec) is Longitude:
-            dec = dec.deg
-
-        # Calculate the pointing in spacecraft body coordinates
-        if ra is not None and dec is not None:
-            bodyra, bodydec = self.radec2body(ra, dec)
-        else:
-            return False
-
-        # Correct ra to be between -180 and 180
-        if hasattr(bodyra, "__len__"):
-            bodyra[np.where(bodyra > 180)] -= 360
-        elif bodyra > 180:
-            bodyra -= 360
-
-        # Calculate the corners of the FOV
-        fov = np.array(
-            [
-                [
-                    -self.size / 2,
-                    -self.size / 2,
-                ],
-                [
-                    +self.size / 2,
-                    -self.size / 2,
-                ],
-                [
-                    +self.size / 2,
-                    +self.size / 2,
-                ],
-                [
-                    -self.size / 2,
-                    +self.size / 2,
-                ],
-            ]
-        )
-
-        # Check if the target is inside the FOV
-        visible = (
-            (bodyra >= fov[0, 0])
-            * (bodyra <= fov[1, 0])
-            * (bodydec >= fov[0, 1])
-            * (bodydec <= fov[3, 1])
-        )
-
-        return visible * np.logical_not(earth_occultation)
-
-
 class FOVCheckBase(ACROSSAPIBase):
     """
-    Base class for FOV check classes.
+    Base class for FOV check classes. These classes are used to check
+    if a point source is inside the FOV of a given instrument. If a HEALpix
+    map is provided, the probability of the source being inside the FOV is
+    calculated.
+
+    If no HEALpix map is provided, but instead am RA/Dec a simple,
+    check is performed to see if the source is inside the FOV. Currently
+    errors on an RA/Dec are not supported.
 
     Attributes
     ----------
@@ -866,20 +488,20 @@ class FOVCheckBase(ACROSSAPIBase):
                 i.fov for i in self.config.instruments if i.shortname == self.instrument
             ][0]
 
-            if fovschema.type == "healpix":
-                self._fov = HealFOV(
-                    healmapfile=fovschema.filename, boresight=fovschema.boresight
-                )
-            elif fovschema.type == "circular":
-                self._fov = CircularFOV(
-                    radius=fovschema.dimension, boresight=fovschema.boresight
-                )
-            elif fovschema.type == "all-sky":
+            if fovschema.type == "all-sky":
                 self._fov = AllSkyFOV()
-            elif fovschema.type == "square" and fovschema.dimension is not None:
-                self._fov = SquareFOV(
-                    size=fovschema.dimension, boresight=fovschema.boresight
-                )
+            # elif fovschema.type == "healpix":
+            #     self._fov = HealFOV(
+            #         healmapfile=fovschema.filename, boresight=fovschema.boresight
+            #     )
+            # elif fovschema.type == "circular":
+            #     self._fov = CircularFOV(
+            #         radius=fovschema.dimension, boresight=fovschema.boresight
+            #     )
+            # elif fovschema.type == "square" and fovschema.dimension is not None:
+            #     self._fov = SquareFOV(
+            #         size=fovschema.dimension, boresight=fovschema.boresight
+            #     )
             else:
                 raise ValueError(f"Unknown FOV type: {fovschema.type}")
 
