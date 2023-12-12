@@ -43,7 +43,6 @@ class MakeWindowBase:
         istart = self.ephem.ephindex(self.begin)
         istop = self.ephem.ephindex(self.end) + 1
         for i in range(istart, istop):
-            # print(f"{i=} {inconstraint[i]=} {inocc=} {self.constraint(i)=}")
             if inocc is True and not inconstraint[i]:
                 inocc = False
                 inindex = i

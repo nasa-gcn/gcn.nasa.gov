@@ -190,7 +190,6 @@ class BurstCubeTOO(ACROSSAPIBase):
             # If this BurstCubeTOO gives RA/Dec and the previous didn't then we
             # should override the previous one
             if too.ra is None and self.ra is not None:
-                print(f"deleting old BurstCubeTOO {too.id} as RA now given")
                 self.table.delete_item(Key={"id": too.id})
                 deleted += 1
                 continue
@@ -201,18 +200,12 @@ class BurstCubeTOO(ACROSSAPIBase):
                 and too.trigger_time.microsecond == 0
                 and self.trigger_time.microsecond != 0
             ):
-                print(
-                    f"deleting old BurstCubeTOO {too.id} as triggertime more accurate."
-                )
                 self.table.delete_item(Key={"id": too.id})
                 deleted += 1
                 continue
 
             # Check if more exposure time requested
             if too.exposure > self.exposure:
-                print(
-                    f"deleting old BurstCubeTOO {too.id} as triggertime as more exposure time requested."
-                )
                 self.table.delete_item(Key={"id": too.id})
                 deleted += 1
                 continue
@@ -289,7 +282,7 @@ class BurstCubeTOO(ACROSSAPIBase):
             self.reason = TOOReason.saa
             self.too_status = TOOStatus.rejected
             return False
-        print(f"{self.ra=} {self.dec=} {self.healpix_loc=}")
+
         # Check if the trigger time is inside FOV
         if (
             self.ra is not None and self.dec is not None
