@@ -58,16 +58,6 @@ acrossapi_jobs
   params String
   result String
 
-burstcube_tle
-  epoch *String
-  tle1 String
-  tle2 String
-
-swift_tle
-  epoch *String
-  tle1 String
-  tle2 String
-
 sessions
   _idx *String
   _ttl TTL
