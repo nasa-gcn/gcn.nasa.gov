@@ -13,7 +13,8 @@ ANTARES_URL = "https://api.antares.noirlab.edu/v1/loci"
 
 
 def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
-    """Query ANTARES API to find RA/Dec of a given ZTF source
+    """
+    Query ANTARES API to find RA/Dec of a given ZTF source
 
     Parameters
     ----------
@@ -45,10 +46,18 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
 
 
 def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
-    """Given a object name, return the Simbad coordinates in degrees.
+    """
+    Given a object name, return the Simbad coordinates in degrees.
 
-    Returns:
-        tuple: RA/Dec in decimal degrees (float)
+    Parameters
+    ----------
+    name : str
+        Name of object to search for
+
+    Returns
+    -------
+    tuple
+        RA/Dec in decimal degrees (float or None)
     """
     url = "http://simbad.u-strasbg.fr/simbad/sim-script?script="
     script = 'format object "%IDLIST(1) | %COO(d;A D)\n' + "query id %s" % name
@@ -70,7 +79,32 @@ def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
 
 
 class Resolve(ACROSSAPIBase):
-    """Generic Name resolver. Convert a source name into an RA/Dec."""
+    """
+    Resolve class for resolving astronomical object names.
+
+    Parameters:
+    -----------
+    name : str
+        The name of the astronomical object to resolve.
+
+    Attributes:
+    -----------
+    status : JobInfo
+        The status of the job.
+    ra : Optional[float]
+        The right ascension of the resolved object.
+    dec : Optional[float]
+        The declination of the resolved object.
+    name : str
+        The name of the astronomical object.
+    resolver : Optional[str]
+        The resolver used for resolving the object.
+
+    Methods:
+    --------
+    get() -> bool:
+        Retrieves the resolved object information.
+    """
 
     api_name: str = "Resolve"
     _schema = ResolveSchema
@@ -97,18 +131,23 @@ class Resolve(ACROSSAPIBase):
     @check_cache
     @register_job
     def get(self) -> bool:
+        """
+        Retrieves the RA and Dec coordinates for a given name.
+
+        Returns
+        -------
+        bool
+            True if the name is successfully resolved, False otherwise.
+
+        Raises
+        ------
+        HTTPException
+            If the name couldn't be resolved.
+        """
         # Make sure the required parameters are given in the correct format
         if not self.validate_get():
             return False
 
-        # Perform the search
-        if self.search():
-            return True
-
-        # Send a warning if name couldn't be resolved
-        raise HTTPException(status_code=404, detail="Could not resolve name.")
-
-    def search(self):
         """Do a name search"""
         # Check against the ANTARES broker
         if "ZTF" in self.name:
@@ -117,7 +156,6 @@ class Resolve(ACROSSAPIBase):
                 self.ra, self.dec = ra, dec
                 self.resolver = "ANTARES"
                 return True
-
         # Check against Simbad
         ra, dec = simbad_radec(self.name)
         if ra is not None:
@@ -125,7 +163,8 @@ class Resolve(ACROSSAPIBase):
             self.resolver = "Simbad"
             return True
 
-        return False
+        # Send a warning if name couldn't be resolved
+        raise HTTPException(status_code=404, detail="Could not resolve name.")
 
 
 ACROSSAPIResolve = Resolve
