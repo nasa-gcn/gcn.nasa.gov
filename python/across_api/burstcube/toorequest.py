@@ -1,4 +1,3 @@
-import os
 from datetime import datetime, timedelta
 from typing import Optional
 
@@ -570,8 +569,5 @@ TOO = BurstCubeTOO
 TOOModelSchema = BurstCubeTOOModelSchema
 TOOPostSchema = BurstCubeTOOPostSchema
 TOOPutSchema = BurstCubeTOOPutSchema
-
-
-# If we're in a dev environment, create the table if it doesn't exist
-if os.environ.get("ARC_SANDBOX") is not None:
-    BurstCubeTOOModel.create_table()
+TOOGetSchema = BurstCubeTOOGetSchema
+TOODelSchema = BurstCubeTOODelSchema
