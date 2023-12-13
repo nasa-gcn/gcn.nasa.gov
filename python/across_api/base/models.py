@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Any
 
 from boto3.dynamodb.conditions import Key  # type: ignore
