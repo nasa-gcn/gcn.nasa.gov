@@ -406,7 +406,7 @@ class SAAGetSchema(DateRangeSchema):
 
 
 # Pointing Schemas
-class PointBase(CoordSchema):
+class PointBase(OptionalCoordSchema):
     """
     Schema defining a spacecraft pointing
 
