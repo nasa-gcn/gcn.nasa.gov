@@ -1,3 +1,4 @@
 black
 pytest
+mypy
 -r python/requirements.txt
