@@ -1,0 +1,293 @@
+{/\* \* Copyright © 2023 United States Government as represented by the
+
+- Administrator of the National Aeronautics and Space Administration.
+- All Rights Reserved.
+-
+- SPDX-License-Identifier: Apache-2.0 \*/}
+
+import {
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardGroup,
+  CardHeader,
+  CardMedia,
+  GridContainer,
+  Icon,
+  Link,
+  Tag,
+} from '@trussworks/react-uswds'
+
+import ParallaxImage from './labs/parallax/ParallaxImage'
+
+import React from 'react'
+
+import styles from './labs/across.css'
+import mma from './labs/mma.png'
+
+  <div style={{ backgroundColor: '#0c0f18', color: 'white', minHeight: '2000px' }}>
+
+    <ParallaxImage
+      src="https://svs.gsfc.nasa.gov/vis/a010000/a012700/a012740/NeutronStarMerger_Shot1_4KStill4_v01_print.jpg"
+      alt="BNS"
+    />
+
+    <GridContainer className="usa-section" style={{minWidth:'75%'}}>
+
+      <div className="section-head"><h1>Overview</h1></div>
+
+      <div className="container" style={{ marginTop: '0px', display: 'flex', justifyContent: 'space-between' }}>
+        <div className="usa-paragraph text-base-lightest magin-top-0" style={{
+            fontSize: '1.1rem',
+            zIndex: 1,
+            whiteSpace: 'normal',
+            width: '90%',
+            marginTop: '0px'
+
+          }}>
+
+          The emerging field of multimessenger astronomy combines the observation of disparate messenger signals to reveal unique
+          information about astrophysical sources. The four extrasolar messengers that make up multimessenger astronomy are electromagnetic
+          radiation, gravitational waves, neutrinos, and cosmic rays and the primary multimessenger sources outside the heliosphere are
+          expected to be compact binary pairs (black holes and neutron stars), supernovae, irregular neutron stars, gamma-ray bursts,
+          active galactic nuclei, and relativistic jets. The present study of the these multimessenger sources has become one of the most
+          promising discovery areas of modern astronomy. Identified as one of the central themes of the 2020 Decadal Review, the full
+          realization of time-domain and multi-messenger astronomy now stands to open an entirely new window on the Universe.
+
+          The first joint detection of two merging neutron stars in gravitational waves and electromagnetic radiation on August 17, 2017
+          was a watershed moment for the field of multimessenger astronomy. The information gained from the detection of both messengers
+          enable science that would have been impossible to perform with either signal alone. The discovery demonstrated that multimessenger
+          astrophysics offers a powerful methodology of growing importance, as astronomers combine electromagnetic radiation, gravitational
+          wave radiation, and particle astrophysics observations of cosmic events.
+
+
+          Multimessenger.nasa.gov aims to support this emerging field by consolidating important information on resources available to
+          scientists around the world to enable future discoveries.
+
+        </div>
+
+        <img
+          src={mma}
+          alt="Descriptive Alt Text"
+          style={{
+            width: 'auto',
+            height: '600px',
+            marginLeft: '0px'
+          }}
+        />
+      </div>
+
+      <div className="section-head" style={{marginTop:'150px'}}></div>
+
+      <CardGroup>
+
+        <Card
+          headerFirst
+          gridLayout={{ tablet: { col: 5 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}
+          >
+          <CardBody className="padding-4 text-base-lightest" style={{ backgroundColor:'#161821'}}>
+            <h1 className="text-left" style={{paddingTop: '20px'}}>
+              The Decadal Survey Findings on Multi-messenger Astronomy
+            </h1>
+          </CardBody>
+        </Card>
+
+        <Card
+          headerFirst
+          gridLayout={{ tablet: { col: 7 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}
+          >
+
+          <CardBody className="padding-top-4 text-base-lightest" style={{backgroundColor:'#161821'}}>
+            <p className="text-italic" style={{paddingTop: '20px'}}>
+              "The New Messengers and New Physics theme embodies the dual revolutions brought about by the marriage of observations of light with those from gravitational waves and elementary particles (multi-messenger astrophysics) along with the expansion of measurements of the sky over time (time-domain)."
+            </p>
+          </CardBody>
+          <CardFooter className="text-base-lightest" style={{ backgroundColor:'#161821'}}>
+            <p>Decadal Survey on Astronomy and Astrophysics 2020, Section 1.1.1, Page 1-2</p>
+          </CardFooter>
+        </Card>
+
+      </CardGroup>
+
+      <div className="section-head" style={{marginTop:'75px'}}><h1>Program News</h1></div>
+
+      <CardGroup>
+
+        <Card
+          headerFirst
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}
+          >
+          <CardHeader style={{ backgroundColor:'#161821', display: 'flex', justifyContent: 'space-between'}}>
+            <Tag background="#1e222b">Solicitations</Tag><Tag background="#161821">Aug 16, 2022</Tag>
+          </CardHeader>
+          <CardBody className="padding-top-3 text-base-lightest" style={{ backgroundColor:'#161821'}}>
+            <h3 className="usa-card__heading text-base-lightest">NASA's Swift Observatory Returns to Science</h3>
+            <p className="font-sans-6 text-base-lightest">
+               NASA's Neil Gehrels Swift Observatory successfully returned to science operations Thursday, Feb. 17. The spacecraft and its three instruments are healthy and operating as expected.
+            </p>
+
+          </CardBody>
+          <CardFooter className="padding-top-3" style={{ backgroundColor:'#161821'}}>
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+        <Card
+          headerFirst
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}
+          >
+          <CardHeader style={{ backgroundColor:'#161821', display: 'flex', justifyContent: 'space-between'}}>
+            <Tag background="#1e222b">Solicitations</Tag><Tag background="#161821">Aug 16, 2022</Tag>
+          </CardHeader>
+          <CardBody className="padding-top-3 text-base-lightest" style={{ backgroundColor:'#161821'}}>
+            <h3 className="usa-card__heading text-base-lightest">2023 Astrophysics Probe Explorer (APEX) draft announcement released</h3>
+            <p className="font-sans-6 text-base-lightest">
+               Astrophysics Probe Explorer (APEX) AO community announcement release of draft solicition.
+            </p>
+
+          </CardBody>
+          <CardFooter className="padding-top-3" style={{ backgroundColor:'#161821'}}>
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+        <Card
+          headerFirst
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}
+          >
+          <CardHeader style={{ backgroundColor:'#161821', display: 'flex', justifyContent: 'space-between'}}>
+            <Tag background="#1e222b">Solicitations</Tag><Tag background="#161821">Aug 16, 2022</Tag>
+          </CardHeader>
+          <CardBody className="padding-top-3 text-base-lightest" style={{ backgroundColor:'#161821'}}>
+            <h3 className="usa-card__heading text-base-lightest">Swift Cycle 18 Results</h3>
+            <p className="font-sans-6 text-base-lightest">
+              Swift Cycle 18 Recommended Targets and Proposals have been posted.
+            </p>
+
+          </CardBody>
+          <CardFooter className="padding-top-3" style={{ backgroundColor:'#161821'}}>
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+      </CardGroup>
+
+      <div className="section-head" style={{marginTop:'75px'}}><h1>Science News</h1></div>
+
+      <CardGroup>
+        <Card
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}>
+          <CardHeader className="bg-base-darkest">
+            <h3 className="usa-card__heading text-base-lightest">NASA Selects Proposals to Study Stellar Explosions, Galaxies, Stars</h3>
+          </CardHeader>
+          <CardMedia>
+            <img src="https://svs.gsfc.nasa.gov/vis/a010000/a012700/a012740/NeutronStarMerger_Shot1_4KStill4_v01_print.jpg" alt="" />
+          </CardMedia>
+          <CardBody className="bg-base-darkest text-base-lightest">
+            <p>Lorem ipsum dolor sit amet, eum sint primis gubergren an.</p>
+          </CardBody>
+          <CardFooter className="bg-base-darkest">
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+        <Card
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}>
+          <CardHeader className="bg-base-darkest">
+            <h3 className="usa-card__heading text-base-lightest">NASA Selects Proposals to Study Stellar Explosions, Galaxies, Stars</h3>
+          </CardHeader>
+          <CardMedia>
+            <img src="https://svs.gsfc.nasa.gov/vis/a010000/a012700/a012740/NeutronStarMerger_Shot1_4KStill4_v01_print.jpg" alt="" />
+          </CardMedia>
+          <CardBody className="bg-base-darkest text-base-lightest">
+            <p>Lorem ipsum dolor sit amet, eum sint primis gubergren an.</p>
+          </CardBody>
+          <CardFooter className="bg-base-darkest">
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+        <Card
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}>
+          <CardHeader className="bg-base-darkest">
+            <h3 className="usa-card__heading text-base-lightest">NASA Selects Proposals to Study Stellar Explosions, Galaxies, Stars</h3>
+          </CardHeader>
+          <CardMedia>
+            <img src="https://svs.gsfc.nasa.gov/vis/a010000/a012700/a012740/NeutronStarMerger_Shot1_4KStill4_v01_print.jpg" alt="" />
+          </CardMedia>
+          <CardBody className="bg-base-darkest text-base-lightest">
+            <p>Lorem ipsum dolor sit amet, eum sint primis gubergren an.</p>
+          </CardBody>
+          <CardFooter className="bg-base-darkest">
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+      </CardGroup>
+
+      <CardGroup>
+        <Card
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}>
+          <CardHeader className="bg-base-darkest">
+            <h3 className="usa-card__heading text-base-lightest">NASA Selects Proposals to Study Stellar Explosions, Galaxies, Stars</h3>
+          </CardHeader>
+          <CardMedia>
+            <img src="https://svs.gsfc.nasa.gov/vis/a010000/a012700/a012740/NeutronStarMerger_Shot1_4KStill4_v01_print.jpg" alt="" />
+          </CardMedia>
+          <CardBody className="bg-base-darkest text-base-lightest">
+            <p>Lorem ipsum dolor sit amet, eum sint primis gubergren an.</p>
+          </CardBody>
+          <CardFooter className="bg-base-darkest">
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+        <Card
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}>
+          <CardHeader className="bg-base-darkest">
+            <h3 className="usa-card__heading text-base-lightest">NASA Selects Proposals to Study Stellar Explosions, Galaxies, Stars</h3>
+          </CardHeader>
+          <CardMedia>
+            <img src="https://svs.gsfc.nasa.gov/vis/a010000/a012700/a012740/NeutronStarMerger_Shot1_4KStill4_v01_print.jpg" alt="" />
+          </CardMedia>
+          <CardBody className="bg-base-darkest text-base-lightest">
+            <p>Lorem ipsum dolor sit amet, eum sint primis gubergren an.</p>
+          </CardBody>
+          <CardFooter className="bg-base-darkest">
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+        <Card
+          gridLayout={{ tablet: { col: 4 } }}
+          containerProps={{ className: '', style: { borderRadius: '10px', borderColor: '#161821' } }}>
+          <CardHeader className="bg-base-darkest">
+            <h3 className="usa-card__heading text-base-lightest">NASA Selects Proposals to Study Stellar Explosions, Galaxies, Stars</h3>
+          </CardHeader>
+          <CardMedia>
+            <img src="https://svs.gsfc.nasa.gov/vis/a010000/a012700/a012740/NeutronStarMerger_Shot1_4KStill4_v01_print.jpg" alt="" />
+          </CardMedia>
+          <CardBody className="bg-base-darkest text-base-lightest">
+            <p>Lorem ipsum dolor sit amet, eum sint primis gubergren an.</p>
+          </CardBody>
+          <CardFooter className="bg-base-darkest">
+            <Button type="button" outline>Link</Button>
+          </CardFooter>
+        </Card>
+
+      </CardGroup>
+
+      </GridContainer>
+
+  </div>
