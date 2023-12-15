@@ -25,6 +25,10 @@ jobs:
 
       - name: Pytest
         run: pytest python
+      
+      - name: Mypy action
+        run: |
+          mypy  $(git ls-files '*.py')
 
       - name: Upload to Codecov.io
         uses: codecov/codecov-action@v3
