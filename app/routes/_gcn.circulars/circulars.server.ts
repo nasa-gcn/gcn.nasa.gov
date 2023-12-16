@@ -166,11 +166,25 @@ export async function search({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const nlpSearchQuery = query
     ? {
-        neural: {
-          circular_embedding: {
-            query_text: query,
-            model_id,
-            k: 100,
+        bool: {
+          must: [
+            {
+              neural: {
+                circular_embedding: {
+                  query_text: query,
+                  model_id,
+                  k: 100,
+                },
+              },
+            },
+          ],
+          filter: {
+            range: {
+              createdOn: {
+                gte: startTime,
+                lte: endTime,
+              },
+            },
           },
         },
       }
