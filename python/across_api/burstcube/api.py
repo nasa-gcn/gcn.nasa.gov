@@ -102,7 +102,7 @@ OptionalTriggerIdDep = Annotated[str, Depends(optional_trigger_id)]
 
 
 # BurstCube endpoints
-@app.get("/BurstCube/Ephem")
+@app.get("/burstcube/ephem")
 async def burstcube_ephemeris(
     daterange: DateRangeDep,
     stepsize: StepSizeDep,
@@ -115,7 +115,7 @@ async def burstcube_ephemeris(
     ).schema
 
 
-@app.get("/BurstCube/FOVCheck")
+@app.get("/burstcube/fovcheck")
 async def burstcube_fov_check(
     ra_dec: RaDecDep,
     daterange: DateRangeDep,
@@ -140,7 +140,7 @@ async def burstcube_fov_check(
 # Start of BurstCube API Endpoints
 
 
-@app.get("/BurstCube/SAA")
+@app.get("/burstcube/saa")
 async def burstcube_saa(
     daterange: DateRangeDep,
     stepsize: StepSizeDep,
@@ -151,7 +151,7 @@ async def burstcube_saa(
     return BurstCubeSAA(stepsize=stepsize, **daterange).schema
 
 
-@app.post("/BurstCube/TOO", status_code=status.HTTP_201_CREATED)
+@app.post("/burstcube/too", status_code=status.HTTP_201_CREATED)
 async def burstcube_too_submit(
     user: LoginDep,
     ra_dec: OptionalRaDecDep,
@@ -200,7 +200,7 @@ async def burstcube_too_submit(
     return too.schema
 
 
-@app.put("/BurstCube/TOO/{id}", status_code=status.HTTP_201_CREATED)
+@app.put("/burstcube/too/{id}", status_code=status.HTTP_201_CREATED)
 async def burstcube_too_update(
     user: LoginDep,
     id: IdDep,
@@ -230,7 +230,7 @@ async def burstcube_too_update(
     return too.schema
 
 
-@app.get("/BurstCube/TOO/{id}", status_code=status.HTTP_200_OK)
+@app.get("/burstcube/too/{id}", status_code=status.HTTP_200_OK)
 async def burstcube_too(
     user: LoginDep,
     id: IdDep,
@@ -243,7 +243,7 @@ async def burstcube_too(
     return too.schema
 
 
-@app.delete("/BurstCube/TOO/{id}", status_code=status.HTTP_200_OK)
+@app.delete("/burstcube/too/{id}", status_code=status.HTTP_200_OK)
 async def burstcube_delete_too(
     user: LoginDep,
     id: IdDep,
@@ -256,7 +256,7 @@ async def burstcube_delete_too(
     return too.schema
 
 
-@app.get("/BurstCube/TOORequests")
+@app.get("/burstcube/toorequests")
 async def burstcube_too_requests(
     user: LoginDep,
     daterange: OptionalDateRangeDep,
@@ -285,7 +285,7 @@ async def burstcube_too_requests(
     ).schema
 
 
-@app.get("/BurstCube/Visibility")
+@app.get("/burstcube/visibility")
 async def burstcube_visibility(
     daterange: DateRangeDep,
     ra_dec: RaDecDep,
