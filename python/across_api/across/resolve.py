@@ -1,7 +1,5 @@
-import json
-from typing import Optional, Tuple
+from typing import Optional
 
-import requests
 from fastapi import HTTPException
 from astropy.coordinates.name_resolve import NameResolveError  # type: ignore
 from astropy.coordinates.sky_coordinate import SkyCoord  # type: ignore
@@ -10,11 +8,10 @@ from ..base.common import ACROSSAPIBase
 from ..base.schema import JobInfo
 from .jobs import check_cache, register_job
 from .schema import ResolveGetSchema, ResolveSchema
+from antares_client.search import get_by_ztf_object_id  # type: ignore
 
-ANTARES_URL = "https://api.antares.noirlab.edu/v1/loci"
 
-
-def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
+def antares_radec(ztfname):
     """
     Query ANTARES API to find RA/Dec of a given ZTF source
 
@@ -28,23 +25,13 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
     Tuple[float, float]
         RA, Dec in ICRS decimal degrees
     """
-    search_query = json.dumps(
-        {"query": {"bool": {"filter": {"term": {"properties.ztf_object_id": ztf_id}}}}}
-    )
-
-    params = {
-        "sort": "-properties.newest_alert_observation_time",
-        "elasticsearch_query[locus_listing]": search_query,
-    }
-    r = requests.get(ANTARES_URL, params=params)
-
-    if r.status_code == 200:
-        antares_data = json.loads(r.text)
-        ra = antares_data["data"][0]["attributes"]["ra"]
-        dec = antares_data["data"][0]["attributes"]["dec"]
-        return ra, dec
-    else:
+    try:
+        ant = get_by_ztf_object_id(ztfname)
+        if ant is None:
+            return None, None
+    except Exception:
         return None, None
+    return ant.ra, ant.dec
 
 
 class Resolve(ACROSSAPIBase):
