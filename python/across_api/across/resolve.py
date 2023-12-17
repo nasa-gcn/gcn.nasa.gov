@@ -3,6 +3,8 @@ from typing import Optional, Tuple
 
 import requests
 from fastapi import HTTPException
+from astropy.coordinates.name_resolve import NameResolveError  # type: ignore
+from astropy.coordinates.sky_coordinate import SkyCoord  # type: ignore
 
 from ..base.common import ACROSSAPIBase
 from ..base.schema import JobInfo
@@ -43,39 +45,6 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         return ra, dec
     else:
         return None, None
-
-
-def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
-    """
-    Given a object name, return the Simbad coordinates in degrees.
-
-    Parameters
-    ----------
-    name : str
-        Name of object to search for
-
-    Returns
-    -------
-    tuple
-        RA/Dec in decimal degrees (float or None)
-    """
-    url = "http://simbad.u-strasbg.fr/simbad/sim-script?script="
-    script = 'format object "%IDLIST(1) | %COO(d;A D)\n' + "query id %s" % name
-
-    lines = requests.get(url + script).text.splitlines()
-
-    ddec = None
-    dra = None
-    for line in lines:
-        x = line.split("|")
-        try:
-            name = x[0]
-            numbers = x[1].split(" ")
-            dra = float(numbers[1])
-            ddec = float(numbers[2].strip())
-        except (ValueError, IndexError):
-            pass
-    return dra, ddec
 
 
 class Resolve(ACROSSAPIBase):
@@ -156,12 +125,15 @@ class Resolve(ACROSSAPIBase):
                 self.ra, self.dec = ra, dec
                 self.resolver = "ANTARES"
                 return True
-        # Check against Simbad
-        ra, dec = simbad_radec(self.name)
-        if ra is not None:
-            self.ra, self.dec = ra, dec
-            self.resolver = "Simbad"
+
+        # Check using the CDS resolver
+        try:
+            skycoord = SkyCoord.from_name(self.name)
+            self.ra, self.dec = skycoord.ra.deg, skycoord.dec.deg
+            self.resolver = "CDS"
             return True
+        except NameResolveError:
+            pass
 
         # Send a warning if name couldn't be resolved
         raise HTTPException(status_code=404, detail="Could not resolve name.")
