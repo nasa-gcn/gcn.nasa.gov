@@ -43,7 +43,7 @@ async def hello(name: YourNameDep) -> HelloSchema:
     return Hello(name=name).schema
 
 
-@app.get("/ACROSS/Resolve")
+@app.get("/across/resolve")
 async def resolve(name: SourceNameDep) -> ResolveSchema:
     """
     Resolve the name of an astronomical object to its coordinates.
