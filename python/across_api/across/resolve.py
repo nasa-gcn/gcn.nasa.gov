@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Tuple
 
 from fastapi import HTTPException
 from astropy.coordinates.name_resolve import NameResolveError  # type: ignore
@@ -11,7 +11,7 @@ from .schema import ResolveGetSchema, ResolveSchema
 from antares_client.search import get_by_ztf_object_id  # type: ignore
 
 
-def antares_radec(ztfname):
+def antares_radec(ztfname: str) -> Tuple[Optional[float], Optional[float]]:
     """
     Query ANTARES API to find RA/Dec of a given ZTF source
 
