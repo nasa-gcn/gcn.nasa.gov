@@ -6,8 +6,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { DataFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
+import {
+  type ActionFunctionArgs,
+  type LoaderFunctionArgs,
+  redirect,
+} from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import {
   Button,
@@ -41,7 +44,7 @@ export const handle: BreadcrumbHandle & SEOHandle = {
   getSitemapEntries: () => null,
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const data = await request.formData()
@@ -84,7 +87,7 @@ export async function action({ request }: DataFunctionArgs) {
   }
 }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const { uuid } = Object.fromEntries(new URL(request.url).searchParams)
   let intent = 'create'
   const user = await getUser(request)
