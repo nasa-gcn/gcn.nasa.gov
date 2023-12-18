@@ -19,7 +19,7 @@
  *
  */
 import { cssBundleHref } from '@remix-run/css-bundle'
-import type { DataFunctionArgs, LinksFunction } from '@remix-run/node'
+import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Links,
   LiveReload,
@@ -92,7 +92,7 @@ export const links: LinksFunction = () => [
   })),
 ]
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   const email = user?.email
   const name = user?.name

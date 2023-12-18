@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 
 import { formatCircularText } from './_gcn.circulars/circulars.lib'
@@ -13,7 +13,7 @@ import { get } from './_gcn.circulars/circulars.server'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 
-export async function loader({ params: { circularId } }: DataFunctionArgs) {
+export async function loader({ params: { circularId } }: LoaderFunctionArgs) {
   invariant(circularId)
   const result = await get(parseFloat(circularId))
   return new Response(formatCircularText(result), {
