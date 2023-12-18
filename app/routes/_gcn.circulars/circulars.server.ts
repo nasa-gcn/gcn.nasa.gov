@@ -127,12 +127,14 @@ export async function search({
   limit,
   startDate,
   endDate,
+  useNLP
 }: {
   query?: string
   page?: number
   limit?: number
   startDate?: string
   endDate?: string
+  useNLP?: boolean
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
@@ -163,7 +165,6 @@ export async function search({
     console.log('Error: ', e)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const nlpSearchQuery = query
     ? {
         bool: {
@@ -190,7 +191,6 @@ export async function search({
       }
     : { match_all: {} }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const searchQuery = {
     bool: {
       must: query
@@ -212,6 +212,7 @@ export async function search({
     },
   }
 
+  const chosenQuery = useNLP ? nlpSearchQuery : searchQuery
   const {
     body: {
       hits: {
@@ -222,7 +223,7 @@ export async function search({
   } = await client.search({
     index: 'circulars',
     body: {
-      query: nlpSearchQuery,
+      query: chosenQuery,
       fields: ['subject'],
       _source: false,
       sort: {

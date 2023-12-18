@@ -40,10 +40,12 @@ import { DateSelector } from './DateSelectorMenu'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
 import { useFeature } from '~/root'
+import { feature } from '~/lib/env.server'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ request: { url } }: LoaderFunctionArgs) {
+  const useNLP = feature('CIRCULARS_USE_NLP')
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   if (query) {
@@ -59,6 +61,7 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
     limit,
     startDate,
     endDate,
+    useNLP,
   })
 
   return { page, ...results }
