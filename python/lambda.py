@@ -19,4 +19,6 @@ async def example():
 if feature("LABS"):
     handler = Mangum(app, api_gateway_base_path="/labs/api", lifespan="off")
 else:
-    handler = lambda *_, **__: {"statusCode": 404}
+
+    def handler(*_, **__):  # type: ignore
+        return {"statusCode": 404}
