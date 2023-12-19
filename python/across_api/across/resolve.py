@@ -7,8 +7,6 @@ from astropy.coordinates.sky_coordinate import SkyCoord  # type: ignore
 from fastapi import HTTPException
 
 from ..base.common import ACROSSAPIBase
-from ..base.schema import JobInfo
-from .jobs import check_cache, register_job
 from .schema import ResolveGetSchema, ResolveSchema
 
 ANTARES_URL = "https://api.antares.noirlab.edu/v1/loci"
@@ -60,8 +58,6 @@ class Resolve(ACROSSAPIBase):
 
     Attributes:
     -----------
-    status : JobInfo
-        The status of the job.
     ra : Optional[float]
         The right ascension of the resolved object.
     dec : Optional[float]
@@ -82,15 +78,12 @@ class Resolve(ACROSSAPIBase):
     _get_schema = ResolveGetSchema
 
     # Type hints
-    status: JobInfo
-    # Class specific values
     ra: Optional[float]
     dec: Optional[float]
     name: str
     resolver: Optional[str]
 
     def __init__(self, name: str):
-        self.status = JobInfo()
         # Class specific values
         self.ra = None
         self.dec = None
@@ -99,8 +92,6 @@ class Resolve(ACROSSAPIBase):
         if self.validate_get():
             self.get()
 
-    @check_cache
-    @register_job
     def get(self) -> bool:
         """
         Retrieves the RA and Dec coordinates for a given name.

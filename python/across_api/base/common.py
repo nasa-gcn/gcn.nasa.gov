@@ -32,7 +32,6 @@ class ACROSSAPIBase:
     config: ConfigSchema
 
     # Common things in API classes
-    status: JobInfo
     entries: list
 
     def __getitem__(self, i) -> Any:

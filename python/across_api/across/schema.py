@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import Optional
 
-from ..base.schema import BaseSchema, JobInfo
+from ..base.schema import BaseSchema
 
 
 class HelloSchema(BaseSchema):
@@ -17,7 +16,6 @@ class HelloSchema(BaseSchema):
     """
 
     hello: str
-    status: JobInfo
 
 
 class HelloGetSchema(BaseSchema):
@@ -58,7 +56,6 @@ class ResolveSchema(BaseSchema):
     ra: float
     dec: float
     resolver: str
-    status: JobInfo
 
 
 class ResolveGetSchema(BaseSchema):
@@ -72,40 +69,3 @@ class ResolveGetSchema(BaseSchema):
     """
 
     name: str
-
-
-class JobSchema(BaseSchema):
-    """
-    Full return of Job Information for ACROSSAPIJobs
-
-    Parameters
-    ----------
-    username : str
-        The username associated with the job.
-    jobnumber : str, optional
-        The job number.
-    reqtype : str
-        The request type.
-    apiversion : str
-        The API version.
-    began : datetime
-        The start time of the job.
-    created : datetime
-        The creation time of the job.
-    expires : datetime
-        The expiration time of the job.
-    params : str
-        The parameters of the job.
-    result : str, optional
-        The result of the job.
-    """
-
-    username: str
-    jobnumber: Optional[str] = None
-    reqtype: str
-    apiversion: str
-    began: datetime
-    created: datetime
-    expires: datetime
-    params: str
-    result: Optional[str] = None

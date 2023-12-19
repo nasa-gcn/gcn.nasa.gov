@@ -3,7 +3,6 @@ from secrets import token_urlsafe
 from fastapi import HTTPException
 
 from ..base.common import ACROSSAPIBase
-from ..base.schema import JobInfo
 from .models import UserModel
 
 
@@ -103,8 +102,6 @@ class APIUserInfo(ACROSSAPIBase):
         The API key associated with the user.
     userlevel : int
         The user level. Defaults to 1.
-    status : JobInfo
-        The status of the job.
 
     Methods
     -------
@@ -122,14 +119,12 @@ class APIUserInfo(ACROSSAPIBase):
     username: str
     api_key: str
     userlevel: int
-    status: JobInfo
 
     def __init__(self, username="anonymous"):
         ACROSSAPIBase.__init__(self)
         self.username = username
         self.api_key = "anonymous"
         self.userlevel = 0
-        self.status = JobInfo()
 
     def get(self) -> bool:
         """
