@@ -1,8 +1,7 @@
 from ..base.models import DynamoDBBase  # type: ignore
-from ..base.schema import BaseSchema
 
 
-class UserModel(BaseSchema, DynamoDBBase):
+class UserModel(DynamoDBBase):
     """
     Represents a user in the system.
 
