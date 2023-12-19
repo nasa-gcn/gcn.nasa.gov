@@ -5,7 +5,7 @@ from typing import Any, Type
 from fastapi import HTTPException
 from pydantic import ValidationError
 
-from .schema import BaseSchema, ConfigSchema, JobInfo
+from .schema import BaseSchema
 
 # Make sure we are working in UTC times
 os.environ["TZ"] = "UTC"
@@ -29,7 +29,6 @@ class ACROSSAPIBase:
     _post_schema: Type[BaseSchema]
     _del_schema: Type[BaseSchema]
     _entry_schema: Type[BaseSchema]
-    config: ConfigSchema
 
     # Common things in API classes
     entries: list
