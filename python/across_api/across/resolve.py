@@ -1,4 +1,3 @@
-from functools import lru_cache
 import json
 from typing import Optional, Tuple
 
@@ -48,7 +47,6 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         return None, None
 
 
-@lru_cache
 class Resolve(ACROSSAPIBase):
     """
     Resolve class for resolving astronomical object names.
