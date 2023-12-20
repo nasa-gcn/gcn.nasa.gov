@@ -17,7 +17,6 @@ class ACROSSAPIBase:
 
     # Main definitions
     mission: str = "ACROSS"
-    username: str = "anonymous"
 
     # Allowed time to cache result
     _cache_time = 300  # 300s = 5 mins
