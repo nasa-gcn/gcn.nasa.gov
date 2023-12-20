@@ -128,8 +128,9 @@ class Resolve(ACROSSAPIBase):
         except NameResolveError:
             pass
 
-        # Send a warning if name couldn't be resolved
-        raise HTTPException(status_code=404, detail="Could not resolve name.")
+        # If no resolution occurred, report this to the user
+        self.resolver = "Could not resolve name."
+        return False
 
 
 ACROSSAPIResolve = Resolve
