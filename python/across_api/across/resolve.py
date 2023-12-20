@@ -4,7 +4,6 @@ from typing import Optional, Tuple
 import requests
 from astropy.coordinates.name_resolve import NameResolveError  # type: ignore
 from astropy.coordinates.sky_coordinate import SkyCoord  # type: ignore
-from fastapi import HTTPException
 
 from ..base.common import ACROSSAPIBase
 from .schema import ResolveGetSchema, ResolveSchema
