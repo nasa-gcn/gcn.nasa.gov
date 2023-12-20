@@ -11,7 +11,7 @@ class Hello(ACROSSAPIBase):
 
     Parameters
     ----------
-    name : str
+    name
         Your name, if you wish to give it
     """
 
@@ -27,7 +27,7 @@ class Hello(ACROSSAPIBase):
 
         Parameters
         ----------
-        name : str
+        name
             Your name
         """
         self.name = name

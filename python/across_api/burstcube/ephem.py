@@ -17,40 +17,40 @@ class Ephem(EphemBase, ACROSSAPIBase):
 
     Parameters
     ----------
-    begin : datetime
+    begin
         Start time of ephemeris search
-    end : datetime
+    end
         End time of ephemeris search
-    stepsize : int
+    stepsize
         Step size in seconds for ephemeris calculations
 
     Attributes
     ----------
-    datetimes : list
+    datetimes
         List of datetimes for ephemeris points
-    posvec : list
+    posvec
         List of S/C position vectors in km
-    lat : list
+    lat
         List of S/C latitude (degrees)
-    long : list
+    long
         List of S/C longitude (degrees)
-    velra : list
+    velra
         List of Ra of the direction of motion (degrees)
     veldec:
         List of Dec of the direction of motion (degrees)
-    beta : list
+    beta
         List of Beta Angle of orbit
-    sunpos : list
+    sunpos
         List of RA/Dec of the Sun
-    moonpos : list
+    moonpos
         List of RA/Dec of the Moon
-    sunvec : list
+    sunvec
         List of vectors to the Sun from the center of the Earth
-    moonvec : list
+    moonvec
         List of vectors to the Moon from the center of the Earth
-    ineclipse : list
+    ineclipse
         List of booleans indicating if the spacecraft is in eclipse
-    status : JobInfo
+    status
         Status of ephemeris query
     """
 

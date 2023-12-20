@@ -17,14 +17,14 @@ class TLEBase:
 
     Parameters
     ----------
-    epoch : datetime
+    epoch
         Epoch of TLE to retrieve
 
     Attributes
     ----------
-    tles : list
+    tles
         List of TLEs currently loaded
-    tle : TLEEntry
+    tle
         TLE entry for given epoch
 
     Methods
@@ -171,12 +171,11 @@ class TLEBase:
 
         Parameters
         ----------
-        epoch : datetime
+        epoch
             Epoch for which you want to retrieve a TLE
 
         Returns
         -------
-        Optional[TLEEntry]
             Best TLE for the given epoch
 
         """

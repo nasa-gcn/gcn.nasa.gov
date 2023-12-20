@@ -26,10 +26,10 @@ class CoordSchema(BaseSchema):
 
     Parameters
     ----------
-    ra : float
+    ra
         Right Ascension value in degrees. Must be 0 or greater
         and lower than 360.
-    dec : float
+    dec
         Declination value in degrees. Must be between -90 and 90.
     """
 
@@ -43,7 +43,7 @@ class PositionSchema(CoordSchema):
 
     Attributes
     ----------
-    error : Optional[float]
+    error
         The error associated with the position. Defaults to None.
     """
 
@@ -55,9 +55,9 @@ class OptionalCoordSchema(BaseSchema):
 
     Parameters
     ----------
-    ra : Optional[float], optional
+    ra
         Right Ascension value in degrees. Must be between 0 and 360.
-    dec : Optional[float], optional
+    dec
         Declination value in degrees. Must be between -90 and 90.
 
     Methods
@@ -77,7 +77,7 @@ class OptionalCoordSchema(BaseSchema):
 
         Parameters
         ----------
-        data : Any
+        data
             The data to be validated.
 
         Returns
@@ -102,7 +102,7 @@ class OptionalPositionSchema(OptionalCoordSchema):
 
     Attributes
     ----------
-    error : Optional[float]
+    error
         The error associated with the position. Defaults to None.
     """
 
@@ -114,14 +114,14 @@ class DateRangeSchema(BaseSchema):
 
     Parameters
     ----------
-    begin : datetime
+    begin
         The start date of the range.
-    end : datetime
+    end
         The end date of the range.
 
     Returns
     -------
-    data : Any
+    data
         The validated data with converted dates.
 
     Raises
@@ -148,9 +148,9 @@ class OptionalDateRangeSchema(BaseSchema):
 
     Parameters
     ----------
-    begin : Optional[datetime], optional
+    begin
         The beginning date of the range, by default None
-    end : Optional[datetime], optional
+    end
         The end date of the range, by default None
 
     Methods
@@ -170,7 +170,7 @@ class OptionalDateRangeSchema(BaseSchema):
 
         Parameters
         ----------
-        data : Any
+        data
             The data to be validated.
 
         Returns
@@ -204,9 +204,9 @@ class UserSchema(BaseSchema):
 
     Parameters
     ----------
-    username : str
+    username
         The username for authentication.
-    api_key : str
+    api_key
         The API key for authentication.
     """
 
@@ -220,16 +220,16 @@ class JobInfo(BaseSchema):
 
     Parameters
     ----------
-    created : datetime, optional
+    created
         The datetime when the job was created.
-    expires : datetime, optional
+    expires
         The datetime when the job expires.
-    warnings : List[str]
+    warnings
         A list of warning messages associated with the job.
 
     Attributes
     ----------
-    num_warnings : int
+    num_warnings
         The number of warnings associated with the job.
 
     Methods
@@ -259,13 +259,13 @@ class VisWindow(DateRangeSchema):
 
     Parameters
     ----------
-    begin : datetime
+    begin
         The beginning of the window.
-    end : datetime
+    end
         The end of the window.
-    initial : str
+    initial
         The main constraint that ends at the beginning of the window.
-    final : str
+    final
         The main constraint that begins at the end of the window.
     """
 
@@ -295,14 +295,14 @@ class VisibilityGetSchema(CoordSchema, DateRangeSchema):
 
     Parameters
     ----------
-    stepsize : int, optional
+    stepsize
         The step size in seconds for the visibility data. Default is 60.
 
     Inherits
     --------
-    CoordSchema : Schema
+    CoordSchema
         Schema for coordinate data.
-    DateRangeSchema : Schema
+    DateRangeSchema
         Schema for date range data.
     """
 
@@ -315,9 +315,9 @@ class TLEEntry(BaseSchema):
 
     Attributes
     ----------
-    tle1 : str
+    tle1
         The first line of the TLE.
-    tle2 : str
+    tle2
         The second line of the TLE.
     epoch:  datetime
         The epoch of the TLE, calculated from the TLE1 line.
@@ -346,7 +346,7 @@ class TLESchema(BaseSchema):
 
     Attributes
     ----------
-    tle : TLEEntry
+    tle
         The TLE entry object.
     """
 
@@ -359,9 +359,9 @@ class SAAEntry(DateRangeSchema):
 
     Parameters
     ----------
-    begin : datetime
+    begin
         The start datetime of the SAA passage.
-    end : datetime
+    end
         The end datetime of the SAA passage.
     """
 
@@ -382,9 +382,9 @@ class SAASchema(BaseSchema):
 
     Parameters
     ----------
-    entries : List[SAAEntry]
+    entries
         List of SAAEntry objects.
-    status : JobInfo
+    status
         JobInfo object representing the status.
 
     """
@@ -398,7 +398,7 @@ class SAAGetSchema(DateRangeSchema):
 
     Inherits
     --------
-    DateRangeSchema : Schema
+    DateRangeSchema
         Schema for date range data.
     """
 
@@ -412,19 +412,19 @@ class PointBase(OptionalCoordSchema):
 
     Parameters
     ----------
-    timestamp : datetime
+    timestamp
         The timestamp of the pointing.
-    roll : float, optional
+    roll
         The roll angle of the spacecraft.
-    observing : bool
+    observing
         Indicates whether the spacecraft is observing.
-    infov : bool, float, None, optional
+    infov
         Flag indicating whether an object is in the instrument field of view,
         can be True/False or a numerical fraction for larger uncertainties.
 
     Inherits
     --------
-    CoordSchema : Schema
+    CoordSchema
         Schema for coordinate data.
     """
 
@@ -448,27 +448,27 @@ class EphemSchema(BaseSchema):
 
     Attributes
     ----------
-    timestamp : List[datetime]
+    timestamp
         List of timestamps.
-    posvec : List[List[float]]
+    posvec
         List of position vectors for the spacecraft in GCRS.
-    earthsize : List[float]
+    earthsize
         List of the angular size of the Earth to the spacecraft.
-    polevec : Optional[List[List[float]]], optional
+    polevec
         List of orbit pole vectors, by default None.
-    velvec : Optional[List[List[float]]], optional
+    velvec
         List of spacecraft velocity vectors, by default None.
-    sunvec : List[List[float]]
+    sunvec
         List of sun vectors.
-    moonvec : List[List[float]]
+    moonvec
         List of moon vectors.
-    latitude : List[float]
+    latitude
         List of latitudes.
-    longitude : List[float]
+    longitude
         List of longitudes.
-    stepsize : int, optional
+    stepsize
         Step size, by default 60.
-    status : JobInfo
+    status
         Job information.
     """
 
@@ -490,7 +490,7 @@ class EphemGetSchema(DateRangeSchema):
 
     Parameters
     ----------
-    stepsize : int, optional
+    stepsize
         The step size in seconds (default is 60).
 
     """
@@ -508,19 +508,19 @@ class MissionSchema(BaseSchema):
 
     Parameters
     ----------
-    name : str
+    name
         The name of the mission.
-    shortname : str
+    shortname
         The short name of the mission.
-    agency : str
+    agency
         The agency responsible for the mission.
-    type : str
+    type
         The type of the mission.
-    pi : str, optional
+    pi
         The principal investigator of the mission. Defaults to None.
-    description : str
+    description
         A description of the mission.
-    website : Url
+    website
         The website URL of the mission.
     """
 
@@ -540,11 +540,11 @@ class FOVOffsetSchema(BaseSchema):
 
     Parameters
     ----------
-    ra_off : float
+    ra_off
         The angular offset in Right Ascension (RA) direction.
-    dec_off : float
+    dec_off
         The angular offset in Declination (Dec) direction.
-    roll_off : float
+    roll_off
         The rotational offset around the spacecraft pointing direction.
 
     """
@@ -560,15 +560,15 @@ class FOVSchema(BaseSchema):
 
     Attributes
     ----------
-    type : str
+    type
         The type of the FOV. Currently "AllSky", "Circular", "Square" and "HEALPix" are supported.
-    area : float
+    area
         The area of the FOV in degrees**2.
-    dimension : Optional[float]
+    dimension
         The dimension of the FOV.
-    filename : Optional[str], optional
+    filename
         The filename associated with the FOV.
-    boresight : Optional[FOVOffsetSchema], optional
+    boresight
         The boresight offset of the FOV.
 
     """
@@ -586,30 +586,30 @@ class InstrumentSchema(BaseSchema):
 
     Attributes
     ----------
-    name : str
+    name
         The name of the instrument.
-    shortname : str
+    shortname
         The short name of the instrument.
-    description : str
+    description
         The description of the instrument.
-    website : Url
+    website
         The website URL of the instrument.
-    energy_low : float
+    energy_low
         The low energy range of the instrument.
-    energy_high : float
+    energy_high
         The high energy range of the instrument.
-    fov : FOVSchema
+    fov
         The field of view of the instrument.
 
     Properties
     ----------
-    frequency_high : Quantity
+    frequency_high
         The high frequency range of the instrument.
-    frequency_low : Quantity
+    frequency_low
         The low frequency range of the instrument.
-    wavelength_high : Quantity
+    wavelength_high
         The high wavelength range of the instrument.
-    wavelength_low : Quantity
+    wavelength_low
         The low wavelength range of the instrument.
     """
 
@@ -644,18 +644,18 @@ class EphemConfigSchema(BaseSchema):
 
     Parameters
     ----------
-    parallax : bool
+    parallax
         Flag indicating whether to include parallax when calculating Moon/Sun
         positions.
-    apparent : bool
+    apparent
         Flag indicating whether to use apparent rather than astrometric
         positions.
-    velocity : bool
+    velocity
         Flag indicating whether to include velocity calculation (needed for
         calculating pole or ram constraints).
-    stepsize : int, optional
+    stepsize
         Step size in seconds. Default is 60.
-    earth_radius : float or None, optional
+    earth_radius
         Earth radius value. If None, it will be calculated. If float, it will
         be fixed to this value.
     """
@@ -674,33 +674,33 @@ class VisibilityConfigSchema(BaseSchema):
     Schema for configuring visibility constraints.
 
     Attributes:
-    earth_cons : bool
+    earth_cons
         Calculate Earth Constraint.
-    moon_cons : bool
+    moon_cons
         Calculate Moon Constraint.
-    sun_cons : bool
+    sun_cons
         Calculate Sun Constraint.
-    ram_cons : bool
+    ram_cons
         Calculate Ram Constraint.
-    pole_cons : bool
+    pole_cons
         Calculate Orbit Pole Constraint.
-    saa_cons : bool
+    saa_cons
         Calculate time in SAA as a constraint.
-    earthoccult : float
+    earthoccult
         How many degrees from Earth Limb can you look?
-    moonoccult : float
+    moonoccult
         Degrees from center of Moon.
-    sunoccult : float
+    sunoccult
         Degrees from center of Sun.
-    ramsize : float, optional
+    ramsize
         Degrees from center of ram direction. Defaults to 0.
-    sunextra : float, optional
+    sunextra
         Degrees buffer used for planning purpose. Defaults to 0.
-    earthextra : float, optional
+    earthextra
         Degrees buffer used for planning purpose. Defaults to 0.
-    moonextra : float, optional
+    moonextra
         Degrees buffer used for planning purpose. Defaults to 0.
-    ramextra : float, optional
+    ramextra
         Degrees buffer used for planning purpose. Defaults to 0.
     """
 
@@ -729,18 +729,18 @@ class TLEConfigSchema(BaseSchema):
 
     Parameters
     ----------
-    tle_bad : float
+    tle_bad
         The threshold for determining if a TLE is considered bad in units
         of days. I.e. if the TLE is older than this value, it is considered
         bad.
-    tle_url : Optional[Url], optional
+    tle_url
         The URL for retrieving TLE data. Defaults to None.
-    tle_name : str
+    tle_name
         The name of the TLE.
-    tle_heasarc : Optional[Url], optional
+    tle_heasarc
         The URL for retrieving TLE data from HEASARC in their multi-TLE format.
         Defaults to None.
-    tle_celestrak : Optional[Url], optional
+    tle_celestrak
         The URL for retrieving TLE data from Celestrak. Defaults to None.
     """
 
@@ -757,17 +757,17 @@ class ConfigSchema(BaseSchema):
 
     Parameters
     ----------
-    mission : MissionSchema
+    mission
         The mission schema.
-    instruments : List[InstrumentSchema]
+    instruments
         The list of instrument schemas.
-    primary_instrument : int, optional
+    primary_instrument
         The index of the primary instrument, defaults to 0.
-    ephem : EphemConfigSchema
+    ephem
         The ephem configuration schema.
-    visibility : VisibilityConfigSchema
+    visibility
         The visibility configuration schema.
-    tle : TLEConfigSchema
+    tle
         The TLE configuration schema.
     """
 

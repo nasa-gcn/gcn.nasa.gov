@@ -208,22 +208,6 @@ async def burstcube_too_update(
 ) -> BurstCubeTOOSchema:
     """
     Update a BurstCube TOO object with the given ID number.
-
-    Parameters
-    ----------
-
-    user : LoginDep
-        The user object containing the API key.
-    id : IdDep
-        The ID number of the BurstCube TOO object to update.
-    data : BurstCubeTOOPutSchema
-        The updated data for the BurstCube TOO object.
-
-    Returns
-    -------
-    BurstCubeTOOSchema
-        The updated BurstCube TOO object.
-
     """
     too = BurstCubeTOO(api_key=user["api_key"], **data.model_dump())
     too.post()

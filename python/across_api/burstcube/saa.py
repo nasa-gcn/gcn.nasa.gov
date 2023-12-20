@@ -15,9 +15,9 @@ class BurstCubeSAAPolygon(SAAPolygonBase):
 
     Attributes
     ----------
-    points : list
+    points
         List of points defining the SAA polygon.
-    saapoly : Polygon
+    saapoly
         Shapely Polygon object defining the SAA polygon.
     """
 
@@ -52,20 +52,20 @@ class BurstCubeSAA(SAABase):
 
     Parameters
     ----------
-    begin : datetime
+    begin
         Start time of SAA search
-    end : datetime
+    end
         End time of SAA search
-    ephem : Optional[Ephem]
+    ephem
         Ephem object to use for SAA calculations
-    stepsize : int
+    stepsize
         Step size in seconds for SAA calculations
 
     Attributes
     ----------
-    entries : list
+    entries
         List of SAA entries
-    status : JobInfo
+    status
         Status of SAA query
     """
 
@@ -113,7 +113,7 @@ class BurstCubeSAA(SAABase):
 
         Parameters
         ----------
-        dttime : datetime
+        dttime
             Time at which to calculate if we're in SAA
 
         Returns

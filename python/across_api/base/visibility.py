@@ -16,7 +16,96 @@ from .window import MakeWindowBase
 
 
 class VisibilityBase(ACROSSAPIBase, MakeWindowBase):
-    """Calculate visibility of a given object."""
+    """Calculate visibility of a given object.
+
+    Parameters
+    ----------
+    ram_cons
+        Flag indicating whether to apply Ram constraint (avoidance of direction of motion).
+    pole_cons
+        Flag indicating whether to apply Pole constraint.
+    sun_cons
+        Flag indicating whether to apply Sun constraint.
+    moon_cons
+        Flag indicating whether to apply Moon constraint.
+    earth_cons
+        Flag indicating whether to apply Earth constraint.
+    saa_cons
+        Flag indicating whether to apply SAA (South Atlantic Anomaly) constraint.
+    earthoccult
+        Extra angle in degrees to be added to the Earth constraint.
+    moonoccult
+        Extra angle in degrees to be added to the Moon constraint.
+    sunoccult
+        Extra angle in degrees to be added to the Sun constraint.
+    ramsize
+        Size of the Ram constraint in degrees.
+    sunextra
+        Extra angle in degrees to be added to the Sun constraint.
+    ramextra
+        Extra angle in degrees to be added to the Ram constraint.
+    earthextra
+        Extra angle in degrees to be added to the Earth constraint.
+    moonextra
+        Extra angle in degrees to be added to the Moon constraint.
+    isat
+        Flag indicating whether the object is a satellite.
+    entries
+        List of time windows during which the object is visible.
+    ra
+        Right Ascension of the object in degrees.
+    dec
+        Declination of the object in degrees.
+    status
+        Information about the job status.
+    begin
+        Start time of the visibility calculation.
+    end
+        End time of the visibility calculation.
+    velocity
+        Flag indicating whether velocity information is available.
+    saa
+        SAA (South Atlantic Anomaly) information.
+    ephem
+        Ephemeris information.
+    stepsize
+        Step size for the visibility calculation.
+
+    Attributes
+    ----------
+    timestamp
+        Array of timestamps for the visibility calculation.
+    inearthcons
+        List of boolean values indicating whether the object is within the Earth constraint.
+    inramcons
+        Array of boolean values indicating whether the object is within the Ram constraint.
+    inpolecons
+        Array of boolean values indicating whether the object is within the Pole constraint.
+    insuncons
+        Array of boolean values indicating whether the object is within the Sun constraint.
+    inmooncons
+        Array of boolean values indicating whether the object is within the Moon constraint.
+    skycoord
+        Sky coordinates of the object.
+    saa_windows
+        List of time windows during which the object is outside the SAA (South Atlantic Anomaly).
+
+    Methods
+    -------
+    __getitem__(self, i)
+        Get the i-th entry from the entries list.
+    __len__(self)
+        Get the length of the entries list.
+    insaa(self, dttime)
+        Check if the object is within the SAA (South Atlantic Anomaly) at a given datetime.
+    visible(self, dttime)
+        Check if the object is visible at a given datetime.
+    get(self)
+        Query visibility for a given RA/Dec.
+    constraint(self, index)
+        Get the type of constraint at a given time index.
+
+    """
 
     _schema = VisibilitySchema
     _get_schema = VisibilityGetSchema

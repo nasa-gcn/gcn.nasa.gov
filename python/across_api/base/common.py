@@ -65,7 +65,7 @@ class ACROSSAPIBase:
 
         Parameters
         ----------
-        model_json : str
+        model_json
             JSON of API Model
 
         Returns

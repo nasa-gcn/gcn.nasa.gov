@@ -11,16 +11,16 @@ class PointingBase(ACROSSAPIBase):
 
     Parameters
     ----------
-    begin : datetime
+    begin
         Start time of pointing search
-    end : datetime
+    end
         End time of pointing search
-    stepsize : int
+    stepsize
         Step size in seconds for pointing calculations
 
     Attributes
     ----------
-    entries : list
+    entries
         List of spacecraft pointings
     """
 

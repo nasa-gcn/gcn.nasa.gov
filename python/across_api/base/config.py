@@ -7,7 +7,7 @@ def set_observatory(obsdict: dict):
 
     Parameters
     ----------
-    obsdict : dict
+    obsdict
         Dictionary of observatory configuration parameters
     """
 
