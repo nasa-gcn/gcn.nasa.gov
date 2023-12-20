@@ -1,6 +1,5 @@
 black
 mypy
 pytest
-mypy
 types-requests
 -r python/requirements.txt
