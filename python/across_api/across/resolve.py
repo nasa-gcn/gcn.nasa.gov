@@ -123,6 +123,3 @@ class Resolve(ACROSSAPIBase):
         # If no resolution occurred, report this to the user
         self.resolver = "Could not resolve name."
         return False
-
-
-ACROSSAPIResolve = Resolve
