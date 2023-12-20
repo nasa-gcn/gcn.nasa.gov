@@ -85,16 +85,16 @@ export const handler = createEmailIncomingMessageHandler(
       return
     }
 
-    const eventId = parseEventFromSubject(parsed.subject)
-
-    const circular = {
+    const circular: Parameters<typeof putRaw>[0] = {
       subject: parsed.subject,
       body: parsed.text,
       sub: userData.sub,
       submitter: formatAuthor(userData),
       submittedHow,
-      eventId,
     }
+
+    const eventId = parseEventFromSubject(parsed.subject)
+    if (eventId) circular.eventId = eventId
 
     // Removes sub as a property if it is undefined from the legacy users
     if (!circular.sub) delete circular.sub
