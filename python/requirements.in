@@ -1,0 +1,4 @@
+astropy==6.0.0
+fastapi==0.105.0
+mangum==0.17.0
+requests==2.31.0
