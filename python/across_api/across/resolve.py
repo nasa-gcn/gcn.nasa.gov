@@ -1,4 +1,5 @@
 import json
+import logging
 from typing import Optional, Tuple
 
 import requests
@@ -35,14 +36,18 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         "elasticsearch_query[locus_listing]": search_query,
     }
     r = requests.get(ANTARES_URL, params=params)
+    try:
+        r.raise_for_status()
+    except requests.HTTPError as e:
+        logging.exception(e)
 
     if r.ok:
         antares_data = json.loads(r.text)
-        ra = antares_data["data"][0]["attributes"]["ra"]
-        dec = antares_data["data"][0]["attributes"]["dec"]
-        return ra, dec
-    else:
-        return None, None
+        if antares_data["meta"]["count"] > 0:
+            ra = antares_data["data"][0]["attributes"]["ra"]
+            dec = antares_data["data"][0]["attributes"]["dec"]
+            return ra, dec
+    return None, None
 
 
 class Resolve(ACROSSAPIBase):
