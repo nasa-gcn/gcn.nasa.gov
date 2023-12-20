@@ -43,11 +43,6 @@ client_credentials
   client_id **String
   PointInTimeRecovery true
 
-acrossapi_users
-  username *String
-  api_key String
-  userlevel Number
-
 sessions
   _idx *String
   _ttl TTL
