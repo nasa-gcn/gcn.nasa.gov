@@ -41,7 +41,6 @@ class ACROSSAPIBase:
 
         Returns
         -------
-        str
             API Name
         """
         return f"{self.mission}{self.__class__.__name__.replace(self.mission,'')}"
@@ -62,7 +61,6 @@ class ACROSSAPIBase:
 
         Returns
         -------
-        bool
             Do arguments validate? True | False
         """
         try:
@@ -76,7 +74,6 @@ class ACROSSAPIBase:
 
         Returns
         -------
-        bool
             Is it validated? True | False
         """
         try:
@@ -90,7 +87,6 @@ class ACROSSAPIBase:
 
         Returns
         -------
-        bool
             Is it validated? True | False
         """
         try:
@@ -105,7 +101,6 @@ class ACROSSAPIBase:
 
         Returns
         -------
-        bool
             Is it validated? True | False
         """
         try:

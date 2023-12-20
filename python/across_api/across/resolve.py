@@ -17,13 +17,12 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
 
     Parameters
     ----------
-    ztf_id : str
+    ztf_id
         ZTF name of source
 
     Returns
     -------
-    Tuple[float, float]
-        RA, Dec in ICRS decimal degrees
+        RA, Dec in ICRS decimal degrees, or None, None if not found
 
     FIXME: Replace with antares-client module call in future, once confluent-kafka-python issues are resolved.
     """
@@ -52,23 +51,23 @@ class Resolve(ACROSSAPIBase):
 
     Parameters:
     -----------
-    name : str
+    name
         The name of the astronomical object to resolve.
 
     Attributes:
     -----------
-    ra : Optional[float]
+    ra
         The right ascension of the resolved object.
-    dec : Optional[float]
+    dec
         The declination of the resolved object.
-    name : str
+    name
         The name of the astronomical object.
-    resolver : Optional[str]
+    resolver
         The resolver used for resolving the object.
 
     Methods:
     --------
-    get() -> bool:
+    get():
         Retrieves the resolved object information.
     """
 
@@ -97,13 +96,7 @@ class Resolve(ACROSSAPIBase):
 
         Returns
         -------
-        bool
             True if the name is successfully resolved, False otherwise.
-
-        Raises
-        ------
-        HTTPException
-            If the name couldn't be resolved.
         """
         # Make sure the required parameters are given in the correct format
         if not self.validate_get():

@@ -9,10 +9,8 @@ class HelloSchema(BaseSchema):
 
     Attributes
     ----------
-    hello : str
+    hello
         The greeting message.
-    status : JobInfo
-        The status of the job.
     """
 
     hello: str
@@ -24,12 +22,12 @@ class HelloGetSchema(BaseSchema):
 
     Parameters
     ----------
-    name : str, optional
+    name
         The name parameter for the Hello class.
 
     Attributes
     ----------
-    name : str or None
+    name
         The name parameter for the Hello class.
 
     """
@@ -43,14 +41,12 @@ class ResolveSchema(BaseSchema):
 
     Parameters
     ----------
-    ra : float
+    ra
         Right ascension coordinate.
-    dec : float
+    dec
         Declination coordinate.
-    resolver : str
+    resolver
         Resolver used for resolving the coordinates.
-    status : JobInfo
-        Information about the job status.
     """
 
     ra: float
@@ -63,7 +59,7 @@ class ResolveGetSchema(BaseSchema):
 
     Parameters
     ----------
-    name : str
+    name
         The name of the source to be resolved into coordinates.
 
     """

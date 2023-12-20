@@ -9,7 +9,7 @@ class Hello(ACROSSAPIBase):
 
     Parameters
     ----------
-    name : str
+    name
         Your name, if you wish to give it
     """
 
@@ -25,7 +25,7 @@ class Hello(ACROSSAPIBase):
 
         Parameters
         ----------
-        name : str
+        name
             Your name
         """
         self.name = name
@@ -38,8 +38,7 @@ class Hello(ACROSSAPIBase):
 
         Returns
         -------
-        bool
-            True if this worked
+            True if this worked (it always should)
         """
         if self.name is None:
             self.hello = "Hello there!"
