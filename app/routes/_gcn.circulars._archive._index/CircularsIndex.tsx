@@ -27,18 +27,42 @@ export default function ({
           {totalItems} result{totalItems != 1 && 's'} found.
         </h3>
       )}
-      <ol>
-        {allItems.map(({ circularId, subject }) => (
-          <li key={circularId} value={circularId}>
-            <Link
-              className="usa-link"
-              to={`/circulars/${circularId}${searchString}`}
-            >
-              {subject}
-            </Link>
-          </li>
-        ))}
-      </ol>
+      <div className="usa-table-container--scrollable" tabIndex={0}>
+        <table
+          className="usa-table usa-table--striped usa-table--borderless"
+          data-sortable
+        >
+          <thead>
+            <tr>
+              <th scope="col" role="columnheader" data-sortable>
+                Circular ID
+              </th>
+              <th scope="col" role="columnheader" data-sortable>
+                Subject
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {allItems.map(({ circularId, subject }) => (
+              <tr key={circularId}>
+                <td data-sort-value={circularId}>{circularId}</td>
+                <td data-sort-value={subject}>
+                  <Link
+                    className="usa-link"
+                    to={`/circulars/${circularId}${searchString}`}
+                  >
+                    {subject}
+                  </Link>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div
+          className="usa-sr-only usa-table__announcement-region"
+          aria-live="polite"
+        ></div>
+      </div>
     </>
   )
 }
