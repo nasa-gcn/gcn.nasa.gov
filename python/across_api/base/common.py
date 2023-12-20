@@ -57,28 +57,6 @@ class ACROSSAPIBase:
         """
         return self._schema.model_validate(self)
 
-    def loads(self, model_json: str) -> bool:
-        """Load attributes from JSON of API Model
-
-        Parameters
-        ----------
-        model_json : str
-            JSON of API Model
-
-        Returns
-        -------
-        bool
-            Did this work True or False?
-        """
-        try:
-            model = self._schema.model_validate_json(model_json)
-            for k in model.model_fields.keys():
-                setattr(self, k, getattr(model, k))
-        except ValidationError as e:
-            raise HTTPException(422, e.errors())
-
-        return True
-
     def validate_get(self) -> bool:
         """Validate arguments for GET
 
