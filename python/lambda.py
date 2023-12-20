@@ -11,5 +11,6 @@ from env import feature
 if feature("LABS"):
     handler = Mangum(app, api_gateway_base_path="/labs/api/v1", lifespan="off")
 else:
+
     def handler(*_, **__):  # type: ignore
         return {"statusCode": 404}
