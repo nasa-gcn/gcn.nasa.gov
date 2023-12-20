@@ -5,8 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
-import { json, redirect } from '@remix-run/node'
+import { type LoaderFunctionArgs, json, redirect } from '@remix-run/node'
 import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import {
   Card,
@@ -58,7 +57,7 @@ export const handle: BreadcrumbHandle = {
 
 export async function loader({
   params: { version, '*': path },
-}: DataFunctionArgs) {
+}: LoaderFunctionArgs) {
   if (version === 'stable') version = undefined
   if (!version || !path) {
     version ||= await getLatestRelease()

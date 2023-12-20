@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs } from '@remix-run/node'
 
 import {
   NewCredentialForm,
@@ -22,7 +22,7 @@ export const handle: BreadcrumbHandle & SEOHandle = {
 
 export const loader = handleCredentialLoader
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   return handleCredentialActions(request, 'user')
 }
 
