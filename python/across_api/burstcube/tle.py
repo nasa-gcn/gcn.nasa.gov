@@ -15,14 +15,14 @@ class BurstCubeTLE(TLEBase):
 
     Parameters
     ----------
-    epoch : datetime
+    epoch
         Epoch of BurstCubeTLE to retrieve
 
     Attributes
     ----------
-    tles : list
+    tles
         List of BurstCubeTLEs for given epoch
-    tle : BurstCubeTLEEntryModel
+    tle
         BurstCubeTLE entry for given epoch
 
     Methods

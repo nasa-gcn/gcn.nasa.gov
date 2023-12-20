@@ -31,11 +31,11 @@ class FOVBase(ACROSSAPIBase):
 
         Parameters
         ----------
-        sc_ra : Optional[float], optional
+        sc_ra
             Spacecraft pointing Right Ascension in decimal degrees, by default None
-        sc_dec : Optional[float], optional
+        sc_dec
             Spacecraft pointing Declination in decimal degrees, by default None
-        sc_roll : Optional[float], optional
+        sc_roll
             Spacecraft pointing Roll in decimal degrees, by default None
 
         Returns
@@ -97,9 +97,9 @@ class FOVBase(ACROSSAPIBase):
 
         Parameters
         ----------
-        ra : float
+        ra
             Right Ascenscion ICRS decimal degrees
-        dec : float
+        dec
             Declination ICRS decimal degrees
 
         Returns
@@ -156,19 +156,19 @@ class FOVBase(ACROSSAPIBase):
 
         Parameters
         ----------
-        ra : float, list, np.ndarray, Latitude, None
+        ra
             Right ascension of the celestial object.
-        dec : float, list, np.ndarray, Longitude, None
+        dec
             Declination of the celestial object.
         skycoord: SkyCoord, optional
             SkyCoord object representing the celestial object.
-        earth : SkyCoord, optional
+        earth
             SkyCoord object representing the Earth.
-        earth_ra : float, optional
+        earth_ra
             Right ascension of the Earth.
-        earth_dec : float, optional
+        earth_dec
             Declination of the Earth.
-        earth_size : float, u.Quantity, None
+        earth_size
             Angular size of the Earth.
 
         Returns
@@ -204,19 +204,19 @@ class FOVBase(ACROSSAPIBase):
 
         Parameters
         ----------
-        ra : float
+        ra
             Right Asc_enscion ICRS decimal degrees
-        dec : float
+        dec
             Declination ICRS decimal degrees
         skycoord: SkyCoord, optional
             SkyCoord object representing the celestial object.
-        earth : SkyCoord, optional
+        earth
             SkyCoord object representing the Earth.
-        earth_ra : float, optional
+        earth_ra
             Right ascension of the Earth.
-        earth_dec : float, optional
+        earth_dec
             Declination of the Earth.
-        earth_size : float, u.Quantity, None
+        earth_size
             Angular size of the Earth (default degrees if float).
 
         Returns
@@ -250,21 +250,21 @@ class FOVBase(ACROSSAPIBase):
 
         Parameters
         ----------
-        healpix_loc : np.ndarray
+        healpix_loc
             An array containing the probability density values for each HEALpix
             pixel.
-        healpix_nside : int
+        healpix_nside
             The NSIDE value of the HEALpix map. If not provided, it will be
             calculated based on the length of healpix_loc.
-        healpix_order : str
+        healpix_order
             The ordering scheme of the HEALpix map. Default is "NESTED".
-        earth_ra : float
+        earth_ra
             The right ascension of the Earth's center in degrees. If provided
             along with earth_dec and earth_size, it will be used to remove
             Earth occulted pixels from the FOV.
-        earth_dec : float
+        earth_dec
             The declination of the Earth's center in degrees.
-        earth_size : float
+        earth_size
             The size of the Earth in degrees.
 
         Returns
@@ -356,31 +356,31 @@ class FOVCheckBase(ACROSSAPIBase):
 
     Attributes
     ----------
-    fov : FOVBase
+    fov
         Instrument FOV
-    ephem : EphemBase
+    ephem
         Ephemeris
-    ra : float
+    ra
         Right Ascension in decimal degrees
-    dec : float
+    dec
         Declination in decimal degrees
-    pointings : PointingBase
+    pointings
         Pointing information
-    earthoccult : bool
+    earthoccult
         Calculate Earth occultation (default: True)
-    stepsize : int
+    stepsize
         Step size in seconds for visibility calculations
-    entries : list
+    entries
         List of FOV check entries
-    status : JobInfo
+    status
         Status of FOV check query
-    config : ConfigSchema
+    config
         Configuration schema
-    instrument : str
+    instrument
         Instrument name
-    healpix_loc : np.ndarray
+    healpix_loc
         HEALpix map
-    healpix_order : str
+    healpix_order
         HEALpix ordering scheme
     """
 
@@ -446,7 +446,7 @@ class FOVCheckBase(ACROSSAPIBase):
 
         Parameters
         ----------
-        trigger_time : datetime
+        trigger_time
             Time at which to calculate if we're in FOV
 
         Returns
@@ -471,7 +471,7 @@ class FOVCheckBase(ACROSSAPIBase):
 
         Parameters
         ----------
-        fovschema : FOVSchema
+        fovschema
             FOV schema
 
         Returns

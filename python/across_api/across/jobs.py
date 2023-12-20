@@ -15,9 +15,9 @@ def api_call_params(func: Callable, instance: ACROSSAPIBase) -> Union[str, bool]
 
     Parameters
     ----------
-    func : Any
+    func
         The function to be called.
-    instance : ACROSSAPIBase
+    instance
         The instance of the ACROSSAPIBase class.
 
     Returns
@@ -98,7 +98,7 @@ def check_cache(func: Callable) -> Callable:
 
     Parameters
     ----------
-    func : function
+    func
         The function to be decorated.
 
     Returns

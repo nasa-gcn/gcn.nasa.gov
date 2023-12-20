@@ -5,7 +5,7 @@ from ..base.schema import BaseSchema
 
 class HelloSchema(BaseSchema):
     """
-    Schema defining the returned attributes of the ACROSS API Hello class.
+    Schema d;efining the returned attributes of the ACROSS API Hello class.
 
     Attributes
     ----------

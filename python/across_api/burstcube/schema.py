@@ -22,19 +22,19 @@ class TOOReason(str, Enum):
 
     Attributes
     ----------
-    saa : str
+    saa
         In SAA
-    earth_occult : str
+    earth_occult
         Earth occulted
-    moon_occult : str
+    moon_occult
         Moon occulted
-    sun_occult : str
+    sun_occult
         Sun occulted
-    too_old : str
+    too_old
         Too old
-    other : str
+    other
         Other
-    none : str
+    none
         None
     """
 
@@ -52,17 +52,17 @@ class TOOStatus(str, Enum):
     Enumeration class representing the status of a Target of Opportunity (TOO) request.
 
     Attributes:
-    requested : str
+    requested
         The TOO request has been submitted.
-    rejected : str
+    rejected
         The TOO request has been rejected.
-    declined : str
+    declined
         The TOO request has been declined.
-    approved : str
+    approved
         The TOO request has been approved.
-    executed : str
+    executed
         The TOO request has been executed.
-    other : str
+    other
         The TOO request has a status other than the predefined ones.
     """
 
@@ -80,7 +80,7 @@ class BurstCubeTOOCoordSchema(OptionalPositionSchema):
 
     Inherits
     --------
-    OptionalPositionSchema : schema
+    OptionalPositionSchema
         Schema for the position of a target with circular error.
     """
 
@@ -93,39 +93,39 @@ class BurstCubeTOOModelSchema(BurstCubeTOOCoordSchema):
 
     Parameters
     ----------
-    id : Optional[int], optional
+    id
         The ID of the BurstCubeTOO Request, by default None
-    username : str
+    username
         The username associated with the BurstCubeTOO Request
-    timestamp : Optional[datetime], optional
+    timestamp
         The timestamp of the BurstCubeTOO Request, by default None
-    trigger_mission : Optional[str], optional
+    trigger_mission
         The mission associated with the trigger, by default None
-    trigger_instrument : Optional[str], optional
+    trigger_instrument
         The instrument associated with the trigger, by default None
-    trigger_id : Optional[str], optional
+    trigger_id
         The ID of the trigger, by default None
-    trigger_time : Optional[datetime], optional
+    trigger_time
         The time of the trigger, by default None
-    trigger_duration : Optional[float], optional
+    trigger_duration
         The duration of the trigger, by default None
-    classification : Optional[str], optional
+    classification
         The classification of the trigger, by default None
-    justification : Optional[str], optional
+    justification
         The justification for the BurstCubeTOO Request, by default None
-    begin : Optional[datetime], optional
+    begin
         The start time of the BurstCubeTOO observation, by default None
-    end : Optional[datetime], optional
+    end
         The end time of the BurstCubeTOO observation, by default None
-    exposure : float, optional
+    exposure
         The exposure time for the BurstCubeTOO observation, by default 200
-    offset : float, optional
+    offset
         The offset for the BurstCubeTOO observation, by default -50
-    reason : TOOReason, optional
+    reason
         The reason for the BurstCubeTOO Request, by default TOOReason.none
-    too_status : TOOStatus, optional
+    too_status
         The status of the BurstCubeTOO Request, by default TOOStatus.requested
-    too_info : str, optional
+    too_info
         Additional information about the BurstCubeTOO Request, by default ""
     """
 
@@ -153,37 +153,37 @@ class BurstCubeTOOPutSchema(UserSchema, BurstCubeTOOCoordSchema):
 
     Parameters
     ----------
-    id : Optional[int], optional
+    id
         The ID of the BurstCubeTOO Request, by default None
-    username : str
+    username
         The username associated with the BurstCubeTOO Request
-    timestamp : Optional[datetime], optional
+    timestamp
         The timestamp of the BurstCubeTOO Request, by default None
-    trigger_mission : Optional[str], optional
+    trigger_mission
         The mission associated with the trigger, by default None
-    trigger_instrument : Optional[str], optional
+    trigger_instrument
         The instrument associated with the trigger, by default None
-    trigger_id : Optional[str], optional
+    trigger_id
         The ID of the trigger, by default None
-    trigger_time : Optional[datetime], optional
+    trigger_time
         The time of the trigger, by default None
-    trigger_duration : Optional[float], optional
+    trigger_duration
         The duration of the trigger, by default None
-    classification : Optional[str], optional
+    classification
         The classification of the trigger, by default None
-    justification : Optional[str], optional
+    justification
         The justification for the BurstCubeTOO Request, by default None
-    begin : Optional[datetime], optional
+    begin
         The start time of the BurstCubeTOO Request, by default None
-    end : Optional[datetime], optional
+    end
         The end time of the BurstCubeTOO Request, by default None
-    exposure : Optional[float], optional
+    exposure
         The exposure time of the BurstCubeTOO Request, by default None
-    offset : Optional[float], optional
+    offset
         The offset of the BurstCubeTOO Request, by default None
-    reason : TOOReason, optional
+    reason
         The reason for the BurstCubeTOO Request, by default TOOReason.none
-    too_status : TOOStatus, optional
+    too_status
         The status of the BurstCubeTOO Request, by default TOOStatus.requested
     """
 
@@ -210,7 +210,7 @@ class BurstCubeTOODelSchema(UserSchema):
 
     Attributes
     ----------
-    id : int
+    id
         The ID of the BurstCubeTOODel object.
     """
 
@@ -223,29 +223,29 @@ class BurstCubeTOOPostSchema(UserSchema, BurstCubeTOOCoordSchema):
 
     Parameters
     ----------
-    username : str
+    username
         The username associated with the request.
-    trigger_mission : str
+    trigger_mission
         The mission associated with the trigger.
-    trigger_instrument : str
+    trigger_instrument
         The instrument associated with the trigger.
-    trigger_id : str
+    trigger_id
         The ID of the trigger.
-    trigger_time : datetime
+    trigger_time
         The time of the trigger.
-    trigger_duration : float, optional
+    trigger_duration
         The duration of the trigger, default is 0.
-    classification : str, optional
+    classification
         The classification of the trigger, default is None.
-    justification : str, optional
+    justification
         The justification for the trigger, default is None.
-    begin : datetime, optional
+    begin
         The beginning time of the trigger, default is None.
-    end : datetime, optional
+    end
         The end time of the trigger, default is None.
-    exposure : float, optional
+    exposure
         The exposure time, default is 200.
-    offset : float, optional
+    offset
         The offset value, default is -50.
     """
 
@@ -267,12 +267,12 @@ class BurstCubeTOOSchema(BurstCubeTOOModelSchema):
 
     Parameters
     ----------
-    status : JobInfo
+    status
         The status of the BurstCubeTOO request.
 
     Inherits
     --------
-    BurstCubeTOOModelSchema : schema
+    BurstCubeTOOModelSchema
         Schema for the BurstCubeTOO request.
 
     """
@@ -298,11 +298,11 @@ class BurstCubeFOVCheckGetSchema(OptionalCoordSchema, DateRangeSchema):
 
     Parameters
     ----------
-    healpix_loc : Optional[list], optional
+    healpix_loc
         HEALPix map localization.
-    stepsize : int, optional
+    stepsize
         Step size in seconds, by default 60.
-    earthoccult : bool, optional
+    earthoccult
         Flag indicating whether to consider Earth occultation, by default True.
     """
 
@@ -317,9 +317,9 @@ class BurstCubeFOVCheckSchema(BaseSchema):
 
     Attributes
     ----------
-    entries : List[BurstCubePoint]
+    entries
         List of BurstCube points.
-    status : JobInfo
+    status
         Information about the job status.
     """
 
@@ -333,7 +333,7 @@ class BurstCubeTOOGetSchema(UserSchema):
 
     Parameters
     ----------
-    id : int
+    id
         The ID of the BurstCube TOO.
     """
 
@@ -348,25 +348,25 @@ class BurstCubeTOORequestsGetSchema(
 
     Parameters:
     -----------
-    ra : Optional[float]
+    ra
         The right ascension of the TOO requests.
-    dec : Optional[float]
+    dec
         The declination of the TOO requests.
-    radius : Optional[float]
+    radius
         The radius around the target coordinates to search for TOO requests.
-    begin : Optional[datetime]
+    begin
         The start time of the TOO requests.
-    end : Optional[datetime]
+    end
         The end time of the TOO requests.
-    trigger_time : Optional[datetime]
+    trigger_time
         The trigger time of the TOO requests.
-    trigger_mission : Optional[str]
+    trigger_mission
         The mission associated with the trigger of the TOO requests.
-    trigger_instrument : Optional[str]
+    trigger_instrument
         The instrument associated with the trigger of the TOO requests.
-    trigger_id : Optional[str]
+    trigger_id
         The ID of the trigger associated with the TOO requests.
-    limit : Optional[int]
+    limit
         The maximum number of TOO requests to retrieve.
     """
 
@@ -383,9 +383,9 @@ class BurstCubeTOORequestsSchema(BaseSchema):
 
     Attributes
     ----------
-    entries : List[BurstCubeTOOModelSchema]
+    entries
         List of BurstCube TOOs.
-    status : JobInfo
+    status
         Job information.
     """
 

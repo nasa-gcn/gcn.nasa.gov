@@ -16,15 +16,15 @@ class BurstCubeVisibility(VisibilityBase, ACROSSAPIBase):
 
     Parameters
     ----------
-    ra : float
+    ra
         Right Ascension in decimal degrees
-    dec : float
+    dec
         Declination in decimal degrees
-    begin : datetime
+    begin
         Start time of visibility search
-    end : datetime
+    end
         End time of visibility search
-    stepsize : int
+    stepsize
         Step size in seconds for visibility calculations
     """
 

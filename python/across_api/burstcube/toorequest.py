@@ -40,11 +40,11 @@ class BurstCubeTOO(ACROSSAPIBase):
 
     Parameters
     ----------
-    username : str
+    username
         Username of user making request
-    api_key : str
+    api_key
         API key of user making request
-    id : Optional[int], optional
+    id
         ID of BurstCubeTOO to fetch, by default None
     """
 
@@ -385,36 +385,36 @@ class BurstCubeTOORequests(ACROSSAPIBase):
 
     Parameters
     ----------
-    username : str
+    username
         Username for API
-    api_key : str
+    api_key
         API Key for user
-    begin : Optional[datetime]
+    begin
         Start time of plan search
-    end : Optional[datetime]
+    end
         End time of plan search
-    limit : Optional[int]
+    limit
         Limit number of searches
-    trigger_time : Optional[datetime]
+    trigger_time
         Time of trigger
-    trigger_mission : Optional[str]
+    trigger_mission
         Mission of trigger
-    trigger_instrument : Optional[str]
+    trigger_instrument
         Instrument of trigger
-    trigger_id : Optional[str]
+    trigger_id
         ID of trigger
-    ra : Optional[float]
+    ra
         Right ascension of trigger search
-    dec : Optional[float]
+    dec
         Declination of trigger search
-    radius : Optional[float]
+    radius
         Radius of search around for trigger
 
     Attributes
     ----------
-    entries : list
+    entries
         List of BurstCubeTOO requests
-    status : JobInfo
+    status
         Status of BurstCubeTOO query
     """
 

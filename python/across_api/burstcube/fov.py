@@ -19,24 +19,24 @@ class BurstCubeFOVCheck(FOVCheckBase):
 
     Parameters
     ----------
-    ra : float
+    ra
         Right Ascension in decimal degrees
-    dec : float
+    dec
         Declination in decimal degrees
-    begin : datetime
+    begin
         Start time of visibility search
-    end : datetime
+    end
         End time of visibility search
-    stepsize : int
+    stepsize
         Step size in seconds for visibility calculations
-    earthoccult : bool
+    earthoccult
         Calculate Earth occultation (default: True)
 
     Attributes
     ----------
-    entries : List[BurstCubePointing]
+    entries
         List of BurstCubePointing entries
-    status : JobInfo
+    status
         Info about BurstCubeFOVCheck query
     """
 

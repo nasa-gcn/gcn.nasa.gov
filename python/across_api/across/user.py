@@ -15,11 +15,11 @@ def check_api_key(anon: bool = True, userlevel: int = 0, requser: list = []):
     Arguments
     ---------
 
-    anon : bool, optional
+    anon
         Flag to allow or disallow anonymous usage. Defaults to True.
-    userlevel : int, optional
+    userlevel
         Minimum user level required. Defaults to 0.
-    requser : list, optional
+    requser
         List of usernames allowed to access the API call. Defaults to [].
 
     Returns
@@ -92,18 +92,18 @@ class APIUserInfo(ACROSSAPIBase):
 
     Parameters
     ----------
-    username : str, optional
+    username
         The username of the API user, by default "anonymous"
 
     Attributes
     ----------
-    username : str
+    username
         The username of the API user.
-    api_key : str
+    api_key
         The API key associated with the user.
-    userlevel : int
+    userlevel
         The user level. Defaults to 1.
-    status : JobInfo
+    status
         The status of the job.
 
     Methods
@@ -236,7 +236,7 @@ class APIUserInfo(ACROSSAPIBase):
 
         Parameters
         ----------
-        username : str
+        username
             The username of the user.
 
         Returns

@@ -37,23 +37,23 @@ class JobModel(BaseSchema, DynamoDBBase):
 
     Parameters
     ----------
-    jobnumber : str, optional
+    jobnumber
         The job number.
-    username : str, optional
+    username
         The username associated with the job.
-    reqtype : str, optional
+    reqtype
         The request type associated with the job.
-    apiversion : str, optional
+    apiversion
         The API version associated with the job.
-    began : datetime.datetime, optional
+    began
         The time the job began.
-    created : datetime.datetime, optional
+    created
         The time the job was created.
-    expires : datetime.datetime, optional
+    expires
         The time the job expires.
-    params : dict, optional
+    params
         The parameters associated with the job.
-    result : str, optional
+    result
         The result of the job.
     """
 
@@ -122,13 +122,13 @@ class JobModel(BaseSchema, DynamoDBBase):
 
         Parameters
         ----------
-        username : str
+        username
             The username associated with the job.
-        params : dict
+        params
             The parameters associated with the job.
-        reqtype : str
+        reqtype
             The request type associated with the job.
-        apiversion : str
+        apiversion
             The API version associated with the job.
 
         Returns
@@ -149,7 +149,7 @@ class JobModel(BaseSchema, DynamoDBBase):
 
         Parameters
         ----------
-        jobnumber : str
+        jobnumber
             The job number to retrieve.
 
         Returns

@@ -54,7 +54,7 @@ def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
 
     Parameters
     ----------
-    name : str
+    name
         Name of object to search for
 
     Returns
@@ -109,20 +109,20 @@ class Resolve(ACROSSAPIBase):
 =======
     Parameters:
     -----------
-    name : str
+    name
         The name of the astronomical object to resolve.
 
     Attributes:
     -----------
-    status : JobInfo
+    status
         The status of the job.
-    ra : Optional[float]
+    ra
         The right ascension of the resolved object.
-    dec : Optional[float]
+    dec
         The declination of the resolved object.
-    name : str
+    name
         The name of the astronomical object.
-    resolver : Optional[str]
+    resolver
         The resolver used for resolving the object.
 
     Methods:

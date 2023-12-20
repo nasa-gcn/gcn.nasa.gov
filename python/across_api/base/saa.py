@@ -16,9 +16,9 @@ class SAAPolygonBase:
 
     Attributes
     ----------
-    points : list
+    points
         List of points defining the SAA polygon.
-    saapoly : Polygon
+    saapoly
         Shapely Polygon object defining the SAA polygon.
 
     """
@@ -52,15 +52,15 @@ class SAABase(ACROSSAPIBase, MakeWindowBase):
 
     Attributes
     ----------
-    begin : datetime
+    begin
         Start time of SAA search
-    end : datetime
+    end
         End time of SAA search
-    ephem : Optional[Ephem]
+    ephem
         Ephem object to use for SAA calculations
-    saa : SAAPolygonBase
+    saa
         SAA Polygon object to use for SAA calculations
-    status : JobInfo
+    status
         Status of SAA query
     """
 
@@ -105,7 +105,7 @@ class SAABase(ACROSSAPIBase, MakeWindowBase):
 
         Arguments
         ---------
-        dttime : datetime
+        dttime
             The datetime to check.
 
         Returns

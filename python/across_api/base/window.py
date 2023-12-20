@@ -9,15 +9,17 @@ class MakeWindowBase:
     begin: datetime
     end: datetime
 
-    def constraint(self, index):
+    def constraint(self, index: int) -> str:
         """
         Returns the constraint for the given index.
 
-        Parameters:
-            index (int): The index of the constraint.
+        Parameters
+        ----------
+            The index of the constraint.
 
-        Returns:
-            str: The constraint value.
+        Returns
+        -------
+            The constraint value.
         """
         # For this dummy method, we just assume SAA always, which is good for the SAA class.
         return "SAA"
@@ -28,9 +30,9 @@ class MakeWindowBase:
 
         Parameters
         ----------
-        inconstraint : list
+        inconstraint
             List of booleans indicating if the spacecraft is in the SAA
-        wintype : VisWindow
+        wintype
             Type of window to create (default: VisWindow)
 
         Returns
