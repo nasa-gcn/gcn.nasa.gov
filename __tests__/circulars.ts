@@ -403,6 +403,30 @@ describe('parseEventFromSubject', () => {
         'LIGO/KAGRA S231127cg: Identification of a GW compact binary merger candidate'
       expect(parseEventFromSubject(ligoVirgoKagra)).toBe('LIGO/KAGRA S231127cg')
     })
+
+    test('handles LVK event name with six digits and a flag', () => {
+      const lvkSubjectWithSixDigits =
+        'LIGO/Virgo G211117: Further Swift-XRT sources'
+      expect(parseEventFromSubject(lvkSubjectWithSixDigits)).toBe(
+        'LIGO/Virgo G211117'
+      )
+    })
+
+    test('handles LVK event name with GW flag', () => {
+      const lvkSubjectWithGwFlag =
+        'LIGO/Virgo GW170817: Chandra X-ray brightening of the counterpart 108 days since merger'
+      expect(parseEventFromSubject(lvkSubjectWithGwFlag)).toBe(
+        'LIGO/Virgo GW170817'
+      )
+    })
+
+    test('handles LVK event name with S flag and one letter', () => {
+      const lvkSubjectWithGwFlag =
+        'LIGO/Virgo/KAGRA S230521k: Zwicky Transient Facility observations'
+      expect(parseEventFromSubject(lvkSubjectWithGwFlag)).toBe(
+        'LIGO/Virgo/KAGRA S230521k'
+      )
+    })
   })
 
   describe('ANTARES', () => {

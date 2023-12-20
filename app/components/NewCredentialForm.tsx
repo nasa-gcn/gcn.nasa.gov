@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import {
@@ -24,7 +24,7 @@ import { getFormDataString } from '~/lib/utils'
 import { useRecaptchaSiteKey } from '~/root'
 import { ClientCredentialVendingMachine } from '~/routes/_gcn.user.credentials/client_credentials.server'
 
-export async function loader(args: DataFunctionArgs) {
+export async function loader(args: LoaderFunctionArgs) {
   return await handleCredentialLoader(args)
 }
 
@@ -67,7 +67,7 @@ export async function handleCredentialActions(
       throw new Response('unknown intent', { status: 400 })
   }
 }
-export async function handleCredentialLoader({ request }: DataFunctionArgs) {
+export async function handleCredentialLoader({ request }: LoaderFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
   const groups = await machine.getGroupDescriptions()

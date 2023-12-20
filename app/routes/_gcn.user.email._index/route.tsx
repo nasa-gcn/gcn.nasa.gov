@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
@@ -30,7 +30,7 @@ import { getUser } from '~/routes/_gcn._auth/user.server'
 
 export const handle: SEOHandle = { getSitemapEntries: () => null }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const data = await request.formData()
@@ -59,7 +59,7 @@ export async function action({ request }: DataFunctionArgs) {
   return null
 }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const data = await getEmailNotifications(user.sub)

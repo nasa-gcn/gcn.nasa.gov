@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
+import type { ActionFunctionArgs, HeadersFunction } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Form, Link, useActionData } from '@remix-run/react'
 import {
@@ -44,7 +44,7 @@ export async function loader() {
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
 
   const recaptchaResponse = getFormDataString(data, 'g-recaptcha-response')

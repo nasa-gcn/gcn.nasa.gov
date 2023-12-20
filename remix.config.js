@@ -71,4 +71,5 @@ export default {
     ...esmOnlyModules,
     ...(isProduction ? [/^(?!@?aws-sdk(\/|$))/] : []),
   ],
+  future: { v3_relativeSplatPath: true },
 }

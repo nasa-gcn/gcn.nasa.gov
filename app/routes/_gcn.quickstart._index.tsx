@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { FormGroup } from '@trussworks/react-uswds'
 
@@ -17,7 +17,7 @@ export const handle: BreadcrumbHandle = {
   breadcrumb: 'Sign in / Sign up',
 }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   return { email: user?.email, idp: user?.idp }
 }
