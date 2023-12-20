@@ -120,6 +120,6 @@ class Resolve(ACROSSAPIBase):
         except NameResolveError:
             pass
 
-        # If no resolution occurred, report this to the user
-        self.resolver = "Could not resolve name."
+        # If no resolution occurred, report None for resolver
+        self.resolver = None
         return False
