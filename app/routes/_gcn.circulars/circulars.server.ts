@@ -273,14 +273,17 @@ export async function put(
     })
 
   validateCircular(item.subject, item.body)
-  const eventId = parseEventFromSubject(item.subject)
 
-  return await putRaw({
+  const circular: Parameters<typeof putRaw>[0] = {
     sub: user.sub,
     submitter: formatAuthor(user),
-    eventId,
     ...item,
-  })
+  }
+
+  const eventId = parseEventFromSubject(item.subject)
+  if (eventId) circular.eventId = eventId
+
+  return await putRaw(circular)
 }
 
 export async function circularRedirect(query: string) {
