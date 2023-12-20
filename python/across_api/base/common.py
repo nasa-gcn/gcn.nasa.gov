@@ -1,6 +1,6 @@
 import os
 from time import tzset
-from typing import Any, Type
+from typing import Any, List, Type
 
 from fastapi import HTTPException
 from pydantic import ValidationError
@@ -30,9 +30,9 @@ class ACROSSAPIBase:
     _entry_schema: Type[BaseSchema]
 
     # Common things in API classes
-    entries: list
+    entries: List[Any] = []
 
-    def __getitem__(self, i) -> Any:
+    def __getitem__(self, i: int) -> Any:
         return self.entries[i]
 
     @property
