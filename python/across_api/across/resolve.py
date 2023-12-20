@@ -36,7 +36,7 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
     }
     r = requests.get(ANTARES_URL, params=params)
 
-    if r.status_code == 200:
+    if r.ok:
         antares_data = json.loads(r.text)
         ra = antares_data["data"][0]["attributes"]["ra"]
         dec = antares_data["data"][0]["attributes"]["dec"]
