@@ -1,5 +1,6 @@
 astropy
 astropy-healpix
+cachetools
 email-validator
 fastapi
 mangum
