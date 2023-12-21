@@ -18,7 +18,7 @@ from erfa import pn, pxp  # type: ignore
 from fastapi import HTTPException
 from sgp4.api import Satrec  # type: ignore
 
-from ..across.jobs import check_cache, register_job
+
 from .common import ACROSSAPIBase
 from .schema import EphemGetSchema, EphemSchema, JobInfo
 from .tle import TLEEntry
@@ -355,8 +355,6 @@ class EphemBase(ACROSSAPIBase):
 
         return True
 
-    @check_cache
-    @register_job
     def get(self) -> bool:
         # Check if all parameters are valid
         if self.validate_get():

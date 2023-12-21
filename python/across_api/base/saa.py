@@ -3,7 +3,7 @@ from typing import Optional
 
 from shapely import Point, Polygon  # type: ignore
 
-from ..across.jobs import check_cache, register_job
+
 from .common import ACROSSAPIBase
 from .ephem import EphemBase
 from .schema import JobInfo, SAAEntry, SAAGetSchema, SAASchema
@@ -78,8 +78,6 @@ class SAABase(ACROSSAPIBase, MakeWindowBase):
     _insaacons: Optional[list]
     entries: Optional[list]  # type: ignore
 
-    @check_cache
-    @register_job
     def get(self) -> bool:
         """Calculate list of SAA entries for a given date range.
 

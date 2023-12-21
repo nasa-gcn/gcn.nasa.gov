@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from ..across.jobs import check_cache, register_job
+
 from ..base.config import set_observatory
 from ..base.pointing import PointingBase
 from ..base.schema import JobInfo
@@ -41,8 +41,6 @@ class BurstCubePointing(PointingBase):
         if self._get_schema.model_validate(self):
             self.get()
 
-    @check_cache
-    @register_job
     def get(self) -> bool:
         """Calculate list of spacecraft pointings for a given date range.
 

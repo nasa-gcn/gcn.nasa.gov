@@ -6,7 +6,7 @@ import numpy as np
 from astropy.coordinates import FK5, CartesianRepresentation, SkyCoord  # type: ignore
 from astropy.time import Time  # type: ignore
 
-from ..across.jobs import check_cache, register_job
+
 from ..functions import round_time
 from .common import ACROSSAPIBase
 from .ephem import EphemBase
@@ -289,8 +289,6 @@ class VisibilityBase(ACROSSAPIBase, MakeWindowBase):
     def ephstop(self):
         return self.ephem.ephindex(self.end) + 1
 
-    @check_cache
-    @register_job
     def get(self):
         """Query visibility for a given RA/Dec."""
         # Round begin to the nearest minute
