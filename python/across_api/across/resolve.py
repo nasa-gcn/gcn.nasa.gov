@@ -45,39 +45,6 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
     return ra, dec
 
 
-def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
-    """
-    Given a object name, return the Simbad coordinates in degrees.
-
-    Parameters
-    ----------
-    name
-        Name of object to search for
-
-    Returns
-    -------
-    tuple
-        RA/Dec in decimal degrees (float or None)
-    """
-    url = "http://simbad.u-strasbg.fr/simbad/sim-script?script="
-    script = 'format object "%IDLIST(1) | %COO(d;A D)\n' + "query id %s" % name
-
-    lines = requests.get(url + script).text.splitlines()
-
-    ddec = None
-    dra = None
-    for line in lines:
-        x = line.split("|")
-        try:
-            name = x[0]
-            numbers = x[1].split(" ")
-            dra = float(numbers[1])
-            ddec = float(numbers[2].strip())
-        except (ValueError, IndexError):
-            pass
-    return dra, ddec
-
-
 class Resolve(ACROSSAPIBase):
     """
     Resolve class for resolving astronomical object names.
@@ -130,13 +97,6 @@ class Resolve(ACROSSAPIBase):
         Returns
         -------
             True if the name is successfully resolved, False otherwise.
-        bool
-            True if the name is successfully resolved, False otherwise.
-
-        Raises
-        ------
-        HTTPException
-            If the name couldn't be resolved.
         """
         # Make sure the required parameters are given in the correct format
         if not self.validate_get():
