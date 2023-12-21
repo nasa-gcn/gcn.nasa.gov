@@ -1,5 +1,6 @@
 architect-functions
 astropy
+boto3
 cachetools
 email-validator
 fastapi
