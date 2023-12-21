@@ -20,7 +20,7 @@ import { useState } from 'react'
 import DateSelectorButton from './DateSelectorButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
-export default function ({
+export function DateSelector ({
   startDate,
   endDate,
 }: {
