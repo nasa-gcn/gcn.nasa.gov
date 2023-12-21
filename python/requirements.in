@@ -1,7 +1,7 @@
-architect - functions
+architect-functions
 astropy
 cachetools
-email - validator
+email-validator
 fastapi
 mangum
 requests
