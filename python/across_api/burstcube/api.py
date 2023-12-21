@@ -3,13 +3,9 @@ from typing import Annotated, Optional
 
 from fastapi import Depends, Query
 
+from ..base.api import app
 from ..base.schema import TLESchema
-
 from .tle import BurstCubeTLE
-
-from ..base.api import (
-    app,
-)
 
 
 def to_naive_utc(value: datetime) -> datetime:

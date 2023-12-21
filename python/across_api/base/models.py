@@ -1,12 +1,11 @@
+from datetime import datetime, timedelta
 from typing import Any
 
 from boto3.dynamodb.conditions import Key  # type: ignore
 from pydantic import computed_field
 
-from .schema import BaseSchema
-
 from ..api_db import dydbtable
-from datetime import datetime, timedelta
+from .schema import BaseSchema
 
 
 class DynamoDBBase:

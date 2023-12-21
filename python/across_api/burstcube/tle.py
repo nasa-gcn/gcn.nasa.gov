@@ -1,5 +1,6 @@
 from datetime import datetime
-from cachetools import cached, TTLCache
+
+from cachetools import TTLCache, cached
 
 from ..base.tle import TLEBase
 

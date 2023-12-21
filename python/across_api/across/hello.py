@@ -1,7 +1,6 @@
 from typing import Optional
 
 from ..base.common import ACROSSAPIBase
-
 from .schema import HelloGetSchema, HelloSchema
 
 
@@ -39,8 +38,7 @@ class Hello(ACROSSAPIBase):
 
         Returns
         -------
-        bool
-            True if this worked
+            True if this worked (it always should)
         """
         if self.name is None:
             self.hello = "Hello there!"
