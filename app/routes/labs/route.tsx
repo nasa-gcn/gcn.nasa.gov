@@ -26,7 +26,7 @@ export default function () {
     <>
       <Header />
       <h1>ACROSS</h1>
-      <main>
+      <main id="main-content">
         <Outlet />
       </main>
       <Footer />
