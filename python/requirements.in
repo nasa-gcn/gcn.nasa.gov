@@ -1,3 +1,4 @@
 astropy
 fastapi
 mangum
+requests
