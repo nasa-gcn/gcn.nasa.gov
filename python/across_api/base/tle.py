@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 from typing import List, Optional
 
 import requests
+from arc import tables  # type: ignore
 from requests import HTTPError
 
-from ..api_db import dydbtable
 from .common import ACROSSAPIBase
 from .models import TLEEntry
 from .schema import TLEGetSchema, TLESchema
@@ -277,7 +277,7 @@ class TLEBase(ACROSSAPIBase):
             Did it work?
         """
         # Load everything already in the table
-        table = dydbtable(TLEEntry.__tablename__)
+        table = tables.table(TLEEntry.__tablename__)
         existing = table.scan()
         epochs = [e["epoch"] for e in existing["Items"]]
         # Write TLEs to database

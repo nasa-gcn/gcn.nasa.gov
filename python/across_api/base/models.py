@@ -1,9 +1,9 @@
 from datetime import datetime, timedelta
 
+from arc import tables  # type: ignore
 from boto3.dynamodb.conditions import Key  # type: ignore
 from pydantic import computed_field
 
-from arc import tables  # type: ignore
 from .schema import BaseSchema
 
 
