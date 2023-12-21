@@ -4,34 +4,24 @@ from typing import Any
 from boto3.dynamodb.conditions import Key  # type: ignore
 from pydantic import computed_field
 
-from ..api_db import dydbtable
+from arc import tables  # type: ignore
 from .schema import BaseSchema
 
 
-class DynamoDBBase:
+class DynamoDBBase(BaseSchema):
     __tablename__: str
 
     def write(self):
-        table = dydbtable(self.__tablename__)
+        table = tables.table(self.__tablename__)
         table.put_item(Item=self.model_dump(mode="json"))
 
     @classmethod
-    def get_by_key(cls, value: str, key: str):
-        table = dydbtable(cls.__tablename__)
-        response = table.query(KeyConditionExpression=Key(key).eq(value))
-        items = response["Items"]
-        if items:
-            item = items[0]
-            return cls(**item)
-        return None
-
-    @classmethod
     def delete(cls, value: Any, key: str) -> bool:
-        table = dydbtable(cls.__tablename__)
+        table = tables.table(cls.__tablename__)
         return table.delete_item(Key={key: value})
 
 
-class TLEEntry(BaseSchema, DynamoDBBase):
+class TLEEntry(DynamoDBBase):
     """Base for TLEEntry"""
 
     __tablename__ = "acrossapi_tle"
@@ -42,14 +32,14 @@ class TLEEntry(BaseSchema, DynamoDBBase):
     @computed_field  # type: ignore[misc]
     @property
     def epoch(self) -> datetime:
-        """Calculate Epoch of TLE - Sort Key"""
+        """Calculate Epoch of TLE (Sort Key)"""
         tleepoch = self.tle1.split()[3]
         year, day_of_year = int(f"20{tleepoch[0:2]}"), float(tleepoch[2:])
         return datetime(year, 1, 1) + timedelta(day_of_year - 1)
 
     @classmethod
     def find_tles_between_epochs(cls, name, start_epoch, end_epoch):
-        table = dydbtable(cls.__tablename__)
+        table = tables.table(cls.__tablename__)
 
         response = table.query(
             KeyConditionExpression=Key("name").eq(name)
