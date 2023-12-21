@@ -70,8 +70,8 @@ class Resolve(ACROSSAPIBase):
     resolver
         The resolver used for resolving the object.
 
-    Methods:
-    --------
+    Methods
+    -------
     get():
         Retrieves the resolved object information.
     """
