@@ -387,27 +387,6 @@ input.react-tags__combobox-input:focus {
 }
 
 /*
- * Override user nav text colors to add contrast when not desktop
- * FIXME: remove once https://github.com/bruffridge/nasawds/issues/10 is fixed
- */
-.usa-nav__primary a:not(.usa-button):not(.usa-current):not(.active) {
-  @media (max-width: 63.99em) {
-    color: white;
-  }
-}
-.usa-nav__primary a:not(.usa-button):not(.usa-current):hover {
-  @media (max-width: 63.99em) {
-    color: #0050d8;
-  }
-}
-
-ul#user {
-  @media (max-width: 63.99em) {
-    background-color: #1b1b1b;
-  }
-}
-
-/*
  * Workaround for https://github.com/uswds/uswds/pull/5418
  */
 .usa-nav__submenu {
