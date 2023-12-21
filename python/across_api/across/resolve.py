@@ -36,18 +36,14 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         "elasticsearch_query[locus_listing]": search_query,
     }
     r = requests.get(ANTARES_URL, params=params)
-    try:
-        r.raise_for_status()
-    except requests.HTTPError as e:
-        logging.exception(e)
-
-    if r.ok:
-        antares_data = json.loads(r.text)
-        if antares_data["meta"]["count"] > 0:
-            ra = antares_data["data"][0]["attributes"]["ra"]
-            dec = antares_data["data"][0]["attributes"]["dec"]
-            return ra, dec
-    return None, None
+    r.raise_for_status()
+    antares_data = r.json()
+    if antares_data["meta"]["count"] > 0:
+        ra = antares_data["data"][0]["attributes"]["ra"]
+        dec = antares_data["data"][0]["attributes"]["dec"]
+    else:
+        ra = dec = None
+    return ra, dec
 
 
 class Resolve(ACROSSAPIBase):
