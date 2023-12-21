@@ -242,7 +242,6 @@ class TLEBase(ACROSSAPIBase):
 
         Returns
         -------
-        bool
             Did it work?
         """
         # Read TLEs from the database for a given `tle_name` and epoch
