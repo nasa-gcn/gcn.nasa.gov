@@ -89,10 +89,7 @@ export function Header() {
       {expanded && (
         <div className="usa-overlay is-visible" onClick={hideMobileNav} />
       )}
-      <USWDSHeader
-        basic
-        className={`usa-header usa-header--dark ${styles.header}`}
-      >
+      <USWDSHeader basic className={`usa-header--dark ${styles.header}`}>
         <div className="usa-nav-container">
           <div className="usa-navbar">
             <Title>
