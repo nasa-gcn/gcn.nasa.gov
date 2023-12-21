@@ -59,8 +59,8 @@ class Resolve(ACROSSAPIBase):
     name
         The name of the astronomical object to resolve.
 
-    Attributes:
-    -----------
+    Attributes
+    ----------
     ra
         The right ascension of the resolved object.
     dec
