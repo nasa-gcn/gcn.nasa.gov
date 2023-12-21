@@ -1,11 +1,12 @@
+architect-functions
 astropy
 astropy-healpix
 cachetools
 email-validator
 fastapi
 mangum
-requests
-shapely
-sgp4
-boto3>=1.34
 python-multipart
+requests
+sgp4
+shapely
+
