@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
@@ -47,7 +47,7 @@ import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-export async function loader({ request: { url } }: DataFunctionArgs) {
+export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   if (query) {
@@ -68,7 +68,7 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   return { page, ...results }
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')

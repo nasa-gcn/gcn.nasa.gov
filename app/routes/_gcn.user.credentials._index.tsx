@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
 import { ClientCredentialVendingMachine } from './_gcn.user.credentials/client_credentials.server'
@@ -17,13 +17,13 @@ import { getFormDataString } from '~/lib/utils'
 
 export const handle: SEOHandle = { getSitemapEntries: () => null }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
   return { client_credentials }
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const [data, machine] = await Promise.all([
     request.formData(),
     ClientCredentialVendingMachine.create(request),

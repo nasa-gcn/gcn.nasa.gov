@@ -2,11 +2,10 @@ import json
 from typing import Optional, Tuple
 
 import requests
-from fastapi import HTTPException
+from astropy.coordinates.name_resolve import NameResolveError  # type: ignore
+from astropy.coordinates.sky_coordinate import SkyCoord  # type: ignore
 
 from ..base.common import ACROSSAPIBase
-from ..base.schema import JobInfo
-from .jobs import check_cache, register_job
 from .schema import ResolveGetSchema, ResolveSchema
 
 ANTARES_URL = "https://api.antares.noirlab.edu/v1/loci"
@@ -23,8 +22,9 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
 
     Returns
     -------
-    Tuple[float, float]
-        RA, Dec in ICRS decimal degrees
+        RA, Dec in ICRS decimal degrees, or None, None if not found
+
+    FIXME: Replace with antares-client module call in future, once confluent-kafka-python issues are resolved.
     """
     search_query = json.dumps(
         {"query": {"bool": {"filter": {"term": {"properties.ztf_object_id": ztf_id}}}}}
@@ -35,14 +35,14 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         "elasticsearch_query[locus_listing]": search_query,
     }
     r = requests.get(ANTARES_URL, params=params)
-
-    if r.status_code == 200:
-        antares_data = json.loads(r.text)
+    r.raise_for_status()
+    antares_data = r.json()
+    if antares_data["meta"]["count"] > 0:
         ra = antares_data["data"][0]["attributes"]["ra"]
         dec = antares_data["data"][0]["attributes"]["dec"]
-        return ra, dec
     else:
-        return None, None
+        ra = dec = None
+    return ra, dec
 
 
 def simbad_radec(name: str) -> Tuple[Optional[float], Optional[float]]:
@@ -82,15 +82,13 @@ class Resolve(ACROSSAPIBase):
     """
     Resolve class for resolving astronomical object names.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     name
         The name of the astronomical object to resolve.
 
-    Attributes:
-    -----------
-    status
-        The status of the job.
+    Attributes
+    ----------
     ra
         The right ascension of the resolved object.
     dec
@@ -100,9 +98,9 @@ class Resolve(ACROSSAPIBase):
     resolver
         The resolver used for resolving the object.
 
-    Methods:
-    --------
-    get() -> bool:
+    Methods
+    -------
+    get():
         Retrieves the resolved object information.
     """
 
@@ -111,15 +109,12 @@ class Resolve(ACROSSAPIBase):
     _get_schema = ResolveGetSchema
 
     # Type hints
-    status: JobInfo
-    # Class specific values
     ra: Optional[float]
     dec: Optional[float]
     name: str
     resolver: Optional[str]
 
     def __init__(self, name: str):
-        self.status = JobInfo()
         # Class specific values
         self.ra = None
         self.dec = None
@@ -128,14 +123,13 @@ class Resolve(ACROSSAPIBase):
         if self.validate_get():
             self.get()
 
-    @check_cache
-    @register_job
     def get(self) -> bool:
         """
         Retrieves the RA and Dec coordinates for a given name.
 
         Returns
         -------
+            True if the name is successfully resolved, False otherwise.
         bool
             True if the name is successfully resolved, False otherwise.
 
@@ -156,15 +150,16 @@ class Resolve(ACROSSAPIBase):
                 self.ra, self.dec = ra, dec
                 self.resolver = "ANTARES"
                 return True
-        # Check against Simbad
-        ra, dec = simbad_radec(self.name)
-        if ra is not None:
-            self.ra, self.dec = ra, dec
-            self.resolver = "Simbad"
+
+        # Check using the CDS resolver
+        try:
+            skycoord = SkyCoord.from_name(self.name)
+            self.ra, self.dec = skycoord.ra.deg, skycoord.dec.deg
+            self.resolver = "CDS"
             return True
+        except NameResolveError:
+            pass
 
-        # Send a warning if name couldn't be resolved
-        raise HTTPException(status_code=404, detail="Could not resolve name.")
-
-
-ACROSSAPIResolve = Resolve
+        # If no resolution occurred, report None for resolver
+        self.resolver = None
+        return False

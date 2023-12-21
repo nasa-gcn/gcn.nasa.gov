@@ -1,0 +1,4 @@
+astropy
+fastapi
+mangum
+requests

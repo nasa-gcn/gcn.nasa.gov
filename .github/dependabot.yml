@@ -18,3 +18,13 @@ updates:
       remix:
         patterns:
           - '@remix-run/*'
+
+  - package-ecosystem: pip
+    directory: /
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: pip
+    directory: /python
+    schedule:
+      interval: weekly

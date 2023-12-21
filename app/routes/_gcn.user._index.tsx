@@ -7,7 +7,7 @@
  */
 import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import {
   Button,
@@ -32,7 +32,7 @@ export const handle: BreadcrumbHandle & SEOHandle = {
   getSitemapEntries: () => null,
 }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
 
@@ -40,7 +40,7 @@ export async function loader({ request }: DataFunctionArgs) {
   return { email, idp, name, affiliation }
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
 

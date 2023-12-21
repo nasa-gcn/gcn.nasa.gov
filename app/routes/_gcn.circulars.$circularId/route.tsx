@@ -5,8 +5,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import {
+  type HeadersFunction,
+  type LoaderFunctionArgs,
+  json,
+} from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds'
 
@@ -27,7 +30,7 @@ export const handle: BreadcrumbHandle<typeof loader> = {
   },
 }
 
-export async function loader({ params: { circularId } }: DataFunctionArgs) {
+export async function loader({ params: { circularId } }: LoaderFunctionArgs) {
   if (!circularId)
     throw new Response('circularId must be defined', { status: 400 })
   const result = await get(parseFloat(circularId))

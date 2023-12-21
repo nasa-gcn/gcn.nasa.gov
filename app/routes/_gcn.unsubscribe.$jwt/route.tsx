@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
@@ -42,13 +42,13 @@ function joinListWithOxfordComma(list: string[], conjunction: string = 'and') {
   return butLast ? `${butLast} ${conjunction} ${last}` : last
 }
 
-export async function loader({ params }: DataFunctionArgs) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const availableTopics = Object.keys(unsubscribeActions)
   const decoded = await decodeFromURLParams(params)
   return { availableTopics, ...decoded }
 }
 
-export async function action({ params, request }: DataFunctionArgs) {
+export async function action({ params, request }: ActionFunctionArgs) {
   const [{ email }, formData] = await Promise.all([
     decodeFromURLParams(params),
     request.formData(),

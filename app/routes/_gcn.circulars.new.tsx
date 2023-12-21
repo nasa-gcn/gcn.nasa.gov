@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
+import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import {
   Form,
@@ -52,7 +52,7 @@ export const handle: BreadcrumbHandle = {
   breadcrumb: 'New',
 }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   let isAuthenticated, isAuthorized, formattedAuthor
   if (user) {
