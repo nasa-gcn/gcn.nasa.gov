@@ -1,7 +1,6 @@
 from typing import Optional
 
 from ..base.common import ACROSSAPIBase
-from ..base.schema import JobInfo
 
 from .schema import HelloGetSchema, HelloSchema
 
@@ -31,7 +30,6 @@ class Hello(ACROSSAPIBase):
             Your name
         """
         self.name = name
-        self.status: JobInfo = JobInfo()
         if self.validate_get():
             self.get()
 

@@ -1,13 +1,10 @@
 from datetime import datetime
 from cachetools import cached, TTLCache
 
-from ..base.config import set_observatory
 from ..base.tle import TLEBase
-from .config import BURSTCUBE
 
 
 @cached(cache=TTLCache(maxsize=128, ttl=3600))
-@set_observatory(BURSTCUBE)
 class BurstCubeTLE(TLEBase):
     """
     Class that reads and updates BurstCubeTLEs for a given Satellite in a database,
@@ -33,6 +30,15 @@ class BurstCubeTLE(TLEBase):
 
     """
 
+    # Configuration options for BurstCubeTLE
+    tle_name = "ISS (ZARYA)"
+    tle_url = "https://celestrak.com/NORAD/elements/stations.txt"
+    tle_heasarc = None
+    tle_bad = 40
+    tle_min_epoch = datetime(2023, 12, 18)
+
     def __init__(self, epoch: datetime):
         self.epoch = epoch
         self.tles = []
+        if self.validate_get():
+            self.get()

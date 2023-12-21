@@ -30,6 +30,8 @@ class TLEBase(ACROSSAPIBase):
         List of TLEs currently loaded
     tle
         TLE entry for given epoch
+    offset
+        Offset between TLE epoch and requested epoch in days
 
     Methods
     -------
@@ -53,13 +55,17 @@ class TLEBase(ACROSSAPIBase):
     _get_schema = TLEGetSchema
 
     # Configuration parameters
-    tle_heasarc: str
-    tle_url: str
+    tle_heasarc: Optional[str]
+    tle_url: Optional[str]
     tle_bad: int
     tle_name: str
+    tle_min_epoch: datetime
     # Arguments
     epoch: datetime
-    tles: List[TLEEntry]
+    # Attributes
+    tles: List[TLEEntry] = []
+    # Return values
+    error: Optional[str]
 
     def read_tle_web(self) -> bool:
         """
@@ -75,6 +81,10 @@ class TLEBase(ACROSSAPIBase):
         -------
             True if the TLE was successfully read and stored, False otherwise.
         """
+        # Check if the URL is set
+        if self.tle_url is None:
+            return False
+
         # Download TLE from internet
         r = requests.get(self.tle_url)
         try:
@@ -116,6 +126,9 @@ class TLEBase(ACROSSAPIBase):
         -------
             True if TLEs were successfully read, False otherwise.
         """
+        # Check if the URL is set
+        if self.tle_heasarc is None:
+            return False
 
         # Download TLEs from internet
         r = requests.get(self.tle_heasarc)
@@ -168,14 +181,16 @@ class TLEBase(ACROSSAPIBase):
             Is this TLE out of date?
         """
         if self.tle is not None:
-            if (
-                abs((self.epoch - self.tle.epoch).total_seconds() / 86400)
-                > self.tle_bad
-            ):
+            # Calculate the number of days between the TLE epoch and the request epoch
+            self.offset = round(
+                abs((self.epoch - self.tle.epoch).total_seconds() / 86400), 2
+            )
+            # If this is greater than the allowed number of days, then return True
+            if self.offset > self.tle_bad:
                 return True
         return False
 
-    def get(self) -> Optional[TLEEntry]:
+    def get(self) -> bool:
         """Read in the best TLE for a given epoch.
 
         Parameters
@@ -188,28 +203,39 @@ class TLEBase(ACROSSAPIBase):
             Best TLE for the given epoch
         """
 
+        # Check if the request is valid
         if self.validate_get() is False:
-            return None
+            return False
 
-        # Try reading from the database first
+        # Check that the epoch is within the allowed range, if not
+        # Just set to either the earliest of latest possible epoch
+        # and just use that TLE to extrapolate.
+        if self.epoch < self.tle_min_epoch:
+            self.epoch = self.tle_min_epoch
+        elif self.epoch > datetime.utcnow() + timedelta(days=self.tle_bad):
+            self.epoch = datetime.utcnow()
+
+        # Fetch TLE from the TLE database
         if self.read_db() is True:
             if self.tle is not None:
-                return self.tle
+                return True
 
-        # Next try reading from the web
+        # Next try reading from the web at the URL given
+        # in `self.tle_url`
         if self.tle_url is not None:
             if self.read_tle_web() is True:
                 # Write this TLE to the database for next time
                 self.write_db()
-                return self.tle
+                return True
 
-        # Try reading in the HEASARC format
+        # Next try try reading the TLE given in the HEASARC format
         if self.tle_heasarc is not None:
             if self.read_tle_heasarc() is True:
                 self.write_db()
-                return self.tle
+                return True
 
-        return None
+        # If we did not find any valid TLEs, then return False
+        return False
 
     def read_db(self) -> bool:
         """

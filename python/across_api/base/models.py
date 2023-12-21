@@ -5,7 +5,7 @@ from pydantic import computed_field
 
 from .schema import BaseSchema
 
-from ..api_db import dydbtable, dynamodb
+from ..api_db import dydbtable
 from datetime import datetime, timedelta
 
 
