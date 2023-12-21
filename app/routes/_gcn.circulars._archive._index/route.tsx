@@ -34,7 +34,7 @@ import {
 import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
-import DateSelectorMenu from './DateSelectorMenu'
+import { DateSelector } from './DateSelectorMenu'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
 import { useFeature } from '~/root'
@@ -135,7 +135,7 @@ export default function () {
           </Button>
         </Form>
         {featureCircularsFilterByDate && (
-          <DateSelectorMenu startDate={startDate} endDate={endDate} />
+          <DateSelector startDate={startDate} endDate={endDate} />
         )}
         <Link to={`/circulars/new${searchString}`}>
           <Button
