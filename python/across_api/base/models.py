@@ -8,7 +8,7 @@ from arc import tables  # type: ignore
 from .schema import BaseSchema
 
 
-class DynamoDBBase(BaseSchema):
+class DynamoDBBase:
     __tablename__: str
 
     def write(self):
@@ -21,7 +21,7 @@ class DynamoDBBase(BaseSchema):
         return table.delete_item(Key={key: value})
 
 
-class TLEEntry(DynamoDBBase):
+class TLEEntry(BaseSchema, DynamoDBBase):
     """Base for TLEEntry"""
 
     __tablename__ = "acrossapi_tle"
