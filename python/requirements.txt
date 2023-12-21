@@ -13,10 +13,6 @@ anyio==3.7.1
 architect-functions==1.0.0
     # via -r requirements.in
 astropy==6.0.0
-    # via
-    #   -r requirements.in
-    #   astropy-healpix
-astropy-healpix==1.0.2
     # via -r requirements.in
 astropy-iers-data==0.2023.12.18.0.30.18
     # via astropy
@@ -48,9 +44,7 @@ mangum==0.17.0
 numpy==1.26.2
     # via
     #   astropy
-    #   astropy-healpix
     #   pyerfa
-    #   shapely
 packaging==23.2
     # via astropy
 pyasn1==0.5.1
@@ -67,18 +61,12 @@ pyerfa==2.0.1.1
     # via astropy
 python-jose==3.3.0
     # via architect-functions
-python-multipart==0.0.6
-    # via -r requirements.in
 pyyaml==6.0.1
     # via astropy
 requests==2.31.0
     # via -r requirements.in
 rsa==4.9
     # via python-jose
-sgp4==2.23
-    # via -r requirements.in
-shapely==2.0.2
-    # via -r requirements.in
 simplejson==3.19.2
     # via architect-functions
 six==1.16.0
