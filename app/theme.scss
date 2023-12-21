@@ -45,7 +45,7 @@ h1:first-child {
  */
 
 .usa-identifier {
-  position: sticky; /* instead of absolute */
+  position: static; /* instead of absolute */
   top: 100vh;
 }
 
@@ -381,10 +381,9 @@ input.react-tags__combobox-input:focus {
 }
 
 /*
- * Workaround for https://github.com/uswds/uswds/pull/5418
+ * Workaround for https://github.com/uswds/uswds/issues/5558
  */
-.usa-nav__submenu {
-  @include at-media($theme-header-min-width) {
-    padding: units(1);
-  }
+
+.usa-input-prefix.wide-input-prefix + * {
+  padding-left: units(10);
 }
