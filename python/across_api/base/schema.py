@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import Any, List, Optional, Union
 
 import astropy.units as u  # type: ignore
-import numpy as np
+
 from astropy.constants import c, h  # type: ignore
-from pydantic import BaseModel, ConfigDict, Field, computed_field, model_validator
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 from pydantic_core import Url
 
 from ..functions import convert_to_dt
@@ -309,50 +309,6 @@ class VisibilityGetSchema(CoordSchema, DateRangeSchema):
     stepsize: int = 60
 
 
-class TLEEntry(BaseSchema):
-    """
-    Represents a Two-Line Element (TLE) entry.
-
-    Attributes
-    ----------
-    tle1
-        The first line of the TLE.
-    tle2
-        The second line of the TLE.
-    epoch:  datetime
-        The epoch of the TLE, calculated from the TLE1 line.
-
-    """
-
-    tle1: str = Field(min_length=69, max_length=69)
-    tle2: str = Field(min_length=69, max_length=69)
-
-    @computed_field  # type: ignore
-    @property
-    def epoch(self) -> datetime:
-        """Calculate Epoch of TLE"""
-        tleepoch = self.tle1.split()[3]
-        year, dayofyear = int(f"20{tleepoch[0:2]}"), float(tleepoch[2:])
-        fracday, dayofyear = np.modf(dayofyear)
-        epoch = datetime.fromordinal(
-            datetime(year, 1, 1).toordinal() + int(dayofyear) - 1
-        ) + timedelta(days=fracday)
-        return epoch
-
-
-class TLESchema(BaseSchema):
-    """
-    Schema for representing a Two-Line Element (TLE) entry.
-
-    Attributes
-    ----------
-    tle
-        The TLE entry object.
-    """
-
-    tle: TLEEntry
-
-
 class SAAEntry(DateRangeSchema):
     """
     Simple class to hold a single SAA passage.
@@ -580,6 +536,14 @@ class FOVSchema(BaseSchema):
     boresight: Optional[FOVOffsetSchema] = None
 
 
+class TLESchema(BaseSchema):
+    tle: Any
+
+
+class TLEGetSchema(BaseSchema):
+    epoch: datetime
+
+
 class InstrumentSchema(BaseSchema):
     """
     Schema for representing an instrument.
@@ -729,26 +693,22 @@ class TLEConfigSchema(BaseSchema):
 
     Parameters
     ----------
+    tle_name
+        The name of the satellite as given in the TLE.
     tle_bad
         The threshold for determining if a TLE is considered bad in units
         of days. I.e. if the TLE is older than this value, it is considered
         bad.
     tle_url
-        The URL for retrieving TLE data. Defaults to None.
-    tle_name
-        The name of the TLE.
+        The URL for retrieving TLE data.
     tle_heasarc
         The URL for retrieving TLE data from HEASARC in their multi-TLE format.
-        Defaults to None.
-    tle_celestrak
-        The URL for retrieving TLE data from Celestrak. Defaults to None.
     """
 
+    tle_name: str
     tle_bad: float
     tle_url: Optional[Url] = None
-    tle_name: str
     tle_heasarc: Optional[Url] = None
-    tle_celestrak: Optional[Url] = None
 
 
 class ConfigSchema(BaseSchema):

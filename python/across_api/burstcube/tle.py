@@ -1,11 +1,12 @@
 from datetime import datetime
+from cachetools import cached, TTLCache
 
 from ..base.config import set_observatory
 from ..base.tle import TLEBase
 from .config import BURSTCUBE
-from .models import BurstCubeTLEEntryModel
 
 
+@cached(cache=TTLCache(maxsize=128, ttl=3600))
 @set_observatory(BURSTCUBE)
 class BurstCubeTLE(TLEBase):
     """
@@ -32,12 +33,6 @@ class BurstCubeTLE(TLEBase):
 
     """
 
-    tlemodel = BurstCubeTLEEntryModel
-
     def __init__(self, epoch: datetime):
         self.epoch = epoch
         self.tles = []
-
-
-# Shorthand alias
-TLE = BurstCubeTLE

@@ -1,3 +1,4 @@
+from cachetools import cached, TTLCache
 from datetime import datetime
 from typing import Optional
 
@@ -7,9 +8,10 @@ from ..base.ephem import EphemBase, EphemSchema
 from ..base.schema import JobInfo
 from ..base.tle import TLEEntry
 from .config import BURSTCUBE
-from .tle import TLE
+from .tle import BurstCubeTLE
 
 
+@cached(cache=TTLCache(maxsize=128, ttl=3600))
 @set_observatory(BURSTCUBE)
 class Ephem(EphemBase, ACROSSAPIBase):
     """
@@ -61,7 +63,7 @@ class Ephem(EphemBase, ACROSSAPIBase):
         EphemBase.__init__(self)
         # Default values
         self.status = JobInfo()
-        self.tle: Optional[TLEEntry] = TLE(begin).get()
+        self.tle: Optional[TLEEntry] = BurstCubeTLE(epoch=begin).get()
 
         # Parse argument keywords
         self.begin = begin

@@ -5,6 +5,8 @@ from typing import Annotated, Optional
 from astropy.io import fits  # type: ignore
 from fastapi import Depends, File, Query, status
 
+from .tle import BurstCubeTLE
+
 from ..base.api import (
     ClassificationDep,
     DateRangeDep,
@@ -27,6 +29,7 @@ from ..base.api import (
     app,
 )
 from ..base.schema import EphemSchema, SAASchema
+from ..base.models import TLEEntry
 from ..functions import convert_to_dt
 from .ephem import BurstCubeEphem
 from .fov import BurstCubeFOVCheck
@@ -54,6 +57,21 @@ async def optional_trigger_time(
 
 
 OptionalTriggerTimeDep = Annotated[datetime, Depends(optional_trigger_time)]
+
+
+async def epoch(
+    epoch: Annotated[
+        datetime,
+        Query(
+            title="Epoch",
+            description="Epoch in UTC or ISO format.",
+        ),
+    ],
+) -> Optional[datetime]:
+    return convert_to_dt(epoch)
+
+
+EpochDep = Annotated[datetime, Depends(epoch)]
 
 
 async def optional_trigger_instrument(
@@ -198,6 +216,17 @@ async def burstcube_too_submit(
         too.healpix_order = hdu[1].header["ORDERING"]
     too.post()
     return too.schema
+
+
+@app.get("/burstcube/tle")
+async def burstcube_tle(
+    epoch: EpochDep,
+) -> Optional[TLEEntry]:
+    """
+    Returns the best TLE for BurstCube for a given epoch.
+    """
+    tle = BurstCubeTLE(epoch=epoch)
+    return tle.get()
 
 
 @app.put("/burstcube/too/{id}", status_code=status.HTTP_201_CREATED)

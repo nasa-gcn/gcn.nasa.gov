@@ -59,10 +59,9 @@ BURSTCUBE = {
     # Information on where to obtain a TLE for this Observatory
     "tle": {
         "tle_bad": 40,  # days
-        "tle_url": None,
         "tle_name": "ISS (ZARYA)",
+        "tle_url": "https://celestrak.org/NORAD/elements/gp.php?INTDES=1998-067",
         "tle_heasarc": None,
-        "tle_celestrak": "https://celestrak.org/NORAD/elements/gp.php?INTDES=1998-067",
     },
 }
 

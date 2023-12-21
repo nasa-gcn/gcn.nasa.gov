@@ -1,17 +1,20 @@
-from dataclasses import dataclass
 from typing import Any
 
 from boto3.dynamodb.conditions import Key  # type: ignore
+from pydantic import computed_field
 
-from ..api_db import dydbtable
+from .schema import BaseSchema
+
+from ..api_db import dydbtable, dynamodb
+from datetime import datetime, timedelta
 
 
 class DynamoDBBase:
     __tablename__: str
 
-    def save(self):
+    def write(self):
         table = dydbtable(self.__tablename__)
-        table.put_item(Item=self.model_dump())
+        table.put_item(Item=self.model_dump(mode="json"))
 
     @classmethod
     def get_by_key(cls, value: str, key: str):
@@ -24,26 +27,34 @@ class DynamoDBBase:
         return None
 
     @classmethod
-    def delete_entry(cls, value: Any, key: str) -> bool:
+    def delete(cls, value: Any, key: str) -> bool:
         table = dydbtable(cls.__tablename__)
         return table.delete_item(Key={key: value})
 
 
-@dataclass
-class TLEEntryModelBase(DynamoDBBase):
+class TLEEntry(BaseSchema, DynamoDBBase):
     """Base for TLEEntry"""
 
-    __tablename__ = ""
-    epoch: str
+    __tablename__ = "acrossapi_tle"
+    name: str  # Partition Key
     tle1: str
     tle2: str
 
+    @computed_field  # type: ignore[misc]
+    @property
+    def epoch(self) -> datetime:
+        """Calculate Epoch of TLE - Sort Key"""
+        tleepoch = self.tle1.split()[3]
+        year, day_of_year = int(f"20{tleepoch[0:2]}"), float(tleepoch[2:])
+        return datetime(year, 1, 1) + timedelta(day_of_year - 1)
+
     @classmethod
-    def find_keys_between_epochs(cls, start_epoch, end_epoch):
+    def find_tles_between_epochs(cls, name, start_epoch, end_epoch):
         table = dydbtable(cls.__tablename__)
-        # FIXME: Replace scan with a query here?
-        response = table.scan(
-            FilterExpression=Key("epoch").between(str(start_epoch), str(end_epoch))
+
+        response = table.query(
+            KeyConditionExpression=Key("name").eq(name)
+            & Key("epoch").between(str(start_epoch), str(end_epoch))
         )
         items = response["Items"]
         tles = [cls(**item) for item in items]

@@ -1,14 +1,18 @@
 from datetime import datetime, timedelta
+import logging
 from typing import List, Optional
 
 import requests
+from requests import HTTPError
+
+from .common import ACROSSAPIBase
+from .schema import TLEGetSchema, TLESchema
 
 from ..api_db import dydbtable
-from .models import TLEEntryModelBase
-from .schema import TLEEntry
+from .models import TLEEntry
 
 
-class TLEBase:
+class TLEBase(ACROSSAPIBase):
     """
     Class that reads and updates TLEs for Satellite from a database,
     and returns a skyfield EarthSatellite based on downloaded TLE file.
@@ -37,67 +41,109 @@ class TLEBase:
         Read TLE from dedicated weblink
     read_tle_heasarc
         Read TLEs in the HEASARC MISSION_TLE_ARCHIVE.tle format
-    read_tle_celestrak
-        Return latest TLE from Celestrak
     read_db
         Read the best TLE for a given epoch from the local database of TLEs
     write_db
         Write a TLE to the database
-    read_db_all_tles
+    write_db_all_tles
         Write all loaded TLEs to database
     """
+
+    _schema = TLESchema
+    _get_schema = TLEGetSchema
 
     # Configuration parameters
     tle_heasarc: str
     tle_url: str
-    tle_celestrak: str
     tle_bad: int
     tle_name: str
     # Arguments
     epoch: datetime
     tles: List[TLEEntry]
 
-    def __init__(self):
-        self.tlemodel = TLEEntryModelBase
-
     def read_tle_web(self) -> bool:
-        """Read TLE from dedicated weblink"""
+        """
+        Read TLE from dedicated weblink.
 
+        This method downloads the TLE (Two-Line Elements) from a dedicated weblink.
+        It retrieves the TLE data, parses it, and stores the valid TLE entries in a list.
+        Often websites (e.g. Celestrak) will have multiple TLEs for a given satellite,
+        so this method will only store the TLEs that match the given satellite name,
+        as stored in the `tle_name` attribute.
+
+        Returns
+        -------
+            True if the TLE was successfully read and stored, False otherwise.
+        """
         # Download TLE from internet
+        r = requests.get(self.tle_url)
         try:
-            tlefile = requests.get(self.tle_url).text.splitlines()
-        except Exception:
+            # Check for HTTP errors
+            r.raise_for_status()
+        except HTTPError as e:
+            logging.exception(e)
             return False
 
-        # Load the TLE
-        tle = TLEEntry(tle1=tlefile[-2].strip(), tle2=tlefile[-1].strip())
-        self.tles.append(tle)
+        # Read valid TLEs into a list
+        tlefile = r.text.splitlines()
+        tles = [
+            TLEEntry(
+                name=tlefile[i].strip(),
+                tle1=tlefile[i + 1].strip(),
+                tle2=tlefile[i + 2].strip(),
+            )
+            for i in range(0, len(tlefile), 3)
+            if self.tle_name in tlefile[i]
+        ]
 
-        # No good TLE was found
-        if self.tle_out_of_date:
-            return False
+        # Append them to the list of stored TLEs
+        self.tles.extend(tles)
 
-        return True
+        # Check if a good TLE for the current epoch was found
+        if self.tle_out_of_date is False:
+            return True
+
+        return False
 
     def read_tle_heasarc(self) -> bool:
-        """Read TLEs in the HEASARC MISSION_TLE_ARCHIVE.tle format"""
+        """
+        Read TLEs in the HEASARC MISSION_TLE_ARCHIVE.tle format. This
+        format is used by the HEASARC to store TLEs for various missions.
+        The format consists of a concatenation of all available TLEs,
+        without the name header.
 
-        # Fetch TLE file off the web
-        tleweb = requests.get(self.tle_heasarc)
-        if tleweb.status_code == 200:
-            tlefile = tleweb.text.splitlines()
-        else:
+        Returns
+        -------
+            True if TLEs were successfully read, False otherwise.
+        """
+
+        # Download TLEs from internet
+        r = requests.get(self.tle_heasarc)
+        try:
+            # Check for HTTP errors
+            r.raise_for_status()
+        except HTTPError as e:
+            logging.exception(e)
             return False
 
         # Parse the file
-        self.tles = []
-        for i in range(0, len(tlefile), 2):
-            # Create the TLEEntry
-            tle = TLEEntry(tle1=tlefile[i].strip(), tle2=tlefile[i + 1].strip())
+        tlefile = r.text.splitlines()
+        tles = [
+            TLEEntry(
+                name=self.tle_name,
+                tle1=tlefile[i + 1].strip(),
+                tle2=tlefile[i + 2].strip(),
+            )
+            for i in range(0, len(tlefile), 2)
+            if self.tle_name in tlefile[i]
+        ]
 
-            # Append it to the list of TLEs
-            self.tles.append(tle)
-        return True
+        # Append it to the list of TLEs
+        self.tles.extend(tles)
+        # Check if a good TLE was found
+        if self.tle_out_of_date is False:
+            return True
+        return False
 
     @property
     def tle(self) -> Optional[TLEEntry]:
@@ -105,7 +151,6 @@ class TLEBase:
 
         Returns
         -------
-        Optional[TLEEntry]
             Best TLE for the given epoch
         """
         if self.epoch is not None and len(self.tles) > 0:
@@ -114,48 +159,12 @@ class TLEBase:
             )
         return None
 
-    def read_tle_celestrak(self) -> bool:
-        """Return latest TLE from Celestrak
-
-        Returns
-        -------
-        bool
-            Did it work?
-        """
-        # Fetch TLE file from Celestrak
-        try:
-            req = requests.get(self.tle_celestrak)
-        except Exception:
-            return False
-        if req.status_code == 200:
-            urltles = req.text
-        else:
-            return False
-
-        # Read in Celestrak combined TLE and fetch the one we want
-        lines = urltles.splitlines()
-        tle = []
-        go = False
-        for line in lines:
-            if go:
-                tle.append(line)
-            if line.strip() == self.tle_name:
-                go = True
-            if len(tle) == 2:
-                go = False
-
-        # Create the self.tlemodel
-        self.tles.append(TLEEntry(tle1=tle[0], tle2=tle[1]))
-
-        return True
-
     @property
     def tle_out_of_date(self) -> bool:
         """Is this TLE outside of the allowed range?
 
         Returns
         -------
-        bool
             Is this TLE out of date?
         """
         if self.tle is not None:
@@ -166,7 +175,7 @@ class TLEBase:
                 return True
         return False
 
-    def get(self, epoch: Optional[datetime] = None) -> Optional[TLEEntry]:
+    def get(self) -> Optional[TLEEntry]:
         """Read in the best TLE for a given epoch.
 
         Parameters
@@ -177,10 +186,11 @@ class TLEBase:
         Returns
         -------
             Best TLE for the given epoch
-
         """
-        if epoch is not None:
-            self.epoch = epoch
+
+        if self.validate_get() is False:
+            return None
+
         # Try reading from the database first
         if self.read_db() is True:
             if self.tle is not None:
@@ -198,13 +208,6 @@ class TLEBase:
             if self.read_tle_heasarc() is True:
                 self.write_db()
                 return self.tle
-        # Last resort, get it off Celestrak
-        if self.tle_celestrak is not None and abs(
-            self.epoch - datetime.now()
-        ) < timedelta(days=self.tle_bad):
-            if self.read_tle_celestrak() is True:
-                self.write_db()
-                return self.tle
 
         return None
 
@@ -217,19 +220,18 @@ class TLEBase:
         bool
             Did it work?
         """
-
-        tles = self.tlemodel.find_keys_between_epochs(
+        # Read TLEs from the database for a given `tle_name` and epoch
+        self.tles = TLEEntry.find_tles_between_epochs(
+            self.tle_name,
             self.epoch - timedelta(days=self.tle_bad),
             self.epoch + timedelta(days=self.tle_bad),
         )
-
-        self.tles = [TLEEntry(**tle.__dict__) for tle in tles]
 
         return True
 
     def write_db(self) -> bool:
         """
-        Write a TLE to the database
+        Write a TLE to the database.
 
         Returns
         -------
@@ -238,23 +240,20 @@ class TLEBase:
         """
         # Write out the data to the table
         if self.tle is not None:
-            tledb = self.tlemodel(
-                epoch=str(self.tle.epoch), tle1=self.tle.tle1, tle2=self.tle.tle2
-            )
-            tledb.save()
+            tledb = TLEEntry(name=self.tle_name, tle1=self.tle.tle1, tle2=self.tle.tle2)
+            tledb.write()
         return True
 
     def write_db_all_tles(self) -> bool:
-        """Write all loaded TLEs to database
+        """
+        Write all loaded TLEs to database.
 
         Returns
         -------
-        bool
             Did it work?
-
         """
         # Load everything already in the table
-        table = dydbtable(self.tlemodel.__tablename__)
+        table = dydbtable(TLEEntry.__tablename__)
         existing = table.scan()
         epochs = [e["epoch"] for e in existing["Items"]]
         # Write TLEs to database
@@ -262,7 +261,7 @@ class TLEBase:
             for t in self.tles:
                 if t.epoch in epochs:
                     continue
-                tdb = TLEEntryModelBase(epoch=str(t.epoch), tle1=t.tle1, tle2=t.tle2)
+                tdb = TLEEntry(name=self.tle_name, tle1=t.tle1, tle2=t.tle2)
                 epochs.append(t.epoch)
                 batch.put_item(Item=tdb.__dict__)
 

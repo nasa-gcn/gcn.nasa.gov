@@ -244,7 +244,7 @@ class BurstCubeTOO(ACROSSAPIBase):
 
         # Write BurstCubeTOO to the database
         too = BurstCubeTOOModel(**self.schema.model_dump(mode="json"))
-        too.save()
+        too.write()
 
         return True
 
@@ -365,7 +365,7 @@ class BurstCubeTOO(ACROSSAPIBase):
             **BurstCubeTOOModelSchema.model_validate(self).model_dump(mode="json")
         )
 
-        too.save()
+        too.write()
         self.id = too.id
 
         return True
