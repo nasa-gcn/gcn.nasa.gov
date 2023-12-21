@@ -54,8 +54,8 @@ class Resolve(ACROSSAPIBase):
     """
     Resolve class for resolving astronomical object names.
 
-    Parameters:
-    -----------
+    Parameters
+    ----------
     name
         The name of the astronomical object to resolve.
 
