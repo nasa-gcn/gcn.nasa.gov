@@ -17,10 +17,10 @@ from .schema import TLEGetSchema, TLESchema
 
 class TLEBase(ACROSSAPIBase):
     """
-    Class that reads and updates TLEs for Satellite from a database,
-    and returns a skyfield EarthSatellite based on downloaded TLE file.
-    If no TLEs are found, it will download the latest TLE from the internet,
-    using various sources, e.g. HEASARC, Celestrak, etc.
+    Class that reads and updates TLEs for Satellite from a database, and
+    returns a skyfield EarthSatellite based on downloaded TLE file. If no TLEs
+    are found, it will download the latest TLE from the internet, using various
+    sources, e.g. HEASARC, Celestrak, etc.
 
     Parameters
     ----------
@@ -74,11 +74,12 @@ class TLEBase(ACROSSAPIBase):
         """
         Read TLE from dedicated weblink.
 
-        This method downloads the TLE (Two-Line Elements) from a dedicated weblink.
-        It retrieves the TLE data, parses it, and stores the valid TLE entries in a list.
-        Often websites (e.g. Celestrak) will have multiple TLEs for a given satellite,
-        so this method will only store the TLEs that match the given satellite name,
-        as stored in the `tle_name` attribute.
+        This method downloads the TLE (Two-Line Elements) from a dedicated
+        weblink. It retrieves the TLE data, parses it, and stores the valid TLE
+        entries in a list. Often websites (e.g. Celestrak) will have multiple
+        TLEs for a given satellite, so this method will only store the TLEs
+        that match the given satellite name, as stored in the `tle_name`
+        attribute.
 
         Returns
         -------
@@ -101,7 +102,7 @@ class TLEBase(ACROSSAPIBase):
         tlefile = r.text.splitlines()
         tles = [
             TLEEntry(
-                name=tlefile[i].strip(),
+                satname=tlefile[i].strip(),
                 tle1=tlefile[i + 1].strip(),
                 tle2=tlefile[i + 2].strip(),
             )
@@ -120,10 +121,10 @@ class TLEBase(ACROSSAPIBase):
 
     def read_tle_heasarc(self) -> bool:
         """
-        Read TLEs in the HEASARC MISSION_TLE_ARCHIVE.tle format. This
-        format is used by the HEASARC to store TLEs for various missions.
-        The format consists of a concatenation of all available TLEs,
-        without the name header.
+        Read TLEs in the HEASARC MISSION_TLE_ARCHIVE.tle format. This format is
+        used by the HEASARC to store TLEs for various missions. The format
+        consists of a concatenation of all available TLEs, without the name
+        header.
 
         Returns
         -------
@@ -146,7 +147,7 @@ class TLEBase(ACROSSAPIBase):
         tlefile = r.text.splitlines()
         tles = [
             TLEEntry(
-                name=self.tle_name,
+                satname=self.tle_name,
                 tle1=tlefile[i + 1].strip(),
                 tle2=tlefile[i + 2].strip(),
             )
@@ -163,11 +164,13 @@ class TLEBase(ACROSSAPIBase):
 
     @property
     def tle(self) -> Optional[TLEEntry]:
-        """Return the best TLE out of the TLEs currently loaded for a the given epoch
+        """
+        Return the best TLE out of the TLEs currently loaded for a the given
+        epoch.
 
         Returns
         -------
-            Best TLE for the given epoch
+            Best TLE for the given epoch, or None if no TLEs are loaded.
         """
         if self.epoch is not None and len(self.tles) > 0:
             return min(
@@ -176,25 +179,32 @@ class TLEBase(ACROSSAPIBase):
         return None
 
     @property
-    def tle_out_of_date(self) -> bool:
-        """Is this TLE outside of the allowed range?
+    def tle_out_of_date(self) -> Optional[bool]:
+        """
+        Is this TLE outside of the allowed range?
 
         Returns
         -------
-            Is this TLE out of date?
+            True if the epoch of the loaded TLE is more the `tle_bad` days off.
+            Returns None if no TLE is loaded.
         """
-        if self.tle is not None:
-            # Calculate the number of days between the TLE epoch and the request epoch
-            self.offset = round(
-                abs((self.epoch - self.tle.epoch).total_seconds() / 86400), 2
-            )
-            # If this is greater than the allowed number of days, then return True
-            if self.offset > self.tle_bad:
-                return True
+        if self.tle is None:
+            return None
+
+        # Calculate the number of days between the TLE epoch and the
+        # requested epoch
+        self.offset = round(
+            abs((self.epoch - self.tle.epoch).total_seconds() / 86400), 2
+        )
+        # If this is greater than the allowed number of days, then return
+        # True
+        if self.offset > self.tle_bad:
+            return True
         return False
 
     def get(self) -> bool:
-        """Read in the best TLE for a given epoch.
+        """
+        Read in the best TLE for a given epoch.
 
         Parameters
         ----------
@@ -206,13 +216,13 @@ class TLEBase(ACROSSAPIBase):
             Best TLE for the given epoch
         """
 
-        # Check if the request is valid
+        # Check if the requested arguments are valid
         if self.validate_get() is False:
             return False
 
-        # Check that the epoch is within the allowed range, if not
-        # Just set to either the earliest of latest possible epoch
-        # and just use that TLE to extrapolate.
+        # Check that the epoch is within the allowed range. If not set to
+        # either the earliest of latest possible epoch and just use that TLE to
+        # extrapolate.
         if self.epoch < self.tle_min_epoch:
             self.epoch = self.tle_min_epoch
         elif self.epoch > datetime.utcnow() + timedelta(days=self.tle_bad):
@@ -223,17 +233,18 @@ class TLEBase(ACROSSAPIBase):
             if self.tle is not None:
                 return True
 
-        # Next try reading from the web at the URL given
+        # Next try try reading the TLE given in the HEASARC format at the URL
+        # given in `self.tle_heasarc`
+        if self.tle_heasarc is not None:
+            if self.read_tle_heasarc() is True:
+                self.write_db()
+                return True
+
+        # Next try reading from the web at the URL given in `self.tle_url`
         # in `self.tle_url`
         if self.tle_url is not None:
             if self.read_tle_web() is True:
                 # Write this TLE to the database for next time
-                self.write_db()
-                return True
-
-        # Next try try reading the TLE given in the HEASARC format
-        if self.tle_heasarc is not None:
-            if self.read_tle_heasarc() is True:
                 self.write_db()
                 return True
 
@@ -268,7 +279,9 @@ class TLEBase(ACROSSAPIBase):
         """
         # Write out the data to the table
         if self.tle is not None:
-            tledb = TLEEntry(name=self.tle_name, tle1=self.tle.tle1, tle2=self.tle.tle2)
+            tledb = TLEEntry(
+                satname=self.tle_name, tle1=self.tle.tle1, tle2=self.tle.tle2
+            )
             tledb.write()
         return True
 
@@ -289,7 +302,7 @@ class TLEBase(ACROSSAPIBase):
             for t in self.tles:
                 if t.epoch in epochs:
                     continue
-                tdb = TLEEntry(name=self.tle_name, tle1=t.tle1, tle2=t.tle2)
+                tdb = TLEEntry(satname=self.tle_name, tle1=t.tle1, tle2=t.tle2)
                 epochs.append(t.epoch)
                 batch.put_item(Item=tdb.__dict__)
 

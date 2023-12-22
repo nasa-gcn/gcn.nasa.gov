@@ -5,7 +5,6 @@
 from datetime import datetime, timedelta
 
 from arc import tables  # type: ignore
-from boto3.dynamodb.conditions import Key  # type: ignore
 from pydantic import computed_field
 
 from .schema import BaseSchema
@@ -17,7 +16,7 @@ class TLEEntry(BaseSchema):
     """
 
     __tablename__ = "acrossapi_tle"
-    name: str  # Partition Key
+    satname: str  # Partition Key
     tle1: str
     tle2: str
 
@@ -36,7 +35,7 @@ class TLEEntry(BaseSchema):
         return datetime(year, 1, 1) + timedelta(day_of_year - 1)
 
     @classmethod
-    def find_tles_between_epochs(cls, name, start_epoch, end_epoch):
+    def find_tles_between_epochs(cls, satname, start_epoch, end_epoch):
         """Find TLE entries between two epochs.
 
         Arguments
@@ -55,8 +54,12 @@ class TLEEntry(BaseSchema):
         table = tables.table(cls.__tablename__)
 
         response = table.query(
-            KeyConditionExpression=Key("name").eq(name)
-            & Key("epoch").between(str(start_epoch), str(end_epoch))
+            KeyConditionExpression="satname = :satname AND epoch BETWEEN :start_epoch AND :end_epoch",
+            ExpressionAttributeValues={
+                ":satname": satname,
+                ":start_epoch": str(start_epoch),
+                ":end_epoch": str(end_epoch),
+            },
         )
         items = response["Items"]
         tles = [cls(**item) for item in items]

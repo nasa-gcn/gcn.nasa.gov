@@ -44,7 +44,7 @@ client_credentials
   PointInTimeRecovery true
 
 acrossapi_tle
-  name *String
+  satname *String
   epoch **String
   tle1 String
   tle2 String
