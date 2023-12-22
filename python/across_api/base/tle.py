@@ -56,7 +56,7 @@ class TLEBase(ACROSSAPIBase):
     # Configuration parameters
     tle_heasarc: Optional[str]
     tle_url: Optional[str]
-    tle_bad: int
+    tle_bad: float
     tle_name: str
     tle_min_epoch: datetime
     # Arguments
