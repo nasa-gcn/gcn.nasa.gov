@@ -25,7 +25,7 @@ export default function () {
   return (
     <>
       <Header />
-      <main id="main-content">
+      <main id="main-content" style={{ backgroundColor: '#0c0f18', color: 'white' }}>
         <Outlet />
       </main>
       <Footer />

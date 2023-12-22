@@ -1,12 +1,54 @@
-import React, { useEffect, useState } from 'react'
+import type { CSSProperties, ReactNode } from 'react'
+import React, { useState } from 'react'
+import { useEventListener } from 'usehooks-ts'
 
 // Define an interface for the component's props
 interface ParallaxImageProps {
-  src: string // URL of the image
-  alt: string // Description of the image
+  src: string
+  alt: string
+  title?: string
+  paragraph?: string
+  containerStyle?: CSSProperties
+  textStyle?: CSSProperties
+  imageStyle?: CSSProperties
+  children?: ReactNode
 }
 
-function ParallaxImage({ src, alt }: ParallaxImageProps) {
+// Define a default container style
+const defaultContainerStyle: CSSProperties = {
+  overflow: 'hidden',
+  position: 'relative',
+  height: '800px',
+}
+
+// Define a default text style
+const defaultTextStyle: CSSProperties = {
+  position: 'absolute',
+  top: '10%',
+  left: '29%',
+  transform: 'translateX(-50%)',
+  width: '500px',
+  fontSize: '1.25rem',
+  zIndex: 1,
+  whiteSpace: 'normal',
+}
+
+// Define a default image style
+const defaultImageStyle: CSSProperties = {
+  position: 'absolute',
+  width: '100%',
+  top: '-10%',
+  bottom: '-5%',
+}
+
+export function ParallaxImage({
+  src,
+  alt,
+  containerStyle = defaultContainerStyle,
+  textStyle = defaultTextStyle,
+  imageStyle = defaultImageStyle,
+  children, // Add children here
+}: ParallaxImageProps) {
   const [offset, setOffset] = useState(0)
 
   const handleScroll = () => {
@@ -14,52 +56,22 @@ function ParallaxImage({ src, alt }: ParallaxImageProps) {
     setOffset(newOffset)
   }
 
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  // Using useEventListener hook
+  useEventListener('scroll', handleScroll)
 
   return (
-    <div
-      style={{
-        overflow: 'hidden',
-        position: 'relative',
-        height: '800px',
-      }}
-    >
-      <div
-        style={{
-          position: 'absolute',
-          top: '10%',
-          left: '29%',
-          transform: 'translateX(-50%)',
-          width: '500px',
-          fontSize: '1.25rem',
-          zIndex: 1,
-          whiteSpace: 'normal',
-        }}
-      >
-        <h3>The Dawn of a New Era in Astronomy</h3>
-        <p className="usa-paragraph text-base-lightest">
-          Multimessenger and time-domain astrophysics are opening entirely new
-          windows on the Universe. The Astrophysics Cross-Observatory Science
-          Support (ACROSS) center is an initiative to facilitate communication,
-          coordination, and collaboration in this new era of astronomy.
-        </p>
+    <div style={containerStyle}>
+      <div style={textStyle}>
+        {children} {/* Use children instead of specific title and paragraph */}
       </div>
       <img
         src={src}
         alt={alt}
         style={{
-          position: 'absolute',
-          width: '100%',
-          top: '-10%',
-          bottom: '-5%',
           transform: `translateY(${offset * 0.5}px)`,
+          ...imageStyle,
         }}
       />
     </div>
   )
 }
-
-export default ParallaxImage
