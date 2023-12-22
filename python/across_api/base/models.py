@@ -12,7 +12,20 @@ from .schema import BaseSchema
 
 class TLEEntry(BaseSchema):
     """
-    Represents a TLE entry in the database.
+    Represents a single TLE entry in the TLE database.
+
+    Parameters
+    ----------
+    satname : str
+        The name of the satellite from the Satellite Catalog.
+    tle1 : str
+        The first line of the TLE.
+    tle2 : str
+        The second line of the TLE.
+
+    Attributes
+    ----------
+    epoch
     """
 
     __tablename__ = "acrossapi_tle"
