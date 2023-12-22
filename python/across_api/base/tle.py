@@ -225,7 +225,7 @@ class TLEBase(ACROSSAPIBase):
 
         # Calculate the number of days between the TLE epoch and the requested
         # epoch. If this is greater than the allowed number of days (given by
-        # `self.tle_bad`), then return True
+        # `tle_bad`), then return True
         if abs((self.epoch - self.tle.epoch).total_seconds() / 86400) > self.tle_bad:
             return True
         return False
@@ -252,10 +252,10 @@ class TLEBase(ACROSSAPIBase):
         if self.validate_get() is False:
             return False
 
-        # Check that the epoch is within the allowed range. If not set to
-        # either the earliest of latest possible epoch and just use that TLE to
-        # extrapolate. If the epoch is in the future, then set it to the
-        # current epoch to use the most current TLE.
+        # Check that the epoch is within the allowed range. If set
+        # to before `tle_min_epoch`, then set it to `tle_min_epoch`. If set to
+        # a value in the future, then set it to the current time to give the most
+        # up to date TLE.
         if self.epoch < self.tle_min_epoch:
             self.epoch = self.tle_min_epoch
         elif self.epoch > datetime.utcnow():
@@ -270,8 +270,8 @@ class TLEBase(ACROSSAPIBase):
                 return True
 
         # Next try try reading the TLE given in the concatenated format at the
-        # URL given in `self.tle_concat`. Concatenated format should have every
-        # TLE for the satellite since launch in a single file, so it's safe to
+        # URL given by `tle_concat`. Concatenated format should have every TLE
+        # for the satellite since launch in a single file, so it's safe to
         # query this for any date within the mission lifetime. For an example
         # of this format (for the NuSTAR mission), see here:
         # https://nustarsoc.caltech.edu/NuSTAR_Public/NuSTAROperationSite/NuSTAR.tle
@@ -283,10 +283,10 @@ class TLEBase(ACROSSAPIBase):
                     print(f"Found TLE in concatenated file with epoch {self.tle.epoch}")
                     return True
 
-        # Finally try reading from the web at the URL given in `self.tle_url`.
-        # Note that URL based TLEs are usually only valid for the current
-        # epoch, so we will only use this if the epoch being requested is
-        # within `self.tle_bad` days of the current epoch.
+        # Finally try reading from the web at the URL given by `tle_url`. Note
+        # that URL based TLEs are usually only valid for the current epoch, so
+        # we will only use this if the epoch being requested is within
+        # `tle_bad` days of the current epoch.
         if self.tle_url is not None:
             if self.epoch > datetime.utcnow() - timedelta(days=self.tle_bad):
                 if self.read_tle_web() is True:
