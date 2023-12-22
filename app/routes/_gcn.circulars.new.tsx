@@ -164,16 +164,18 @@ export default function () {
       <h1>New GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <InputGroup className="border-0 maxw-full">
-          <InputPrefix>From</InputPrefix>
-          <span className="padding-1">{formattedAuthor}</span>
-          <Link
-            to="/user"
-            title="Adjust how your name and affiliation appear in new GCN Circulars"
-          >
-            <Button unstyled type="button">
-              <Icon.Edit role="presentation" /> Edit
-            </Button>
-          </Link>
+          <InputPrefix className="wide-input-prefix">From</InputPrefix>
+          <span>
+            {formattedAuthor}{' '}
+            <Link
+              to="/user"
+              title="Adjust how your name and affiliation appear in new GCN Circulars"
+            >
+              <Button unstyled type="button">
+                <Icon.Edit role="presentation" /> Edit
+              </Button>
+            </Link>
+          </span>
         </InputGroup>
         <InputGroup
           className={classnames('maxw-full', {
@@ -181,7 +183,7 @@ export default function () {
             'usa-input--success': subjectValid,
           })}
         >
-          <InputPrefix>Subject</InputPrefix>
+          <InputPrefix className="wide-input-prefix">Subject</InputPrefix>
           <TextInput
             autoFocus
             aria-describedby="subjectDescription"
