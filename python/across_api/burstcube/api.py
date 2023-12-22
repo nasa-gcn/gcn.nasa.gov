@@ -14,5 +14,4 @@ async def burstcube_tle(
     """
     Returns the best TLE for BurstCube for a given epoch.
     """
-    tle = BurstCubeTLE(epoch=epoch)
-    return tle.schema
+    return BurstCubeTLE(epoch=epoch).schema
