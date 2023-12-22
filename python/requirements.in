@@ -6,4 +6,3 @@ fastapi
 mangum
 requests
 types-cachetools
-
