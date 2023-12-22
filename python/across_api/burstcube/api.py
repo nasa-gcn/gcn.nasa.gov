@@ -2,7 +2,7 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from ..base.api import app, EpochDep
+from ..base.api import EpochDep, app
 from ..base.schema import TLESchema
 from .tle import BurstCubeTLE
 
