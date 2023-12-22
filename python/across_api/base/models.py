@@ -5,7 +5,7 @@
 from datetime import datetime, timedelta
 
 from arc import tables  # type: ignore
-from pydantic import computed_field
+from pydantic import Field, computed_field
 
 from .schema import BaseSchema
 
@@ -17,31 +17,47 @@ class TLEEntry(BaseSchema):
 
     __tablename__ = "acrossapi_tle"
     satname: str  # Partition Key
-    tle1: str
-    tle2: str
+    tle1: str = Field(min_length=69, max_length=69)
+    tle2: str = Field(min_length=69, max_length=69)
 
     @computed_field  # type: ignore[misc]
     @property
     def epoch(self) -> datetime:
         """
-        Calculate the Epoch of the TLE (Sort Key).
+        Calculate the Epoch datetime of the TLE file. See
+        https://celestrak.org/columns/v04n03/#FAQ04 for more information on
+        how the year / epoch encoding works.
 
         Returns
         -------
             The calculated epoch of the TLE.
         """
+        # Extract epoch from TLE
         tleepoch = self.tle1.split()[3]
-        year, day_of_year = int(f"20{tleepoch[0:2]}"), float(tleepoch[2:])
+
+        # Convert 2 number year into 4 number year.
+        tleyear = int(tleepoch[0:2])
+        if tleyear < 57:
+            year = 2000 + tleyear
+        else:
+            year = 1900 + tleyear
+
+        # Convert day of year into float
+        day_of_year = float(tleepoch[2:])
+
+        # Return datetime epoch
         return datetime(year, 1, 1) + timedelta(day_of_year - 1)
 
     @classmethod
     def find_tles_between_epochs(cls, satname, start_epoch, end_epoch):
-        """Find TLE entries between two epochs.
+        """
+        Find TLE entries between two epochs in the TLE database for a given
+        satellite TLE name.
 
         Arguments
         ---------
-        name
-            The name of the TLE entry.
+        satname
+            The common name for the spacecraft based on the Satellite Catalog.
         start_epoch
             The start time over which to search for TLE entries.
         end_epoch
@@ -53,6 +69,7 @@ class TLEEntry(BaseSchema):
         """
         table = tables.table(cls.__tablename__)
 
+        # Query the table for TLEs between the two epochs
         response = table.query(
             KeyConditionExpression="satname = :satname AND epoch BETWEEN :start_epoch AND :end_epoch",
             ExpressionAttributeValues={
@@ -61,10 +78,9 @@ class TLEEntry(BaseSchema):
                 ":end_epoch": str(end_epoch),
             },
         )
-        items = response["Items"]
-        tles = [cls(**item) for item in items]
-        tles.sort(key=lambda x: x.epoch)
-        return tles
+
+        # Convert the response into a list of TLEEntry objects and return them
+        return [cls(**item) for item in response["Items"]]
 
     def write(self):
         """Write the TLE entry to the database."""
