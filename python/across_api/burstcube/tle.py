@@ -20,7 +20,7 @@ class BurstCubeTLE(TLEBase):
     Attributes
     ----------
     tle_name
-        Name of the spacecraft as it appears in the TLE.
+        Name of the spacecraft as it appears in the Spacecraft Catalog.
     tle_url
         URL to retrieve the TLE from.
     tle_concat
