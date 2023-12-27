@@ -2,12 +2,13 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from datetime import datetime, timedelta
 
+import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
+from astropy.time import Time, TimeDelta  # type: ignore
 from pydantic import Field, computed_field
 
-from .schema import BaseSchema
+from .schema import AstropyTime, BaseSchema
 
 
 class TLEEntry(BaseSchema):
@@ -35,9 +36,9 @@ class TLEEntry(BaseSchema):
 
     @computed_field  # type: ignore[misc]
     @property
-    def epoch(self) -> datetime:
+    def epoch(self) -> AstropyTime:
         """
-        Calculate the Epoch datetime of the TLE file. See
+        Calculate the Epoch of the TLE file. See
         https://celestrak.org/columns/v04n03/#FAQ04 for more information on
         how the year / epoch encoding works.
 
@@ -59,10 +60,10 @@ class TLEEntry(BaseSchema):
         day_of_year = float(tleepoch[2:])
 
         # Return datetime epoch
-        return datetime(year, 1, 1) + timedelta(day_of_year - 1)
+        return Time(f"{year}-01-01", scale="utc") + TimeDelta((day_of_year - 1) * u.day)
 
     @classmethod
-    def find_tles_between_epochs(cls, satname, start_epoch, end_epoch):
+    def find_tles_between_epochs(cls, satname: str, start_epoch: Time, end_epoch: Time):
         """
         Find TLE entries between two epochs in the TLE database for a given
         satellite TLE name.
@@ -87,8 +88,8 @@ class TLEEntry(BaseSchema):
             KeyConditionExpression="satname = :satname AND epoch BETWEEN :start_epoch AND :end_epoch",
             ExpressionAttributeValues={
                 ":satname": satname,
-                ":start_epoch": str(start_epoch),
-                ":end_epoch": str(end_epoch),
+                ":start_epoch": str(start_epoch.utc.datetime),
+                ":end_epoch": str(end_epoch.utc.datetime),
             },
         )
 

@@ -5,7 +5,17 @@
 from datetime import datetime
 from typing import Any, Optional
 
-from pydantic import BaseModel, ConfigDict
+from astropy.time import Time  # type: ignore
+from pydantic import BaseModel, ConfigDict, PlainSerializer, WithJsonSchema
+from typing_extensions import Annotated
+
+# Define a Pydantic type for astropy Time objects, which will be serialized as
+# a UTC datetime object, or a string in ISO format for JSON.
+AstropyTime = Annotated[
+    Time,
+    PlainSerializer(lambda x: x.utc.datetime, return_type=datetime),
+    WithJsonSchema({"type": "string"}, mode="serialization"),
+]
 
 
 class BaseSchema(BaseModel):
@@ -16,7 +26,7 @@ class BaseSchema(BaseModel):
     Subclasses can inherit from this class and override the `from_attributes` method to define their own schema logic.
     """
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
 class TLESchema(BaseSchema):
@@ -24,4 +34,4 @@ class TLESchema(BaseSchema):
 
 
 class TLEGetSchema(BaseSchema):
-    epoch: datetime
+    epoch: AstropyTime

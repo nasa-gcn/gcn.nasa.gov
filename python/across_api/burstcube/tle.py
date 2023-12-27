@@ -2,8 +2,7 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from datetime import datetime
-
+from astropy.time import Time  # type: ignore
 from cachetools import TTLCache, cached
 
 from ..base.tle import TLEBase
@@ -39,4 +38,4 @@ class BurstCubeTLE(TLEBase):
     tle_url = "https://celestrak.com/NORAD/elements/stations.txt"
     tle_concat = None
     tle_bad = 40
-    tle_min_epoch = datetime(2023, 12, 18)
+    tle_min_epoch = Time("2023-12-18", scale="utc")

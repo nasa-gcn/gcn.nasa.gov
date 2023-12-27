@@ -3,10 +3,11 @@
 # All Rights Reserved.
 
 import logging
-from datetime import datetime, timedelta
 from typing import List, Optional
 
+import astropy.units as u  # type: ignore
 import requests
+from astropy.time import Time, TimeDelta  # type: ignore
 from requests import HTTPError
 
 from .common import ACROSSAPIBase
@@ -61,15 +62,15 @@ class TLEBase(ACROSSAPIBase):
     tle_url: Optional[str]
     tle_bad: float
     tle_name: str
-    tle_min_epoch: datetime
+    tle_min_epoch: Time
     # Arguments
-    epoch: datetime
+    epoch: Time
     # Attributes
     tles: List[TLEEntry] = []
     # Return values
     error: Optional[str]
 
-    def __init__(self, epoch: datetime):
+    def __init__(self, epoch: Time):
         """
         Initialize a TLE object with the given epoch.
 
@@ -95,8 +96,8 @@ class TLEBase(ACROSSAPIBase):
         # the allowed range
         self.tles = TLEEntry.find_tles_between_epochs(
             self.tle_name,
-            self.epoch - timedelta(days=self.tle_bad),
-            self.epoch + timedelta(days=self.tle_bad),
+            self.epoch - TimeDelta(self.tle_bad * u.day),
+            self.epoch + TimeDelta(self.tle_bad * u.day),
         )
 
         return True
@@ -205,7 +206,7 @@ class TLEBase(ACROSSAPIBase):
         """
         if self.epoch is not None and len(self.tles) > 0:
             return min(
-                self.tles, key=lambda x: abs((x.epoch - self.epoch).total_seconds())
+                self.tles, key=lambda x: abs((x.epoch - self.epoch).to_value("s"))
             )
         return None
 
@@ -226,7 +227,7 @@ class TLEBase(ACROSSAPIBase):
         # Calculate the number of days between the TLE epoch and the requested
         # epoch. If this is greater than the allowed number of days (given by
         # `tle_bad`), then return True
-        if abs((self.epoch - self.tle.epoch).total_seconds() / 86400) > self.tle_bad:
+        if abs((self.epoch - self.tle.epoch).to_value("s") / 86400) > self.tle_bad:
             return True
         return False
 
@@ -258,8 +259,8 @@ class TLEBase(ACROSSAPIBase):
         # up to date TLE.
         if self.epoch < self.tle_min_epoch:
             self.epoch = self.tle_min_epoch
-        elif self.epoch > datetime.utcnow():
-            self.epoch = datetime.utcnow()
+        elif self.epoch > Time.now().utc:
+            self.epoch = Time.now().utc
 
         # Fetch TLE from the TLE database
         if self.read_tle_db() is True:
@@ -288,7 +289,7 @@ class TLEBase(ACROSSAPIBase):
         # we will only use this if the epoch being requested is within
         # `tle_bad` days of the current epoch.
         if self.tle_url is not None:
-            if self.epoch > datetime.utcnow() - timedelta(days=self.tle_bad):
+            if self.epoch > Time.now().utc - TimeDelta(self.tle_bad * u.day):
                 if self.read_tle_web() is True:
                     # Write the TLE to the database for next time
                     if self.tle is not None:
