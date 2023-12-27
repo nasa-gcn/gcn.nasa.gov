@@ -11,8 +11,7 @@ from astropy.time import Time, TimeDelta  # type: ignore
 from requests import HTTPError
 
 from .common import ACROSSAPIBase
-from .models import TLEEntry
-from .schema import TLEGetSchema, TLESchema
+from .schema import TLEGetSchema, TLESchema, TLEEntry
 
 
 class TLEBase(ACROSSAPIBase):
