@@ -17,7 +17,7 @@ import {
 
 import { getUser } from './_gcn._auth/user.server'
 import { AstroDataContext } from './_gcn.circulars.$circularId.($version)/AstroDataContext'
-import CircularEditForm from './_gcn.circulars.edit.$circularId/CircularEditForm'
+import { CircularEditForm } from './_gcn.circulars.edit.$circularId/CircularEditForm'
 import { formatAuthor } from './_gcn.circulars/circulars.lib'
 import { group } from './_gcn.circulars/circulars.server'
 import { origin } from '~/lib/env.server'

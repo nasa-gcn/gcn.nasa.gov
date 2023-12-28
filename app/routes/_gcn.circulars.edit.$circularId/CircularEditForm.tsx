@@ -100,7 +100,7 @@ function SyntaxReference() {
   )
 }
 
-export default function CircularEditForm({
+export function CircularEditForm({
   formattedContributor,
   circular,
   defaultBody,
