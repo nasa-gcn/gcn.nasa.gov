@@ -31,9 +31,6 @@ class EphemBase(ACROSSAPIBase):
 
     _schema = EphemSchema
     _get_schema = EphemGetSchema
-    _cache_time = (
-        86400 * 7
-    )  # Cache Ephemeris for a week, because it really never goes out of date
     # Type hints
     begin: Time
     end: Time
@@ -55,46 +52,14 @@ class EphemBase(ACROSSAPIBase):
     def pole(self) -> SkyCoord:
         return SkyCoord(
             CartesianRepresentation(x=self.polevec.T),
-            # frame=GCRS(obstime=self.timestamp),
         )
-
-    @cached_property
-    def earthsize(self):
-        if self.config.ephem.earth_radius is not None:
-            return self.config.ephem.earth_radius * np.ones(len(self))
-        return self._earthsize
 
     @cached_property
     def earth(self) -> SkyCoord:
         """Earth RA/Dec"""
         return SkyCoord(
             CartesianRepresentation(x=-self.posvec.T),
-            # frame=GCRS(obstime=self.timestamp),
         )
-
-    @cached_property
-    def earth_ra(self) -> np.ndarray:
-        return self.earth.ra.deg
-
-    @cached_property
-    def earth_dec(self) -> np.ndarray:
-        return self.earth.dec.deg
-
-    @cached_property
-    def sun_ra(self) -> np.ndarray:
-        return self.sun.ra.deg
-
-    @cached_property
-    def sun_dec(self) -> np.ndarray:
-        return self.sun.dec.deg
-
-    @cached_property
-    def moon_ra(self) -> np.ndarray:
-        return self.moon.ra.deg
-
-    @cached_property
-    def moon_dec(self) -> np.ndarray:
-        return self.moon.dec.deg
 
     @cached_property
     def tle_epoch(self) -> Optional[Time]:
@@ -192,10 +157,11 @@ class EphemBase(ACROSSAPIBase):
             teme = TEME(teme_p.without_differentials(), obstime=self.timestamp)
         self.gcrs = teme.transform_to(GCRS(obstime=self.timestamp))
 
-        # Calculate posvec
+        # Calculate satellite position vector as array of x,y,z vectors in
+        # units of km
         self.posvec = self.gcrs.cartesian.xyz.to(u.km).value.T
 
-        # Moonvec
+        # Get Moon vector
         moon = get_body("moon", self.timestamp)
 
         # Use apparent position of the Moon?
