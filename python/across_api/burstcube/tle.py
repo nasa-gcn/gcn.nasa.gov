@@ -37,5 +37,5 @@ class BurstCubeTLE(TLEBase):
     tle_name = "ISS (ZARYA)"
     tle_url = "https://celestrak.com/NORAD/elements/stations.txt"
     tle_concat = None
-    tle_bad = 40
+    tle_bad = 4
     tle_min_epoch = Time("2023-12-18", scale="utc")

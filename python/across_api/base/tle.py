@@ -2,16 +2,19 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
+import json
 import logging
+import os
 from typing import List, Optional
+from urllib.parse import quote
 
 import astropy.units as u  # type: ignore
 import requests
-from astropy.time import Time, TimeDelta  # type: ignore
+from astropy.time import Time  # type: ignore
 from requests import HTTPError
 
 from .common import ACROSSAPIBase
-from .schema import TLEGetSchema, TLESchema, TLEEntry
+from .schema import TLEEntry, TLEGetSchema, TLESchema
 
 
 class TLEBase(ACROSSAPIBase):
@@ -95,8 +98,8 @@ class TLEBase(ACROSSAPIBase):
         # the allowed range
         self.tles = TLEEntry.find_tles_between_epochs(
             self.tle_name,
-            self.epoch - TimeDelta(self.tle_bad * u.day),
-            self.epoch + TimeDelta(self.tle_bad * u.day),
+            self.epoch - self.tle_bad * u.day,
+            self.epoch + self.tle_bad * u.day,
         )
 
         return True
@@ -139,6 +142,85 @@ class TLEBase(ACROSSAPIBase):
             )
             for i in range(0, len(tlefile), 3)
             if self.tle_name in tlefile[i]
+        ]
+
+        # Append them to the list of stored TLEs
+        self.tles.extend(tles)
+
+        # Check if a good TLE for the current epoch was found
+        if self.tle_out_of_date is False:
+            return True
+
+        return False
+
+    def read_tle_space_track(self) -> bool:
+        """
+        Read TLE from Space-Track.org.
+
+        This method downloads the TLE (Two-Line Elements) from Space-Track.org.
+        It retrieves the TLE data, parses it, and stores the valid TLE entries
+        in a list. Often websites (e.g. Celestrak) will have multiple TLEs for
+        a given satellite, so this method will only store the TLEs that match
+        the given satellite name, as stored in the `tle_name` attribute.
+
+        Returns
+        -------
+            True if the TLE was successfully read and stored, False otherwise.
+        """
+        # Check if the URL is set
+        if self.tle_url is None:
+            return False
+
+        # Build space-track.org query
+        epoch_start = self.epoch - self.tle_bad * u.day
+        epoch_stop = self.epoch + self.tle_bad * u.day
+        url = "https://www.space-track.org/basicspacedata/query/class/gp_history/OBJECT_NAME/"
+        url += quote(self.tle_name)
+        url += "/EPOCH/"
+        url += quote(f">{epoch_start},<{epoch_stop}")
+        url += "/orderby/EPOCH asc/emptyresult/show"
+
+        # Log into space-track.org
+        s = requests.Session()
+        username = os.environ.get("SPACE_TRACK_USER")
+        password = os.environ.get("SPACE_TRACK_PASS")
+        if username is None or password is None:
+            logging.error("Please set SPACE_TRACK_USER and SPACE_TRACK_PASS")
+            return False
+        r = s.post(
+            "https://www.space-track.org/ajaxauth/login",
+            data={"identity": username, "password": password},
+        )
+        try:
+            # Check for HTTP errors
+            r.raise_for_status()
+        except HTTPError as e:
+            logging.exception(e)
+            return False
+
+        # Fetch the space-track.org query results
+        r = s.get(url)
+        try:
+            # Check for HTTP errors
+            r.raise_for_status()
+        except HTTPError as e:
+            logging.exception(e)
+            return False
+
+        # Read in the space-track.org query results, check that the list is
+        # non-zero length
+        tles_dict = json.loads(r.text)
+        if len(tles_dict) == 0:
+            return False
+
+        # Parse the results into a list of TLEEntry objects
+        tles = [
+            TLEEntry(
+                satname=self.tle_name,
+                tle1=result["TLE_LINE1"].strip(),
+                tle2=result["TLE_LINE2"].strip(),
+            )
+            for result in tles_dict
         ]
 
         # Append them to the list of stored TLEs
@@ -269,6 +351,16 @@ class TLEBase(ACROSSAPIBase):
                 )
                 return True
 
+        # Next try querying space-track.org for the TLE. This will only work if
+        # the environment variables SPACE_TRACK_USER and
+        # SPACE_TRACK_PASS are set, and valid.
+        if self.read_tle_space_track() is True:
+            # Write the TLE to the database for next time
+            if self.tle is not None:
+                self.tle.write()
+                print(f"Found TLE on space-track.org with epoch {self.tle.epoch}")
+                return True
+
         # Next try try reading the TLE given in the concatenated format at the
         # URL given by `tle_concat`. Concatenated format should have every TLE
         # for the satellite since launch in a single file, so it's safe to
@@ -288,7 +380,7 @@ class TLEBase(ACROSSAPIBase):
         # we will only use this if the epoch being requested is within
         # `tle_bad` days of the current epoch.
         if self.tle_url is not None:
-            if self.epoch > Time.now().utc - TimeDelta(self.tle_bad * u.day):
+            if self.epoch > Time.now().utc - self.tle_bad * u.day:
                 if self.read_tle_web() is True:
                     # Write the TLE to the database for next time
                     if self.tle is not None:
