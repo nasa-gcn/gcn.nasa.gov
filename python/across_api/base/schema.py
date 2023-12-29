@@ -9,15 +9,8 @@ from typing import Optional
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
 from astropy.time import Time  # type: ignore
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
-    PlainSerializer,
-    computed_field,
-)
+from pydantic import BaseModel, ConfigDict, Field, PlainSerializer, computed_field
 from typing_extensions import Annotated
-
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
 # a naive UTC datetime object, or a string in ISO format for JSON. If Time is
