@@ -6,4 +6,3 @@ email-validator
 fastapi
 mangum
 requests
-types-cachetools

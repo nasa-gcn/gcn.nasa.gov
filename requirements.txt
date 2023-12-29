@@ -2,4 +2,5 @@ black
 mypy
 pytest
 types-requests
+types-cachetools
 -r python/requirements.txt
