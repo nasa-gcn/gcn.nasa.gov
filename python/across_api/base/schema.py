@@ -3,7 +3,8 @@
 # All Rights Reserved.
 
 
-import datetime
+from ctypes import Union
+from datetime import datetime
 from typing import Any, List, Optional
 
 import astropy.units as u  # type: ignore
@@ -21,14 +22,16 @@ from pydantic import (
 from typing_extensions import Annotated
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
-# a UTC Time object, or a string in ISO format for JSON.
+# a naive UTC datetime object, or a string in ISO format for JSON. If Time is
+# in list form, then it will be serialized as a list of UTC naive datetime
+# objects.
 AstropyTime = Annotated[
     Time,
     PlainSerializer(
         lambda x: x.utc.datetime
         if not hasattr(x, "__len__")
         else x.utc.datetime.tolist(),
-        return_type=datetime,
+        return_type=Union[datetime, List[datetime]],
     ),
     WithJsonSchema({"type": "string"}, mode="serialization"),
 ]
