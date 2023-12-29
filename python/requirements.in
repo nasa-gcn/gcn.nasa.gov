@@ -6,3 +6,4 @@ email-validator
 fastapi
 mangum
 requests
+sgp4
