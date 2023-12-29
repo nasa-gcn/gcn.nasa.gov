@@ -16,10 +16,11 @@ class SwiftEphem(EphemBase, ACROSSAPIBase):
     parallax = True  # Calculate parallax for Moon/Sun
     apparent = True  # Use apparent positions
     velocity = True  # Calculate Velocity of spacecraft (slower)
+    tleclass = SwiftTLE
 
     def __init__(self, begin: Time, end: Time, stepsize: int = 60):
         # Default values
-        self.tle = SwiftTLE(begin).tle
+        self.tle = self.tleclass(begin).tle
 
         # Parse argument keywords
         self.begin = begin
