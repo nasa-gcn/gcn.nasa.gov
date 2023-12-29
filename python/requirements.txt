@@ -14,7 +14,7 @@ architect-functions==1.0.0
     # via -r requirements.in
 astropy==6.0.0
     # via -r requirements.in
-astropy-iers-data==0.2023.12.18.0.30.18
+astropy-iers-data
     # via astropy
 boto3==1.34.7
     # via -r requirements.in
