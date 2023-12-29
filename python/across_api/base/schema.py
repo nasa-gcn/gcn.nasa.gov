@@ -4,7 +4,7 @@
 
 
 from datetime import datetime
-from typing import Any, List, Optional, Union
+from typing import Any, List, Optional
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
@@ -14,7 +14,6 @@ from pydantic import (
     ConfigDict,
     Field,
     PlainSerializer,
-    WithJsonSchema,
     computed_field,
     model_validator,
 )
@@ -27,12 +26,17 @@ from typing_extensions import Annotated
 AstropyTime = Annotated[
     Time,
     PlainSerializer(
-        lambda x: x.utc.datetime
-        if not hasattr(x, "__len__")
-        else x.utc.datetime.tolist(),
-        return_type=Union[datetime, List[datetime]],
+        lambda x: x.utc.datetime,
+        return_type=datetime,  # Union[datetime, List[datetime]],
     ),
-    WithJsonSchema({"type": "string"}, mode="serialization"),
+]
+
+AstropyTimeList = Annotated[
+    Time,
+    PlainSerializer(
+        lambda x: x.utc.datetime.tolist(),
+        return_type=List[datetime],
+    ),
 ]
 
 
@@ -109,7 +113,7 @@ class EphemSchema(BaseSchema):
         Step size, by default 60.
     """
 
-    timestamp: AstropyTime
+    timestamp: AstropyTimeList
     posvec: List[List[float]]
     earthsize: List[float]
     polevec: Optional[List[List[float]]] = None
@@ -211,7 +215,6 @@ class TLEEntry(BaseSchema):
         -------
             A list of TLEEntry objects between the specified epochs.
         """
-        return []
         table = tables.table(cls.__tablename__)
 
         # Query the table for TLEs between the two epochs
@@ -229,7 +232,6 @@ class TLEEntry(BaseSchema):
 
     def write(self):
         """Write the TLE entry to the database."""
-        return None
         table = tables.table(self.__tablename__)
         table.put_item(Item=self.model_dump(mode="json"))
 
