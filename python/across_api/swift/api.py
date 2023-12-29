@@ -2,9 +2,23 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from ..base.api import EpochDep, app
-from ..base.schema import TLESchema
+from ..base.api import DateRangeDep, EpochDep, StepSizeDep, app
+from ..base.schema import EphemSchema, TLESchema
+from .ephem import SwiftEphem
 from .tle import SwiftTLE
+
+
+@app.get("/swift/ephem")
+async def swift_ephemeris(
+    daterange: DateRangeDep,
+    stepsize: StepSizeDep,
+) -> EphemSchema:
+    """
+    Calculates the ephemeris for Swift.
+    """
+    return SwiftEphem(
+        begin=daterange["begin"], end=daterange["end"], stepsize=stepsize
+    ).schema
 
 
 @app.get("/swift/tle")
