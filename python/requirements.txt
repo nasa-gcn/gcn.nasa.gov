@@ -81,8 +81,6 @@ rsa==4.9
     # via python-jose
 s3transfer==0.10.0
     # via boto3
-sgp4==2.23
-    # via -r requirements.in
 simplejson==3.19.2
     # via architect-functions
 six==1.16.0
