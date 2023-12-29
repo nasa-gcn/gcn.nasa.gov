@@ -1,5 +1,5 @@
 from functools import cached_property
-from typing import Optional
+from typing import Optional, Type
 
 import astropy.units as u  # type: ignore
 import numpy as np
@@ -20,7 +20,7 @@ from sgp4.api import Satrec  # type: ignore
 
 from ..base.schema import EphemGetSchema, EphemSchema
 from .common import ACROSSAPIBase
-from .tle import TLEEntry
+from .tle import TLEBase, TLEEntry
 
 # Constants
 EARTH_RADIUS = 6371  # km. Note this is average radius, as Earth is not a sphere.
@@ -40,6 +40,21 @@ class EphemBase(ACROSSAPIBase):
     velocity: bool
     apparent: bool
     tle: Optional[TLEEntry]
+    tleclass: Type[TLEBase]
+
+    def __init__(self, begin: Time, end: Time, stepsize: int = 60):
+        # Default values
+        self.tle = self.tleclass(begin).tle
+
+        # Parse argument keywords
+        self.begin = begin
+        self.end = end
+        self.stepsize = stepsize
+
+        # Validate and process API call
+        if self.validate_get():
+            # Perform GET
+            self.get()
 
     def __len__(self) -> int:
         return len(self.timestamp)
