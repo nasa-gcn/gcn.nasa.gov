@@ -8,6 +8,7 @@
 import { useSearchParams, useSubmit } from '@remix-run/react'
 import {
   Button,
+  ButtonGroup,
   CardBody,
   CardFooter,
   DateRangePicker,
@@ -17,8 +18,54 @@ import {
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
-import DateSelectorButton from './DateSelectorButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
+
+const dateSelectorLabels: Record<string, string> = {
+  hour: 'Last Hour',
+  today: 'Today',
+  day: 'Last Day',
+  week: 'Last Week',
+  month: 'Last Month',
+  year: 'Last Year',
+  ytd: 'Year to Date',
+}
+
+function DateSelectorButton({
+  startDate,
+  endDate,
+  expanded,
+  ...props
+}: {
+  startDate?: string
+  endDate?: string
+  expanded?: boolean
+} & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
+  const slimClasses = 'height-4 padding-y-0'
+
+  return (
+    <ButtonGroup type="segmented" {...props}>
+      <Button type="button" className={`${slimClasses} padding-x-2`}>
+        {(startDate && dateSelectorLabels[startDate]) ||
+          (startDate && endDate && (
+            <>
+              {startDate}—{endDate}
+            </>
+          )) ||
+          (startDate && <>After {startDate}</>) ||
+          (endDate && <>Before {endDate}</>) ||
+          'Filter by date'}
+      </Button>
+      <Button type="button" className={`${slimClasses} padding-x-1`}>
+        <Icon.CalendarToday role="presentation" />
+        {expanded ? (
+          <Icon.ExpandLess role="presentation" />
+        ) : (
+          <Icon.ExpandMore role="presentation" />
+        )}
+      </Button>
+    </ButtonGroup>
+  )
+}
 
 export function DateSelector({
   startDate,
@@ -54,15 +101,6 @@ export function DateSelector({
     })
   }
 
-  const dateSelectorLabels: Record<string, string> = {
-    hour: 'Last Hour',
-    today: 'Today',
-    day: 'Last Day',
-    week: 'Last Week',
-    month: 'Last Month',
-    year: 'Last Year',
-    ytd: 'Year to Date',
-  }
   return (
     <>
       <DateSelectorButton
