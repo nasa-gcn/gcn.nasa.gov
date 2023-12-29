@@ -15,7 +15,6 @@ from pydantic import (
     ConfigDict,
     Field,
     PlainSerializer,
-    WithJsonSchema,
     computed_field,
 )
 from typing_extensions import Annotated
@@ -25,7 +24,6 @@ from typing_extensions import Annotated
 AstropyTime = Annotated[
     Time,
     PlainSerializer(lambda x: x.utc.datetime, return_type=datetime),
-    WithJsonSchema({"type": "string"}, mode="serialization"),
 ]
 
 
