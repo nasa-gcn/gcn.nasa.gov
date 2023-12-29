@@ -34,38 +34,3 @@ async def epoch(
 
 
 EpochDep = Annotated[datetime, Depends(epoch)]
-
-
-# Depends functions for FastAPI calls.
-async def daterange(
-    begin: Annotated[
-        datetime,
-        Query(description="Start time of period to be calculated.", title="Begin"),
-    ],
-    end: Annotated[
-        datetime, Query(description="End time of period to be calculated.", title="End")
-    ],
-) -> dict:
-    """
-    Helper function to convert begin and end to datetime objects.
-    """
-    return {"begin": Time(begin), "end": Time(end)}
-
-
-DateRangeDep = Annotated[dict, Depends(daterange)]
-
-
-async def stepsize(
-    stepsize: Annotated[
-        int,
-        Query(
-            ge=1,
-            title="Step Size",
-            description="Time resolution in which to calculate result in seconds.",
-        ),
-    ] = 60,
-) -> int:
-    return stepsize
-
-
-StepSizeDep = Annotated[int, Depends(stepsize)]

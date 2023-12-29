@@ -4,7 +4,7 @@
 
 
 from datetime import datetime
-from typing import Any, List, Optional
+from typing import Optional
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
@@ -15,8 +15,6 @@ from pydantic import (
     Field,
     PlainSerializer,
     computed_field,
-    conlist,
-    model_validator,
 )
 from typing_extensions import Annotated
 
@@ -29,15 +27,7 @@ AstropyTime = Annotated[
     Time,
     PlainSerializer(
         lambda x: x.utc.datetime,
-        return_type=datetime,  # Union[datetime, List[datetime]],
-    ),
-]
-
-AstropyTimeList = Annotated[
-    Time,
-    PlainSerializer(
-        lambda x: x.utc.datetime.tolist(),
-        return_type=List[datetime],
+        return_type=datetime,
     ),
 ]
 
@@ -51,94 +41,6 @@ class BaseSchema(BaseModel):
     """
 
     model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
-
-
-class DateRangeSchema(BaseSchema):
-    """Schema that defines date range
-
-    Parameters
-    ----------
-    begin : Time
-        The start date of the range.
-    end : Time
-        The end date of the range.
-
-    Returns
-    -------
-    data : Any
-        The validated data with converted dates.
-
-    Raises
-    ------
-    AssertionError
-        If the end date is before the begin date.
-
-    """
-
-    begin: AstropyTime
-    end: AstropyTime
-
-    @model_validator(mode="after")
-    @classmethod
-    def check_dates(cls, data: Any) -> Any:
-        data.end = Time(data.end)
-        data.begin = Time(data.begin)
-        assert data.begin <= data.end, "End date should not be before begin"
-        return data
-
-
-class EphemSchema(BaseSchema):
-    """
-    Schema for ephemeral data.
-
-    Attributes
-    ----------
-    timestamp : AstropyTime
-        List of timestamps.
-    posvec : List[List[float]]
-        List of position vectors for the spacecraft in GCRS.
-    earthsize : List[float]
-        List of the angular size of the Earth to the spacecraft.
-    polevec : Optional[List[List[float]]], optional
-        List of orbit pole vectors, by default None.
-    velvec : Optional[List[List[float]]], optional
-        List of spacecraft velocity vectors, by default None.
-    sunvec : List[List[float]]
-        List of sun vectors.
-    moonvec : List[List[float]]
-        List of moon vectors.
-    latitude : List[float]
-        List of latitudes.
-    longitude : List[float]
-        List of longitudes.
-    stepsize : int, optional
-        Step size, by default 60.
-    """
-
-    timestamp: AstropyTimeList
-    posvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
-    earthsize: List[float]
-    polevec: Optional[List[conlist(float, min_length=3, max_length=3)]] = None  # type: ignore
-    velvec: Optional[List[conlist(float, min_length=3, max_length=3)]] = None  # type: ignore
-    sunvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
-    moonvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
-    latitude: List[float]
-    longitude: List[float]
-    stepsize: int = 60
-
-
-class EphemGetSchema(DateRangeSchema):
-    """Schema to define required parameters for a GET
-
-    Parameters
-    ----------
-    stepsize : int, optional
-        The step size in seconds (default is 60).
-
-    """
-
-    stepsize: int = 60
-    ...
 
 
 class TLEGetSchema(BaseSchema):
