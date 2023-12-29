@@ -8,11 +8,13 @@ from .tle import SwiftTLE
 @cached(cache=TTLCache(maxsize=128, ttl=86400))
 class SwiftEphem(EphemBase, ACROSSAPIBase):
     """
-    Class to generate Swift ephemeris. Generate on the fly an ephemeris for Satellite from TLE.
+    Class to generate Swift ephemeris. Generate on the fly an ephemeris for
+    Satellite from TLE.
     """
 
     # Configuration options
     parallax = True  # Calculate parallax for Moon/Sun
     apparent = True  # Use apparent positions
     velocity = True  # Calculate Velocity of spacecraft (slower)
+    earth_radius = None  # Calculate Earth radius
     tleclass = SwiftTLE

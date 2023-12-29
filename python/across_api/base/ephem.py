@@ -39,6 +39,7 @@ class EphemBase(ACROSSAPIBase):
     parallax: bool
     velocity: bool
     apparent: bool
+    earth_radius: Optional[float]
     tle: Optional[TLEEntry]
     tleclass: Type[TLEBase]
 
@@ -209,7 +210,10 @@ class EphemBase(ACROSSAPIBase):
 
         # Calculate Angular size of Earth in degrees, note assumes Earth is spherical
         earth_distance = lon_lat_dist.distance.to(u.km).value
-        self.earthsize = np.degrees(np.arcsin(EARTH_RADIUS / earth_distance))
+        if self.earth_radius is not None:
+            self.earthsize = self.earth_radius * np.ones(entries)
+        else:
+            self.earthsize = np.degrees(np.arcsin(EARTH_RADIUS / earth_distance))
 
         # Calculate velocity components, if we want them
         if self.velocity:

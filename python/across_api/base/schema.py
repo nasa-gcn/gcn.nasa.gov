@@ -20,7 +20,6 @@ from pydantic import (
 )
 from typing_extensions import Annotated
 
-
 # Define a Pydantic type for astropy Time objects, which will be serialized as
 # a naive UTC datetime object, or a string in ISO format for JSON. If Time is
 # in list form, then it will be serialized as a list of UTC naive datetime

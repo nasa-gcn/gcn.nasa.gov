@@ -5,7 +5,7 @@ from ..base.ephem import EphemBase
 from .tle import BurstCubeTLE
 
 
-@cached(cache=TTLCache(maxsize=1024, ttl=86400))
+@cached(cache=TTLCache(maxsize=128, ttl=86400))
 class BurstCubeEphem(EphemBase, ACROSSAPIBase):
     """
     Class to generate BurstCube ephemeris. Generate on the fly an ephemeris for Satellite from TLE.
