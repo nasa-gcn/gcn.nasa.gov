@@ -361,9 +361,6 @@ class TLEBase(ACROSSAPIBase):
         # Fetch TLE from the TLE database
         if self.read_tle_db() is True:
             if self.tle is not None:
-                print(
-                    f"Found TLE for {self.tle.satname} in database with epoch {self.tle.epoch}"
-                )
                 return True
 
         # Next try querying space-track.org for the TLE. This will only work if
@@ -373,7 +370,6 @@ class TLEBase(ACROSSAPIBase):
             # Write the TLE to the database for next time
             if self.tle is not None:
                 self.tle.write()
-                print(f"Found TLE on space-track.org with epoch {self.tle.epoch}")
                 return True
 
         # Next try try reading the TLE given in the concatenated format at the
@@ -387,7 +383,6 @@ class TLEBase(ACROSSAPIBase):
                 # Write the TLE to the database for next time
                 if self.tle is not None:
                     self.tle.write()
-                    print(f"Found TLE in concatenated file with epoch {self.tle.epoch}")
                     return True
 
         # Finally try reading from the web at the URL given by `tle_url`. Note
@@ -400,7 +395,6 @@ class TLEBase(ACROSSAPIBase):
                     # Write the TLE to the database for next time
                     if self.tle is not None:
                         self.tle.write()
-                        print(f"Found TLE on web with epoch {self.tle.epoch}")
                         return True
 
         # If we did not find any valid TLEs, then return False
