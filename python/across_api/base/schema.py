@@ -3,9 +3,8 @@
 # All Rights Reserved.
 
 
-from ctypes import Union
 from datetime import datetime
-from typing import Any, List, Optional
+from typing import Any, List, Optional, Union
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
