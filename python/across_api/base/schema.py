@@ -3,13 +3,12 @@
 # All Rights Reserved.
 
 
-from datetime import datetime
-from typing import Optional
+import datetime
+from typing import Any, List, Optional
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
 from astropy.time import Time  # type: ignore
-from astropy.time import TimeDelta  # type: ignore
 from pydantic import (
     BaseModel,
     ConfigDict,
@@ -17,14 +16,20 @@ from pydantic import (
     PlainSerializer,
     WithJsonSchema,
     computed_field,
+    model_validator,
 )
 from typing_extensions import Annotated
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
-# a UTC datetime object, or a string in ISO format for JSON.
+# a UTC Time object, or a string in ISO format for JSON.
 AstropyTime = Annotated[
     Time,
-    PlainSerializer(lambda x: x.utc.datetime, return_type=datetime),
+    PlainSerializer(
+        lambda x: x.utc.datetime
+        if not hasattr(x, "__len__")
+        else x.utc.datetime.tolist(),
+        return_type=datetime,
+    ),
     WithJsonSchema({"type": "string"}, mode="serialization"),
 ]
 
@@ -38,6 +43,94 @@ class BaseSchema(BaseModel):
     """
 
     model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
+
+
+class DateRangeSchema(BaseSchema):
+    """Schema that defines date range
+
+    Parameters
+    ----------
+    begin : Time
+        The start date of the range.
+    end : Time
+        The end date of the range.
+
+    Returns
+    -------
+    data : Any
+        The validated data with converted dates.
+
+    Raises
+    ------
+    AssertionError
+        If the end date is before the begin date.
+
+    """
+
+    begin: AstropyTime
+    end: AstropyTime
+
+    @model_validator(mode="after")
+    @classmethod
+    def check_dates(cls, data: Any) -> Any:
+        data.end = Time(data.end)
+        data.begin = Time(data.begin)
+        assert data.begin <= data.end, "End date should not be before begin"
+        return data
+
+
+class EphemSchema(BaseSchema):
+    """
+    Schema for ephemeral data.
+
+    Attributes
+    ----------
+    timestamp : AstropyTime
+        List of timestamps.
+    posvec : List[List[float]]
+        List of position vectors for the spacecraft in GCRS.
+    earthsize : List[float]
+        List of the angular size of the Earth to the spacecraft.
+    polevec : Optional[List[List[float]]], optional
+        List of orbit pole vectors, by default None.
+    velvec : Optional[List[List[float]]], optional
+        List of spacecraft velocity vectors, by default None.
+    sunvec : List[List[float]]
+        List of sun vectors.
+    moonvec : List[List[float]]
+        List of moon vectors.
+    latitude : List[float]
+        List of latitudes.
+    longitude : List[float]
+        List of longitudes.
+    stepsize : int, optional
+        Step size, by default 60.
+    """
+
+    timestamp: AstropyTime
+    posvec: List[List[float]]
+    earthsize: List[float]
+    polevec: Optional[List[List[float]]] = None
+    velvec: Optional[List[List[float]]] = None
+    sunvec: List[List[float]]
+    moonvec: List[List[float]]
+    latitude: List[float]
+    longitude: List[float]
+    stepsize: int = 60
+
+
+class EphemGetSchema(DateRangeSchema):
+    """Schema to define required parameters for a GET
+
+    Parameters
+    ----------
+    stepsize : int, optional
+        The step size in seconds (default is 60).
+
+    """
+
+    stepsize: int = 60
+    ...
 
 
 class TLEGetSchema(BaseSchema):
@@ -92,8 +185,8 @@ class TLEEntry(BaseSchema):
         # Convert day of year into float
         day_of_year = float(tleepoch[2:])
 
-        # Return datetime epoch
-        return Time(f"{year}-01-01", scale="utc") + TimeDelta((day_of_year - 1) * u.day)
+        # Return Time epoch
+        return Time(f"{year}-01-01", scale="utc") + (day_of_year - 1) * u.day
 
     @classmethod
     def find_tles_between_epochs(
@@ -116,6 +209,7 @@ class TLEEntry(BaseSchema):
         -------
             A list of TLEEntry objects between the specified epochs.
         """
+        return []
         table = tables.table(cls.__tablename__)
 
         # Query the table for TLEs between the two epochs
@@ -133,6 +227,7 @@ class TLEEntry(BaseSchema):
 
     def write(self):
         """Write the TLE entry to the database."""
+        return None
         table = tables.table(self.__tablename__)
         table.put_item(Item=self.model_dump(mode="json"))
 
