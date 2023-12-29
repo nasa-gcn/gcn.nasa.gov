@@ -21,17 +21,17 @@ from pydantic import (
 from typing_extensions import Annotated
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
-# a naive UTC datetime object, or a string in ISO format for JSON. If Time is
-# in list form, then it will be serialized as a list of UTC naive datetime
-# objects.
+# a naive UTC datetime object, or a string in ISO format for JSON.
 AstropyTime = Annotated[
     Time,
     PlainSerializer(
         lambda x: x.utc.datetime,
-        return_type=datetime,  # Union[datetime, List[datetime]],
+        return_type=datetime,
     ),
 ]
-
+# Define a Pydantic type for list-type astropy Time objects, which will be
+# serialized as a list of naive UTC datetime objects, or a list of strings in
+# ISO format for JSON.
 AstropyTimeList = Annotated[
     Time,
     PlainSerializer(
@@ -53,25 +53,25 @@ class BaseSchema(BaseModel):
 
 
 class DateRangeSchema(BaseSchema):
-    """Schema that defines date range
+    """
+    Schema that defines date range
 
     Parameters
     ----------
-    begin : Time
+    begin
         The start date of the range.
-    end : Time
+    end
         The end date of the range.
 
     Returns
     -------
-    data : Any
+    data
         The validated data with converted dates.
 
     Raises
     ------
     AssertionError
         If the end date is before the begin date.
-
     """
 
     begin: AstropyTime
@@ -88,30 +88,7 @@ class DateRangeSchema(BaseSchema):
 
 class EphemSchema(BaseSchema):
     """
-    Schema for ephemeral data.
-
-    Attributes
-    ----------
-    timestamp : AstropyTime
-        List of timestamps.
-    posvec : List[List[float]]
-        List of position vectors for the spacecraft in GCRS.
-    earthsize : List[float]
-        List of the angular size of the Earth to the spacecraft.
-    polevec : Optional[List[List[float]]], optional
-        List of orbit pole vectors, by default None.
-    velvec : Optional[List[List[float]]], optional
-        List of spacecraft velocity vectors, by default None.
-    sunvec : List[List[float]]
-        List of sun vectors.
-    moonvec : List[List[float]]
-        List of moon vectors.
-    latitude : List[float]
-        List of latitudes.
-    longitude : List[float]
-        List of longitudes.
-    stepsize : int, optional
-        Step size, by default 60.
+    Schema for ephemeris data.
     """
 
     timestamp: AstropyTimeList
@@ -127,13 +104,8 @@ class EphemSchema(BaseSchema):
 
 
 class EphemGetSchema(DateRangeSchema):
-    """Schema to define required parameters for a GET
-
-    Parameters
-    ----------
-    stepsize : int, optional
-        The step size in seconds (default is 60).
-
+    """
+    Schema to define required parameters for a Ephem GET operation.
     """
 
     stepsize: int = 60
@@ -150,11 +122,11 @@ class TLEEntry(BaseSchema):
 
     Parameters
     ----------
-    satname : str
+    satname
         The name of the satellite from the Satellite Catalog.
-    tle1 : str
+    tle1
         The first line of the TLE.
-    tle2 : str
+    tle2
         The second line of the TLE.
 
     Attributes
