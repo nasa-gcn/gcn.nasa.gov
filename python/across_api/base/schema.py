@@ -4,7 +4,7 @@
 
 
 from datetime import datetime
-from typing import List
+from typing import Optional
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
@@ -139,4 +139,4 @@ class TLEEntry(BaseSchema):
 
 
 class TLESchema(BaseSchema):
-    tle: List[TLEEntry]
+    tle: Optional[TLEEntry]
