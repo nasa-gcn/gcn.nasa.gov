@@ -15,9 +15,11 @@ from pydantic import (
     Field,
     PlainSerializer,
     computed_field,
+    conlist,
     model_validator,
 )
 from typing_extensions import Annotated
+
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
 # a naive UTC datetime object, or a string in ISO format for JSON. If Time is
@@ -114,12 +116,12 @@ class EphemSchema(BaseSchema):
     """
 
     timestamp: AstropyTimeList
-    posvec: List[List[float]]
+    posvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
     earthsize: List[float]
-    polevec: Optional[List[List[float]]] = None
-    velvec: Optional[List[List[float]]] = None
-    sunvec: List[List[float]]
-    moonvec: List[List[float]]
+    polevec: Optional[List[conlist(float, min_length=3, max_length=3)]] = None  # type: ignore
+    velvec: Optional[List[conlist(float, min_length=3, max_length=3)]] = None  # type: ignore
+    sunvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
+    moonvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
     latitude: List[float]
     longitude: List[float]
     stepsize: int = 60
