@@ -19,10 +19,13 @@ from .schema import TLEEntry, TLEGetSchema, TLESchema
 
 class TLEBase(ACROSSAPIBase):
     """
-    Class that reads and updates TLEs for Satellite from a database, and
-    returns a skyfield EarthSatellite based on downloaded TLE file. If no TLEs
-    are found, it will download the latest TLE from the internet, using various
-    sources, e.g. CONCAT, Celestrak, etc.
+    Class for retrieving and updating spacecraft TLEs in the TLE database. If
+    the TLEs are not found in the database, they are retrieved from
+    space-track.org based on the name of the spacecraft given by `tle_name`.
+    Other backup methods for fetching the TLE include using either the supplied
+    `tle_url`, or from the URL specified in the `tle_concat` attribute (in the
+    concatenated TLE format). TLEs fetched are then written to the database for
+    future use.
 
     Parameters
     ----------
@@ -37,6 +40,18 @@ class TLEBase(ACROSSAPIBase):
         TLE entry for given epoch
     offset
         Offset between TLE epoch and requested epoch in days
+    tle_name
+        Name of the spacecraft as it appears in the Spacecraft Catalog.
+    tle_url
+        URL to retrieve the TLE from.
+    tle_concat
+        URL to retrieve the TLE from in concatenated format.
+    tle_bad
+        If the TLE is this many days old, it is considered outdated, and a new
+        TLE will be retrieved.
+    tle_min_epoch
+        Minimum epoch for which TLEs are available, typically this will
+        correspond to a date after the launch of the spacecraft.
 
     Methods
     -------
