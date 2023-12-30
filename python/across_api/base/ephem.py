@@ -31,7 +31,59 @@ EARTH_RADIUS = 6371  # km. Note this is average radius, as Earth is not a sphere
 
 
 class EphemBase(ACROSSAPIBase):
-    """Base class for Ephemeris API."""
+    """
+    Base class for computing ephemeris data, for spacecraft whose positions can
+    be determined using a Two-Line Element (TLE) file, i.e. most Earth-orbiting
+    spacecraft. This ephemeris primarily calculates the position of the
+    spacecraft in GCRS coordinates. It also calculates the position of the Sun
+    and Moon in GCRS coordinates, and the latitude and longitude of the
+    spacecraft over the Earth.
+
+    The design of this ephemeris class is based upon how actual LEO spacecraft
+    ephemeris calculations work, and therefore is designed to mimic constraints
+    calculated onboard a spacecraft, to as closely match and predict those as
+    possible.
+
+    Parameters
+    ----------
+    begin
+        The start time of the ephemeris.
+    end
+        The end time of the ephemeris.
+    stepsize
+        The time step size in seconds. Default is 60.
+
+    Attributes
+    ----------
+    begin
+        The start time of the ephemeris.
+    end
+        The end time of the ephemeris.
+    stepsize
+        The time step size in seconds.
+    username
+        The username for the API request.
+    parallax
+        Flag indicating whether to include parallax correction.
+    velocity
+        Flag indicating whether to calculate satellite velocity.
+    apparent
+        Flag indicating whether to use apparent positions for Sun and Moon.
+    earth_radius
+        The radius of the Earth in degrees. If not specified (None), it will be
+        calculated based on the distance from the Earth to the spacecraft.
+    tle
+        The TLE (Two-Line Elements) data for the satellite.
+    tleclass
+        The spacecraft specific class for retrieving TLE data.
+
+    Methods
+    -------
+    ephindex(self, t: Time)
+        Returns the time index for a given time.
+    get(self)
+        Computes the ephemeris for the specified time range.
+    """
 
     _schema = EphemSchema
     _get_schema = EphemGetSchema
@@ -64,9 +116,9 @@ class EphemBase(ACROSSAPIBase):
     def __len__(self) -> int:
         return len(self.timestamp)
 
-    def ephindex(self, dt: Time) -> int:
-        """For a given time, return a time index that is valid for this ephemeris (rounded up)"""
-        return round((dt - self.timestamp[0]).to_value(u.s) / self.stepsize)
+    def ephindex(self, t: Time) -> int:
+        """For a given time, return an index for the nearest time in the ephemeris."""
+        return int(np.argmin(np.abs(self.timestamp - t)))
 
     @cached_property
     def pole(self) -> SkyCoord:
@@ -89,12 +141,13 @@ class EphemBase(ACROSSAPIBase):
 
     @cached_property
     def beta(self) -> np.ndarray:
-        """Return beta angle"""
+        """Return spacecraft beta angle (angle between the plane of the orbit
+        and the plane of the Sun)."""
         return np.array(self.pole.separation(self.sun).deg) - 90
 
     @cached_property
     def sun(self) -> SkyCoord:
-        """Calculate Sun RA/Dec"""
+        """Sun position as a SkyCoord, corrected for spacecraft parallax if requested."""
         if self.parallax:
             return SkyCoord(
                 CartesianRepresentation(
@@ -118,17 +171,16 @@ class EphemBase(ACROSSAPIBase):
             # Calculate the position of the Moon from the spacecraft, not the center of the Earth
             return SkyCoord(
                 CartesianRepresentation(x=self.moonvec.T - self.posvec.T),
-                # frame=GCRS(obstime=self.timestamp),
             )
         else:
             # Calculate the position of the Moon from the center of the Earth
             return SkyCoord(
                 CartesianRepresentation(x=self.moonvec.T),
-                # frame=GCRS(obstime=self.timestamp),
             )
 
     def get(self) -> bool:
-        """Compute the ephemeris for the specified time range with at a
+        """
+        Compute the ephemeris for the specified time range with at a
         time resolution given by self.stepsize.
 
         Note only calculates Spacecraft position, velocity (optionally),
@@ -136,9 +188,6 @@ class EphemBase(ACROSSAPIBase):
         initially. These are stored as arrays of vectors as
         a 2xN or 3xN array of floats, in units of degrees (Lat/Lon) or km
         (position) and km/s (velocity).
-
-        These are stored as floats to allow easy serialization into JSON,
-        download and caching. Derived values are calculated on the fly.
         """
 
         # Check if all parameters are valid
@@ -158,7 +207,7 @@ class EphemBase(ACROSSAPIBase):
         # Loop to create the ephemeris values for every time step
         entries = int((self.end - self.begin).to_value(u.s) / self.stepsize + 1)
 
-        # Set up time arrays
+        # Set up time array
         self.timestamp = self.begin + np.arange(entries) * self.stepsize * u.s
 
         # Calculate GCRS position for Satellite
@@ -167,7 +216,7 @@ class EphemBase(ACROSSAPIBase):
         )
         teme_p = CartesianRepresentation(temes_p.T * u.km)
 
-        # Calculate satellite velocity vector if necessary
+        # Convert SGP4 TEME data to astropy TEME data
         if self.velocity is True:
             # Calculate position with differentials, so satellite velocity can be determined
             teme_v = CartesianDifferential(temes_v.T * u.km / u.s)
@@ -181,7 +230,7 @@ class EphemBase(ACROSSAPIBase):
         # units of km
         self.posvec = self.gcrs.cartesian.xyz.to(u.km).value.T
 
-        # Get Moon vector
+        # Calculate the GCRS position of the Moon in km
         moon = get_body("moon", self.timestamp)
 
         # Use apparent position of the Moon?
@@ -189,21 +238,21 @@ class EphemBase(ACROSSAPIBase):
             moon = moon.tete
         self.moonvec = moon.cartesian.xyz.to(u.km).value.T
 
-        # Sunvec
+        # Calculate the GCRS position of the Sun in km
         sun = get_body("sun", self.timestamp)
 
-        # Use apparent position of the Moon?
+        # Use apparent position of the Sun?
         if self.apparent:
             sun = sun.tete
         self.sunvec = sun.cartesian.xyz.to(u.km).value.T
 
-        # Calculate Latitude/Longitude of spacecraft over Earth
-        # This method calculates the alt/az of the spacecraft as viewed
-        # from the center of the Earth. This matches lat/long well enough
-        # for the purpose we need it: Determining if we're in the SAA.
-        # Accurate to within ~5 arcminutes in latitude and 0.25 arcminutes
-        # in longitude (latitude variance due to Earth not being spherical)
-        # FIXME: Proper calculation of Lat/Lon of point below spacecraft using WGS84
+        # Calculate Latitude/Longitude of spacecraft over Earth This method
+        # calculates the alt/az of the spacecraft as viewed from the center of
+        # the Earth. This matches lat/long well enough for the purpose we need
+        # it: Determining if we're in the SAA. Accurate to within ~5 arcminutes
+        # in latitude and 0.25 arcminutes in longitude (latitude variance due
+        # to Earth not being spherical) FIXME: Proper calculation of Lat/Lon of
+        # point below spacecraft using WGS84
         earth_centered_frame = AltAz(
             obstime=self.timestamp,
             location=EarthLocation.from_geocentric(0, 0, 0, unit="m"),
@@ -219,7 +268,10 @@ class EphemBase(ACROSSAPIBase):
         else:
             self.earthsize = np.degrees(np.arcsin(EARTH_RADIUS / earth_distance))
 
-        # Calculate velocity components, if we want them
+        # Calculate satellite velocity vector (if needed). This is useful
+        # for calculating the orbit pole vector (used to calculate the location
+        # of pole constraints or continuous viewing zones), or the direction of
+        # spacecraft motion in order to calculate a ram constraint.
         if self.velocity:
             # Calculate velocity vector
             self.velvec = self.gcrs.velocity.d_xyz.to(u.km / u.s).value.T
