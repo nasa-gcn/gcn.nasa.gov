@@ -32,18 +32,29 @@ EARTH_RADIUS = 6371 * u.km  # km. Note this is average radius, as Earth is not a
 
 class EarthSatelliteLocation:
     """
-    Class to calculate the position of a satellite given a TLE.
+    Class to calculate the position of a satellite in orbit around the Earth
+    given a TLE. This class uses the SGP4 model to calculate the position of
+    the satellite in TEME (True Equator Mean Equinox) coordinates, and then
+    converts this to GCRS (Geocentric Celestial Reference System) coordinates.
 
-    Note this mimics the astropy.coordinates EarthLocation class, in that it
+    Note this mimics the `astropy.coordinates` `EarthLocation` class, in that it
     provides the method `get_gcrs_posvel` which returns the position and
     velocity of the satellite in GCRS coordinates. Therefore this class can be
-    used by the astropy `get_body` function to set the location in place of an
-    `EarthLocation` object. This way you can calculate the RA/Dec of the Moon
-    and Sun as viewed from the satellite, which means effects like Moon
-    parallax are correctly included.
+    used by the astropy `get_body` function to set the location of the observer
+    to a Earth orbiting satellite, in place of an `EarthLocation` object which
+    defines a ground based observatotry.
 
-    Also provides a method to calculate the latitude and longitude of the
-    spacecraft over the Earth.
+    This way you can calculate the RA/Dec of the Earth, Moon and Sun as viewed from
+    the satellite, including the effects of the satellite's motion on the
+    position of these objects in the sky.
+
+    This class also provides a method to calculate the latitude and longitude of the
+    spacecraft over the Earth, used for determining if the spacecraft is in
+    the SAA (South Atlantic Anomaly). This is done by calculating the
+    ITRS (International Terrestrial Reference System) position of the
+    spacecraft, and then converting this to latitude and longitude using the
+    `earth_location` method of the `ITRS` class.
+
 
     Parameters
     ----------
@@ -68,10 +79,10 @@ class EarthSatelliteLocation:
         Calculate the latitude/longitude of the spacecraft over the Earth, and
         the distance from the center of the Earth.
     lon(self, t: Time)
-        Return the longitude of the spacecraft at a given time. Uses default
+        Return the longitude of the spacecraft at a given Time(s). Uses default
         WGS84 ellipsoid.
     lat(self, t: Time)
-        Return the latitude of the spacecraft at a given time. Uses default
+        Return the latitude of the spacecraft at a given Time(s). Uses default
         WGS84 ellipsoid.
     """
 
@@ -113,7 +124,7 @@ class EarthSatelliteLocation:
         self.gcrs = teme.transform_to(GCRS(obstime=t))
         return self.gcrs
 
-    def get_itrs(self, t: Time, location: Optional[EarthLocation] = None) -> GCRS:
+    def get_itrs(self, t: Time, location: Optional[EarthLocation] = None) -> ITRS:
         """
         Return the ITRS position and velocity for a satellite
 
