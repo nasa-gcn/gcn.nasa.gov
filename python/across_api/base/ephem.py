@@ -43,7 +43,7 @@ class EarthSatelliteLocation:
     parallax are correctly included.
 
     Also provides a method to calculate the latitude and longitude of the
-    spacecraft over the Earth, and the distance from the center of the Earth.
+    spacecraft over the Earth.
 
     Parameters
     ----------
@@ -315,14 +315,10 @@ class EphemBase(ACROSSAPIBase):
                 status_code=404, detail="No TLE available for this epoch"
             )
 
-        # Load the TLE
-        self.satellite = Satrec.twoline2rv(self.tle.tle1, self.tle.tle2)
-
-        # Loop to create the ephemeris values for every time step
-        entries = int((self.end - self.begin).to(u.s) / (60 * u.s)) + 1
-
-        # Set up time array
-        self.timestamp = self.begin + np.arange(entries) * self.stepsize
+        # Set up time array by default include a point for the end value also
+        self.timestamp = Time(
+            np.arange(self.begin, self.end + self.stepsize, self.stepsize)
+        )
 
         # Set up EarthLocation mimic
         satloc = EarthSatelliteLocation(self.tle.tle1, self.tle.tle2)
@@ -357,7 +353,7 @@ class EphemBase(ACROSSAPIBase):
 
         # Calculate the Earth radius in degrees
         if self.earth_radius is not None:
-            self.earthsize = self.earth_radius * np.ones(entries)
+            self.earthsize = self.earth_radius * np.ones(len(self.timestamp))
         else:
             self.earthsize = np.arcsin(EARTH_RADIUS / dist) * u.rad
 

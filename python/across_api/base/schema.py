@@ -177,7 +177,7 @@ class EphemSchema(BaseSchema):
     moon: AstropyPositionVector
     latitude: AstropyDegrees
     longitude: AstropyDegrees
-    stepsize: AstropySeconds = 60 * u.s
+    stepsize: AstropySeconds
 
 
 class EphemGetSchema(DateRangeSchema):
@@ -186,11 +186,11 @@ class EphemGetSchema(DateRangeSchema):
     Parameters
     ----------
     stepsize : int, optional
-        The step size in seconds (default is 60).
+        The step size in seconds
 
     """
 
-    stepsize: AstropySeconds = 60 * u.s
+    stepsize: AstropySeconds
     ...
 
 
