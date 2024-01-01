@@ -8,9 +8,9 @@ import os
 from typing import List, Optional
 from urllib.parse import quote
 
-import astropy.units as u  # type: ignore
 import requests
 from astropy.time import Time  # type: ignore
+from astropy.units import Quantity  # type: ignore
 from requests import HTTPError
 
 from .common import ACROSSAPIBase
@@ -77,7 +77,7 @@ class TLEBase(ACROSSAPIBase):
     # Configuration parameters
     tle_concat: Optional[str]
     tle_url: Optional[str]
-    tle_bad: float
+    tle_bad: Quantity
     tle_name: str
     tle_min_epoch: Time
     # Arguments
@@ -113,8 +113,8 @@ class TLEBase(ACROSSAPIBase):
         # the allowed range
         self.tles = TLEEntry.find_tles_between_epochs(
             self.tle_name,
-            self.epoch - self.tle_bad * u.day,
-            self.epoch + self.tle_bad * u.day,
+            self.epoch - self.tle_bad,
+            self.epoch + self.tle_bad,
         )
 
         return True
@@ -187,8 +187,8 @@ class TLEBase(ACROSSAPIBase):
             return False
 
         # Build space-track.org query
-        epoch_start = self.epoch - self.tle_bad * u.day
-        epoch_stop = self.epoch + self.tle_bad * u.day
+        epoch_start = self.epoch - self.tle_bad
+        epoch_stop = self.epoch + self.tle_bad
         url = "https://www.space-track.org/basicspacedata/query/class/gp_history/OBJECT_NAME/"
         url += quote(self.tle_name)
         url += "/EPOCH/"
@@ -390,7 +390,7 @@ class TLEBase(ACROSSAPIBase):
         # we will only use this if the epoch being requested is within
         # `tle_bad` days of the current epoch.
         if self.tle_url is not None:
-            if self.epoch > Time.now().utc - self.tle_bad * u.day:
+            if self.epoch > Time.now().utc - self.tle_bad:
                 if self.read_tle_web() is True:
                     # Write the TLE to the database for next time
                     if self.tle is not None:
