@@ -2,6 +2,7 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
+import astropy.units as u  # type: ignore
 from astropy.time import Time  # type: ignore
 from cachetools import TTLCache, cached
 
@@ -14,5 +15,5 @@ class SwiftTLE(TLEBase):
     tle_name = "SWIFT"
     tle_url = "https://celestrak.org/NORAD/elements/gp.php?INTDES=2004-047"
     tle_concat = "https://www.swift.ac.uk/about/status_files/tle"
-    tle_bad = 4
+    tle_bad = 4 * u.day
     tle_min_epoch = Time("2004-11-20 23:00:00", scale="utc")
