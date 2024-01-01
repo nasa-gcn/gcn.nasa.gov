@@ -7,6 +7,12 @@ from datetime import datetime
 from typing import Any, List, Optional
 
 import astropy.units as u  # type: ignore
+from astropy.coordinates import (  # type: ignore
+    CartesianRepresentation,
+    SkyCoord,
+    Latitude,
+    Longitude,
+)
 from arc import tables  # type: ignore
 from astropy.time import Time  # type: ignore
 from pydantic import (
@@ -37,6 +43,77 @@ AstropyTimeList = Annotated[
     PlainSerializer(
         lambda x: x.utc.datetime.tolist(),
         return_type=List[datetime],
+    ),
+]
+
+AstropyAngle = Annotated[
+    u.Quantity,
+    PlainSerializer(
+        lambda x: x.deg,
+        return_type=float,
+    ),
+]
+
+# Pydantic type to serialize astropy SkyCoord or CartesianRepresentation objects as a list
+# of vectors in units of km
+AstropyPositionVector = Annotated[
+    CartesianRepresentation | SkyCoord,
+    PlainSerializer(
+        lambda x: x.xyz.to(u.km).value.T.tolist()
+        if type(x) is CartesianRepresentation
+        else x.cartesian.xyz.to(u.km).value.T.tolist(),
+        return_type=List[conlist(float, min_length=3, max_length=3)],  # type: ignore
+    ),
+]
+
+# Pydantic type to serialize astropy CartesianRepresentation velocity objects as a list
+# of vectors in units of km/s
+AstropyVelocityVector = Annotated[
+    CartesianRepresentation,
+    PlainSerializer(
+        lambda x: x.xyz.to(u.km / u.s).value.T.tolist(),
+        return_type=List[conlist(float, min_length=3, max_length=3)],  # type: ignore
+    ),
+]
+
+# Pydantic type to serialize astropy SkyCoord objects as a list
+# of vectors with no units
+AstropyUnitVector = Annotated[
+    SkyCoord,
+    PlainSerializer(
+        lambda x: x.cartesian.xyz.value.T.tolist(),
+        return_type=List[conlist(float, min_length=3, max_length=3)],  # type: ignore
+    ),
+]
+
+
+# Define a Pydantic type for astropy Latitude, Longitude and Quantity list-type
+# objects, which will be serialized as a list of float in units of degrees.
+AstropyDegrees = Annotated[
+    Latitude | Longitude | u.Quantity,
+    PlainSerializer(
+        lambda x: x.deg.tolist()
+        if type(x) is not u.Quantity
+        else x.to(u.deg).value.tolist(),
+        return_type=List[float],
+    ),
+]
+
+# Pydantic type for a Astropy Time  in days
+AstropyDays = Annotated[
+    u.Quantity,
+    PlainSerializer(
+        lambda x: x.to(u.day).value,
+        return_type=float,
+    ),
+]
+
+# Pydantic type for a Astropy Time  in seconds
+AstropySeconds = Annotated[
+    u.Quantity,
+    PlainSerializer(
+        lambda x: x.to(u.s).value,
+        return_type=float,
     ),
 ]
 
@@ -92,23 +169,28 @@ class EphemSchema(BaseSchema):
     """
 
     timestamp: AstropyTimeList
-    posvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
-    earthsize: List[float]
-    polevec: Optional[List[conlist(float, min_length=3, max_length=3)]] = None  # type: ignore
-    velvec: Optional[List[conlist(float, min_length=3, max_length=3)]] = None  # type: ignore
-    sunvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
-    moonvec: List[conlist(float, min_length=3, max_length=3)]  # type: ignore
-    latitude: List[float]
-    longitude: List[float]
-    stepsize: int = 60
+    posvec: AstropyPositionVector
+    earthsize: AstropyDegrees
+    pole: AstropyUnitVector
+    velvec: AstropyVelocityVector
+    sun: AstropyPositionVector
+    moon: AstropyPositionVector
+    latitude: AstropyDegrees
+    longitude: AstropyDegrees
+    stepsize: AstropySeconds = 60 * u.s
 
 
 class EphemGetSchema(DateRangeSchema):
-    """
-    Schema to define required parameters for a Ephem GET operation.
+    """Schema to define required parameters for a GET
+
+    Parameters
+    ----------
+    stepsize : int, optional
+        The step size in seconds (default is 60).
+
     """
 
-    stepsize: int = 60
+    stepsize: AstropySeconds = 60 * u.s
     ...
 
 

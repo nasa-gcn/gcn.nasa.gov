@@ -2,7 +2,9 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
+from astropy.time import Time  # type: ignore
 from cachetools import TTLCache, cached
+import astropy.units as u  # type: ignore
 
 from ..base.common import ACROSSAPIBase
 from ..base.ephem import EphemBase
@@ -21,5 +23,8 @@ class BurstCubeEphem(EphemBase, ACROSSAPIBase):
     parallax = False  # Calculate parallax for Moon/Sun
     apparent = True  # Use apparent positions
     velocity = False  # Calculate Velocity of spacecraft (slower)
-    earth_radius = 70  # Fix 70 degree Earth radius
-    tleclass = BurstCubeTLE
+    earth_radius = 70 * u.deg  # Fix 70 degree Earth radius
+
+    def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
+        self.tle = BurstCubeTLE(begin).tle
+        super().__init__(begin, end, stepsize)
