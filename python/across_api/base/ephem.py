@@ -27,7 +27,7 @@ from ..base.schema import EphemGetSchema, EphemSchema, TLEEntry
 from .common import ACROSSAPIBase
 
 # Constants
-EARTH_RADIUS = 6371  # km. Note this is average radius, as Earth is not a sphere.
+EARTH_RADIUS = 6371 * u.km  # km. Note this is average radius, as Earth is not a sphere.
 
 
 class EarthSatelliteLocation:
@@ -359,7 +359,7 @@ class EphemBase(ACROSSAPIBase):
         if self.earth_radius is not None:
             self.earthsize = self.earth_radius * np.ones(entries)
         else:
-            self.earthsize = np.arcsin(EARTH_RADIUS / dist.value) * u.rad
+            self.earthsize = np.arcsin(EARTH_RADIUS / dist) * u.rad
 
         # Calculate orbit pole vector
         polevec = self.posvec.cross(self.velvec)
