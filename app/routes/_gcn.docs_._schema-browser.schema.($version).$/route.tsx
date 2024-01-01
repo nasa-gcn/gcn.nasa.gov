@@ -130,6 +130,7 @@ function VersionSelector({
   return (
     <>
       <DetailsDropdownButton
+        title="Select version"
         onClick={() => {
           setShowVersions((shown) => !shown)
         }}
