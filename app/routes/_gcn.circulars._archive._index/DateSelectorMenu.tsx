@@ -116,9 +116,9 @@ export function DateSelector({
         <DetailsDropdownContent className="maxw-card-xlg">
           <CardBody>
             <Grid row>
-              <Grid col={4} key={`radio-alltime`}>
+              <Grid col={4} key="radio-alltime">
                 <Radio
-                  id={`radio-alltime`}
+                  id="radio-alltime"
                   name="radio-date"
                   value=""
                   label="All Time"
