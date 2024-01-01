@@ -114,13 +114,15 @@ class EarthSatelliteLocation:
         # Store the time we've calculated for caching purposes
         self._t = t
 
-        # Calculate GCRS position for Satellite
+        # Calculate TEME position and velocity for Satellite
         _, temes_p, temes_v = self.satellite.sgp4_array(t.jd1, t.jd2)
         teme_p = CartesianRepresentation(temes_p.T * u.km)
+        teme_v = CartesianDifferential(temes_v.T * u.km / u.s)
 
         # Convert SGP4 TEME data to astropy TEME data
-        teme_v = CartesianDifferential(temes_v.T * u.km / u.s)
         teme = TEME(teme_p.with_differentials(teme_v), obstime=t)
+
+        # Transform to TEME to GCRS
         self.gcrs = teme.transform_to(GCRS(obstime=t))
         return self.gcrs
 
