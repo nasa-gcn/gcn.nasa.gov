@@ -221,8 +221,6 @@ class EphemBase(ACROSSAPIBase):
 
     Attributes
     ----------
-    parallax
-        Flag indicating whether to include parallax correction.
     earth_radius
         The radius of the Earth in degrees. If not specified (None), it will be
         calculated based on the distance from the Earth to the spacecraft.
@@ -239,14 +237,11 @@ class EphemBase(ACROSSAPIBase):
 
     _schema = EphemSchema
     _get_schema = EphemGetSchema
+
     # Type hints
     begin: Time
     end: Time
     stepsize: u.Quantity
-    username: str
-    parallax: bool
-    velocity: bool
-    apparent: bool
     earth_radius: Optional[u.Quantity] = None
     tle: Optional[TLEEntry] = None
 
@@ -273,24 +268,19 @@ class EphemBase(ACROSSAPIBase):
     def ephindex(self, t: Time) -> int:
         """For a given time, return an index for the nearest time in the
         ephemeris. Note that internally converting from Time to datetime makes
-        this run"""
+        this run way faster."""
         return int(np.argmin(np.abs((self.timestamp.datetime - t.datetime))))
-
-    @cached_property
-    def earth(self) -> SkyCoord:
-        """Earth SkyCoord as viewed from spacecraft."""
-        return SkyCoord(-self.posvec, frame="gcrs", representation_type="spherical")
 
     @cached_property
     def beta(self) -> np.ndarray:
         """Return spacecraft beta angle (angle between the plane of the orbit
         and the plane of the Sun)."""
-        return np.array(self.pole.separation(self.sun).deg) - 90
+        return self.pole.separation(self.sun) - 90 * u.deg
 
     @cached_property
     def ineclipse(self) -> np.ndarray:
         """Is the spacecraft in an Earth eclipse? Defined as when the Sun > 50% behind the Earth"""
-        return self.sun.separation(self.earth) < self.earthsize * u.deg
+        return self.earth.separation(self.sun) < self.earthsize
 
     def get(self) -> bool:
         """
@@ -327,23 +317,14 @@ class EphemBase(ACROSSAPIBase):
         # units of km, and velocity vector as array of x,y,z vectors in units of km/s
         self.posvec, self.velvec = satloc.get_gcrs_posvel(self.timestamp)
 
-        # Calculate the GCRS position of the Moon in km
-        if self.parallax:
-            self.moon = get_body("moon", self.timestamp, location=satloc)
-        else:
-            self.moon = get_body("moon", self.timestamp)
+        # Calculate the position of the Moon relative to the spacecraft
+        self.moon = get_body("moon", self.timestamp, location=satloc)
 
-        # Set moonvec to be the position of the Moon in GCRS coordinates
-        self.moonvec = self.moon.cartesian
+        # Calculate the position of the Moon relative to the spacecraft
+        self.sun = get_body("sun", self.timestamp, location=satloc)
 
-        # Calculate the GCRS position of the Sun in km
-        if self.parallax:
-            self.sun = get_body("sun", self.timestamp, location=satloc)
-        else:
-            self.sun = get_body("sun", self.timestamp)
-
-        # Set sunvec to be the position of the Sun in GCRS coordinates
-        self.sunvec = self.sun.cartesian
+        # Calculate the position of the Earth relative to the spacecraft
+        self.earth = get_body("earth", self.timestamp, location=satloc)
 
         # Calculate the latitude, longitude and distance from the center of the
         # Earth of the satellite
@@ -355,7 +336,7 @@ class EphemBase(ACROSSAPIBase):
         if self.earth_radius is not None:
             self.earthsize = self.earth_radius * np.ones(len(self.timestamp))
         else:
-            self.earthsize = np.arcsin(EARTH_RADIUS / dist) * u.rad
+            self.earthsize = np.arcsin(EARTH_RADIUS / dist)
 
         # Calculate orbit pole vector
         polevec = self.posvec.cross(self.velvec)
