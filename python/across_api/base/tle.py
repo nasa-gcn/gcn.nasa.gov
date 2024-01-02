@@ -323,7 +323,7 @@ class TLEBase(ACROSSAPIBase):
         # Calculate the number of days between the TLE epoch and the requested
         # epoch. If this is greater than the allowed number of days (given by
         # `tle_bad`), then return True
-        if abs((self.epoch - self.tle.epoch).to_value("s") / 86400) > self.tle_bad:
+        if abs(self.epoch - self.tle.epoch) > self.tle_bad:
             return True
         return False
 
