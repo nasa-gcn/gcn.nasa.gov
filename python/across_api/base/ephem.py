@@ -279,20 +279,44 @@ class EphemBase(ACROSSAPIBase):
         return len(self.timestamp)
 
     def ephindex(self, t: Time) -> int:
-        """For a given time, return an index for the nearest time in the
+        """
+        For a given time, return an index for the nearest time in the
         ephemeris. Note that internally converting from Time to datetime makes
-        this run way faster."""
+        this run way faster.
+
+        Parameters
+        ----------
+        t
+            The time to find the nearest index for.
+
+        Returns
+        -------
+            The index of the nearest time in the ephemeris.
+        """
         return int(np.argmin(np.abs((self.timestamp.datetime - t.datetime))))
 
     @cached_property
     def beta(self) -> np.ndarray:
-        """Return spacecraft beta angle (angle between the plane of the orbit
-        and the plane of the Sun)."""
+        """
+        Return spacecraft beta angle (angle between the plane of the orbit
+        and the plane of the Sun).
+
+        Returns
+        -------
+            The beta angle of the spacecraft.
+        """
         return self.pole.separation(self.sun) - 90 * u.deg
 
     @cached_property
     def ineclipse(self) -> np.ndarray:
-        """Is the spacecraft in an Earth eclipse? Defined as when the Sun > 50% behind the Earth"""
+        """
+        Is the spacecraft in an Earth eclipse? Defined as when the Sun > 50%
+        behind the Earth.
+
+        Returns
+        -------
+            A boolean array indicating if the spacecraft is in eclipse.
+        """
         return self.earth.separation(self.sun) < self.earthsize
 
     def get(self) -> bool:
@@ -300,11 +324,13 @@ class EphemBase(ACROSSAPIBase):
         Compute the ephemeris for the specified time range with at a
         time resolution given by self.stepsize.
 
-        Note only calculates Spacecraft position, velocity (optionally),
+        Note only calculates Spacecraft position, velocity,
         Sun/Moon position and latitude/longitude of the spacecraft
-        initially. These are stored as arrays of vectors as
-        a 2xN or 3xN array of floats, in units of degrees (Lat/Lon) or km
-        (position) and km/s (velocity).
+        initially.
+
+        Returns
+        -------
+            True if successful, False if not.
         """
 
         # Check if all parameters are valid
@@ -347,7 +373,7 @@ class EphemBase(ACROSSAPIBase):
 
         # Calculate the Earth radius in degrees
         if self.earth_radius is not None:
-            self.earthsize = self.earth_radius * np.ones(len(self.timestamp))
+            self.earthsize = self.earth_radius * np.ones(len(self))
         else:
             self.earthsize = np.arcsin(EARTH_RADIUS / dist)
 
