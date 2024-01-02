@@ -54,7 +54,7 @@ export default function () {
             src={fleet}
           />
           <figcaption>
-            The current NASA Astrophysics Fleet, flying and in development.
+            The current NASA Astrophysics fleet, flying and in development.
           </figcaption>
         </figure>
 
