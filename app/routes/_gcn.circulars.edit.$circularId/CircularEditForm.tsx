@@ -146,7 +146,7 @@ export function CircularEditForm({
             'usa-input--success': subjectValid,
           })}
         >
-          <InputPrefix>Subject</InputPrefix>
+          <InputPrefix className="wide-input-prefix">Subject</InputPrefix>
           <TextInput
             autoFocus
             aria-describedby="subjectDescription"
