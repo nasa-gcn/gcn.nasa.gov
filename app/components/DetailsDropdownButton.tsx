@@ -18,12 +18,7 @@ export default function DetailsDropdownButton({
   className?: string
 } & Omit<ButtonProps & JSX.IntrinsicElements['button'], 'type'>) {
   return (
-    <Button
-      className={`${className ?? ''}`}
-      type="button"
-      title="Select version"
-      {...props}
-    >
+    <Button className={`${className ?? ''}`} type="button" {...props}>
       {children}
       <Icon.ExpandMore role="presentation" />
     </Button>
