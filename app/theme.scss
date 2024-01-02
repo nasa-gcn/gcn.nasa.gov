@@ -387,3 +387,19 @@ input.react-tags__combobox-input:focus {
 .usa-input-prefix.wide-input-prefix + * {
   padding-left: units(10);
 }
+
+/*
+ * Workaround for https://github.com/uswds/uswds/issues/5695
+ */
+figure {
+  border-left: 3px solid indigo;
+  & > figcaption {
+    color: lightgray;
+    margin-left: 2rem;
+    font-style: italic;
+  }
+  & > figcaption > img {
+    padding-bottom: 1.5rem;
+    float: left;
+  }
+}
