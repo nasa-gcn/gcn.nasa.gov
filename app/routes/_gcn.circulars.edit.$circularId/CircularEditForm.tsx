@@ -244,7 +244,6 @@ export function CircularEditForm({
           <Button
             disabled={sending || !valid}
             type="submit"
-            name="intent"
             value="save"
           >
             Send
