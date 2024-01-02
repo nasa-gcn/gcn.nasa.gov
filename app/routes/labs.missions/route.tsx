@@ -8,10 +8,10 @@
 import { GridContainer } from '@trussworks/react-uswds'
 
 import fermiHeroImage from './Fermi_Earth_GWs.jpg'
+import { Meatball } from '~/components/meatball/Meatball'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 import fleet from './AstroFleetChart.png'
-import meatball from '~/components/meatball/logo.svg'
 
 export const handle: BreadcrumbHandle = {
   breadcrumb: 'Missions',
@@ -66,13 +66,7 @@ export default function () {
             on observations from several of these observatories simultaneously."
           </blockquote>
           <figcaption>
-            <img
-              alt="nasa meatball logo"
-              width="50"
-              height="50"
-              src={meatball}
-              className="margin-x-1"
-            />
+            <Meatball className="usa-identifier__logo-img width-5" />
             2019 Astrophysics Senior Review, Executive Summary, Page 2
           </figcaption>
         </figure>
