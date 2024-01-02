@@ -26,7 +26,7 @@ export default function () {
     <>
       <Header />
       <h1>ACROSS</h1>
-      <main id="main-content" className="bg-ink text-white">
+      <main id="main-content" className="usa-prose--dark">
         <Outlet />
       </main>
       <Footer />

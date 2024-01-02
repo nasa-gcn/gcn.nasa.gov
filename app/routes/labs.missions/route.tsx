@@ -28,7 +28,7 @@ export default function () {
         <h1>Mutimessenger missions</h1>
         <hr />
         <h3>Overview</h3>
-        <p>
+        <p className="usa-paragraph">
           The joint discovery of gravitational waves and electromagnetic
           radiation from the binary neutron star merger GW170817 was a watershed
           moment for astrophysics. NASA missions played a critical role in this
@@ -48,17 +48,17 @@ export default function () {
           “greater than the sum of its parts”, and will contribute significantly
           to the major science questions in this field.
         </p>
-        <div>
+        <figure>
           <img
             alt="a diagram depicting all the missions in the fleet over time shaped as a swirl"
             src={fleet}
           />
-          <figcaption className="text-italic">
+          <figcaption>
             The current NASA Astrophysics Fleet, flying and in development.
           </figcaption>
-        </div>
+        </figure>
 
-        <figure>
+        <figure className="bordered">
           <blockquote cite="https://developer.mozilla.org/samples/html/figure.html">
             "The complementary nature of these missions makes the overall
             capability of the portfolio more than the sum of its parts, and many

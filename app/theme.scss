@@ -388,11 +388,15 @@ input.react-tags__combobox-input:focus {
   padding-left: units(10);
 }
 
+.usa-prose--dark {
+  color: white;
+  background-color: #1b1b1b;
+}
+
 /*
  * Workaround for https://github.com/uswds/uswds/issues/5695
  */
 figure {
-  border-left: 3px solid indigo;
   & > figcaption {
     color: lightgray;
     margin-left: 2rem;
@@ -402,4 +406,7 @@ figure {
     padding-bottom: 1.5rem;
     float: left;
   }
+}
+figure.bordered {
+  border-left: 3px solid indigo;
 }
