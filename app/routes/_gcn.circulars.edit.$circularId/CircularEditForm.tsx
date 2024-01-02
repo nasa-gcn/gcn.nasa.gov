@@ -101,7 +101,6 @@ export function CircularEditForm({
   defaultBody,
   defaultSubject,
   searchString,
-  isAuthorized,
 }: {
   formattedContributor: string
   defaultBody: string
@@ -124,12 +123,13 @@ export function CircularEditForm({
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
   return (
-    <>
+    <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>New GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <InputGroup className="border-0 maxw-full">
           <InputPrefix className="wide-input-prefix">From</InputPrefix>
-          <span className="padding-1">{formattedContributor}{' '}
+          <span className="padding-1">
+            {formattedContributor}{' '}
             <Link
               to="/user"
               title="Adjust how your name and affiliation appear in new GCN Circulars"
@@ -138,7 +138,7 @@ export function CircularEditForm({
                 <Icon.Edit role="presentation" /> Edit
               </Button>
             </Link>
-        </span>
+          </span>
         </InputGroup>
         <InputGroup
           className={classnames('maxw-full', {
@@ -240,11 +240,7 @@ export function CircularEditForm({
           >
             Back
           </Link>
-          <Button
-            disabled={sending || !valid}
-            type="submit"
-            value="save"
-          >
+          <Button disabled={sending || !valid} type="submit" value="save">
             Send
           </Button>
           {sending && (
@@ -254,7 +250,7 @@ export function CircularEditForm({
           )}
         </ButtonGroup>
       </Form>
-    </>
+    </AstroDataContext.Provider>
   )
 }
 

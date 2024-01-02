@@ -16,7 +16,6 @@ import {
 } from '@trussworks/react-uswds'
 
 import { getUser } from './_gcn._auth/user.server'
-import { AstroDataContext } from './_gcn.circulars.$circularId/AstroDataContext'
 import { CircularEditForm } from './_gcn.circulars.edit.$circularId/CircularEditForm'
 import { formatAuthor } from './_gcn.circulars/circulars.lib'
 import { group } from './_gcn.circulars/circulars.server'
@@ -69,10 +68,10 @@ export default function () {
   }
 
   return (
-    <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
+    <>
       <CircularEditForm {...formDefaults} />
       {isAuthorized || <ModalUnauthorized isAuthenticated={isAuthenticated} />}
-    </AstroDataContext.Provider>
+    </>
   )
 }
 
