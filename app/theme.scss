@@ -389,8 +389,8 @@ input.react-tags__combobox-input:focus {
 }
 
 .usa-prose--dark {
-  color: white;
-  background-color: #1b1b1b;
+  @include u-bg('ink');
+  @include u-text('white');
 }
 
 /*
@@ -398,15 +398,16 @@ input.react-tags__combobox-input:focus {
  */
 figure {
   & > figcaption {
-    color: lightgray;
+    @include u-text('gray-30');
     margin-left: 2rem;
     font-style: italic;
   }
   & > figcaption > img {
-    padding-bottom: 1.5rem;
+    padding-bottom: 1rem;
     float: left;
   }
 }
 figure.bordered {
-  border-left: 3px solid indigo;
+  @include u-border-left('violet-70v');
+  border-left-width: 3px;
 }

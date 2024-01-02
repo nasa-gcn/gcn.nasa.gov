@@ -59,7 +59,7 @@ export default function () {
         </figure>
 
         <figure className="bordered">
-          <blockquote cite="https://developer.mozilla.org/samples/html/figure.html">
+          <blockquote>
             "The complementary nature of these missions makes the overall
             capability of the portfolio more than the sum of its parts, and many
             of the most exciting developments in contemporary astrophysics draw

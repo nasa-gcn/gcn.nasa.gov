@@ -25,7 +25,6 @@ export default function () {
   return (
     <>
       <Header />
-      <h1>ACROSS</h1>
       <main id="main-content" className="usa-prose--dark">
         <Outlet />
       </main>
