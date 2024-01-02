@@ -16,7 +16,7 @@ import {
 } from '@trussworks/react-uswds'
 
 import { getUser } from './_gcn._auth/user.server'
-import { AstroDataContext } from './_gcn.circulars.$circularId.($version)/AstroDataContext'
+import { AstroDataContext } from './_gcn.circulars.$circularId/AstroDataContext'
 import { CircularEditForm } from './_gcn.circulars.edit.$circularId/CircularEditForm'
 import { formatAuthor } from './_gcn.circulars/circulars.lib'
 import { group } from './_gcn.circulars/circulars.server'

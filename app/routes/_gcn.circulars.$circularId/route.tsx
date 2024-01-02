@@ -13,9 +13,9 @@ import {
 import { Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Icon } from '@trussworks/react-uswds'
 
-import { PlainTextBody } from '../_gcn.circulars.$circularId.($version)/Body'
-import { FrontMatter } from '../_gcn.circulars.$circularId.($version)/FrontMatter'
 import { get } from '../_gcn.circulars/circulars.server'
+import { PlainTextBody } from './Body'
+import { FrontMatter } from './FrontMatter'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'

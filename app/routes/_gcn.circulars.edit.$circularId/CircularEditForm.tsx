@@ -21,11 +21,8 @@ import type { ReactNode } from 'react'
 import { useContext, useState } from 'react'
 import { dedent } from 'ts-dedent'
 
-import { AstroDataContext } from '../_gcn.circulars.$circularId.($version)/AstroDataContext'
-import {
-  MarkdownBody,
-  PlainTextBody,
-} from '../_gcn.circulars.$circularId.($version)/Body'
+import { AstroDataContext } from '../_gcn.circulars.$circularId/AstroDataContext'
+import { MarkdownBody, PlainTextBody } from '../_gcn.circulars.$circularId/Body'
 import type { Circular } from '../_gcn.circulars/circulars.lib'
 import { bodyIsValid, subjectIsValid } from '../_gcn.circulars/circulars.lib'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
