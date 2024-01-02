@@ -253,25 +253,42 @@ function SchemaBody({
           Github
         </Link>
       </div>
-      <h2>Properties</h2>
-      <p className="usa-paragraph">
-        <small>* = required</small>
-      </p>
       {result.properties && (
-        <Table stackedStyle="default">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Type</th>
-              <th>Description</th>
-            </tr>
-          </thead>
-          <tbody>
-            <SchemaPropertiesTableBody schema={result} />
-          </tbody>
-        </Table>
+        <>
+          <h2>Properties</h2>
+          <p className="usa-paragraph">
+            <small>* = required</small>
+          </p>
+          <Table stackedStyle="default">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <SchemaPropertiesTableBody schema={result} />
+            </tbody>
+          </Table>
+        </>
       )}
-
+      {result.enum && (
+        <>
+          <h2>Possible Values</h2>
+          <p>
+            Any of the following are valid values for the {result.title}{' '}
+            property:
+          </p>
+          <ul>
+            {result.enum.map((x) => (
+              <li key={x}>
+                <code>{x}</code>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
       {result.allOf && (
         <>
           <h3>Properties from all of the following:</h3>
