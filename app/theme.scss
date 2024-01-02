@@ -409,6 +409,6 @@ figure {
   }
 }
 figure.bordered {
-  @include u-border-left('violet-70v');
+  @include u-border-left('primary');
   border-left-width: 3px;
 }
