@@ -130,15 +130,16 @@ export function CircularEditForm({
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <InputGroup className="border-0 maxw-full">
           <InputPrefix className="wide-input-prefix">From</InputPrefix>
-          <span className="padding-1">{formattedContributor} </span>
-          <Link
-            to="/user"
-            title="Adjust how your name and affiliation appear in new GCN Circulars"
-          >
-            <Button unstyled type="button">
-              <Icon.Edit role="presentation" /> Edit
-            </Button>
-          </Link>
+          <span className="padding-1">{formattedContributor}{' '}
+            <Link
+              to="/user"
+              title="Adjust how your name and affiliation appear in new GCN Circulars"
+            >
+              <Button unstyled type="button">
+                <Icon.Edit role="presentation" /> Edit
+              </Button>
+            </Link>
+        </span>
         </InputGroup>
         <InputGroup
           className={classnames('maxw-full', {
