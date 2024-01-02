@@ -107,7 +107,6 @@ export function CircularEditForm({
   defaultBody: string
   defaultSubject: string
   searchString: string
-  isAuthorized: boolean
 }) {
   let formSearchString = '?index'
   if (searchString) {
