@@ -23,7 +23,6 @@ import { dedent } from 'ts-dedent'
 
 import { AstroDataContext } from '../_gcn.circulars.$circularId/AstroDataContext'
 import { MarkdownBody, PlainTextBody } from '../_gcn.circulars.$circularId/Body'
-import type { Circular } from '../_gcn.circulars/circulars.lib'
 import { bodyIsValid, subjectIsValid } from '../_gcn.circulars/circulars.lib'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
@@ -99,14 +98,12 @@ function SyntaxReference() {
 
 export function CircularEditForm({
   formattedContributor,
-  circular,
   defaultBody,
   defaultSubject,
   searchString,
   isAuthorized,
 }: {
   formattedContributor: string
-  circular?: Circular
   defaultBody: string
   defaultSubject: string
   searchString: string
@@ -129,25 +126,10 @@ export function CircularEditForm({
   const valid = subjectValid && bodyValid
   return (
     <>
-      <h1>{circular ? 'Edit' : 'New'} GCN Circular</h1>
+      <h1>New GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
-        {circular && (
-          <>
-            <input
-              type="hidden"
-              name="circularId"
-              value={circular.circularId}
-            />
-            <InputGroup className="border-0 maxw-full">
-              <InputPrefix className="wide-input-prefix">From</InputPrefix>
-              <span className="padding-1">{circular.submitter} </span>
-            </InputGroup>
-          </>
-        )}
         <InputGroup className="border-0 maxw-full">
-          <InputPrefix className="wide-input-prefix">
-            {circular ? 'Editor' : 'From'}
-          </InputPrefix>
+          <InputPrefix className="wide-input-prefix">From</InputPrefix>
           <span className="padding-1">{formattedContributor} </span>
           <Link
             to="/user"
@@ -264,19 +246,8 @@ export function CircularEditForm({
             name="intent"
             value="save"
           >
-            {circular ? 'Update' : 'Send'}
+            Send
           </Button>
-          {/* TODO: implement this
-          {circular && (
-            <Button
-              disabled={sending || !valid}
-              type="submit"
-              name="intent"
-              value="distribute"
-            >
-              Update and Distribute
-            </Button>
-          )} */}
           {sending && (
             <div className="padding-top-1 padding-bottom-1">
               <Spinner /> Sending...
