@@ -26,7 +26,6 @@ export default function () {
       />
       <GridContainer className="usa-section">
         <h1>Mutimessenger missions</h1>
-        <hr />
         <h3>Overview</h3>
         <p className="usa-paragraph">
           The joint discovery of gravitational waves and electromagnetic
