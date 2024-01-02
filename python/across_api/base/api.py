@@ -5,8 +5,8 @@
 from datetime import datetime
 from typing import Annotated, Optional
 
-from astropy.time import Time  # type: ignore
 import astropy.units as u  # type: ignore
+from astropy.time import Time  # type: ignore
 from fastapi import Depends, FastAPI, Query
 
 # FastAPI app definition

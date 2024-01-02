@@ -2,13 +2,13 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
+import astropy.units as u  # type: ignore
+from astropy.time import Time  # type: ignore
 from cachetools import TTLCache, cached
 
 from ..base.common import ACROSSAPIBase
 from ..base.ephem import EphemBase
 from .tle import SwiftTLE
-from astropy.time import Time  # type: ignore
-import astropy.units as u  # type: ignore
 
 
 @cached(cache=TTLCache(maxsize=128, ttl=86400))

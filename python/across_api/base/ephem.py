@@ -23,6 +23,8 @@ from astropy.time import Time  # type: ignore
 from fastapi import HTTPException
 from sgp4.api import Satrec  # type: ignore
 
+from across_api.functions import round_time
+
 from ..base.schema import EphemGetSchema, EphemSchema, TLEEntry
 from .common import ACROSSAPIBase
 
@@ -266,8 +268,8 @@ class EphemBase(ACROSSAPIBase):
             )
 
         # Parse argument keywords
-        self.begin = begin
-        self.end = end
+        self.begin = round_time(begin, self.stepsize)
+        self.end = round_time(end, self.stepsize)
         self.stepsize = stepsize
 
         # Validate and process API call

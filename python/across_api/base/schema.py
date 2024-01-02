@@ -7,13 +7,13 @@ from datetime import datetime
 from typing import Any, List, Optional
 
 import astropy.units as u  # type: ignore
+from arc import tables  # type: ignore
 from astropy.coordinates import (  # type: ignore
     CartesianRepresentation,
-    SkyCoord,
     Latitude,
     Longitude,
+    SkyCoord,
 )
-from arc import tables  # type: ignore
 from astropy.time import Time  # type: ignore
 from pydantic import (
     BaseModel,
