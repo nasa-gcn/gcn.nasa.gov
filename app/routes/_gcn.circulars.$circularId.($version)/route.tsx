@@ -117,11 +117,9 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        {useFeature('CIRCULAR_VERSIONS') &&
-          result?.history &&
-          result?.history.length > 0 && (
-            <CircularsHistory circular={circularId} history={result?.history} />
-          )}
+        {useFeature('CIRCULAR_VERSIONS') && history && history.length > 0 && (
+          <CircularsHistory circular={circularId} history={result?.history} />
+        )}
         {useFeature('CIRCULAR_VERSIONS') && result?.userIsModerator && (
           <Link
             to={`/circulars/edit/${circularId}`}
@@ -131,7 +129,7 @@ export default function () {
           </Link>
         )}
       </ButtonGroup>
-      <h1 className="margin-bottom-0">GCN Circular {circularId} </h1>
+      <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <PlainTextBody className="margin-y-2">{body}</PlainTextBody>
     </>

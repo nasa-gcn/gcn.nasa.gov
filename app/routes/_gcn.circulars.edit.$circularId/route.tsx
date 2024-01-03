@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs, HeadersFunction } from '@remix-run/node'
+import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -25,7 +25,7 @@ export const handle: BreadcrumbHandle = {
 export async function loader({
   params: { circularId },
   request,
-}: DataFunctionArgs) {
+}: LoaderFunctionArgs) {
   if (!feature('CIRCULAR_VERSIONS')) throw new Response(null, { status: 404 })
   if (!circularId) throw new Response(null, { status: 404 })
   const user = await getUser(request)

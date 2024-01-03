@@ -51,19 +51,26 @@ export function FrontMatter({
   | 'editedBy'
   | 'editedOn'
 >) {
-  const displayDate = editedOn ?? createdOn
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
       <FrontMatterItem label="Date">
-        {formatDateISO(displayDate)}{' '}
+        {formatDateISO(createdOn)}{' '}
         <small className="text-base-light">
-          (<TimeAgo time={displayDate}></TimeAgo>)
+          (<TimeAgo time={createdOn}></TimeAgo>)
         </small>
       </FrontMatterItem>
       <FrontMatterItem label="From">{submitter}</FrontMatterItem>
       {editedBy && (
         <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
+      )}
+      {editedOn && (
+        <FrontMatterItem label="Edited On">
+          {formatDateISO(editedOn)}{' '}
+          <small className="text-base-light">
+            (<TimeAgo time={editedOn}></TimeAgo>)
+          </small>
+        </FrontMatterItem>
       )}
       {submittedHow && (
         <FrontMatterItem label="Via">

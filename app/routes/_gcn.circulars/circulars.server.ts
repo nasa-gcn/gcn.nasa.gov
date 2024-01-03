@@ -323,7 +323,6 @@ export async function putVersion(
     editedBy: formatAuthor(user),
     editedOn: Date.now(),
   }
-  // if (!submittedHow) delete newCircularVersion.submittedHow
   return await circularVersionsAutoIncrement.put(newCircularVersion)
 }
 

@@ -5,16 +5,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import {
-  type HeadersFunction,
-  type LoaderFunctionArgs,
-  json,
-} from '@remix-run/node'
+import { type HeadersFunction, type LoaderFunctionArgs } from '@remix-run/node'
 
 import { getUser } from '../_gcn._auth/user.server'
 import { getVersions, moderatorGroup } from '../_gcn.circulars/circulars.server'
-import { feature, origin } from '~/lib/env.server'
-import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
+import { feature } from '~/lib/env.server'
+import { pickHeaders } from '~/lib/headers.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> = {
@@ -40,14 +36,7 @@ export async function loader({
   }
   const user = await getUser(request)
   const userIsModerator = user?.groups.includes(moderatorGroup)
-  return json(
-    { circularId, history, userIsModerator },
-    {
-      headers: getCanonicalUrlHeaders(
-        new URL(`/circulars/${circularId}`, origin)
-      ),
-    }
-  )
+  return { circularId, history, userIsModerator }
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
