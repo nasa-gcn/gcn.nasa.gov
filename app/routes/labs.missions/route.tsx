@@ -23,8 +23,9 @@ export default function () {
       <img
         alt="Fermi satellite with a GRB in the background, both positioned over earth"
         src={fermiHeroImage}
-        height="auto"
-        width="auto"
+        height="600"
+        width="1800"
+        className="mobile:display-block tablet:display-block height-auto"
       />
       <GridContainer className="usa-section">
         <h1>Mutimessenger missions</h1>
@@ -53,8 +54,9 @@ export default function () {
           <img
             alt="a diagram depicting all the missions in the fleet over time shaped as a swirl"
             src={fleet}
-            height="auto"
-            width="auto"
+            height="450"
+            width="800"
+            className="mobile:display-block tablet:display-block height-auto"
           />
           <figcaption>
             The current NASA Astrophysics fleet, flying and in development.
