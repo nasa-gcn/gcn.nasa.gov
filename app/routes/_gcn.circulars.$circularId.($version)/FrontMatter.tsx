@@ -41,17 +41,24 @@ export function FrontMatter({
   submitter,
   submittedHow,
   editedBy,
+  editedOn,
 }: Pick<
   Circular,
-  'subject' | 'createdOn' | 'submitter' | 'submittedHow' | 'editedBy'
+  | 'subject'
+  | 'createdOn'
+  | 'submitter'
+  | 'submittedHow'
+  | 'editedBy'
+  | 'editedOn'
 >) {
+  const displayDate = editedOn ?? createdOn
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
       <FrontMatterItem label="Date">
-        {formatDateISO(createdOn)}{' '}
+        {formatDateISO(displayDate)}{' '}
         <small className="text-base-light">
-          (<TimeAgo time={createdOn}></TimeAgo>)
+          (<TimeAgo time={displayDate}></TimeAgo>)
         </small>
       </FrontMatterItem>
       <FrontMatterItem label="From">{submitter}</FrontMatterItem>

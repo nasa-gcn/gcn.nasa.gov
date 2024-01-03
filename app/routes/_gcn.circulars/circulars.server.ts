@@ -315,19 +315,15 @@ export async function putVersion(
   )
 
   // Need to be retrieved otherwise will be absent in latest version
-  const { bibcode, submitter, submittedHow } = await get(circular.circularId)
+  const oldCircular = await get(circular.circularId)
 
   const newCircularVersion = {
+    ...oldCircular,
     ...circular,
     editedBy: formatAuthor(user),
-    createdOn: Date.now(),
-    bibcode,
-    submitter,
-    submittedHow,
+    editedOn: Date.now(),
   }
-  // Remove fields if they are undefined, as this will otherwise throw an error in the PUT
-  if (!bibcode) delete newCircularVersion.bibcode
-  if (!submittedHow) delete newCircularVersion.submittedHow
+  // if (!submittedHow) delete newCircularVersion.submittedHow
   return await circularVersionsAutoIncrement.put(newCircularVersion)
 }
 
