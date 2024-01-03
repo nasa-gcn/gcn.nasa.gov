@@ -60,10 +60,6 @@ export function FrontMatter({
           (<TimeAgo time={createdOn}></TimeAgo>)
         </small>
       </FrontMatterItem>
-      <FrontMatterItem label="From">{submitter}</FrontMatterItem>
-      {editedBy && (
-        <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
-      )}
       {editedOn && (
         <FrontMatterItem label="Edited On">
           {formatDateISO(editedOn)}{' '}
@@ -71,6 +67,10 @@ export function FrontMatter({
             (<TimeAgo time={editedOn}></TimeAgo>)
           </small>
         </FrontMatterItem>
+      )}
+      <FrontMatterItem label="From">{submitter}</FrontMatterItem>
+      {editedBy && (
+        <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
       )}
       {submittedHow && (
         <FrontMatterItem label="Via">
