@@ -100,20 +100,18 @@ function SyntaxReference() {
   )
 }
 
-export default function CircularEditForm({
+export function CircularEditForm({
   formattedContributor,
   circular,
   defaultBody,
   defaultSubject,
   searchString,
-  isAuthorized,
 }: {
   formattedContributor: string
   circular?: Circular
   defaultBody: string
   defaultSubject: string
   searchString: string
-  isAuthorized: boolean
 }) {
   let formSearchString = '?index'
   if (searchString) {
