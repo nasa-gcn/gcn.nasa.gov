@@ -116,15 +116,12 @@ export default function () {
               Cite (ADS)
             </Button>
           )}
-          {useFeature('CIRCULAR_VERSIONS') &&
-            result?.history &&
-            result?.history.length > 0 && (
-              <CircularsHistory
-                circular={circularId}
-                history={result?.history}
-              />
-            )}
         </ButtonGroup>
+        {useFeature('CIRCULAR_VERSIONS') &&
+          result?.history &&
+          result?.history.length > 0 && (
+            <CircularsHistory circular={circularId} history={result?.history} />
+          )}
         {useFeature('CIRCULAR_VERSIONS') && result?.userIsModerator && (
           <Link
             to={`/circulars/edit/${circularId}`}
