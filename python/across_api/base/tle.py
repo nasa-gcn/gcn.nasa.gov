@@ -198,7 +198,7 @@ class TLEBase(ACROSSAPIBase):
 
         # Fetch the TLEs between the requested epochs
         tletext = st.tle(
-            object_name="SWIFT",
+            object_name=self.tle_name,
             orderby="epoch desc",
             limit=22,
             format="tle",
