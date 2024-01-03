@@ -2,16 +2,16 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-import json
+
 import logging
 import os
 from typing import List, Optional
-from urllib.parse import quote
 
 import requests
 from astropy.time import Time  # type: ignore
 from astropy.units import Quantity  # type: ignore
 from requests import HTTPError
+from spacetrack import SpaceTrackClient  # type: ignore
 
 from .common import ACROSSAPIBase
 from .schema import TLEEntry, TLEGetSchema, TLESchema
@@ -189,53 +189,36 @@ class TLEBase(ACROSSAPIBase):
         # Build space-track.org query
         epoch_start = self.epoch - self.tle_bad
         epoch_stop = self.epoch + self.tle_bad
-        url = "https://www.space-track.org/basicspacedata/query/class/gp_history/OBJECT_NAME/"
-        url += quote(self.tle_name)
-        url += "/EPOCH/"
-        url += quote(f">{epoch_start},<{epoch_stop}")
-        url += "/orderby/EPOCH asc/emptyresult/show"
 
         # Log into space-track.org
-        s = requests.Session()
-        username = os.environ.get("SPACE_TRACK_USER")
-        password = os.environ.get("SPACE_TRACK_PASS")
-        if username is None or password is None:
-            logging.error("Please set SPACE_TRACK_USER and SPACE_TRACK_PASS")
-            return False
-        r = s.post(
-            "https://www.space-track.org/ajaxauth/login",
-            data={"identity": username, "password": password},
+        st = SpaceTrackClient(
+            identity=os.environ.get("SPACE_TRACK_USER"),
+            password=os.environ.get("SPACE_TRACK_PASS"),
         )
-        try:
-            # Check for HTTP errors
-            r.raise_for_status()
-        except HTTPError as e:
-            logging.exception(e)
+
+        # Fetch the TLEs between the requested epochs
+        tletext = st.tle(
+            object_name="SWIFT",
+            orderby="epoch desc",
+            limit=22,
+            format="tle",
+            epoch=f">{epoch_start.datetime},<{epoch_stop.datetime}",
+        )
+        # Check if we got a return
+        if tletext == "":
             return False
 
-        # Fetch the space-track.org query results
-        r = s.get(url)
-        try:
-            # Check for HTTP errors
-            r.raise_for_status()
-        except HTTPError as e:
-            logging.exception(e)
-            return False
-
-        # Read in the space-track.org query results, check that the list is
-        # non-zero length
-        tles_dict = json.loads(r.text)
-        if len(tles_dict) == 0:
-            return False
+        # Split the TLEs into individual lines
+        tletext = tletext.splitlines()
 
         # Parse the results into a list of TLEEntry objects
         tles = [
             TLEEntry(
                 satname=self.tle_name,
-                tle1=result["TLE_LINE1"].strip(),
-                tle2=result["TLE_LINE2"].strip(),
+                tle1=tletext[i].strip(),
+                tle2=tletext[i + 1].strip(),
             )
-            for result in tles_dict
+            for i in range(0, len(tletext), 2)
         ]
 
         # Append them to the list of stored TLEs

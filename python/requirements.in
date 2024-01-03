@@ -5,3 +5,4 @@ email-validator
 fastapi
 mangum
 requests
+spacetrack
