@@ -24,6 +24,7 @@ export interface Circular extends CircularMetadata {
   bibcode?: string
   editedBy?: string
   version?: number // 1: Original
+  editedOn?: number
 }
 
 export interface CircularChangeRequest extends CircularMetadata {

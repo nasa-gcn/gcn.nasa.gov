@@ -52,11 +52,12 @@ export const getOpenIDClient = memoizee(
   async function () {
     const user_pool_id = process.env.COGNITO_USER_POOL_ID
 
-    let providerUrl
+    let providerUrl, isCognito
     if (user_pool_id) {
       providerUrl = `https://cognito-idp.${
         user_pool_id.split('_')[0]
       }.amazonaws.com/${user_pool_id}/`
+      isCognito = true
     } else if (process.env.ARC_ENV === 'testing') {
       providerUrl = `http://localhost:${process.env.ARC_OIDC_IDP_PORT}/`
     } else {
@@ -66,6 +67,16 @@ export const getOpenIDClient = memoizee(
     }
 
     const issuer = await Issuer.discover(providerUrl)
+    // FIXME: Cognito supports RFC 7009 "Token Revocation", but it does not
+    // advertise the token endpoint in its autodiscovery response.
+    // Fill it in by hand.
+    if (isCognito && !issuer.metadata.revocation_endpoint) {
+      issuer.revocation_endpoint = issuer.metadata.revocation_endpoint =
+        issuer.metadata.token_endpoint?.replace(
+          '/oauth2/token',
+          '/oauth2/revoke'
+        )
+    }
 
     return new issuer.Client({
       client_id: getEnvOrDie('OIDC_CLIENT_ID'),

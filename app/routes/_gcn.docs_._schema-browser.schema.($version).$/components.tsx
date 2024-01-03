@@ -31,6 +31,7 @@ export type Schema = {
   title?: string
   description?: string
   properties?: { [key: string]: SchemaProperty }
+  enum?: string[]
   $defs?: { [key: string]: SchemaProperty }
   anyOf?: ReferencedSchema[]
   allOf?: ReferencedSchema[]
