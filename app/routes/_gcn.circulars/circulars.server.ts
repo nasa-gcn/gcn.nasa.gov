@@ -439,14 +439,15 @@ export async function approveChangeRequest(
     })
 
   const changeRequest = await getChangeRequest(circularId, requestorSub)
-
+  const circular = await get(circularId)
   const autoincrementVersion = await getDynamoDBVersionAutoIncrement(circularId)
 
   await autoincrementVersion.put({
+    ...circular,
     body: changeRequest.body,
     subject: changeRequest.subject,
     editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
-    createdOn: Date.now(),
+    revisedOn: Date.now(),
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)
