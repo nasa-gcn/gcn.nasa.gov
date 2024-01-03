@@ -23,6 +23,8 @@ export default function () {
       <img
         alt="Fermi satellite with a GRB in the background, both positioned over earth"
         src={fermiHeroImage}
+        height="auto"
+        width="auto"
       />
       <GridContainer className="usa-section">
         <h1>Mutimessenger missions</h1>
@@ -51,6 +53,8 @@ export default function () {
           <img
             alt="a diagram depicting all the missions in the fleet over time shaped as a swirl"
             src={fleet}
+            height="auto"
+            width="auto"
           />
           <figcaption>
             The current NASA Astrophysics fleet, flying and in development.
@@ -65,7 +69,7 @@ export default function () {
             on observations from several of these observatories simultaneously."
           </blockquote>
           <figcaption>
-            <Meatball className="usa-identifier__logo-img width-5" />
+            <Meatball className="height-auto width-5" />
             2019 Astrophysics Senior Review, Executive Summary, Page 2
           </figcaption>
         </figure>

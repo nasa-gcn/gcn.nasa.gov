@@ -409,6 +409,6 @@ figure {
   }
 }
 figure.bordered {
-  @include u-border-left('primary');
+  @include u-border-left('base');
   border-left-width: 3px;
 }
