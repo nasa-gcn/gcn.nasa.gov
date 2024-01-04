@@ -15,6 +15,9 @@ export interface CircularMetadata {
 
 export type SubmittedHow = 'web' | 'email' | 'email-legacy' | 'api'
 
+export const circularFormats = ['text/plain', 'text/markdown'] as const
+export type CircularFormat = (typeof circularFormats)[number]
+
 export interface Circular extends CircularMetadata {
   sub?: string
   createdOn: number
@@ -25,6 +28,7 @@ export interface Circular extends CircularMetadata {
   editedBy?: string
   version?: number // 1: Original
   editedOn?: number
+  format?: CircularFormat
 }
 
 export interface CircularChangeRequest extends CircularMetadata {

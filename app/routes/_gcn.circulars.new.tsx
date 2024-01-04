@@ -54,15 +54,21 @@ export default function () {
   let [searchParams] = useSearchParams()
   const defaultBody = searchParams.get('body') || ''
   const defaultSubject = searchParams.get('subject') || ''
+  const defaultFormat =
+    searchParams.get('format') === 'text/markdown'
+      ? ('text/markdown' as const)
+      : undefined
 
   searchParams = new URLSearchParams(searchParams)
   searchParams.delete('subject')
   searchParams.delete('body')
+  searchParams.delete('format')
   const searchString = searchParams.toString()
   const formDefaults = {
     formattedContributor: formattedAuthor ?? '',
     defaultBody,
     defaultSubject,
+    defaultFormat,
     searchString,
     isAuthorized: Boolean(isAuthorized),
   }

@@ -17,8 +17,7 @@ import {
   Textarea,
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
-import type { ReactNode } from 'react'
-import { useContext, useState } from 'react'
+import { type ReactNode, useContext, useState } from 'react'
 import { dedent } from 'ts-dedent'
 
 import { AstroDataContext } from '../_gcn.circulars.$circularId.($version)/AstroDataContext'
@@ -26,13 +25,19 @@ import {
   MarkdownBody,
   PlainTextBody,
 } from '../_gcn.circulars.$circularId.($version)/Body'
-import { bodyIsValid, subjectIsValid } from '../_gcn.circulars/circulars.lib'
+import {
+  type CircularFormat,
+  bodyIsValid,
+  subjectIsValid,
+} from '../_gcn.circulars/circulars.lib'
+import { RichEditor } from './RichEditor'
 import {
   SegmentedRadioButton,
   SegmentedRadioButtonGroup,
 } from './SegmentedRadioButton'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
+import { useFeature } from '~/root'
 
 function SyntaxExample({
   label,
@@ -107,6 +112,7 @@ export function CircularEditForm({
   formattedContributor,
   circularId,
   submitter,
+  defaultFormat,
   defaultBody,
   defaultSubject,
   searchString,
@@ -115,6 +121,7 @@ export function CircularEditForm({
   formattedContributor: string
   circularId?: number
   submitter?: string
+  defaultFormat?: CircularFormat
   defaultBody: string
   defaultSubject: string
   searchString: string
@@ -151,6 +158,7 @@ export function CircularEditForm({
       saveButtonText = 'Send'
       break
   }
+  const bodyPlaceholder = useBodyPlaceholder()
 
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
@@ -225,36 +233,52 @@ export function CircularEditForm({
         <label hidden htmlFor="body">
           Body
         </label>
-        <SegmentedRadioButtonGroup>
-          <SegmentedRadioButton
-            defaultChecked
-            onClick={() => setShowPreview(false)}
-          >
-            Edit
-          </SegmentedRadioButton>
-          <SegmentedRadioButton onClick={() => setShowPreview(true)}>
-            Preview
-          </SegmentedRadioButton>
-        </SegmentedRadioButtonGroup>
-        <Textarea
-          hidden={showPreview}
-          name="body"
-          id="body"
-          aria-describedby="bodyDescription"
-          placeholder={useBodyPlaceholder()}
-          defaultValue={defaultBody}
-          required={true}
-          className={classnames('maxw-full', {
-            'usa-input--success': bodyValid,
-          })}
-          onChange={({ target: { value } }) => {
-            setBody(value)
-          }}
-        />
-        {showPreview && (
-          <PlainTextBody className="border padding-1 margin-top-1">
-            {body}
-          </PlainTextBody>
+        {useFeature('CIRCULARS_MARKDOWN') ? (
+          <RichEditor
+            aria-describedby="bodyDescription"
+            placeholder={bodyPlaceholder}
+            defaultValue={defaultBody}
+            defaultMarkdown={defaultFormat === 'text/markdown'}
+            required={true}
+            className={bodyValid ? 'usa-input--success' : undefined}
+            onChange={({ target: { value } }) => {
+              setBody(value)
+            }}
+          />
+        ) : (
+          <>
+            <SegmentedRadioButtonGroup>
+              <SegmentedRadioButton
+                defaultChecked
+                onClick={() => setShowPreview(false)}
+              >
+                Edit
+              </SegmentedRadioButton>
+              <SegmentedRadioButton onClick={() => setShowPreview(true)}>
+                Preview
+              </SegmentedRadioButton>
+            </SegmentedRadioButtonGroup>
+            <Textarea
+              hidden={showPreview}
+              name="body"
+              id="body"
+              aria-describedby="bodyDescription"
+              placeholder={bodyPlaceholder}
+              defaultValue={defaultBody}
+              required={true}
+              className={classnames('maxw-full', {
+                'usa-input--success': bodyValid,
+              })}
+              onChange={({ target: { value } }) => {
+                setBody(value)
+              }}
+            />
+            {showPreview && (
+              <PlainTextBody className="border padding-1 margin-top-1">
+                {body}
+              </PlainTextBody>
+            )}
+          </>
         )}
         <div className="text-base margin-bottom-1" id="bodyDescription">
           <small>

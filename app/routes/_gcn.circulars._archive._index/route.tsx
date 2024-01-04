@@ -27,6 +27,10 @@ import { useId, useState } from 'react'
 
 import { getUser } from '../_gcn._auth/user.server'
 import {
+  type CircularFormat,
+  circularFormats,
+} from '../_gcn.circulars/circulars.lib'
+import {
   circularRedirect,
   createChangeRequest,
   get,
@@ -41,6 +45,7 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
+import { feature } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { useModStatus } from '~/root'
 
@@ -74,16 +79,30 @@ export async function action({ request }: ActionFunctionArgs) {
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
   const intent = getFormDataString(data, 'intent')
+  let format
+  if (feature('CIRCULARS_MARKDOWN')) {
+    format = getFormDataString(data, 'format') as CircularFormat | undefined
+    if (format && !circularFormats.includes(format)) {
+      throw new Response('Invalid format', { status: 400 })
+    }
+  } else {
+    format = undefined
+  }
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
+
   let result
+  const props = { body, subject, ...(format ? { format } : {}) }
   switch (intent) {
     case 'correction':
       if (!circularId)
         throw new Response('circularId is required', { status: 400 })
-      await createChangeRequest(parseFloat(circularId), body, subject, user)
+      await createChangeRequest(
+        { circularId: parseFloat(circularId), ...props },
+        user
+      )
       result = null
       break
     case 'edit':
@@ -91,16 +110,15 @@ export async function action({ request }: ActionFunctionArgs) {
         throw new Response('circularId is required', { status: 400 })
       await putVersion(
         {
-          body,
           circularId: parseFloat(circularId),
-          subject,
+          ...props,
         },
         user
       )
       result = await get(parseFloat(circularId))
       break
     case 'new':
-      result = await put({ subject, body, submittedHow: 'web' }, user)
+      result = await put({ ...props, submittedHow: 'web' }, user)
       break
     default:
       break

@@ -37,6 +37,7 @@ export async function loader({
     formattedContributor,
     defaultBody: circular.body,
     defaultSubject: circular.subject,
+    defaultFormat: circular.format,
     circularId: circular.circularId,
     submitter: circular.submitter,
     searchString: '',
