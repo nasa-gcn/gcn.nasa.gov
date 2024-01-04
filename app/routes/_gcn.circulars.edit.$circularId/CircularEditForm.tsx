@@ -24,6 +24,10 @@ import { dedent } from 'ts-dedent'
 import { AstroDataContext } from '../_gcn.circulars.$circularId/AstroDataContext'
 import { MarkdownBody, PlainTextBody } from '../_gcn.circulars.$circularId/Body'
 import { bodyIsValid, subjectIsValid } from '../_gcn.circulars/circulars.lib'
+import {
+  SegmentedRadioButton,
+  SegmentedRadioButtonGroup,
+} from './SegmentedRadioButton'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
 
@@ -185,13 +189,17 @@ export function CircularEditForm({
         <label hidden htmlFor="body">
           Body
         </label>
-        <ToggleButton
-          defaultValue="edit"
-          options={{ edit: 'Edit', preview: 'Preview' }}
-          onChange={(value) => {
-            setShowPreview(value === 'preview')
-          }}
-        />
+        <SegmentedRadioButtonGroup>
+          <SegmentedRadioButton
+            defaultChecked
+            onClick={() => setShowPreview(false)}
+          >
+            Edit
+          </SegmentedRadioButton>
+          <SegmentedRadioButton onClick={() => setShowPreview(true)}>
+            Preview
+          </SegmentedRadioButton>
+        </SegmentedRadioButtonGroup>
         <Textarea
           hidden={showPreview}
           name="body"
@@ -268,41 +276,6 @@ function useBodyPlaceholder() {
 
     ...
     `)
-}
-
-function ToggleButton<T extends Record<string, ReactNode>>({
-  defaultValue,
-  options,
-  onChange,
-}: {
-  defaultValue: keyof T
-  options: T
-  onChange?: (value: keyof T) => void
-}) {
-  const [value, setValue] = useState(defaultValue)
-
-  return (
-    <ButtonGroup type="segmented" role="radiogroup">
-      {Object.entries(options).map(([key, label]) => {
-        const checked = key === value
-        return (
-          <Button
-            key={key}
-            type="button"
-            role="radio"
-            aria-checked={checked}
-            outline={!checked}
-            onClick={() => {
-              setValue(key)
-              if (onChange && !checked) onChange(key)
-            }}
-          >
-            {label}
-          </Button>
-        )
-      })}
-    </ButtonGroup>
-  )
 }
 
 function useStateToggle(value: boolean) {
