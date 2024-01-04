@@ -36,14 +36,8 @@ export async function loader({
   const formattedEditor = formatAuthor(user)
 
   const circular = await get(parseFloat(circularId))
-  return json(
-    { isAuthenticated, isAuthorized, formattedEditor, circular },
-    { headers: getCanonicalUrlHeaders(new URL(`/circulars/edit`, origin)) }
-  )
+  return { isAuthenticated, isAuthorized, formattedEditor, circular }
 }
-
-export const headers: HeadersFunction = ({ loaderHeaders }) =>
-  pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
   const { isAuthorized, formattedEditor, circular } =
