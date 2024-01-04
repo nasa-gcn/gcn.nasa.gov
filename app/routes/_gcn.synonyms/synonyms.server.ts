@@ -130,7 +130,7 @@ export async function putSynonyms({
   const subtractions = deleteSynonyms.filter((x) => !synonyms?.includes(x))
   const additions = synonyms.filter((x) => !deleteSynonyms?.includes(x))
 
-  if (!subtractions && !additions) return
+  if (!subtractions && !additions) return await db.synonyms.get({ synonymId })
   if (subtractions) {
     await Promise.all(
       subtractions.map((eventId) => {
