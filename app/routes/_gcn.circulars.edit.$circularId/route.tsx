@@ -28,12 +28,10 @@ export async function loader({
   const user = await getUser(request)
   if (!user?.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
-  const isAuthenticated = true
-  const isAuthorized = user.groups.includes(moderatorGroup)
   const formattedEditor = formatAuthor(user)
 
   const circular = await get(parseFloat(circularId))
-  return { isAuthenticated, isAuthorized, formattedEditor, circular }
+  return { formattedEditor, circular }
 }
 
 export default function () {
