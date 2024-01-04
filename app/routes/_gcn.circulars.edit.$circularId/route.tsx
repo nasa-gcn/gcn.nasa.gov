@@ -52,8 +52,6 @@ export default function () {
   }
 
   return (
-    <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
-      <CircularEditForm {...formDefaults} />
-    </AstroDataContext.Provider>
+    <CircularEditForm {...formDefaults} />
   )
 }
