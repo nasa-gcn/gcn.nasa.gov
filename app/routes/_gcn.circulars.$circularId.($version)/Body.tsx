@@ -9,7 +9,9 @@ import { rehypeAstro } from '@nasa-gcn/remark-rehype-astro'
 import classNames from 'classnames'
 import type { Root } from 'mdast'
 import { Fragment, createElement } from 'react'
+import rehypeClassNames from 'rehype-class-names'
 import rehypeReact from 'rehype-react'
+import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 import { type Plugin, unified } from 'unified'
@@ -50,9 +52,15 @@ export function MarkdownBody({
 }) {
   const { result } = unified()
     .use(remarkParse)
+    .use(remarkGfm)
     .use(remarkRehype)
     .use(rehypeAstro)
-    .use(rehypeAutolinkLiteral)
+    .use(rehypeClassNames, {
+      ol: 'usa-list',
+      p: 'usa-paragraph',
+      table: 'usa-table',
+      ul: 'usa-list',
+    })
     .use(rehypeReact, {
       Fragment,
       createElement,

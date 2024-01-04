@@ -1,0 +1,35 @@
+/*!
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+.tabs {
+  :global(.usa-button-group__item) {
+    :global(.usa-button) {
+      box-shadow: 0px 0px 0px 0px;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      border: 2px solid;
+      padding-bottom: 14px;
+      width: auto;
+
+      &:not(.checked) {
+        margin-top: 2px;
+      }
+
+      &.checked {
+        padding-top: 14px;
+        border-top-left-radius: 4px;
+        border-top-right-radius: 4px;
+        border-bottom-color: transparent;
+      }
+    }
+
+    &:last-child :global(.usa-button) {
+      margin-left: -1px;
+    }
+  }
+}

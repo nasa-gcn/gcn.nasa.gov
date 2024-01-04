@@ -7,6 +7,16 @@
  */
 
 @use 'styles' with (
+  $background-color-settings: (
+    active: true,
+    hover: true,
+  ),
+  $theme-utility-breakpoints: (
+    mobile-lg: true,
+    tablet: true,
+    tablet-lg: true,
+    desktop: true,
+  ),
   $theme-show-notifications: false,
   $theme-image-path: 'nasawds/src/img',
   $theme-font-path: 'nasawds/src/fonts'

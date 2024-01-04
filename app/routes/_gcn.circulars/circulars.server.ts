@@ -19,6 +19,7 @@ import memoizee from 'memoizee'
 import { type User, getUser } from '../_gcn._auth/user.server'
 import {
   bodyIsValid,
+  circularFormats,
   formatAuthor,
   parseEventFromSubject,
   subjectIsValid,
@@ -279,7 +280,7 @@ export async function put(
       status: 403,
     })
 
-  validateCircular(item.subject, item.body)
+  validateCircular(item)
 
   const circular: Parameters<typeof putRaw>[0] = {
     sub: user.sub,
@@ -312,7 +313,7 @@ export async function putVersion(
   circular: Omit<Circular, 'createdOn' | 'submitter' | 'submittedHow'>,
   user?: User
 ): Promise<number> {
-  validateCircular(circular.subject, circular.body)
+  validateCircular(circular)
   if (!user?.groups.includes(moderatorGroup))
     throw new Response('User is not a moderator', {
       status: 403,
@@ -359,12 +360,20 @@ export async function getVersions(circularId: number): Promise<number[]> {
  * @param request
  */
 export async function createChangeRequest(
-  circularId: number,
-  body: string,
-  subject: string,
+  item: Omit<
+    Circular,
+    | 'sub'
+    | 'createdOn'
+    | 'submitter'
+    | 'submittedHow'
+    | 'bibcode'
+    | 'editedBy'
+    | 'version'
+    | 'editedOn'
+  >,
   user?: User
 ) {
-  validateCircular(subject, body)
+  validateCircular(item)
   if (!user)
     throw new Response('User is not signed in', {
       status: 403,
@@ -372,9 +381,7 @@ export async function createChangeRequest(
   const requestor = formatAuthor(user)
   const db = await tables()
   await db.circulars_change_requests.put({
-    circularId,
-    body,
-    subject,
+    ...item,
     requestorSub: user.sub,
     requestor,
   })
@@ -498,8 +505,14 @@ export async function getChangeRequest(
   return changeRequest
 }
 
-function validateCircular(subject: string, body: string) {
+function validateCircular({
+  body,
+  subject,
+  format,
+}: Pick<Circular, 'body' | 'subject' | 'format'>) {
   if (!subjectIsValid(subject))
     throw new Response('subject is invalid', { status: 400 })
   if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
+  if (!(format === undefined || circularFormats.includes(format)))
+    throw new Response('format is invalid', { status: 400 })
 }
