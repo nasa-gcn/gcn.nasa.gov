@@ -138,7 +138,7 @@ export function CircularEditForm({
             <input type="hidden" name="circularId" value={circularId} />
             <InputGroup className="border-0 maxw-full">
               <InputPrefix className="wide-input-prefix">From</InputPrefix>
-              <span className="padding-1">{submitter} </span>
+              <span className="padding-1">{submitter}</span>
             </InputGroup>
           </>
         )}
