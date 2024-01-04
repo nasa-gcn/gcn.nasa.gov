@@ -21,8 +21,11 @@ import type { ReactNode } from 'react'
 import { useContext, useState } from 'react'
 import { dedent } from 'ts-dedent'
 
-import { AstroDataContext } from '../_gcn.circulars.$circularId/AstroDataContext'
-import { MarkdownBody, PlainTextBody } from '../_gcn.circulars.$circularId/Body'
+import { AstroDataContext } from '../_gcn.circulars.$circularId.($version)/AstroDataContext'
+import {
+  MarkdownBody,
+  PlainTextBody,
+} from '../_gcn.circulars.$circularId.($version)/Body'
 import { bodyIsValid, subjectIsValid } from '../_gcn.circulars/circulars.lib'
 import {
   SegmentedRadioButton,
@@ -102,11 +105,15 @@ function SyntaxReference() {
 
 export function CircularEditForm({
   formattedContributor,
+  circularId,
+  submitter,
   defaultBody,
   defaultSubject,
   searchString,
 }: {
   formattedContributor: string
+  circularId?: number
+  submitter?: string
   defaultBody: string
   defaultSubject: string
   searchString: string
@@ -128,21 +135,30 @@ export function CircularEditForm({
   const valid = subjectValid && bodyValid
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
-      <h1>New GCN Circular</h1>
+      <h1>{circularId ? 'Edit' : 'New'} GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
+        {circularId && (
+          <>
+            <input type="hidden" name="circularId" value={circularId} />
+            <InputGroup className="border-0 maxw-full">
+              <InputPrefix className="wide-input-prefix">From</InputPrefix>
+              <span className="padding-1">{submitter}</span>
+            </InputGroup>
+          </>
+        )}
         <InputGroup className="border-0 maxw-full">
-          <InputPrefix className="wide-input-prefix">From</InputPrefix>
-          <span className="padding-1">
-            {formattedContributor}{' '}
-            <Link
-              to="/user"
-              title="Adjust how your name and affiliation appear in new GCN Circulars"
-            >
-              <Button unstyled type="button">
-                <Icon.Edit role="presentation" /> Edit
-              </Button>
-            </Link>
-          </span>
+          <InputPrefix className="wide-input-prefix">
+            {circularId ? 'Editor' : 'From'}
+          </InputPrefix>
+          <span className="padding-1">{formattedContributor} </span>
+          <Link
+            to="/user"
+            title="Adjust how your name and affiliation appear in new GCN Circulars"
+          >
+            <Button unstyled type="button">
+              <Icon.Edit role="presentation" /> Edit
+            </Button>
+          </Link>
         </InputGroup>
         <InputGroup
           className={classnames('maxw-full', {
@@ -249,7 +265,7 @@ export function CircularEditForm({
             Back
           </Link>
           <Button disabled={sending || !valid} type="submit" value="save">
-            Send
+            {circularId ? 'Update' : 'Send'}
           </Button>
           {sending && (
             <div className="padding-top-1 padding-bottom-1">

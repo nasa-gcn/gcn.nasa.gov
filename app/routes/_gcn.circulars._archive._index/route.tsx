@@ -28,7 +28,9 @@ import { useState } from 'react'
 import { getUser } from '../_gcn._auth/user.server'
 import {
   circularRedirect,
+  get,
   put,
+  putVersion,
   search,
 } from '../_gcn.circulars/circulars.server'
 import CircularPagination from './CircularPagination'
@@ -68,10 +70,23 @@ export async function action({ request }: ActionFunctionArgs) {
   const subject = getFormDataString(data, 'subject')
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
-  return await put(
-    { subject, body, submittedHow: 'web' },
-    await getUser(request)
-  )
+  const user = await getUser(request)
+  const circularId = getFormDataString(data, 'circularId')
+  let result
+  if (circularId) {
+    await putVersion(
+      {
+        body,
+        circularId: parseFloat(circularId),
+        subject,
+      },
+      user
+    )
+    result = await get(parseFloat(circularId))
+  } else {
+    result = await put({ subject, body, submittedHow: 'web' }, user)
+  }
+  return result
 }
 
 export default function () {

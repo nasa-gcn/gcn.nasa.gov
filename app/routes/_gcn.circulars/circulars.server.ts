@@ -301,6 +301,31 @@ export async function circularRedirect(query: string) {
   }
 }
 
+export async function putVersion(
+  circular: Omit<Circular, 'createdOn' | 'submitter' | 'submittedHow'>,
+  user?: User
+): Promise<number> {
+  validateCircular(circular.subject, circular.body)
+  if (!user?.groups.includes(moderatorGroup))
+    throw new Response('User is not a moderator', {
+      status: 403,
+    })
+  const circularVersionsAutoIncrement = await getDynamoDBVersionAutoIncrement(
+    circular.circularId
+  )
+
+  // Need to be retrieved otherwise will be absent in latest version
+  const oldCircular = await get(circular.circularId)
+
+  const newCircularVersion = {
+    ...oldCircular,
+    ...circular,
+    editedBy: formatAuthor(user),
+    editedOn: Date.now(),
+  }
+  return await circularVersionsAutoIncrement.put(newCircularVersion)
+}
+
 /**
  * Gets all entries in circulars_history for a given circularId
  * @param circularId
