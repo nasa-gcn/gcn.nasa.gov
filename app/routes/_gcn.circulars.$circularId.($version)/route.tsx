@@ -14,7 +14,7 @@ import invariant from 'tiny-invariant'
 
 import type { loader as parentLoader } from '../_gcn.circulars.$circularId/route'
 import { get } from '../_gcn.circulars/circulars.server'
-import { PlainTextBody } from './Body'
+import { MarkdownBody, PlainTextBody } from './Body'
 import { FrontMatter } from './FrontMatter'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
@@ -60,9 +60,13 @@ export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
-  const { circularId, body, bibcode, version, ...frontMatter } =
+  const { circularId, body, bibcode, version, format, ...frontMatter } =
     useLoaderData<typeof loader>()
   const searchString = useSearchString()
+  const Body =
+    useFeature('CIRCULARS_MARKDOWN') && format === 'text/markdown'
+      ? MarkdownBody
+      : PlainTextBody
 
   const result = useRouteLoaderData<typeof parentLoader>(
     'routes/_gcn.circulars.$circularId'
@@ -141,7 +145,7 @@ export default function () {
       </ButtonGroup>
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
-      <PlainTextBody className="margin-y-2">{body}</PlainTextBody>
+      <Body className="margin-y-2">{body}</Body>
     </>
   )
 }
