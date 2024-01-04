@@ -79,6 +79,7 @@ class TLEBase(ACROSSAPIBase):
     tle_url: Optional[str]
     tle_bad: Quantity
     tle_name: str
+    tle_norad_id: int
     tle_min_epoch: Time
     # Arguments
     epoch: Time
@@ -198,7 +199,7 @@ class TLEBase(ACROSSAPIBase):
 
         # Fetch the TLEs between the requested epochs
         tletext = st.tle(
-            object_name=self.tle_name,
+            norad_cat_id=self.tle_norad_id,
             orderby="epoch desc",
             limit=22,
             format="tle",
