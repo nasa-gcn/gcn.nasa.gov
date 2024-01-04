@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -15,8 +16,9 @@ import { CircularEditForm } from './CircularEditForm'
 import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle: BreadcrumbHandle = {
+export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Edit',
+  getSitemapEntries: () => null,
 }
 
 export async function loader({
@@ -28,22 +30,20 @@ export async function loader({
   const user = await getUser(request)
   if (!user?.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
-  const formattedEditor = formatAuthor(user)
-
+  const formattedContributor = formatAuthor(user)
   const circular = await get(parseFloat(circularId))
-  return { formattedEditor, circular }
+
+  return {
+    formattedContributor,
+    defaultBody: circular.body,
+    defaultSubject: circular.subject,
+    circularId: circular.circularId,
+    submitter: circular.submitter,
+    searchString: '',
+  }
 }
 
 export default function () {
-  const { formattedEditor, circular } = useLoaderData<typeof loader>()
-
-  const formDefaults = {
-    formattedContributor: formattedEditor,
-    circular,
-    defaultBody: circular?.body || '',
-    defaultSubject: circular?.subject || '',
-    searchString: '',
-  }
-
-  return <CircularEditForm {...formDefaults} />
+  const data = useLoaderData<typeof loader>()
+  return <CircularEditForm {...data} />
 }

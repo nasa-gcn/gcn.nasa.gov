@@ -26,7 +26,6 @@ import {
   MarkdownBody,
   PlainTextBody,
 } from '../_gcn.circulars.$circularId.($version)/Body'
-import type { Circular } from '../_gcn.circulars/circulars.lib'
 import { bodyIsValid, subjectIsValid } from '../_gcn.circulars/circulars.lib'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import Spinner from '~/components/Spinner'
@@ -102,13 +101,15 @@ function SyntaxReference() {
 
 export function CircularEditForm({
   formattedContributor,
-  circular,
+  circularId,
+  submitter,
   defaultBody,
   defaultSubject,
   searchString,
 }: {
   formattedContributor: string
-  circular?: Circular
+  circularId?: number
+  submitter?: string
   defaultBody: string
   defaultSubject: string
   searchString: string
@@ -130,24 +131,20 @@ export function CircularEditForm({
   const valid = subjectValid && bodyValid
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
-      <h1>{circular ? 'Edit' : 'New'} GCN Circular</h1>
+      <h1>{circularId ? 'Edit' : 'New'} GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
-        {circular && (
+        {circularId && (
           <>
-            <input
-              type="hidden"
-              name="circularId"
-              value={circular.circularId}
-            />
+            <input type="hidden" name="circularId" value={circularId} />
             <InputGroup className="border-0 maxw-full">
               <InputPrefix className="wide-input-prefix">From</InputPrefix>
-              <span className="padding-1">{circular.submitter} </span>
+              <span className="padding-1">{submitter} </span>
             </InputGroup>
           </>
         )}
         <InputGroup className="border-0 maxw-full">
           <InputPrefix className="wide-input-prefix">
-            {circular ? 'Editor' : 'From'}
+            {circularId ? 'Editor' : 'From'}
           </InputPrefix>
           <span className="padding-1">{formattedContributor} </span>
           <Link
@@ -260,7 +257,7 @@ export function CircularEditForm({
             Back
           </Link>
           <Button disabled={sending || !valid} type="submit" value="save">
-            {circular ? 'Update' : 'Send'}
+            {circularId ? 'Update' : 'Send'}
           </Button>
           {sending && (
             <div className="padding-top-1 padding-bottom-1">
