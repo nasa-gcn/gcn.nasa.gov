@@ -13,6 +13,11 @@ export interface CircularMetadata {
   eventId?: string
 }
 
+export interface CircularGroupingMetadata {
+  id: string
+  circulars: CircularMetadata[]
+}
+
 export type SubmittedHow = 'web' | 'email' | 'email-legacy' | 'api'
 
 export interface Circular extends CircularMetadata {

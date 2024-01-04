@@ -26,6 +26,7 @@ import {
 import type {
   Circular,
   CircularChangeRequest,
+  CircularGroupingMetadata,
   CircularMetadata,
 } from './circulars.lib'
 
@@ -494,4 +495,55 @@ function validateCircular(subject: string, body: string) {
   if (!subjectIsValid(subject))
     throw new Response('subject is invalid', { status: 400 })
   if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
+}
+
+export async function getCircularsByEventIds(
+  eventIds: string[]
+): Promise<Circular[]> {
+  const db = await tables()
+  const promises = eventIds.map(async (eventId) => {
+    const params = {
+      TableName: 'circulars',
+      IndexName: 'circularEventId',
+      KeyConditionExpression: 'eventId = :eventId',
+      ExpressionAttributeValues: {
+        ':eventId': eventId,
+      },
+    }
+
+    const result = await db.circulars.query(params)
+
+    if (result.Items) {
+      const circulars: Circular[] = result.Items as Circular[]
+      return circulars
+    } else {
+      return [] as Circular[]
+    }
+  })
+  const results = await Promise.all(promises)
+  const circulars: Circular[] = []
+  return circulars.concat(...results)
+}
+
+export async function groupCircularsBySynonyms({
+  synonyms,
+  circulars,
+}: {
+  synonyms: Record<string, string[]>
+  circulars: Circular[]
+}) {
+  const circularDictionary = {} as Record<string, Circular>
+  circulars.forEach((circular) => {
+    if (!circular.eventId) return
+    circularDictionary[circular.eventId] = circular
+  })
+  const groupedCirculars = [] as CircularGroupingMetadata[]
+  Object.keys(synonyms).forEach((synonymKey: string) => {
+    const circularArray = [] as Circular[]
+    synonyms[synonymKey].forEach((event) => {
+      circularArray.push(circularDictionary[event])
+    })
+    groupedCirculars.push({ id: synonymKey, circulars: circularArray })
+  })
+  return { groups: groupedCirculars }
 }
