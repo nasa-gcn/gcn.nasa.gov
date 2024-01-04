@@ -55,7 +55,6 @@ export default function () {
     defaultBody: circular?.body || '',
     defaultSubject: circular?.subject || '',
     searchString: '',
-    isAuthorized,
   }
 
   return (
