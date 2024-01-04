@@ -5,17 +5,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
 import { getUser } from '../_gcn._auth/user.server'
-import { AstroDataContext } from '../_gcn.circulars.$circularId.($version)/AstroDataContext'
 import { formatAuthor } from '../_gcn.circulars/circulars.lib'
 import { get, moderatorGroup } from '../_gcn.circulars/circulars.server'
 import { CircularEditForm } from './CircularEditForm'
-import { feature, origin } from '~/lib/env.server'
-import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
+import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
@@ -40,8 +37,7 @@ export async function loader({
 }
 
 export default function () {
-  const { isAuthorized, formattedEditor, circular } =
-    useLoaderData<typeof loader>()
+  const { formattedEditor, circular } = useLoaderData<typeof loader>()
 
   const formDefaults = {
     formattedContributor: formattedEditor,
@@ -51,7 +47,5 @@ export default function () {
     searchString: '',
   }
 
-  return (
-    <CircularEditForm {...formDefaults} />
-  )
+  return <CircularEditForm {...formDefaults} />
 }
