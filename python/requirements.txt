@@ -8,6 +8,7 @@ annotated-types==0.6.0
     # via pydantic
 anyio==3.7.1
     # via
+    #   fastapi
     #   httpx
     #   starlette
 architect-functions==1.0.0
@@ -55,7 +56,7 @@ logbook==1.7.0.post0
     # via spacetrack
 mangum==0.17.0
     # via -r requirements.in
-numpy==1.26.3
+numpy==1.26.2
     # via
     #   astropy
     #   pyerfa
