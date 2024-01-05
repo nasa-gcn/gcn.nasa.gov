@@ -8,7 +8,6 @@ annotated-types==0.6.0
     # via pydantic
 anyio==3.7.1
     # via
-    #   fastapi
     #   httpx
     #   starlette
 architect-functions==1.0.0
@@ -50,16 +49,13 @@ idna==3.6
     # via
     #   anyio
     #   email-validator
-<<<<<<< HEAD
-=======
     #   httpx
->>>>>>> main
     #   requests
 logbook==1.7.0.post0
     # via spacetrack
 mangum==0.17.0
     # via -r requirements.in
-numpy==1.26.2
+numpy==1.26.3
     # via
     #   astropy
     #   pyerfa
@@ -87,10 +83,10 @@ requests==2.31.0
     # via -r requirements.in
 rsa==4.9
     # via python-jose
-sgp4==2.23
-    # via -r requirements.in
 rush==2021.4.0
     # via spacetrack
+sgp4==2.23
+    # via -r requirements.in
 simplejson==3.19.2
     # via architect-functions
 six==1.16.0
