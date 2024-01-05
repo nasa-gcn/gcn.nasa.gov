@@ -1,0 +1,38 @@
+name: QEMU test
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: jirutka/setup-alpine@v1
+        with:
+          arch: aarch64
+
+      - name: Check uname
+        run: uname -a
+        shell: alpine.sh {0}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+        shell: alpine.sh {0}
+
+      - name: Pip Install
+        run: pip install -r requirements.txt
+        shell: alpine.sh {0}
+
+      - name: Pytest
+        run: pytest python
+        shell: alpine.sh {0}
+
+      - name: MyPy
+        run: mypy python
+        shell: alpine.sh {0}
