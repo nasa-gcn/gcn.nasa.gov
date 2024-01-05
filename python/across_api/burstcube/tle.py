@@ -14,6 +14,7 @@ class BurstCubeTLE(TLEBase):
     # Configuration options for BurstCubeTLE
     # FIXME: These values are placeholders until BurstCube is launched
     tle_name = "ISS (ZARYA)"
+    tle_norad_id = 25544
     tle_url = "https://celestrak.com/NORAD/elements/stations.txt"
     tle_concat = None
     tle_bad = 4 * u.day

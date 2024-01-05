@@ -13,6 +13,7 @@ from ..base.tle import TLEBase
 class SwiftTLE(TLEBase):
     # Configuration options for SwiftTLE
     tle_name = "SWIFT"
+    tle_norad_id = 28485
     tle_url = "https://celestrak.org/NORAD/elements/gp.php?INTDES=2004-047"
     tle_concat = "https://www.swift.ac.uk/about/status_files/tle"
     tle_bad = 4 * u.day

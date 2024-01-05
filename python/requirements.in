@@ -6,3 +6,4 @@ fastapi
 mangum
 requests
 sgp4
+spacetrack

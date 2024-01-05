@@ -252,7 +252,7 @@ class TLEEntry(BaseSchema):
     @classmethod
     def find_tles_between_epochs(
         cls, satname: str, start_epoch: Time, end_epoch: Time
-    ) -> list:
+    ) -> List[Any]:
         """
         Find TLE entries between two epochs in the TLE database for a given
         satellite TLE name.
@@ -285,7 +285,7 @@ class TLEEntry(BaseSchema):
         # Convert the response into a list of TLEEntry objects and return them
         return [cls(**item) for item in response["Items"]]
 
-    def write(self):
+    def write(self) -> None:
         """Write the TLE entry to the database."""
         table = tables.table(self.__tablename__)
         table.put_item(Item=self.model_dump(mode="json"))
