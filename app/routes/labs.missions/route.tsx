@@ -84,11 +84,12 @@ export default function () {
           In the near future, the balanced mission portfolio is well-positioned
           to continue to make major contributions to EM followup of
           gravitational-wave sources. Current workhorse facilities in the area
-          of time-domain and multi-messenger astronony such as Fermi, Swift,
-          Chandra, & HST are well past design lifetimes. These capabiltiies are
-          currently being augemted and will eventually be replaced by specalized
-          CubeSats, SmallSats, and Missions of Opportunity, many of which are
-          currently in development and lager missions currently being proposed.
+          of time-domain and multi-messenger astronomy such as Fermi, Swift,
+          Chandra, & HST are well past design lifetimes. These capabilities are
+          currently being augmented and will eventually be replaced by
+          specialized CubeSats, SmallSats, and Missions of Opportunity, many of
+          which are currently in development and lager missions currently being
+          proposed.
         </p>
         <figure>
           <img
