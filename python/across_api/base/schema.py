@@ -176,7 +176,7 @@ class EphemGetSchema(DateRangeSchema):
 
     Parameters
     ----------
-    stepsize : int, optional
+    stepsize
         The step size in seconds
 
     """
