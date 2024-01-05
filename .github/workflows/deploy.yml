@@ -24,21 +24,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
         with:
-          node-version: '18'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: NPM Install
-        run: npm ci
-      - name: Build
-        run: npm run build
+          platforms: linux/arm64
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           aws-region: us-east-1
-      - name: Deploy
-        run: npm run deploy
+      - name: Build and deploy inside Docker
+        uses: addnab/docker-run-action@v3
+        with:
+          image: nikolaik/python-nodejs:python3.11-nodejs18
+          options: |
+            --platform linux/arm64
+            --volume ${{ github.workspace }}/../:/build
+          run: |
+            cd /build/gcn.nasa.gov
+            npm ci
+            npm run build
+            npm run deploy
