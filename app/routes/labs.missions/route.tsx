@@ -76,9 +76,8 @@ export default function () {
             2019 Astrophysics Senior Review, Executive Summary, Page 2
           </figcaption>
         </figure>
-      </GridContainer>
-      <GridContainer className="usa-section">
-        <h3 className="margin-top-2">Multimessenger Mission Timeline</h3>
+        <div className="clearfix" />
+        <h3>Multimessenger Mission Timeline</h3>
         <p className="usa-paragraph">
           NASA missions played a critical role in the discovery and
           characterization of the first binary neutron star merger (GW170817).
