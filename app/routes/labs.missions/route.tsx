@@ -93,7 +93,7 @@ export default function () {
         </p>
         <figure>
           <img
-            alt="a gantt chart depicting various mission timelines from the year 2000 to 2032"
+            alt="Gantt chart depicting various mission timelines from the year 2000 to 2032"
             src={missionTimeline}
             height="1618"
             width="1988"
