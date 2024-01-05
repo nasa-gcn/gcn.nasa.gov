@@ -12,6 +12,7 @@ import { Meatball } from '~/components/meatball/Meatball'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 import fleet from './AstroFleetChart.png'
+import missionTimeline from './mission-timeline.png'
 
 export const handle: BreadcrumbHandle = {
   breadcrumb: 'Missions',
@@ -74,6 +75,30 @@ export default function () {
             <Meatball className="height-auto width-5" />
             2019 Astrophysics Senior Review, Executive Summary, Page 2
           </figcaption>
+        </figure>
+      </GridContainer>
+      <GridContainer className="usa-section">
+        <h3 className="margin-top-2">Multimessenger Mission Timeline</h3>
+        <p className="usa-paragraph">
+          NASA missions played a critical role in the discovery and
+          characterization of the first binary neutron star merger (GW170817).
+          In the near future, the balanced mission portfolio is well-positioned
+          to continue to make major contributions to EM followup of
+          gravitational-wave sources. Current workhorse facilities in the area
+          of time-domain and multi-messenger astronony such as Fermi, Swift,
+          Chandra, & HST are well past design lifetimes. These capabiltiies are
+          currently being augemted and will eventually be replaced by specalized
+          CubeSats, SmallSats, and Missions of Opportunity, many of which are
+          currently in development and lager missions currently being proposed.
+        </p>
+        <figure>
+          <img
+            alt="a gantt chart depicting various mission timelines from the year 2000 to 2032"
+            src={missionTimeline}
+            height="1618"
+            width="1988"
+            className="mobile:width-mobile width-tablet height-auto"
+          />
         </figure>
       </GridContainer>
     </>
