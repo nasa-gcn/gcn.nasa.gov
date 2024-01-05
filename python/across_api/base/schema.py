@@ -99,15 +99,6 @@ AstropyDegrees = Annotated[
     ),
 ]
 
-# Pydantic type for a Astropy Time  in days
-AstropyDays = Annotated[
-    u.Quantity,
-    PlainSerializer(
-        lambda x: x.to(u.day).value,
-        return_type=float,
-    ),
-]
-
 # Pydantic type for a Astropy Time  in seconds
 AstropySeconds = Annotated[
     u.Quantity,
