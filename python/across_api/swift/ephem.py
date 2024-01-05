@@ -18,12 +18,6 @@ class SwiftEphem(EphemBase, ACROSSAPIBase):
     Satellite from TLE.
     """
 
-    # Configuration options
-    parallax = True  # Calculate parallax for Moon/Sun
-    apparent = True  # Use apparent positions
-    velocity = True  # Calculate Velocity of spacecraft (slower)
-    earth_radius = None  # Calculate Earth radius
-
     def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
         self.tle = SwiftTLE(begin).tle
         super().__init__(begin, end, stepsize)

@@ -19,10 +19,6 @@ class BurstCubeEphem(EphemBase, ACROSSAPIBase):
     """
 
     # Configuration options
-    velocity = False
-    parallax = False  # Calculate parallax for Moon/Sun
-    apparent = True  # Use apparent positions
-    velocity = False  # Calculate Velocity of spacecraft (slower)
     earth_radius = 70 * u.deg  # Fix 70 degree Earth radius
 
     def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
