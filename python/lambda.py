@@ -5,7 +5,10 @@
 from mangum import Mangum
 
 from across_api.base.api import app
-from across_api.across.api import *  # noqa F401
+import across_api.across.api  # noqa F401
+import across_api.burstcube.api  # noqa F401
+import across_api.swift.api  # noqa F401
+
 from env import feature
 
 if feature("LABS"):
