@@ -33,7 +33,7 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           aws-region: us-east-1
-      - name: NPM install
+      - name: NPM Install
         uses: addnab/docker-run-action@v3
         with:
           image: nikolaik/python-nodejs:python3.11-nodejs18
