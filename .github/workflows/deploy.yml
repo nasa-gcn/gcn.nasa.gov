@@ -33,15 +33,33 @@ jobs:
         with:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
           aws-region: us-east-1
-      - name: Build and deploy inside Docker
+      - name: NPM install
         uses: addnab/docker-run-action@v3
         with:
           image: nikolaik/python-nodejs:python3.11-nodejs18
           options: |
             --platform linux/arm64
-            --volume ${{ github.workspace }}/../:/build
+            --volume ${{ github.workspace }}:/build
           run: |
-            cd /build/gcn.nasa.gov
+            cd /build
             npm ci
+      - name: Build
+        uses: addnab/docker-run-action@v3
+        with:
+          image: nikolaik/python-nodejs:python3.11-nodejs18
+          options: |
+            --platform linux/arm64
+            --volume ${{ github.workspace }}:/build
+          run: |
+            cd /build
             npm run build
+      - name: Deploy
+        uses: addnab/docker-run-action@v3
+        with:
+          image: nikolaik/python-nodejs:python3.11-nodejs18
+          options: |
+            --platform linux/arm64
+            --volume ${{ github.workspace }}:/build
+          run: |
+            cd /build
             npm run deploy
