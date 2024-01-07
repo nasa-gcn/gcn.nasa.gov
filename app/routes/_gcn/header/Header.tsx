@@ -89,10 +89,7 @@ export function Header() {
       {expanded && (
         <div className="usa-overlay is-visible" onClick={hideMobileNav} />
       )}
-      <USWDSHeader
-        basic
-        className={`usa-header usa-header--dark ${styles.header}`}
-      >
+      <USWDSHeader basic className={`usa-header--dark ${styles.header}`}>
         <div className="usa-nav-container">
           <div className="usa-navbar">
             <Title>
@@ -155,39 +152,44 @@ export function Header() {
                     id="user"
                     isOpen={userMenuIsOpen}
                     items={[
-                      <Link key="user" to="/user" onClick={onClickUserMenuItem}>
+                      <NavLink
+                        end
+                        key="user"
+                        to="/user"
+                        onClick={onClickUserMenuItem}
+                      >
                         Profile
-                      </Link>,
-                      <Link
+                      </NavLink>,
+                      <NavLink
                         key="endorsements"
                         to="/user/endorsements"
                         onClick={onClickUserMenuItem}
                       >
                         Peer Endorsements
-                      </Link>,
+                      </NavLink>,
                       !idp && (
-                        <Link
+                        <NavLink
                           key="password"
                           to="/user/password"
                           onClick={onClickUserMenuItem}
                         >
                           Reset Password
-                        </Link>
+                        </NavLink>
                       ),
-                      <Link
+                      <NavLink
                         key="credentials"
                         to="/user/credentials"
                         onClick={onClickUserMenuItem}
                       >
                         Client Credentials
-                      </Link>,
-                      <Link
+                      </NavLink>,
+                      <NavLink
                         key="email"
                         to="/user/email"
                         onClick={onClickUserMenuItem}
                       >
                         Email Notifications
-                      </Link>,
+                      </NavLink>,
                       <Link
                         key="logout"
                         to="/logout"

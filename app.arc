@@ -43,6 +43,12 @@ client_credentials
   client_id **String
   PointInTimeRecovery true
 
+acrossapi_tle
+  satname *String
+  epoch **String
+  tle1 String
+  tle2 String
+
 sessions
   _idx *String
   _ttl TTL

@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import {
   Button,
@@ -46,7 +46,7 @@ export const handle: BreadcrumbHandle & SEOHandle = {
   getSitemapEntries: () => null,
 }
 
-export async function loader({ request }: DataFunctionArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const endorsementServer = await EndorsementsServer.create(request)
   const [requestedEndorsements, awaitingEndorsements] = await Promise.all([
     endorsementServer.getEndorsements('requestor'),
@@ -60,7 +60,7 @@ export async function loader({ request }: DataFunctionArgs) {
   }
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const [data, endorsementServer] = await Promise.all([
     request.formData(),
     EndorsementsServer.create(request),

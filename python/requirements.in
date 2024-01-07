@@ -1,0 +1,8 @@
+architect-functions
+astropy
+cachetools
+email-validator
+fastapi
+mangum
+requests
+spacetrack

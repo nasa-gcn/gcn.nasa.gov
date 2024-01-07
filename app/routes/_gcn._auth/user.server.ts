@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
+import { type DynamoDBDocument, paginateQuery } from '@aws-sdk/lib-dynamodb'
 import type { Session } from '@remix-run/node'
 import { TokenSet } from 'openid-client'
 
@@ -126,32 +127,39 @@ export async function updateSession(
 // Expire tokens from all sessions belonging to the user with the given sub, to force them to get new tokens.
 export async function clearUserToken(sub: string) {
   const db = await tables()
-  const targetSessionResults = await db.sessions.query({
-    IndexName: 'sessionsBySub',
-    KeyConditionExpression: '#sub = :sub',
-    ExpressionAttributeNames: {
-      '#sub': 'sub',
-      '#idx': '_idx',
-    },
-    ExpressionAttributeValues: {
-      ':sub': sub,
-    },
-    ProjectionExpression: '#idx',
-  })
-
-  if (!targetSessionResults.Items) return
-
-  const promises = targetSessionResults.Items.map((item) =>
-    db.sessions.update({
-      Key: { _idx: item['_idx'] as string },
-      UpdateExpression: 'SET expiresAt = :expiresAtValue',
-      ExpressionAttributeValues: {
-        ':expiresAtValue': null,
+  const client = db._doc as unknown as DynamoDBDocument
+  const pages = paginateQuery(
+    { client },
+    {
+      IndexName: 'sessionsBySub',
+      KeyConditionExpression: '#sub = :sub',
+      ExpressionAttributeNames: {
+        '#sub': 'sub',
+        '#idx': '_idx',
       },
-    })
+      ExpressionAttributeValues: {
+        ':sub': sub,
+      },
+      ProjectionExpression: '#idx',
+      TableName: db.name('sessions'),
+    }
   )
 
-  await Promise.all(promises)
+  for await (const { Items } of pages) {
+    if (Items?.length) {
+      await Promise.all(
+        Items.map((item) =>
+          db.sessions.update({
+            Key: { _idx: item['_idx'] as string },
+            UpdateExpression: 'SET expiresAt = :expiresAtValue',
+            ExpressionAttributeValues: {
+              ':expiresAtValue': null,
+            },
+          })
+        )
+      )
+    }
+  }
 }
 
 // Refreshes a given users groups and tokens

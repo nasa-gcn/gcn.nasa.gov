@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { DataFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
@@ -17,13 +17,8 @@ import {
 import {
   Button,
   ButtonGroup,
-  CardBody,
-  CardFooter,
-  DateRangePicker,
-  Grid,
   Icon,
   Label,
-  Radio,
   Select,
   TextInput,
 } from '@trussworks/react-uswds'
@@ -33,21 +28,22 @@ import { useState } from 'react'
 import { getUser } from '../_gcn._auth/user.server'
 import {
   circularRedirect,
+  get,
   put,
+  putVersion,
   search,
 } from '../_gcn.circulars/circulars.server'
 import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
-import DateSelectorButton from './DateSelectorButton'
-import DetailsDropdownContent from '~/components/DetailsDropdownContent'
+import { DateSelector } from './DateSelectorMenu'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
 import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-export async function loader({ request: { url } }: DataFunctionArgs) {
+export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   if (query) {
@@ -68,16 +64,29 @@ export async function loader({ request: { url } }: DataFunctionArgs) {
   return { page, ...results }
 }
 
-export async function action({ request }: DataFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
-  return await put(
-    { subject, body, submittedHow: 'web' },
-    await getUser(request)
-  )
+  const user = await getUser(request)
+  const circularId = getFormDataString(data, 'circularId')
+  let result
+  if (circularId) {
+    await putVersion(
+      {
+        body,
+        circularId: parseFloat(circularId),
+        subject,
+      },
+      user
+    )
+    result = await get(parseFloat(circularId))
+  } else {
+    result = await put({ subject, body, submittedHow: 'web' }, user)
+  }
+  return result
 }
 
 export default function () {
@@ -103,46 +112,14 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const [inputDateGte, setInputDateGte] = useState(startDate)
-  const [inputDateLte, setInputDateLte] = useState(endDate)
-  const [showContent, setShowContent] = useState(false)
-  const [showDateRange, setShowDateRange] = useState(false)
   const clean = inputQuery === query
 
   const submit = useSubmit()
 
-  function setFuzzyTime(startDate?: string) {
-    setShowDateRange(false)
-    setInputDateGte(startDate)
-    setInputDateLte('')
-  }
-
-  function setDateRange() {
-    setShowContent(false)
-    if (inputDateGte) searchParams.set('startDate', inputDateGte)
-    else searchParams.delete('startDate')
-    if (inputDateLte) searchParams.set('endDate', inputDateLte)
-    else searchParams.delete('endDate')
-    submit(searchParams, {
-      method: 'get',
-      action: '/circulars',
-    })
-  }
-
-  const dateSelectorLabels: Record<string, string> = {
-    hour: 'Last Hour',
-    today: 'Today',
-    day: 'Last Day',
-    week: 'Last Week',
-    month: 'Last Month',
-    year: 'Last Year',
-    ytd: 'Year to Date',
-  }
-
   return (
     <>
       <CircularsHeader />
-      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-top">
+      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           className="display-inline-block usa-search usa-search--small"
           role="search"
@@ -173,102 +150,7 @@ export default function () {
           </Button>
         </Form>
         {featureCircularsFilterByDate && (
-          <>
-            <DateSelectorButton
-              startDate={startDate}
-              endDate={endDate}
-              onClick={() => {
-                setShowContent((shown) => !shown)
-                setShowDateRange(false)
-              }}
-              expanded={showContent}
-            />
-            {showContent && (
-              <DetailsDropdownContent className="maxw-card-xlg">
-                <CardBody>
-                  <Grid row>
-                    <Grid col={4} key={`radio-alltime`}>
-                      <Radio
-                        id={`radio-alltime`}
-                        name="radio-date"
-                        value=""
-                        label="All Time"
-                        defaultChecked={true}
-                        onChange={(e) => {
-                          setInputDateGte(e.target.value)
-                        }}
-                      />
-                    </Grid>
-                    {Object.entries(dateSelectorLabels).map(
-                      ([value, label]) => (
-                        <Grid col={4} key={`radio-${value}`}>
-                          <Radio
-                            id={`radio-${value}`}
-                            name="radio-date"
-                            value={value}
-                            label={label}
-                            checked={value === inputDateGte}
-                            onChange={() => {
-                              setFuzzyTime(value)
-                            }}
-                          />
-                        </Grid>
-                      )
-                    )}
-                    <Grid col={4}>
-                      <Radio
-                        id="radio-custom"
-                        name="radio-date"
-                        value="custom"
-                        label="Custom Range..."
-                        checked={showDateRange}
-                        onChange={(e) => {
-                          setShowDateRange(e.target.checked)
-                        }}
-                      />
-                    </Grid>
-                  </Grid>
-                  {showDateRange && (
-                    <DateRangePicker
-                      startDateHint="dd/mm/yyyy"
-                      startDateLabel="Start Date"
-                      className="margin-bottom-2"
-                      startDatePickerProps={{
-                        id: 'event-date-start',
-                        name: 'event-date-start',
-                        defaultValue: 'startDate',
-                        onChange: (value) => {
-                          setInputDateGte(value)
-                        },
-                      }}
-                      endDateHint="dd/mm/yyyy"
-                      endDateLabel="End Date"
-                      endDatePickerProps={{
-                        id: 'event-date-end',
-                        name: 'event-date-end',
-                        defaultValue: 'endDate',
-                        onChange: (value) => {
-                          setInputDateLte(value)
-                        },
-                      }}
-                    />
-                  )}
-
-                  <CardFooter>
-                    <Button
-                      type="button"
-                      form="searchForm"
-                      onClick={() => {
-                        setDateRange()
-                      }}
-                    >
-                      <Icon.CalendarToday /> Submit
-                    </Button>
-                  </CardFooter>
-                </CardBody>
-              </DetailsDropdownContent>
-            )}
-          </>
+          <DateSelector startDate={startDate} endDate={endDate} />
         )}
         <Link to={`/circulars/new${searchString}`}>
           <Button

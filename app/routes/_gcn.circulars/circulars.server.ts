@@ -17,7 +17,12 @@ import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 
 import { type User, getUser } from '../_gcn._auth/user.server'
-import { bodyIsValid, formatAuthor, subjectIsValid } from './circulars.lib'
+import {
+  bodyIsValid,
+  formatAuthor,
+  parseEventFromSubject,
+  subjectIsValid,
+} from './circulars.lib'
 import type {
   Circular,
   CircularChangeRequest,
@@ -254,7 +259,10 @@ export async function putRaw(
  */
 export async function put(
   item: Require<
-    Omit<Circular, 'sub' | 'submitter' | 'createdOn' | 'circularId'>,
+    Omit<
+      Circular,
+      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId'
+    >,
     'submittedHow'
   >,
   user?: User
@@ -266,11 +274,16 @@ export async function put(
 
   validateCircular(item.subject, item.body)
 
-  return await putRaw({
+  const circular: Parameters<typeof putRaw>[0] = {
     sub: user.sub,
     submitter: formatAuthor(user),
     ...item,
-  })
+  }
+
+  const eventId = parseEventFromSubject(item.subject)
+  if (eventId) circular.eventId = eventId
+
+  return await putRaw(circular)
 }
 
 export async function circularRedirect(query: string) {
@@ -286,6 +299,31 @@ export async function circularRedirect(query: string) {
     const circularURL = `/circulars/${circularId}`
     throw redirect(circularURL)
   }
+}
+
+export async function putVersion(
+  circular: Omit<Circular, 'createdOn' | 'submitter' | 'submittedHow'>,
+  user?: User
+): Promise<number> {
+  validateCircular(circular.subject, circular.body)
+  if (!user?.groups.includes(moderatorGroup))
+    throw new Response('User is not a moderator', {
+      status: 403,
+    })
+  const circularVersionsAutoIncrement = await getDynamoDBVersionAutoIncrement(
+    circular.circularId
+  )
+
+  // Need to be retrieved otherwise will be absent in latest version
+  const oldCircular = await get(circular.circularId)
+
+  const newCircularVersion = {
+    ...oldCircular,
+    ...circular,
+    editedBy: formatAuthor(user),
+    editedOn: Date.now(),
+  }
+  return await circularVersionsAutoIncrement.put(newCircularVersion)
 }
 
 /**
@@ -426,14 +464,15 @@ export async function approveChangeRequest(
     })
 
   const changeRequest = await getChangeRequest(circularId, requestorSub)
-
+  const circular = await get(circularId)
   const autoincrementVersion = await getDynamoDBVersionAutoIncrement(circularId)
 
   await autoincrementVersion.put({
+    ...circular,
     body: changeRequest.body,
     subject: changeRequest.subject,
     editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
-    createdOn: Date.now(),
+    editedOn: Date.now(),
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)

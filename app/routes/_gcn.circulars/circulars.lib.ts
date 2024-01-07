@@ -24,6 +24,7 @@ export interface Circular extends CircularMetadata {
   bibcode?: string
   editedBy?: string
   version?: number // 1: Original
+  editedOn?: number
 }
 
 export interface CircularChangeRequest extends CircularMetadata {
@@ -45,7 +46,7 @@ const subjectMatchers: SubjectMatcher[] = [
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
-    /((?:LIGO|Virgo|KAGRA)(?:[/-](?:LIGO|Virgo|KAGRA))*)[-_ \s]?(S|G|GW)(\d{5,}[a-z]+)/i,
+    /((?:LIGO|Virgo|KAGRA)(?:[/-](?:LIGO|Virgo|KAGRA))*)[-_ \s]?(S|G|GW)(\d{5,}[a-z]*)/i,
     ([, instrument, flag, id]) => {
       return `${instrument} ${flag.toUpperCase()}${id.toLowerCase()}`
     },
