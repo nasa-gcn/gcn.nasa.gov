@@ -10,5 +10,14 @@ jobs:
   hydrate:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
       - name: uname -a
-        run: docker run --rm --platform linux/arm64 python:3.11 uname -a
+        run: docker run --rm --platform linux/arm64 python:3.11 sh -c 'apt-get update && apt-get install npm'
