@@ -19,5 +19,9 @@ jobs:
         uses: docker/setup-qemu-action@v3
         with:
           platforms: arm64
-      - name: uname -a
-        run: docker run --rm --platform linux/arm64 python:3.11 sh -c 'apt-get update && apt-get install npm'
+      - name: NPM Install
+        run: npm ci
+      # - name: Build
+      #   run: npm run build
+      - name: Install Python dependencies
+        run: docker run --rm --platform linux/arm64 python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommended npm'
