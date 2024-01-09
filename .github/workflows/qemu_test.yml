@@ -9,9 +9,6 @@ on:
 jobs:
   hydrate:
     runs-on: ubuntu-latest
-    container:
-      image: python:3.11
-      options: --platform 
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
