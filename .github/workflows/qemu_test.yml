@@ -11,5 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: python:3.11
+      options: --platform 
     steps:
-      - run: uname -a
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      - name: uname -a
+        run: docker run --rm --platform linux/arm64 python:3.11 uname -a
