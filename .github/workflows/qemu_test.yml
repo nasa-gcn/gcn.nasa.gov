@@ -10,9 +10,5 @@ jobs:
   hydrate:
     runs-on: ubuntu-latest
     steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
       - name: uname -a
         run: docker run --rm --platform linux/arm64 python:3.11 uname -a
