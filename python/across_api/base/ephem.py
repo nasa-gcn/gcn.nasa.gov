@@ -215,7 +215,7 @@ class EphemBase(ACROSSAPIBase):
     end
         The end time of the ephemeris.
     stepsize
-        The time step size in seconds. Default is 60.
+        The time step size, the default is 60 seconds.
 
     Attributes
     ----------
