@@ -13,7 +13,6 @@ from astropy.coordinates import (  # type: ignore
     TEME,
     CartesianDifferential,
     CartesianRepresentation,
-    EarthLocation,
     Latitude,
     Longitude,
     SkyCoord,
@@ -23,10 +22,8 @@ from astropy.time import Time  # type: ignore
 from fastapi import HTTPException
 from sgp4.api import Satrec  # type: ignore
 
-from across_api.functions import round_time
-
 from ..base.schema import EphemGetSchema, EphemSchema, TLEEntry
-from .common import ACROSSAPIBase
+from .common import ACROSSAPIBase, round_time
 
 # Constants
 EARTH_RADIUS = 6371 * u.km  # km. Note this is average radius, as Earth is not a sphere.
@@ -34,136 +31,125 @@ EARTH_RADIUS = 6371 * u.km  # km. Note this is average radius, as Earth is not a
 
 class EarthSatelliteLocation:
     """
-    Class to calculate the position of a satellite in orbit around the Earth
-    given a TLE. This class uses the SGP4 model to calculate the position of
-    the satellite in TEME (True Equator Mean Equinox) coordinates, and then
-    converts this to GCRS (Geocentric Celestial Reference System) coordinates.
+    Class to calculate the position of a satellite in orbit around the Earth.
+    The default parameter for this class is a True Equator Mean Equinox (TEME)
+    coordinate with positiona and velocity, and a given obstime. `obstime`
+    should be an array like `Time` object, covering the period of interest.
 
-    Note this mimics the `astropy.coordinates` `EarthLocation` class, in that it
-    provides the method `get_gcrs_posvel` which returns the position and
+    The `from_tle` classmethod can be used to create an instance of this class
+    from a TLE (Two-Line Element) file. This uses the `sgp4` package to
+    calculate the position of the satellite in TEME coordinates, and returns an
+    instantiated `EarthSatelliteLocation` object.
+
+    Note this mimics the `astropy.coordinates` `EarthLocation` class, in that
+    it provides the method `get_gcrs_posvel` which returns the position and
     velocity of the satellite in GCRS coordinates. Therefore this class can be
     used by the astropy `get_body` function to set the location of the observer
-    to a Earth orbiting satellite, in place of an `EarthLocation` object which
-    defines a ground based observatotry.
+    to a Earth orbiting satellite, in place of an `EarthLocation` object (which
+    defines a ground based observatory).
 
-    This way you can calculate the RA/Dec of the Earth, Moon and Sun as viewed from
-    the satellite, including the effects of the satellite's motion on the
+    This way you can calculate the RA/Dec of the Earth, Moon and Sun as viewed
+    from the satellite, including the effects of the satellite's motion on the
     position of these objects in the sky.
 
-    This class also provides a method to calculate the latitude and longitude of the
-    spacecraft over the Earth, used for determining if the spacecraft is in
-    the SAA (South Atlantic Anomaly). This is done by calculating the
-    ITRS (International Terrestrial Reference System) position of the
+    This class also provides attributes for the latitude and longitude of the
+    spacecraft over the Earth, used for (e.g.) determining if the spacecraft is
+    in the South Atlantic Anomaly (SAA). This is done by calculating the
+    International Terrestrial Reference System (ITRS) position of the
     spacecraft, and then converting this to latitude and longitude using the
     `earth_location` method of the `ITRS` class.
 
-
     Parameters
     ----------
-    tle1 : str
-        First line of the TLE
-    tle2 : str
-        Second line of the TLE
+    teme
+        The TEME position and velocity of the satellite.
+
+    Attributes
+    ----------
+    t
+        The time at which the satellite position was calculated.
+    gcrs
+        The GCRS position and velocity of the satellite.
+    itrs
+        The ITRS position and velocity of the satellite.
+    lon
+        The longitude of the satellite.
+    lat
+        The latitude of the satellite.
 
     Methods
     -------
-    get_grcs(self, t: Time)
-        Return the GCRS position and velocity for a satellite
-    get_itrs(self, t: Time, location: Optional[EarthLocation] = None)
-        Return the ITRS position and velocity for a satellite
-    itrs(self)
-        Return the ITRS position and velocity for a satellite at the default
-        time
-    get_gcrs_posvel(self, t: Time)
+    get_gcrs_posvel
         Calculate the GCRS position and velocity of the satellite at a given
-        time.
-    get_lonlatdist(self, t: Time)
-        Calculate the latitude/longitude of the spacecraft over the Earth, and
-        the distance from the center of the Earth.
-    lon(self, t: Time)
-        Return the longitude of the spacecraft at a given Time(s). Uses default
-        WGS84 ellipsoid.
-    lat(self, t: Time)
-        Return the latitude of the spacecraft at a given Time(s). Uses default
-        WGS84 ellipsoid.
+        time. Note the time must match the time used to instantiate the class.
     """
 
-    gcrs: GCRS
-    satellite: Satrec
-    _t: Time
+    # Type hints
+    teme: TEME
 
-    def __init__(self, tle1: str, tle2: str):
-        self.satellite = Satrec.twoline2rv(tle1, tle2)
+    def __init__(self, teme: TEME):
+        self.teme = teme
 
-    def get_gcrs(self, t: Time) -> GCRS:
+    @classmethod
+    def from_tle(cls, tle: TLEEntry, obstime: Time) -> "EarthSatelliteLocation":
         """
-        Return the GCRS position and velocity for a satellite
+        Returns a EarthSatelliteLocation object for a given TLE and time. This
+        calculates the TEME position and velocity for a satellite, derived from
+        the TLE, using the `sgp4` package.
 
         Parameters
         ----------
-        t : Time
+        t
             Time to calculate position for. Must be array-type.
+
+        Returns
+        -------
+            TEME position and velocity for satellite
+        """
+        satellite = Satrec.twoline2rv(tle.tle1, tle.tle2)
+
+        # Calculate TEME position and velocity for Satellite
+        _, temes_p, temes_v = satellite.sgp4_array(obstime.jd1, obstime.jd2)
+
+        # Convert SGP4 TEME data to astropy TEME data
+        teme_p = CartesianRepresentation(temes_p.T * u.km)
+        teme_v = CartesianDifferential(temes_v.T * u.km / u.s)
+        teme = TEME(teme_p.with_differentials(teme_v), obstime=obstime)
+
+        # Return class with TEME loaded
+        return cls(teme)
+
+    @cached_property
+    def gcrs(self) -> GCRS:
+        """
+        Return the GCRS position and velocity for a satellite
 
         Returns
         -------
             GCRS position and velocity for satellite
         """
-        # Check if this has been calculated before, if yes, just return cached
-        # result
-        if hasattr(self, "_t") and self._t is t:
-            return self.gcrs
-
-        # Store the time we've calculated for caching purposes
-        self._t = t
-
-        # Calculate TEME position and velocity for Satellite
-        _, temes_p, temes_v = self.satellite.sgp4_array(t.jd1, t.jd2)
-        teme_p = CartesianRepresentation(temes_p.T * u.km)
-        teme_v = CartesianDifferential(temes_v.T * u.km / u.s)
-
-        # Convert SGP4 TEME data to astropy TEME data
-        teme = TEME(teme_p.with_differentials(teme_v), obstime=t)
 
         # Transform to TEME to GCRS
-        self.gcrs = teme.transform_to(GCRS(obstime=t))
-        return self.gcrs
+        return self.teme.transform_to(GCRS(obstime=self.teme.obstime))
 
-    def get_itrs(self, t: Time, location: Optional[EarthLocation] = None) -> ITRS:
+    @cached_property
+    def itrs(self) -> ITRS:
         """
         Return the ITRS position and velocity for a satellite
 
-        Parameters
-        ----------
-        t : Time
-            Time to calculate position for. Must be array-type.
-        location : EarthLocation
-            Location to calculate position for. If None, calculates using a
-            geocentric location.
-
         Returns
         -------
             ITRS position and velocity for satellite
         """
-        return self.get_gcrs(t).transform_to(ITRS(obstime=t, location=location))
-
-    @property
-    def itrs(self) -> ITRS:
-        """
-        Return the ITRS position and velocity for a satellite at the time
-        specified by the last call to get_gcrs_posvel.
-
-        Returns
-        -------
-            ITRS position and velocity for satellite
-        """
-        return self.gcrs.transform_to(ITRS(obstime=self._t))
+        return self.gcrs.transform_to(ITRS(obstime=self.gcrs.obstime))
 
     def get_gcrs_posvel(
         self, t: Time
     ) -> Tuple[CartesianRepresentation, CartesianRepresentation]:
         """
-        Calculate the GCRS (Geocentric Celestial Reference System) position and
-        velocity for the satellite at a given time.
+        Return the GCRS (Geocentric Celestial Reference System) position and
+        velocity for the satellite at a given time. Note that the time t has to
+        match the time used to instantiate the class.
 
         Parameters
         ----------
@@ -174,15 +160,20 @@ class EarthSatelliteLocation:
         -------
             A tuple containing the GCRS position and velocity as Cartesian coordinates.
         """
-        # Calculate GCRS position for Satellite
-        self.gcrs = self.get_gcrs(t)
+        # Check if t matches obstime
+        if t is not self.teme.obstime:
+            raise ValueError(
+                "Supplied Time does not match obstime of TEME position/velocity of satellite."
+            )
+
         # Return values expected by get_body
         return (
             self.gcrs.cartesian.without_differentials(),
             self.gcrs.velocity.to_cartesian(),
         )
 
-    def lon(self, t: Time) -> Longitude:
+    @cached_property
+    def lon(self) -> Longitude:
         """
         Returns the longitude of the satellite's location at the given time.
 
@@ -194,9 +185,10 @@ class EarthSatelliteLocation:
         Returns:
             The longitude of the satellite at the given Time.
         """
-        return self.get_itrs(t).earth_location.lon
+        return self.itrs.earth_location.lon
 
-    def lat(self, t: Time) -> Latitude:
+    @cached_property
+    def lat(self) -> Latitude:
         """
         Returns the latitude of the satellite's location at the given time.
 
@@ -208,7 +200,7 @@ class EarthSatelliteLocation:
         Returns:
             The latitude of the satellite at the given Time.
         """
-        return self.get_itrs(t).earth_location.lat
+        return self.itrs.earth_location.lat
 
 
 class EphemBase(ACROSSAPIBase):
@@ -240,13 +232,13 @@ class EphemBase(ACROSSAPIBase):
         The radius of the Earth in degrees. If not specified (None), it will be
         calculated based on the distance from the Earth to the spacecraft.
     tle
-        The TLE (Two-Line Elements) data for the satellite.
+        The TLE (Two-Line Element) data for the satellite.
 
     Methods
     -------
-    ephindex(self, t: Time)
-        Returns the time index for a given time.
-    get(self)
+    ephindex
+        Returns the array index for a given time.
+    get
         Computes the ephemeris for the specified time range.
     """
 
@@ -267,9 +259,9 @@ class EphemBase(ACROSSAPIBase):
                 status_code=404, detail="No TLE available for this epoch"
             )
 
-        # Parse argument keywords
-        self.begin = round_time(begin, self.stepsize)
-        self.end = round_time(end, self.stepsize)
+        # Parse inputs, round begin and end to stepsize
+        self.begin = round_time(begin, stepsize)
+        self.end = round_time(end, stepsize)
         self.stepsize = stepsize
 
         # Validate and process API call
@@ -352,7 +344,7 @@ class EphemBase(ACROSSAPIBase):
         )
 
         # Set up EarthLocation mimic
-        satloc = EarthSatelliteLocation(self.tle.tle1, self.tle.tle2)
+        satloc = EarthSatelliteLocation.from_tle(self.tle, obstime=self.timestamp)
 
         # Calculate satellite position vector as array of x,y,z vectors in
         # units of km, and velocity vector as array of x,y,z vectors in units of km/s
@@ -369,8 +361,8 @@ class EphemBase(ACROSSAPIBase):
 
         # Calculate the latitude, longitude and distance from the center of the
         # Earth of the satellite
-        self.longitude = satloc.lon(self.timestamp)
-        self.latitude = satloc.lat(self.timestamp)
+        self.longitude = satloc.lon
+        self.latitude = satloc.lat
         dist = self.posvec.norm()
 
         # Calculate the Earth radius in degrees
