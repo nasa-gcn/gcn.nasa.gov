@@ -206,7 +206,7 @@ class EarthSatelliteLocation:
 class EphemBase(ACROSSAPIBase):
     """
     Base class for computing ephemeris data, for spacecraft whose positions can
-    be determined using a Two-Line Element (TLE) file, i.e. most Earth-orbiting
+    be determined using a Two-Line Element (TLE), i.e. most Earth-orbiting
     spacecraft. This ephemeris primarily calculates the position of the
     spacecraft in GCRS coordinates. It also calculates the position of the Sun
     and Moon in GCRS coordinates, and the latitude and longitude of the
