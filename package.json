@@ -135,7 +135,7 @@
     "typescript": "^5.3.3"
   },
   "overrides": {
-    "@architect/hydrate": "github:lpsinger/hydrate#remove-no-binary-all"
+    "@architect/hydrate": "github:lpsinger/hydrate#pip-fixes"
   },
   "engines": {
     "node": ">=18"
