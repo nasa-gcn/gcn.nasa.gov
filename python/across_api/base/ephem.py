@@ -99,12 +99,12 @@ class EarthSatelliteLocation:
 
         Parameters
         ----------
-        t
+        obstime
             Time to calculate position for. Must be array-type.
 
         Returns
         -------
-            TEME position and velocity for satellite
+            A EarthSatelliteLocation object for the given TLE and time.
         """
         satellite = Satrec.twoline2rv(tle.tle1, tle.tle2)
 
@@ -175,30 +175,20 @@ class EarthSatelliteLocation:
     @cached_property
     def lon(self) -> Longitude:
         """
-        Returns the longitude of the satellite's location at the given time.
-
-        Parameters
-        ----------
-        t
-            The time at which to calculate the longitude.
+        Returns the longitude of the satellite's location.
 
         Returns:
-            The longitude of the satellite at the given Time.
+            The longitude of the satellite.
         """
         return self.itrs.earth_location.lon
 
     @cached_property
     def lat(self) -> Latitude:
         """
-        Returns the latitude of the satellite's location at the given time.
-
-        Parameters
-        ----------
-        t
-            The time at which to calculate the Latitude.
+        Returns the latitude of the satellite's location.
 
         Returns:
-            The latitude of the satellite at the given Time.
+            The latitude of the satellite.
         """
         return self.itrs.earth_location.lat
 
