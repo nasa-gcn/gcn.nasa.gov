@@ -148,8 +148,6 @@ class DateRangeSchema(BaseSchema):
     @model_validator(mode="after")
     @classmethod
     def check_dates(cls, data: Any) -> Any:
-        data.end = Time(data.end)
-        data.begin = Time(data.begin)
         assert data.begin <= data.end, "End date should not be before begin"
         return data
 
