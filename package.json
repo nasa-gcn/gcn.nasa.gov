@@ -134,6 +134,9 @@
     "ts-jest": "^29.1.0",
     "typescript": "^5.3.3"
   },
+  "overrides": {
+    "@architect/hydrate": "github:lpsinger/hydrate#pip-fixes"
+  },
   "engines": {
     "node": ">=18"
   },
