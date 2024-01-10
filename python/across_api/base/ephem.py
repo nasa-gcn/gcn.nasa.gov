@@ -106,6 +106,7 @@ class EarthSatelliteLocation:
         -------
             A EarthSatelliteLocation object for the given TLE and time.
         """
+        # Load in the TLE data
         satellite = Satrec.twoline2rv(tle.tle1, tle.tle2)
 
         # Calculate TEME position and velocity for Satellite
