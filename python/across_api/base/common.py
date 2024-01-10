@@ -6,11 +6,12 @@ import os
 from time import tzset
 from typing import Any, List, Type
 
-from fastapi import HTTPException
-from pydantic import ValidationError
-from astropy.time import Time  # type: ignore
 import astropy.units as u  # type: ignore
 import numpy as np
+from astropy.time import Time  # type: ignore
+from fastapi import HTTPException
+from pydantic import ValidationError
+
 from .schema import BaseSchema
 
 # Make sure we are working in UTC times
