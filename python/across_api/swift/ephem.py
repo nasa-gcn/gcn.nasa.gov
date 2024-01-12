@@ -8,9 +8,8 @@ from cachetools import TTLCache, cached
 
 from ..base.common import ACROSSAPIBase
 from ..base.ephem import EphemBase
-
-from .tle import SwiftTLE
 from ..scheduling.orbit import TLE
+from .tle import SwiftTLE
 
 
 @cached(cache=TTLCache(maxsize=128, ttl=86400))

@@ -3,11 +3,11 @@
 # All Rights Reserved.
 
 
+import io
 from datetime import datetime
 from typing import IO, Annotated, Any, List, Optional
 
 import astropy.units as u  # type: ignore
-import io
 from arc import tables  # type: ignore
 from astropy.coordinates import (  # type: ignore
     CartesianRepresentation,
@@ -25,7 +25,6 @@ from pydantic import (
     conlist,
     model_validator,
 )
-
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
 # a naive UTC datetime object, or a string in ISO format for JSON.

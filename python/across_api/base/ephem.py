@@ -6,9 +6,9 @@ from functools import cached_property
 from typing import Optional
 
 import astropy.units as u  # type: ignore
-from astropy.constants import R_earth  # type: ignore
 import numpy as np
 from astroplan import Observer  # type: ignore
+from astropy.constants import R_earth  # type: ignore
 from astropy.coordinates import SkyCoord, get_body  # type: ignore
 from astropy.time import Time  # type: ignore
 from fastapi import HTTPException
@@ -182,7 +182,6 @@ class EphemBase(ACROSSAPIBase):
 
         # Calculate the latitude, longitude and distance from the center of the
         # Earth of the satellite
-
         self.longitude = self.observer.latitude
         self.latitude = self.observer.latitude
         dist = self.posvec.norm()
