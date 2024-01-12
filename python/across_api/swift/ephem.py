@@ -8,7 +8,9 @@ from cachetools import TTLCache, cached
 
 from ..base.common import ACROSSAPIBase
 from ..base.ephem import EphemBase
+
 from .tle import SwiftTLE
+from ..scheduling.orbit import TLE
 
 
 @cached(cache=TTLCache(maxsize=128, ttl=86400))
@@ -20,4 +22,6 @@ class SwiftEphem(EphemBase, ACROSSAPIBase):
 
     def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
         self.tle = SwiftTLE(begin).tle
-        super().__init__(begin, end, stepsize)
+        if self.tle is not None:
+            self.satellite = TLE(self.tle.io)
+            super().__init__(begin=begin, end=end, stepsize=stepsize)

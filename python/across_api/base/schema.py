@@ -4,9 +4,10 @@
 
 
 from datetime import datetime
-from typing import Any, List, Optional
+from typing import IO, Annotated, Any, List, Optional
 
 import astropy.units as u  # type: ignore
+import io
 from arc import tables  # type: ignore
 from astropy.coordinates import (  # type: ignore
     CartesianRepresentation,
@@ -24,7 +25,7 @@ from pydantic import (
     conlist,
     model_validator,
 )
-from typing_extensions import Annotated
+
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
 # a naive UTC datetime object, or a string in ISO format for JSON.
@@ -278,6 +279,14 @@ class TLEEntry(BaseSchema):
         """Write the TLE entry to the database."""
         table = tables.table(self.__tablename__)
         table.put_item(Item=self.model_dump(mode="json"))
+
+    @property
+    def io(self) -> IO:
+        """
+        Return the file handle for the TLE database.
+        """
+        tletext = f"{self.satname}\n{self.tle1}\n{self.tle2}\n"
+        return io.BytesIO(tletext.encode())
 
 
 class TLESchema(BaseSchema):
