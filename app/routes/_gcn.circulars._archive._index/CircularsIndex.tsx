@@ -7,7 +7,8 @@
  */
 import { Link } from '@remix-run/react'
 
-import type { CircularMetadata } from '../_gcn.circulars/circulars.lib'
+import type { Circular} from '../_gcn.circulars/circulars.lib';
+import { formatDateISO } from '../_gcn.circulars/circulars.lib'
 
 export default function ({
   allItems,
@@ -15,7 +16,7 @@ export default function ({
   totalItems,
   query,
 }: {
-  allItems: CircularMetadata[]
+  allItems: Circular[]
   searchString: string
   totalItems: number
   query?: string
@@ -24,7 +25,7 @@ export default function ({
     <>
       {query && (
         <h3>
-          {totalItems} result{totalItems != 1 && 's'} found.
+          {totalItems} result{totalItems !== 1 && 's'} found.
         </h3>
       )}
       <div className="usa-table-container--scrollable" tabIndex={0}>
@@ -40,10 +41,13 @@ export default function ({
               <th scope="col" role="columnheader" data-sortable>
                 Subject
               </th>
+              <th scope="col" role="columnheader" data-sortable>
+                Created On
+              </th>
             </tr>
           </thead>
           <tbody>
-            {allItems.map(({ circularId, subject }) => (
+            {allItems.map(({ circularId, subject, createdOn }) => (
               <tr key={circularId}>
                 <td data-sort-value={circularId}>{circularId}</td>
                 <td data-sort-value={subject}>
@@ -54,6 +58,7 @@ export default function ({
                     {subject}
                   </Link>
                 </td>
+                <td data-sort-value={createdOn}>{formatDateISO(createdOn)}</td>
               </tr>
             ))}
           </tbody>

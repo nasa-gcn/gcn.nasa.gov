@@ -23,11 +23,7 @@ import {
   parseEventFromSubject,
   subjectIsValid,
 } from './circulars.lib'
-import type {
-  Circular,
-  CircularChangeRequest,
-  CircularMetadata,
-} from './circulars.lib'
+import type { Circular, CircularChangeRequest } from './circulars.lib'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -134,7 +130,7 @@ export async function search({
   startDate?: string
   endDate?: string
 }): Promise<{
-  items: CircularMetadata[]
+  items: Circular[]
   totalPages: number
   totalItems: number
 }> {
@@ -172,8 +168,8 @@ export async function search({
           },
         },
       },
-      fields: ['subject'],
-      _source: false,
+      fields: ['subject', 'createdOn'],
+      _source: ['subject', 'createdOn'],
       sort: {
         circularId: {
           order: 'desc',
@@ -187,16 +183,15 @@ export async function search({
 
   const items = hits.map(
     ({
-      _id: circularId,
-      fields: {
-        subject: [subject],
-      },
+      _id,
+      _source: { subject, createdOn },
     }: {
       _id: string
-      fields: { subject: string[] }
+      _source: { subject: string; createdOn: string }
     }) => ({
-      circularId,
+      circularId: _id,
       subject,
+      createdOn,
     })
   )
 
@@ -302,7 +297,7 @@ export async function circularRedirect(query: string) {
 }
 
 export async function putVersion(
-  circular: Omit<Circular, 'createdOn' | 'submitter' | 'submittedHow'>,
+  circular: Omit<Circular, 'submitter' | 'submittedHow'>,
   user?: User
 ): Promise<number> {
   validateCircular(circular.subject, circular.body)
