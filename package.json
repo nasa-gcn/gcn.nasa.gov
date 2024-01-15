@@ -122,7 +122,7 @@
     "npm-run-all": "^4.1.5",
     "oidc-provider": "^8.4.3",
     "postcss-csso": "^6.0.1",
-    "prettier": "3.1.1",
+    "prettier": "3.2.2",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-class-names": "^1.0.13",
     "rehype-external-links": "^3.0.0",
