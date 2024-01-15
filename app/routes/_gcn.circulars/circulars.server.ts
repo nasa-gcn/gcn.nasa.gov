@@ -174,11 +174,11 @@ export async function search({
       },
       fields: ['subject'],
       _source: false,
-      sort: {
-        circularId: {
-          order: 'desc',
-        },
-      },
+      // sort: {
+      //   circularId: {
+      //     order: 'desc',
+      //   },
+      // },
       from: page && limit && page * limit,
       size: limit,
       track_total_hits: true,
