@@ -46,7 +46,7 @@ export default function ({
       )}
 
       {featureCircularsTableFormat && (
-        <div className="usa-table-container--scrollable" tabIndex={0}>
+        <div className="usa-table-container" tabIndex={0}>
           <table
             className="usa-table usa-table--striped usa-table--borderless"
             data-sortable
