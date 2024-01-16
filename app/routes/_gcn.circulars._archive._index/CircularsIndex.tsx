@@ -32,6 +32,7 @@ export default function ({
         <table
           className="usa-table--compact usa-table--striped usa-table--borderless"
           data-sortable
+          width="100%"
         >
           <thead>
             <tr>
