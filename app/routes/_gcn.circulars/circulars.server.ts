@@ -23,7 +23,11 @@ import {
   parseEventFromSubject,
   subjectIsValid,
 } from './circulars.lib'
-import type { Circular, CircularChangeRequest } from './circulars.lib'
+import type {
+  Circular,
+  CircularChangeRequest,
+  CircularMetadata,
+} from './circulars.lib'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -130,7 +134,7 @@ export async function search({
   startDate?: string
   endDate?: string
 }): Promise<{
-  items: Circular[]
+  items: CircularMetadata[]
   totalPages: number
   totalItems: number
 }> {
