@@ -6,10 +6,10 @@ from functools import cached_property
 from typing import Optional
 
 import astropy.units as u  # type: ignore
-from astropy.constants import R_earth  # type: ignore
 import numpy as np
+from astroplan import Observer  # type: ignore
+from astropy.constants import R_earth  # type: ignore
 from astropy.coordinates import (  # type: ignore
-    GCRS,
     TEME,
     CartesianDifferential,
     CartesianRepresentation,
@@ -19,7 +19,6 @@ from astropy.coordinates import (  # type: ignore
 from astropy.time import Time  # type: ignore
 from fastapi import HTTPException
 from sgp4.api import Satrec  # type: ignore
-from astroplan import Observer  # type: ignore
 
 from ..base.schema import EphemGetSchema, EphemSchema, TLEEntry
 from .common import ACROSSAPIBase, round_time
