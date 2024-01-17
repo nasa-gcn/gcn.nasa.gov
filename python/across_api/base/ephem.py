@@ -186,9 +186,9 @@ class EphemBase(ACROSSAPIBase):
         # Calculate satellite position in GCRS coordinate system vector as
         # array of x,y,z vectors in units of km, and velocity vector as array
         # of x,y,z vectors in units of km/s
-        self.gcrs = self.itrs.transform_to(GCRS(obstime=self.timestamp))
-        self.posvec = self.gcrs.cartesian.without_differentials()
-        self.velvec = self.gcrs.velocity.to_cartesian()
+        self.posvec, self.velvec = self.observer.location.get_gcrs_posvel(
+            self.timestamp
+        )
 
         # Calculate the position of the Moon relative to the spacecraft
         self.moon = get_body("moon", self.timestamp, location=self.observer.location)
