@@ -6,16 +6,22 @@ from functools import cached_property
 from typing import Optional
 
 import astropy.units as u  # type: ignore
-import numpy as np
-from astroplan import Observer  # type: ignore
 from astropy.constants import R_earth  # type: ignore
-from astropy.coordinates import SkyCoord, get_body  # type: ignore
+import numpy as np
+from astropy.coordinates import (  # type: ignore
+    GCRS,
+    TEME,
+    CartesianDifferential,
+    CartesianRepresentation,
+    SkyCoord,
+    get_body,
+)
 from astropy.time import Time  # type: ignore
 from fastapi import HTTPException
+from sgp4.api import Satrec  # type: ignore
+from astroplan import Observer  # type: ignore
 
 from ..base.schema import EphemGetSchema, EphemSchema, TLEEntry
-from ..scheduling.constraints import OrbitNightConstraint
-from ..scheduling.orbit import TLE
 from .common import ACROSSAPIBase, round_time
 
 
@@ -67,7 +73,6 @@ class EphemBase(ACROSSAPIBase):
     stepsize: u.Quantity
     earth_radius: Optional[u.Quantity] = None
     tle: Optional[TLEEntry] = None
-    satellite: TLE
 
     def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
         # Check if TLE is loaded
@@ -128,7 +133,7 @@ class EphemBase(ACROSSAPIBase):
         -------
             A boolean array indicating if the spacecraft is in eclipse.
         """
-        return OrbitNightConstraint().compute_constraint(self.timestamp, self.observer)
+        return self.earth.separation(self.sun) < self.earthsize
 
     def get(self) -> bool:
         """
@@ -160,16 +165,30 @@ class EphemBase(ACROSSAPIBase):
             np.arange(self.begin, self.end + self.stepsize, self.stepsize)
         )
 
-        # Calculate location of satellite for given timestamps
-        self.satloc = self.satellite(self.timestamp)
+        # Load in the TLE data
+        satellite = Satrec.twoline2rv(self.tle.tle1, self.tle.tle2)
 
-        # Set up astroplan Observer class for spacecraft
-        self.observer = Observer(self.satloc.earth_location)
+        # Calculate TEME position and velocity for Satellite
+        _, temes_p, temes_v = satellite.sgp4_array(
+            self.timestamp.jd1, self.timestamp.jd2
+        )
 
-        # Calculate satellite position vector as array of x,y,z vectors in
-        # units of km, and velocity vector as array of x,y,z vectors in units of km/s
-        self.posvec = self.satloc.gcrs.cartesian.without_differentials()
-        self.velvec = self.satloc.gcrs.velocity.to_cartesian()
+        # Convert SGP4 TEME data to astropy ITRS SkyCoord
+        teme_p = CartesianRepresentation(temes_p.T * u.km)
+        teme_v = CartesianDifferential(temes_v.T * u.km / u.s)
+        self.itrs = SkyCoord(
+            teme_p.with_differentials(teme_v), frame=TEME(obstime=self.timestamp)
+        ).itrs
+
+        # Set up astroplan Observer class
+        self.observer = Observer(self.itrs.earth_location)
+
+        # Calculate satellite position in GCRS coordinate system vector as
+        # array of x,y,z vectors in units of km, and velocity vector as array
+        # of x,y,z vectors in units of km/s
+        self.gcrs = self.itrs.transform_to(GCRS(obstime=self.timestamp))
+        self.posvec = self.gcrs.cartesian.without_differentials()
+        self.velvec = self.gcrs.velocity.to_cartesian()
 
         # Calculate the position of the Moon relative to the spacecraft
         self.moon = get_body("moon", self.timestamp, location=self.observer.location)
@@ -182,7 +201,7 @@ class EphemBase(ACROSSAPIBase):
 
         # Calculate the latitude, longitude and distance from the center of the
         # Earth of the satellite
-        self.longitude = self.observer.latitude
+        self.longitude = self.observer.longitude
         self.latitude = self.observer.latitude
         dist = self.posvec.norm()
 
