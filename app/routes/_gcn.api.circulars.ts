@@ -22,7 +22,7 @@ import {
   extractAttribute,
   extractAttributeRequired,
 } from '~/lib/cognito.server'
-import { feature, getEnvOrDie } from '~/lib/env.server'
+import { getEnvOrDie } from '~/lib/env.server'
 
 // FIXME: BaseClient.validateJWT is non-private but undocumented.
 // openid-client doesn't provide a type for it.
@@ -166,7 +166,6 @@ async function getUserGroups(Username: string) {
  * [authorization code flow]: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow
  */
 export async function action({ request }: ActionFunctionArgs) {
-  if (!feature('CIRCULARS_API')) throw new Response(null, { status: 404 })
   if (request.method !== 'POST') throw new Response(null, { status: 405 })
 
   const bearer = getBearer(request)
