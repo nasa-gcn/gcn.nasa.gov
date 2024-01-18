@@ -45,5 +45,5 @@ export async function loader({
 
 export default function () {
   const data = useLoaderData<typeof loader>()
-  return <CircularEditForm {...data} />
+  return <CircularEditForm {...data} intent="edit" />
 }

@@ -69,7 +69,7 @@ export default function () {
 
   return (
     <>
-      <CircularEditForm {...formDefaults} />
+      <CircularEditForm {...formDefaults} intent="new" />
       {isAuthorized || <ModalUnauthorized isAuthenticated={isAuthenticated} />}
     </>
   )

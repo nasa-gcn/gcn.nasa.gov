@@ -110,6 +110,7 @@ export function CircularEditForm({
   defaultBody,
   defaultSubject,
   searchString,
+  intent,
 }: {
   formattedContributor: string
   circularId?: number
@@ -117,6 +118,7 @@ export function CircularEditForm({
   defaultBody: string
   defaultSubject: string
   searchString: string
+  intent: 'correction' | 'edit' | 'new'
 }) {
   let formSearchString = '?index'
   if (searchString) {
@@ -137,6 +139,7 @@ export function CircularEditForm({
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>{circularId ? 'Edit' : 'New'} GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
+        <input type="hidden" name="intent" value={intent} />
         {circularId && (
           <>
             <input type="hidden" name="circularId" value={circularId} />

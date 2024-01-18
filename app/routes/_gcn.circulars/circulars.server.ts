@@ -355,10 +355,9 @@ export async function createChangeRequest(
   circularId: number,
   body: string,
   subject: string,
-  request: Request
+  user?: User
 ) {
   validateCircular(subject, body)
-  const user = await getUser(request)
   if (!user)
     throw new Response('User is not signed in', {
       status: 403,
@@ -384,11 +383,7 @@ export async function getChangeRequests(
 ): Promise<CircularChangeRequest[]> {
   const db = await tables()
   return (
-    await db.circulars_change_requests.query({
-      KeyConditionExpression: 'circularId = :circularId',
-      ExpressionAttributeValues: {
-        ':circularId': circularId,
-      },
+    await db.circulars_change_requests.scan({
       ProjectionExpression: 'circularId, requestor, requestorSub',
     })
   ).Items

@@ -28,6 +28,7 @@ import { useId, useState } from 'react'
 import { getUser } from '../_gcn._auth/user.server'
 import {
   circularRedirect,
+  createChangeRequest,
   get,
   put,
   putVersion,
@@ -67,23 +68,37 @@ export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
+  const intent = getFormDataString(data, 'intent')
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
   let result
-  if (circularId) {
-    await putVersion(
-      {
-        body,
-        circularId: parseFloat(circularId),
-        subject,
-      },
-      user
-    )
-    result = await get(parseFloat(circularId))
-  } else {
-    result = await put({ subject, body, submittedHow: 'web' }, user)
+  switch (intent) {
+    case 'correction':
+      if (!circularId)
+        throw new Response('circularId is required', { status: 400 })
+      await createChangeRequest(parseFloat(circularId), body, subject, user)
+      result = null
+      break
+    case 'edit':
+      if (!circularId)
+        throw new Response('circularId is required', { status: 400 })
+      await putVersion(
+        {
+          body,
+          circularId: parseFloat(circularId),
+          subject,
+        },
+        user
+      )
+      result = await get(parseFloat(circularId))
+      break
+    case 'new':
+      result = await put({ subject, body, submittedHow: 'web' }, user)
+      break
+    default:
+      break
   }
   return result
 }
