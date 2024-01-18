@@ -36,14 +36,14 @@ export default function ({
         >
           <thead>
             <tr>
-              <th scope="col" role="columnheader" data-sortable>
-                Circular ID
+              <th scope="col" role="columnheader" data-sortable align="left">
+                Circular
               </th>
-              <th scope="col" role="columnheader" data-sortable>
+              <th scope="col" role="columnheader" data-sortable align="left">
                 Subject
               </th>
-              <th scope="col" role="columnheader" data-sortable>
-                Created On
+              <th scope="col" role="columnheader" data-sortable align="left">
+                Created
               </th>
             </tr>
           </thead>
