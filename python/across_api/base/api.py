@@ -2,6 +2,11 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
+"""
+Base API definitions for ACROSS API. This module is imported by all other API
+modules. Contains the FastAPI app definition and globally defined Depends.
+"""
+
 from datetime import datetime
 from typing import Annotated, Optional
 
@@ -21,7 +26,6 @@ app = FastAPI(
 )
 
 
-# Globally defined Depends definitions
 def epoch(
     epoch: Annotated[
         datetime,
@@ -37,7 +41,6 @@ def epoch(
 EpochDep = Annotated[datetime, Depends(epoch)]
 
 
-# Depends functions for FastAPI calls.
 def daterange(
     begin: Annotated[
         datetime,
