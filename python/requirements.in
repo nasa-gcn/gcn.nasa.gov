@@ -1,8 +1,10 @@
 architect-functions
+authlib
 astropy
 cachetools
 email-validator
 fastapi
 mangum
+pyjwt
 requests
 spacetrack
