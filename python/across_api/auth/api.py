@@ -4,13 +4,13 @@
 
 
 import os
-from typing import Optional
+from typing import Annotated, Optional
 
 import jwt
 import requests
 from authlib.integrations.base_client.errors import OAuthError  # type: ignore
 from authlib.integrations.requests_client import OAuth2Session  # type: ignore
-from fastapi import Depends, HTTPException, Request, status
+from fastapi import Depends, HTTPException, Query, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from ..base.api import app
@@ -80,7 +80,7 @@ JWTBearerDep = [Depends(security)]
 
 
 @app.get("/auth/token")
-async def token(client_id: str, client_secret: str) -> AuthToken:
+async def get_authentication_token(client_id: str, client_secret: str) -> AuthToken:
     """Obtain an authorization token using GCN credentials."""
     session = OAuth2Session(client_id, client_secret, scope={})
     try:
@@ -93,6 +93,6 @@ async def token(client_id: str, client_secret: str) -> AuthToken:
 
 
 @app.get("/auth/verify", dependencies=JWTBearerDep)
-async def verify() -> dict:
+async def verify_authentication() -> dict:
     """Verify that the user is authenticated."""
     return {"status": "success"}
