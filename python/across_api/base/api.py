@@ -22,7 +22,7 @@ app = FastAPI(
 
 
 # Globally defined Depends definitions
-async def epoch(
+def epoch(
     epoch: Annotated[
         datetime,
         Query(
@@ -38,7 +38,7 @@ EpochDep = Annotated[datetime, Depends(epoch)]
 
 
 # Depends functions for FastAPI calls.
-async def daterange(
+def daterange(
     begin: Annotated[
         datetime,
         Query(description="Start time of period to be calculated.", title="Begin"),
@@ -56,7 +56,7 @@ async def daterange(
 DateRangeDep = Annotated[dict, Depends(daterange)]
 
 
-async def stepsize(
+def stepsize(
     stepsize: Annotated[
         int,
         Query(

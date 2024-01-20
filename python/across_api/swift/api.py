@@ -9,7 +9,7 @@ from .tle import SwiftTLE
 
 
 @app.get("/swift/ephem")
-async def swift_ephemeris(
+def swift_ephemeris(
     daterange: DateRangeDep,
     stepsize: StepSizeDep,
 ) -> EphemSchema:
@@ -22,7 +22,7 @@ async def swift_ephemeris(
 
 
 @app.get("/swift/tle")
-async def swift_tle(
+def swift_tle(
     epoch: EpochDep,
 ) -> TLESchema:
     """
