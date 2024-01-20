@@ -388,6 +388,10 @@ input.react-tags__combobox-input:focus {
   padding-left: units(10);
 }
 
+/*
+ * Dark mode (for ACROSS pages)
+ */
+
 .usa-prose--dark {
   @include u-bg('ink');
   @include u-text('white');

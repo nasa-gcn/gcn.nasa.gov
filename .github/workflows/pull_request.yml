@@ -1,4 +1,5 @@
 name: Pull Request
+
 on:
   push:
     branches:
@@ -6,9 +7,11 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
   node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
+
   python:
     runs-on: ubuntu-latest
     steps:
@@ -31,3 +34,25 @@ jobs:
 
       - name: Upload to Codecov.io
         uses: codecov/codecov-action@v3
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      - name: NPM Install
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Install Python dependencies
+        run: docker run --rm --platform linux/arm64 -v $(pwd):/src python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommends npm && cd src && npx arc hydrate'
