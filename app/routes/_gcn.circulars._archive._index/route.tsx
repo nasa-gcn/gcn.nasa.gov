@@ -150,7 +150,7 @@ export default function () {
           </Button>
         </Form>
         {featureCircularsFilterByDate && (
-          <DateSelector startDate={startDate} endDate={endDate} />
+          <DateSelector defaultStartDate={startDate} defaultEndDate={endDate} />
         )}
         <Link to={`/circulars/new${searchString}`}>
           <Button

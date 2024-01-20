@@ -68,16 +68,16 @@ function DateSelectorButton({
 }
 
 export function DateSelector({
-  startDate,
-  endDate,
+  defaultStartDate,
+  defaultEndDate,
 }: {
-  startDate?: string
-  endDate?: string
+  defaultStartDate?: string
+  defaultEndDate?: string
 }) {
   const [searchParams] = useSearchParams()
 
-  const [inputDateGte, setInputDateGte] = useState(startDate)
-  const [inputDateLte, setInputDateLte] = useState(endDate)
+  const [startDate, setStartDate] = useState(defaultStartDate)
+  const [endDate, setEndDate] = useState(defaultEndDate)
   const [showContent, setShowContent] = useState(false)
   const [showDateRange, setShowDateRange] = useState(false)
 
@@ -85,15 +85,15 @@ export function DateSelector({
 
   function setFuzzyTime(startDate?: string) {
     setShowDateRange(false)
-    setInputDateGte(startDate)
-    setInputDateLte('')
+    setStartDate(startDate)
+    setEndDate('')
   }
 
   function setDateRange() {
     setShowContent(false)
-    if (inputDateGte) searchParams.set('startDate', inputDateGte)
+    if (startDate) searchParams.set('startDate', startDate)
     else searchParams.delete('startDate')
-    if (inputDateLte) searchParams.set('endDate', inputDateLte)
+    if (endDate) searchParams.set('endDate', endDate)
     else searchParams.delete('endDate')
     submit(searchParams, {
       method: 'get',
@@ -104,8 +104,8 @@ export function DateSelector({
   return (
     <>
       <DateSelectorButton
-        startDate={startDate}
-        endDate={endDate}
+        startDate={defaultStartDate}
+        endDate={defaultEndDate}
         onClick={() => {
           setShowContent((shown) => !shown)
           setShowDateRange(false)
@@ -124,7 +124,7 @@ export function DateSelector({
                   label="All Time"
                   defaultChecked={true}
                   onChange={(e) => {
-                    setInputDateGte(e.target.value)
+                    setStartDate(e.target.value)
                   }}
                 />
               </Grid>
@@ -135,7 +135,7 @@ export function DateSelector({
                     name="radio-date"
                     value={value}
                     label={label}
-                    checked={value === inputDateGte}
+                    checked={value === startDate}
                     onChange={() => {
                       setFuzzyTime(value)
                     }}
@@ -165,7 +165,7 @@ export function DateSelector({
                   name: 'event-date-start',
                   defaultValue: 'startDate',
                   onChange: (value) => {
-                    setInputDateGte(value)
+                    setStartDate(value)
                   },
                 }}
                 endDateHint="dd/mm/yyyy"
@@ -175,7 +175,7 @@ export function DateSelector({
                   name: 'event-date-end',
                   defaultValue: 'endDate',
                   onChange: (value) => {
-                    setInputDateLte(value)
+                    setEndDate(value)
                   },
                 }}
               />
