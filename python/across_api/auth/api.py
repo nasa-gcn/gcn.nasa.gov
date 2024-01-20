@@ -4,17 +4,17 @@
 
 
 import os
-from typing import Annotated, Optional
+from typing import Optional
 
 import jwt
 import requests
 from authlib.integrations.base_client.errors import OAuthError  # type: ignore
 from authlib.integrations.requests_client import OAuth2Session  # type: ignore
-from fastapi import Depends, HTTPException, Query, Request, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from ..base.api import app
-from .schema import AuthToken
+from .schema import AuthToken, VerifyAuth
 
 
 class JWTBearer(HTTPBearer):
@@ -93,6 +93,6 @@ async def get_authentication_token(client_id: str, client_secret: str) -> AuthTo
 
 
 @app.get("/auth/verify", dependencies=JWTBearerDep)
-async def verify_authentication() -> dict:
+async def verify_authentication() -> VerifyAuth:
     """Verify that the user is authenticated."""
-    return {"status": "success"}
+    return VerifyAuth()

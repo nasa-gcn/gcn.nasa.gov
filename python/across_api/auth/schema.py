@@ -8,3 +8,7 @@ class AuthToken(BaseModel):
     expires_in: int
     token_type: str
     expires_at: int
+
+
+class VerifyAuth(BaseModel):
+    status: str = "success"
