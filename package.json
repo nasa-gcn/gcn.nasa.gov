@@ -48,7 +48,7 @@
     "email-validator": "^2.0.4",
     "github-slugger": "^2.0.0",
     "hast-util-find-and-replace": "^5.0.1",
-    "hastscript": "^8.0.0",
+    "hastscript": "^9.0.0",
     "highlight.js": "^11.8.0",
     "isbot": "^4.4.0",
     "lodash": "^4.17.21",
