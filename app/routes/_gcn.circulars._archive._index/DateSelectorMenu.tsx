@@ -79,7 +79,11 @@ export function DateSelector({
   const [startDate, setStartDate] = useState(defaultStartDate)
   const [endDate, setEndDate] = useState(defaultEndDate)
   const [showContent, setShowContent] = useState(false)
-  const [showDateRange, setShowDateRange] = useState(false)
+  const defaultShowDateRange = Boolean(
+    (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
+      defaultEndDate
+  )
+  const [showDateRange, setShowDateRange] = useState(defaultShowDateRange)
 
   const submit = useSubmit()
 
@@ -108,7 +112,6 @@ export function DateSelector({
         endDate={defaultEndDate}
         onClick={() => {
           setShowContent((shown) => !shown)
-          setShowDateRange(false)
         }}
         expanded={showContent}
       />
@@ -122,9 +125,9 @@ export function DateSelector({
                   name="radio-date"
                   value=""
                   label="All Time"
-                  defaultChecked={true}
-                  onChange={(e) => {
-                    setStartDate(e.target.value)
+                  defaultChecked={!defaultStartDate && !defaultEndDate}
+                  onChange={() => {
+                    setFuzzyTime('')
                   }}
                 />
               </Grid>
@@ -135,7 +138,7 @@ export function DateSelector({
                     name="radio-date"
                     value={value}
                     label={label}
-                    checked={value === startDate}
+                    defaultChecked={value === defaultStartDate}
                     onChange={() => {
                       setFuzzyTime(value)
                     }}
@@ -148,7 +151,7 @@ export function DateSelector({
                   name="radio-date"
                   value="custom"
                   label="Custom Range..."
-                  checked={showDateRange}
+                  defaultChecked={defaultShowDateRange}
                   onChange={(e) => {
                     setShowDateRange(e.target.checked)
                   }}
@@ -157,23 +160,25 @@ export function DateSelector({
             </Grid>
             {showDateRange && (
               <DateRangePicker
-                startDateHint="dd/mm/yyyy"
+                startDateHint="YYYY-MM-DD"
                 startDateLabel="Start Date"
                 className="margin-bottom-2"
                 startDatePickerProps={{
                   id: 'event-date-start',
                   name: 'event-date-start',
-                  defaultValue: 'startDate',
+                  dateFormat: 'YYYY-MM-DD',
+                  defaultValue: defaultStartDate,
                   onChange: (value) => {
                     setStartDate(value)
                   },
                 }}
-                endDateHint="dd/mm/yyyy"
+                endDateHint="YYYY-MM-DD"
                 endDateLabel="End Date"
                 endDatePickerProps={{
                   id: 'event-date-end',
                   name: 'event-date-end',
-                  defaultValue: 'endDate',
+                  dateFormat: 'YYYY-MM-DD',
+                  defaultValue: defaultEndDate,
                   onChange: (value) => {
                     setEndDate(value)
                   },
