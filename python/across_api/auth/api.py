@@ -23,7 +23,7 @@ class JWTBearer(HTTPBearer):
 
     def __init__(self):
         # Fetch the well-known config from Cognito
-        if os.environ["ARC_ENV"] == "testing":
+        if os.environ.get("ARC_ENV") == "testing":
             cognito_url = f"http://localhost:{os.environ['ARC_OIDC_IDP_PORT']}/"
         else:
             user_pool_id = os.environ.get("COGNITO_USER_POOL_ID")
