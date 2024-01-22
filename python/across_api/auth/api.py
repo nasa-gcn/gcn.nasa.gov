@@ -22,16 +22,18 @@ class JWTBearer(HTTPBearer):
     jwks_uri: str
 
     def __init__(self):
-        # Check that required environment variable is set
-        if "COGNITO_USER_POOL_ID" not in os.environ:
-            HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="COGNITO_USER_POOL_ID not set",
-            )
-
         # Fetch the well-known config from Cognito
-        user_pool_id = os.environ["COGNITO_USER_POOL_ID"]
-        cognito_url = f"https://cognito-idp.{user_pool_id.split('_')[0]}.amazonaws.com/{user_pool_id}/"
+        if os.environ["ARC_ENV"] == "testing":
+            cognito_url = f"http://localhost:{os.environ['ARC_OIDC_IDP_PORT']}/"
+        else:
+            user_pool_id = os.environ.get("COGNITO_USER_POOL_ID")
+            if user_pool_id is None:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail="COGNITO_USER_POOL_ID environment variable not set.",
+                )
+            cognito_url = f"https://cognito-idp.{user_pool_id.split('_')[0]}.amazonaws.com/{user_pool_id}/"
+
         resp = requests.get(cognito_url + ".well-known/openid-configuration")
         try:
             resp.raise_for_status()
