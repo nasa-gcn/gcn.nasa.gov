@@ -197,13 +197,12 @@ export function DateSelector({
                 }}
               />
             )}
-
-            <CardFooter>
-              <Button type="submit" form={form}>
-                <Icon.CalendarToday /> Submit
-              </Button>
-            </CardFooter>
           </CardBody>
+          <CardFooter>
+            <Button type="submit" form={form}>
+              <Icon.CalendarToday /> Submit
+            </Button>
+          </CardFooter>
         </DetailsDropdownContent>
       )}
     </>
