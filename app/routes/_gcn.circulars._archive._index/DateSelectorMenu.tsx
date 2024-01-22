@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { useSubmit } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
@@ -15,7 +16,7 @@ import {
   Icon,
   Radio,
 } from '@trussworks/react-uswds'
-import { type ChangeEvent, useState } from 'react'
+import { type ChangeEvent, useRef, useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -75,29 +76,48 @@ export function DateSelector({
   defaultStartDate?: string
   defaultEndDate?: string
 }) {
-  const [startDate, setStartDate] = useState(defaultStartDate)
-  const [endDate, setEndDate] = useState(defaultEndDate)
   const [showContent, setShowContent] = useState(false)
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
       defaultEndDate
   )
   const [showDateRange, setShowDateRange] = useState(defaultShowDateRange)
+  const startDateInputRef = useRef<HTMLInputElement>(null)
+  const endDateInputRef = useRef<HTMLInputElement>(null)
+  const submit = useSubmit()
+
+  function setStartDate(value: string) {
+    if (startDateInputRef.current) startDateInputRef.current.value = value
+  }
+
+  function setEndDate(value: string) {
+    if (endDateInputRef.current) endDateInputRef.current.value = value
+  }
 
   function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setShowDateRange(false)
     setStartDate(value)
     setEndDate('')
+    const form = startDateInputRef.current?.form
+    if (form) submit(form)
   }
 
   return (
     <>
-      {Boolean(startDate) && (
-        <input type="hidden" name="startDate" form={form} value={startDate} />
-      )}
-      {Boolean(endDate) && (
-        <input type="hidden" name="endDate" form={form} value={endDate} />
-      )}
+      <input
+        type="hidden"
+        name="startDate"
+        form={form}
+        ref={startDateInputRef}
+        defaultValue={defaultStartDate}
+      />
+      <input
+        type="hidden"
+        name="endDate"
+        form={form}
+        ref={endDateInputRef}
+        defaultValue={defaultEndDate}
+      />
       <DateSelectorButton
         startDate={defaultStartDate}
         endDate={defaultEndDate}
@@ -160,7 +180,7 @@ export function DateSelector({
                   dateFormat: 'YYYY-MM-DD',
                   defaultValue: defaultStartDate,
                   onChange: (value) => {
-                    setStartDate(value)
+                    setStartDate(value ?? '')
                   },
                 }}
                 endDateHint="YYYY-MM-DD"
@@ -172,7 +192,7 @@ export function DateSelector({
                   dateFormat: 'YYYY-MM-DD',
                   defaultValue: defaultEndDate,
                   onChange: (value) => {
-                    setEndDate(value)
+                    setEndDate(value ?? '')
                   },
                 }}
               />
