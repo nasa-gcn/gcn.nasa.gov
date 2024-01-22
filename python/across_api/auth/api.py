@@ -79,7 +79,7 @@ security = JWTBearer()
 JWTBearerDep = [Depends(security)]
 
 
-@app.get("/auth/token")
+@app.post("/auth/token")
 async def get_authentication_token(client_id: str, client_secret: str) -> AuthToken:
     """Obtain an authorization token using GCN credentials."""
     session = OAuth2Session(client_id, client_secret, scope={})
