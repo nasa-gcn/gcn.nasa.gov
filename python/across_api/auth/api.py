@@ -23,10 +23,10 @@ class JWTBearer(HTTPBearer):
 
     def __init__(self):
         # Fetch the well-known config from Cognito
-        if os.environ.get("ARC_ENV") == "testing":
+        user_pool_id = os.environ.get("COGNITO_USER_POOL_ID")
+        if os.environ.get("ARC_ENV") == "testing" and user_pool_id is None:
             cognito_url = f"http://localhost:{os.environ['ARC_OIDC_IDP_PORT']}/"
         else:
-            user_pool_id = os.environ.get("COGNITO_USER_POOL_ID")
             if user_pool_id is None:
                 raise HTTPException(
                     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
