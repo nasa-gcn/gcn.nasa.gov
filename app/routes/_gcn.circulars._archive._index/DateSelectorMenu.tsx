@@ -121,6 +121,7 @@ export function DateSelector({
             <Grid row>
               <Grid col={4} key="radio-alltime">
                 <Radio
+                  form=""
                   id="radio-alltime"
                   name="radio-date"
                   value=""
@@ -132,6 +133,7 @@ export function DateSelector({
               {Object.entries(dateSelectorLabels).map(([value, label]) => (
                 <Grid col={4} key={`radio-${value}`}>
                   <Radio
+                    form=""
                     id={`radio-${value}`}
                     name="radio-date"
                     value={value}
@@ -143,6 +145,7 @@ export function DateSelector({
               ))}
               <Grid col={4}>
                 <Radio
+                  form=""
                   id="radio-custom"
                   name="radio-date"
                   value="custom"
@@ -160,6 +163,7 @@ export function DateSelector({
                 startDateLabel="Start Date"
                 className="margin-bottom-2"
                 startDatePickerProps={{
+                  form: '',
                   id: 'event-date-start',
                   name: 'event-date-start',
                   dateFormat: 'YYYY-MM-DD',
@@ -171,6 +175,7 @@ export function DateSelector({
                 endDateHint="YYYY-MM-DD"
                 endDateLabel="End Date"
                 endDatePickerProps={{
+                  form: '',
                   id: 'event-date-end',
                   name: 'event-date-end',
                   dateFormat: 'YYYY-MM-DD',
