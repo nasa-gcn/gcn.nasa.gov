@@ -16,7 +16,7 @@ import {
   Icon,
   Radio,
 } from '@trussworks/react-uswds'
-import { useState } from 'react'
+import { type ChangeEvent, useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -87,9 +87,9 @@ export function DateSelector({
 
   const submit = useSubmit()
 
-  function setFuzzyTime(startDate?: string) {
+  function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setShowDateRange(false)
-    setStartDate(startDate)
+    setStartDate(value)
     setEndDate('')
   }
 
@@ -126,9 +126,7 @@ export function DateSelector({
                   value=""
                   label="All Time"
                   defaultChecked={!defaultStartDate && !defaultEndDate}
-                  onChange={() => {
-                    setFuzzyTime('')
-                  }}
+                  onChange={radioOnChange}
                 />
               </Grid>
               {Object.entries(dateSelectorLabels).map(([value, label]) => (
@@ -139,9 +137,7 @@ export function DateSelector({
                     value={value}
                     label={label}
                     defaultChecked={value === defaultStartDate}
-                    onChange={() => {
-                      setFuzzyTime(value)
-                    }}
+                    onChange={radioOnChange}
                   />
                 </Grid>
               ))}
@@ -152,8 +148,8 @@ export function DateSelector({
                   value="custom"
                   label="Custom Range..."
                   defaultChecked={defaultShowDateRange}
-                  onChange={(e) => {
-                    setShowDateRange(e.target.checked)
+                  onChange={({ target: { checked } }) => {
+                    setShowDateRange(checked)
                   }}
                 />
               </Grid>
