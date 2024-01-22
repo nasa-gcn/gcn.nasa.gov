@@ -198,11 +198,13 @@ export function DateSelector({
               />
             )}
           </CardBody>
-          <CardFooter>
-            <Button type="submit" form={form}>
-              <Icon.CalendarToday /> Submit
-            </Button>
-          </CardFooter>
+          {showDateRange && (
+            <CardFooter>
+              <Button type="submit" form={form}>
+                <Icon.CalendarToday /> Submit
+              </Button>
+            </CardFooter>
+          )}
         </DetailsDropdownContent>
       )}
     </>
