@@ -17,7 +17,6 @@ import {
 import { getUser } from './_gcn._auth/user.server'
 import { CircularEditForm } from './_gcn.circulars.edit.$circularId/CircularEditForm'
 import { formatAuthor } from './_gcn.circulars/circulars.lib'
-// import { formatAuthor } from './_gcn.circulars/circulars.lib'
 import { get } from './_gcn.circulars/circulars.server'
 import { useSearchString } from '~/lib/utils'
 import { useUrl } from '~/root'

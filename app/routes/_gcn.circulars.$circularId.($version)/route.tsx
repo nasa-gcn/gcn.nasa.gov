@@ -122,7 +122,7 @@ export default function () {
             className="usa-button usa-button--outline"
             to={`/circulars/correction/${circularId}`}
           >
-            Request Correction
+            Suggest Correction
           </Link>
         )}
         {useFeature('CIRCULAR_VERSIONS') &&
