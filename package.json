@@ -38,7 +38,7 @@
     "@remix-run/css-bundle": "^2.5.1",
     "@remix-run/node": "^2.5.1",
     "@remix-run/react": "^2.5.1",
-    "@trussworks/react-uswds": "^6.2.0",
+    "@trussworks/react-uswds": "github:lpsinger/react-uswds#dateFormat",
     "aws-lambda-ses-forwarder": "github:lpsinger/aws-lambda-ses-forwarder#aws-sdk-v3",
     "classnames": "^2.5.1",
     "color-convert": "^2.0.1",
