@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { useSearchParams, useSubmit } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
@@ -68,14 +67,14 @@ function DateSelectorButton({
 }
 
 export function DateSelector({
+  form,
   defaultStartDate,
   defaultEndDate,
 }: {
+  form?: string
   defaultStartDate?: string
   defaultEndDate?: string
 }) {
-  const [searchParams] = useSearchParams()
-
   const [startDate, setStartDate] = useState(defaultStartDate)
   const [endDate, setEndDate] = useState(defaultEndDate)
   const [showContent, setShowContent] = useState(false)
@@ -85,28 +84,20 @@ export function DateSelector({
   )
   const [showDateRange, setShowDateRange] = useState(defaultShowDateRange)
 
-  const submit = useSubmit()
-
   function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     setShowDateRange(false)
     setStartDate(value)
     setEndDate('')
   }
 
-  function setDateRange() {
-    setShowContent(false)
-    if (startDate) searchParams.set('startDate', startDate)
-    else searchParams.delete('startDate')
-    if (endDate) searchParams.set('endDate', endDate)
-    else searchParams.delete('endDate')
-    submit(searchParams, {
-      method: 'get',
-      action: '/circulars',
-    })
-  }
-
   return (
     <>
+      {Boolean(startDate) && (
+        <input type="hidden" name="startDate" form={form} value={startDate} />
+      )}
+      {Boolean(endDate) && (
+        <input type="hidden" name="endDate" form={form} value={endDate} />
+      )}
       <DateSelectorButton
         startDate={defaultStartDate}
         endDate={defaultEndDate}
@@ -188,13 +179,7 @@ export function DateSelector({
             )}
 
             <CardFooter>
-              <Button
-                type="button"
-                form="searchForm"
-                onClick={() => {
-                  setDateRange()
-                }}
-              >
+              <Button type="submit" form={form}>
                 <Icon.CalendarToday /> Submit
               </Button>
             </CardFooter>

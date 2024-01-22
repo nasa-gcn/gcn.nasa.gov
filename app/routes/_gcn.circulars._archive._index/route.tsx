@@ -23,7 +23,7 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 
 import { getUser } from '../_gcn._auth/user.server'
 import {
@@ -114,6 +114,7 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const clean = inputQuery === query
 
+  const formId = useId()
   const submit = useSubmit()
 
   return (
@@ -123,7 +124,7 @@ export default function () {
         <Form
           className="display-inline-block usa-search usa-search--small"
           role="search"
-          id="searchForm"
+          id={formId}
         >
           <Label srOnly={true} htmlFor="query">
             Search
@@ -150,7 +151,11 @@ export default function () {
           </Button>
         </Form>
         {featureCircularsFilterByDate && (
-          <DateSelector defaultStartDate={startDate} defaultEndDate={endDate} />
+          <DateSelector
+            form={formId}
+            defaultStartDate={startDate}
+            defaultEndDate={endDate}
+          />
         )}
         <Link to={`/circulars/new${searchString}`}>
           <Button
