@@ -16,6 +16,7 @@ import {
   Icon,
   Radio,
 } from '@trussworks/react-uswds'
+import classNames from 'classnames'
 import { type ChangeEvent, useRef, useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
@@ -98,6 +99,7 @@ export function DateSelector({
     setShowDateRange(false)
     setStartDate(value)
     setEndDate('')
+    setShowContent(false)
     const form = startDateInputRef.current?.form
     if (form) submit(form)
   }
@@ -126,87 +128,96 @@ export function DateSelector({
         }}
         expanded={showContent}
       />
-      {showContent && (
-        <DetailsDropdownContent className="maxw-card-xlg">
-          <CardBody>
-            <Grid row>
-              <Grid col={4} key="radio-alltime">
+      <DetailsDropdownContent
+        className={classNames('maxw-card-xlg', {
+          'display-none': !showContent,
+        })}
+      >
+        <CardBody>
+          <Grid row>
+            <Grid col={4} key="radio-alltime">
+              <Radio
+                form=""
+                id="radio-alltime"
+                name="radio-date"
+                value=""
+                label="All Time"
+                defaultChecked={!defaultStartDate && !defaultEndDate}
+                onChange={radioOnChange}
+              />
+            </Grid>
+            {Object.entries(dateSelectorLabels).map(([value, label]) => (
+              <Grid col={4} key={`radio-${value}`}>
                 <Radio
                   form=""
-                  id="radio-alltime"
+                  id={`radio-${value}`}
                   name="radio-date"
-                  value=""
-                  label="All Time"
-                  defaultChecked={!defaultStartDate && !defaultEndDate}
+                  value={value}
+                  label={label}
+                  defaultChecked={value === defaultStartDate}
                   onChange={radioOnChange}
                 />
               </Grid>
-              {Object.entries(dateSelectorLabels).map(([value, label]) => (
-                <Grid col={4} key={`radio-${value}`}>
-                  <Radio
-                    form=""
-                    id={`radio-${value}`}
-                    name="radio-date"
-                    value={value}
-                    label={label}
-                    defaultChecked={value === defaultStartDate}
-                    onChange={radioOnChange}
-                  />
-                </Grid>
-              ))}
-              <Grid col={4}>
-                <Radio
-                  form=""
-                  id="radio-custom"
-                  name="radio-date"
-                  value="custom"
-                  label="Custom Range..."
-                  defaultChecked={defaultShowDateRange}
-                  onChange={({ target: { checked } }) => {
-                    setShowDateRange(checked)
-                  }}
-                />
-              </Grid>
-            </Grid>
-            {showDateRange && (
-              <DateRangePicker
-                startDateHint="YYYY-MM-DD"
-                startDateLabel="Start Date"
-                className="margin-bottom-2"
-                startDatePickerProps={{
-                  form: '',
-                  id: 'event-date-start',
-                  name: 'event-date-start',
-                  dateFormat: 'YYYY-MM-DD',
-                  defaultValue: defaultStartDate,
-                  onChange: (value) => {
-                    setStartDate(value ?? '')
-                  },
-                }}
-                endDateHint="YYYY-MM-DD"
-                endDateLabel="End Date"
-                endDatePickerProps={{
-                  form: '',
-                  id: 'event-date-end',
-                  name: 'event-date-end',
-                  dateFormat: 'YYYY-MM-DD',
-                  defaultValue: defaultEndDate,
-                  onChange: (value) => {
-                    setEndDate(value ?? '')
-                  },
+            ))}
+            <Grid col={4}>
+              <Radio
+                form=""
+                id="radio-custom"
+                name="radio-date"
+                value="custom"
+                label="Custom Range..."
+                defaultChecked={defaultShowDateRange}
+                onChange={({ target: { checked } }) => {
+                  setShowDateRange(checked)
                 }}
               />
-            )}
-          </CardBody>
+            </Grid>
+          </Grid>
           {showDateRange && (
-            <CardFooter>
-              <Button type="submit" form={form}>
-                Submit
-              </Button>
-            </CardFooter>
+            <DateRangePicker
+              startDateHint="YYYY-MM-DD"
+              startDateLabel="Start Date"
+              className="margin-bottom-2"
+              startDatePickerProps={{
+                form: '',
+                id: 'event-date-start',
+                name: 'event-date-start',
+                dateFormat: 'YYYY-MM-DD',
+                defaultValue: defaultStartDate,
+                onChange: (value) => {
+                  setStartDate(value ?? '')
+                },
+              }}
+              endDateHint="YYYY-MM-DD"
+              endDateLabel="End Date"
+              endDatePickerProps={{
+                form: '',
+                id: 'event-date-end',
+                name: 'event-date-end',
+                dateFormat: 'YYYY-MM-DD',
+                defaultValue: defaultEndDate,
+                onChange: (value) => {
+                  setEndDate(value ?? '')
+                },
+              }}
+            />
           )}
-        </DetailsDropdownContent>
-      )}
+        </CardBody>
+        {showDateRange && (
+          <CardFooter>
+            <Button
+              type="button"
+              onClick={() => {
+                setShowContent(false)
+                const form = startDateInputRef.current?.form
+                if (form) submit(form)
+              }}
+            >
+              Submit
+            </Button>
+          </CardFooter>
+        )}
+      </DetailsDropdownContent>
     </>
   )
 }
