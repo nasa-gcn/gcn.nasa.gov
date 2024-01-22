@@ -201,7 +201,7 @@ export function DateSelector({
           {showDateRange && (
             <CardFooter>
               <Button type="submit" form={form}>
-                <Icon.CalendarToday /> Submit
+                Submit
               </Button>
             </CardFooter>
           )}
