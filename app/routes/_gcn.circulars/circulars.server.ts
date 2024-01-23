@@ -128,15 +128,15 @@ export async function search({
   startDate,
   endDate,
   sort,
-  sortDirection,
+  sortOrder,
 }: {
   query?: string
   page?: number
   limit?: number
   startDate?: string
   endDate?: string
-  sort?: 'circularID' | 'createdOn'
-  sortDirection?: 'asc' | 'desc'
+  sort?: string
+  sortOrder?: string
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
@@ -148,7 +148,7 @@ export async function search({
 
   const sortObj = {
     [sort || 'circularId']: {
-      order: sortDirection || 'desc',
+      order: sortOrder || 'desc',
     },
   }
 
