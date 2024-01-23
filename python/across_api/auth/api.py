@@ -9,7 +9,7 @@ from typing import Optional
 import jwt
 import requests
 from authlib.integrations.base_client.errors import OAuthError  # type: ignore
-from authlib.integrations.requests_client import OAuth2Session  # type: ignore
+from authlib.integrations.httpx_client import AsyncOAuth2Client  # type: ignore
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
@@ -89,9 +89,9 @@ JWTBearerDep = [Depends(security)]
 @app.post("/auth/token")
 async def get_authentication_token(client_id: str, client_secret: str) -> AuthToken:
     """Obtain an authorization token using GCN credentials."""
-    session = OAuth2Session(client_id, client_secret, scope={})
+    session = AsyncOAuth2Client(client_id, client_secret, scope={})
     try:
-        token = session.fetch_token(security.token_endpoint)
+        token = await session.fetch_token(security.token_endpoint)
     except OAuthError:
         raise HTTPException(
             status_code=401, detail="Invalid client_id or client_secret."
