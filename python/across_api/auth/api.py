@@ -33,7 +33,7 @@ class JWTBearer(HTTPBearer):
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 detail="Environment variable COGNITO_USER_POOL_ID must be defined in production.",
             )
-        print(provider_url)
+
         # Fetch the well-known config from the IdP
         resp = requests.get(provider_url + ".well-known/openid-configuration")
         try:
