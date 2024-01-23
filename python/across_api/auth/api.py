@@ -22,19 +22,20 @@ class JWTBearer(HTTPBearer):
     jwks_uri: str
 
     def __init__(self):
-        # Fetch the well-known config from Cognito
+        # Configure URL from IdP
         user_pool_id = os.environ.get("COGNITO_USER_POOL_ID")
-        if os.environ.get("ARC_ENV") == "testing" and user_pool_id is None:
-            cognito_url = f"http://localhost:{os.environ['ARC_OIDC_IDP_PORT']}/"
+        if user_pool_id is not None:
+            provider_url = f"https://cognito-idp.{user_pool_id.split('_')[0]}.amazonaws.com/{user_pool_id}/"
+        elif os.environ.get("ARC_ENV") == "testing":
+            provider_url = f"http://localhost:{os.environ.get('ARC_OIDC_IDP_PORT')}/"
         else:
-            if user_pool_id is None:
-                raise HTTPException(
-                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                    detail="COGNITO_USER_POOL_ID environment variable not set.",
-                )
-            cognito_url = f"https://cognito-idp.{user_pool_id.split('_')[0]}.amazonaws.com/{user_pool_id}/"
-
-        resp = requests.get(cognito_url + ".well-known/openid-configuration")
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Environment variable COGNITO_USER_POOL_ID must be defined in production.",
+            )
+        print(provider_url)
+        # Fetch the well-known config from the IdP
+        resp = requests.get(provider_url + ".well-known/openid-configuration")
         try:
             resp.raise_for_status()
         except requests.exceptions.HTTPError as e:
