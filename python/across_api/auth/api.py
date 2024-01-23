@@ -21,7 +21,7 @@ class JWTBearer(HTTPBearer):
     token_endpoint: str
     jwks_uri: str
 
-    def __init__(self):
+    def __init__(self, **kwargs):
         # Configure URL from IdP
         user_pool_id = os.environ.get("COGNITO_USER_POOL_ID")
         if user_pool_id is not None:
@@ -45,8 +45,9 @@ class JWTBearer(HTTPBearer):
         well_known = resp.json()
         self.token_endpoint = well_known["token_endpoint"]
         self.jwks_uri = well_known["jwks_uri"]
+        self.token_alg = well_known["id_token_signing_alg_values_supported"]
 
-        super().__init__()
+        super().__init__(**kwargs)
 
     async def __call__(self, request: Request) -> None:
         credentials: Optional[HTTPAuthorizationCredentials] = await super().__call__(
@@ -70,7 +71,7 @@ class JWTBearer(HTTPBearer):
                 jwt.api_jwt.decode_complete(
                     credentials.credentials,
                     key=signing_key.key,
-                    algorithms=["RS256"],
+                    algorithms=self.token_alg,
                 )
             except jwt.InvalidSignatureError as e:
                 raise HTTPException(
@@ -78,7 +79,10 @@ class JWTBearer(HTTPBearer):
                 )
 
 
-security = JWTBearer()
+security = JWTBearer(
+    scheme_name="ACROSS API Authorization",
+    description="Enter your JWT authentication token obtained from /auth/token using GCN client_id and client_key.",
+)
 JWTBearerDep = [Depends(security)]
 
 
