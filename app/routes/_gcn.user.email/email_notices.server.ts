@@ -9,6 +9,8 @@ import { tables } from '@architect/functions'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
 
+import type { User } from '../_gcn._auth/user.server'
+import { moderatorGroup } from '../_gcn.circulars/circulars.server'
 import { sendEmail } from '~/lib/email.server'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 
@@ -214,5 +216,27 @@ export async function sendTestEmail(to: string) {
     to: [to],
     subject: 'GCN Notices test',
     body: 'This is a test message from GCN Notices.',
+  })
+}
+
+export async function sendNewsAnnouncementEmail(
+  subject: string,
+  body: string,
+  user?: User
+) {
+  if (!user || !user.groups.includes(moderatorGroup))
+    throw new Response(null, { status: 403 })
+
+  const db = await tables()
+  const to = (
+    await db.announcement_subscriptions.scan({
+      ProjectionExpression: 'email',
+    })
+  ).Items.map((item) => item.email)
+  await sendEmail({
+    fromName: 'GCN Announcements',
+    to,
+    subject,
+    body,
   })
 }
