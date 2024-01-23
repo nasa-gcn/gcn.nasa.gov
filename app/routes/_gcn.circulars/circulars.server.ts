@@ -135,7 +135,7 @@ export async function search({
   limit?: number
   startDate?: string
   endDate?: string
-  sort?: string
+  sort?: 'circularID' | 'createdOn'
   sortDirection?: 'asc' | 'desc'
 }): Promise<{
   items: CircularMetadata[]
