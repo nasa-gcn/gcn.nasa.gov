@@ -5,13 +5,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { useSearchParams, useSubmit } from '@remix-run/react'
+import { useSubmit } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
   CardBody,
   Grid,
   Icon,
+  Radio,
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
@@ -37,28 +38,38 @@ function SortButton({
   )
 }
 
-export function SortSelector({
-  sort = 'circularId',
-  ...props
-}: {
-  sort?: string
-}) {
-  const [searchParams] = useSearchParams()
-
+export function SortSelector({ sort = 'circularId' }: { sort?: string }) {
   const [inputSort, setSort] = useState(sort)
 
   const [showContent, setShowContent] = useState(false)
 
   const submit = useSubmit()
 
-  function changeSort() {
-    setShowContent(false)
-    searchParams.set('sort', inputSort)
-    submit(searchParams, {
-      method: 'get',
-      action: '/circulars',
-    })
-  }
+  const sortOptions = [
+    { id: 'radio-sort-circularId', value: '', label: 'Circular ID' },
+    { id: 'radio-sort-relevance', value: 'relevance', label: 'Relevance' },
+  ]
+
+  const SortRadioButtons = () => (
+    <>
+      {sortOptions.map(({ id, value, label }) => (
+        <Radio
+          key={id}
+          id={id}
+          name="sort"
+          value={value}
+          label={label}
+          form="searchForm"
+          checked={inputSort === value}
+          onChange={({ target: { form, value } }) => {
+            setSort(value)
+            setShowContent(false)
+            submit(form)
+          }}
+        />
+      ))}
+    </>
+  )
 
   return (
     <>
@@ -72,28 +83,7 @@ export function SortSelector({
         <DetailsDropdownContent className="maxw-card-xlg">
           <CardBody>
             <Grid col={1}>
-              <Button
-                type="button"
-                className="usa-button usa-button--unstyled"
-                value="circularID"
-                onClick={(e) => {
-                  setSort(e.currentTarget.value)
-                  changeSort()
-                }}
-              >
-                Circular ID
-              </Button>
-              <Button
-                type="button"
-                className="usa-button usa-button--unstyled"
-                value="relevance"
-                onClick={(e) => {
-                  setSort(e.currentTarget.value)
-                  changeSort()
-                }}
-              >
-                Relevance
-              </Button>
+              <SortRadioButtons />
             </Grid>
           </CardBody>
         </DetailsDropdownContent>
