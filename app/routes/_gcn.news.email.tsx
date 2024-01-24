@@ -41,7 +41,7 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!subject || !body)
     throw new Response('subject and body are required', { status: 400 })
   await sendNewsAnnouncementEmail(subject, body, user)
-  return 'OK' //redirect('/news')
+  return null
 }
 
 export default function () {
