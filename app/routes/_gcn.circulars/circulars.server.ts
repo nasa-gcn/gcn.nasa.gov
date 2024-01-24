@@ -146,11 +146,24 @@ export async function search({
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
-  const sortObj = {
-    [sort || 'circularId']: {
-      order: sortOrder || 'desc',
-    },
-  }
+  // const sortObj =
+  //   sort === 'circularID' ? {
+  //   ['circularId']: {
+  //     order: 'desc',
+  //   },
+  // }
+  // : sort === 'relevance' ? {
+  // }
+
+  // constant where if the sort variable is circularID, then it will have the standard sort object, if not, then it will be empty
+  const sortObj =
+    sort === 'relevance'
+      ? {}
+      : {
+          circularId: {
+            order: sortOrder,
+          },
+        }
 
   const {
     body: {
