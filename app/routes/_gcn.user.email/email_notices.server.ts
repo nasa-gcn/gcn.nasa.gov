@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { paginateScan } from '@aws-sdk/lib-dynamodb'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
 
@@ -228,14 +230,22 @@ export async function sendNewsAnnouncementEmail(
     throw new Response(null, { status: 403 })
 
   const db = await tables()
-  const to = (
-    await db.announcement_subscriptions.scan({
-      ProjectionExpression: 'email',
-    })
-  ).Items.map((item) => item.email)
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('announcement_subscriptions')
+
+  const pages = paginateScan(
+    { client },
+    { AttributesToGet: ['email'], TableName }
+  )
+  const emails: string[] = []
+  for await (const page of pages) {
+    const newEmails = page.Items?.map(({ email }) => email)
+    if (newEmails) emails.push(...newEmails)
+  }
+
   await sendEmailBulk({
     fromName: 'GCN Announcements',
-    to,
+    to: emails,
     subject,
     body,
     topic: 'announcements',

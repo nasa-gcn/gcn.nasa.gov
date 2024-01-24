@@ -11,9 +11,9 @@ import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import {
-  createAnnouncementEmailNotification,
-  deleteAnnouncementEmailNotification,
-  getUsersAnnouncementSubmissionStatus,
+  createAnnouncementSubsciption,
+  deleteAnnouncementSubscription,
+  getAnnouncementSubscription,
 } from '../_gcn.user.email/email_announcements.server'
 import {
   createCircularEmailNotification,
@@ -55,10 +55,10 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       break
     case 'subscribe_announcements':
-      await createAnnouncementEmailNotification(user.sub, user.email)
+      await createAnnouncementSubsciption(user.sub, user.email)
       break
     case 'unsubscribe_announcements':
-      await deleteAnnouncementEmailNotification(user.sub, user.email)
+      await deleteAnnouncementSubscription(user.sub, user.email)
       break
     case 'subscribe_circulars':
       await createCircularEmailNotification(user.sub, user.email)
@@ -76,8 +76,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const data = await getEmailNotifications(user.sub)
   const userIsSubscribedToCircularEmails =
     await getUsersCircularSubmissionStatus(user.sub)
-  const userIsSubscribedToAnnouncements =
-    await getUsersAnnouncementSubmissionStatus(user.sub)
+  const userIsSubscribedToAnnouncements = await getAnnouncementSubscription(
+    user.sub
+  )
   return {
     data,
     userIsSubscribedToCircularEmails,

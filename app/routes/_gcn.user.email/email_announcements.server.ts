@@ -7,7 +7,7 @@
  */
 import { tables } from '@architect/functions'
 
-export async function createAnnouncementEmailNotification(
+export async function createAnnouncementSubsciption(
   sub: string,
   email: string
 ) {
@@ -20,7 +20,7 @@ export async function createAnnouncementEmailNotification(
   })
 }
 
-export async function getUsersAnnouncementSubmissionStatus(sub: string) {
+export async function getAnnouncementSubscription(sub: string) {
   const db = await tables()
   const results = await db.announcement_subscriptions.query({
     IndexName: 'announcementSubscriptionsBySub',
@@ -38,7 +38,7 @@ export async function getUsersAnnouncementSubmissionStatus(sub: string) {
   return results.Items.length > 0
 }
 
-export async function deleteAnnouncementEmailNotification(
+export async function deleteAnnouncementSubscription(
   sub: string,
   email: string
 ) {

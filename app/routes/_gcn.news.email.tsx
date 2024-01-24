@@ -6,10 +6,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, Link, redirect, useNavigation } from '@remix-run/react'
+import { Link, useFetcher } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
+  Icon,
   InputGroup,
   InputPrefix,
   TextInput,
@@ -40,19 +41,18 @@ export async function action({ request }: ActionFunctionArgs) {
   if (!subject || !body)
     throw new Response('subject and body are required', { status: 400 })
   await sendNewsAnnouncementEmail(subject, body, user)
-  return redirect('/news')
+  return 'OK' //redirect('/news')
 }
 
 export default function () {
   const [subjectValid, setSubjectValid] = useState(false)
   const [bodyValid, setBodyValid] = useState(false)
   const valid = subjectValid && bodyValid
-  const sending = Boolean(useNavigation().formData)
-
+  const fetcher = useFetcher()
   return (
     <>
       <h1>GCN News Announcement</h1>
-      <Form method="POST">
+      <fetcher.Form method="POST">
         <InputGroup
           className={classnames('maxw-full', {
             'usa-input--error': subjectValid === false,
@@ -90,16 +90,25 @@ export default function () {
           <Link to={`/news`} className="usa-button usa-button--outline">
             Back
           </Link>
-          <Button disabled={sending || !valid} type="submit" value="save">
+          <Button
+            disabled={fetcher.state !== 'idle' || !valid}
+            type="submit"
+            value="save"
+          >
             Send
           </Button>
-          {sending && (
+          {fetcher.state !== 'idle' && (
             <div className="padding-top-1 padding-bottom-1">
               <Spinner /> Sending...
             </div>
           )}
+          {fetcher.state === 'idle' && fetcher.data !== undefined && (
+            <span className="text-middle">
+              <Icon.Check role="presentation" color="green" /> Sent
+            </span>
+          )}
         </ButtonGroup>
-      </Form>
+      </fetcher.Form>
     </>
   )
 }
