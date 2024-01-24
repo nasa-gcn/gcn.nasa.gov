@@ -128,7 +128,6 @@ export async function search({
   startDate,
   endDate,
   sort,
-  sortOrder,
 }: {
   query?: string
   page?: number
@@ -136,7 +135,6 @@ export async function search({
   startDate?: string
   endDate?: string
   sort?: string
-  sortOrder?: string
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
@@ -146,22 +144,12 @@ export async function search({
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
-  // const sortObj =
-  //   sort === 'circularID' ? {
-  //   ['circularId']: {
-  //     order: 'desc',
-  //   },
-  // }
-  // : sort === 'relevance' ? {
-  // }
-
-  // constant where if the sort variable is circularID, then it will have the standard sort object, if not, then it will be empty
   const sortObj =
     sort === 'relevance'
       ? {}
       : {
           circularId: {
-            order: sortOrder,
+            order: 'desc',
           },
         }
 

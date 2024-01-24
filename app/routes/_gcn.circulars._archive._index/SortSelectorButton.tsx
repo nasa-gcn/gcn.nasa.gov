@@ -27,18 +27,13 @@ function SortButton({
 } & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
   const slimClasses = 'height-4 padding-y-0'
 
-  const sortOrderIcon: { [key: string]: JSX.Element } = {
-    asc: <Icon.TrendingUp role="presentation" />,
-    desc: <Icon.TrendingDown role="presentation" />,
-  }
-
   return (
     <ButtonGroup type="segmented" {...props}>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         Sort by...
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
-        {sortOrderIcon[sortOrder || 'desc']}
+        {<Icon.FilterList role="presentation" />}
       </Button>
     </ButtonGroup>
   )
@@ -55,7 +50,6 @@ export function SortSelector({
   const [searchParams] = useSearchParams()
 
   const [inputSort, setSort] = useState(sort)
-  // const [inputSortOrder, setSortOrder] = useState(sortOrder)
 
   const [showContent, setShowContent] = useState(false)
 
@@ -64,7 +58,6 @@ export function SortSelector({
   function changeSort() {
     setShowContent(false)
     searchParams.set('sort', inputSort)
-    // searchParams.set('sortOrder', inputSortOrder)
     submit(searchParams, {
       method: 'get',
       action: '/circulars',
@@ -75,7 +68,6 @@ export function SortSelector({
     <>
       <SortButton
         sort={sort}
-        // sortOrder={sortOrder}
         onClick={() => {
           setShowContent((shown) => !shown)
         }}
