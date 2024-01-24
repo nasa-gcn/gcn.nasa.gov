@@ -127,7 +127,7 @@ export async function search({
   limit,
   startDate,
   endDate,
-  useNLP
+  useNLP,
 }: {
   query?: string
   page?: number
@@ -144,13 +144,12 @@ export async function search({
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
   const get_model_id_request = {
-    method: 'GET',
     path: '/_ingest/pipeline',
   }
 
   let model_id = ''
   try {
-    const resp = await client.transport.request(get_model_id_request)
+    const resp = await client.http.get(get_model_id_request)
 
     if (resp && resp.statusCode == 200) {
       model_id =

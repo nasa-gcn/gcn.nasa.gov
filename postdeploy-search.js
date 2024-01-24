@@ -5,7 +5,6 @@ It also creates a neural ingest pipeline to allow for ingesting of documents int
 export default async function (client) {
   //Set cluster settings
   const cluster_settings_request = {
-    method: 'PUT',
     path: '/_cluster/settings',
     body: {
       persistent: {
@@ -21,7 +20,7 @@ export default async function (client) {
   }
 
   try {
-    const resp = await client.transport.request(cluster_settings_request)
+    const resp = await client.http.put(cluster_settings_request)
 
     if (resp && resp.statusCode == 200) {
       console.log('Updated ML-related cluster settings.')
@@ -39,7 +38,6 @@ export default async function (client) {
 
   //Register model group
   const register_model_group_request = {
-    method: 'POST',
     path: '/_plugins/_ml/model_groups/_register',
     body: {
       name: 'NLP_model_group',
@@ -49,7 +47,7 @@ export default async function (client) {
 
   let model_group_id
   try {
-    const resp = await client.transport.request(register_model_group_request)
+    const resp = await client.http.post(register_model_group_request)
 
     if (resp && resp.statusCode == 200) {
       model_group_id = resp.body.model_group_id
@@ -68,7 +66,6 @@ export default async function (client) {
 
   //Register model to model group
   const register_model_request = {
-    method: 'POST',
     path: '/_plugins/_ml/models/_register',
     body: {
       name: 'huggingface/sentence-transformers/all-MiniLM-L6-v2',
@@ -80,7 +77,7 @@ export default async function (client) {
 
   let task_id
   try {
-    const resp = await client.transport.request(register_model_request)
+    const resp = await client.http.post(register_model_request)
 
     if (resp && resp.statusCode == 200) {
       task_id = resp.body.task_id
@@ -99,7 +96,6 @@ export default async function (client) {
 
   //Check status of model registration
   const check_model_registration_request = {
-    method: 'GET',
     path: `_plugins/_ml/tasks/${task_id}`,
   }
 
@@ -107,7 +103,7 @@ export default async function (client) {
   try {
     let resp
     do {
-      resp = await client.transport.request(check_model_registration_request)
+      resp = await client.http.get(check_model_registration_request)
 
       if (resp && resp.statusCode == 200) {
         console.log('Checking model registration status...')
@@ -133,12 +129,11 @@ export default async function (client) {
 
   //Deploy model
   const deploy_model_request = {
-    method: 'POST',
     path: `/_plugins/_ml/models/${model_id}/_deploy`,
   }
 
   try {
-    const resp = await client.transport.request(deploy_model_request)
+    const resp = await client.http.post(deploy_model_request)
 
     if (resp && resp.statusCode == 200) {
       task_id = resp.body.task_id
@@ -157,14 +152,13 @@ export default async function (client) {
 
   //Check status of model deployment
   const check_model_deployment_request = {
-    method: 'GET',
     path: `_plugins/_ml/tasks/${task_id}`,
   }
 
   try {
     let resp
     do {
-      resp = await client.transport.request(check_model_deployment_request)
+      resp = await client.http.get(check_model_deployment_request)
 
       if (resp && resp.statusCode == 200) {
         console.log('Checking model deployment status...')
@@ -191,7 +185,6 @@ export default async function (client) {
   //Create neural ingest pipeline
   const pipeline_name = 'nlp-ingest-pipeline'
   const create_ingest_pipeline_request = {
-    method: 'PUT',
     path: `/_ingest/pipeline/${pipeline_name}`,
     body: {
       description: 'An NLP ingest pipeline',
@@ -209,7 +202,7 @@ export default async function (client) {
   }
 
   try {
-    const resp = await client.transport.request(create_ingest_pipeline_request)
+    const resp = await client.http.put(create_ingest_pipeline_request)
 
     if (resp && resp.statusCode == 200) {
       console.log('Successfully created neural ingest pipeline.')
