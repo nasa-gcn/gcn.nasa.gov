@@ -19,11 +19,9 @@ import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
 function SortButton({
   sort,
-  sortOrder,
   ...props
 }: {
   sort?: string
-  sortOrder?: string
 } & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
   const slimClasses = 'height-4 padding-y-0'
 
@@ -41,11 +39,9 @@ function SortButton({
 
 export function SortSelector({
   sort = 'circularId',
-  sortOrder = 'desc',
   ...props
 }: {
   sort?: string
-  sortOrder?: string
 }) {
   const [searchParams] = useSearchParams()
 
