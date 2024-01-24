@@ -48,19 +48,19 @@ also happy to work with the mission teams to help construct your alerts.
       <ProcessListHeading type="h3">
          Draft Your Schema
       </ProcessListHeading>
-      As a GCN Notice producer, you can create your own instrument-specific schema. Please contribute your schema to our [GitHub repository](https://github.com/nasa-gcn/gcn-schema), placing it in a folder under <code>gcn/notices/<i>mission</i></code> and submit a pull request for the GCN Team to review. For details, please refer to the [schema documentation](/docs/producers/schema).
+      As a GCN Notice producer, you can create your own instrument-specific schema. Please contribute your schema to our [GitHub repository](https://github.com/nasa-gcn/gcn-schema), placing it in a folder under <code>gcn/notices/<i>mission</i></code> and submit a pull request for the GCN Team to review. For details, please refer to the [schema documentation](/docs/notices/schema).
    </ProcessListItem>
    <ProcessListItem>
       <ProcessListHeading type="h3">
          Build Producer Code
       </ProcessListHeading>
-      - Log out and log back in.
-      - Go through the [Start Streaming GCN Notices](/quickstart) process.
-      - On Step 2, choose the scope <code>gcn.nasa.gov/kafka-<i>mission</i>-producer</code>.
-      - Your producer code will look very similar to the [client example code](client) and
-      Step 4 of [Start Streaming GCN Notices](/quickstart). `client_id` and `client_secret`
-      can be found in Step 4 client example code.
-      - Start from this and adjust the `client_id`, `client_secret`, `topic` and `data` content:
+
+         - Log out and log back in.
+         - Go through the [Start Streaming GCN Notices](/quickstart) process.
+         - On Step 2, choose the scope <code>gcn.nasa.gov/kafka-<i>mission</i>-producer</code>.
+         - Your producer code will look very similar to the client example code in Step 4 of the [Start Streaming GCN Notices](/quickstart) guide. Your `client_id` and `client_secret`
+         can be found in Step 4 client example code.
+         - Start from this and adjust the `client_id`, `client_secret`, `topic` and `data` content:
 
       ```python
       from gcn_kafka import Producer
@@ -75,6 +75,7 @@ also happy to work with the mission teams to help construct your alerts.
           'key': 'value'
       }).encode()
       producer.produce(topic, data)
+      producer.flush()
       ```
 
    </ProcessListItem>
