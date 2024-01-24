@@ -11,7 +11,7 @@ import { validate } from 'email-validator'
 
 import type { User } from '../_gcn._auth/user.server'
 import { moderatorGroup } from '../_gcn.circulars/circulars.server'
-import { sendEmail } from '~/lib/email.server'
+import { sendEmail, sendEmailBulk } from '~/lib/email.server'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 
 // db model
@@ -233,10 +233,11 @@ export async function sendNewsAnnouncementEmail(
       ProjectionExpression: 'email',
     })
   ).Items.map((item) => item.email)
-  await sendEmail({
+  await sendEmailBulk({
     fromName: 'GCN Announcements',
     to,
     subject,
     body,
+    topic: 'announcements',
   })
 }
