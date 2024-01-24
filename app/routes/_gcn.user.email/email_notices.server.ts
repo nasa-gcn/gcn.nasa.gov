@@ -224,7 +224,7 @@ export async function sendNewsAnnouncementEmail(
   body: string,
   user?: User
 ) {
-  if (!user || !user.groups.includes(moderatorGroup))
+  if (!user?.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
 
   const db = await tables()
