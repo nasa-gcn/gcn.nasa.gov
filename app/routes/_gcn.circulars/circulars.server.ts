@@ -504,7 +504,7 @@ export async function getCircularsByEventIds(
   const promises = eventIds.map(async (eventId) => {
     const params = {
       TableName: 'circulars',
-      IndexName: 'circularEventId',
+      IndexName: 'circularsByEventId',
       KeyConditionExpression: 'eventId = :eventId',
       ExpressionAttributeValues: {
         ':eventId': eventId,
