@@ -8,13 +8,11 @@ from typing import Optional
 
 import jwt
 import requests
-from authlib.integrations.base_client.errors import OAuthError  # type: ignore
-from authlib.integrations.httpx_client import AsyncOAuth2Client  # type: ignore
 from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from ..base.api import app
-from .schema import AuthToken, VerifyAuth
+from .schema import VerifyAuth
 
 
 class JWTBearer(HTTPBearer):
@@ -84,19 +82,6 @@ security = JWTBearer(
     description="Enter your JWT authentication token obtained from /auth/token using GCN client_id and client_key.",
 )
 JWTBearerDep = [Depends(security)]
-
-
-@app.post("/auth/token")
-async def get_authentication_token(client_id: str, client_secret: str) -> AuthToken:
-    """Obtain an authorization token using GCN credentials."""
-    session = AsyncOAuth2Client(client_id, client_secret, scope={})
-    try:
-        token = await session.fetch_token(security.token_endpoint)
-    except OAuthError:
-        raise HTTPException(
-            status_code=401, detail="Invalid client_id or client_secret."
-        )
-    return AuthToken(**token)
 
 
 @app.get("/auth/verify", dependencies=JWTBearerDep)
