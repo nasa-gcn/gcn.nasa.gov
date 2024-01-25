@@ -135,9 +135,28 @@ export function CircularEditForm({
   const [showPreview, setShowPreview] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
+  let headerText,
+    saveButtonText = ''
+
+  switch (intent) {
+    case 'correction':
+      headerText = 'Correct'
+      saveButtonText = 'Submit'
+      break
+    case 'edit':
+      headerText = 'Edit'
+      saveButtonText = 'Update'
+      break
+    case 'new':
+      headerText = 'New'
+      saveButtonText = 'Send'
+
+      break
+  }
+
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
-      <h1>{circularId ? 'Edit' : 'New'} GCN Circular</h1>
+      <h1>{headerText} GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <input type="hidden" name="intent" value={intent} />
         {circularId && (
@@ -268,7 +287,7 @@ export function CircularEditForm({
             Back
           </Link>
           <Button disabled={sending || !valid} type="submit" value="save">
-            {circularId ? 'Update' : 'Send'}
+            {saveButtonText}
           </Button>
           {sending && (
             <div className="padding-top-1 padding-bottom-1">
