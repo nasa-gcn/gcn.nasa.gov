@@ -33,7 +33,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
-  if (!user) throw new Response(null, { status: 403 })
   const data = await request.formData()
   const subject = getFormDataString(data, 'subject')
   const body = getFormDataString(data, 'body')
