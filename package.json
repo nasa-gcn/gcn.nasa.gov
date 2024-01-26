@@ -34,11 +34,11 @@
     "@octokit/request-error": "^5.0.1",
     "@octokit/rest": "^20.0.2",
     "@opensearch-project/opensearch": "^2.5.0",
-    "@remix-run/architect": "^2.5.0",
-    "@remix-run/css-bundle": "^2.5.0",
-    "@remix-run/node": "^2.5.0",
-    "@remix-run/react": "^2.5.0",
-    "@trussworks/react-uswds": "^6.1.0",
+    "@remix-run/architect": "^2.5.1",
+    "@remix-run/css-bundle": "^2.5.1",
+    "@remix-run/node": "^2.5.1",
+    "@remix-run/react": "^2.5.1",
+    "@trussworks/react-uswds": "^6.2.0",
     "aws-lambda-ses-forwarder": "github:lpsinger/aws-lambda-ses-forwarder#aws-sdk-v3",
     "classnames": "^2.5.1",
     "color-convert": "^2.0.1",
@@ -72,7 +72,7 @@
     "ts-dedent": "^2.2.0",
     "unified": "^10.0.0",
     "unist-builder": "^4.0.0",
-    "usehooks-ts": "^2.9.1"
+    "usehooks-ts": "^2.9.5"
   },
   "devDependencies": {
     "@architect/architect": "^10.16.3",
@@ -89,8 +89,8 @@
     "@babel/preset-typescript": "^7.23.3",
     "@nasa-gcn/architect-plugin-search": "^1.1.0",
     "@nasa-gcn/eslint-config-gitignore": "^0.0.1",
-    "@remix-run/dev": "^2.5.0",
-    "@remix-run/eslint-config": "^2.5.0",
+    "@remix-run/dev": "^2.5.1",
+    "@remix-run/eslint-config": "^2.5.1",
     "@testing-library/jest-dom": "^6.1.4",
     "@testing-library/react": "^14.1.2",
     "@trivago/prettier-plugin-sort-imports": "^4.2.1",
@@ -122,7 +122,7 @@
     "npm-run-all": "^4.1.5",
     "oidc-provider": "^8.4.3",
     "postcss-csso": "^6.0.1",
-    "prettier": "3.2.2",
+    "prettier": "3.2.4",
     "rehype-autolink-headings": "^6.1.1",
     "rehype-class-names": "^1.0.13",
     "rehype-external-links": "^3.0.0",
@@ -131,14 +131,14 @@
     "remark-gfm": "^3.0.1",
     "rimraf": "^5.0.0",
     "sass": "^1.64.2",
-    "ts-jest": "^29.1.0",
+    "ts-jest": "^29.1.2",
     "typescript": "^5.3.3"
   },
   "overrides": {
     "@architect/hydrate": "github:lpsinger/hydrate#pip-fixes"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "sideEffects": false,
   "prettier": {
