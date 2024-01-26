@@ -110,30 +110,6 @@ class EphemBase(ACROSSAPIBase):
         """
         return int(np.argmin(np.abs((self.timestamp.datetime - t.datetime))))
 
-    @cached_property
-    def beta(self) -> np.ndarray:
-        """
-        Return spacecraft beta angle (angle between the plane of the orbit
-        and the plane of the Sun).
-
-        Returns
-        -------
-            The beta angle of the spacecraft.
-        """
-        return self.pole.separation(self.sun) - 90 * u.deg
-
-    @cached_property
-    def ineclipse(self) -> np.ndarray:
-        """
-        Is the spacecraft in an Earth eclipse? Defined as when the Sun > 50%
-        behind the Earth.
-
-        Returns
-        -------
-            A boolean array indicating if the spacecraft is in eclipse.
-        """
-        return self.earth.separation(self.sun) < self.earthsize
-
     def get(self) -> bool:
         """
         Compute the ephemeris for the specified time range with at a
