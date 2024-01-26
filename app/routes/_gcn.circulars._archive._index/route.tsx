@@ -96,7 +96,6 @@ export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
   const featureCircularsFilterByDate = useFeature('CIRCULARS_FILTER_BY_DATE')
-  const featureCircularsSort = useFeature('CIRCULARS_SORT_MENU')
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
@@ -156,7 +155,7 @@ export default function () {
         {featureCircularsFilterByDate && (
           <DateSelector startDate={startDate} endDate={endDate} />
         )}
-        {featureCircularsSort && <SortSelector />}
+        <SortSelector />
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
