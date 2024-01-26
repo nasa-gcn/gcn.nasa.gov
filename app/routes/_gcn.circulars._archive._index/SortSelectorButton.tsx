@@ -38,8 +38,10 @@ function SortButton({
   )
 }
 
-export function SortSelector({ sort = 'circularId' }: { sort?: string }) {
-  const [inputSort, setSort] = useState(sort)
+type SortOrder = 'circularId' | 'relevance'
+
+export function SortSelector({ defaultValue }: { defaultValue?: SortOrder }) {
+  const [inputSort, setSort] = useState(defaultValue || '')
 
   const [showContent, setShowContent] = useState(false)
 
@@ -74,7 +76,7 @@ export function SortSelector({ sort = 'circularId' }: { sort?: string }) {
   return (
     <>
       <SortButton
-        sort={sort}
+        sort={defaultValue}
         onClick={() => {
           setShowContent((shown) => !shown)
         }}
