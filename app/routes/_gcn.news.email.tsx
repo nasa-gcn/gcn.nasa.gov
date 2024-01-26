@@ -26,7 +26,7 @@ import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
-  if (!user || !user.groups.includes(moderatorGroup))
+  if (!user?.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
   return null
 }
