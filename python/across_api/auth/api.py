@@ -27,9 +27,8 @@ class JWTBearer(HTTPBearer):
         elif os.environ.get("ARC_ENV") == "testing":
             provider_url = f"http://localhost:{os.environ.get('ARC_OIDC_IDP_PORT')}/"
         else:
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Environment variable COGNITO_USER_POOL_ID must be defined in production.",
+            raise RuntimeError(
+                "Environment variable COGNITO_USER_POOL_ID must be defined in production.",
             )
 
         # Fetch the well-known config from the IdP
