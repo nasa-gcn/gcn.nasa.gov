@@ -75,6 +75,10 @@ class JWTBearer(HTTPBearer):
                 raise HTTPException(
                     status_code=401, detail=f"Authentication error: {e}"
                 )
+        else:
+            raise HTTPException(
+                status_code=401, detail="Authentication error: No credentials supplied."
+            )
 
 
 security = JWTBearer(
