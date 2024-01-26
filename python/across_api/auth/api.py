@@ -17,30 +17,19 @@ from .schema import VerifyAuth
 
 
 class JWTBearer(HTTPBearer):
-    token_endpoint: str
-    jwks_uri: str
-
     def __init__(self, **kwargs):
         # Configure URL from IdP
         user_pool_id = os.environ.get("COGNITO_USER_POOL_ID")
         if user_pool_id is not None:
-            provider_url = f"https://cognito-idp.{user_pool_id.split('_')[0]}.amazonaws.com/{user_pool_id}/"
+            self.provider_url = f"https://cognito-idp.{user_pool_id.split('_')[0]}.amazonaws.com/{user_pool_id}/"
         elif os.environ.get("ARC_ENV") == "testing":
-            provider_url = f"http://localhost:{os.environ.get('ARC_OIDC_IDP_PORT')}/"
+            self.provider_url = (
+                f"http://localhost:{os.environ.get('ARC_OIDC_IDP_PORT')}/"
+            )
         else:
             raise RuntimeError(
                 "Environment variable COGNITO_USER_POOL_ID must be defined in production.",
             )
-
-        # Fetch the well-known config from the IdP
-        resp = httpx.get(provider_url + ".well-known/openid-configuration")
-        resp.raise_for_status()
-
-        # Find the token endpoint and jwks_uri from the well-known config
-        well_known = resp.json()
-        self.token_endpoint = well_known["token_endpoint"]
-        self.jwks_uri = well_known["jwks_uri"]
-        self.token_alg = well_known["id_token_signing_alg_values_supported"]
 
         super().__init__(**kwargs)
 
@@ -50,9 +39,21 @@ class JWTBearer(HTTPBearer):
         )
         """Validate credentials if passed"""
         if credentials:
+            # Fetch the well-known config from the IdP
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(
+                    self.provider_url + ".well-known/openid-configuration"
+                )
+            resp.raise_for_status()
+
+            # Find the jwks_uri and token algorithms from the well-known config
+            well_known = resp.json()
+            jwks_uri = well_known["jwks_uri"]
+            token_alg = well_known["id_token_signing_alg_values_supported"]
+
             # Fetch signing key from Cognito
             async with httpx.AsyncClient() as client:
-                resp = await client.get(self.jwks_uri)
+                resp = await client.get(jwks_uri)
             jwks_data = resp.json()
             header = jwt.get_unverified_header(credentials.credentials)
             signing_key = next(
@@ -69,16 +70,14 @@ class JWTBearer(HTTPBearer):
                 jwt.decode(
                     credentials.credentials,
                     key=signing_key,
-                    algorithms=self.token_alg,
+                    algorithms=token_alg,
                 )
             except JWTError as e:
                 raise HTTPException(
                     status_code=401, detail=f"Authentication error: {e}"
                 )
         else:
-            raise HTTPException(
-                status_code=401, detail="Authentication error: No credentials supplied."
-            )
+            raise AssertionError("No credentials passed.")
 
 
 security = JWTBearer(
