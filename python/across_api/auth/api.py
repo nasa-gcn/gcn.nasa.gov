@@ -75,7 +75,7 @@ class JWTBearer(HTTPBearer):
 
 security = JWTBearer(
     scheme_name="ACROSS API Authorization",
-    description="Enter your access token obtained from /auth/token using GCN client_id and client_secret.",
+    description="Enter your access token.",
 )
 JWTBearerDep = [Depends(security)]
 
