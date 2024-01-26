@@ -74,8 +74,6 @@ pydantic-core==2.14.5
     # via pydantic
 pyerfa==2.0.1.1
     # via astropy
-pyjwt==2.8.0
-    # via -r requirements.in
 python-jose==3.3.0
     # via architect-functions
 pyyaml==6.0.1

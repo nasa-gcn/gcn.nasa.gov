@@ -6,9 +6,10 @@
 import os
 from typing import Optional
 
-import jwt
-import requests
-from fastapi import Depends, HTTPException, Request, status
+from jose import jwt
+from jose.exceptions import JWTError
+import httpx  # type: ignore
+from fastapi import Depends, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 from ..base.api import app
@@ -32,7 +33,7 @@ class JWTBearer(HTTPBearer):
             )
 
         # Fetch the well-known config from the IdP
-        resp = requests.get(provider_url + ".well-known/openid-configuration")
+        resp = httpx.get(provider_url + ".well-known/openid-configuration")
         resp.raise_for_status()
 
         # Find the token endpoint and jwks_uri from the well-known config
@@ -50,26 +51,29 @@ class JWTBearer(HTTPBearer):
         """Validate credentials if passed"""
         if credentials:
             # Fetch signing key from Cognito
-            jwks_client = jwt.PyJWKClient(self.jwks_uri)
-            try:
-                signing_key = jwks_client.get_signing_key_from_jwt(
-                    credentials.credentials
-                )
-            except jwt.DecodeError as e:
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(self.jwks_uri)
+            jwks_data = resp.json()
+            header = jwt.get_unverified_header(credentials.credentials)
+            signing_key = next(
+                data for data in jwks_data["keys"] if data["kid"] == header["kid"]
+            )
+
+            if signing_key is None:
                 raise HTTPException(
-                    status_code=401, detail=f"Authentication error: {e}"
+                    status_code=401, detail="Authentication error: Invalid key."
                 )
 
             # Validate the credentials
             try:
-                jwt.api_jwt.decode_complete(
+                jwt.decode(
                     credentials.credentials,
-                    key=signing_key.key,
+                    key=signing_key,
                     algorithms=self.token_alg,
                 )
-            except jwt.InvalidSignatureError as e:
+            except JWTError as e:
                 raise HTTPException(
-                    status_code=401, detail=f"Authentication error: {e}."
+                    status_code=401, detail=f"Authentication error: {e}"
                 )
 
 
