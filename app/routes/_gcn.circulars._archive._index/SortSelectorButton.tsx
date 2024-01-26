@@ -48,7 +48,7 @@ export function SortSelector({ defaultValue }: { defaultValue?: SortOrder }) {
   const submit = useSubmit()
 
   const sortOptions = [
-    { id: 'radio-sort-circularId', value: '', label: 'Circular ID' },
+    { id: 'radio-sort-circularId', value: '', label: 'Circular' },
     { id: 'radio-sort-relevance', value: 'relevance', label: 'Relevance' },
   ]
 
@@ -62,7 +62,7 @@ export function SortSelector({ defaultValue }: { defaultValue?: SortOrder }) {
           value={value}
           label={label}
           form="searchForm"
-          checked={inputSort === value}
+          defaultChecked={inputSort === value}
           onChange={({ target: { form, value } }) => {
             setSort(value)
             setShowContent(false)
