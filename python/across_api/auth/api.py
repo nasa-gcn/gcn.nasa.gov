@@ -33,10 +33,7 @@ class JWTBearer(HTTPBearer):
 
         # Fetch the well-known config from the IdP
         resp = requests.get(provider_url + ".well-known/openid-configuration")
-        try:
-            resp.raise_for_status()
-        except requests.exceptions.HTTPError as e:
-            HTTPException(status_code=500, detail=str(e))
+        resp.raise_for_status()
 
         # Find the token endpoint and jwks_uri from the well-known config
         well_known = resp.json()
