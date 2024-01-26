@@ -2,7 +2,6 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from functools import cached_property
 from typing import Optional
 
 import astropy.units as u  # type: ignore
