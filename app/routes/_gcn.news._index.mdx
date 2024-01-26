@@ -3,19 +3,28 @@ handle:
   breadcrumb: News
 ---
 
+import { Link } from '@remix-run/react'
 import {
   Collection,
   CollectionCalendarDate,
   CollectionDescription,
   CollectionHeading,
   CollectionItem,
+  Grid,
 } from '@trussworks/react-uswds'
 
 import { Anchor } from '~/components/Anchor'
 
-# GCN News and Events
+<Grid row>
+  <h1 className="grid-col-fill">GCN News and Events</h1>
+  <div className="grid-col-auto">
+    <Link className="usa-button usa-button--outline " to="/news/email">
+      Send Announcement
+    </Link>
+  </div>
+</Grid>
 
-  <Collection>
+<Collection>
 
 ## 2023
 
