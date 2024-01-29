@@ -4,13 +4,13 @@
 
 
 import os
-from typing import Optional
+from typing import Any, Annotated, Optional
 
 from jose import jwt
 from jose.exceptions import JWTError
 import httpx  # type: ignore
-from fastapi import Depends, HTTPException, Request
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import Depends, HTTPException, Request, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, SecurityScopes
 
 from ..base.api import app
 from .schema import VerifyAuth
@@ -33,10 +33,11 @@ class JWTBearer(HTTPBearer):
 
         super().__init__(**kwargs)
 
-    async def __call__(self, request: Request) -> None:
+    async def __call__(self, request: Request):
         credentials: Optional[HTTPAuthorizationCredentials] = await super().__call__(
             request
         )
+
         """Validate credentials if passed"""
         if credentials:
             # Fetch the well-known config from the IdP
@@ -56,17 +57,20 @@ class JWTBearer(HTTPBearer):
                 resp = await client.get(jwks_uri)
             jwks_data = resp.json()
             header = jwt.get_unverified_header(credentials.credentials)
-            for signing_key in jwks_data["keys"]:
-                if signing_key["kid"] == header["kid"]:
-                    break
-            else:
+
+            signing_key = None
+            for key in jwks_data["keys"]:
+                if key["kid"] == header["kid"]:
+                    signing_key = key
+
+            if signing_key is None:
                 raise HTTPException(
                     status_code=401, detail="Authentication error: Invalid key."
                 )
 
             # Validate the credentials
             try:
-                jwt.decode(
+                access_token = jwt.decode(
                     credentials.credentials,
                     key=signing_key,
                     algorithms=token_alg,
@@ -75,18 +79,47 @@ class JWTBearer(HTTPBearer):
                 raise HTTPException(
                     status_code=401, detail=f"Authentication error: {e}"
                 )
+            print(type(access_token))
+            return access_token
+
         else:
             raise AssertionError("No credentials passed.")
 
 
-security = JWTBearer(
+JWTBearerSecurity = JWTBearer(
     scheme_name="ACROSS API Authorization",
     description="Enter your access token.",
 )
-JWTBearerDep = [Depends(security)]
 
 
-@app.get("/auth/verify", dependencies=JWTBearerDep)
+async def ScopeAuthenticate(
+    security_scopes: SecurityScopes,
+    access_token: Annotated[dict, Depends(JWTBearerSecurity)],
+):
+    valid = False
+    scopes = access_token.get("scope", "")
+
+    # assuming the jwt scopes will be comma separated
+    token_scopes = scopes.split(",")
+
+    # check if user scopes is in endpoint scope
+    if len(security_scopes.scopes):
+        for role in token_scopes:
+            if role in security_scopes.scopes:
+                valid = True
+    else:  # endpoint has no scopes
+        valid = True
+
+    # raise exception if user.role not in endpoint scope
+    if not valid:
+        raise HTTPException(
+            status_code=401,
+            detail="Bearer token scope(s) not in endpoint scope",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+
+@app.get("/auth/verify", dependencies=[Security(ScopeAuthenticate, scopes=[])])
 async def verify_authentication() -> VerifyAuth:
     """Verify that the user is authenticated."""
     return VerifyAuth()

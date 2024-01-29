@@ -4,9 +4,10 @@
 
 from typing import Annotated, Optional
 
-from fastapi import Depends, Query
+from fastapi import Depends, Query, Security
 
 from ..base.api import app
+from ..auth.api import ScopeAuthenticate
 from .hello import Hello
 from .resolve import Resolve
 from .schema import HelloSchema, ResolveSchema
@@ -40,6 +41,20 @@ YourNameDep = Annotated[Optional[str], Depends(your_name)]
 # API End points
 @app.get("/")
 async def hello(name: YourNameDep) -> HelloSchema:
+    """
+    This function returns a JSON response with a greeting message and an optional name parameter.
+    If the name parameter is provided, the greeting message will include the name.
+    """
+    return Hello(name=name).schema
+
+
+@app.get(
+    "/secure_hello",
+    dependencies=[
+        Security(ScopeAuthenticate, scopes=["gcn.nasa.gov/kafka-public-consumer"])
+    ],
+)
+async def secure_hello(name: YourNameDep) -> HelloSchema:
     """
     This function returns a JSON response with a greeting message and an optional name parameter.
     If the name parameter is provided, the greeting message will include the name.
