@@ -14,6 +14,7 @@ import {
   Icon,
   Radio,
 } from '@trussworks/react-uswds'
+import classNames from 'classnames'
 import { useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
@@ -95,15 +96,18 @@ export function SortSelector({
           setShowContent((shown) => !shown)
         }}
       />
-      {showContent && (
-        <DetailsDropdownContent className="maxw-card-xlg">
-          <CardBody>
-            <Grid col={1}>
-              <SortRadioButtons />
-            </Grid>
-          </CardBody>
-        </DetailsDropdownContent>
-      )}
+
+      <DetailsDropdownContent
+        className={classNames('maxw-card-xlg', {
+          'display-none': !showContent,
+        })}
+      >
+        <CardBody>
+          <Grid col={1}>
+            <SortRadioButtons />
+          </Grid>
+        </CardBody>
+      </DetailsDropdownContent>
     </>
   )
 }
