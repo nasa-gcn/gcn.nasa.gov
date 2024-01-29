@@ -6,16 +6,14 @@
 from typing import List, Optional
 
 import astropy.units as u  # type: ignore
+import numpy as np
 from astropy.time import Time  # type: ignore
 from shapely import Polygon  # type: ignore
 
-from .constraints import SAAPolygonConstraint
-
 from .common import ACROSSAPIBase, round_time
+from .constraints import SAAPolygonConstraint
 from .ephem import EphemBase
 from .schema import SAAEntry, SAAGetSchema, SAASchema
-from .window import MakeWindowBase
-import numpy as np
 
 
 class SAAPolygonBase:
@@ -49,7 +47,7 @@ class SAAPolygonBase:
     ]
 
 
-class SAABase(ACROSSAPIBase, MakeWindowBase):
+class SAABase(ACROSSAPIBase):
     """
     Class for SAA calculations.
 
@@ -169,3 +167,40 @@ class SAABase(ACROSSAPIBase, MakeWindowBase):
         cls.saacons = SAAPolygonConstraint(cls.saa.saapoly)
         ephem = cls.ephemclass(begin=t, end=t, stepsize=1e-6 * u.s)  # type: ignore
         return cls.saacons(times=t, ephem=ephem)[0]
+
+    def make_windows(self, inconstraint: list, wintype=SAAEntry) -> list:
+        """
+        Record SAA windows from array
+
+        Parameters
+        ----------
+        inconstraint : list
+            List of booleans indicating if the spacecraft is in the SAA
+        wintype : VisWindow
+            Type of window to create (default: VisWindow)
+
+        Returns
+        -------
+        list
+            List of SAAEntry objects
+        """
+        windows = []
+        inocc = True
+        for i in range(len(inconstraint)):
+            if inocc is True and not inconstraint[i]:
+                inocc = False
+                inindex = i
+            if inocc is False and inconstraint[i]:
+                inocc = True
+                windows.append(
+                    wintype(
+                        begin=self.timestamp[inindex],
+                        end=self.timestamp[i - 1],
+                    )
+                )  # type: ignore
+
+        if not inocc:
+            win = wintype(begin=self.timestamp[inindex], end=self.timestamp[i])
+            if (win.end - win.begin).to(u.s) > 0:
+                windows.append(win)
+        return windows

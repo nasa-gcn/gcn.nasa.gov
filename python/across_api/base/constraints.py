@@ -1,5 +1,5 @@
-from shapely import Polygon, points  # type: ignore
 from astropy.time import Time  # type: ignore
+from shapely import Polygon, points  # type: ignore
 
 from .ephem import EphemBase
 
