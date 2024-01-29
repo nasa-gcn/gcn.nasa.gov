@@ -135,10 +135,8 @@ class EphemBase(ACROSSAPIBase):
             )
 
         # Round start and end times to stepsize, create array of timestamps
-        begin = round_time(self.begin, self.stepsize)
-        end = round_time(self.end, self.stepsize)
-        steps = (end - begin).to(u.s) / (self.stepsize.to(u.s)) + 1
-        self.timestamp = Time(np.linspace(begin, end, steps))
+        steps = (self.end - self.begin).to(u.s) / (self.stepsize.to(u.s)) + 1
+        self.timestamp = Time(np.linspace(self.begin, self.end, steps))
 
         # Load in the TLE data
         satellite = Satrec.twoline2rv(self.tle.tle1, self.tle.tle2)
