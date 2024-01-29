@@ -15,7 +15,7 @@ import {
   Radio,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import type { ChangeEvent} from 'react';
+import type { ChangeEvent } from 'react'
 import { useRef, useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
