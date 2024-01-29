@@ -79,7 +79,7 @@ class JWTBearer(HTTPBearer):
                 raise HTTPException(
                     status_code=401, detail=f"Authentication error: {e}"
                 )
-            print(type(access_token))
+
             return access_token
 
         else:
