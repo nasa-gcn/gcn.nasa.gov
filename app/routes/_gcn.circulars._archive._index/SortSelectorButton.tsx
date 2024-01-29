@@ -20,9 +20,11 @@ import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
 function SortButton({
   sort,
+  expanded,
   ...props
 }: {
   sort?: string
+  expanded?: boolean
 } & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
   const slimClasses = 'height-4 padding-y-0'
 
@@ -33,6 +35,11 @@ function SortButton({
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         {<Icon.FilterList role="presentation" />}
+        {expanded ? (
+          <Icon.ExpandLess role="presentation" />
+        ) : (
+          <Icon.ExpandMore role="presentation" />
+        )}
       </Button>
     </ButtonGroup>
   )
@@ -83,6 +90,7 @@ export function SortSelector({
     <>
       <SortButton
         sort={defaultValue}
+        expanded={showContent}
         onClick={() => {
           setShowContent((shown) => !shown)
         }}
