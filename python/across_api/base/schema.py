@@ -5,7 +5,7 @@
 
 import io
 from datetime import datetime
-from typing import IO, Annotated, Any, List, Optional
+from typing import IO, Annotated, Any, List, Optional, Union
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
@@ -57,11 +57,13 @@ AstropyAngle = Annotated[
 # Pydantic type to serialize astropy SkyCoord or CartesianRepresentation objects as a list
 # of vectors in units of km
 AstropyPositionVector = Annotated[
-    CartesianRepresentation | SkyCoord,
+    Union[CartesianRepresentation, SkyCoord],
     PlainSerializer(
-        lambda x: x.xyz.to(u.km).value.T.tolist()
-        if type(x) is CartesianRepresentation
-        else x.cartesian.xyz.to(u.km).value.T.tolist(),
+        lambda x: (
+            x.xyz.to(u.km).value.T.tolist()
+            if type(x) is CartesianRepresentation
+            else x.cartesian.xyz.to(u.km).value.T.tolist()
+        ),
         return_type=List[conlist(float, min_length=3, max_length=3)],  # type: ignore
     ),
 ]
@@ -90,11 +92,11 @@ AstropyUnitVector = Annotated[
 # Define a Pydantic type for astropy Latitude, Longitude and Quantity list-type
 # objects, which will be serialized as a list of float in units of degrees.
 AstropyDegrees = Annotated[
-    Latitude | Longitude | u.Quantity,
+    Union[Latitude, Longitude, u.Quantity],
     PlainSerializer(
-        lambda x: x.deg.tolist()
-        if type(x) is not u.Quantity
-        else x.to(u.deg).value.tolist(),
+        lambda x: (
+            x.deg.tolist() if type(x) is not u.Quantity else x.to(u.deg).value.tolist()
+        ),
         return_type=List[float],
     ),
 ]
@@ -160,7 +162,6 @@ class EphemSchema(BaseSchema):
     timestamp: AstropyTimeList
     posvec: AstropyPositionVector
     earthsize: AstropyDegrees
-    pole: AstropyUnitVector
     velvec: AstropyVelocityVector
     sun: AstropyPositionVector
     moon: AstropyPositionVector
