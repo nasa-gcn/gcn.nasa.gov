@@ -40,7 +40,13 @@ function SortButton({
 
 type SortOrder = 'circularId' | 'relevance'
 
-export function SortSelector({ defaultValue }: { defaultValue?: SortOrder }) {
+export function SortSelector({
+  form,
+  defaultValue,
+}: {
+  form?: string
+  defaultValue?: SortOrder
+}) {
   const [inputSort, setSort] = useState(defaultValue || '')
 
   const [showContent, setShowContent] = useState(false)
@@ -61,7 +67,7 @@ export function SortSelector({ defaultValue }: { defaultValue?: SortOrder }) {
           name="sort"
           value={value}
           label={label}
-          form="searchForm"
+          form={form}
           defaultChecked={inputSort === value}
           onChange={({ target: { form, value } }) => {
             setSort(value)
