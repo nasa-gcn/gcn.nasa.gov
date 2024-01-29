@@ -32,7 +32,7 @@ function SortButton({
   return (
     <ButtonGroup type="segmented" {...props}>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
-        Sort by...
+        Sorted By {sort === 'relevance' ? 'Relevance' : 'Circular'}
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         {<Icon.FilterList role="presentation" />}
@@ -46,14 +46,12 @@ function SortButton({
   )
 }
 
-type SortOrder = 'circularId' | 'relevance'
-
 export function SortSelector({
   form,
   defaultValue,
 }: {
   form?: string
-  defaultValue?: SortOrder
+  defaultValue?: string
 }) {
   const [inputSort, setSort] = useState(defaultValue || '')
 
@@ -90,7 +88,7 @@ export function SortSelector({
   return (
     <>
       <SortButton
-        sort={defaultValue}
+        sort={inputSort}
         expanded={showContent}
         onClick={() => {
           setShowContent((shown) => !shown)
