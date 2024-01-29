@@ -2,9 +2,21 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from ..base.api import EpochDep, app
-from ..base.schema import TLESchema
+from ..base.api import DateRangeDep, EpochDep, StepSizeDep, app
+from ..base.schema import SAASchema, TLESchema
+from .saa import SwiftSAA
 from .tle import SwiftTLE
+
+
+@app.get("/swift/saa")
+async def swift_saa(
+    daterange: DateRangeDep,
+    stepsize: StepSizeDep,
+) -> SAASchema:
+    """
+    Endpoint for retrieving the times of Swift SAA passages for a given date range.
+    """
+    return SwiftSAA(stepsize=stepsize, **daterange).schema
 
 
 @app.get("/swift/tle")
