@@ -4,4 +4,5 @@ mypy
 pytest
 types-requests
 types-cachetools
+types-python-jose
 -r python/requirements.txt
