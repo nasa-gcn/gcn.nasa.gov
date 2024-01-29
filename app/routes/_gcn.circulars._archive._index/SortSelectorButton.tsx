@@ -74,7 +74,7 @@ export function SortSelector({
           value={value}
           label={label}
           form={form}
-          defaultChecked={inputSort === value}
+          defaultChecked={defaultValue === value}
           onChange={({ target: { form, value } }) => {
             setSort(value)
             setShowContent(false)
