@@ -4,12 +4,12 @@
 
 from mangum import Mangum
 
-from across_api.base.api import app
 import across_api.across.api  # noqa F401
+import across_api.auth.api  # type: ignore # noqa F401
 import across_api.burstcube.api  # noqa F401
 import across_api.swift.api  # noqa F401
-
-from env import feature
+from across_api.base.api import app
+from env import feature  # type: ignore
 
 if feature("LABS"):
     handler = Mangum(app, api_gateway_base_path="/labs/api/v1", lifespan="off")
