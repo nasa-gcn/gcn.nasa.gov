@@ -135,6 +135,14 @@ export function Header() {
               >
                 Documentation
               </NavLink>,
+              <NavLink
+                className="usa-nav__link"
+                to="/news"
+                key="/news"
+                onClick={hideMobileNav}
+              >
+                News
+              </NavLink>,
               email ? (
                 <>
                   <NavDropDownButton
