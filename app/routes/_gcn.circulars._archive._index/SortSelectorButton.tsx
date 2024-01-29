@@ -15,7 +15,8 @@ import {
   Radio,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { useState } from 'react'
+import type { ChangeEvent} from 'react';
+import { useRef, useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -53,16 +54,30 @@ export function SortSelector({
   form?: string
   defaultValue?: string
 }) {
-  const [inputSort, setSort] = useState(defaultValue || '')
-
   const [showContent, setShowContent] = useState(false)
+
+  const sortInputRef = useRef<HTMLInputElement>(null)
 
   const submit = useSubmit()
 
   const sortOptions = [
-    { id: 'radio-sort-circularId', value: '', label: 'Circular' },
+    { id: 'radio-sort-circularId', value: 'circularID', label: 'Circular' },
     { id: 'radio-sort-relevance', value: 'relevance', label: 'Relevance' },
   ]
+
+  function setSortOrder(value: string) {
+    if (sortInputRef.current) {
+      sortInputRef.current.value = value
+    }
+  }
+
+  function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
+    setSortOrder(value)
+    setShowContent(false)
+    const form = sortInputRef.current?.form
+    if (form) console.log(form)
+    if (form) submit(form)
+  }
 
   const SortRadioButtons = () => (
     <>
@@ -70,16 +85,12 @@ export function SortSelector({
         <Radio
           key={id}
           id={id}
-          name="sort"
+          name={''}
           value={value}
           label={label}
           form={form}
           defaultChecked={defaultValue === value}
-          onChange={({ target: { form, value } }) => {
-            setSort(value)
-            setShowContent(false)
-            submit(form)
-          }}
+          onChange={radioOnChange}
         />
       ))}
     </>
@@ -87,8 +98,15 @@ export function SortSelector({
 
   return (
     <>
+      <input
+        type="hidden"
+        name="sort"
+        form={form}
+        ref={sortInputRef}
+        defaultValue={defaultValue}
+      />
       <SortButton
-        sort={inputSort}
+        sort={defaultValue}
         expanded={showContent}
         onClick={() => {
           setShowContent((shown) => !shown)

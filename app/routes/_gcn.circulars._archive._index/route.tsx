@@ -110,6 +110,7 @@ export default function () {
   const query = searchParams.get('query') || undefined
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
+  const sort = searchParams.get('sort') || undefined
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -156,7 +157,7 @@ export default function () {
         {featureCircularsFilterByDate && (
           <DateSelector startDate={startDate} endDate={endDate} />
         )}
-        <SortSelector form={formId} />
+        <SortSelector form={formId} defaultValue={sort} />
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
