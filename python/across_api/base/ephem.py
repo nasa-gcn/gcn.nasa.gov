@@ -186,8 +186,4 @@ class EphemBase(ACROSSAPIBase):
         else:
             self.earthsize = np.arcsin(R_earth / dist)
 
-        # Calculate orbit pole vector
-        polevec = self.posvec.cross(self.velvec)
-        self.pole = SkyCoord(polevec / polevec.norm())
-
         return True

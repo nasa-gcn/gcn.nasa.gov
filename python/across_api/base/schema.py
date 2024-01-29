@@ -160,7 +160,6 @@ class EphemSchema(BaseSchema):
     timestamp: AstropyTimeList
     posvec: AstropyPositionVector
     earthsize: AstropyDegrees
-    pole: AstropyUnitVector
     velvec: AstropyVelocityVector
     sun: AstropyPositionVector
     moon: AstropyPositionVector
