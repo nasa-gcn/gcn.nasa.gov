@@ -135,7 +135,7 @@ class EphemBase(ACROSSAPIBase):
             )
 
         # Round start and end times to stepsize, create array of timestamps
-        steps = (self.end - self.begin).to(u.s) / (self.stepsize.to(u.s)) + 1
+        steps = int((self.end - self.begin).to(u.s) / (self.stepsize.to(u.s)) + 1)
         self.timestamp = Time(np.linspace(self.begin, self.end, steps))
 
         # Load in the TLE data
