@@ -56,11 +56,10 @@ class JWTBearer(HTTPBearer):
                 resp = await client.get(jwks_uri)
             jwks_data = resp.json()
             header = jwt.get_unverified_header(credentials.credentials)
-            signing_key = next(
-                data for data in jwks_data["keys"] if data["kid"] == header["kid"]
-            )
-
-            if signing_key is None:
+            for signing_key in jwks_data["keys"]:
+                if signing_key["kid"] == header["kid"]:
+                    break
+            else:
                 raise HTTPException(
                     status_code=401, detail="Authentication error: Invalid key."
                 )
