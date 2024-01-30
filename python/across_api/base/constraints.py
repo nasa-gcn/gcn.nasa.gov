@@ -18,7 +18,7 @@ class SAAPolygonConstraint:
     """
 
     def __init__(self, polygon: Polygon):
-        self.polygon = polygon
+        self.polygon = Polygon(polygon)
 
     def __call__(self, times: Time, ephem: EphemBase):
         """

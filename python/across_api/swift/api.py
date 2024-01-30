@@ -2,11 +2,13 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from .ephem import SwiftEphem
-from ..base.api import DateRangeDep, EpochDep, StepSizeDep, app
-from ..base.schema import EphemSchema, TLESchema
-from .tle import SwiftTLE
 import os
+
+from ..base.api import DateRangeDep, EpochDep, StepSizeDep, app
+from ..base.schema import EphemSchema, SAASchema, TLESchema
+from .ephem import SwiftEphem
+from .saa import SwiftSAA
+from .tle import SwiftTLE
 
 if os.environ.get("ARC_ENV") == "testing":
 
@@ -29,3 +31,12 @@ if os.environ.get("ARC_ENV") == "testing":
         Returns the best TLE for Swift for a given epoch.
         """
         return SwiftTLE(epoch=epoch).schema
+
+    @app.get("/testing/swift/saa")
+    async def swift_saa(date_range: DateRangeDep, stepsize: StepSizeDep) -> SAASchema:
+        """
+        Returns the best TLE for Swift for a given epoch.
+        """
+        return SwiftSAA(
+            begin=date_range["begin"], end=date_range["end"], stepsize=stepsize
+        ).schema

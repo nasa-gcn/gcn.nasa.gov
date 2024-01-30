@@ -5,8 +5,9 @@
 import os
 
 from ..base.api import DateRangeDep, EpochDep, StepSizeDep, app
-from ..base.schema import EphemSchema, TLESchema
+from ..base.schema import EphemSchema, SAASchema, TLESchema
 from .ephem import BurstCubeEphem
+from .saa import BurstCubeSAA
 from .tle import BurstCubeTLE
 
 if os.environ.get("ARC_ENV") == "testing":
@@ -30,3 +31,14 @@ if os.environ.get("ARC_ENV") == "testing":
         Returns the best TLE for BurstCube for a given epoch.
         """
         return BurstCubeTLE(epoch=epoch).schema
+
+    @app.get("/testing/burstcube/saa")
+    async def burstcube_saa(
+        date_range: DateRangeDep, stepsize: StepSizeDep
+    ) -> SAASchema:
+        """
+        Returns the best TLE for BurstCube for a given epoch.
+        """
+        return BurstCubeSAA(
+            begin=date_range["begin"], end=date_range["end"], stepsize=stepsize
+        ).schema
