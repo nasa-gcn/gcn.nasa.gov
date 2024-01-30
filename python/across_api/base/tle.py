@@ -5,7 +5,7 @@
 
 import logging
 import os
-from typing import List, Optional, Tuple
+from typing import List, Optional
 
 import requests
 from astropy.time import Time  # type: ignore
