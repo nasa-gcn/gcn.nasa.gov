@@ -41,50 +41,6 @@ def round_time(t: Time, step: u.Quantity) -> Time:
     )
 
 
-def ceil_time(t: Time, step: u.Quantity) -> Time:
-    """
-    Round up an astropy Time object to a given time step. So for example, if
-    step=1*u.s, then the time will be rounded to the next nearest second. If step
-    is 1*u.min, then the time will be rounded to the next nearest minute.
-
-    Parameters
-    ----------
-    t
-        The time to round.
-    step
-        The time step to round to.
-
-    Returns
-    -------
-        The rounded Time.
-    """
-    return Time(
-        np.ceil(t.unix / step.to_value(u.s)) * step.to_value(u.s), format="unix"
-    )
-
-
-def floor_time(t: Time, step: u.Quantity) -> Time:
-    """
-    Round down an astropy Time object to a given time step. So for example, if
-    step=1*u.s, then the time will be rounded down to the second. If step
-    is 1*u.min, then the time will be rounded down to the minute.
-
-    Parameters
-    ----------
-    t
-        The time to round.
-    step
-        The time step to round to.
-
-    Returns
-    -------
-        The rounded Time.
-    """
-    return Time(
-        np.floor(t.unix / step.to_value(u.s)) * step.to_value(u.s), format="unix"
-    )
-
-
 class ACROSSAPIBase:
     """Common methods for ACROSS API Classes. Most of these are to do with reading and writing classes out as JSON/dicts."""
 
