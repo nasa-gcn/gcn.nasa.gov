@@ -2,16 +2,31 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from ..base.api import EpochDep, app
-from ..base.schema import TLESchema
+import os
+
+from ..base.api import DateRangeDep, EpochDep, StepSizeDep, app
+from ..base.schema import EphemGetSchema, TLESchema
+from .ephem import BurstCubeEphem
 from .tle import BurstCubeTLE
 
+if os.environ.get("ARC_ENV") == "testing":
 
-@app.get("/burstcube/tle")
-def burstcube_tle(
-    epoch: EpochDep,
-) -> TLESchema:
-    """
-    Returns the best TLE for BurstCube for a given epoch.
-    """
-    return BurstCubeTLE(epoch=epoch).schema
+    @app.get("/testing/burstcube/ephem")
+    async def burstcube_ephem(
+        date_range: DateRangeDep, stepsize: StepSizeDep
+    ) -> EphemGetSchema:
+        """
+        Returns the best TLE for BurstCube for a given epoch.
+        """
+        return BurstCubeEphem(
+            begin=date_range["begin"], end=date_range["end"], stepsize=stepsize
+        ).schema
+
+    @app.get("/testing/burstcube/tle")
+    async def burstcube_tle(
+        epoch: EpochDep,
+    ) -> TLESchema:
+        """
+        Returns the best TLE for BurstCube for a given epoch.
+        """
+        return BurstCubeTLE(epoch=epoch).schema
