@@ -121,6 +121,9 @@ class BaseSchema(BaseModel):
 
     model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
+    def __hash__(self):
+        return hash((type(self),) + tuple(self.__dict__.values()))
+
 
 class DateRangeSchema(BaseSchema):
     """
@@ -291,3 +294,52 @@ class TLEEntry(BaseSchema):
 
 class TLESchema(BaseSchema):
     tle: Optional[TLEEntry]
+
+
+class SAAEntry(DateRangeSchema):
+    """
+    Simple class to hold a single SAA passage.
+
+    Parameters
+    ----------
+    begin
+        The start datetime of the SAA passage.
+    end
+        The end datetime of the SAA passage.
+    """
+
+    @property
+    def length(self) -> u.Quantity:
+        """
+        Calculate the length of the SAA passage in days.
+
+        Returns
+        -------
+            The length of the SAA passage
+        """
+        return self.end - self.begin
+
+
+class SAASchema(BaseSchema):
+    """
+    Returns from the SAA class
+
+    Parameters
+    ----------
+    entries
+        List of SAAEntry objects.
+    """
+
+    entries: List[SAAEntry]
+
+
+class SAAGetSchema(DateRangeSchema):
+    """Schema defining required parameters for GET
+
+    Inherits
+    --------
+    DateRangeSchema
+        Schema for date range data.
+    """
+
+    ...
