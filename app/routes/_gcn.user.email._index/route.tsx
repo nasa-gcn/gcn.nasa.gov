@@ -11,6 +11,11 @@ import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import {
+  createAnnouncementSubsciption,
+  deleteAnnouncementSubscription,
+  getAnnouncementSubscription,
+} from '../_gcn.user.email/email_announcements.server'
+import {
   createCircularEmailNotification,
   deleteCircularEmailNotification,
   getUsersCircularSubmissionStatus,
@@ -49,10 +54,16 @@ export async function action({ request }: ActionFunctionArgs) {
         await sendTestEmail(recipient)
       }
       break
-    case 'subscribe':
+    case 'subscribe_announcements':
+      await createAnnouncementSubsciption(user.sub, user.email)
+      break
+    case 'unsubscribe_announcements':
+      await deleteAnnouncementSubscription(user.sub, user.email)
+      break
+    case 'subscribe_circulars':
       await createCircularEmailNotification(user.sub, user.email)
       break
-    case 'unsubscribe':
+    case 'unsubscribe_circulars':
       await deleteCircularEmailNotification(user.sub, user.email)
       break
   }
@@ -65,19 +76,31 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const data = await getEmailNotifications(user.sub)
   const userIsSubscribedToCircularEmails =
     await getUsersCircularSubmissionStatus(user.sub)
-
-  return { data, userIsSubscribedToCircularEmails }
+  const userIsSubscribedToAnnouncements = await getAnnouncementSubscription(
+    user.sub
+  )
+  return {
+    data,
+    userIsSubscribedToCircularEmails,
+    userIsSubscribedToAnnouncements,
+  }
 }
 
-function CircularsSubscriptionForm({ value }: { value: boolean }) {
+function EmailSubscriptionForm({
+  value,
+  option,
+}: {
+  value: boolean
+  option: 'circulars' | 'announcements'
+}) {
   const fetcher = useFetcher<typeof action>()
 
   let valuePending
   switch (fetcher.formData?.get('intent')?.toString()) {
-    case 'subscribe':
+    case `subscribe_${option}`:
       valuePending = true
       break
-    case 'unsubscribe':
+    case `unsubscribe_${option}`:
       valuePending = false
       break
     default:
@@ -106,7 +129,7 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
           <Button
             type={value ? 'button' : 'submit'}
             name="intent"
-            value="subscribe"
+            value={`subscribe_${option}`}
             outline={!valuePending}
           >
             On
@@ -114,7 +137,7 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
           <Button
             type={value ? 'submit' : 'button'}
             name="intent"
-            value="unsubscribe"
+            value={`unsubscribe_${option}`}
             outline={valuePending}
           >
             Off
@@ -128,8 +151,11 @@ function CircularsSubscriptionForm({ value }: { value: boolean }) {
 export default function () {
   const hostname = useHostname()
   const email = useEmail()
-  const { data, userIsSubscribedToCircularEmails } =
-    useLoaderData<typeof loader>()
+  const {
+    data,
+    userIsSubscribedToCircularEmails,
+    userIsSubscribedToAnnouncements,
+  } = useLoaderData<typeof loader>()
 
   return (
     <>
@@ -139,10 +165,29 @@ export default function () {
       </p>
       <Grid row>
         <Grid tablet={{ col: 'fill' }}>
+          <h2>Announcements</h2>
+        </Grid>
+        <Grid tablet={{ col: 'auto' }}>
+          <EmailSubscriptionForm
+            value={userIsSubscribedToAnnouncements}
+            option="announcements"
+          />
+        </Grid>
+      </Grid>
+      <p className="usa-paragraph">
+        {userIsSubscribedToAnnouncements
+          ? 'You are currently subscribed to receive GCN Announcements via Email.'
+          : 'You are not currently subscribed to receive GCN Announcements via Email.'}
+      </p>
+      <Grid row>
+        <Grid tablet={{ col: 'fill' }}>
           <h2>Circulars</h2>
         </Grid>
         <Grid tablet={{ col: 'auto' }}>
-          <CircularsSubscriptionForm value={userIsSubscribedToCircularEmails} />
+          <EmailSubscriptionForm
+            value={userIsSubscribedToCircularEmails}
+            option="circulars"
+          />
         </Grid>
       </Grid>
       <p className="usa-paragraph">
@@ -152,7 +197,7 @@ export default function () {
       </p>
 
       <p className="usa-paragraph">
-        <strong>Circulars</strong> are sent from GCN Circulars{' '}
+        <strong>Announcements and Circulars</strong> are sent from GCN Circulars{' '}
         {`<no-reply@${hostname}>`} and are delivered to the email associated
         with your account ({email}).
       </p>

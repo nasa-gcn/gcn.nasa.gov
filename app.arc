@@ -53,6 +53,11 @@ sessions
   _idx *String
   _ttl TTL
 
+announcement_subscriptions
+  email *String
+  sub **String
+  PointInTimeRecovery true
+
 circulars_subscriptions
   email *String
   sub **String
@@ -132,6 +137,10 @@ circulars
 circulars_subscriptions
   sub *String
   name circularsSubscriptionsBySub
+
+announcement_subscriptions
+  sub *String
+  name announcementSubscriptionsBySub
 
 legacy_users
   receive *Number
