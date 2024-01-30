@@ -6,9 +6,9 @@ from typing import Optional
 
 import astropy.units as u  # type: ignore
 import numpy as np
-from astroplan import Observer  # type: ignore
 from astropy.constants import R_earth  # type: ignore
 from astropy.coordinates import (  # type: ignore
+    GCRS,
     TEME,
     CartesianDifferential,
     CartesianRepresentation,
@@ -153,29 +153,28 @@ class EphemBase(ACROSSAPIBase):
             teme_p.with_differentials(teme_v), frame=TEME(obstime=self.timestamp)
         ).itrs
 
-        # Set up astroplan Observer class
-        self.observer = Observer(self.itrs.earth_location)
-
         # Calculate satellite position in GCRS coordinate system vector as
         # array of x,y,z vectors in units of km, and velocity vector as array
         # of x,y,z vectors in units of km/s
-        self.posvec, self.velvec = self.observer.location.get_gcrs_posvel(
-            self.timestamp
-        )
+        self.gcrs = self.itrs.transform_to(GCRS)
+        self.posvec = self.gcrs.cartesian.without_differentials()
+        self.velvec = self.gcrs.velocity.to_cartesian()
 
         # Calculate the position of the Moon relative to the spacecraft
-        self.moon = get_body("moon", self.timestamp, location=self.observer.location)
+        self.moon = get_body("moon", self.timestamp, location=self.itrs.earth_location)
 
         # Calculate the position of the Moon relative to the spacecraft
-        self.sun = get_body("sun", self.timestamp, location=self.observer.location)
+        self.sun = get_body("sun", self.timestamp, location=self.itrs.earth_location)
 
         # Calculate the position of the Earth relative to the spacecraft
-        self.earth = get_body("earth", self.timestamp, location=self.observer.location)
+        self.earth = get_body(
+            "earth", self.timestamp, location=self.itrs.earth_location
+        )
 
         # Calculate the latitude, longitude and distance from the center of the
         # Earth of the satellite
-        self.longitude = self.observer.longitude
-        self.latitude = self.observer.latitude
+        self.longitude = self.itrs.earth_location.lon
+        self.latitude = self.itrs.earth_location.lat
         dist = self.posvec.norm()
 
         # Calculate the Earth radius in degrees
