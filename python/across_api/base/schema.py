@@ -121,6 +121,9 @@ class BaseSchema(BaseModel):
 
     model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
+    def __hash__(self):
+        return hash((type(self),) + tuple(self.__dict__.values()))
+
 
 class DateRangeSchema(BaseSchema):
     """
