@@ -41,6 +41,7 @@ import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
 import { DevBanner } from './root/DevBanner'
 import { Title } from './root/Title'
 import { getUser } from './routes/_gcn._auth/user.server'
+import { moderatorGroup } from './routes/_gcn.circulars/circulars.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 // FIXME: no top-level await, no import function
@@ -98,8 +99,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const name = user?.name
   const idp = user?.idp
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
+  const userIsMod = user?.groups.includes(moderatorGroup)
 
-  return { origin, email, name, features, recaptchaSiteKey, idp }
+  return { origin, email, name, features, recaptchaSiteKey, idp, userIsMod }
 }
 
 /** Don't reevaluate this route's loader due to client-side navigations. */
@@ -126,6 +128,11 @@ export function useEmail() {
 export function useName() {
   const { name } = useLoaderDataRoot()
   return name
+}
+
+export function useModStatus() {
+  const { userIsMod } = useLoaderDataRoot()
+  return userIsMod
 }
 
 export function useRecaptchaSiteKey() {

@@ -6,9 +6,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+function dieForEnv(key: string): never {
+  throw new Error(`environment variable ${key} must be set`)
+}
+
 export function getEnvOrDie(key: string) {
   const result = process.env[key]
-  if (!result) throw new Error(`environment variable ${key} must be set`)
+  if (!result) dieForEnv(key)
   return result
 }
 
@@ -16,7 +20,7 @@ export function getEnvOrDieInProduction(key: string) {
   const result = process.env[key]
   if (!result) {
     if (process.env.NODE_ENV === 'production') {
-      throw new Error(`environment variable ${key} must be set`)
+      dieForEnv(key)
     }
     console.warn(
       `environment variable ${key} must be set for production. Proceeding anyway since we are in ${process.env.NODE_ENV}`
