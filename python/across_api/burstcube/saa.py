@@ -6,7 +6,6 @@ from typing import Optional
 
 import astropy.units as u  # type: ignore
 from astropy.time import Time  # type: ignore
-from shapely.geometry import Polygon  # type: ignore
 
 from ..base.common import ceil_time, floor_time, round_time
 from ..base.constraints import SAAPolygonConstraint  # type: ignore
