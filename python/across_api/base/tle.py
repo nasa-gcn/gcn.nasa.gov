@@ -5,7 +5,7 @@
 
 import logging
 import os
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import requests
 from astropy.time import Time  # type: ignore
@@ -88,7 +88,7 @@ class TLEBase(ACROSSAPIBase):
     # Return values
     error: Optional[str]
 
-    def __init__(self, epoch: Time):
+    def __init__(self, epoch: Time, tle: Optional[TLEEntry] = None):
         """
         Initialize a TLE object with the given epoch.
 
@@ -98,7 +98,10 @@ class TLEBase(ACROSSAPIBase):
             The epoch of the TLE object.
         """
         self.epoch = epoch
-        self.tles = []
+        if tle is not None:
+            self.tles = [tle]
+        else:
+            self.tles = []
         if self.validate_get():
             self.get()
 
@@ -341,6 +344,10 @@ class TLEBase(ACROSSAPIBase):
             self.epoch = self.tle_min_epoch
         elif self.epoch > Time.now().utc:
             self.epoch = Time.now().utc
+
+        # Check if a TLE is loaded manually
+        if self.tle is not None:
+            return True
 
         # Fetch TLE from the TLE database
         if self.read_tle_db() is True:
