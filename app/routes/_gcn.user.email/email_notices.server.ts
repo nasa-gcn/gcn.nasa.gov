@@ -7,7 +7,7 @@
  */
 import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { paginateScan } from '@aws-sdk/lib-dynamodb'
+import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
 
@@ -243,11 +243,37 @@ export async function sendNewsAnnouncementEmail(
     if (newEmails) emails.push(...newEmails)
   }
 
+  const legacyEmails = await getLegacyAnnouncementReceiverEmails()
+
   await sendEmailBulk({
     fromName: 'GCN Announcements',
-    to: emails,
+    to: [...emails, ...legacyEmails],
     subject,
     body,
     topic: 'announcements',
   })
+}
+
+async function getLegacyAnnouncementReceiverEmails() {
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('legacy_users')
+  const pages = paginateQuery(
+    { client },
+    {
+      IndexName: 'legacyReceivers',
+      KeyConditionExpression: 'receiveAnnouncements = :receiveAnnouncements',
+      ExpressionAttributeValues: {
+        ':receiveAnnouncements': 1,
+      },
+      ProjectionExpression: 'email',
+      TableName,
+    }
+  )
+  const emails: string[] = []
+  for await (const page of pages) {
+    const newEmails = page.Items?.map(({ email }) => email)
+    if (newEmails) emails.push(...newEmails)
+  }
+  return emails
 }
