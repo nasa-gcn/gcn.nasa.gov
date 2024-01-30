@@ -5,7 +5,7 @@
 import os
 
 from ..base.api import DateRangeDep, EpochDep, StepSizeDep, app
-from ..base.schema import EphemGetSchema, TLESchema
+from ..base.schema import EphemSchema, TLESchema
 from .ephem import BurstCubeEphem
 from .tle import BurstCubeTLE
 
@@ -14,7 +14,7 @@ if os.environ.get("ARC_ENV") == "testing":
     @app.get("/testing/burstcube/ephem")
     async def burstcube_ephem(
         date_range: DateRangeDep, stepsize: StepSizeDep
-    ) -> EphemGetSchema:
+    ) -> EphemSchema:
         """
         Returns the best TLE for BurstCube for a given epoch.
         """
