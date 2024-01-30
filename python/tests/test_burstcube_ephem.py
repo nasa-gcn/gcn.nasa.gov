@@ -6,7 +6,7 @@ from astropy.time import Time  # type: ignore
 import astropy.units as u  # type: ignore
 from across_api.burstcube.ephem import BurstCubeEphem  # type: ignore
 from across_api.burstcube.tle import BurstCubeTLE  # type: ignore
-from python.across_api.base.schema import TLEEntry
+from across_api.base.schema import TLEEntry
 
 # Define a TLE by hand
 satname = "ISS (ZARYA)"
