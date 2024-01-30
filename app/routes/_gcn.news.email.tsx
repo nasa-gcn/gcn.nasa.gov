@@ -21,7 +21,7 @@ import { useState } from 'react'
 
 import { getUser } from './_gcn._auth/user.server'
 import { moderatorGroup } from './_gcn.circulars/circulars.server'
-import { sendNewsAnnouncementEmail } from './_gcn.user.email/email_notices.server'
+import { sendNewsAnnouncementEmail } from './_gcn.user.email/email_announcements.server'
 import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ request }: LoaderFunctionArgs) {
