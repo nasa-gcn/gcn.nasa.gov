@@ -55,7 +55,7 @@ export async function deleteAnnouncementSubscription(
   })
 }
 
-export async function sendNewsAnnouncementEmail(
+export async function sendAnnouncementEmail(
   subject: string,
   body: string,
   user?: User
