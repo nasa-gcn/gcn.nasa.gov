@@ -75,7 +75,6 @@ export function SortSelector({
     setSortOrder(value)
     setShowContent(false)
     const form = sortInputRef.current?.form
-    if (form) console.log(form)
     if (form) submit(form)
   }
 
