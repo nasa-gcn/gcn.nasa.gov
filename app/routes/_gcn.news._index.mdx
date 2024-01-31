@@ -9,16 +9,20 @@ import {
   CollectionDescription,
   CollectionHeading,
   CollectionItem,
-  GridContainer,
+  Grid,
 } from '@trussworks/react-uswds'
 
+import { SendAnnouncmentButton } from './_gcn.news/components'
 import { Anchor } from '~/components/Anchor'
 
-<GridContainer className="usa-section">
+<Grid row>
+  <h1 className="grid-col-fill">GCN News and Events</h1>
+  <div className="grid-col-auto">
+    <SendAnnouncmentButton />
+  </div>
+</Grid>
 
-# GCN News and Events
-
-  <Collection>
+<Collection>
 
 ## 2023
 
@@ -245,5 +249,3 @@ import { Anchor } from '~/components/Anchor'
     </CollectionItem>
 
   </Collection>
-
-</GridContainer>

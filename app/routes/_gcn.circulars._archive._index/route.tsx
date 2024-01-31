@@ -40,7 +40,6 @@ import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
-import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -95,7 +94,6 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
-  const featureCircularsFilterByDate = useFeature('CIRCULARS_FILTER_BY_DATE')
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
@@ -154,10 +152,11 @@ export default function () {
             />
           </Button>
         </Form>
-        {featureCircularsFilterByDate && (
-          <DateSelector startDate={startDate} endDate={endDate} />
-        )}
-        <SortSelector form={formId} defaultValue={sort} />
+        <DateSelector
+          form={formId}
+          defaultStartDate={startDate}
+          defaultEndDate={endDate}
+        />
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"

@@ -92,4 +92,25 @@ export const unsubscribeActions = {
       ),
     ])
   },
+  async announcements(email: string) {
+    await Promise.all([
+      nukeSubscriptions(
+        email,
+        'email',
+        ['email', 'sub'],
+        'announcement_subscriptions'
+      ),
+      (async () => {
+        const db = await tables()
+        const item = await db.legacy_users.get({ email })
+        if (item)
+          await db.legacy_users.update({
+            Key: { email },
+            UpdateExpression:
+              'set receiveAnnouncements = :receiveAnnouncements',
+            ExpressionAttributeValues: { ':receiveAnnouncements': 0 },
+          })
+      })(),
+    ])
+  },
 }

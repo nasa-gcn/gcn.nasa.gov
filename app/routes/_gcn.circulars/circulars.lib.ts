@@ -123,6 +123,7 @@ export function emailIsAutoReply(subject: string) {
 export const validSubjectKeywords = [
   'AGILE',
   'ALMA',
+  'AMON',
   'ANTARES',
   'AXP',
   'Baksan Neutrino Observatory Alert',
@@ -149,6 +150,7 @@ export const validSubjectKeywords = [
   'MAGIC',
   'MASTER',
   'MAXI',
+  'NuEM',
   'Pan-STARRS',
   'POLAR',
   'RATIR',

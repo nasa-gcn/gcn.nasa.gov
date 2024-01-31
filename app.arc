@@ -53,6 +53,11 @@ sessions
   _idx *String
   _ttl TTL
 
+announcement_subscriptions
+  email *String
+  sub **String
+  PointInTimeRecovery true
+
 circulars_subscriptions
   email *String
   sub **String
@@ -133,16 +138,24 @@ circulars_subscriptions
   sub *String
   name circularsSubscriptionsBySub
 
+announcement_subscriptions
+  sub *String
+  name announcementSubscriptionsBySub
+
 legacy_users
   receive *Number
   name legacyReceivers
+
+legacy_users
+  receiveAnnouncements *Number
+  name legacyAnnouncementReceivers
 
 synonyms
   synonymId *String
   name synonymsById
 
 @aws
-runtime nodejs18.x
+runtime nodejs20.x
 region us-east-1
 architecture arm64
 memory 256
