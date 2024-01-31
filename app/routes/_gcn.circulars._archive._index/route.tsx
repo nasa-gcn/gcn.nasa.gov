@@ -157,6 +157,7 @@ export default function () {
           defaultStartDate={startDate}
           defaultEndDate={endDate}
         />
+        <SortSelector form={formId} defaultValue={sort} />
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
