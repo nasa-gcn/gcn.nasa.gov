@@ -101,7 +101,7 @@ async function getLegacyAnnouncementReceiverEmails() {
   const pages = paginateQuery(
     { client },
     {
-      IndexName: 'legacyReceivers',
+      IndexName: 'legacyAnnouncementReceivers',
       KeyConditionExpression: 'receiveAnnouncements = :receiveAnnouncements',
       ExpressionAttributeValues: {
         ':receiveAnnouncements': 1,
