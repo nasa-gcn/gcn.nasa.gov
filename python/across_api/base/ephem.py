@@ -19,11 +19,11 @@ from astropy.time import Time  # type: ignore
 from fastapi import HTTPException
 from sgp4.api import Satrec  # type: ignore
 
-from ..base.schema import EphemGetSchema, EphemSchema, TLEEntry
-from .common import ACROSSAPIBase, round_time
+from ..base.schema import TLEEntry
+from .common import round_time
 
 
-class EphemBase(ACROSSAPIBase):
+class EphemBase:
     """
     Base class for computing ephemeris data, for spacecraft whose positions can
     be determined using a Two-Line Element (TLE), i.e. most Earth-orbiting
@@ -58,12 +58,7 @@ class EphemBase(ACROSSAPIBase):
     -------
     ephindex
         Returns the array index for a given time.
-    get
-        Computes the ephemeris for the specified time range.
     """
-
-    _schema = EphemSchema
-    _get_schema = EphemGetSchema
 
     # Type hints
     begin: Time
@@ -71,23 +66,6 @@ class EphemBase(ACROSSAPIBase):
     stepsize: u.Quantity
     earth_radius: Optional[u.Quantity] = None
     tle: Optional[TLEEntry] = None
-
-    def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
-        # Check if TLE is loaded
-        if self.tle is None:
-            raise HTTPException(
-                status_code=404, detail="No TLE available for this epoch"
-            )
-
-        # Parse inputs, round begin and end to stepsize
-        self.begin = round_time(begin, stepsize)
-        self.end = round_time(end, stepsize)
-        self.stepsize = stepsize
-
-        # Validate and process API call
-        if self.validate_get():
-            # Perform GET
-            self.get()
 
     def __len__(self) -> int:
         return len(self.timestamp)
@@ -109,24 +87,17 @@ class EphemBase(ACROSSAPIBase):
         """
         return int(np.argmin(np.abs((self.timestamp.datetime - t.datetime))))
 
-    def get(self) -> bool:
-        """
-        Compute the ephemeris for the specified time range with at a
-        time resolution given by self.stepsize.
+    def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
+        # Check if TLE is loaded
+        if self.tle is None:
+            raise HTTPException(
+                status_code=404, detail="No TLE available for this epoch"
+            )
 
-        Note only calculates Spacecraft position, velocity,
-        Sun/Moon position and latitude/longitude of the spacecraft
-        initially.
-
-        Returns
-        -------
-            True if successful, False if not.
-        """
-
-        # Check if all parameters are valid
-        if not self.validate_get():
-            # Compute Ephemeris
-            return False
+        # Parse inputs, round begin and end to stepsize
+        self.begin = round_time(begin, stepsize)
+        self.end = round_time(end, stepsize)
+        self.stepsize = stepsize
 
         # Check the TLE is available
         if self.tle is None:
@@ -182,5 +153,3 @@ class EphemBase(ACROSSAPIBase):
             self.earthsize = self.earth_radius * np.ones(len(self))
         else:
             self.earthsize = np.arcsin(R_earth / dist)
-
-        return True
