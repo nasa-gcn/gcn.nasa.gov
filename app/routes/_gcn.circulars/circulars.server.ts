@@ -127,21 +127,91 @@ export async function search({
   limit,
   startDate,
   endDate,
+  useNLP,
 }: {
   query?: string
   page?: number
   limit?: number
   startDate?: string
   endDate?: string
+  useNLP?: boolean
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
   totalItems: number
 }> {
   const client = await getSearch()
-
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
+  const get_model_id_request = {
+    path: '/_ingest/pipeline',
+  }
+
+  let model_id = ''
+  try {
+    const resp = await client.http.get(get_model_id_request)
+
+    if (resp && resp.statusCode == 200) {
+      model_id =
+        resp.body['nlp-ingest-pipeline'].processors[0].text_embedding.model_id
+    } else {
+      console.log(
+        'Error. Could not deploy model. Returned with response: ',
+        resp
+      )
+    }
+  } catch (e) {
+    console.log('Error: ', e)
+  }
+
+  const nlpSearchQuery = query
+    ? {
+        bool: {
+          must: [
+            {
+              neural: {
+                circular_embedding: {
+                  query_text: query,
+                  model_id,
+                  k: 100,
+                },
+              },
+            },
+          ],
+          filter: {
+            range: {
+              createdOn: {
+                gte: startTime,
+                lte: endTime,
+              },
+            },
+          },
+        },
+      }
+    : { match_all: {} }
+
+  const searchQuery = {
+    bool: {
+      must: query
+        ? {
+            multi_match: {
+              query,
+              fields: ['submitter', 'subject', 'body'],
+            },
+          }
+        : undefined,
+      filter: {
+        range: {
+          createdOn: {
+            gte: startTime,
+            lte: endTime,
+          },
+        },
+      },
+    },
+  }
+
+  const chosenQuery = useNLP ? nlpSearchQuery : searchQuery
   const {
     body: {
       hits: {
@@ -152,26 +222,7 @@ export async function search({
   } = await client.search({
     index: 'circulars',
     body: {
-      query: {
-        bool: {
-          must: query
-            ? {
-                multi_match: {
-                  query,
-                  fields: ['submitter', 'subject', 'body'],
-                },
-              }
-            : undefined,
-          filter: {
-            range: {
-              createdOn: {
-                gte: startTime,
-                lte: endTime,
-              },
-            },
-          },
-        },
-      },
+      query: chosenQuery,
       fields: ['subject'],
       _source: false,
       sort: {
