@@ -65,14 +65,10 @@ export function SortSelector({
     { id: 'radio-sort-relevance', value: 'relevance', label: 'Relevance' },
   ]
 
-  function setSortOrder(value: string) {
+  function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     if (sortInputRef.current) {
       sortInputRef.current.value = value
     }
-  }
-
-  function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
-    setSortOrder(value)
     setShowContent(false)
     const form = sortInputRef.current?.form
     if (form) submit(form)
