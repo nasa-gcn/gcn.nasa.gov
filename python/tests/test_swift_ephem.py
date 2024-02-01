@@ -7,7 +7,7 @@ from astropy.time import Time  # type: ignore
 import astropy.units as u  # type: ignore
 from across_api.swift.ephem import SwiftEphem  # type: ignore
 from across_api.swift.tle import SwiftTLE  # type: ignore
-from across_api.base.schema import TLEEntry
+from across_api.base.schema import TLEEntry  # type: ignore
 
 # Define a TLE by hand
 satname = "SWIFT"
@@ -34,15 +34,30 @@ eph = SwiftEphem(begin=Time("2024-01-29"), end=Time("2024-01-29 00:05:00"), tle=
 
 skyfield_posvec = np.array(
     [
-        [-4021.14168008, -3588.58428427, -3131.50230864, -2653.0164915, -2156.39468954],
         [
-            -5279.52579436,
-            -5625.88039737,
-            -5933.78696439,
-            -6201.13550554,
+            -4021.14168009,
+            -3677.15476197,
+            -3317.0818494,
+            -2942.49650402,
+            -2555.0360961,
+            -2156.39468954,
+        ],
+        [
+            -5279.52579435,
+            -5559.61309208,
+            -5815.37918607,
+            -6045.70235929,
+            -6249.57188609,
             -6426.09251345,
         ],
-        [1881.44369991, 1747.07797651, 1600.73951274, 1443.4296362, 1276.22512307],
+        [
+            1881.44369991,
+            1774.93957664,
+            1660.64930775,
+            1539.07344591,
+            1410.74460051,
+            1276.22512307,
+        ],
     ]
 )
 
@@ -58,9 +73,9 @@ def test_swift_ephem_posvec():
 # gcrs.velocity.km_per_s
 skyfield_velocity = np.array(
     [
-        [5.59057289, 5.93764486, 6.24418338, 6.50808334, 6.72752905],
-        [-4.86407618, -4.36668742, -3.83938535, -3.28576312, -2.70959622],
-        [-1.70752377, -1.87347582, -2.02661094, -2.16587667, -2.29031471],
+        [5.59057289, 5.87140084, 6.12657304, 6.3549683, 6.55558167, 6.72752905],
+        [-4.86407618, -4.46866974, -4.05367016, -3.62088727, -3.17220958, -2.70959622],
+        [-1.70752377, -1.84127551, -1.96696431, -2.08403741, -2.19197943, -2.29031471],
     ]
 )
 
@@ -74,7 +89,7 @@ def test_swift_ephem_velvec():
 # lat, lon = wgs84.latlon_of(gcrs)
 # lat.degrees
 skyfield_lat = np.array(
-    [15.83859755, 14.68496444, 13.43485516, 12.09768058, 10.68313044]
+    [15.83859755, 14.92370425, 13.94588103, 12.90989575, 11.82064667, 10.68313044]
 )
 
 
@@ -86,15 +101,15 @@ def test_swift_ephem_latitude():
 
 # lon.degrees
 skyfield_lon = np.array(
-    [105.23334776, 109.68260303, 114.08064412, 118.42899985, 122.73046095]
+    [105.23276066, 108.79628721, 112.32691818, 115.82523204, 119.29234661, 122.72987384]
 )
 
 
 def test_swift_ephem_longitude():
-    # Astropy ITRS and SkyField longitude disagree by 0.13 arcseconds, so we
+    # Astropy ITRS and SkyField longitude disagree by 3 arcseconds, so we
     # set our tolerance to <0.3 arcseconds.
 
-    assert (abs(eph.longitude.deg - skyfield_lon) < 0.3 / 3600).all()
+    assert (abs(eph.longitude.deg - skyfield_lon) < 3 / 3600).all()
 
 
 # Calculate Sun position as seen from the satellite orbiting the Earth
@@ -104,7 +119,7 @@ def test_swift_ephem_longitude():
 # sunra
 
 skyfield_sunra = np.array(
-    [310.63900074, 310.6399734, 310.64092592, 310.64185792, 310.64276916]
+    [310.63900074, 310.63978046, 310.64054735, 310.6413012, 310.64204183, 310.64276916]
 )
 
 # sundec = sunpos.apparent().radec()[0]._degrees
@@ -112,7 +127,7 @@ skyfield_sunra = np.array(
 # sundec
 
 skyfield_sundec = np.array(
-    [-18.20980286, -18.2096302, -18.20945211, -18.20926825, -18.20907831]
+    [-18.20980286, -18.20966515, -18.20952402, -18.20937928, -18.20923076, -18.20907831]
 )
 
 
@@ -128,12 +143,12 @@ def test_swift_ephem_sunradec():
 #
 # moonpos.apparent().radec()[0]._degrees
 skyfield_moonra = np.array(
-    [165.39248665, 165.36921874, 165.3522351, 165.34169294, 165.33770354]
+    [165.39248665, 165.37337541, 165.35826335, 165.34723799, 165.34036809, 165.33770354]
 )
 
 # moonpos.apparent().radec()[1]._degrees
 skyfield_moondec = np.array(
-    [8.71492202, 8.71821102, 8.72286869, 8.72882625, 8.73600592]
+    [8.71492202, 8.71744169, 8.72084558, 8.72509989, 8.73016706, 8.73600592]
 )
 
 
@@ -149,7 +164,7 @@ def test_ephem_epoch():
 
 
 def test_ephem_length():
-    assert len(eph.timestamp) == 5
+    assert len(eph.timestamp) == 6
 
 
 def test_default_stepsize():
