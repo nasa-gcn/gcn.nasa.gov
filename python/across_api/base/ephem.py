@@ -105,9 +105,13 @@ class EphemBase:
                 status_code=404, detail="No TLE available for this epoch"
             )
 
-        # Round start and end times to stepsize, create array of timestamps
-        steps = int((self.end - self.begin).to(u.s) / (self.stepsize.to(u.s)) + 1)
-        self.timestamp = Time(np.linspace(self.begin, self.end, steps))
+        # Create array of timestamps
+        if self.begin == self.end:
+            self.timestamp = Time([self.begin])
+        else:
+            self.timestamp = Time(
+                np.arange(self.begin, self.end + self.stepsize, self.stepsize)
+            )
 
         # Load in the TLE data
         satellite = Satrec.twoline2rv(self.tle.tle1, self.tle.tle2)
