@@ -20,6 +20,12 @@ import { useRef, useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
+
+const sortOptions = [
+  { id: 'radio-sort-circularId', value: 'circularID', label: 'Circular' },
+  { id: 'radio-sort-relevance', value: 'relevance', label: 'Relevance' },
+]
+
 function SortButton({
   sort,
   expanded,
@@ -33,7 +39,7 @@ function SortButton({
   return (
     <ButtonGroup type="segmented" {...props}>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
-        Sorted By {sort === 'relevance' ? 'Relevance' : 'Circular'}
+        Sorted By {sortOptions.find((option) => option.value === sort)?.label || 'Circular'}
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         {<Icon.FilterList role="presentation" />}
@@ -60,10 +66,6 @@ export function SortSelector({
 
   const submit = useSubmit()
 
-  const sortOptions = [
-    { id: 'radio-sort-circularId', value: 'circularID', label: 'Circular' },
-    { id: 'radio-sort-relevance', value: 'relevance', label: 'Relevance' },
-  ]
 
   function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
     if (sortInputRef.current) {
