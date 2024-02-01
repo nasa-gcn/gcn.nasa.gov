@@ -169,16 +169,8 @@ class TLEEntry(BaseSchema):
 
     def write(self) -> None:
         """Write the TLE entry to the database."""
-        # table = tables.table(self.__tablename__)
-        # table.put_item(Item=self.model_dump(mode="json"))
-
-    @property
-    def io(self) -> IO:
-        """
-        Return the file handle for the TLE database.
-        """
-        tletext = f"{self.satname}\n{self.tle1}\n{self.tle2}\n"
-        return io.BytesIO(tletext.encode())
+        table = tables.table(self.__tablename__)
+        table.put_item(Item=self.model_dump(mode="json"))
 
 
 class TLESchema(BaseSchema):
