@@ -2,6 +2,7 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
+from datetime import timedelta
 from typing import Optional
 
 import astropy.units as u  # type: ignore
@@ -110,7 +111,11 @@ class EphemBase:
             self.timestamp = Time([self.begin])
         else:
             self.timestamp = Time(
-                np.arange(self.begin, self.end + self.stepsize, self.stepsize)
+                np.arange(
+                    self.begin.datetime,
+                    self.end.datetime + timedelta(seconds=self.stepsize.to(u.s).value),
+                    timedelta(seconds=self.stepsize.to(u.s).value),
+                )
             )
 
         # Load in the TLE data
