@@ -110,12 +110,9 @@ class EphemBase:
         if self.begin == self.end:
             self.timestamp = Time([self.begin])
         else:
+            step = timedelta(seconds=self.stepsize.to_value(u.s))
             self.timestamp = Time(
-                np.arange(
-                    self.begin.datetime,
-                    self.end.datetime + timedelta(seconds=self.stepsize.to(u.s).value),
-                    timedelta(seconds=self.stepsize.to(u.s).value),
-                )
+                np.arange(self.begin.datetime, self.end.datetime + step, step)
             )
 
         # Load in the TLE data
