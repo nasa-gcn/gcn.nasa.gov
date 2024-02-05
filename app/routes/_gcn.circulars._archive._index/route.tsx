@@ -108,7 +108,7 @@ export default function () {
   const query = searchParams.get('query') || undefined
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
-  const sort = searchParams.get('sort') || undefined
+  const sort = searchParams.get('sort') || 'circularID'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`

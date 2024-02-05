@@ -16,7 +16,7 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import type { ChangeEvent } from 'react'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -63,17 +63,11 @@ export function SortSelector({
 }) {
   const [showContent, setShowContent] = useState(false)
 
-  const sortInputRef = useRef<HTMLInputElement>(null)
-
   const submit = useSubmit()
 
-  function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
-    if (sortInputRef.current) {
-      sortInputRef.current.value = value
-    }
+  function radioOnChange({ target }: ChangeEvent<HTMLInputElement>) {
     setShowContent(false)
-    const form = sortInputRef.current?.form
-    if (form) submit(form)
+    if (target.form) submit(target.form)
   }
 
   const SortRadioButtons = () => (
@@ -82,7 +76,7 @@ export function SortSelector({
         <Radio
           key={id}
           id={id}
-          name={''}
+          name="sort"
           value={value}
           label={label}
           form={form}
@@ -95,13 +89,6 @@ export function SortSelector({
 
   return (
     <>
-      <input
-        type="hidden"
-        name="sort"
-        form={form}
-        ref={sortInputRef}
-        defaultValue={defaultValue}
-      />
       <SortButton
         sort={defaultValue}
         expanded={showContent}
