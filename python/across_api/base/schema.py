@@ -3,19 +3,24 @@
 # All Rights Reserved.
 
 
+import io
 from datetime import datetime
-from typing import Any, List, Optional
+from typing import IO, Annotated, Any, List, Optional
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
 from astropy.time import Time  # type: ignore
-from pydantic import BaseModel, ConfigDict, Field, PlainSerializer, computed_field
-from typing_extensions import Annotated
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    PlainSerializer,
+    computed_field,
+    model_validator,
+)
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
-# a naive UTC datetime object, or a string in ISO format for JSON. If Time is
-# in list form, then it will be serialized as a list of UTC naive datetime
-# objects.
+# a naive UTC datetime object, or a string in ISO format for JSON.
 AstropyTime = Annotated[
     Time,
     PlainSerializer(
@@ -36,6 +41,38 @@ class BaseSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, arbitrary_types_allowed=True)
 
 
+class DateRangeSchema(BaseSchema):
+    """
+    Schema that defines date range
+
+    Parameters
+    ----------
+    begin
+        The start date of the range.
+    end
+        The end date of the range.
+
+    Returns
+    -------
+    data
+        The validated data with converted dates.
+
+    Raises
+    ------
+    AssertionError
+        If the end date is before the begin date.
+    """
+
+    begin: AstropyTime
+    end: AstropyTime
+
+    @model_validator(mode="after")
+    @classmethod
+    def check_dates(cls, data: Any) -> Any:
+        assert data.begin <= data.end, "End date should not be before begin"
+        return data
+
+
 class TLEGetSchema(BaseSchema):
     epoch: AstropyTime
 
@@ -46,11 +83,11 @@ class TLEEntry(BaseSchema):
 
     Parameters
     ----------
-    satname : str
+    satname
         The name of the satellite from the Satellite Catalog.
-    tle1 : str
+    tle1
         The first line of the TLE.
-    tle2 : str
+    tle2
         The second line of the TLE.
 
     Attributes
