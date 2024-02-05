@@ -5125,5 +5125,14 @@
       "affiliation": "Example",
       "submit": 1
     }
+  ],
+  "kafka_acls": [
+    {
+      "commandId": "abcd-wsedrftyhuj-sedrftgy",
+      "sub": "fake-userssub-string",
+      "consumerGroup": "gcn.nasa.gov/kafka-example-consumer",
+      "producerGroup": "gcn.nasa.gov/kafka-example-producer",
+      "topic": "gcn.notices.super_cool_example_topic"
+    }
   ]
 }

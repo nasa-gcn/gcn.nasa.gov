@@ -105,6 +105,11 @@ legacy_users
   email *String
   PointInTimeRecovery true
 
+kafka_acls
+  commandId *String
+  sub **String
+  PointInTimeRecovery true
+
 @tables-indexes
 email_notification_subscription
   topic *String
@@ -154,6 +159,14 @@ synonyms
   synonymId *String
   name synonymsById
 
+kafka_acls
+  sub *String
+  name kafkaAclsByUser
+
+kafka_acls
+  topic *String
+  name kafkaAclsByTopic
+
 @aws
 runtime nodejs20.x
 region us-east-1
@@ -180,3 +193,4 @@ emailOutgoing  # Grant the Lambda function permission to send email; add email t
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 architect/plugin-lambda-invoker
+ssmDocument # Provision ssm document for kafka broker interactions
