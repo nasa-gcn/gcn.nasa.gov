@@ -8,7 +8,7 @@ modules. Contains the FastAPI app definition and globally defined Depends.
 """
 
 from datetime import datetime
-from typing import Annotated, Optional
+from typing import Annotated
 
 from astropy.time import Time  # type: ignore
 from fastapi import Depends, FastAPI, Query
@@ -23,21 +23,6 @@ app = FastAPI(
     },
     root_path="/labs/api/v1",
 )
-
-
-def epoch(
-    epoch: Annotated[
-        datetime,
-        Query(
-            title="Epoch",
-            description="Epoch in UTC or ISO format.",
-        ),
-    ],
-) -> Optional[Time]:
-    return Time(epoch)
-
-
-EpochDep = Annotated[datetime, Depends(epoch)]
 
 
 def daterange(
