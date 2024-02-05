@@ -33,7 +33,7 @@ class JWTBearer(HTTPBearer):
 
         super().__init__(**kwargs)
 
-    async def __call__(self, request: Request):
+    async def __call__(self, request: Request) -> Optional[dict]:  # type: ignore
         credentials: Optional[HTTPAuthorizationCredentials] = await super().__call__(
             request
         )
@@ -60,17 +60,18 @@ class JWTBearer(HTTPBearer):
 
             signing_key = None
             for key in jwks_data["keys"]:
-                if key["kid"] == header["kid"]:
-                    signing_key = key
-
-            if signing_key is None:
+                if "kid" in header.keys():
+                    if key["kid"] == header["kid"]:
+                        signing_key = key
+                        break
+            else:
                 raise HTTPException(
                     status_code=401, detail="Authentication error: Invalid key."
                 )
 
             # Validate the credentials
             try:
-                access_token = jwt.decode(
+                return jwt.decode(
                     credentials.credentials,
                     key=signing_key,
                     algorithms=token_alg,
@@ -79,11 +80,10 @@ class JWTBearer(HTTPBearer):
                 raise HTTPException(
                     status_code=401, detail=f"Authentication error: {e}"
                 )
-
-            return access_token
-
         else:
             raise AssertionError("No credentials passed.")
+
+        return {}
 
 
 JWTBearerSecurity = JWTBearer(
@@ -104,9 +104,7 @@ async def ScopeAuthenticate(
 
     # check if user scopes is in endpoint scope
     if len(security_scopes.scopes):
-        for role in token_scopes:
-            if role in security_scopes.scopes:
-                valid = True
+        valid = any(scope in security_scopes.scopes for scope in token_scopes)
     else:  # endpoint has no scopes
         valid = True
 
