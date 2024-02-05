@@ -4,15 +4,10 @@
 
 """
 Base API definitions for ACROSS API. This module is imported by all other API
-modules. Contains the FastAPI app definition and globally defined Depends.
+modules. Contains the FastAPI app definition.
 """
 
-from datetime import datetime
-from typing import Annotated, Optional
-
-import astropy.units as u  # type: ignore
-from astropy.time import Time  # type: ignore
-from fastapi import Depends, FastAPI, Query
+from fastapi import FastAPI
 
 # FastAPI app definition
 app = FastAPI(
@@ -24,52 +19,3 @@ app = FastAPI(
     },
     root_path="/labs/api/v1",
 )
-
-
-def epoch(
-    epoch: Annotated[
-        datetime,
-        Query(
-            title="Epoch",
-            description="Epoch in UTC or ISO format.",
-        ),
-    ],
-) -> Optional[Time]:
-    return Time(epoch)
-
-
-EpochDep = Annotated[datetime, Depends(epoch)]
-
-
-def daterange(
-    begin: Annotated[
-        datetime,
-        Query(description="Start time of period to be calculated.", title="Begin"),
-    ],
-    end: Annotated[
-        datetime, Query(description="End time of period to be calculated.", title="End")
-    ],
-) -> dict:
-    """
-    Helper function to convert begin and end to datetime objects.
-    """
-    return {"begin": Time(begin), "end": Time(end)}
-
-
-DateRangeDep = Annotated[dict, Depends(daterange)]
-
-
-def stepsize(
-    stepsize: Annotated[
-        int,
-        Query(
-            ge=1,
-            title="Step Size",
-            description="Time resolution in which to calculate result in seconds.",
-        ),
-    ] = 60,
-) -> int:
-    return stepsize * u.s
-
-
-StepSizeDep = Annotated[int, Depends(stepsize)]
