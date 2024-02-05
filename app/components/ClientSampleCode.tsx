@@ -564,12 +564,12 @@ export function ClientSampleCode({
             </>
           )}
           Run the following command to consume Kafka records and print them to
-          the console.
+          the console (supports only a single topic at a time).
           <Highlight
             language="sh"
             code={`kafka-console-consumer.sh --bootstrap-server kafka.${
               domain ?? 'gcn.nasa.gov'
-            }:9092 --consumer.config example.properties${topics.map((topic) => ` ${topic}`).join('')}`}
+            }:9092 --consumer.config example.properties --topic ${topics[0]}`}
           />
         </>
       )
