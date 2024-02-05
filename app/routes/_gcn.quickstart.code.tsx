@@ -83,6 +83,12 @@ export default function () {
             language="cs"
           />
         </Tab>
+        <Tab label="Java">
+          <ClientSampleCode
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
+            language="java"
+          />
+        </Tab>
       </Tabs>
       <Form method="GET" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
