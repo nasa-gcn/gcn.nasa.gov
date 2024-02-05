@@ -39,7 +39,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs'
+  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java'
 }) {
   const domain = useDomain()
 
@@ -509,6 +509,68 @@ export function ClientSampleCode({
           Build the solution from the build menu, or Ctrl + Shift + B. The
           resulting executable can be found in the bin folder within the
           project.
+        </>
+      )
+    case 'java':
+      return (
+        <>
+          <p>
+            The following instructions are for the official Kafka command line
+            tools which use Java and come with either{' '}
+            <a
+              rel="external"
+              href="https://kafka.apache.org/documentation/#quickstart"
+            >
+              Apache Kafka
+            </a>{' '}
+            or{' '}
+            <a
+              rel="external"
+              href="https://docs.confluent.io/kafka/operations-tools/kafka-tools.html"
+            >
+              Confluent
+            </a>
+            . However, they should work with most Java code that uses the
+            official Apache Kafka client libraries.
+          </p>
+          Save the configuration below to a file called{' '}
+          <code>example.properties</code>:
+          <Highlight
+            language="properties"
+            filename="example.properties"
+            code={dedent(String.raw`
+              security.protocol = SASL_SSL
+              sasl.mechanism = OAUTHBEARER
+              sasl.login.callback.handler.class = org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler
+              sasl.oauthbearer.token.endpoint.url = https://auth.${
+                domain ?? 'gcn.nasa.gov'
+              }/oauth2/token
+              sasl.jaas.config = org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required \
+                clientId="${clientId}" \
+                clientSecret="${clientSecret}";
+              # Warning: don't share the client secret with others.
+            `)}
+          />
+          <p>Next, open a terminal.</p>
+          {listTopics && (
+            <>
+              Run the following command to list available Kafka topics.
+              <Highlight
+                language="sh"
+                code={`kafka-topics.sh --bootstrap-server kafka.${
+                  domain ?? 'gcn.nasa.gov'
+                }:9092 --command-config example.properties --list`}
+              />
+            </>
+          )}
+          Run the following command to consume Kafka records and print them to
+          the console.
+          <Highlight
+            language="sh"
+            code={`kafka-console-consumer.sh --bootstrap-server kafka.${
+              domain ?? 'gcn.nasa.gov'
+            }:9092 --consumer.config example.properties${topics.map((topic) => ` ${topic}`).join('')}`}
+          />
         </>
       )
   }
