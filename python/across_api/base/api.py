@@ -10,7 +10,6 @@ modules. Contains the FastAPI app definition and globally defined Depends.
 from datetime import datetime
 from typing import Annotated, Optional
 
-import astropy.units as u  # type: ignore
 from astropy.time import Time  # type: ignore
 from fastapi import Depends, FastAPI, Query
 
@@ -57,19 +56,3 @@ def daterange(
 
 
 DateRangeDep = Annotated[dict, Depends(daterange)]
-
-
-def stepsize(
-    stepsize: Annotated[
-        int,
-        Query(
-            ge=1,
-            title="Step Size",
-            description="Time resolution in which to calculate result in seconds.",
-        ),
-    ] = 60,
-) -> int:
-    return stepsize * u.s
-
-
-StepSizeDep = Annotated[int, Depends(stepsize)]
