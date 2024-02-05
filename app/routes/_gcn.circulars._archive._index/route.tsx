@@ -23,7 +23,7 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useState } from 'react'
+import { useId, useState } from 'react'
 
 import { getUser } from '../_gcn._auth/user.server'
 import {
@@ -39,7 +39,6 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
-import { useFeature } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -92,7 +91,6 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function () {
   const newItem = useActionData<typeof action>()
   const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
-  const featureCircularsFilterByDate = useFeature('CIRCULARS_FILTER_BY_DATE')
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
@@ -114,6 +112,7 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const clean = inputQuery === query
 
+  const formId = useId()
   const submit = useSubmit()
 
   return (
@@ -123,7 +122,7 @@ export default function () {
         <Form
           className="display-inline-block usa-search usa-search--small"
           role="search"
-          id="searchForm"
+          id={formId}
         >
           <Label srOnly={true} htmlFor="query">
             Search
@@ -149,9 +148,11 @@ export default function () {
             />
           </Button>
         </Form>
-        {featureCircularsFilterByDate && (
-          <DateSelector startDate={startDate} endDate={endDate} />
-        )}
+        <DateSelector
+          form={formId}
+          defaultStartDate={startDate}
+          defaultEndDate={endDate}
+        />
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"

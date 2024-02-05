@@ -1,3 +1,5 @@
+import properties from 'highlight.js/lib/languages/properties'
+import { common } from 'lowlight'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeClassNames from 'rehype-class-names'
 import rehypeExternalLinks from 'rehype-external-links'
@@ -38,7 +40,7 @@ const esmOnlyModules = [
 export default {
   mdx: {
     rehypePlugins: [
-      rehypeHighlight,
+      (options) => rehypeHighlight({ ...common, properties }),
       rehypeSlug,
       (options) =>
         rehypeExternalLinks({

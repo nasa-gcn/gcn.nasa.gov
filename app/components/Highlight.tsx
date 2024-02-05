@@ -7,8 +7,11 @@
  */
 import { Icon, Tooltip } from '@trussworks/react-uswds'
 import hljs from 'highlight.js/lib/common'
+import properties from 'highlight.js/lib/languages/properties'
 import { useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
+
+hljs.registerLanguage('properties', properties)
 
 export function Highlight({
   code,

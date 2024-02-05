@@ -6,14 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { paginateScan } from '@aws-sdk/lib-dynamodb'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
 
-import type { User } from '../_gcn._auth/user.server'
-import { moderatorGroup } from '../_gcn.circulars/circulars.server'
-import { sendEmail, sendEmailBulk } from '~/lib/email.server'
+import { sendEmail } from '~/lib/email.server'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 
 // db model
@@ -218,36 +214,5 @@ export async function sendTestEmail(to: string) {
     to: [to],
     subject: 'GCN Notices test',
     body: 'This is a test message from GCN Notices.',
-  })
-}
-
-export async function sendNewsAnnouncementEmail(
-  subject: string,
-  body: string,
-  user?: User
-) {
-  if (!user?.groups.includes(moderatorGroup))
-    throw new Response(null, { status: 403 })
-
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('announcement_subscriptions')
-
-  const pages = paginateScan(
-    { client },
-    { AttributesToGet: ['email'], TableName }
-  )
-  const emails: string[] = []
-  for await (const page of pages) {
-    const newEmails = page.Items?.map(({ email }) => email)
-    if (newEmails) emails.push(...newEmails)
-  }
-
-  await sendEmailBulk({
-    fromName: 'GCN Announcements',
-    to: emails,
-    subject,
-    body,
-    topic: 'announcements',
   })
 }
