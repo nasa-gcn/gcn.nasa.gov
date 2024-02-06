@@ -35,5 +35,5 @@ export default {
     if (!files) return []
     return `prettier --write ${filteredFiles}`
   },
-  '*.py': ['black', 'mypy'],
+  '*.py': ['ruff format', 'ruff check'],
 }
