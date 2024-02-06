@@ -3,9 +3,8 @@
 # All Rights Reserved.
 
 
-import io
 from datetime import datetime
-from typing import IO, Annotated, Any, List, Optional
+from typing import Annotated, Any, List, Optional
 
 import astropy.units as u  # type: ignore
 from arc import tables  # type: ignore
