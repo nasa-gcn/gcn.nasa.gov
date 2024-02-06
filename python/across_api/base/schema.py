@@ -15,7 +15,6 @@ from pydantic import (
     Field,
     PlainSerializer,
     computed_field,
-    model_validator,
 )
 
 # Define a Pydantic type for astropy Time objects, which will be serialized as
@@ -41,38 +40,6 @@ class BaseSchema(BaseModel):
 
     def __hash__(self):
         return hash((type(self),) + tuple(self.__dict__.values()))
-
-
-class DateRangeSchema(BaseSchema):
-    """
-    Schema that defines date range
-
-    Parameters
-    ----------
-    begin
-        The start date of the range.
-    end
-        The end date of the range.
-
-    Returns
-    -------
-    data
-        The validated data with converted dates.
-
-    Raises
-    ------
-    AssertionError
-        If the end date is before the begin date.
-    """
-
-    begin: AstropyTime
-    end: AstropyTime
-
-    @model_validator(mode="after")
-    @classmethod
-    def check_dates(cls, data: Any) -> Any:
-        assert data.begin <= data.end, "End date should not be before begin"
-        return data
 
 
 class TLEGetSchema(BaseSchema):
