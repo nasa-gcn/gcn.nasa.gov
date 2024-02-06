@@ -1,2 +1,5 @@
 [tool.pytest.ini_options]
 addopts = "--ignore=python/vendor"
+
+[tool.mypy]
+exclude = "vendor/"
