@@ -64,7 +64,7 @@ class JWTBearer(HTTPBearer):
                     if key["kid"] == header["kid"]:
                         signing_key = key
                         break
-            else:
+            if signing_key is None:
                 raise HTTPException(
                     status_code=401, detail="Authentication error: Invalid key."
                 )
