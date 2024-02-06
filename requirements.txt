@@ -1,5 +1,6 @@
 black
 boto3
+flake8
 mypy
 pytest
 types-requests
