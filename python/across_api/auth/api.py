@@ -87,15 +87,8 @@ async def scopeauthorize(
     # assuming the jwt scopes will be comma separated
     token_scopes = scopes.split(",")
 
-    # validate the scopes
-    valid = False
-    if len(security_scopes.scopes):
-        valid = all(scope in security_scopes.scopes for scope in token_scopes)
-    else:
-        valid = True
-
     # raise exception if user.role not in endpoint scope
-    if not valid:
+    if not all(scope in token_scopes for scope in security_scopes.scopes):
         raise HTTPException(
             status_code=401,
             detail="Bearer token scope(s) not in endpoint scope",
