@@ -16,7 +16,7 @@ from .schema import HelloSchema, ResolveSchema
 def name(
     name: Annotated[
         str, Query(description="Name of astronomical object to convert to coordinates.")
-    ]
+    ],
 ) -> str:
     return name
 
@@ -28,7 +28,7 @@ def your_name(
             description="Name of person to greet.",
             title="Your Name",
         ),
-    ] = None
+    ] = None,
 ) -> Optional[str]:
     return name
 
