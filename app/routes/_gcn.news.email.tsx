@@ -21,7 +21,7 @@ import { useState } from 'react'
 
 import { getUser } from './_gcn._auth/user.server'
 import { moderatorGroup } from './_gcn.circulars/circulars.server'
-import { sendNewsAnnouncementEmail } from './_gcn.user.email/email_notices.server'
+import { sendAnnouncementEmail } from './_gcn.user.email/email_announcements.server'
 import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -38,7 +38,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const body = getFormDataString(data, 'body')
   if (!subject || !body)
     throw new Response('subject and body are required', { status: 400 })
-  await sendNewsAnnouncementEmail(subject, body, user)
+  await sendAnnouncementEmail(subject, body, user)
   return { subject }
 }
 

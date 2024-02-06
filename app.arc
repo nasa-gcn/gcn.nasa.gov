@@ -146,6 +146,10 @@ legacy_users
   receive *Number
   name legacyReceivers
 
+legacy_users
+  receiveAnnouncements *Number
+  name legacyAnnouncementReceivers
+
 synonyms
   synonymId *String
   name synonymsById

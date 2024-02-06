@@ -14,22 +14,22 @@ from .schema import HelloSchema, ResolveSchema
 
 
 # Depends functions for FastAPI calls.
-async def name(
+def name(
     name: Annotated[
         str, Query(description="Name of astronomical object to convert to coordinates.")
-    ]
+    ],
 ) -> str:
     return name
 
 
-async def your_name(
+def your_name(
     name: Annotated[
         Optional[str],
         Query(
             description="Name of person to greet.",
             title="Your Name",
         ),
-    ] = None
+    ] = None,
 ) -> Optional[str]:
     return name
 
@@ -40,7 +40,7 @@ YourNameDep = Annotated[Optional[str], Depends(your_name)]
 
 # API End points
 @app.get("/")
-async def hello(name: YourNameDep) -> HelloSchema:
+def hello(name: YourNameDep) -> HelloSchema:
     """
     This function returns a JSON response with a greeting message and an optional name parameter.
     If the name parameter is provided, the greeting message will include the name.
@@ -63,7 +63,7 @@ async def secure_hello(name: YourNameDep) -> HelloSchema:
 
 
 @app.get("/across/resolve")
-async def resolve(name: SourceNameDep) -> ResolveSchema:
+def resolve(name: SourceNameDep) -> ResolveSchema:
     """
     Resolve the name of an astronomical object to its coordinates.
     """

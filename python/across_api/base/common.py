@@ -6,6 +6,9 @@ import os
 from time import tzset
 from typing import Any, List, Type
 
+import astropy.units as u  # type: ignore
+import numpy as np
+from astropy.time import Time  # type: ignore
 from fastapi import HTTPException
 from pydantic import ValidationError
 
@@ -14,6 +17,28 @@ from .schema import BaseSchema
 # Make sure we are working in UTC times
 os.environ["TZ"] = "UTC"
 tzset()
+
+
+def round_time(t: Time, step: u.Quantity) -> Time:
+    """
+    Round an astropy Time object to a given time step. So for example, if
+    step=1*u.s, then the time will be rounded to the nearest second. If step
+    is 1*u.min, then the time will be rounded to the nearest minute.
+
+    Parameters
+    ----------
+    t
+        The time to round.
+    step
+        The time step to round to.
+
+    Returns
+    -------
+        The rounded Time.
+    """
+    return Time(
+        np.round(t.unix / step.to_value(u.s)) * step.to_value(u.s), format="unix"
+    )
 
 
 class ACROSSAPIBase:
