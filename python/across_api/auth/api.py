@@ -92,7 +92,7 @@ JWTBearerSecurity = JWTBearer(
 )
 
 
-async def ScopeAuthenticate(
+async def ScopeAuthorize(
     security_scopes: SecurityScopes,
     access_token: Annotated[dict, Depends(JWTBearerSecurity)],
 ):
