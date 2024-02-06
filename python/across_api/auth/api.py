@@ -5,7 +5,6 @@
 
 import os
 from typing import Annotated, Any
-from typing_extensions import TypedDict
 
 from jose import jwt
 from jose.exceptions import JWTError
