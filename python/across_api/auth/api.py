@@ -83,8 +83,6 @@ class JWTBearer(HTTPBearer):
         else:
             raise AssertionError("No credentials passed.")
 
-        return {}
-
 
 JWTBearerSecurity = JWTBearer(
     scheme_name="ACROSS API Authorization",
