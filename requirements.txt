@@ -1,6 +1,6 @@
-black
 boto3
 mypy
+ruff
 pytest
 types-requests
 types-cachetools
