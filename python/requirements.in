@@ -3,7 +3,6 @@ astropy
 cachetools
 email-validator
 fastapi
-hypothesis
 mangum
 requests
 sgp4

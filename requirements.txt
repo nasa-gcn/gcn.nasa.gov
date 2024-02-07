@@ -1,6 +1,7 @@
 boto3
 mypy
 ruff
+hypothesis
 pytest
 types-requests
 types-cachetools
