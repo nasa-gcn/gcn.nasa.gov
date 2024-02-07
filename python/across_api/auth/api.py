@@ -77,7 +77,7 @@ async def claims(
         raise HTTPException(status_code=401, detail=f"Authentication error: {e}")
 
 
-async def scopeauthorize(
+async def scope_authorize(
     security_scopes: SecurityScopes,
     access_token: Annotated[dict, Depends(claims)],
 ):
@@ -96,7 +96,7 @@ async def scopeauthorize(
         )
 
 
-@app.get("/auth/verify", dependencies=[Security(scopeauthorize, scopes=[])])
+@app.get("/auth/verify", dependencies=[Security(scope_authorize, scopes=[])])
 async def verify_authentication() -> VerifyAuth:
     """Verify that the user is authenticated."""
     return VerifyAuth()

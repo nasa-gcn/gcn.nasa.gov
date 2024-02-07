@@ -7,7 +7,7 @@ from typing import Annotated, Optional
 from fastapi import Depends, Query, Security
 
 from ..base.api import app
-from ..auth.api import scopeauthorize
+from ..auth.api import scope_authorize
 from .hello import Hello
 from .resolve import Resolve
 from .schema import HelloSchema, ResolveSchema
@@ -51,7 +51,7 @@ def hello(name: YourNameDep) -> HelloSchema:
 @app.get(
     "/secure_hello",
     dependencies=[
-        Security(scopeauthorize, scopes=["gcn.nasa.gov/kafka-public-consumer"])
+        Security(scope_authorize, scopes=["gcn.nasa.gov/kafka-public-consumer"])
     ],
 )
 async def secure_hello(name: YourNameDep) -> HelloSchema:
