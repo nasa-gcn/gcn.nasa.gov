@@ -15,12 +15,12 @@ from across_api.base.schema import TLEEntry  # type: ignore
 class ExpectedSkyField:
     def __init__(self, posvec, velocity, lat, lon, sunra, sundec, moonra, moondec):
         self.posvec = posvec
-        self.velocity = (velocity,)
-        self.lat = (lat,)
-        self.lon = (lon,)
-        self.sunra = (sunra,)
-        self.sundec = (sundec,)
-        self.moonra = (moonra,)
+        self.velocity = velocity
+        self.lat = lat
+        self.lon = lon
+        self.sunra = sunra
+        self.sundec = sundec
+        self.moonra = moonra
         self.moondec = moondec
 
 
