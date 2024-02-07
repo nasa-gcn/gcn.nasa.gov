@@ -9,8 +9,8 @@ from typing import Annotated, Any
 from jose import jwt
 from jose.exceptions import JWTError
 import httpx  # type: ignore
-from fastapi import Depends, HTTPException
-from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from fastapi import Depends, HTTPException, Security
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer, SecurityScopes
 
 from ..base.api import app
 from .schema import VerifyAuth
@@ -77,10 +77,26 @@ async def claims(
         raise HTTPException(status_code=401, detail=f"Authentication error: {e}")
 
 
-JWTBearerDep = [Depends(claims)]
+async def scope_authorize(
+    security_scopes: SecurityScopes,
+    access_token: Annotated[dict, Depends(claims)],
+):
+    # retrieve scopes from access token
+    scopes = access_token.get("scope", "")
+
+    # assuming the jwt scopes will be comma separated
+    token_scopes = scopes.split(",")
+
+    # raise exception if user.role not in endpoint scope
+    if not all(scope in token_scopes for scope in security_scopes.scopes):
+        raise HTTPException(
+            status_code=401,
+            detail="Bearer token scope(s) not in endpoint scope",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
-@app.get("/auth/verify", dependencies=JWTBearerDep)
+@app.get("/auth/verify", dependencies=[Security(scope_authorize, scopes=[])])
 async def verify_authentication() -> VerifyAuth:
     """Verify that the user is authenticated."""
     return VerifyAuth()
