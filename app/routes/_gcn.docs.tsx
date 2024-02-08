@@ -50,6 +50,9 @@ export default function () {
                   ]}
                 />
               </>,
+              <NavLink key="code-of-conduct" to="code-of-conduct">
+                Code of Conduct
+              </NavLink>,
               <>
                 <NavLink key="contributing" to="contributing">
                   Contributing
@@ -170,9 +173,6 @@ export default function () {
               </NavLink>,
               <NavLink key="schema" to="schema">
                 Schema Browser
-              </NavLink>,
-              <NavLink key="terms-of-service" to="terms-of-service">
-                Terms of Service
               </NavLink>,
             ]}
           />
