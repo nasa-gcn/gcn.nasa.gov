@@ -14,7 +14,7 @@ from shapely import Polygon, points  # type: ignore[import]
 from .ephem import EphemBase
 
 
-def getslice(time: Time, ephem: EphemBase) -> slice:
+def get_slice(time: Time, ephem: EphemBase) -> slice:
     """
     Return a slice for what the part of the ephemeris that we're using.
 
@@ -101,13 +101,13 @@ class SAAPolygonConstraint(Constraint):
         """
 
         # Find a slice what the part of the ephemeris that we're using
-        i = getslice(time, ephem)
+        i = get_slice(time, ephem)
 
-        inconstraint = self.polygon.contains(
+        in_constraint = self.polygon.contains(
             points(ephem.longitude[i], ephem.latitude[i])
         )
         # Return the result as True or False, or an array of True/False
-        return inconstraint[0] if time.isscalar else inconstraint
+        return in_constraint[0] if time.isscalar else in_constraint
 
 
 class EarthLimbConstraint(Constraint):
@@ -166,16 +166,18 @@ class EarthLimbConstraint(Constraint):
         assert skycoord is not None, "SkyCoord object must be passed"
 
         # Find a slice what the part of the ephemeris that we're using
-        i = getslice(time, ephem)
+        i = get_slice(time, ephem)
 
         # Calculate the angular distance between the center of the Earth and
         # the object. Note that creating the SkyCoord here from ra/dec stored
         # in the ephemeris `earth` is 3x faster than just doing the separation
         # directly with `earth`.
-        inconstraint = (
+        in_constraint = (
             SkyCoord(ephem.earth[i].ra, ephem.earth[i].dec).separation(skycoord)
             < ephem.earthsize[i] + self.min_angle
         )
 
         # Return the result as True or False, or an array of True/False
-        return inconstraint[0] if time.isscalar and skycoord.isscalar else inconstraint
+        return (
+            in_constraint[0] if time.isscalar and skycoord.isscalar else in_constraint
+        )
