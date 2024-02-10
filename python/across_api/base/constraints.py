@@ -2,8 +2,7 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from abc import ABC, abstractmethod
-from typing import Optional, Union
+from typing import Union
 
 import astropy.units as u  # type: ignore[import]
 import numpy as np
@@ -50,17 +49,7 @@ def get_slice(time: Time, ephem: EphemBase) -> slice:
         return slice(ephem.ephindex(time[0]), ephem.ephindex(time[-1]) + 1)
 
 
-class Constraint(ABC):
-    """Define the basic structure of a Constraint class."""
-
-    @abstractmethod
-    def __call__(
-        self, time: Time, ephem: EphemBase, skycoord: Optional[SkyCoord] = None
-    ) -> Union[bool, np.ndarray]:
-        pass
-
-
-class SAAPolygonConstraint(Constraint):
+class SAAPolygonConstraint:
     """
     Polygon based SAA constraint. The SAA is defined by a Shapely Polygon, and
     this constraint will calculate for a given set of times and a given
@@ -77,9 +66,7 @@ class SAAPolygonConstraint(Constraint):
     def __init__(self, polygon: list):
         self.polygon = Polygon(polygon)
 
-    def __call__(
-        self, time: Time, ephem: EphemBase, skycoord: Optional[SkyCoord] = None
-    ) -> Union[bool, np.ndarray]:
+    def __call__(self, time: Time, ephem: EphemBase) -> Union[bool, np.ndarray]:
         """
         Return a bool array indicating whether the spacecraft is in constraint
         for a given ephemeris.
@@ -110,7 +97,7 @@ class SAAPolygonConstraint(Constraint):
         return in_constraint[0] if time.isscalar else in_constraint
 
 
-class EarthLimbConstraint(Constraint):
+class EarthLimbConstraint:
     """
     For a given Earth limb avoidance angle, is a given coordinate inside this
     constraint?
@@ -136,7 +123,7 @@ class EarthLimbConstraint(Constraint):
         self,
         time: Time,
         ephem: EphemBase,
-        skycoord: Optional[SkyCoord] = None,
+        skycoord: SkyCoord,
     ) -> Union[bool, np.ndarray]:
         """
         Check for a given time, ephemeris and coordinate if positions given are
@@ -162,9 +149,6 @@ class EarthLimbConstraint(Constraint):
             otherwise.
 
         """
-        # This class requires a SkyCoord object to be passed
-        assert skycoord is not None, "SkyCoord object must be passed"
-
         # Find a slice what the part of the ephemeris that we're using
         i = get_slice(time, ephem)
 
