@@ -2,9 +2,9 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from astropy.time import Time  # type: ignore
 import astropy.units as u  # type: ignore
 from across_api.burstcube.tle import BurstCubeTLE  # type: ignore
+from astropy.time import Time  # type: ignore
 
 
 def test_burstcube_ephem_posvec(burstcube_ephem, expected_burstcube_skyfield):
