@@ -20,10 +20,7 @@ import { useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
-const sortOptions = {
-  circularID: 'Circular',
-  relevance: 'Relevance',
-}
+const sortOptions = { circularID: 'Date', relevance: 'Relevance' }
 
 function SortButton({
   sort,
@@ -38,7 +35,8 @@ function SortButton({
   return (
     <ButtonGroup type="segmented" {...props}>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
-        Sorted By {sortOptions[sort ?? 'circular']}
+        Sorted By{' '}
+        {sortOptions[(sort as keyof typeof sortOptions) || 'circularID']}
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         {<Icon.FilterList role="presentation" />}
@@ -70,10 +68,10 @@ export function SortSelector({
 
   const SortRadioButtons = () => (
     <>
-      {sortOptions.map(({ id, value, label }) => (
+      {Object.entries(sortOptions).map(([value, label]) => (
         <Radio
-          key={id}
-          id={id}
+          key={`radio-sort-${value}`}
+          id={`radio-sort-${value}`}
           name="sort"
           value={value}
           label={label}
