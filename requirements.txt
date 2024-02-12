@@ -6,6 +6,6 @@ pytest
 types-requests
 types-cachetools
 types-python-jose
-skyfield==1.48
-swifttools==3.0.21
+skyfield
+swifttools
 -r python/requirements.txt

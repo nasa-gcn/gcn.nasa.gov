@@ -59,6 +59,7 @@ numpy==1.26.2
     # via
     #   astropy
     #   pyerfa
+    #   shapely
 packaging==23.2
     # via astropy
 pyasn1==0.5.1
@@ -86,6 +87,8 @@ rsa==4.9
 rush==2021.4.0
     # via spacetrack
 sgp4==2.23
+    # via -r requirements.in
+shapely==2.0.2
     # via -r requirements.in
 simplejson==3.19.2
     # via architect-functions

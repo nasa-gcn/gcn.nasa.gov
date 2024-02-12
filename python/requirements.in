@@ -5,5 +5,6 @@ email-validator
 fastapi
 mangum
 requests
+shapely
 sgp4
 spacetrack
