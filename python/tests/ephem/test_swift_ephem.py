@@ -2,9 +2,9 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-from astropy.time import Time  # type: ignore
 import astropy.units as u  # type: ignore
 from across_api.swift.tle import SwiftTLE  # type: ignore
+from astropy.time import Time  # type: ignore
 
 
 def test_swift_ephem_posvec(swift_ephem, expected_swift_skyfield):
