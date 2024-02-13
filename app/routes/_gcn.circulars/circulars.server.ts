@@ -463,7 +463,7 @@ export async function approveChangeRequest(
     ...circular,
     body: changeRequest.body,
     subject: changeRequest.subject,
-    // editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
+    editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
     editedOn: Date.now(),
   })
 
@@ -473,6 +473,8 @@ export async function approveChangeRequest(
 /**
  * Gets the change request for a given circular
  * @param circularId
+ * @param requestorSub
+ * @returns
  */
 export async function getChangeRequest(
   circularId: number,

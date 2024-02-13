@@ -7,7 +7,7 @@
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { Grid } from '@trussworks/react-uswds'
+import { ButtonGroup, Grid } from '@trussworks/react-uswds'
 
 import { getUser } from './_gcn._auth/user.server'
 import type { CircularChangeRequest } from './_gcn.circulars/circulars.lib'
@@ -33,6 +33,11 @@ export default function () {
   return (
     <>
       <h2>Pending Corrections</h2>
+      <ButtonGroup>
+        <Link to="/circulars" className="usa-button usa-button--outline">
+          Back
+        </Link>
+      </ButtonGroup>
       <SegmentedCards>
         {changeRequests.map((correction) => (
           <CircularChangeRequestRow

@@ -138,12 +138,14 @@ export default function () {
     <>
       <CircularsHeader />
       {userIsModerator && (
-        <p>
-          Current pending corrections requested by submitters:{' '}
-          {requestedChangeCount}
-        </p>
+        <>
+          <p>
+            Current pending corrections requested by submitters:{' '}
+            {requestedChangeCount}
+          </p>
+          <Link to="moderation">Review Requested Changes</Link>
+        </>
       )}
-      <Link to="moderation">Review Requested Changes</Link>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           className="display-inline-block usa-search usa-search--small"
