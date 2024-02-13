@@ -31,7 +31,9 @@ import type { BreadcrumbHandle } from '~/root/Title'
 export const handle: BreadcrumbHandle<typeof loader> = {
   breadcrumb({ data }) {
     if (data) {
-      const { subject, version } = data
+      const {
+        result: { subject, version },
+      } = data
       return `${version ? `v${version} - ` : ''} ${subject}`
     }
   },
@@ -48,20 +50,24 @@ export async function loader({
     version ? parseFloat(version) : undefined
   )
 
-  return json(result, {
-    headers: {
-      ...publicStaticShortTermCacheControlHeaders,
-      ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
-    },
-  })
+  return json(
+    { result },
+    {
+      headers: {
+        ...publicStaticShortTermCacheControlHeaders,
+        ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
+      },
+    }
+  )
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
-  const { circularId, body, bibcode, version, ...frontMatter } =
-    useLoaderData<typeof loader>()
+  const {
+    result: { circularId, body, bibcode, version, ...frontMatter },
+  } = useLoaderData<typeof loader>()
   const searchString = useSearchString()
 
   const result = useRouteLoaderData<typeof parentLoader>(
@@ -122,7 +128,7 @@ export default function () {
             className="usa-button usa-button--outline"
             to={`/circulars/correction/${circularId}`}
           >
-            Suggest Correction
+            Request Correction
           </Link>
         )}
         {useFeature('CIRCULAR_VERSIONS') &&

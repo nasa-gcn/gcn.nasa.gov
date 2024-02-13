@@ -30,6 +30,7 @@ import {
   circularRedirect,
   createChangeRequest,
   get,
+  getChangeRequests,
   put,
   putVersion,
   search,
@@ -40,6 +41,7 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
+import { useModStatus } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -60,8 +62,8 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
     startDate,
     endDate,
   })
-
-  return { page, ...results }
+  const requestedChangeCount = (await getChangeRequests()).length
+  return { page, ...results, requestedChangeCount }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -105,12 +107,14 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function () {
   const newItem = useActionData<typeof action>()
-  const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
+  const { items, page, totalPages, totalItems, requestedChangeCount } =
+    useLoaderData<typeof loader>()
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
+  const userIsModerator = useModStatus()
 
   // Strip off the ?index param if we navigated here from a form.
   // See https://remix.run/docs/en/main/guides/index-query-param.
@@ -133,6 +137,13 @@ export default function () {
   return (
     <>
       <CircularsHeader />
+      {userIsModerator && (
+        <p>
+          Current pending corrections requested by submitters:{' '}
+          {requestedChangeCount}
+        </p>
+      )}
+      <Link to="moderation">Review Requested Changes</Link>
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           className="display-inline-block usa-search usa-search--small"
