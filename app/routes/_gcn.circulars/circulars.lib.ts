@@ -11,13 +11,13 @@ export interface CircularMetadata {
   circularId: number
   subject: string
   eventId?: string
+  createdOn: number
 }
 
 export type SubmittedHow = 'web' | 'email' | 'email-legacy' | 'api'
 
 export interface Circular extends CircularMetadata {
   sub?: string
-  createdOn: number
   body: string
   submitter: string
   submittedHow?: SubmittedHow

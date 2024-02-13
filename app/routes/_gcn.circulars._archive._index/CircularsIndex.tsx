@@ -8,6 +8,7 @@
 import { Link } from '@remix-run/react'
 
 import type { CircularMetadata } from '../_gcn.circulars/circulars.lib'
+import { formatDateISO } from '../_gcn.circulars/circulars.lib'
 
 export default function ({
   allItems,
@@ -27,18 +28,47 @@ export default function ({
           {totalItems} result{totalItems != 1 && 's'} found.
         </h3>
       )}
-      <ol>
-        {allItems.map(({ circularId, subject }) => (
-          <li key={circularId} value={circularId}>
-            <Link
-              className="usa-link"
-              to={`/circulars/${circularId}${searchString}`}
-            >
-              {subject}
-            </Link>
-          </li>
-        ))}
-      </ol>
+      <div className="usa-table-container" tabIndex={0}>
+        <table
+          className="usa-table--compact usa-table--striped usa-table--borderless"
+          data-sortable
+          width="100%"
+        >
+          <thead>
+            <tr>
+              <th scope="col" role="columnheader" data-sortable align="left">
+                Circular
+              </th>
+              <th scope="col" role="columnheader" data-sortable align="left">
+                Subject
+              </th>
+              <th scope="col" role="columnheader" data-sortable align="left">
+                Created
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {allItems.map(({ circularId, subject, createdOn }) => (
+              <tr key={circularId}>
+                <td data-sort-value={circularId}>{circularId}</td>
+                <td data-sort-value={subject}>
+                  <Link
+                    className="usa-link"
+                    to={`/circulars/${circularId}${searchString}`}
+                  >
+                    {subject}
+                  </Link>
+                </td>
+                <td data-sort-value={createdOn}>{formatDateISO(createdOn)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div
+          className="usa-sr-only usa-table__announcement-region"
+          aria-live="polite"
+        ></div>
+      </div>
     </>
   )
 }

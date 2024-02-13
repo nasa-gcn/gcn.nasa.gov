@@ -67,6 +67,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
+  const createdOn = getFormDataString(data, 'createdOn') || undefined
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
@@ -78,6 +79,7 @@ export async function action({ request }: ActionFunctionArgs) {
         body,
         circularId: parseFloat(circularId),
         subject,
+        createdOn: parseFloat(createdOn ?? '0'),
       },
       user
     )
