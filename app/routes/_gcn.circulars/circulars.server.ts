@@ -127,12 +127,14 @@ export async function search({
   limit,
   startDate,
   endDate,
+  sort,
 }: {
   query?: string
   page?: number
   limit?: number
   startDate?: string
   endDate?: string
+  sort?: string
 }): Promise<{
   items: CircularMetadata[]
   totalPages: number
@@ -141,6 +143,15 @@ export async function search({
   const client = await getSearch()
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
+
+  const sortObj =
+    sort === 'relevance'
+      ? {}
+      : {
+          circularId: {
+            order: 'desc',
+          },
+        }
 
   const {
     body: {
@@ -174,11 +185,7 @@ export async function search({
       },
       fields: ['subject'],
       _source: false,
-      sort: {
-        circularId: {
-          order: 'desc',
-        },
-      },
+      sort: sortObj,
       from: page && limit && page * limit,
       size: limit,
       track_total_hits: true,
