@@ -37,6 +37,7 @@ import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
+import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
 
@@ -52,12 +53,14 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
+  const sort = searchParams.get('sort') || 'circularId'
   const results = await search({
     query,
     page: page - 1,
     limit,
     startDate,
     endDate,
+    sort,
   })
 
   return { page, ...results }
@@ -105,6 +108,7 @@ export default function () {
   const query = searchParams.get('query') || undefined
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
+  const sort = searchParams.get('sort') || 'circularID'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -153,6 +157,7 @@ export default function () {
           defaultStartDate={startDate}
           defaultEndDate={endDate}
         />
+        <SortSelector form={formId} defaultValue={sort} />
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
