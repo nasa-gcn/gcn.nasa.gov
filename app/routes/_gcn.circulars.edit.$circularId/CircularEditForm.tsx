@@ -135,8 +135,7 @@ export function CircularEditForm({
   const [showPreview, setShowPreview] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
-  let headerText,
-    saveButtonText = ''
+  let headerText, saveButtonText
 
   switch (intent) {
     case 'correction':
