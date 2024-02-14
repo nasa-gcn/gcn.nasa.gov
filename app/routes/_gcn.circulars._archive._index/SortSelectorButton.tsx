@@ -36,7 +36,8 @@ function SortButton({
     <ButtonGroup type="segmented" {...props}>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         Sorted By{' '}
-        {sortOptions[(sort as keyof typeof sortOptions) || 'circularID']}
+        {sortOptions[sort as keyof typeof sortOptions] ||
+          sortOptions.circularID}
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
         {<Icon.FilterList role="presentation" />}
@@ -66,6 +67,9 @@ export function SortSelector({
     if (target.form) submit(target.form)
   }
 
+  const sanitizedValue =
+    defaultValue && defaultValue in sortOptions ? defaultValue : 'circularID'
+
   const SortRadioButtons = () => (
     <>
       {Object.entries(sortOptions).map(([value, label]) => (
@@ -76,7 +80,7 @@ export function SortSelector({
           value={value}
           label={label}
           form={form}
-          defaultChecked={defaultValue === value}
+          defaultChecked={sanitizedValue === value}
           onChange={radioOnChange}
         />
       ))}
@@ -86,7 +90,7 @@ export function SortSelector({
   return (
     <>
       <SortButton
-        sort={defaultValue}
+        sort={sanitizedValue}
         expanded={showContent}
         onClick={() => {
           setShowContent((shown) => !shown)
