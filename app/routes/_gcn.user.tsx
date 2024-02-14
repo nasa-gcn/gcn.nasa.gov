@@ -40,9 +40,6 @@ export default function () {
                     </NavLink>,
                   ]
                 : []),
-              <NavLink key="circulars" to="circulars">
-                Circulars
-              </NavLink>,
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,
