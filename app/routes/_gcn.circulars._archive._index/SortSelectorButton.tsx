@@ -70,8 +70,8 @@ export function SortSelector({
     <>
       {Object.entries(sortOptions).map(([value, label]) => (
         <Radio
-          key={`radio-sort-${value}`}
-          id={`radio-sort-${value}`}
+          key={value}
+          id={value}
           name="sort"
           value={value}
           label={label}
