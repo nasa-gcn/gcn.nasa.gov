@@ -7,20 +7,12 @@
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
-import {
-  Button,
-  Modal,
-  ModalFooter,
-  ModalHeading,
-} from '@trussworks/react-uswds'
+import { useLoaderData } from '@remix-run/react'
 
 import { getUser } from './_gcn._auth/user.server'
 import { CircularEditForm } from './_gcn.circulars.edit.$circularId/CircularEditForm'
 import { formatAuthor } from './_gcn.circulars/circulars.lib'
 import { get } from './_gcn.circulars/circulars.server'
-import { useSearchString } from '~/lib/utils'
-import { useUrl } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
@@ -35,6 +27,7 @@ export async function loader({
   if (!circularId) throw new Response(null, { status: 404 })
 
   const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
   const isAuthenticated = user !== undefined
   const circular = await get(parseFloat(circularId))
   const data = {
@@ -49,50 +42,6 @@ export async function loader({
 }
 
 export default function () {
-  const { isAuthenticated, data } = useLoaderData<typeof loader>()
-  return (
-    <>
-      <CircularEditForm {...data} intent="correction" />
-      {isAuthenticated || <ModalUnauthorized />}
-    </>
-  )
-}
-
-function ModalUnauthorized() {
-  const searchString = useSearchString()
-
-  return (
-    <Modal
-      id="modal-unauthorized"
-      aria-labelledby="modal-unauthorized-heading"
-      aria-describedby="modal-unauthorized-description"
-      isInitiallyOpen={true}
-      forceAction={true}
-      renderToPortal={false}
-    >
-      <ModalHeading id="modal-unauthorized-heading">
-        Submit a Correction
-      </ModalHeading>
-      <p id="modal-unauthorized-description">
-        In order to submit a correction for a GCN Circular, you must sign in.
-      </p>
-      <ModalFooter>
-        <Link to={`/circulars${searchString}`}>
-          <Button type="button" outline>
-            Cancel
-          </Button>
-        </Link>
-        <SignInButton />
-      </ModalFooter>
-    </Modal>
-  )
-}
-
-function SignInButton() {
-  const url = useUrl()
-  return (
-    <Link to={`/login?redirect=${encodeURIComponent(url)}`}>
-      <Button type="button">Sign in</Button>
-    </Link>
-  )
+  const { data } = useLoaderData<typeof loader>()
+  return <CircularEditForm {...data} intent="correction" />
 }

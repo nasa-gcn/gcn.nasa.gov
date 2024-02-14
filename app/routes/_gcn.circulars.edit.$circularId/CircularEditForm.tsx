@@ -150,7 +150,6 @@ export function CircularEditForm({
     case 'new':
       headerText = 'New'
       saveButtonText = 'Send'
-
       break
   }
 

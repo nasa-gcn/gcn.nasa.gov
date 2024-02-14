@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { ButtonGroup, Grid } from '@trussworks/react-uswds'
@@ -16,6 +17,12 @@ import {
   moderatorGroup,
 } from './_gcn.circulars/circulars.server'
 import SegmentedCards from '~/components/SegmentedCards'
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Moderation',
+  getSitemapEntries: () => null,
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
