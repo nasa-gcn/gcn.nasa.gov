@@ -83,8 +83,7 @@ circulars
   PointInTimeRecovery true
 
 synonyms
-  synonymId *String
-  eventId **String
+  eventId *String
   PointInTimeRecovery true
 
 auto_increment_metadata
@@ -151,8 +150,9 @@ legacy_users
   name legacyAnnouncementReceivers
 
 synonyms
-  eventId *String
-  name synonymsByEventId
+  uuid *String
+  eventId **String
+  name synonymsByUuid
 
 @aws
 runtime nodejs20.x
