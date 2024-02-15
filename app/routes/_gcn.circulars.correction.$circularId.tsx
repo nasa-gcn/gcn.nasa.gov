@@ -28,7 +28,6 @@ export async function loader({
 
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
-  const isAuthenticated = user !== undefined
   const circular = await get(parseFloat(circularId))
   const data = {
     formattedContributor: user ? formatAuthor(user) : '',
@@ -38,7 +37,7 @@ export async function loader({
     submitter: circular.submitter,
     searchString: '',
   }
-  return { isAuthenticated, data }
+  return { data }
 }
 
 export default function () {
