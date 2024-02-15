@@ -1,0 +1,382 @@
+# Copyright © 2023 United States Government as represented by the
+# Administrator of the National Aeronautics and Space Administration.
+# All Rights Reserved.
+
+from typing import Optional, Union
+import astropy_healpix as ah  # type: ignore
+import astropy.units as u  # type: ignore
+from astropy.io.fits import FITS_rec  # type: ignore
+import numpy as np
+from astropy.coordinates import SkyCoord, angular_separation, spherical_to_cartesian  # type: ignore
+from astropy.time import Time  # type: ignore
+import healpy as hp
+from .constraints import EarthLimbConstraint, get_slice
+from .common import ACROSSAPIBase
+from .footprint import Footprint
+from .pointing import PointingBase
+from .ephem import EphemBase
+
+HEALPIX_MAP_EVAL_ORDER = 9
+
+
+# Some math stuff for calculating the probability inside for circular error
+# regions
+def normal_pdf(x, standard_deviation):
+    """
+    Calculate the probability density function (PDF) of a standard normal distribution (mean=0).
+
+    Parameters
+    ----------
+    x
+        The value at which to calculate the PDF.
+    standard_deviation
+        The standard deviation of the normal distribution.
+
+    Returns
+    -------
+    pdf
+        The probability density at the given x.
+    """
+
+    # Calculate the exponent term
+    exponent = -(x**2) / (2 * standard_deviation**2)
+
+    # Calculate the PDF using the simplified formula
+    pdf = (1 / (standard_deviation * np.sqrt(2 * np.pi))) * np.exp(exponent)
+
+    return pdf
+
+
+def healpix_map_from_position_error(
+    skycoord: SkyCoord,
+    error_radius: u.Quantity,
+    nside=hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
+) -> np.ndarray:
+    """
+    For a given sky position and error radius, create a HEALPix map of the
+    probability density distribution.
+
+    Parameters
+    ----------
+    skycoord
+        The sky position for which to create the probability density
+        distribution.
+    error_radius
+        The 1 sigma error radius for the sky position.
+    nside
+        The NSIDE value for the HEALPix map. Default is 512.
+
+    Returns
+    -------
+    prob
+        The probability density distribution HEALPix map.
+    """
+    # Create HEALPix map
+    hp = ah.HEALPix(nside=nside, order="nested")
+
+    # Find RA/Dec for each pixel in HEALPix map
+    hpra, hpdec = hp.healpix_to_lonlat(range(ah.nside_to_npix(nside)))
+
+    # Find angular distance of each HEALPix pixel to the skycoord
+    distance = angular_separation(hpra, hpdec, skycoord.ra, skycoord.dec).to(u.deg)
+
+    # Create the probability density distribution HEALPix map
+    prob = normal_pdf(distance, error_radius).value
+
+    # Normalize it
+    prob = np.divide(prob, np.sum(prob))
+
+    return prob
+
+
+class FOVBase(ACROSSAPIBase):
+    visible_pixels: np.ndarray
+
+    def probability_in_fov(
+        self,
+        skycoord: Optional[SkyCoord] = None,
+        error_radius: Optional[u.Quantity] = None,
+        healpix_loc: Optional[FITS_rec] = None,
+    ) -> float:
+        """
+        For a given sky position and error radius, calculate the probability of
+        the sky position being inside the field of view (FOV).
+
+        Parameters
+        ----------
+        skycoord
+                SkyCoord object representing the position of the celestial object.
+        error_radius
+                The error radius for the sky position. If not given, the `skycoord`
+                will be treated as a point source.
+        healpix_loc
+                HEALPix map of the localization.
+        time
+                The time of the observation.
+        ephem
+                Ephemeris object.
+
+        """
+        # For a point source
+        if skycoord is not None and (error_radius is None or error_radius == 0.0):
+            in_fov = self.in_fov(skycoord)
+            return 1.0 if in_fov else 0.0
+        # For a circular error region
+        if skycoord is not None and error_radius is not None:
+            return self.in_fov_circular_error(
+                skycoord=skycoord, error_radius=error_radius
+            )
+        # For a HEALPix map
+        elif healpix_loc is not None:
+            return self.in_fov_healpix_map(healpix_loc=healpix_loc)
+
+        # We should never get here
+        raise AssertionError("No valid arguments provided")
+
+    def in_fov(
+        self,
+        skycoord: SkyCoord,
+    ) -> Union[bool, np.ndarray]:
+        """
+        Is a coordinate or set of coordinates `skycoord` inside the FOV and not
+        Earth occulted.
+
+        Note that this method only checks if the given coordinate is Earth
+        occulted, so defines a simple 'all-sky' FOV with no other constraints.
+        For more complex FOVs, this method should be overridden with one that
+        also checks if coordinate is inside the bounds of an instrument's FOV
+        for a given spacecraft attitude.
+
+        Parameters
+        ----------
+        skycoord
+                SkyCoord object representing the celestial object.
+        time
+                Time object representing the time of the observation.
+        ephem
+                Ephemeris object
+
+        Returns
+        -------
+        bool
+                True or False
+        """
+
+        # Check if skycoord pixels in list of visible pixels
+        skycoord_pix = hp.ang2pix(
+            hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
+            skycoord.ra.value,
+            skycoord.dec.value,
+            lonlat=True,
+            nest=True,
+        )
+        in_fov = np.ma.isin(skycoord_pix, self.visible_pixels)
+        return in_fov.data
+
+    def in_fov_circular_error(
+        self,
+        skycoord: SkyCoord,
+        error_radius: u.Quantity,
+        nside: int = hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
+    ) -> float:
+        """
+        Calculate the probability of a celestial object with a circular error
+        region being inside the FOV defined by the given parameters. This works
+        by creating a HEALPix map of the probability density distribution, and
+        then using the `in_fov_healpix_map` method to calculate the amount of
+        probability inside the FOV.
+
+        The FOV definition is based on the `in_fov` method, which checks if a
+        given coordinate is inside the FOV and not Earth occulted.
+
+        Parameters
+        ----------
+        skycoord
+                SkyCoord object representing the celestial object.
+        time
+                Time object representing the time of the observation.
+        ephem
+                Ephemeris object
+        error_radius
+                The error radius for the sky position.
+        nside
+                The NSIDE value for the HEALPix map. Default is 512.
+
+        Returns
+        -------
+        bool
+                True or False
+        """
+        # Sanity check
+        assert skycoord.isscalar, "SkyCoord must be scalar"
+
+        # Create a HEALPix map of the probability density distribution
+        prob = healpix_map_from_position_error(
+            skycoord=skycoord, error_radius=error_radius, nside=nside
+        )
+
+        return self.in_fov_healpix_map(healpix_loc=prob)
+
+    def in_fov_healpix_map(
+        self,
+        healpix_loc: FITS_rec,
+        healpix_order: str = "NESTED",
+    ) -> float:
+        """
+        Calculates the amount of probability inside the field of view (FOV)
+        defined by the given parameters. This works by calculating a SkyCoord
+        containing every non-zero probability pixel, uses the
+        `in_fov` method to check which pixels are inside the FOV,
+        and then finding the integrated probability of those pixels.
+
+        Note: This method makes no attempt to deal with pixels that are only
+        partially inside the FOV, i.e. Earth occultation is calculated for
+        location of the center of each HEALPix pixel.
+
+        If `healpix_order` == "NUNIQ", it assumes that `healpix_loc` contains a
+        multi-order HEALPix map, and handles that accordingly.
+
+        Parameters
+        ----------
+        healpix_loc
+                An array containing the probability density values for each HEALPix
+                pixel.
+        healpix_nside
+                The NSIDE value of the HEALPix map. If not provided, it will be
+                calculated based on the length of healpix_loc.
+        healpix_order
+                The ordering scheme of the HEALPix map. Default is "NESTED".
+
+        Returns
+        -------
+        float
+                The amount of probability inside the FOV.
+
+        """
+        # Extract the NSIDE value from the HEALPix map, also level and ipix if
+        # this is a MOC map
+        if healpix_order == "NUNIQ":
+            level, ipix = ah.uniq_to_level_ipix(healpix_loc["UNIQ"])
+            uniq_nside = ah.level_to_nside(level)
+            healpix_loc = healpix_loc["PROBDENSITY"]
+        else:
+            nside = ah.npix_to_nside(len(healpix_loc))
+
+        # Find where in HEALPix map the probability is > 0
+        nonzero_prob_pixels = np.where(healpix_loc > 0.0)[0]
+
+        # Create a list of RA/Dec coordinates for these pixels
+        if healpix_order == "NUNIQ":
+            ra, dec = ah.healpix_to_lonlat(
+                ipix[nonzero_prob_pixels],
+                nside=uniq_nside[nonzero_prob_pixels],  # type: ignore
+                order="NESTED",
+            )
+        else:
+            ra, dec = ah.healpix_to_lonlat(
+                nonzero_prob_pixels, nside=nside, order=healpix_order
+            )
+
+        # Convert these coordinates into a SkyCoord
+        skycoord = SkyCoord(ra=ra, dec=dec, unit="deg")
+
+        # Calculate pixel indicies of the all the regions inside of the FOV
+        visible_probability_pixels = nonzero_prob_pixels[self.in_fov(skycoord=skycoord)]
+        # Calculate the amount of probability inside the FOV
+        if healpix_order == "NUNIQ":
+            # Calculate probability in FOV by multiplying the probability density by
+            # area of each pixel and summing up
+            pixarea = ah.nside_to_pixel_area(uniq_nside[visible_probability_pixels])
+            return float(
+                round(
+                    np.sum(healpix_loc[visible_probability_pixels] * pixarea.value), 5
+                )
+            )
+        else:
+            # Calculate the amount of probability inside the FOV
+            return float(round(np.sum(healpix_loc[visible_probability_pixels]), 5))
+
+
+class FootprintFOV(FOVBase):
+    """
+    Constrained instrumet FOV. This is an FOV that calculate lates what is
+    visible in the FOV at a given pointing
+    """
+
+    footprint: Footprint
+
+    def __init__(self, pointing: PointingBase) -> None:
+        projected_footprint = self.footprint.project(
+            ra=pointing.ra, dec=pointing.dec, pos_angle=pointing.position_angle
+        )
+
+        ras_poly = [x[0] for x in projected_footprint][:-1]
+        decs_poly = [x[1] for x in projected_footprint][:-1]
+
+        cartesian_vertices = spherical_to_cartesian(
+            1,  # radial component
+            np.deg2rad(decs_poly),  # LAT - DECs
+            np.deg2rad(ras_poly),  # LON - RAs
+        )
+
+        self.visible_pixels = hp.query_polygon(
+            hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
+            np.array(cartesian_vertices).T,
+            inclusive=True,
+            nest=True,
+        )
+
+
+class AllSkyFOV(FOVBase):
+    """
+    All sky instrument FOV. This is a simple FOV that is always visible unless
+    Earth occulted.
+    """
+
+    earth_constraint: EarthLimbConstraint
+
+    def __init__(self, ephem: EphemBase, time: Time):
+        """
+        Finds all healpix pixels within the ephemeris time slot that are not earth
+        occulted, and sets them to FOVBase.visible_pixels.
+
+        Function does assume that it is a space mission with available ephemeris
+        """
+        n_side = hp.order2nside(HEALPIX_MAP_EVAL_ORDER)
+        n_pix = hp.order2npix(HEALPIX_MAP_EVAL_ORDER)
+        i_slice = get_slice(time=time, ephem=ephem)
+
+        ra = ephem.earth.ra[i_slice].degree
+        dec = ephem.earth.dec[i_slice].degree
+
+        vec = hp.ang2vec(ra, dec, lonlat=True)
+
+        # np.array to store occulted pixels
+        earth_pixels = np.array([]).astype(int)
+
+        # loop over each time-slice vector and concatenate
+        # earth constrained pixels calculated with healpy's cone search (query_disc)
+        # assume the earth is a disc at ephem.earth position with radius
+        # radius = earthsize + constraint min angle.
+        for i, v in enumerate(vec):
+            radius = np.radians(ephem.earthsize[i].value) + np.radians(
+                self.earth_constraint.min_angle.value
+            )
+            earth_pixels = np.concatenate(
+                (
+                    earth_pixels,
+                    hp.query_disc(n_side, v, radius, nest=True, inclusive=False),
+                )
+            )
+
+        # only need unique pixels
+        earth_pixels = np.unique(earth_pixels)
+
+        # simulate the whole sky
+        all_sky_pixels = np.zeros(n_pix, dtype=np.float32)
+
+        # set the earth values on the sky
+        all_sky_pixels[earth_pixels] = 1
+
+        # find the complement (where sky != 1)
+        self.visible_pixels = np.where(all_sky_pixels == 0)[0]
