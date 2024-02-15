@@ -8,13 +8,9 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, redirect, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
-import { DiffMethod } from 'react-diff-viewer-continued'
+import * as Diff from 'diff'
 
 import { getUser } from './_gcn._auth/user.server'
-import type {
-  Circular,
-  CircularChangeRequest,
-} from './_gcn.circulars/circulars.lib'
 import {
   approveChangeRequest,
   deleteChangeRequest,
@@ -23,8 +19,6 @@ import {
   moderatorGroup,
 } from './_gcn.circulars/circulars.server'
 import { getFormDataString } from '~/lib/utils'
-
-const DiffViewer = require('react-diff-viewer-continued').default
 
 export async function action({
   request,
@@ -69,7 +63,13 @@ export default function () {
   return (
     <>
       <h2>Circular {circular.circularId}</h2>
-      <Diff circular={circular} correction={correction} />
+      <h3>Subject</h3>
+      <DiffedContent
+        oldString={circular.subject}
+        newString={correction.subject}
+      />
+      <h3>Body</h3>
+      <DiffedContent oldString={circular.body} newString={correction.body} />
       <Form method="POST">
         <ButtonGroup>
           <Button type="submit" name="intent" value="approve">
@@ -84,20 +84,35 @@ export default function () {
   )
 }
 
-function Diff({
-  circular,
-  correction,
+function DiffedContent({
+  oldString,
+  newString,
 }: {
-  circular: Circular
-  correction: CircularChangeRequest
+  oldString: string
+  newString: string
 }) {
+  const diff = Diff.diffWords(oldString, newString)
+
   return (
-    <DiffViewer
-      oldValue={circular.subject + '\n' + circular.body}
-      newValue={correction.subject + '\n' + correction.body}
-      splitView={false}
-      hideLineNumbers
-      compareMethod={DiffMethod.WORDS}
-    />
+    <div>
+      <pre>
+        <code>
+          {diff.map((part, index) => (
+            <span
+              key={index}
+              className={
+                part.added
+                  ? 'bg-success'
+                  : part.removed
+                    ? 'bg-secondary'
+                    : 'bg-white'
+              }
+            >
+              {part.value}
+            </span>
+          ))}
+        </code>
+      </pre>
+    </div>
   )
 }
