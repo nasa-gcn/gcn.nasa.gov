@@ -145,7 +145,7 @@ export async function search({
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
   const sortObj =
-    sort === 'relevance'
+    sort === 'relevance' && query
       ? {}
       : {
           circularId: {
