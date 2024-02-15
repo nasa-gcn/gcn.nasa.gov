@@ -16,12 +16,14 @@ import astropy.units as u
 
 @pytest.fixture
 def AT2017gfo_skycoord():
+    # Define the position of interesting event AT2017gfo
     r = Resolve(name="AT2017gfo")
     return SkyCoord(r.ra, r.dec, unit="deg")
 
 
 @pytest.fixture
 def AT2017gfo_healpix_probability():
+    # Load the skymap of AT2017gfo and return the probability distribution
     hdu = fits.open("tests/gw170817_skymap.fits.gz")
     return hdu[1].data["PROB"]
 

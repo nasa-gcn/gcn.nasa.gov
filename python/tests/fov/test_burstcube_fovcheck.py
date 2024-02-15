@@ -7,6 +7,7 @@ def test_burstcube_fov_point_source(AT2017gfo_skycoord, burstcube_fov):
     # Assert that the skyfield calculated Earth position is > 70 degrees from
     # the trigger location, i.e. not occulted
 
+    # skyfielld earth position
     skyfield_earthra = 297.96021 * u.deg
     skyfield_earthdec = -3.8946682 * u.deg
 
@@ -19,6 +20,7 @@ def test_burstcube_fov_point_source(AT2017gfo_skycoord, burstcube_fov):
         )
         > 70 * u.deg
     ), "This trigger should be not earth occulted"
+
     # Perform the same calculation using the ACROSS API BurstCubeFOV class.
     # Should report True if the trigger was in the FOV.
     assert (
