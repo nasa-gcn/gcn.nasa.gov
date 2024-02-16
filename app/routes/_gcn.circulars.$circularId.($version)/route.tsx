@@ -117,6 +117,14 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
+        {useFeature('CIRCULAR_VERSIONS') && (
+          <Link
+            className="usa-button usa-button--outline"
+            to={`/circulars/correction/${circularId}`}
+          >
+            Request Correction
+          </Link>
+        )}
         {useFeature('CIRCULAR_VERSIONS') &&
           result?.history &&
           result.history.length > 0 && (

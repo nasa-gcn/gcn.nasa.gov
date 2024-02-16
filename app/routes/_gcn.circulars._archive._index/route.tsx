@@ -28,7 +28,9 @@ import { useId, useState } from 'react'
 import { getUser } from '../_gcn._auth/user.server'
 import {
   circularRedirect,
+  createChangeRequest,
   get,
+  getChangeRequests,
   put,
   putVersion,
   search,
@@ -40,6 +42,7 @@ import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { getFormDataString } from '~/lib/utils'
+import { useModStatus } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -62,43 +65,59 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
     endDate,
     sort,
   })
-
-  return { page, ...results }
+  const requestedChangeCount = (await getChangeRequests()).length
+  return { page, ...results, requestedChangeCount }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
+  const intent = getFormDataString(data, 'intent')
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
   let result
-  if (circularId) {
-    await putVersion(
-      {
-        body,
-        circularId: parseFloat(circularId),
-        subject,
-      },
-      user
-    )
-    result = await get(parseFloat(circularId))
-  } else {
-    result = await put({ subject, body, submittedHow: 'web' }, user)
+  switch (intent) {
+    case 'correction':
+      if (!circularId)
+        throw new Response('circularId is required', { status: 400 })
+      await createChangeRequest(parseFloat(circularId), body, subject, user)
+      result = null
+      break
+    case 'edit':
+      if (!circularId)
+        throw new Response('circularId is required', { status: 400 })
+      await putVersion(
+        {
+          body,
+          circularId: parseFloat(circularId),
+          subject,
+        },
+        user
+      )
+      result = await get(parseFloat(circularId))
+      break
+    case 'new':
+      result = await put({ subject, body, submittedHow: 'web' }, user)
+      break
+    default:
+      break
   }
   return result
 }
 
 export default function () {
   const newItem = useActionData<typeof action>()
-  const { items, page, totalPages, totalItems } = useLoaderData<typeof loader>()
+  const { items, page, totalPages, totalItems, requestedChangeCount } =
+    useLoaderData<typeof loader>()
 
   // Concatenate items from the action and loader functions
   const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
 
   const [searchParams] = useSearchParams()
+  const userIsModerator = useModStatus()
 
   // Strip off the ?index param if we navigated here from a form.
   // See https://remix.run/docs/en/main/guides/index-query-param.
@@ -122,6 +141,15 @@ export default function () {
   return (
     <>
       <CircularsHeader />
+      {userIsModerator && (
+        <>
+          <p>
+            Current pending corrections requested by submitters:{' '}
+            {requestedChangeCount}
+          </p>
+          <Link to="moderation">Review Requested Changes</Link>
+        </>
+      )}
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           className="display-inline-block usa-search usa-search--small"

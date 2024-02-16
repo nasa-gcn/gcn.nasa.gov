@@ -9,15 +9,14 @@ import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
-import { getUser } from '../_gcn._auth/user.server'
-import { formatAuthor } from '../_gcn.circulars/circulars.lib'
-import { get, moderatorGroup } from '../_gcn.circulars/circulars.server'
-import { CircularEditForm } from './CircularEditForm'
-import { feature } from '~/lib/env.server'
+import { getUser } from './_gcn._auth/user.server'
+import { CircularEditForm } from './_gcn.circulars.edit.$circularId/CircularEditForm'
+import { formatAuthor } from './_gcn.circulars/circulars.lib'
+import { get } from './_gcn.circulars/circulars.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
-  breadcrumb: 'Edit',
+  breadcrumb: 'Correction',
   getSitemapEntries: () => null,
 }
 
@@ -25,16 +24,13 @@ export async function loader({
   params: { circularId },
   request,
 }: LoaderFunctionArgs) {
-  if (!feature('CIRCULAR_VERSIONS')) throw new Response(null, { status: 404 })
   if (!circularId) throw new Response(null, { status: 404 })
-  const user = await getUser(request)
-  if (!user?.groups.includes(moderatorGroup))
-    throw new Response(null, { status: 403 })
-  const formattedContributor = formatAuthor(user)
-  const circular = await get(parseFloat(circularId))
 
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+  const circular = await get(parseFloat(circularId))
   return {
-    formattedContributor,
+    formattedContributor: user ? formatAuthor(user) : '',
     defaultBody: circular.body,
     defaultSubject: circular.subject,
     circularId: circular.circularId,
@@ -45,5 +41,5 @@ export async function loader({
 
 export default function () {
   const data = useLoaderData<typeof loader>()
-  return <CircularEditForm {...data} intent="edit" />
+  return <CircularEditForm {...data} intent="correction" />
 }

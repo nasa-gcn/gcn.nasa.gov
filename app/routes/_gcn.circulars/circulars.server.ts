@@ -7,7 +7,7 @@
  */
 import { tables } from '@architect/functions'
 import type { DynamoDB } from '@aws-sdk/client-dynamodb'
-import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import { search as getSearch } from '@nasa-gcn/architect-functions-search'
 import {
   DynamoDBAutoIncrement,
@@ -362,10 +362,9 @@ export async function createChangeRequest(
   circularId: number,
   body: string,
   subject: string,
-  request: Request
+  user?: User
 ) {
   validateCircular(subject, body)
-  const user = await getUser(request)
   if (!user)
     throw new Response('User is not signed in', {
       status: 403,
@@ -382,23 +381,22 @@ export async function createChangeRequest(
 }
 
 /**
- * Gets all change requests for a given circular
- * @param circularId
+ * Get all pending change requests
  * @returns
  */
-export async function getChangeRequests(
-  circularId: number
-): Promise<CircularChangeRequest[]> {
+export async function getChangeRequests(): Promise<CircularChangeRequest[]> {
   const db = await tables()
-  return (
-    await db.circulars_change_requests.query({
-      KeyConditionExpression: 'circularId = :circularId',
-      ExpressionAttributeValues: {
-        ':circularId': circularId,
-      },
-      ProjectionExpression: 'circularId, requestor, requestorSub',
-    })
-  ).Items
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('circulars_change_requests')
+
+  const pages = paginateScan({ client }, { TableName })
+  const changeRequests: CircularChangeRequest[] = []
+  for await (const page of pages) {
+    const newRequests = page.Items as CircularChangeRequest[]
+    if (newRequests) changeRequests.push(...newRequests)
+  }
+
+  return changeRequests
 }
 
 /**
@@ -411,14 +409,13 @@ export async function getChangeRequests(
  *
  * @param circularId
  * @param requestorSub
- * @param request
+ * @param user
  */
 export async function deleteChangeRequest(
   circularId: number,
   requestorSub: string,
-  request: Request
+  user: User
 ): Promise<void> {
-  const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   if (requestorSub !== user.sub || !user.groups.includes(moderatorGroup))
     throw new Response(
@@ -432,7 +429,6 @@ export async function deleteChangeRequest(
 /**
  * Delete a specific change request
  * @param circularId
- * @param requestorSub
  */
 async function deleteChangeRequestRaw(
   circularId: number,
@@ -446,25 +442,21 @@ async function deleteChangeRequestRaw(
 }
 
 /**
- * Applies a change request on behalf of another user. This
+ * Applies the change request on behalf of the original author. This
  * method creates a new version and deletes the change
  * request once completed
  *
  * Throws an HTTP error if:
  *  - The current user is not a moderator
- *  - No change request is found with the provided requestor
- *    information
  *
  * @param circularId
- * @param requestorSub
- * @param request
+ * @param user
  */
 export async function approveChangeRequest(
   circularId: number,
   requestorSub: string,
-  request: Request
+  user: User
 ) {
-  const user = await getUser(request)
   if (!user?.groups.includes(moderatorGroup))
     throw new Response('User is not in the moderators group', {
       status: 403,
@@ -485,7 +477,16 @@ export async function approveChangeRequest(
   await deleteChangeRequestRaw(circularId, requestorSub)
 }
 
-async function getChangeRequest(circularId: number, requestorSub: string) {
+/**
+ * Gets the change request for a given circular
+ * @param circularId
+ * @param requestorSub
+ * @returns
+ */
+export async function getChangeRequest(
+  circularId: number,
+  requestorSub: string
+) {
   const db = await tables()
   const changeRequest = (await db.circulars_change_requests.get({
     circularId,
