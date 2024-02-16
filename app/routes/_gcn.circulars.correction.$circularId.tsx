@@ -33,6 +33,7 @@ export async function loader({
     formattedContributor: user ? formatAuthor(user) : '',
     defaultBody: circular.body,
     defaultSubject: circular.subject,
+    defaultFormat: circular.format,
     circularId: circular.circularId,
     submitter: circular.submitter,
     searchString: '',
