@@ -29,7 +29,7 @@ export async function loader({
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const circular = await get(parseFloat(circularId))
-  const data = {
+  return {
     formattedContributor: user ? formatAuthor(user) : '',
     defaultBody: circular.body,
     defaultSubject: circular.subject,
@@ -37,10 +37,9 @@ export async function loader({
     submitter: circular.submitter,
     searchString: '',
   }
-  return { data }
 }
 
 export default function () {
-  const { data } = useLoaderData<typeof loader>()
+  const data = useLoaderData<typeof loader>()
   return <CircularEditForm {...data} intent="correction" />
 }
