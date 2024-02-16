@@ -7,5 +7,5 @@
  */
 export interface Synonym {
   eventId: string
-  synonymId: string
+  uuid: string
 }
