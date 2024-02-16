@@ -8,6 +8,7 @@
 import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
+import { dedent } from 'ts-dedent'
 
 import type { User } from '../_gcn._auth/user.server'
 import { moderatorGroup } from '../_gcn.circulars/circulars.server'
@@ -68,11 +69,26 @@ export async function sendAnnouncementEmail(
     getLegacyAnnouncementReceiverEmails(),
   ])
 
+  const formattedBody = dedent`
+  TO: All GCN Users
+  SUBJECT: GCN Announcement: [NEW FEATURE]
+  DATE: ${Date()} GMT
+  FROM: ${user.email} on behalf of the GCN Team
+
+  For more details on this new feature and an archive of GCN news and announcements, see https://gcn.nasa.gov/news.
+  
+  For questions, issues, or bug reports, please contact us via:
+  - Contact form:
+    https://gcn.nasa.gov/contact
+  - GitHub issue tracker:
+    https://github.com/nasa-gcn/gcn.nasa.gov/issues
+  `
+
   await sendEmailBulk({
     fromName: 'GCN Announcements',
     to: [...emails, ...legacyEmails],
     subject,
-    body,
+    body: formattedBody,
     topic: 'announcements',
   })
 }
