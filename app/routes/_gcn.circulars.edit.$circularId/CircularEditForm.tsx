@@ -214,15 +214,22 @@ export function CircularEditForm({
           <small>
             The subject line must contain (and should start with) the name of
             the transient, which must start with one of the{' '}
-            <button
+            <Button
+              unstyled
               type="button"
-              className="usa-banner__button margin-left-0"
+              className="usa-link"
               aria-expanded={showKeywords}
               onClick={toggleShowKeywords}
             >
-              <span className="usa-banner__button-text">known keywords</span>
-            </button>
-            .
+              <small>
+                known keywords&nbsp;
+                {showKeywords ? (
+                  <Icon.ExpandLess role="presentation" />
+                ) : (
+                  <Icon.ExpandMore role="presentation" />
+                )}
+              </small>
+            </Button>
           </small>
           {showKeywords && (
             <div className="text-base padding-x-2 padding-bottom-2">
@@ -286,14 +293,22 @@ export function CircularEditForm({
             <Link to="/docs/circulars/styleguide">style guide</Link>. References
             to Circulars, DOIs, arXiv preprints, and transients are
             automatically shown as links; see{' '}
-            <button
+            <Button
+              unstyled
               type="button"
-              className="usa-banner__button margin-left-0"
+              className="usa-link"
               aria-expanded={showBodySyntax}
               onClick={toggleShowBodySyntax}
             >
-              <span className="usa-banner__button-text">syntax.</span>
-            </button>
+              <small>
+                syntax&nbsp;
+                {showBodySyntax ? (
+                  <Icon.ExpandLess role="presentation" />
+                ) : (
+                  <Icon.ExpandMore role="presentation" />
+                )}
+              </small>
+            </Button>
           </small>
         </div>
         {showBodySyntax && (
