@@ -2,99 +2,42 @@
 # Administrator of the National Aeronautics and Space Administration.
 # All Rights Reserved.
 
-import numpy as np
 
-
-def ra_dec_to_uvec(ra, dec):
-    phi = np.deg2rad(90 - dec)
-    theta = np.deg2rad(ra)
-    x = np.cos(theta) * np.sin(phi)
-    y = np.sin(theta) * np.sin(phi)
-    z = np.cos(phi)
-    return x, y, z
-
-
-def uvec_to_ra_dec(x, y, z):
-    r = np.sqrt(x**2 + y**2 + z**2)
-    x /= r
-    y /= r
-    z /= r
-    theta = np.arctan2(y, x)
-    phi = np.arccos(z)
-    dec = 90 - np.rad2deg(phi)
-    if theta < 0:
-        ra = 360 + np.rad2deg(theta)
-    else:
-        ra = np.rad2deg(theta)
-    return ra, dec
-
-
-def x_rot(theta_deg):
-    theta = np.deg2rad(theta_deg)
-    return np.array(
-        [
-            [1, 0, 0],
-            [0, np.cos(theta), -np.sin(theta)],
-            [0, np.sin(theta), np.cos(theta)],
-        ]
-    )
-
-
-def y_rot(theta_deg):
-    theta = np.deg2rad(theta_deg)
-    return np.array(
-        [
-            [np.cos(theta), 0, np.sin(theta)],
-            [0, 1, 0],
-            [-np.sin(theta), 0, np.cos(theta)],
-        ]
-    )
-
-
-def z_rot(theta_deg):
-    theta = np.deg2rad(theta_deg)
-    return np.array(
-        [
-            [np.cos(theta), -np.sin(theta), 0],
-            [np.sin(theta), np.cos(theta), 0],
-            [0, 0, 1],
-        ]
-    )
+from astropy import units as u
+from astropy.coordinates.representation import (
+    CartesianRepresentation,
+    UnitSphericalRepresentation,
+)
+from astropy.coordinates.matrix_utilities import rotation_matrix
 
 
 class Footprint:
     polygon: list = []
 
     def __init__(self, polygon: list) -> None:
-        self.polygon = list(polygon)
+        self.polygon = polygon
 
     def project(self, ra, dec, pos_angle):
         if pos_angle is None:
             pos_angle = 0.0
 
-        footprint_zero_center_ra = np.asarray([pt[0] for pt in self.polygon])
-        footprint_zero_center_dec = np.asarray([pt[1] for pt in self.polygon])
-        footprint_zero_center_uvec = ra_dec_to_uvec(
-            footprint_zero_center_ra, footprint_zero_center_dec
-        )
-        (
-            footprint_zero_center_x,
-            footprint_zero_center_y,
-            footprint_zero_center_z,
-        ) = footprint_zero_center_uvec
-
-        proj_footprint = []
-        for idx in range(footprint_zero_center_x.shape[0]):
-            vec = np.asarray(
-                [
-                    footprint_zero_center_x[idx],
-                    footprint_zero_center_y[idx],
-                    footprint_zero_center_z[idx],
-                ]
+        projected_footprint = (
+            UnitSphericalRepresentation(
+                u.Quantity([pt[0] for pt in self.polygon], u.deg),
+                u.Quantity([pt[1] for pt in self.polygon], u.deg),
             )
-            new_vec = vec @ x_rot(-pos_angle) @ y_rot(dec) @ z_rot(-ra)
-            new_x, new_y, new_z = new_vec.flat
-            pt_ra, pt_dec = uvec_to_ra_dec(new_x, new_y, new_z)
-            proj_footprint.append([round(pt_ra, 3), round(pt_dec, 3)])
+            .represent_as(CartesianRepresentation)
+            .transform(rotation_matrix(-1.0 * pos_angle * u.deg, axis="x"))
+            .transform(rotation_matrix(dec * u.deg, axis="y"))
+            .transform(rotation_matrix(-1.0 * ra * u.deg, axis="z"))
+            .represent_as(UnitSphericalRepresentation)
+        )
 
-        return proj_footprint
+        projected_ra = [
+            round(lon.to(u.deg).value, 3) for lon in projected_footprint.lon
+        ]
+        projected_dec = [
+            round(lat.to(u.deg).value, 3) for lat in projected_footprint.lat
+        ]
+
+        return list(zip(projected_ra, projected_dec))
