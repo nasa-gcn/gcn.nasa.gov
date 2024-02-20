@@ -172,7 +172,6 @@ export const validSubjectKeywords = [
   'XRT',
   'XTR',
   'Virgo',
-  'VLA',
   'ZTF',
 ]
 
