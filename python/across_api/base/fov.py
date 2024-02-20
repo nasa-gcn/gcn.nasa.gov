@@ -6,45 +6,17 @@ from typing import Optional, Union
 import astropy_healpix as ah  # type: ignore
 import astropy.units as u  # type: ignore
 from astropy.io.fits import FITS_rec  # type: ignore
+from scipy import stats
 import numpy as np
-from astropy.coordinates import SkyCoord, angular_separation, spherical_to_cartesian  # type: ignore
+from astropy.coordinates import SkyCoord, spherical_to_cartesian  # type: ignore
 from astropy.time import Time  # type: ignore
 import healpy as hp
 from .constraints import EarthLimbConstraint, get_slice
-from .common import ACROSSAPIBase
 from .footprint import Footprint
 from .pointing import PointingBase
 from .ephem import EphemBase
 
 HEALPIX_MAP_EVAL_ORDER = 9
-
-
-# Some math stuff for calculating the probability inside for circular error
-# regions
-def normal_pdf(x, standard_deviation):
-    """
-    Calculate the probability density function (PDF) of a standard normal distribution (mean=0).
-
-    Parameters
-    ----------
-    x
-        The value at which to calculate the PDF.
-    standard_deviation
-        The standard deviation of the normal distribution.
-
-    Returns
-    -------
-    pdf
-        The probability density at the given x.
-    """
-
-    # Calculate the exponent term
-    exponent = -(x**2) / (2 * standard_deviation**2)
-
-    # Calculate the PDF using the simplified formula
-    pdf = (1 / (standard_deviation * np.sqrt(2 * np.pi))) * np.exp(exponent)
-
-    return pdf
 
 
 def healpix_map_from_position_error(
@@ -72,24 +44,24 @@ def healpix_map_from_position_error(
         The probability density distribution HEALPix map.
     """
     # Create HEALPix map
-    hp = ah.HEALPix(nside=nside, order="nested")
+    hp = ah.HEALPix(nside=nside, order="nested", frame="fk5")
 
     # Find RA/Dec for each pixel in HEALPix map
-    hpra, hpdec = hp.healpix_to_lonlat(range(ah.nside_to_npix(nside)))
+    hpcoord = hp.healpix_to_skycoord(np.arange(hp.npix))
 
     # Find angular distance of each HEALPix pixel to the skycoord
-    distance = angular_separation(hpra, hpdec, skycoord.ra, skycoord.dec).to(u.deg)
+    distance = hpcoord.separation(skycoord).to(u.deg)
 
     # Create the probability density distribution HEALPix map
-    prob = normal_pdf(distance, error_radius).value
+    prob = stats.norm(scale=error_radius).pdf(distance)
 
     # Normalize it
-    prob = np.divide(prob, np.sum(prob))
+    prob /= np.sum(prob)
 
     return prob
 
 
-class FOVBase(ACROSSAPIBase):
+class FOVBase:
     visible_pixels: np.ndarray
 
     def probability_in_fov(
@@ -287,14 +259,10 @@ class FOVBase(ACROSSAPIBase):
             # Calculate probability in FOV by multiplying the probability density by
             # area of each pixel and summing up
             pixarea = ah.nside_to_pixel_area(uniq_nside[visible_probability_pixels])
-            return float(
-                round(
-                    np.sum(healpix_loc[visible_probability_pixels] * pixarea.value), 5
-                )
-            )
+            return np.sum(healpix_loc[visible_probability_pixels] * pixarea.value)
         else:
             # Calculate the amount of probability inside the FOV
-            return float(round(np.sum(healpix_loc[visible_probability_pixels]), 5))
+            return np.sum(healpix_loc[visible_probability_pixels])
 
 
 class FootprintFOV(FOVBase):

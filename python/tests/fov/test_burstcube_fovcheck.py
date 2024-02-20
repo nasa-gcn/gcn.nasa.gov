@@ -31,14 +31,19 @@ def test_burstcube_fov_point_source(AT2017gfo_skycoord, burstcube_fov):
 def test_burstcube_fov_error(AT2017gfo_skycoord, burstcube_fov):
     """Check that for a circular error box of radius 20 degrees, the infov
     fraction of the probability is 0.92439."""
-    in_fov_burstcube = burstcube_fov.probability_in_fov(
-        skycoord=AT2017gfo_skycoord, error_radius=20 * u.deg
+    in_fov_burstcube = round(
+        burstcube_fov.probability_in_fov(
+            skycoord=AT2017gfo_skycoord, error_radius=20 * u.deg
+        ),
+        5,
     )
     assert in_fov_burstcube == 0.92439
 
 
 def test_burstcube_fov_healpix(burstcube_fov, AT2017gfo_healpix_probability):
+    in_fov_burstcube = round(
+        burstcube_fov.probability_in_fov(healpix_loc=AT2017gfo_healpix_probability), 5
+    )
     assert (
-        burstcube_fov.probability_in_fov(healpix_loc=AT2017gfo_healpix_probability)
-        == 1.0
+        in_fov_burstcube == 1.0
     ), "100% of the probability of GW170817 should be inside the FOV"

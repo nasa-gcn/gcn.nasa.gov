@@ -29,8 +29,8 @@ def test_swift_fov_error(AT2017gfo_skycoord):
             position_angle=0,
         )
     )
-    in_fov_prob = fov.probability_in_fov(
-        skycoord=AT2017gfo_skycoord, error_radius=1 * u.deg
+    in_fov_prob = round(
+        fov.probability_in_fov(skycoord=AT2017gfo_skycoord, error_radius=1 * u.deg), 5
     )
     assert in_fov_prob == 0.03687
 
@@ -44,7 +44,9 @@ def test_swift_fov_healpix(AT2017gfo_skycoord, AT2017gfo_healpix_probability):
             position_angle=0,
         )
     )
-    in_fov_prob = fov.probability_in_fov(healpix_loc=AT2017gfo_healpix_probability)
+    in_fov_prob = round(
+        fov.probability_in_fov(healpix_loc=AT2017gfo_healpix_probability), 5
+    )
     assert (
         in_fov_prob == 0.0193
     ), "0.0193% of the probability of GW170817 should be inside the FOV for Swift"
