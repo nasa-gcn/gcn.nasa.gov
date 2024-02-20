@@ -119,6 +119,10 @@ export function bodyIsValid(body: string) {
   if (body.length) return true
 }
 
+export function formatIsValid(format: string): format is CircularFormat {
+  return (circularFormats as any as string[]).includes(format)
+}
+
 export function emailIsAutoReply(subject: string) {
   const lowercaseSubject = subject.toLowerCase()
   return emailAutoReplyChecklist.some((x) => lowercaseSubject.includes(x))
