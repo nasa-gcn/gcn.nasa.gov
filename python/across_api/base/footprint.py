@@ -3,12 +3,12 @@
 # All Rights Reserved.
 
 
-from astropy import units as u
-from astropy.coordinates.representation import (
+from astropy import units as u  # type: ignore[import]
+from astropy.coordinates.representation import (  # type: ignore[import]
     CartesianRepresentation,
     UnitSphericalRepresentation,
 )
-from astropy.coordinates.matrix_utilities import rotation_matrix
+from astropy.coordinates.matrix_utilities import rotation_matrix  # type: ignore[import]
 
 
 class Footprint:

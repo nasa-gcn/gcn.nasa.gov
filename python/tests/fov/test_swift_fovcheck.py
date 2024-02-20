@@ -1,4 +1,4 @@
-import astropy.units as u
+import astropy.units as u  # type: ignore[import]
 from across_api.swift.fov import SwiftFOV
 from across_api.base.pointing import PointingBase
 

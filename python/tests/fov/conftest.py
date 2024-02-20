@@ -6,12 +6,12 @@ import pytest
 from across_api.across.resolve import Resolve
 from astropy.coordinates import SkyCoord  # type: ignore[import]
 from astropy.time import Time  # type: ignore[import]
-from astropy.io import fits
+from astropy.io import fits  # type: ignore[import]
 from across_api.base.schema import TLEEntry
 from across_api.burstcube.ephem import BurstCubeEphem
 from across_api.burstcube.fov import BurstCubeFOV
 from across_api.burstcube.tle import BurstCubeTLE
-import astropy.units as u
+import astropy.units as u  # type: ignore[import]
 
 
 @pytest.fixture

@@ -6,11 +6,11 @@ from typing import Optional, Union
 import astropy_healpix as ah  # type: ignore
 import astropy.units as u  # type: ignore
 from astropy.io.fits import FITS_rec  # type: ignore
-from scipy import stats
+from scipy import stats  # type: ignore[import]
 import numpy as np
 from astropy.coordinates import SkyCoord, spherical_to_cartesian  # type: ignore
 from astropy.time import Time  # type: ignore
-import healpy as hp
+import healpy as hp  # type: ignore[import]
 from .constraints import EarthLimbConstraint, get_slice
 from .footprint import Footprint
 from .pointing import PointingBase

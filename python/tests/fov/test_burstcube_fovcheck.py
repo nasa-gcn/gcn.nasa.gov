@@ -1,5 +1,5 @@
-import astropy.units as u
-from astropy.coordinates import angular_separation
+import astropy.units as u  # type: ignore[import]
+from astropy.coordinates import angular_separation  # type: ignore[import]
 
 
 def test_burstcube_fov_point_source(AT2017gfo_skycoord, burstcube_fov):
