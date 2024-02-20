@@ -70,11 +70,9 @@ export async function sendAnnouncementEmail(
   ])
 
   const formattedBody = dedent`
-  TO: All GCN Users
-  SUBJECT: GCN Announcement: [NEW FEATURE]
-  DATE: ${Date()} GMT
-  FROM: ${user.email} on behalf of the GCN Team
+  ${body}
 
+  
   For more details on this new feature and an archive of GCN news and announcements, see https://gcn.nasa.gov/news.
   
   For questions, issues, or bug reports, please contact us via:

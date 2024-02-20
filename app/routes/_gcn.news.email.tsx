@@ -18,7 +18,6 @@ import {
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
 import { useState } from 'react'
-import { dedent } from 'ts-dedent'
 
 import { getUser } from './_gcn._auth/user.server'
 import { moderatorGroup } from './_gcn.circulars/circulars.server'
@@ -48,7 +47,8 @@ export default function () {
   const [bodyValid, setBodyValid] = useState(false)
   const valid = subjectValid && bodyValid
   const submitted = useActionData<typeof action>()
-  const defaultBody = dedent`The GCN Team is pleased to announce a new feature on https://gcn.nasa.gov that ...`
+  const defaultBody =
+    'The GCN Team is pleased to announce a new feature on https://gcn.nasa.gov that ...'
   return (
     <>
       <h1>GCN News Announcement</h1>
@@ -84,6 +84,7 @@ export default function () {
               name="subject"
               id="subject"
               type="text"
+              defaultValue={'GCN Announcement: [NEW FEATURE]'}
               required={true}
               onChange={({ target: { value } }) => {
                 setSubjectValid(Boolean(value))
