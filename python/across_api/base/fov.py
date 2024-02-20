@@ -308,43 +308,44 @@ class AllSkyFOV(FOVBase):
         Finds all healpix pixels within the ephemeris time slot that are not earth
         occulted, and sets them to FOVBase.visible_pixels.
 
+        This is done by finding the antipodal position of the earth and calculating
+        all of the pixels within a disc of radius 180deg - radius_of_earth(deg)
+
+        Antipodal:
+            a_ra = ra-180 (deg)
+            a_dec = -dec  (deg)
+            a_radius = 180-radius (deg)
+
         Function does assume that it is a space mission with available ephemeris
         """
         n_side = hp.order2nside(HEALPIX_MAP_EVAL_ORDER)
-        n_pix = hp.order2npix(HEALPIX_MAP_EVAL_ORDER)
         i_slice = get_slice(time=time, ephem=ephem)
 
-        ra = ephem.earth.ra[i_slice].degree
-        dec = ephem.earth.dec[i_slice].degree
+        # antipodal positions
+        ra = ephem.earth.ra[i_slice].degree - 180.0
+        dec = -1.0 * ephem.earth.dec[i_slice].degree
 
         vec = hp.ang2vec(ra, dec, lonlat=True)
 
-        # np.array to store occulted pixels
-        earth_pixels = np.array([]).astype(int)
+        # np.array to store visible pixels
+        visible_pixels = np.array([]).astype(int)
 
         # loop over each time-slice vector and concatenate
-        # earth constrained pixels calculated with healpy's cone search (query_disc)
+        # visible pixels calculated with healpy's cone search (query_disc)
         # assume the earth is a disc at ephem.earth position with radius
-        # radius = earthsize + constraint min angle.
+        # radius = 180 - earthsize + constraint min angle.
         for i, v in enumerate(vec):
-            radius = np.radians(ephem.earthsize[i].value) + np.radians(
-                self.earth_constraint.min_angle.value
+            radius = (
+                np.radians(180)
+                - np.radians(ephem.earthsize[i].value)
+                + np.radians(self.earth_constraint.min_angle.value)
             )
-            earth_pixels = np.concatenate(
+            visible_pixels = np.concatenate(
                 (
-                    earth_pixels,
+                    visible_pixels,
                     hp.query_disc(n_side, v, radius, nest=True, inclusive=False),
                 )
             )
 
         # only need unique pixels
-        earth_pixels = np.unique(earth_pixels)
-
-        # simulate the whole sky
-        all_sky_pixels = np.zeros(n_pix, dtype=np.float32)
-
-        # set the earth values on the sky
-        all_sky_pixels[earth_pixels] = 1
-
-        # find the complement (where sky != 1)
-        self.visible_pixels = np.where(all_sky_pixels == 0)[0]
+        self.visible_pixels = np.unique(visible_pixels)
