@@ -94,8 +94,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
 
-  let newItem
-  let showSuccess = false
+  let newCircular
   const props = { body, subject, ...(format ? { format } : {}) }
   switch (intent) {
     case 'correction':
@@ -105,8 +104,7 @@ export async function action({ request }: ActionFunctionArgs) {
         { circularId: parseFloat(circularId), ...props },
         user
       )
-      showSuccess = true
-      newItem = null
+      newCircular = null
       break
     case 'edit':
       if (!circularId)
@@ -118,15 +116,15 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         user
       )
-      newItem = await get(parseFloat(circularId))
+      newCircular = await get(parseFloat(circularId))
       break
     case 'new':
-      newItem = await put({ ...props, submittedHow: 'web' }, user)
+      newCircular = await put({ ...props, submittedHow: 'web' }, user)
       break
     default:
       break
   }
-  return { newItem, showSuccess }
+  return { newCircular, intent }
 }
 
 export default function () {
@@ -136,7 +134,7 @@ export default function () {
 
   // Concatenate items from the action and loader functions
   const allItems = [
-    ...(result?.newItem ? [result.newItem] : []),
+    ...(result?.newCircular ? [result.newCircular] : []),
     ...(items || []),
   ]
 
@@ -164,7 +162,7 @@ export default function () {
 
   return (
     <>
-      {result?.showSuccess && (
+      {result?.intent == 'correction' && (
         <Alert type={'success'} headingLevel={'h1'} slim>
           Request Submitted
         </Alert>
