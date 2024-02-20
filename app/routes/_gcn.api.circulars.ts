@@ -194,9 +194,22 @@ export async function action({ request }: ActionFunctionArgs) {
     ...attrs,
   }
 
-  const { subject, body } = await request.json()
-  if (!(typeof subject === 'string' && typeof body === 'string'))
+  const { subject, body, format } = await request.json()
+  if (
+    !(
+      typeof subject === 'string' &&
+      typeof body === 'string' &&
+      (format === undefined || typeof format === 'string')
+    )
+  )
     throw new Response(null, { status: 400 })
 
-  return await put({ submittedHow: 'api', subject, body }, user)
+  const circular = {
+    submittedHow: 'api',
+    subject,
+    body,
+    ...(format ? { format } : {}),
+  } as const
+
+  return await put(circular, user)
 }
