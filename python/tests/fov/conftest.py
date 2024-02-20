@@ -24,7 +24,9 @@ def AT2017gfo_skycoord():
 @pytest.fixture
 def AT2017gfo_healpix_probability():
     # Load the skymap of AT2017gfo and return the probability distribution
-    hdu = fits.open("tests/gw170817_skymap.fits.gz")
+    hdu = fits.open(
+        "https://dcc.ligo.org/public/0146/G1701985/001/LALInference_v2.fits.gz"
+    )
     return hdu[1].data["PROB"]
 
 
