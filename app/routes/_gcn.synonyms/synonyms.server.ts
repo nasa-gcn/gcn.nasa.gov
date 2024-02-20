@@ -8,11 +8,12 @@
 import { tables } from '@architect/functions'
 import crypto from 'crypto'
 
-export async function createSynonyms({
-  synonymousEventIds,
-}: {
-  synonymousEventIds: string[]
-}) {
+/*
+If an eventId already has a synonym and is passed in, it will unlink the
+eventId from the old synonym and the only remaining link will be to the
+new synonym
+*/
+export async function createSynonyms(...synonymousEventIds: string[]){
   const uuid = crypto.randomUUID()
   const db = await tables()
   await Promise.all(
