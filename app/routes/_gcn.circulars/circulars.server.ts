@@ -19,8 +19,8 @@ import memoizee from 'memoizee'
 import { type User, getUser } from '../_gcn._auth/user.server'
 import {
   bodyIsValid,
-  circularFormats,
   formatAuthor,
+  formatIsValid,
   parseEventFromSubject,
   subjectIsValid,
 } from './circulars.lib'
@@ -331,6 +331,8 @@ export async function putVersion(
     editedBy: formatAuthor(user),
     editedOn: Date.now(),
   }
+  validateCircular(newCircularVersion)
+
   return await circularVersionsAutoIncrement.put(newCircularVersion)
 }
 
@@ -513,6 +515,6 @@ function validateCircular({
   if (!subjectIsValid(subject))
     throw new Response('subject is invalid', { status: 400 })
   if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
-  if (!(format === undefined || circularFormats.includes(format)))
+  if (!(format === undefined || formatIsValid(format)))
     throw new Response('format is invalid', { status: 400 })
 }
