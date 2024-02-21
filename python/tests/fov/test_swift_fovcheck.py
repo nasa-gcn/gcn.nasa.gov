@@ -11,7 +11,7 @@ def test_swift_fov_point_source(AT2017gfo_skycoord):
         pointing=PointingBase(
             ra=AT2017gfo_skycoord.ra.value,
             dec=AT2017gfo_skycoord.dec.value,
-            position_angle=0,
+            position_angle=45,
         )
     )
     assert (
@@ -26,7 +26,7 @@ def test_swift_fov_error(AT2017gfo_skycoord):
         pointing=PointingBase(
             ra=AT2017gfo_skycoord.ra.value,
             dec=AT2017gfo_skycoord.dec.value,
-            position_angle=0,
+            position_angle=45,
         )
     )
     in_fov_prob = round(
@@ -41,7 +41,7 @@ def test_swift_fov_healpix(AT2017gfo_skycoord, AT2017gfo_healpix_probability):
         pointing=PointingBase(
             ra=AT2017gfo_skycoord.ra.value,
             dec=AT2017gfo_skycoord.dec.value,
-            position_angle=0,
+            position_angle=45,
         )
     )
     in_fov_prob = round(

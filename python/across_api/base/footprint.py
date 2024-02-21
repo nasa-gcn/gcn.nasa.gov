@@ -21,5 +21,5 @@ class Footprint:
 
     def project(self, center: SkyCoord, pos_angle: u.Quantity[u.deg] = 0 * u.deg):
         return SkyCoord(
-            self.representation, frame=center.skyoffset_frame(-1.0 * u.deg * pos_angle)
+            self.representation, frame=center.skyoffset_frame(-1.0 * pos_angle)
         ).icrs
