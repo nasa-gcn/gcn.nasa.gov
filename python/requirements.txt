@@ -29,7 +29,7 @@ cffi==1.16.0
     # via cryptography
 charset-normalizer==3.3.2
     # via requests
-cryptography==42.0.2
+cryptography==42.0.4
     # via architect-functions
 dnspython==2.4.2
     # via email-validator
