@@ -142,8 +142,9 @@ class FOVBase:
             lonlat=True,
             nest=True,
         )
-        in_fov = np.ma.isin(skycoord_pix, self.visible_pixels)
-        return in_fov.data
+
+        in_fov = np.isin(skycoord_pix, self.visible_pixels)
+        return in_fov
 
     def in_fov_circular_error(
         self,
