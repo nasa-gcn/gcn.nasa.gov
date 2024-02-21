@@ -113,12 +113,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function () {
   const { notification, format } = useLoaderData<typeof loader>()
+  console.log(format)
+  console.log(notification)
   const defaultNameValid = Boolean(notification.name)
   const [nameValid, setNameValid] = useState(defaultNameValid)
   const defaultRecipientValid = Boolean(notification.recipient)
   const [recipientValid, setRecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
+  const [defaultFormat, setFormat] = useState<NoticeFormat>(format)
 
   return (
     <Form method="POST">
@@ -160,12 +163,18 @@ export default function () {
         onChange={(e) => setRecipientValid(Boolean(e.target.value))}
       />
       <Label htmlFor="format">Format</Label>
-      <NoticeFormatInput name="noticeFormat" value={format} showJson={false} />
+      <NoticeFormatInput
+        name="noticeFormat"
+        value={defaultFormat}
+        showJson={true}
+        onChange={setFormat}
+      />
       <Label htmlFor="noticeTypes">Types</Label>
       <NoticeTypeCheckboxes
+        selectedFormat={defaultFormat}
         defaultSelected={notification.noticeTypes}
         validationFunction={setAlertsValid}
-      ></NoticeTypeCheckboxes>
+      />
       <ReCAPTCHA
         onChange={(value) => {
           setRecaptchaValid(Boolean(value))
