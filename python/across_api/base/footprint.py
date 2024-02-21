@@ -5,39 +5,21 @@
 
 from astropy import units as u  # type: ignore[import]
 from astropy.coordinates.representation import (  # type: ignore[import]
-    CartesianRepresentation,
     UnitSphericalRepresentation,
 )
-from astropy.coordinates.matrix_utilities import rotation_matrix  # type: ignore[import]
+from astropy.coordinates import SkyCoord  # type: ignore[import]
 
 
 class Footprint:
-    polygon: list = []
+    representation: UnitSphericalRepresentation
 
     def __init__(self, polygon: list) -> None:
-        self.polygon = polygon
-
-    def project(self, ra, dec, pos_angle):
-        if pos_angle is None:
-            pos_angle = 0.0
-
-        projected_footprint = (
-            UnitSphericalRepresentation(
-                u.Quantity([pt[0] for pt in self.polygon], u.deg),
-                u.Quantity([pt[1] for pt in self.polygon], u.deg),
-            )
-            .represent_as(CartesianRepresentation)
-            .transform(rotation_matrix(-1.0 * pos_angle * u.deg, axis="x"))
-            .transform(rotation_matrix(dec * u.deg, axis="y"))
-            .transform(rotation_matrix(-1.0 * ra * u.deg, axis="z"))
-            .represent_as(UnitSphericalRepresentation)
+        self.representation = UnitSphericalRepresentation(
+            u.Quantity([pt[0] for pt in polygon], u.deg),
+            u.Quantity([pt[1] for pt in polygon], u.deg),
         )
 
-        projected_ra = [
-            round(lon.to(u.deg).value, 3) for lon in projected_footprint.lon
-        ]
-        projected_dec = [
-            round(lat.to(u.deg).value, 3) for lat in projected_footprint.lat
-        ]
-
-        return list(zip(projected_ra, projected_dec))
+    def project(self, center: SkyCoord, pos_angle: u.Quantity[u.deg] = 0 * u.deg):
+        return SkyCoord(
+            self.representation, frame=center.skyoffset_frame(pos_angle)
+        ).icrs

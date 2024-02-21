@@ -275,12 +275,14 @@ class FootprintFOV(FOVBase):
     footprint: Footprint
 
     def __init__(self, pointing: PointingBase) -> None:
+        center = SkyCoord(pointing.ra, pointing.dec, unit="deg")
+
         projected_footprint = self.footprint.project(
-            ra=pointing.ra, dec=pointing.dec, pos_angle=pointing.position_angle
+            center=center, pos_angle=pointing.position_angle * u.deg
         )
 
-        ras_poly = [x[0] for x in projected_footprint][:-1]
-        decs_poly = [x[1] for x in projected_footprint][:-1]
+        ras_poly = list(projected_footprint.ra.value.round(3))[:-1]
+        decs_poly = list(projected_footprint.dec.value.round(3))[:-1]
 
         cartesian_vertices = spherical_to_cartesian(
             1,  # radial component
