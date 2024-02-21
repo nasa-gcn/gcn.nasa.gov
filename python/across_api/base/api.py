@@ -4,10 +4,11 @@
 
 """
 Base API definitions for ACROSS API. This module is imported by all other API
-modules. Contains the FastAPI app definition.
+modules.
 """
 
 from fastapi import FastAPI
+
 
 # FastAPI app definition
 app = FastAPI(

@@ -86,7 +86,11 @@ class EphemBase:
         -------
             The index of the nearest time in the ephemeris.
         """
-        return int(np.argmin(np.abs((self.timestamp.datetime - t.datetime))))
+        index = np.round(
+            (t.jd - self.timestamp[0].jd) // self.stepsize.to_value(u.day)
+        ).astype(int)
+        assert index >= 0 and index < len(self), "Time outside of ephemeris of range"
+        return index
 
     def __init__(self, begin: Time, end: Time, stepsize: u.Quantity = 60 * u.s):
         # Check if TLE is loaded

@@ -6,6 +6,7 @@ email-validator
 fastapi
 healpy
 mangum
+python-multipart  # Required for file uploads in FastAPI; see https://fastapi.tiangolo.com/tutorial/request-files/
 requests
 shapely
 sgp4

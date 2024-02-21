@@ -30,20 +30,10 @@ def get_slice(time: Time, ephem: EphemBase) -> slice:
     """
     # If we're just passing a single time, we can just find the index for that
     if time.isscalar:
-        # Check that the time is within the ephemeris range, this should never
-        # happen as the ephemeris is generated based on this range.
-        assert (
-            time >= ephem.begin and time <= ephem.end
-        ), "Time outside of ephemeris of range"
         # Find the index for the time and return a slice for that index
         index = ephem.ephindex(time)
         return slice(index, index + 1)
     else:
-        # Check that the time range is within the ephemeris range, as above.
-        assert (
-            time[0] >= ephem.begin and time[-1] <= ephem.end
-        ), "Time outside of ephemeris of range"
-
         # Find the indices for the start and end of the time range and return a
         # slice for that range
         return slice(ephem.ephindex(time[0]), ephem.ephindex(time[-1]) + 1)
