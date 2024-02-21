@@ -4,16 +4,19 @@
 
 
 from datetime import datetime
-from typing import Annotated, Any, List, Optional
+from typing import Annotated, Any, List, Optional, Union
 
 import astropy.units as u  # type: ignore
-from arc import tables  # type: ignore
+from arc import tables  # type: ignore[import]
+from astropy.coordinates import Latitude, Longitude  # type: ignore[import]
 from astropy.time import Time  # type: ignore
 from pydantic import (
     BaseModel,
+    BeforeValidator,
     ConfigDict,
     Field,
     PlainSerializer,
+    WithJsonSchema,
     computed_field,
     model_validator,
 )
@@ -22,9 +25,56 @@ from pydantic import (
 # a naive UTC datetime object, or a string in ISO format for JSON.
 AstropyTime = Annotated[
     Time,
+    BeforeValidator(lambda x: Time(x) if type(x) is not Time else x),
     PlainSerializer(
         lambda x: x.utc.datetime,
         return_type=datetime,
+    ),
+    WithJsonSchema(
+        {"type": "string", "format": "date-time"},
+        mode="serialization",
+    ),
+    WithJsonSchema(
+        {"type": "string", "format": "date-time"},
+        mode="validation",
+    ),
+]
+
+
+# Pydantic type for a Astropy Time in seconds
+AstropySeconds = Annotated[
+    u.Quantity,
+    BeforeValidator(lambda x: x * u.s if type(x) is not u.Quantity else x.to(u.s)),
+    PlainSerializer(
+        lambda x: x.to(u.s).value,
+        return_type=float,
+    ),
+    WithJsonSchema(
+        {"type": "number"},
+        mode="serialization",
+    ),
+    WithJsonSchema(
+        {"type": "number"},
+        mode="validation",
+    ),
+]
+
+
+# Pydantic type for a scalar astropy Quantity/Latitude/Longitude in degrees
+AstropyAngle = Annotated[
+    Union[Latitude, Longitude, u.Quantity[u.deg]],
+    BeforeValidator(lambda x: x * u.deg if isinstance(x, (int, float)) else x),
+    PlainSerializer(
+        lambda x: x.to_value(u.deg),
+        return_type=float,
+    ),
+    WithJsonSchema(
+        {"type": "number"},
+        mode="serialization",
+    ),
+    WithJsonSchema(
+        {"type": "number"},
+        mode="validation",
     ),
 ]
 
@@ -43,35 +93,82 @@ class BaseSchema(BaseModel):
         return hash((type(self),) + tuple(self.__dict__.values()))
 
 
-class DateRangeSchema(BaseSchema):
-    """
-    Schema that defines date range
+class OptionalDateRangeSchema(BaseSchema):
+    """Schema that defines date range, which is optional
 
     Parameters
     ----------
     begin
-        The start date of the range.
+        The beginning date of the range, by default None
     end
-        The end date of the range.
+        The end date of the range, by default None
 
-    Returns
+    Methods
     -------
-    data
-        The validated data with converted dates.
+    check_dates(data: Any) -> Any
+        Validates the date range and ensures that the begin and end dates are set correctly.
 
-    Raises
-    ------
-    AssertionError
-        If the end date is before the begin date.
     """
 
-    begin: AstropyTime
-    end: AstropyTime
+    begin: Optional[AstropyTime] = None
+    end: Optional[AstropyTime] = None
 
     @model_validator(mode="after")
     @classmethod
     def check_dates(cls, data: Any) -> Any:
-        assert data.begin <= data.end, "End date should not be before begin"
+        """Validates the date range and ensures that the begin and end dates are set correctly.
+
+        Parameters
+        ----------
+        data
+            The data to be validated.
+
+        Returns
+        -------
+        Any
+            The validated data.
+        """
+        if data.begin is None or data.end is None:
+            assert (
+                data.begin == data.end
+            ), "Begin/End should both be set, or both not set"
+        if data.begin != data.end:
+            assert data.begin <= data.end, "End date should not be before begin"
+
+        return data
+
+
+class OptionalPositionSchema(BaseSchema):
+    """
+    Schema for representing position information with an error radius.
+
+    Attributes
+    ----------
+    error
+        The error associated with the position. Defaults to None.
+    """
+
+    ra: Optional[AstropyAngle] = Field(ge=0 * u.deg, lt=360 * u.deg, default=None)
+    dec: Optional[AstropyAngle] = Field(ge=-90 * u.deg, le=90 * u.deg, default=None)
+    error_radius: Optional[AstropyAngle] = None
+
+    @model_validator(mode="after")
+    @classmethod
+    def check_ra_dec(cls, data: Any) -> Any:
+        """Validates that RA and Dec are both set or both not set.
+
+        Parameters
+        ----------
+        data
+            The data to be validated.
+
+        Returns
+        -------
+        Any
+            The validated data.
+        """
+        if data.ra is None or data.dec is None:
+            assert data.ra == data.dec, "RA/Dec should both be set, or both not set"
         return data
 
 

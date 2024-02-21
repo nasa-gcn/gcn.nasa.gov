@@ -49,6 +49,9 @@ acrossapi_tle
   tle1 String
   tle2 String
 
+burstcube_too
+  id *String
+
 sessions
   _idx *String
   _ttl TTL
@@ -105,6 +108,11 @@ legacy_users
   PointInTimeRecovery true
 
 @tables-indexes
+burstcube_too
+  gsipk *String 
+  created_on **String
+  name byCreatedOn
+
 email_notification_subscription
   topic *String
   name byTopic
