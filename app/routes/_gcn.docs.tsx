@@ -9,6 +9,7 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
+import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
@@ -35,6 +36,16 @@ export default function () {
                     <NavLink key="subscribing" to="circulars" end>
                       About
                     </NavLink>,
+                    <NavLink key="archive" to="circulars/archive">
+                      Archive
+                    </NavLink>,
+                    <>
+                      {useFeature('CIRCULAR_VERSIONS') && (
+                        <NavLink key="corrections" to="circulars/corrections">
+                          Corrections
+                        </NavLink>
+                      )}
+                    </>,
                     <NavLink key="subscribing" to="circulars/subscribing">
                       Subscribing
                     </NavLink>,
@@ -43,9 +54,6 @@ export default function () {
                     </NavLink>,
                     <NavLink key="styleguide" to="circulars/styleguide">
                       Style Guide
-                    </NavLink>,
-                    <NavLink key="archive" to="circulars/archive">
-                      Archive
                     </NavLink>,
                   ]}
                 />

@@ -1,0 +1,13 @@
+---
+handle:
+  breadcrumb: Corrections
+---
+
+import { feature } from '~/lib/env.server'
+
+export async function loader() {
+  if (!feature('CIRCULAR_VERSIONS')) throw new Response(null, { status: 404 })
+  return null
+}
+
+# Corrections
