@@ -21,7 +21,7 @@ HEALPIX_MAP_EVAL_ORDER = 9
 
 def healpix_map_from_position_error(
     skycoord: SkyCoord,
-    error_radius: u.Quantity,
+    error_radius: u.Quantity[u.deg],
     nside=hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
 ) -> np.ndarray:
     """
@@ -67,7 +67,7 @@ class FOVBase:
     def probability_in_fov(
         self,
         skycoord: Optional[SkyCoord] = None,
-        error_radius: Optional[u.Quantity] = None,
+        error_radius: Optional[u.Quantity[u.deg]] = None,
         healpix_loc: Optional[FITS_rec] = None,
     ) -> float:
         """
@@ -149,7 +149,7 @@ class FOVBase:
     def in_fov_circular_error(
         self,
         skycoord: SkyCoord,
-        error_radius: u.Quantity,
+        error_radius: u.Quantity[u.deg],
         nside: int = hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
     ) -> float:
         """
@@ -281,13 +281,13 @@ class FootprintFOV(FOVBase):
             center=center, pos_angle=pointing.position_angle * u.deg
         )
 
-        ras_poly = list(projected_footprint.ra.value.round(3))[:-1]
-        decs_poly = list(projected_footprint.dec.value.round(3))[:-1]
+        ras_radians = projected_footprint.ra.to(u.rad).value[:-1]
+        decs_radians = projected_footprint.dec.to(u.rad).value[:-1]
 
         cartesian_vertices = spherical_to_cartesian(
             1,  # radial component
-            np.deg2rad(decs_poly),  # LAT - DECs
-            np.deg2rad(ras_poly),  # LON - RAs
+            decs_radians,  # LAT - DECs
+            ras_radians,  # LON - RAs
         )
 
         self.visible_pixels = hp.query_polygon(
@@ -340,8 +340,8 @@ class AllSkyFOV(FOVBase):
         for i, v in enumerate(vec):
             radius = (
                 np.radians(180)
-                - np.radians(ephem.earthsize[i].value)
-                + np.radians(self.earth_constraint.min_angle.value)
+                - ephem.earthsize[i].to(u.rad).value
+                + self.earth_constraint.min_angle.to(u.rad).value
             )
             visible_pixels = np.concatenate(
                 (
