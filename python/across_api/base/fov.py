@@ -69,6 +69,7 @@ class FOVBase:
         skycoord: Optional[SkyCoord] = None,
         error_radius: Optional[u.Quantity[u.deg]] = None,
         healpix_loc: Optional[FITS_rec] = None,
+        healpix_scheme: str = "NESTED",
     ) -> float:
         """
         For a given sky position and error radius, calculate the probability of
@@ -100,7 +101,9 @@ class FOVBase:
             )
         # For a HEALPix map
         elif healpix_loc is not None:
-            return self.in_fov_healpix_map(healpix_loc=healpix_loc)
+            return self.in_fov_healpix_map(
+                healpix_loc=healpix_loc, healpix_scheme=healpix_scheme
+            )
 
         # We should never get here
         raise AssertionError("No valid arguments provided")
@@ -193,7 +196,7 @@ class FOVBase:
     def in_fov_healpix_map(
         self,
         healpix_loc: FITS_rec,
-        healpix_order: str = "NESTED",
+        healpix_scheme: str = "NESTED",
     ) -> float:
         """
         Calculates the amount of probability inside the field of view (FOV)
@@ -206,7 +209,7 @@ class FOVBase:
         partially inside the FOV, i.e. Earth occultation is calculated for
         location of the center of each HEALPix pixel.
 
-        If `healpix_order` == "NUNIQ", it assumes that `healpix_loc` contains a
+        If `healpix_scheme` == "NUNIQ", it assumes that `healpix_loc` contains a
         multi-order HEALPix map, and handles that accordingly.
 
         Parameters
@@ -217,7 +220,7 @@ class FOVBase:
         healpix_nside
                 The NSIDE value of the HEALPix map. If not provided, it will be
                 calculated based on the length of healpix_loc.
-        healpix_order
+        healpix_scheme
                 The ordering scheme of the HEALPix map. Default is "NESTED".
 
         Returns
@@ -228,7 +231,7 @@ class FOVBase:
         """
         # Extract the NSIDE value from the HEALPix map, also level and ipix if
         # this is a MOC map
-        if healpix_order == "NUNIQ":
+        if healpix_scheme == "NUNIQ":
             level, ipix = ah.uniq_to_level_ipix(healpix_loc["UNIQ"])
             uniq_nside = ah.level_to_nside(level)
             healpix_loc = healpix_loc["PROBDENSITY"]
@@ -239,7 +242,7 @@ class FOVBase:
         nonzero_prob_pixels = np.where(healpix_loc > 0.0)[0]
 
         # Create a list of RA/Dec coordinates for these pixels
-        if healpix_order == "NUNIQ":
+        if healpix_scheme == "NUNIQ":
             ra, dec = ah.healpix_to_lonlat(
                 ipix[nonzero_prob_pixels],
                 nside=uniq_nside[nonzero_prob_pixels],  # type: ignore
@@ -247,7 +250,7 @@ class FOVBase:
             )
         else:
             ra, dec = ah.healpix_to_lonlat(
-                nonzero_prob_pixels, nside=nside, order=healpix_order
+                nonzero_prob_pixels, nside=nside, order=healpix_scheme
             )
 
         # Convert these coordinates into a SkyCoord
@@ -256,7 +259,7 @@ class FOVBase:
         # Calculate pixel indicies of the all the regions inside of the FOV
         visible_probability_pixels = nonzero_prob_pixels[self.in_fov(skycoord=skycoord)]
         # Calculate the amount of probability inside the FOV
-        if healpix_order == "NUNIQ":
+        if healpix_scheme == "NUNIQ":
             # Calculate probability in FOV by multiplying the probability density by
             # area of each pixel and summing up
             pixarea = ah.nside_to_pixel_area(uniq_nside[visible_probability_pixels])
