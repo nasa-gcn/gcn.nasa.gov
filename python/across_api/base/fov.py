@@ -339,10 +339,10 @@ class AllSkyFOV(FOVBase):
         # radius = 180 - earthsize + constraint min angle.
         for i, v in enumerate(vec):
             radius = (
-                np.radians(180)
-                - ephem.earthsize[i].to(u.rad).value
-                + self.earth_constraint.min_angle.to(u.rad).value
-            )
+                180 * u.deg
+                - ephem.earthsize[i]
+                + self.earth_constraint.min_angle
+            ).to_value(u.rad)
             visible_pixels = np.concatenate(
                 (
                     visible_pixels,
