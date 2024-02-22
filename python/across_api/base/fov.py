@@ -137,8 +137,8 @@ class FOVBase:
         # Check if skycoord pixels in list of visible pixels
         skycoord_pix = hp.ang2pix(
             hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
-            skycoord.ra.value,
-            skycoord.dec.value,
+            skycoord.ra.deg,
+            skycoord.dec.deg,
             lonlat=True,
             nest=True,
         )
