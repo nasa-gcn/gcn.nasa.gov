@@ -1,8 +1,10 @@
 architect-functions
 astropy
+astropy_healpix
 cachetools
 email-validator
 fastapi
+healpy
 mangum
 requests
 shapely
