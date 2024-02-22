@@ -25,6 +25,7 @@ import {
 } from '../../_gcn.circulars.$circularId.($version)/Body'
 import { GitLabIcon } from './GitLabIcon'
 import { Tab, TabBar } from './Tabs'
+import { onKeyDown } from './onKeyDown'
 
 import styles from './index.module.css'
 import iconBold from '@gitlab/svgs/dist/sprite_icons/bold.svg'
@@ -105,12 +106,12 @@ function StyleButton({
   )
 }
 
-function insertText(text: string) {
+export function insertText(text: string) {
   if (text.length > 0) document.execCommand('insertText', false, text)
   else document.execCommand('delete', false)
 }
 
-const linesep = '\n'
+export const linesep = '\n'
 
 export function RichEditor({
   className,
@@ -436,6 +437,7 @@ export function RichEditor({
           setValue(e.target.value)
           onChange?.(e)
         }}
+        onKeyDown={onKeyDown}
         {...props}
       />
     </div>
