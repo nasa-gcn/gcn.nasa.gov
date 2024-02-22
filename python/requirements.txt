@@ -34,6 +34,8 @@ cffi==1.16.0
     # via cryptography
 charset-normalizer==3.3.2
     # via requests
+contourpy==1.2.0
+    # via matplotlib
 cryptography==42.0.4
     # via architect-functions
 cycler==0.12.1
