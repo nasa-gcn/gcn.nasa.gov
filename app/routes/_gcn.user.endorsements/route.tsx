@@ -26,7 +26,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useElementSize } from 'usehooks-ts'
+import { useResizeObserver } from 'usehooks-ts'
 
 import { formatAuthor } from '../_gcn.circulars/circulars.lib'
 import type {
@@ -232,8 +232,11 @@ export function EndorsementRequestCard({
   const disabled = fetcher.state !== 'idle'
   const [showMore, setShowMore] = useState(false)
 
-  const [noteRef, { width }] = useElementSize()
-  const [noteContainerRef, { width: containerWidth }] = useElementSize()
+  const noteRef = useRef<HTMLSpanElement>(null)
+  const noteContainerRef = useRef<HTMLDivElement>(null)
+
+  const { width } = useResizeObserver({ ref: noteRef })
+  const { width: containerWidth } = useResizeObserver({ ref: noteContainerRef })
 
   return (
     <fetcher.Form method="POST">
@@ -246,7 +249,10 @@ export function EndorsementRequestCard({
             {endorsementRequest.note && (
               <div className="margin-top-0 margin-bottom-1">
                 Comments from the user:
-                {(width > containerWidth || showMore) && (
+                {((width !== undefined &&
+                  containerWidth !== undefined &&
+                  width > containerWidth) ||
+                  showMore) && (
                   <Button
                     type="button"
                     unstyled
