@@ -5,20 +5,73 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { AstroDataLink } from './AstroDataContext'
+import { type Circular } from '../circulars/circulars.lib'
+import { AstroDataLink, AstroDataLinkWithTooltip } from './AstroDataContext'
+import { useOrigin } from '~/root'
 
 export function GcnCircular({
   children,
   value,
 }: JSX.IntrinsicElements['data']) {
-  return <AstroDataLink to={`/circulars/${value}`}>{children}</AstroDataLink>
+  const origin = useOrigin()
+
+  return (
+    <AstroDataLinkWithTooltip
+      to={`/circulars/${value}`}
+      fetch={async () => {
+        const response = await fetch(`${origin}/circulars/${value}.json`)
+        return (await response.json()) as Circular
+      }}
+      label={({ subject, submitter }) => (
+        <>
+          <div>GCN {value}</div>
+          <div>{submitter}</div>
+          <div>{subject}</div>
+        </>
+      )}
+    >
+      {children}
+    </AstroDataLinkWithTooltip>
+  )
 }
 
 export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <AstroDataLink to={`https://arxiv.org/abs/${value}`}>
+    <AstroDataLinkWithTooltip
+      to={`https://arxiv.org/abs/${value}`}
+      fetch={async () => {
+        const response = await fetch(
+          `http://export.arxiv.org/api/query?id_list=${value}`
+        )
+        const text = await response.text()
+        const entry = new DOMParser()
+          .parseFromString(text, 'text/xml')
+          .getElementsByTagName('entry')[0]
+
+        const title = entry.getElementsByTagName('title')[0].textContent
+
+        const published = entry.getElementsByTagName('published')[0].textContent
+        const year = published && new Date(published).getFullYear()
+
+        const authorElements = entry.getElementsByTagName('author')
+        let authors =
+          authorElements[0].getElementsByTagName('name')[0].textContent
+        if (authorElements.length > 1) authors += ' et al.'
+
+        return { title, year, authors }
+      }}
+      label={({ title, year, authors }) => (
+        <>
+          <div>arXiv:{value}</div>
+          <div>
+            {authors}, {year}
+          </div>
+          <div>{title}</div>
+        </>
+      )}
+    >
       {children}
-    </AstroDataLink>
+    </AstroDataLinkWithTooltip>
   )
 }
 
