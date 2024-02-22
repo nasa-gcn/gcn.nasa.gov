@@ -28,11 +28,6 @@
     border-left: 1px solid darkslategray;
     border-right: 1px solid darkslategray;
     border-bottom: 1px solid darkslategray;
-
-    & :first-child {
-      padding-top: 0;
-      margin-top: 0;
-    }
   }
 
   textarea {

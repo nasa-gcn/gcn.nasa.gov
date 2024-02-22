@@ -29,7 +29,7 @@
     "@architect/functions": "^5.3.4",
     "@nasa-gcn/architect-functions-search": "^1.0.0",
     "@nasa-gcn/dynamodb-autoincrement": "^2.2.0",
-    "@nasa-gcn/remark-rehype-astro": "^1.1.0",
+    "@nasa-gcn/remark-rehype-astro": "^1.1.1",
     "@nasa-gcn/remix-seo": "^2.0.0",
     "@octokit/request-error": "^5.0.1",
     "@octokit/rest": "^20.0.2",

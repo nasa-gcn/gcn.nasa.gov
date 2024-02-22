@@ -25,10 +25,12 @@ import {
 } from '../../_gcn.circulars.$circularId.($version)/Body'
 import { GitLabIcon } from './GitLabIcon'
 import { Tab, TabBar } from './Tabs'
+import { onKeyDown } from './onKeyDown'
 
 import styles from './index.module.css'
 import iconBold from '@gitlab/svgs/dist/sprite_icons/bold.svg'
 import iconCode from '@gitlab/svgs/dist/sprite_icons/code.svg'
+import iconText from '@gitlab/svgs/dist/sprite_icons/doc-text.svg'
 import iconEllipsis from '@gitlab/svgs/dist/sprite_icons/ellipsis_h.svg'
 import iconHeading from '@gitlab/svgs/dist/sprite_icons/heading.svg'
 import iconItalic from '@gitlab/svgs/dist/sprite_icons/italic.svg'
@@ -57,7 +59,8 @@ function PlainTextButton({
 >) {
   return (
     <SlimButton outline={!checked} type="button" {...props}>
-      Plain Text
+      <GitLabIcon src={iconText} className="width-2 height-2" />
+      <span className="display-none tablet-lg:display-inline"> Plain Text</span>
     </SlimButton>
   )
 }
@@ -105,12 +108,12 @@ function StyleButton({
   )
 }
 
-function insertText(text: string) {
+export function insertText(text: string) {
   if (text.length > 0) document.execCommand('insertText', false, text)
   else document.execCommand('delete', false)
 }
 
-const linesep = '\n'
+export const linesep = '\n'
 
 export function RichEditor({
   className,
@@ -370,17 +373,11 @@ export function RichEditor({
             name="format"
             value={markdown ? 'text/markdown' : 'text/plain'}
           />
-          <ButtonGroup
-            type="segmented"
-            className="display-none desktop:display-flex"
-          >
+          <ButtonGroup type="segmented">
             <PlainTextButton
               {...toggleMarkdownButtonProps}
               checked={!markdown}
             />
-            <MarkdownButton {...toggleMarkdownButtonProps} checked={markdown} />
-          </ButtonGroup>
-          <ButtonGroup className="display-inline-block desktop:display-none">
             <MarkdownButton {...toggleMarkdownButtonProps} checked={markdown} />
           </ButtonGroup>
         </Grid>
@@ -436,6 +433,7 @@ export function RichEditor({
           setValue(e.target.value)
           onChange?.(e)
         }}
+        onKeyDown={onKeyDown}
         {...props}
       />
     </div>
