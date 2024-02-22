@@ -69,6 +69,7 @@ class FOVBase:
         skycoord: Optional[SkyCoord] = None,
         error_radius: Optional[u.Quantity[u.deg]] = None,
         healpix_loc: Optional[FITS_rec] = None,
+        healpix_order: str = "NESTED",
     ) -> float:
         """
         For a given sky position and error radius, calculate the probability of
@@ -100,7 +101,9 @@ class FOVBase:
             )
         # For a HEALPix map
         elif healpix_loc is not None:
-            return self.in_fov_healpix_map(healpix_loc=healpix_loc)
+            return self.in_fov_healpix_map(
+                healpix_loc=healpix_loc, healpix_order=healpix_order
+            )
 
         # We should never get here
         raise AssertionError("No valid arguments provided")
