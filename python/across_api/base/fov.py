@@ -8,7 +8,7 @@ import astropy.units as u  # type: ignore
 from astropy.io.fits import FITS_rec  # type: ignore
 from scipy import stats  # type: ignore[import]
 import numpy as np
-from astropy.coordinates import SkyCoord, spherical_to_cartesian  # type: ignore
+from astropy.coordinates import SkyCoord  # type: ignore
 from astropy.time import Time  # type: ignore
 import healpy as hp  # type: ignore[import]
 from .constraints import EarthLimbConstraint, get_slice
@@ -281,14 +281,7 @@ class FootprintFOV(FOVBase):
             center=center, pos_angle=pointing.position_angle * u.deg
         )
 
-        ras_radians = projected_footprint.ra.to(u.rad).value[:-1]
-        decs_radians = projected_footprint.dec.to(u.rad).value[:-1]
-
-        cartesian_vertices = spherical_to_cartesian(
-            1,  # radial component
-            decs_radians,  # LAT - DECs
-            ras_radians,  # LON - RAs
-        )
+        cartesian_vertices = projected_footprint[:-1].cartesian.xyz.value
 
         self.visible_pixels = hp.query_polygon(
             hp.order2nside(HEALPIX_MAP_EVAL_ORDER),
