@@ -35,7 +35,7 @@ import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
-import { useRecaptchaSiteKey } from '~/root'
+import { useFeature, useRecaptchaSiteKey } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 import { getUser } from '~/routes/_gcn._auth/user.server'
 
@@ -59,9 +59,12 @@ export async function action({ request }: ActionFunctionArgs) {
   } = Object.fromEntries(data)
   if (intent !== 'delete') await verifyRecaptcha(recaptchaResponse?.toString())
   const noticeTypes = Object.keys(rest)
-  const topics = noticeTypes.map((noticeType) =>
-    formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
-  )
+  const topics =
+    noticeFormat == 'json'
+      ? noticeTypes
+      : noticeTypes.map((noticeType) =>
+          formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
+        )
   const emailNotification: EmailNotification = {
     name: name.toString(),
     recipient: recipient.toString(),
@@ -113,8 +116,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function () {
   const { notification, format } = useLoaderData<typeof loader>()
-  console.log(format)
-  console.log(notification)
   const defaultNameValid = Boolean(notification.name)
   const [nameValid, setNameValid] = useState(defaultNameValid)
   const defaultRecipientValid = Boolean(notification.recipient)
@@ -166,7 +167,7 @@ export default function () {
       <NoticeFormatInput
         name="noticeFormat"
         value={defaultFormat}
-        showJson={true}
+        showJson={useFeature('JSON_NOTICES')}
         onChange={setFormat}
       />
       <Label htmlFor="noticeTypes">Types</Label>

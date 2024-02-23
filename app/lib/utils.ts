@@ -11,9 +11,7 @@ export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
 ) {
-  return noticeFormat == 'json'
-    ? noticeType
-    : `gcn.classic.${noticeFormat}.${noticeType}`
+  return `gcn.classic.${noticeFormat}.${noticeType}`
 }
 
 export function topicToFormatAndNoticeType(topic: string): {
@@ -23,7 +21,7 @@ export function topicToFormatAndNoticeType(topic: string): {
   if (topic.startsWith('gcn.notices.') || topic === 'igwn.gwalert')
     return {
       noticeFormat: 'json',
-      noticeType: topic.replace('gcn.notices.', ''),
+      noticeType: topic,
     }
   const splitString = topic.split('.')
   return { noticeFormat: splitString[2], noticeType: splitString[3] }
