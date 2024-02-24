@@ -35,7 +35,7 @@ import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
-import { useRecaptchaSiteKey } from '~/root'
+import { useFeature, useRecaptchaSiteKey } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 import { getUser } from '~/routes/_gcn._auth/user.server'
 
@@ -59,9 +59,12 @@ export async function action({ request }: ActionFunctionArgs) {
   } = Object.fromEntries(data)
   if (intent !== 'delete') await verifyRecaptcha(recaptchaResponse?.toString())
   const noticeTypes = Object.keys(rest)
-  const topics = noticeTypes.map((noticeType) =>
-    formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
-  )
+  const topics =
+    noticeFormat == 'json'
+      ? noticeTypes
+      : noticeTypes.map((noticeType) =>
+          formatAndNoticeTypeToTopic(noticeFormat.toString(), noticeType)
+        )
   const emailNotification: EmailNotification = {
     name: name.toString(),
     recipient: recipient.toString(),
@@ -119,6 +122,7 @@ export default function () {
   const [recipientValid, setRecipientValid] = useState(defaultRecipientValid)
   const [alertsValid, setAlertsValid] = useState(false)
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
+  const [defaultFormat, setFormat] = useState<NoticeFormat>(format)
 
   return (
     <Form method="POST">
@@ -160,12 +164,18 @@ export default function () {
         onChange={(e) => setRecipientValid(Boolean(e.target.value))}
       />
       <Label htmlFor="format">Format</Label>
-      <NoticeFormatInput name="noticeFormat" value={format} showJson={false} />
+      <NoticeFormatInput
+        name="noticeFormat"
+        value={defaultFormat}
+        showJson={useFeature('JSON_NOTICES')}
+        onChange={setFormat}
+      />
       <Label htmlFor="noticeTypes">Types</Label>
       <NoticeTypeCheckboxes
+        selectedFormat={defaultFormat}
         defaultSelected={notification.noticeTypes}
         validationFunction={setAlertsValid}
-      ></NoticeTypeCheckboxes>
+      />
       <ReCAPTCHA
         onChange={(value) => {
           setRecaptchaValid(Boolean(value))
