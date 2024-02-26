@@ -96,11 +96,11 @@ export function SortSelector({
           setShowContent((shown) => !shown)
         }}
       />
-
       <DetailsDropdownContent
         className={classNames('maxw-card-xlg', {
           'display-none': !showContent,
         })}
+        onClose={() => setShowContent(false)}
       >
         <CardBody>
           <Grid col={1}>
