@@ -96,6 +96,7 @@ export function SortSelector({
           setShowContent((shown) => !shown)
         }}
       />
+      
       <DetailsDropdownContent
         className={classNames('maxw-card-xlg', {
           'display-none': !showContent,
