@@ -12,7 +12,7 @@ import { dedent } from 'ts-dedent'
 
 import type { User } from '../_gcn._auth/user.server'
 import { moderatorGroup } from '../_gcn.circulars/circulars.server'
-import { announcementAppendedText } from '../_gcn.news.email'
+import { announcementAppendedText } from './email_announcements'
 import { sendEmailBulk } from '~/lib/email.server'
 
 export async function createAnnouncementSubsciption(
