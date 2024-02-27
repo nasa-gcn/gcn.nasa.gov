@@ -145,7 +145,7 @@ export default function () {
               </Button>
             </small>
             {showAppendedText && (
-              <div className="text-base padding-x-2 padding-bottom-2 text-pre">
+              <div className="text-base padding-x-2 padding-bottom-2 text-pre-wrap">
                 {announcementAppendedText}
               </div>
             )}
