@@ -15,6 +15,7 @@ import {
   useSubmit,
 } from '@remix-run/react'
 import {
+  Alert,
   Button,
   ButtonGroup,
   Icon,
@@ -93,7 +94,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
 
-  let result
+  let newCircular
   const props = { body, subject, ...(format ? { format } : {}) }
   switch (intent) {
     case 'correction':
@@ -103,7 +104,7 @@ export async function action({ request }: ActionFunctionArgs) {
         { circularId: parseFloat(circularId), ...props },
         user
       )
-      result = null
+      newCircular = null
       break
     case 'edit':
       if (!circularId)
@@ -115,24 +116,27 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         user
       )
-      result = await get(parseFloat(circularId))
+      newCircular = await get(parseFloat(circularId))
       break
     case 'new':
-      result = await put({ ...props, submittedHow: 'web' }, user)
+      newCircular = await put({ ...props, submittedHow: 'web' }, user)
       break
     default:
       break
   }
-  return result
+  return { newCircular, intent }
 }
 
 export default function () {
-  const newItem = useActionData<typeof action>()
+  const result = useActionData<typeof action>()
   const { items, page, totalPages, totalItems, requestedChangeCount } =
     useLoaderData<typeof loader>()
 
   // Concatenate items from the action and loader functions
-  const allItems = [...(newItem ? [newItem] : []), ...(items || [])]
+  const allItems = [
+    ...(result?.newCircular ? [result.newCircular] : []),
+    ...(items || []),
+  ]
 
   const [searchParams] = useSearchParams()
   const userIsModerator = useModStatus()
@@ -158,6 +162,11 @@ export default function () {
 
   return (
     <>
+      {result?.intent == 'correction' && (
+        <Alert type={'success'} headingLevel={'h1'} slim>
+          Request Submitted
+        </Alert>
+      )}
       <CircularsHeader />
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
