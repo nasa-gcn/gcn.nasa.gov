@@ -12,17 +12,8 @@ import { dedent } from 'ts-dedent'
 
 import type { User } from '../_gcn._auth/user.server'
 import { moderatorGroup } from '../_gcn.circulars/circulars.server'
+import { announcementAppendedText } from '../_gcn.news.email'
 import { sendEmailBulk } from '~/lib/email.server'
-
-export const announcementAppendedText = `
-For more details on this new feature and an archive of GCN news and announcements, see https://gcn.nasa.gov/news.
-  
-For questions, issues, or bug reports, please contact us via:
-- Contact form:
-  https://gcn.nasa.gov/contact
-- GitHub issue tracker:
-  https://github.com/nasa-gcn/gcn.nasa.gov/issues
-`
 
 export async function createAnnouncementSubsciption(
   sub: string,

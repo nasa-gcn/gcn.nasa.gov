@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
+import { Form, Link, useActionData } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
@@ -22,17 +22,24 @@ import { useState } from 'react'
 
 import { getUser } from './_gcn._auth/user.server'
 import { moderatorGroup } from './_gcn.circulars/circulars.server'
-import {
-  announcementAppendedText,
-  sendAnnouncementEmail,
-} from './_gcn.user.email/email_announcements.server'
+import { sendAnnouncementEmail } from './_gcn.user.email/email_announcements.server'
 import { getFormDataString } from '~/lib/utils'
+
+export const announcementAppendedText = `
+For more details on this new feature and an archive of GCN news and announcements, see https://gcn.nasa.gov/news.
+  
+For questions, issues, or bug reports, please contact us via:
+- Contact form:
+  https://gcn.nasa.gov/contact
+- GitHub issue tracker:
+  https://github.com/nasa-gcn/gcn.nasa.gov/issues
+`
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (!user?.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
-  return announcementAppendedText
+  return null
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -52,7 +59,6 @@ export default function () {
   const [showAppendedText, toggleShowAppendedText] = useState(false)
   const valid = subjectValid && bodyValid
   const submitted = useActionData<typeof action>()
-  const announcementAppendedText = useLoaderData<typeof loader>()
   const defaultBody =
     'The GCN Team is pleased to announce a new feature on https://gcn.nasa.gov that ...'
   return (
