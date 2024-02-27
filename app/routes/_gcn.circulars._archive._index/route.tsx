@@ -162,9 +162,15 @@ export default function () {
 
   return (
     <>
-      {result?.intent == 'correction' && (
-        <Alert type={'success'} headingLevel={'h1'} slim>
-          Request Submitted
+      {result?.intent === 'correction' && (
+        <Alert
+          type={'success'}
+          headingLevel={'h1'}
+          slim
+          heading="Request Submitted"
+        >
+          Thank you for your correction. A GCN Circulars moderator will review
+          it shortly.
         </Alert>
       )}
       <CircularsHeader />
