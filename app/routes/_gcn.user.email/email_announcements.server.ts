@@ -8,9 +8,11 @@
 import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
+import { dedent } from 'ts-dedent'
 
 import type { User } from '../_gcn._auth/user.server'
 import { moderatorGroup } from '../_gcn.circulars/circulars.server'
+import { announcementAppendedText } from './email_announcements'
 import { sendEmailBulk } from '~/lib/email.server'
 
 export async function createAnnouncementSubsciption(
@@ -68,11 +70,18 @@ export async function sendAnnouncementEmail(
     getLegacyAnnouncementReceiverEmails(),
   ])
 
+  const formattedBody = dedent`
+  ${body}
+
+  
+  ${announcementAppendedText}
+  `
+
   await sendEmailBulk({
     fromName: 'GCN Announcements',
     to: [...emails, ...legacyEmails],
     subject,
-    body,
+    body: formattedBody,
     topic: 'announcements',
   })
 }
