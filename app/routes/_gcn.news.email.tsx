@@ -6,11 +6,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, Link, useActionData } from '@remix-run/react'
+import { Form, Link, useActionData, useLoaderData } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
   FormGroup,
+  Icon,
   InputGroup,
   InputPrefix,
   TextInput,
@@ -21,14 +22,17 @@ import { useState } from 'react'
 
 import { getUser } from './_gcn._auth/user.server'
 import { moderatorGroup } from './_gcn.circulars/circulars.server'
-import { sendAnnouncementEmail } from './_gcn.user.email/email_announcements.server'
+import {
+  announcementAppendedText,
+  sendAnnouncementEmail,
+} from './_gcn.user.email/email_announcements.server'
 import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (!user?.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
-  return null
+  return announcementAppendedText
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -45,8 +49,10 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function () {
   const [subjectValid, setSubjectValid] = useState(false)
   const [bodyValid, setBodyValid] = useState(false)
+  const [showAppendedText, toggleShowAppendedText] = useState(false)
   const valid = subjectValid && bodyValid
   const submitted = useActionData<typeof action>()
+  const announcementAppendedText = useLoaderData<typeof loader>()
   const defaultBody =
     'The GCN Team is pleased to announce a new feature on https://gcn.nasa.gov that ...'
   return (
@@ -77,7 +83,12 @@ export default function () {
               'usa-input--success': subjectValid,
             })}
           >
-            <InputPrefix className="wide-input-prefix">Subject</InputPrefix>
+            <InputPrefix
+              className="wide-input-prefix"
+              aria-describedby="subjectDescription"
+            >
+              Subject
+            </InputPrefix>
             <TextInput
               autoFocus
               className="maxw-full"
@@ -91,6 +102,11 @@ export default function () {
               }}
             />
           </InputGroup>
+          <div className="text-base margin-bottom-1" id="subjectDescription">
+            <small>
+              Please replace "[New Feature]" with the appropriate title
+            </small>
+          </div>
           <label hidden htmlFor="body">
             Body
           </label>
@@ -105,7 +121,35 @@ export default function () {
             onChange={({ target: { value } }) => {
               setBodyValid(Boolean(value))
             }}
+            aria-describedby="bodyDescription"
           />
+          <div className="text-base margin-bottom-1" id="bodyDescription">
+            <small>
+              The submitted body text will have additional email footer content
+              appended automatically.{' '}
+              <Button
+                unstyled
+                type="button"
+                className="usa-link"
+                aria-expanded={showAppendedText}
+                onClick={() => toggleShowAppendedText(!showAppendedText)}
+              >
+                <small>
+                  Appended Text&nbsp;
+                  {showAppendedText ? (
+                    <Icon.ExpandLess role="presentation" />
+                  ) : (
+                    <Icon.ExpandMore role="presentation" />
+                  )}
+                </small>
+              </Button>
+            </small>
+            {showAppendedText && (
+              <div className="text-base padding-x-2 padding-bottom-2 text-pre">
+                {announcementAppendedText}
+              </div>
+            )}
+          </div>
           <ButtonGroup>
             <Link to={`/news`} className="usa-button usa-button--outline">
               Back
