@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
 import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, CardBody, Icon } from '@trussworks/react-uswds'
 import { useState } from 'react'
@@ -18,12 +17,8 @@ import { MarkdownBody, PlainTextBody } from './Body'
 import { FrontMatter } from './FrontMatter'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
-import { feature, origin } from '~/lib/env.server'
-import {
-  getCanonicalUrlHeaders,
-  pickHeaders,
-  publicStaticShortTermCacheControlHeaders,
-} from '~/lib/headers.server'
+import { feature } from '~/lib/env.server'
+import { pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
 import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
@@ -47,13 +42,7 @@ export async function loader({
     parseFloat(circularId),
     version ? parseFloat(version) : undefined
   )
-
-  return json(result, {
-    headers: {
-      ...publicStaticShortTermCacheControlHeaders,
-      ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
-    },
-  })
+  return result
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
