@@ -58,6 +58,9 @@ export default function () {
                   ]}
                 />
               </>,
+              <NavLink key="code-of-conduct" to="code-of-conduct">
+                Code of Conduct
+              </NavLink>,
               <>
                 <NavLink key="contributing" to="contributing">
                   Contributing
