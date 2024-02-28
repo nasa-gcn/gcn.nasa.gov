@@ -31,4 +31,4 @@ Circulars submitting privileges are granted for new users via the GCN [peer endo
 
 ## Acknowledgement
 
-The GCN team requests that any presentation, publication, or document that mentions the GCN system, specific GCN Circulars or Notices, to please reference the General Coordinates Network (https://gcn.nasa.gov) and cite Circulars using bibliographic records from the [SAO/NASA ADS](https://ui.adsabs.harvard.edu).
+The GCN team requests that any presentation, publication, or document that mentions the GCN system, specific GCN Circulars or Notices, to please reference the General Coordinates Network (https://gcn.nasa.gov) and cite Circulars using bibliographic records from the [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu).
