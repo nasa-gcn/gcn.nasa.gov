@@ -29,10 +29,10 @@ function Document({ children }: { children?: ReactNode }) {
     <>
       <Header />
       <NewsBanner>
-        New Swift-BAT/GUANO and IceCube Notice Types Available! See{' '}
+        New Announcement Feature, Code of Conduct, Circular Revisions. See{' '}
         <Link
           className="usa-link"
-          to="/news#new-swift-bat/guano-and-icecube-notices-available-via-kafka"
+          to="/news#new-announcement-feature-code-of-conduct-circular-revisions"
         >
           news and announcements
         </Link>
