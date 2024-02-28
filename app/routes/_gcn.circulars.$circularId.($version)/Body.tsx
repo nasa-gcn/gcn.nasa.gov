@@ -44,12 +44,11 @@ function LinkWrapper({
 }
 
 export function MarkdownBody({
-  className,
   children,
+  ...props
 }: {
-  className?: string
   children: string
-}) {
+} & Omit<JSX.IntrinsicElements['div'], 'children'>) {
   const { result } = unified()
     .use(remarkParse)
     .use(remarkGfm)
@@ -68,16 +67,16 @@ export function MarkdownBody({
     })
     .processSync(children)
 
-  return <div className={className}>{result}</div>
+  return <div {...props}>{result}</div>
 }
 
 export function PlainTextBody({
   className,
   children,
+  ...props
 }: {
-  className?: string
   children: string
-}) {
+} & Omit<JSX.IntrinsicElements['div'], 'children'>) {
   const tree = u('root', [u('code', children)])
 
   const { result } = unified()
@@ -93,6 +92,8 @@ export function PlainTextBody({
     .processSync()
 
   return (
-    <div className={classNames(styles.PlainTextBody, className)}>{result}</div>
+    <div {...props} className={classNames(styles.PlainTextBody, className)}>
+      {result}
+    </div>
   )
 }
