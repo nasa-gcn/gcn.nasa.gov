@@ -175,6 +175,7 @@ function CircularsHistory({
             <Link
               onClick={() => setShowVersions(!showVersions)}
               to={`/circulars/${circular}`}
+              reloadDocument
             >
               Latest
             </Link>
