@@ -61,34 +61,21 @@ export async function putSynonyms({
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const writes = []
-  if (!subtractions && !additions) {
-    const { Items } = await db.synonym.query({
-      IndexName: 'synonymsByUuid',
-      KeyConditionExpression: 'uuid = :uuid',
-      ExpressionAttributeValues: {
-        ':uuid': uuid,
-      },
-    })
-    return Items
-  }
+  if (!subtractions && !additions) return
   if (subtractions) {
-    const subtraction_writes = subtractions
-      .filter((eventId) => Boolean(eventId))
-      .map((eventId) => ({
-        DeleteRequest: {
-          Key: { uuid, eventId },
-        },
-      }))
+    const subtraction_writes = subtractions.map((eventId) => ({
+      DeleteRequest: {
+        Key: { uuid, eventId },
+      },
+    }))
     writes.push(subtraction_writes)
   }
   if (additions) {
-    const addition_writes = additions
-      .filter((eventId) => Boolean(eventId))
-      .map((eventId) => ({
-        PutRequest: {
-          Item: { uuid, eventId },
-        },
-      }))
+    const addition_writes = additions.map((eventId) => ({
+      PutRequest: {
+        Item: { uuid, eventId },
+      },
+    }))
     writes.push(addition_writes)
   }
   const params = {
