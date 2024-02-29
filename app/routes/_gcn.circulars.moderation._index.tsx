@@ -41,11 +41,7 @@ export default function () {
     <>
       <h2>Pending Corrections</h2>
       <ButtonGroup>
-        <Link
-          to="/circulars"
-          className="usa-button usa-button--outline"
-          reloadDocument
-        >
+        <Link to="/circulars" className="usa-button usa-button--outline">
           Back
         </Link>
       </ButtonGroup>

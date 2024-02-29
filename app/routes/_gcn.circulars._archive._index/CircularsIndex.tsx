@@ -31,7 +31,6 @@ export default function ({
         {allItems.map(({ circularId, subject }) => (
           <li key={circularId} value={circularId}>
             <Link
-              reloadDocument
               className="usa-link"
               to={`/circulars/${circularId}${searchString}`}
             >

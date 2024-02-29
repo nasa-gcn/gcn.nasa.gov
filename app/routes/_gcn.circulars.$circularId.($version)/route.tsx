@@ -51,6 +51,10 @@ export async function loader({
   })
 }
 
+export function shouldRevalidate() {
+  return true
+}
+
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
@@ -170,7 +174,6 @@ function CircularsHistory({
             <Link
               onClick={() => setShowVersions(!showVersions)}
               to={`/circulars/${circular}`}
-              reloadDocument
             >
               Latest
             </Link>
