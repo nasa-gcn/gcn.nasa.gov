@@ -60,8 +60,10 @@ export async function putSynonyms({
 }) {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('synonyms')
   const writes = []
   if (!subtractions && !additions) return
+  if (subtractions?.length === 0 && additions?.length === 0) return
   if (subtractions) {
     const subtraction_writes = subtractions.map((eventId) => ({
       DeleteRequest: {
@@ -80,7 +82,7 @@ export async function putSynonyms({
   }
   const params = {
     RequestItems: {
-      synonyms: writes,
+      [TableName]: writes,
     },
   }
   await client.batchWrite(params)
