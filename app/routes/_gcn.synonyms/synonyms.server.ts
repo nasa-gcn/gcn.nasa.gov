@@ -19,24 +19,22 @@ import crypto from 'crypto'
  */
 export async function createSynonyms(...synonymousEventIds: string[]) {
   const uuid = crypto.randomUUID()
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
 
-  const writeRequests = synonymousEventIds
-    .filter((eventId) => Boolean(eventId))
-    .map((eventId) => ({
-      PutRequest: {
-        Item: { uuid, eventId },
+  if (synonymousEventIds.length > 0) {
+    const db = await tables()
+    const client = db._doc as unknown as DynamoDBDocument
+    const TableName = db.name('synonyms')
+
+    await client.batchWrite({
+      RequestItems: {
+        [TableName]: synonymousEventIds.map((eventId) => ({
+          PutRequest: {
+            Item: { uuid, eventId },
+          },
+        })),
       },
-    }))
-
-  const params = {
-    RequestItems: {
-      synonyms: writeRequests,
-    },
+    })
   }
-
-  await client.batchWrite(params)
 
   return uuid
 }
