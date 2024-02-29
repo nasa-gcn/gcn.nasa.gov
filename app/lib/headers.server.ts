@@ -21,13 +21,6 @@ export const publicStaticShortTermCacheControlHeaders = {
 }
 
 /**
- * HTTP headers for 0 life.
- */
-export const publicStaticZeroLifeCacheControlHeaders = {
-  'Cache-Control': 'no-cache, no-store, must-revalidate',
-}
-
-/**
  * Get HTTP headers for declaring the canonical URL to search engines.
  *
  * This adds HTTP headers that are equivalent to the HTML

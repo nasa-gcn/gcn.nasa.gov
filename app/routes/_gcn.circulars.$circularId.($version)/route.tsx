@@ -19,11 +19,7 @@ import { FrontMatter } from './FrontMatter'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { feature, origin } from '~/lib/env.server'
-import {
-  getCanonicalUrlHeaders,
-  pickHeaders,
-  publicStaticZeroLifeCacheControlHeaders,
-} from '~/lib/headers.server'
+import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
 import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
@@ -50,7 +46,6 @@ export async function loader({
 
   return json(result, {
     headers: {
-      ...publicStaticZeroLifeCacheControlHeaders,
       ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
     },
   })
