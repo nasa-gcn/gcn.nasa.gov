@@ -13,7 +13,6 @@ import { getUser } from '../_gcn._auth/user.server'
 import { formatAuthor } from '../_gcn.circulars/circulars.lib'
 import { get, moderatorGroup } from '../_gcn.circulars/circulars.server'
 import { CircularEditForm } from './CircularEditForm'
-import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
@@ -25,7 +24,6 @@ export async function loader({
   params: { circularId },
   request,
 }: LoaderFunctionArgs) {
-  if (!feature('CIRCULAR_VERSIONS')) throw new Response(null, { status: 404 })
   if (!circularId) throw new Response(null, { status: 404 })
   const user = await getUser(request)
   if (!user?.groups.includes(moderatorGroup))

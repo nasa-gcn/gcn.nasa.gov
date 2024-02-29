@@ -9,7 +9,6 @@ import { type HeadersFunction, type LoaderFunctionArgs } from '@remix-run/node'
 
 import { getUser } from '../_gcn._auth/user.server'
 import { getVersions, moderatorGroup } from '../_gcn.circulars/circulars.server'
-import { feature } from '~/lib/env.server'
 import { pickHeaders } from '~/lib/headers.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -29,11 +28,9 @@ export async function loader({
   if (!circularId)
     throw new Response('circularId must be defined', { status: 400 })
 
-  let history: number[] = []
-  if (feature('CIRCULAR_VERSIONS')) {
-    history = await getVersions(parseFloat(circularId))
-    history.reverse() // Sort by descending version
-  }
+  const history = await getVersions(parseFloat(circularId))
+  history.reverse() // Sort by descending version
+
   const user = await getUser(request)
   const userIsModerator = user?.groups.includes(moderatorGroup)
   return { circularId, history, userIsModerator }

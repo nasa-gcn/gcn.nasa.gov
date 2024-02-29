@@ -18,7 +18,7 @@ import { MarkdownBody, PlainTextBody } from './Body'
 import { FrontMatter } from './FrontMatter'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
-import { feature, origin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
 import {
   getCanonicalUrlHeaders,
   pickHeaders,
@@ -40,8 +40,6 @@ export const handle: BreadcrumbHandle<typeof loader> = {
 export async function loader({
   params: { circularId, version },
 }: LoaderFunctionArgs) {
-  if (!feature('CIRCULAR_VERSIONS') && version)
-    throw new Response(null, { status: 404 })
   invariant(circularId)
   const result = await get(
     parseFloat(circularId),
@@ -121,20 +119,16 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        {useFeature('CIRCULAR_VERSIONS') && (
-          <Link
-            className="usa-button usa-button--outline"
-            to={`/circulars/correction/${circularId}`}
-          >
-            Request Correction
-          </Link>
+        <Link
+          className="usa-button usa-button--outline"
+          to={`/circulars/correction/${circularId}`}
+        >
+          Request Correction
+        </Link>
+        {result?.history && result.history.length > 0 && (
+          <CircularsHistory circular={circularId} history={result?.history} />
         )}
-        {useFeature('CIRCULAR_VERSIONS') &&
-          result?.history &&
-          result.history.length > 0 && (
-            <CircularsHistory circular={circularId} history={result?.history} />
-          )}
-        {useFeature('CIRCULAR_VERSIONS') && result?.userIsModerator && (
+        {result?.userIsModerator && (
           <Link
             to={`/circulars/edit/${circularId}`}
             className="usa-button usa-button--outline"
