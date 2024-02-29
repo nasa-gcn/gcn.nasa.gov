@@ -87,3 +87,32 @@ export async function putSynonyms({
   }
   await client.batchWrite(params)
 }
+
+/*
+ * BatchWriteItem has a limit of 25 items, so the user may not delete
+ *  more than 25 synonyms at a time.
+ */
+export async function deleteSynonyms({ uuid }: { uuid: string }) {
+  if (!uuid) return
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('synonyms')
+  const results = await db.synonyms.query({
+    IndexName: 'synonymsByUuid',
+    KeyConditionExpression: 'uuid = :uuid',
+    ExpressionAttributeValues: {
+      ':uuid': uuid,
+    },
+  })
+  const writes = results.Items.map((i) => ({
+    PutRequest: {
+      Item: { uuid: i.uuid, eventId: i.eventId },
+    },
+  }))
+  const params = {
+    RequestItems: {
+      [TableName]: writes,
+    },
+  }
+  await client.batchWrite(params)
+}
