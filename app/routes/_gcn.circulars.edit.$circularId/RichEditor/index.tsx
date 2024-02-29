@@ -350,7 +350,16 @@ export function RichEditor({
         }
       }}
     >
-      {editing || <Preview className={styles.preview}>{value}</Preview>}
+      {editing || (
+        <Preview
+          id="preview"
+          role="tabpanel"
+          aria-labelledby="previewButton"
+          className={styles.preview}
+        >
+          {value}
+        </Preview>
+      )}
       <Grid row className="position-absolute width-full padding-top-05">
         <Grid
           col="auto"
@@ -358,10 +367,17 @@ export function RichEditor({
         />
         <Grid col="auto">
           <TabBar>
-            <Tab defaultChecked onClick={edit}>
+            <Tab
+              defaultChecked
+              id="editButton"
+              aria-controls="body"
+              onClick={edit}
+            >
               Edit
             </Tab>
-            <Tab onClick={preview}>Preview</Tab>
+            <Tab onClick={preview} aria-controls="preview" id="previewButton">
+              Preview
+            </Tab>
           </TabBar>
         </Grid>
         <Grid
@@ -422,6 +438,7 @@ export function RichEditor({
       <Textarea
         id="body"
         name="body"
+        aria-labelledby="editButton"
         className={classNames(
           { [styles.hidden]: !editing },
           'font-code-sm',

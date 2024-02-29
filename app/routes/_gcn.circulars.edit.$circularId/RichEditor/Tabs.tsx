@@ -20,31 +20,43 @@ export function Tab({
   ...props
 }: { defaultSelected?: boolean } & Omit<
   Parameters<typeof Button>[0],
-  'outline' | 'type'
+  'outline' | 'role' | 'type'
 >) {
   const [checked, setChecked] = useExclusiveOption(defaultChecked)
   return (
     <Button
+      {...props}
       outline
+      aria-selected={checked}
+      role="tab"
       type="button"
       className={classNames(className, { [styles.checked]: checked })}
       onClick={(e) => {
         setChecked()
         onClick?.(e)
       }}
-      {...props}
     />
   )
 }
 
 export function TabBar({
   children,
+  className,
+  ...props
 }: {
   children: Iterable<ReactElement<typeof Tab>>
-}) {
+} & Omit<
+  Parameters<typeof ButtonGroup>[0],
+  'children' | 'role' | 'segmented' | 'type'
+>) {
   return (
     <ExclusiveOptionGroup>
-      <ButtonGroup type="segmented" className={styles.tabs}>
+      <ButtonGroup
+        {...props}
+        role="tablist"
+        type="segmented"
+        className={classNames(styles.tabs, className)}
+      >
         {children}
       </ButtonGroup>
     </ExclusiveOptionGroup>
