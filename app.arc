@@ -151,7 +151,6 @@ legacy_users
 
 synonyms
   uuid *String
-  eventId **String
   name synonymsByUuid
 
 @aws
