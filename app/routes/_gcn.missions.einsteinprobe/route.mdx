@@ -1,0 +1,52 @@
+---
+handle:
+  breadcrumb: Einstein Probe
+---
+
+import logo from './logo.png'
+
+# Einstein Probe
+
+<img
+  src={logo}
+  align="right"
+  width="284"
+  height="210"
+  alt="Einstein Probe logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
+**Launch Date:** January 9, 2024
+
+**End of Operations:** Mission duration of 3 years (5 years as a goal)
+
+The [Einstein Probe (EP)](https://ep.bao.ac.cn/ep/) is a mission of the Chinese Academy of Sciences (CAS), in collaboration with the [European Space Agency (ESA)](https://www.cosmos.esa.int/web/einstein-probe/mission) and the [Max Planck Institute for extraterrestrial Physics (MPE)](https://www.mpe.mpg.de/7867826/EinsteinProbe), Germany, dedicated to time-domain high-energy astrophysics. Its primary goals are to discover high-energy transients and monitor variable objects. To achieve this, EP employs a very large instantaneous field-of-view (3600 square degrees), along with moderate spatial resolution (FWHM ~5 arcmin) and energy resolution in the 0.5-5 keV energy band. EP has also the capability of performing fast and deep follow-up observations in the 0.5-10 keV energy band (effective area 2\*300 cm<sup>2</sup> @ 1 keV; half-power diameter, HPD, ~30 arcsec), as well as of quick downlink of transient alert messages.
+
+<div className="overflow-table">
+
+| Instruments                | Energy Range | Field of View        | Localization           |
+| -------------------------- | ------------ | -------------------- | ---------------------- |
+| Wide Field X-ray Telescope | 0.5 – 5 keV  | 3600 deg<sup>2</sup> | 5 arcmin (FWHM)        |
+| Follow-up X-ray Telescope  | 0.5 – 10 keV | 60 arcmin diameter   | 5-15 arcsec (90% c.l.) |
+
+</div>
+
+**JSON-Serialized GCN Notices Types in GCN Kafka:**
+
+<div className="overflow-table">
+
+| Type                                   | Contents                               | Latency |
+| -------------------------------------- | -------------------------------------- | ------- |
+| `gcn.notices.einstein_probe.wxt.alert` | Localization, Count Rate, Significance | ??      |
+
+</div>
+
+**Yearly Trigger Rates:**
+
+<div className="overflow-table">
+
+| Instrument | Type                                                   | Rates |
+| ---------- | ------------------------------------------------------ | ----- |
+| WXT        | GRBs, other transients, and non-astrophysical triggers | ??    |
+
+</div>
