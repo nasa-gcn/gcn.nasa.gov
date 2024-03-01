@@ -110,7 +110,7 @@ export async function searchSynonymsByEventId({
  * BatchWriteItem has a limit of 25 items, so the user may not add more than
  * 25 synonyms at a time.
  */
-export async function createSynonyms(...synonymousEventIds: string[]) {
+export async function createSynonyms(synonymousEventIds: string[]) {
   const uuid = crypto.randomUUID()
 
   if (synonymousEventIds.length > 0) {
