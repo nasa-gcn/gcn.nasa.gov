@@ -12,7 +12,7 @@ import { Button, ButtonGroup, FormGroup } from '@trussworks/react-uswds'
 
 import { ClientCredentialVendingMachine } from './_gcn.user.credentials/client_credentials.server'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
-import { Tab, Tabs } from '~/components/tabs/Tabs'
+import { Tab, Tabs } from '~/components/tabs'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
 

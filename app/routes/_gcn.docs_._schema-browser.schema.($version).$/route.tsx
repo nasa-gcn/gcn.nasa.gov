@@ -34,7 +34,7 @@ import Documentation from './documentation.md'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { Highlight } from '~/components/Highlight'
-import { Tab, Tabs } from '~/components/tabs/Tabs'
+import { Tab, Tabs } from '~/components/tabs'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 import { exampleSuffix, schemaSuffix } from '~/lib/schema-data'
 import type {

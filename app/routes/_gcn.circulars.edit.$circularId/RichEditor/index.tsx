@@ -24,8 +24,8 @@ import {
   PlainTextBody,
 } from '../../_gcn.circulars.$circularId.($version)/Body'
 import { GitLabIcon } from './GitLabIcon'
-import { Tab, TabBar } from './Tabs'
 import { onKeyDown } from './onKeyDown'
+import { TabButton, TabButtonGroup } from '~/components/tabs'
 
 import styles from './index.module.css'
 import iconBold from '@gitlab/svgs/dist/sprite_icons/bold.svg'
@@ -366,19 +366,23 @@ export function RichEditor({
           className="width-1 margin-bottom-05 border-primary border-bottom-2px"
         />
         <Grid col="auto">
-          <TabBar>
-            <Tab
+          <TabButtonGroup>
+            <TabButton
               defaultChecked
               id="editButton"
               aria-controls="body"
               onClick={edit}
             >
               Edit
-            </Tab>
-            <Tab onClick={preview} aria-controls="preview" id="previewButton">
+            </TabButton>
+            <TabButton
+              onClick={preview}
+              aria-controls="preview"
+              id="previewButton"
+            >
               Preview
-            </Tab>
-          </TabBar>
+            </TabButton>
+          </TabButtonGroup>
         </Grid>
         <Grid
           col="auto"
