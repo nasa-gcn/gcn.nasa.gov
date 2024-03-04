@@ -40,7 +40,7 @@ jobs:
       - name: Build
         run: npm run build
       - name: Install Python dependencies
-        run: docker run --rm --platform linux/arm64 -v $(pwd):/src python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommends npm && cd src && npx arc hydrate'
+        run: docker run --rm --platform linux/arm64 -v $(pwd):/src python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommends npm && cd src && npx arc hydrate -v'
       - name: Configure aws credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
