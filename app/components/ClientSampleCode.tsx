@@ -47,26 +47,36 @@ export function ClientSampleCode({
     case 'py':
       return (
         <>
-          Open a terminal and run this command to install with{' '}
-          <Link className="usa-link" rel="external" href="https://pip.pypa.io/">
-            pip
-          </Link>
-          :
+          <p className="usa-paragraph">
+            Open a terminal and run this command to install with{' '}
+            <Link
+              className="usa-link"
+              rel="external"
+              href="https://pip.pypa.io/"
+            >
+              pip
+            </Link>
+            :
+          </p>
           <Highlight language="sh" code="pip install gcn-kafka" />
-          or this command to install with with{' '}
-          <Link
-            className="usa-link"
-            rel="external"
-            href="https://docs.conda.io/"
-          >
-            conda
-          </Link>
-          :
+          <p className="usa-paragraph">
+            or this command to install with with{' '}
+            <Link
+              className="usa-link"
+              rel="external"
+              href="https://docs.conda.io/"
+            >
+              conda
+            </Link>
+            :
+          </p>
           <Highlight
             language="sh"
             code="conda install -c conda-forge gcn-kafka"
           />
-          Save the Python code below to a file called <code>example.py</code>:
+          <p className="usa-paragraph">
+            Save the Python code below to a file called <code>example.py</code>:
+          </p>
           <Highlight
             language={language}
             filename={`example.${language}`}
@@ -107,25 +117,31 @@ export function ClientSampleCode({
 
             `)}
           />
-          Run the code by typing this command in the terminal:
+          <p className="usa-paragraph">
+            Run the code by typing this command in the terminal:
+          </p>
           <Highlight language="sh" code="python example.py" />
         </>
       )
     case 'mjs':
       return (
         <>
-          Open a terminal and run this command to install with{' '}
-          <Link
-            className="usa-link"
-            rel="external"
-            href="https://www.npmjs.com"
-          >
-            npm
-          </Link>
-          :
+          <p className="usa-paragraph">
+            Open a terminal and run this command to install with{' '}
+            <Link
+              className="usa-link"
+              rel="external"
+              href="https://www.npmjs.com"
+            >
+              npm
+            </Link>
+            :
+          </p>
           <Highlight language="sh" code="npm install gcn-kafka" />
-          Save the JavaScript code below to a file called{' '}
-          <code>example.mjs</code>:
+          <p className="usa-paragraph">
+            Save the JavaScript code below to a file called{' '}
+            <code>example.mjs</code>:
+          </p>
           <Highlight
             language={language}
             filename={`example.${language}`}
@@ -184,25 +200,31 @@ export function ClientSampleCode({
 
             `)}
           />
-          Run the code by typing this command in the terminal:
+          <p className="usa-paragraph">
+            Run the code by typing this command in the terminal:
+          </p>
           <Highlight language="sh" code="node example.mjs" />
         </>
       )
     case 'cjs':
       return (
         <>
-          Open a terminal and run this command to install with{' '}
-          <Link
-            className="usa-link"
-            rel="external"
-            href="https://www.npmjs.com"
-          >
-            npm
-          </Link>
-          :
+          <p className="usa-paragraph">
+            Open a terminal and run this command to install with{' '}
+            <Link
+              className="usa-link"
+              rel="external"
+              href="https://www.npmjs.com"
+            >
+              npm
+            </Link>
+            :
+          </p>
           <Highlight language="sh" code="npm install gcn-kafka" />
-          Save the JavaScript code below to a file called{' '}
-          <code>example.cjs</code>:
+          <p className="usa-paragraph">
+            Save the JavaScript code below to a file called{' '}
+            <code>example.cjs</code>:
+          </p>
           <Highlight
             language={language}
             filename={`example.${language}`}
@@ -263,23 +285,27 @@ export function ClientSampleCode({
 
             `)}
           />
-          Run the code by typing this command in the terminal:
+          <p className="usa-paragraph">
+            Run the code by typing this command in the terminal:
+          </p>
           <Highlight language="sh" code="node example.cjs" />
         </>
       )
     case 'c':
       return (
         <>
-          First,{' '}
-          <Link
-            className="usa-link"
-            rel="external"
-            href="https://github.com/edenhill/librdkafka#installation"
-          >
-            install librdkafka
-          </Link>{' '}
-          version 2.2.0 or newer. Then, save the C code below to a file called{' '}
-          <code>example.c</code>:
+          <p className="usa-paragraph">
+            First,{' '}
+            <Link
+              className="usa-link"
+              rel="external"
+              href="https://github.com/edenhill/librdkafka#installation"
+            >
+              install librdkafka
+            </Link>{' '}
+            version 2.2.0 or newer. Then, save the C code below to a file called{' '}
+            <code>example.c</code>:
+          </p>
           <Highlight
             language={language}
             filename={`example.${language}`}
@@ -424,25 +450,31 @@ export function ClientSampleCode({
               }
             `)}
           />
-          Compile the code. The command will vary slightly depending on your
-          operating system and compiler. For GCC on Linux or macOS, run the
-          following command:
+          <p className="usa-paragraph">
+            Compile the code. The command will vary slightly depending on your
+            operating system and compiler. For GCC on Linux or macOS, run the
+            following command:
+          </p>
           <Highlight
             language="sh"
             code="gcc $(pkg-config --cflags libcrypto rdkafka) example.c $(pkg-config --libs libcrypto rdkafka)"
           />
-          Run the program. On Linux or macOS, run the following command:
+          <p className="usa-paragraph">
+            Run the program. On Linux or macOS, run the following command:
+          </p>
           <Highlight language="sh" code="./a.out" />
         </>
       )
     case 'cs':
       return (
         <>
-          In Visual Studio, create a new C# Console App under File {'>'} New{' '}
-          {'>'} Project. After the project initializes, right click the solution
-          in the Solution Explorer and click Manage NuGet packages for solution.
-          Browse for and install Confluent.Kafka. Copy the following into your
-          Program.cs file.
+          <p className="usa-paragraph">
+            In Visual Studio, create a new C# Console App under File {'>'} New{' '}
+            {'>'} Project. After the project initializes, right click the
+            solution in the Solution Explorer and click Manage NuGet packages
+            for solution. Browse for and install Confluent.Kafka. Copy the
+            following into your Program.cs file.
+          </p>
           <Highlight
             language="cs"
             filename={`example.${language}`}
@@ -506,15 +538,17 @@ export function ClientSampleCode({
 
             `)}
           />
-          Build the solution from the build menu, or Ctrl + Shift + B. The
-          resulting executable can be found in the bin folder within the
-          project.
+          <p className="usa-paragraph">
+            Build the solution from the build menu, or Ctrl + Shift + B. The
+            resulting executable can be found in the bin folder within the
+            project.
+          </p>
         </>
       )
     case 'java':
       return (
         <>
-          <p>
+          <p className="usa-paragraph">
             The following instructions are for the official Kafka command line
             tools which use Java and come with either{' '}
             <a
@@ -533,8 +567,10 @@ export function ClientSampleCode({
             . However, they should work with most Java code that uses the
             official Apache Kafka client libraries.
           </p>
-          Save the configuration below to a file called{' '}
-          <code>example.properties</code>:
+          <p className="usa-paragraph">
+            Save the configuration below to a file called{' '}
+            <code>example.properties</code>:
+          </p>
           <Highlight
             language="properties"
             filename="example.properties"
@@ -551,10 +587,12 @@ export function ClientSampleCode({
               # Warning: don't share the client secret with others.
             `)}
           />
-          <p>Next, open a terminal.</p>
+          <p className="usa-paragraph">Next, open a terminal.</p>
           {listTopics && (
             <>
-              Run the following command to list available Kafka topics.
+              <p className="usa-paragraph">
+                Run the following command to list available Kafka topics.
+              </p>
               <Highlight
                 language="sh"
                 code={`kafka-topics.sh --bootstrap-server kafka.${
@@ -563,8 +601,10 @@ export function ClientSampleCode({
               />
             </>
           )}
-          Run the following command to consume Kafka records and print them to
-          the console (supports only a single topic at a time).
+          <p className="usa-paragraph">
+            Run the following command to consume Kafka records and print them to
+            the console (supports only a single topic at a time).
+          </p>
           <Highlight
             language="sh"
             code={`kafka-console-consumer.sh --bootstrap-server kafka.${
