@@ -61,4 +61,9 @@ jobs:
       - name: Build
         run: npm run build
       - name: Install Python dependencies
-        run: docker run --rm --platform linux/arm64 -v $(pwd):/src python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommends npm && cd src && npx arc hydrate -v'
+        run: |
+          docker run --rm --platform linux/arm64 -v $(pwd):/src python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommends npm && cd src && npx arc hydrate -v'
+          sudo chown -R $(id -u):$(id -g) python/vendor
+      - uses: ./.github/actions/strip-python
+        with:
+          args: python/vendor --exclude python/vendor/astropy --tests
