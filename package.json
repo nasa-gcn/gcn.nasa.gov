@@ -136,7 +136,8 @@
     "rimraf": "^5.0.0",
     "sass": "^1.64.2",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "yarn": "^1.22.21"
   },
   "overrides": {
     "@architect/hydrate": "github:lpsinger/hydrate#pip-fixes"
