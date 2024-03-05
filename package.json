@@ -18,7 +18,7 @@
     "dev:sass": "sass --watch -Inode_modules/nasawds/src/theme -Inode_modules/@uswds -Inode_modules/@uswds/uswds/packages app:app",
     "dev:esbuild": "node esbuild.js --dev",
     "dev": "run-p \"dev:*\"",
-    "prepare": "husky install",
+    "prepare": "husky",
     "deploy": "arc deploy --prune --production",
     "clean": "rimraf --glob build/static app/css \"build/**/index.*\" \"build/**/metafile.*\" \"build/**/version.txt\" \"app/**/*.css\" \"app/**/*.css.map\" sam.json sam.yaml .cache python/vendor",
     "test": "jest",
