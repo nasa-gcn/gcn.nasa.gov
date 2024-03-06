@@ -22,10 +22,6 @@ export async function getSynonymsByUuid(uuid: string) {
       ':uuid': uuid,
     },
   })
-  if (!Items.length)
-    throw new Response(null, {
-      status: 404,
-    })
 
   return Items as Synonym[]
 }
