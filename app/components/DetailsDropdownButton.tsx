@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Button, Icon } from '@trussworks/react-uswds'
-import type { ButtonProps } from '@trussworks/react-uswds/lib/components/Button/Button'
+import type { ButtonProps } from 'node_modules/@trussworks/react-uswds/lib/components/Button/Button'
 import type { ReactNode } from 'react'
 
 export default function DetailsDropdownButton({
