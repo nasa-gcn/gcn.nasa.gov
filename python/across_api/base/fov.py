@@ -6,7 +6,6 @@ from typing import Optional, Union
 import astropy_healpix as ah  # type: ignore
 import astropy.units as u  # type: ignore
 from astropy.io.fits import FITS_rec  # type: ignore
-from scipy import stats  # type: ignore[import]
 import numpy as np
 from astropy.coordinates import SkyCoord  # type: ignore
 from astropy.time import Time  # type: ignore
@@ -17,6 +16,31 @@ from .pointing import PointingBase
 from .ephem import EphemBase
 
 HEALPIX_MAP_EVAL_ORDER = 9
+
+
+def norm_pdf(x: u.Quantity[u.deg], std: u.Quantity[u.deg]) -> np.ndarray:
+    """
+    Calculate the probability density function (PDF) of a standard normal distribution (mean=0).
+
+    Parameters
+    ----------
+    x
+        The value at which to calculate the PDF.
+    std
+        The standard deviation of the normal distribution.
+
+    Returns
+    -------
+        The probability density at the given x.
+    """
+
+    # Calculate the exponent term
+    exponent = -0.5 * np.square(x / std)
+
+    # Calculate the PDF using the simplified formula
+    pdf = (1 / (std * np.sqrt(2 * np.pi))) * np.exp(exponent)
+
+    return pdf.value
 
 
 def healpix_map_from_position_error(
@@ -53,7 +77,7 @@ def healpix_map_from_position_error(
     distance = hpcoord.separation(skycoord).to(u.deg)
 
     # Create the probability density distribution HEALPix map
-    prob = stats.norm(scale=error_radius).pdf(distance)
+    prob = norm_pdf(distance, std=error_radius)
 
     # Normalize it
     prob /= np.sum(prob)
