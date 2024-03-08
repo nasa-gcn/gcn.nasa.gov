@@ -221,12 +221,14 @@ export class ClientCredentialVendingMachine {
     } catch (e) {
       maybeThrow(e, 'not getting group descriptions')
     }
+
     const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(
       response?.Groups?.map(({ GroupName, Description }) => [
         GroupName,
         Description,
       ])?.filter(([GroupName]) => GroupName) ?? []
     )
+
     return [...this.groups]
       .sort()
       .sort((a, b) => Number(b === defaultGroup) - Number(a === defaultGroup))
