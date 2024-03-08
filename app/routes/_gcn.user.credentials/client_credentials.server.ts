@@ -48,7 +48,11 @@ export class ClientCredentialVendingMachine {
     if (!user) throw new Response('not signed in', { status: 403 })
     return new this(
       user.sub,
-      user.groups.filter((x) => x.startsWith('gcn.nasa.gov/kafka'))
+      user.groups.filter(
+        (x) =>
+          x.startsWith('gcn.nasa.gov/kafka') ||
+          x == 'gcn.nasa.gov/burstcube-too-submitter'
+      )
     )
   }
 
@@ -217,14 +221,12 @@ export class ClientCredentialVendingMachine {
     } catch (e) {
       maybeThrow(e, 'not getting group descriptions')
     }
-
     const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(
       response?.Groups?.map(({ GroupName, Description }) => [
         GroupName,
         Description,
       ])?.filter(([GroupName]) => GroupName) ?? []
     )
-
     return [...this.groups]
       .sort()
       .sort((a, b) => Number(b === defaultGroup) - Number(a === defaultGroup))
