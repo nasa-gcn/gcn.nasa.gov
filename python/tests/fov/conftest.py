@@ -3,6 +3,7 @@
 # All Rights Reserved.
 
 import pytest
+import pytest_asyncio
 from across_api.across.resolve import Resolve
 from astropy.coordinates import SkyCoord  # type: ignore[import]
 from astropy.time import Time  # type: ignore[import]
@@ -14,10 +15,11 @@ from across_api.burstcube.tle import BurstCubeTLE
 import astropy.units as u  # type: ignore[import]
 
 
-@pytest.fixture
-def AT2017gfo_skycoord():
+@pytest_asyncio.fixture
+async def AT2017gfo_skycoord():
     # Define the position of interesting event AT2017gfo
     r = Resolve(name="AT2017gfo")
+    await r.get()
     return SkyCoord(r.ra, r.dec, unit="deg")
 
 
@@ -30,8 +32,8 @@ def AT2017gfo_healpix_probability():
     return hdu[1].data["PROB"]
 
 
-@pytest.fixture
-def burstcube_fov():
+@pytest_asyncio.fixture
+async def burstcube_fov():
     # Define a TLE by hand. For the sake of this test, we're going to use the Fermi TLE on the day that GW170817 triggered.
     satname = "FGRST (GLAST)"
     tle1 = "1 33053U 08029A   17229.56317825 +.00000508 +00000-0 +12437-4 0  9995"
@@ -51,8 +53,9 @@ def burstcube_fov():
     eph = BurstCubeEphem(
         begin=trigger_time - 2 * u.s,
         end=trigger_time + 2 * u.s,
-        tle=tle.tle,
         stepsize=1 * u.s,
     )
+    eph.tle = tle.tle
+    await eph.get()
 
     return BurstCubeFOV(ephem=eph, time=trigger_time)

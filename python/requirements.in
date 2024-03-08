@@ -1,4 +1,5 @@
 --extra-index-url https://nasa-gcn.github.io/healpy-prerelease-pypi-index/simple/
+aioboto3
 architect-functions
 astropy
 astropy_healpix
@@ -6,9 +7,9 @@ cachetools
 email-validator
 fastapi
 healpy==0.1.dev1+g500357b
+httpx
 mangum
 python-multipart  # Required for file uploads in FastAPI; see https://fastapi.tiangolo.com/tutorial/request-files/
-requests
 shapely
 sgp4
 spacetrack

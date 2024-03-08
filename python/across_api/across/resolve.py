@@ -5,7 +5,7 @@
 import json
 from typing import Optional, Tuple
 
-import requests
+import httpx
 from astropy.coordinates.name_resolve import NameResolveError  # type: ignore
 from astropy.coordinates.sky_coordinate import SkyCoord  # type: ignore
 
@@ -15,7 +15,7 @@ from .schema import ResolveGetSchema, ResolveSchema
 ANTARES_URL = "https://api.antares.noirlab.edu/v1/loci"
 
 
-def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
+async def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
     """
     Query ANTARES API to find RA/Dec of a given ZTF source
 
@@ -38,7 +38,8 @@ def antares_radec(ztf_id: str) -> Tuple[Optional[float], Optional[float]]:
         "sort": "-properties.newest_alert_observation_time",
         "elasticsearch_query[locus_listing]": search_query,
     }
-    r = requests.get(ANTARES_URL, params=params)
+    async with httpx.AsyncClient() as client:
+        r = await client.get(ANTARES_URL, params=params)
     r.raise_for_status()
     antares_data = r.json()
     if antares_data["meta"]["count"] > 0:
@@ -91,10 +92,8 @@ class Resolve(ACROSSAPIBase):
         self.dec = None
         self.name = name
         self.resolver = None
-        if self.validate_get():
-            self.get()
 
-    def get(self) -> bool:
+    async def get(self) -> bool:
         """
         Retrieves the RA and Dec coordinates for a given name.
 
@@ -109,7 +108,7 @@ class Resolve(ACROSSAPIBase):
         """Do a name search"""
         # Check against the ANTARES broker
         if "ZTF" in self.name:
-            ra, dec = antares_radec(self.name)
+            ra, dec = await antares_radec(self.name)
             if ra is not None:
                 self.ra, self.dec = ra, dec
                 self.resolver = "ANTARES"

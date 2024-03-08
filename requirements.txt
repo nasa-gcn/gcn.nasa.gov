@@ -3,6 +3,7 @@ mypy
 ruff
 hypothesis
 pytest
+pytest-asyncio
 types-requests
 types-cachetools
 types-python-jose
