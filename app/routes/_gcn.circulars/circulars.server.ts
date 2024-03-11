@@ -455,7 +455,7 @@ export async function deleteChangeRequest(
     subject: 'GCN Circulars Change Request: Rejected',
     body: dedent`Your change request has been rejected for GCN Circular ${circularId}. 
     
-    View it at ${origin}/circulars/${circularId}`,
+    View the Circular at ${origin}/circulars/${circularId}`,
   })
 }
 
