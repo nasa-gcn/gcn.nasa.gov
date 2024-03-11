@@ -79,6 +79,11 @@ export default function () {
         oldString={circular.subject}
         newString={correction.subject}
       />
+      <h3>Format</h3>
+      <DiffedContent
+        oldString={circular.format ?? 'text/plain'}
+        newString={correction.format}
+      />
       <h3>Body</h3>
       <DiffedContent oldString={circular.body} newString={correction.body} />
       <Form method="POST">
