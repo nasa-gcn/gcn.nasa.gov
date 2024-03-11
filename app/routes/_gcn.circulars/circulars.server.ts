@@ -395,7 +395,7 @@ export async function createChangeRequest(
   await sendEmail({
     to: [user.email],
     fromName: 'GCN Circulars',
-    subject: 'GCN Circulars Change Request: Request Created',
+    subject: 'GCN Circulars Change Request: Received',
     body: dedent`Your change request has been created for GCN Circular ${item.circularId}. 
     
     You will receive another email when your request has been reviewed.`,
