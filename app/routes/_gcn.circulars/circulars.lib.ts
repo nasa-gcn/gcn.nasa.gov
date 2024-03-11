@@ -35,6 +35,7 @@ export interface CircularChangeRequest extends CircularMetadata {
   body: string
   requestor: string
   requestorSub: string
+  format: CircularFormat
 }
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]

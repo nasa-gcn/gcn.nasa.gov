@@ -481,6 +481,7 @@ export async function approveChangeRequest(
     subject: changeRequest.subject,
     editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
     editedOn: Date.now(),
+    format: changeRequest.format,
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)
