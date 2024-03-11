@@ -15,6 +15,7 @@ import {
 } from '@nasa-gcn/dynamodb-autoincrement'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
+import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_gcn._auth/user.server'
 import {
@@ -29,6 +30,8 @@ import type {
   CircularChangeRequest,
   CircularMetadata,
 } from './circulars.lib'
+import { sendEmail } from '~/lib/email.server'
+import { origin } from '~/lib/env.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -385,7 +388,17 @@ export async function createChangeRequest(
   await db.circulars_change_requests.put({
     ...item,
     requestorSub: user.sub,
+    requestorEmail: user.email,
     requestor,
+  })
+
+  await sendEmail({
+    to: [user.email],
+    fromName: 'GCN Circulars',
+    subject: 'GCN Circulars Change Request: Request Created',
+    body: dedent`Your change request has been created for GCN Circular ${item.circularId}. 
+    
+    You will receive another email when your request has been reviewed.`,
   })
 }
 
@@ -432,7 +445,18 @@ export async function deleteChangeRequest(
       { status: 403 }
     )
 
+  const requestorEmail = (await getChangeRequest(circularId, requestorSub))
+    .requestorEmail
   await deleteChangeRequestRaw(circularId, requestorSub)
+
+  await sendEmail({
+    to: [requestorEmail],
+    fromName: 'GCN Circulars',
+    subject: 'GCN Circulars Change Request: Rejected',
+    body: dedent`Your change request has been rejected for GCN Circular ${circularId}. 
+    
+    View it at ${origin}/circulars/${circularId}`,
+  })
 }
 
 /**
@@ -485,6 +509,15 @@ export async function approveChangeRequest(
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)
+
+  await sendEmail({
+    to: [changeRequest.requestorEmail],
+    fromName: 'GCN Circulars',
+    subject: 'GCN Circulars Change Request: Approved',
+    body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}. 
+    
+    View it at ${origin}/circulars/${changeRequest.circularId}`,
+  })
 }
 
 /**
