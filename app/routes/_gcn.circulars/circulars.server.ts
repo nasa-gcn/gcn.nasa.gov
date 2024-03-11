@@ -516,7 +516,7 @@ export async function approveChangeRequest(
     subject: 'GCN Circulars Change Request: Approved',
     body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}. 
     
-    View it at ${origin}/circulars/${changeRequest.circularId}`,
+    View the Circular at ${origin}/circulars/${changeRequest.circularId}`,
   })
 }
 
