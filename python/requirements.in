@@ -5,7 +5,7 @@ astropy_healpix
 cachetools
 email-validator
 fastapi
-healpy==0.1.dev1+g500357b
+healpy==1.16.6
 mangum
 python-multipart  # Required for file uploads in FastAPI; see https://fastapi.tiangolo.com/tutorial/request-files/
 requests

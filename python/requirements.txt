@@ -13,20 +13,20 @@ anyio==3.7.1
     #   httpx
     #   starlette
 architect-functions==1.0.0
-    # via -r requirements.in
+    # via -r python/requirements.in
 astropy==6.0.0
     # via
-    #   -r requirements.in
+    #   -r python/requirements.in
     #   astropy-healpix
     #   healpy
 astropy-healpix==1.0.2
-    # via -r requirements.in
+    # via -r python/requirements.in
 astropy-iers-data==0.2024.2.5.0.30.52
     # via astropy
 attrs==23.2.0
     # via rush
 cachetools==5.3.2
-    # via -r requirements.in
+    # via -r python/requirements.in
 certifi==2023.11.17
     # via
     #   httpcore
@@ -36,20 +36,26 @@ cffi==1.16.0
     # via cryptography
 charset-normalizer==3.3.2
     # via requests
+contourpy==1.2.0
+    # via matplotlib
 cryptography==42.0.4
     # via architect-functions
+cycler==0.12.1
+    # via matplotlib
 dnspython==2.4.2
     # via email-validator
 ecdsa==0.18.0
     # via python-jose
 email-validator==2.1.0.post1
-    # via -r requirements.in
+    # via -r python/requirements.in
 fastapi==0.109.2
-    # via -r requirements.in
+    # via -r python/requirements.in
+fonttools==4.49.0
+    # via matplotlib
 h11==0.14.0
     # via httpcore
-healpy==0.1.dev1+g500357b
-    # via -r requirements.in
+healpy==1.16.6
+    # via -r python/requirements.in
 httpcore==1.0.2
     # via httpx
 httpx==0.26.0
@@ -60,19 +66,30 @@ idna==3.6
     #   email-validator
     #   httpx
     #   requests
+kiwisolver==1.4.5
+    # via matplotlib
 logbook==1.7.0.post0
     # via spacetrack
 mangum==0.17.0
-    # via -r requirements.in
+    # via -r python/requirements.in
+matplotlib==3.8.3
+    # via healpy
 numpy==1.26.2
     # via
     #   astropy
     #   astropy-healpix
+    #   contourpy
     #   healpy
+    #   matplotlib
     #   pyerfa
+    #   scipy
     #   shapely
 packaging==23.2
-    # via astropy
+    # via
+    #   astropy
+    #   matplotlib
+pillow==10.2.0
+    # via matplotlib
 pyasn1==0.5.1
     # via
     #   python-jose
@@ -85,35 +102,43 @@ pydantic-core==2.14.5
     # via pydantic
 pyerfa==2.0.1.1
     # via astropy
+pyparsing==3.1.2
+    # via matplotlib
+python-dateutil==2.9.0.post0
+    # via matplotlib
 python-jose==3.3.0
     # via architect-functions
 python-multipart==0.0.9
-    # via -r requirements.in
+    # via -r python/requirements.in
 pyyaml==6.0.1
     # via astropy
 represent==2.0
     # via spacetrack
 requests==2.31.0
-    # via -r requirements.in
+    # via -r python/requirements.in
 rsa==4.9
     # via python-jose
 rush==2021.4.0
     # via spacetrack
+scipy==1.12.0
+    # via healpy
 sgp4==2.23
-    # via -r requirements.in
+    # via -r python/requirements.in
 shapely==2.0.2
-    # via -r requirements.in
+    # via -r python/requirements.in
 simplejson==3.19.2
     # via architect-functions
 six==1.16.0
-    # via ecdsa
+    # via
+    #   ecdsa
+    #   python-dateutil
 sniffio==1.3.0
     # via
     #   anyio
     #   httpx
     #   spacetrack
 spacetrack==1.2.0
-    # via -r requirements.in
+    # via -r python/requirements.in
 starlette==0.36.3
     # via fastapi
 typing-extensions==4.9.0
