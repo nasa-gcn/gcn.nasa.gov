@@ -137,7 +137,7 @@
     "sass": "^1.64.2",
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.2",
-    "yarn": "^1.22.21"
+    "yarn": "^1.22.22"
   },
   "overrides": {
     "@architect/hydrate": "github:lpsinger/hydrate#pip-fixes"
