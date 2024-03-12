@@ -9,6 +9,7 @@ from astropy.io import fits  # type: ignore
 from fastapi import Depends, File, HTTPException, Security, UploadFile, status
 
 from ..auth.api import claims, scope_authorize
+from ..base.api import app
 from ..base.depends import (
     ErrorRadiusDep,
     ExposureDep,
@@ -20,7 +21,6 @@ from ..base.depends import (
     OptionalRaDecDep,
     TriggerTimeDep,
 )
-from ..base.api import app
 from .schema import BurstCubeTOORequestsSchema, BurstCubeTOOSchema, BurstCubeTriggerInfo
 from .toorequest import BurstCubeTOO, BurstCubeTOORequests
 
@@ -91,7 +91,7 @@ async def burstcube_too_submit(
     # and healpix_scheme attributes.
     if healpix_file is not None:
         too.healpix_loc, too.healpix_scheme = read_healpix_file(healpix_file)
-    too.post()
+    await too.post()
     return too.schema
 
 
@@ -134,7 +134,7 @@ async def burstcube_too_update(
     # and healpix_scheme attributes.
     if healpix_file is not None:
         too.healpix_loc, too.healpix_scheme = read_healpix_file(healpix_file)
-    too.put()
+    await too.put()
     return too.schema
 
 
@@ -147,12 +147,14 @@ async def burstcube_too_requests(
     """
     Endpoint to retrieve BurstCube multiple TOO requests.
     """
-    return BurstCubeTOORequests(
+    toos = BurstCubeTOORequests(
         begin=daterange["begin"],
         end=daterange["end"],
         duration=duration,
         limit=limit,
-    ).schema
+    )
+    await toos.get()
+    return toos.schema
 
 
 @app.get("/burstcube/too/{id}", status_code=status.HTTP_200_OK)
@@ -163,7 +165,7 @@ async def burstcube_too(
     Retrieve a BurstCube Target of Opportunity (TOO) by ID.
     """
     too = BurstCubeTOO(id=id)
-    too.get()
+    await too.get()
     return too.schema
 
 
@@ -182,5 +184,5 @@ async def burstcube_delete_too(
     Delete a BurstCube Target of Opportunity (TOO) with the given ID.
     """
     too = BurstCubeTOO(sub=credential["sub"], id=id)
-    too.delete()
+    await too.delete()
     return too.schema

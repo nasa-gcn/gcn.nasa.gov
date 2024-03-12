@@ -23,6 +23,7 @@ from astropy.time import Time  # type: ignore[import]
 from skyfield.api import EarthSatellite, load, utc, wgs84  # type: ignore
 from swifttools.swift_too import SAA, VisQuery  # type: ignore[import]
 from shapely import Polygon, points  # type: ignore[import]
+import pytest_asyncio
 
 
 def make_windows(insaa, timestamp):
@@ -39,8 +40,8 @@ def make_windows(insaa, timestamp):
     return np.array([(win[0].unix, win[1].unix) for win in windows])
 
 
-@pytest.fixture
-def swift_ephem():
+@pytest_asyncio.fixture
+async def swift_ephem():
     # Define a TLE by hand
     satname = "SWIFT"
     tle1 = "1 28485U 04047A   24029.43721350  .00012795  00000-0  63383-3 0  9994"
@@ -51,7 +52,10 @@ def swift_ephem():
     tle = SwiftTLE(epoch=Time("2024-01-29"), tle=tleentry)
 
     # Calculate a Swift Ephemeris
-    return SwiftEphem(begin=Time("2024-01-29"), end=Time("2024-01-30"), tle=tle.tle)
+    ephem = SwiftEphem(begin=Time("2024-01-29"), end=Time("2024-01-30"))
+    ephem.tle = tle.tle
+    await ephem.get()
+    return ephem
 
 
 @pytest.fixture
@@ -73,8 +77,8 @@ def burstcube_tle():
     return tleentry
 
 
-@pytest.fixture
-def burstcube_ephem(burstcube_tle):
+@pytest_asyncio.fixture
+async def burstcube_ephem(burstcube_tle):
     """BurstCube Ephemeris fixture"""
     stepsize = 60 * u.s
 
@@ -82,9 +86,10 @@ def burstcube_ephem(burstcube_tle):
     eph = BurstCubeEphem(
         begin=Time("2024-01-29"),
         end=Time("2024-01-30"),
-        tle=burstcube_tle,
         stepsize=stepsize,
     )
+    eph.tle = burstcube_tle
+    await eph.get()
     return eph
 
 

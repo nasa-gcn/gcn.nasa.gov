@@ -3,6 +3,7 @@
 # All Rights Reserved.
 
 import pytest
+import pytest_asyncio
 from across_api.base.schema import TLEEntry  # type: ignore[import]
 from across_api.burstcube.ephem import BurstCubeEphem  # type: ignore[import]
 from across_api.swift.ephem import SwiftEphem  # type: ignore[import]
@@ -37,12 +38,13 @@ def burstcube_tle():
     return tleentry
 
 
-@pytest.fixture
-def burstcube_ephem(burstcube_tle):
+@pytest_asyncio.fixture
+async def burstcube_ephem(burstcube_tle):
     # Calculate a BurstCube Ephemeris
-    return BurstCubeEphem(
-        begin=Time("2024-01-01"), end=Time("2024-01-01 00:05:00"), tle=burstcube_tle
-    )
+    ephem = BurstCubeEphem(begin=Time("2024-01-01"), end=Time("2024-01-01 00:05:00"))
+    ephem.tle = burstcube_tle
+    await ephem.get()
+    return ephem
 
 
 @pytest.fixture
@@ -56,12 +58,13 @@ def swift_tle():
     return tleentry
 
 
-@pytest.fixture
-def swift_ephem(swift_tle):
+@pytest_asyncio.fixture
+async def swift_ephem(swift_tle):
     # Calculate a Swift Ephemeris
-    return SwiftEphem(
-        begin=Time("2024-01-29"), end=Time("2024-01-29 00:05:00"), tle=swift_tle
-    )
+    ephem = SwiftEphem(begin=Time("2024-01-29"), end=Time("2024-01-29 00:05:00"))
+    ephem.tle = swift_tle
+    await ephem.get()
+    return ephem
 
 
 @pytest.fixture

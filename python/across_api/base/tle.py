@@ -7,11 +7,11 @@ import logging
 import os
 from typing import List, Optional
 
-import requests
+import httpx
 from astropy.time import Time  # type: ignore
 from astropy.units import Quantity  # type: ignore
-from requests import HTTPError
-from spacetrack import SpaceTrackClient  # type: ignore
+from httpx import HTTPError
+from spacetrack import AsyncSpaceTrackClient  # type: ignore
 
 from .common import ACROSSAPIBase
 from .schema import TLEEntry, TLEGetSchema, TLESchema
@@ -102,10 +102,8 @@ class TLEBase(ACROSSAPIBase):
             self.tles = [tle]
         else:
             self.tles = []
-        if self.validate_get():
-            self.get()
 
-    def read_tle_db(self) -> bool:
+    async def read_tle_db(self) -> bool:
         """
         Read the best TLE for a given epoch from the local database of TLEs
 
@@ -115,7 +113,7 @@ class TLEBase(ACROSSAPIBase):
         """
         # Read TLEs from the database for a given `tle_name` and epoch within
         # the allowed range
-        self.tles = TLEEntry.find_tles_between_epochs(
+        self.tles = await TLEEntry.find_tles_between_epochs(
             self.tle_name,
             self.epoch - self.tle_bad,
             self.epoch + self.tle_bad,
@@ -123,7 +121,7 @@ class TLEBase(ACROSSAPIBase):
 
         return True
 
-    def read_tle_web(self) -> bool:
+    async def read_tle_web(self) -> bool:
         """
         Read TLE from dedicated weblink.
 
@@ -143,7 +141,8 @@ class TLEBase(ACROSSAPIBase):
             return False
 
         # Download TLE from internet
-        r = requests.get(self.tle_url)
+        async with httpx.AsyncClient() as client:
+            r = await client.get(self.tle_url)
         try:
             # Check for HTTP errors
             r.raise_for_status()
@@ -172,7 +171,7 @@ class TLEBase(ACROSSAPIBase):
 
         return False
 
-    def read_tle_space_track(self) -> bool:
+    async def read_tle_space_track(self) -> bool:
         """
         Read TLE from Space-Track.org.
 
@@ -195,19 +194,20 @@ class TLEBase(ACROSSAPIBase):
         epoch_stop = self.epoch + self.tle_bad
 
         # Log into space-track.org
-        st = SpaceTrackClient(
+        async with AsyncSpaceTrackClient(
             identity=os.environ.get("SPACE_TRACK_USER"),
             password=os.environ.get("SPACE_TRACK_PASS"),
-        )
+        ) as st:
+            await st.authenticate()
 
-        # Fetch the TLEs between the requested epochs
-        tletext = st.tle(
-            norad_cat_id=self.tle_norad_id,
-            orderby="epoch desc",
-            limit=22,
-            format="tle",
-            epoch=f">{epoch_start.datetime},<{epoch_stop.datetime}",
-        )
+            # Fetch the TLEs between the requested epochs
+            tletext = await st.tle(
+                norad_cat_id=self.tle_norad_id,
+                orderby="epoch desc",
+                limit=22,
+                format="tle",
+                epoch=f">{epoch_start.datetime},<{epoch_stop.datetime}",
+            )
         # Check if we got a return
         if tletext == "":
             return False
@@ -234,7 +234,7 @@ class TLEBase(ACROSSAPIBase):
 
         return False
 
-    def read_tle_concat(self) -> bool:
+    async def read_tle_concat(self) -> bool:
         """
         Read TLEs in the CONCAT MISSION_TLE_ARCHIVE.tle format. This format is
         used by the CONCAT to store TLEs for various missions. The format
@@ -250,7 +250,8 @@ class TLEBase(ACROSSAPIBase):
             return False
 
         # Download TLEs from internet
-        r = requests.get(self.tle_concat)
+        async with httpx.AsyncClient() as client:
+            r = await client.get(self.tle_concat)
         try:
             # Check for HTTP errors
             r.raise_for_status()
@@ -314,7 +315,7 @@ class TLEBase(ACROSSAPIBase):
             return True
         return False
 
-    def get(self) -> bool:
+    async def get(self) -> bool:
         """
         Find in the best TLE for a given epoch. This method will first try to
         read the TLE from the local database. If that fails, it will try to
@@ -350,17 +351,17 @@ class TLEBase(ACROSSAPIBase):
             return True
 
         # Fetch TLE from the TLE database
-        if self.read_tle_db() is True:
+        if await self.read_tle_db() is True:
             if self.tle is not None:
                 return True
 
         # Next try querying space-track.org for the TLE. This will only work if
         # the environment variables SPACE_TRACK_USER and
         # SPACE_TRACK_PASS are set, and valid.
-        if self.read_tle_space_track() is True:
+        if await self.read_tle_space_track() is True:
             # Write the TLE to the database for next time
             if self.tle is not None:
-                self.tle.write()
+                await self.tle.write()
                 return True
 
         # Next try try reading the TLE given in the concatenated format at the
@@ -373,7 +374,7 @@ class TLEBase(ACROSSAPIBase):
             if self.read_tle_concat() is True:
                 # Write the TLE to the database for next time
                 if self.tle is not None:
-                    self.tle.write()
+                    await self.tle.write()
                     return True
 
         # Finally try reading from the web at the URL given by `tle_url`. Note
@@ -385,7 +386,7 @@ class TLEBase(ACROSSAPIBase):
                 if self.read_tle_web() is True:
                     # Write the TLE to the database for next time
                     if self.tle is not None:
-                        self.tle.write()
+                        await self.tle.write()
                         return True
 
         # If we did not find any valid TLEs, then return False

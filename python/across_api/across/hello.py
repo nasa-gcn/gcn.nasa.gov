@@ -33,10 +33,8 @@ class Hello(ACROSSAPIBase):
             Your name
         """
         self.name = name
-        if self.validate_get():
-            self.get()
 
-    def get(self) -> bool:
+    async def get(self) -> bool:
         """
         GET method for ACROSS API Hello class.
 

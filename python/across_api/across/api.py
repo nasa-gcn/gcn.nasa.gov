@@ -6,8 +6,8 @@ from typing import Annotated, Optional
 
 from fastapi import Depends, Query, Security
 
-from ..base.api import app
 from ..auth.api import scope_authorize
+from ..base.api import app
 from .hello import Hello
 from .resolve import Resolve
 from .schema import HelloSchema, ResolveSchema
@@ -40,12 +40,14 @@ YourNameDep = Annotated[Optional[str], Depends(your_name)]
 
 # API End points
 @app.get("/")
-def hello(name: YourNameDep) -> HelloSchema:
+async def hello(name: YourNameDep) -> HelloSchema:
     """
     This function returns a JSON response with a greeting message and an optional name parameter.
     If the name parameter is provided, the greeting message will include the name.
     """
-    return Hello(name=name).schema
+    hello = Hello(name=name)
+    await hello.get()
+    return hello.schema
 
 
 @app.get(
@@ -59,12 +61,16 @@ async def secure_hello(name: YourNameDep) -> HelloSchema:
     This function returns a JSON response with a greeting message and an optional name parameter.
     If the name parameter is provided, the greeting message will include the name.
     """
-    return Hello(name=name).schema
+    hello = Hello(name=name)
+    await hello.get()
+    return hello.schema
 
 
 @app.get("/across/resolve")
-def resolve(name: SourceNameDep) -> ResolveSchema:
+async def resolve(name: SourceNameDep) -> ResolveSchema:
     """
     Resolve the name of an astronomical object to its coordinates.
     """
-    return Resolve(name=name).schema
+    resolve = Resolve(name=name)
+    await resolve.get()
+    return resolve.schema
