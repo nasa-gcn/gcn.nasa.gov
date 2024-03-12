@@ -52,6 +52,11 @@ acrossapi_tle
 burstcube_too
   id *String
 
+burstcube_too_history
+  id *String
+  version **Number
+  PointInTimeRecovery true
+
 sessions
   _idx *String
   _ttl TTL
