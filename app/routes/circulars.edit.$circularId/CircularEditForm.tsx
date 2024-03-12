@@ -71,7 +71,7 @@ function SyntaxExample({
   )
 }
 
-function SyntaxReference() {
+export function SyntaxReference() {
   return (
     <>
       <h3>GCN Circulars cross-reference syntax</h3>

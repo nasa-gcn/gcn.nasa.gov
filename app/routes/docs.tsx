@@ -50,6 +50,13 @@ export default function () {
                     <NavLink key="styleguide" to="circulars/styleguide">
                       Style Guide
                     </NavLink>,
+                    <>
+                      {useFeature('CIRCULARS_MARKDOWN') && (
+                        <NavLink key="markdown" to="circulars/markdown">
+                          Markdown
+                        </NavLink>
+                      )}
+                    </>,
                   ]}
                 />
               </>,
