@@ -11,9 +11,7 @@ aioboto3==12.3.0
     #   -r requirements.in
     #   dynamodb-autoincrement
 aiobotocore[boto3]==2.11.2
-    # via
-    #   aioboto3
-    #   aiobotocore
+    # via aioboto3
 aiohttp==3.9.3
     # via aiobotocore
 aioitertools==0.11.0
@@ -80,7 +78,7 @@ frozenlist==1.4.1
     #   aiosignal
 h11==0.14.0
     # via httpcore
-healpy==0.1.dev1+g500357b
+healpy==0.1.dev1+g500357b ; platform_system != "Windows"
     # via -r requirements.in
 httpcore==1.0.2
     # via httpx

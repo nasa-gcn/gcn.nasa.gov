@@ -7,7 +7,7 @@ cachetools
 dynamodb-autoincrement>=0.2.0
 email-validator
 fastapi
-healpy==0.1.dev1+g500357b
+healpy==0.1.dev1+g500357b; platform_system!="Windows"  # Healpy does not have any Windows builds; see https://github.com/healpy/healpy/issues/25
 httpx
 mangum
 python-multipart  # Required for file uploads in FastAPI; see https://fastapi.tiangolo.com/tutorial/request-files/
