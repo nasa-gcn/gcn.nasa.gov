@@ -557,15 +557,15 @@ export function ClientSampleCode({
             >
               Apache Kafka
             </a>{' '}
-            or{' '}
+            version 3.4.0 or newer or{' '}
             <a
               rel="external"
               href="https://docs.confluent.io/kafka/operations-tools/kafka-tools.html"
             >
               Confluent
-            </a>
-            . However, they should work with most Java code that uses the
-            official Apache Kafka client libraries.
+            </a>{' '}
+            7.4.x or newer. However, they should work with most Java code that
+            uses the official Apache Kafka client libraries.
           </p>
           <p className="usa-paragraph">
             Save the configuration below to a file called{' '}
