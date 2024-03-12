@@ -5,6 +5,7 @@
 import hashlib
 import json
 from arc.tables import name  # type: ignore[import]
+from arc._lib import use_aws  # type: ignore[import]
 from dataclasses import dataclass
 from decimal import Decimal  # type: ignore[import]
 from functools import cached_property
@@ -19,6 +20,7 @@ from astropy.coordinates import (  # type: ignore[import]
 )
 from astropy.time import Time  # type: ignore[import]
 from boto3.dynamodb.conditions import Key  # type: ignore[import]
+from dynamodb_autoincrement import DynamoDBHistoryAutoIncrement  # type: ignore[import]
 from fastapi import HTTPException
 
 from ..base.common import ACROSSAPIBase
@@ -169,8 +171,16 @@ class BurstCubeTOO(ACROSSAPIBase):
                 # Add fixed partition key for the GSI
                 json_too["gsipk"] = "1"
                 async with dynamodb_resource() as dynamodb:
-                    table = await dynamodb.Table(name(BurstCubeTOOSchema.__tablename__))
-                    await table.put_item(Item=json_too)
+                    table = DynamoDBHistoryAutoIncrement(
+                        dynamodb=dynamodb,
+                        counter_table_name=name(BurstCubeTOOSchema.__tablename__),
+                        counter_table_key={"id": self.id},
+                        attribute_name="version",
+                        table_name=name(BurstCubeTOOSchema.__tablename__ + "_history"),
+                        initial_value=1,
+                        dangerously=False if use_aws() else True,
+                    )
+                    await table.put(item=json_too)
             return True
         return False
 
@@ -219,7 +229,18 @@ class BurstCubeTOO(ACROSSAPIBase):
             self.modified_on = Time.now().datetime.isoformat()
             json_too = json.loads(self.schema.model_dump_json(), parse_float=Decimal)
             json_too["gsipk"] = "1"
-            await table.put_item(Item=json_too)
+            # Write updated BurstCubeTOO to the database, recording old version
+            # in history table
+            table = DynamoDBHistoryAutoIncrement(
+                dynamodb=dynamodb,
+                counter_table_name=name(BurstCubeTOOSchema.__tablename__),
+                counter_table_key={"id": self.id},
+                attribute_name="version",
+                table_name=name(BurstCubeTOOSchema.__tablename__ + "_history"),
+                initial_value=1,
+                dangerously=False if use_aws() else True,
+            )
+            await table.put(item=json_too)
 
         return True
 
