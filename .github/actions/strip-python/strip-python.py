@@ -55,7 +55,7 @@ def should_include(path: Path):
 for path in args.paths:
     if args.tests:
         for testdir in chain(path.glob("**/test"), path.glob("**/tests")):
-            if testdir.is_dir():
+            if testdir.is_dir() and should_include(testdir):
                 if args.verbose:
                     shell_print("rm", "-rf", testdir)
                 # FIXME: use Path.walk in Python >= 3.12
@@ -71,12 +71,13 @@ for path in args.paths:
                         for name in dirs:
                             (root / name).rmdir()
         for testfile in chain(path.glob("**/test_*.py"), path.glob("**/test_*.pyc")):
-            if args.verbose:
-                shell_print("rm", testfile)
-            if not args.dry_run:
-                count += 1
-                size_saved += testfile.stat().st_size
-                testfile.unlink()
+            if should_include(testdir):
+                if args.verbose:
+                    shell_print("rm", testfile)
+                if not args.dry_run:
+                    count += 1
+                    size_saved += testfile.stat().st_size
+                    testfile.unlink()
 
     for pycache in path.glob("**/__pycache__"):
         if pycache.is_dir() and should_include(pycache):
