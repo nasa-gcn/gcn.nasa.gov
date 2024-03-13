@@ -30,7 +30,7 @@ export default {
     return `eslint --cache --fix --max-warnings 0 ${filteredFiles}`
   },
   '*.{ts,tsx}': () => 'tsc',
-  '*.{css,scss,cjs,mjs,js,json,jsx,md,mdx,ts,tsx}': async (files) => {
+  '*.{css,scss,cjs,mjs,js,json,jsx,md,mdx,ts,tsx,yml}': async (files) => {
     const filteredFiles = prettierRemoveIgnoredFiles(files)
     if (!files) return []
     return `prettier --write ${filteredFiles}`
