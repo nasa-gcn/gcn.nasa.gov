@@ -1,13 +1,50 @@
-name: Deploy to AWS
+name: Deploy
+
 on:
   push:
     branches:
       - main
-permissions:
-  contents: read
-  id-token: write
+  pull_request:
+    branches:
+      - main
+
 jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
+      - name: NPM Install
+        run: npm ci
+      - name: Build
+        run: npm run build
+      - name: Install Python dependencies
+        run: |
+          docker run --rm --platform linux/arm64 -v $(pwd):/src python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommends npm && cd src && npx arc hydrate -v'
+          sudo chown -R $(id -u):$(id -g) python/vendor
+      - name: Strip Python code
+        uses: ./.github/actions/strip-python
+        with:
+          args: python/vendor --exclude python/vendor/astropy --tests
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          path: |
+            build
+            python/vendor
+
   deploy:
+    name: Deploy to AWS
+    needs: build
+    if: github.event_name == 'push' && github.ref == github.event.repository.default_branch
     strategy:
       fail-fast: false
       matrix:
@@ -21,6 +58,9 @@ jobs:
     environment:
       name: ${{ matrix.env }}
       url: ${{ matrix.url }}
+    permissions:
+      contents: read
+      id-token: write
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -28,25 +68,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64
       - name: NPM Install
         run: npm ci
-      - name: Build
-        run: npm run build
-      - name: Install Python dependencies
-        run: |
-          docker run --rm --platform linux/arm64 -v $(pwd):/src python:3.11 sh -c 'apt-get update && apt-get -y install --no-install-recommends npm && cd src && npx arc hydrate -v'
-          sudo chown -R $(id -u):$(id -g) python/vendor
-      - uses: ./.github/actions/strip-python
-        with:
-          args: python/vendor --exclude python/vendor/astropy --tests
-      - name: Configure aws credentials
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+      - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           role-to-assume: ${{ secrets.AWS_IAM_ROLE }}
