@@ -138,7 +138,7 @@ async def burstcube_too_update(
     return too.schema
 
 
-@app.get("/burstcube/too/", status_code=status.HTTP_200_OK)
+@app.get("/burstcube/too", status_code=status.HTTP_200_OK)
 async def burstcube_too_requests(
     daterange: OptionalDateRangeDep,
     duration: OptionalDurationDep,
