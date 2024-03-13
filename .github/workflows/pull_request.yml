@@ -39,4 +39,4 @@ jobs:
         run: mypy python
 
       - name: Upload to Codecov.io
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v4
