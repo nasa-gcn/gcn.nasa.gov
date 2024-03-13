@@ -4,6 +4,7 @@ handle:
 ---
 
 import { Link } from '@remix-run/react'
+import { Alert } from '@trussworks/react-uswds'
 
 import deploymentScreenshot from './screenshot.png'
 
@@ -76,6 +77,13 @@ To approve and trigger a deployment to testing or production, follow these steps
 5. Tap the `Approve and deploy` button.
 
 The deployment should take about 5 minutes.
+
+<Alert type="warning" headingLevel="h4" heading="Avoid concurrent deployments">
+  Be careful not to trigger multiple deployments to the same stage at the same time because [GitHub currently has no way to prevent multiple deployment jobs for the same environment from running simultaneously](https://github.com/orgs/community/discussions/17401).
+
+If a deployment is already in progress and you trigger another deployment to the same stage before it finishes, then the second deployment will probably fail harmlessly because AWS CloudFormation does not permit updating a stack while an update is already in progress.
+
+</Alert>
 
 <img
   src={deploymentScreenshot}
