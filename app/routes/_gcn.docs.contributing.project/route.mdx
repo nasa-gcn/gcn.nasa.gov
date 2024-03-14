@@ -1,0 +1,196 @@
+---
+handle:
+  breadcrumb: Project Board
+---
+
+import { Table } from '@trussworks/react-uswds'
+
+import issueScreenshot from './issue.png'
+import openTicketScreenshot from './openTicket.png'
+import projectBoardScreenshot from './projectBoard.png'
+import ticketMetadata from './ticketMetadata.png'
+
+# Github Project Board
+
+[GCN Project Board](https://github.com/orgs/nasa-gcn/projects/6)
+
+## Philosophy
+
+We use github Projects to organize our development process.
+We chose github Projects becase we already extensively use github Issues and Milestones.
+[Github's Projects Documentation](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects)
+
+We have a total of six possible ticket states.
+
+<Table bordered compact stackedStyle="headers">
+  <thead>
+    <tr>
+      <th scope="col">Status</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>No Status</td>
+      <td>
+        These are tickets that have not been fully groomed or pointed yet.
+      </td>
+    </tr>
+    <tr>
+      <td>Backlog</td>
+      <td>
+        These are tickets that are fully groomed and pointed and are ready to
+        go. They may be planned for a particular sprint or have no sprint
+        attached.
+      </td>
+    </tr>
+    <tr>
+      <td>In Progress</td>
+      <td>
+        These are tickets that are under way. A user should be assigned to any
+        tickets in progress.
+      </td>
+    </tr>
+    <tr>
+      <td>In Review</td>
+      <td>
+        We manually put tickets into review status when PRs are ready for
+        review.
+      </td>
+    </tr>
+    <tr>
+      <td>Blocked</td>
+      <td>
+        This is for tasks that are blocked and waiting on something from a
+        source other than the assigned user.
+      </td>
+    </tr>
+    <tr>
+      <td>Done</td>
+      <td>
+        These are tickets that have merged PRs or completed tasks. Use github
+        trigger words ("closes #123") to ensure tickets are linked to PRs and
+        this will automatically happen on merge.
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+They appear visually as columns on our project board as seen in this screenshot.
+
+<img
+  src={projectBoardScreenshot}
+  alt="Screen shot of GCN Project in GitHub Projects"
+  width="3452"
+  height="1986"
+  className="height-auto"
+/>
+
+When you open a specific Issue while on the Project board, you will see ticket details open on the right hand side of the window. This is where you can find ticket metadata.
+
+<img
+  src={openTicketScreenshot}
+  alt="Screen shot of and open ticket on the GCN Project in GitHub Projects"
+  width="2242"
+  height="1964"
+  className="height-auto"
+/>
+
+Project specific metadata can be found by scrolling down in the right hand Issue pane. There are other types of ticket metadata preceding and following this section. The github Project specific metadata section looks like the following screenshot.
+
+<img
+  src={ticketMetadata}
+  alt="Screen shot of ticket Project metadata in GitHub Project"
+  width="1216"
+  height="542"
+  className="height-auto"
+/>
+
+We create Issues for all work. All Issues should have a detailed title, description, and acceptance criteria. All issues must be pointed before moving into the Backlog or In Progress. Some Project metadata is also editable from an Issue page.
+
+<img
+  src={issueScreenshot}
+  alt="Screen shot of a GitHub Issue"
+  width="2548"
+  height="1972"
+  className="height-auto"
+/>
+
+## Pointing
+
+We point tickets as a group during planning meetings.
+We use the description and acceptance criteria written in the github Issue to ensure group understanding of the work.
+Once we have agreed that we understand the scope and request, we vote on the level of complexity for that body of work.
+We use the unique numbers in the fibbonacci sequence to represent complexity. We only go up to 21 points, making our options 1, 2, 3, 5, 8, 13, and 21. We also have the additional options of `coffee` or `question mark`.
+
+<Table bordered compact stackedStyle="headers">
+  <thead>
+    <tr>
+      <th scope="col">Complexity</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>Something incredibly straightforward such as a copy fix.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>A small uncomplicated change</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>The average bugfix or small feature</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>This is a more robust feature or a more complex bug</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>
+        This is quite large. It may need to be broken down into smaller steps
+        where possible.
+      </td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>
+        This is where we start deeply questioning. If a ticket is 13 points, it
+        is possible that it is not broken down into small enough steps and would
+        benefit from further breaking down. Or perhapse the acceptance criteria
+        are too ambiguous.
+      </td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>
+        This is a wildly difficult task. This will take more than an
+        iteration/sprint, likely more than one.
+      </td>
+    </tr>
+    <tr>
+      <td>coffee</td>
+      <td>Abstaining from voting.</td>
+    </tr>
+    <tr>
+      <td>question mark</td>
+      <td>
+        This is used when the description or acceptance criteria are too vague
+        to make an accurate estimate or there are any outstanding questions that
+        would prevent accurate pointing.
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+Tickets with clear descriptions and acceptance criteria are pointed before being placed in the backlog.
+
+## Iterations/sprints
+
+We use both sprint and iteration to mean a two week period of work. Our github Project board uses iterations though these spans of work are more frequently known as sprints. Our team uses both words interchangeably.
+
+## Planning Meetings
+
+TBD.
