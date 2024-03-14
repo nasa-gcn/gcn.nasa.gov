@@ -439,7 +439,7 @@ export async function deleteChangeRequest(
   user: User
 ): Promise<void> {
   if (!user) throw new Response(null, { status: 403 })
-  if (requestorSub !== user.sub || !user.groups.includes(moderatorGroup))
+  if (requestorSub !== user.sub && !user.groups.includes(moderatorGroup))
     throw new Response(
       'Change requests may only be deleted by the user that submitted them or moderators',
       { status: 403 }
