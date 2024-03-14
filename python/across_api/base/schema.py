@@ -9,6 +9,7 @@ from typing import Annotated, Any, List, Optional, Union
 import astropy.units as u  # type: ignore
 from astropy.coordinates import Latitude, Longitude  # type: ignore[import]
 from astropy.time import Time  # type: ignore
+from decimal import Decimal
 from pydantic import (
     BaseModel,
     BeforeValidator,
@@ -64,7 +65,7 @@ AstropySeconds = Annotated[
 # Pydantic type for a scalar astropy Quantity/Latitude/Longitude in degrees
 AstropyAngle = Annotated[
     Union[Latitude, Longitude, u.Quantity[u.deg]],
-    BeforeValidator(lambda x: x * u.deg if isinstance(x, (int, float)) else x),
+    BeforeValidator(lambda x: x * u.deg if isinstance(x, (int, float, Decimal)) else x),
     PlainSerializer(
         lambda x: x.to_value(u.deg),
         return_type=float,
