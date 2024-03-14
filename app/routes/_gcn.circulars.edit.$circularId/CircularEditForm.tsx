@@ -136,6 +136,7 @@ export function CircularEditForm({
     subjectIsValid(defaultSubject)
   )
   const [body, setBody] = useState(defaultBody)
+  const [subject, setSubject] = useState(defaultSubject)
   const bodyValid = bodyIsValid(body)
   const [showKeywords, toggleShowKeywords] = useStateToggle(false)
   const [showBodySyntax, toggleShowBodySyntax] = useStateToggle(false)
@@ -159,6 +160,10 @@ export function CircularEditForm({
       break
   }
   const bodyPlaceholder = useBodyPlaceholder()
+
+  const changesHaveBeenMade =
+    body.trim() !== defaultBody.trim() ||
+    subject.trim() !== defaultSubject.trim()
 
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
@@ -206,6 +211,7 @@ export function CircularEditForm({
             defaultValue={defaultSubject}
             required={true}
             onChange={({ target: { value } }) => {
+              setSubject(value)
               setSubjectValid(subjectIsValid(value))
             }}
           />
@@ -323,7 +329,11 @@ export function CircularEditForm({
           >
             Back
           </Link>
-          <Button disabled={sending || !valid} type="submit" value="save">
+          <Button
+            disabled={sending || !valid || !changesHaveBeenMade}
+            type="submit"
+            value="save"
+          >
             {saveButtonText}
           </Button>
           {sending && (
