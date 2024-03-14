@@ -1,6 +1,7 @@
 --extra-index-url https://nasa-gcn.github.io/healpy-prerelease-pypi-index/simple/
 aioboto3
 architect-functions
+asyncer
 astropy
 astropy_healpix
 cachetools
