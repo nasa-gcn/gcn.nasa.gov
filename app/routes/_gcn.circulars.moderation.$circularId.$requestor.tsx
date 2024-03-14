@@ -80,7 +80,6 @@ export default function () {
         oldString={circular.subject}
         newString={correction.subject}
       />
-
       {useFeature('CIRCULARS_MARKDOWN') && (
         <>
           <h3>Format</h3>
