@@ -82,7 +82,7 @@ export default function () {
       <h3>Format</h3>
       <DiffedContent
         oldString={circular.format ?? 'text/plain'}
-        newString={correction.format}
+        newString={correction.format ?? 'text/plain'}
       />
       <h3>Body</h3>
       <DiffedContent oldString={circular.body} newString={correction.body} />
@@ -112,7 +112,7 @@ function DiffedContent({
   return (
     <div>
       <pre>
-        <code>
+        <code className="text-pre-wrap">
           {diff.map((part, index) => (
             <span
               key={index}
