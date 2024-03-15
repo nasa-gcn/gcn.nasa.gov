@@ -137,6 +137,7 @@ export function CircularEditForm({
   )
   const [body, setBody] = useState(defaultBody)
   const [subject, setSubject] = useState(defaultSubject)
+  const [format, setFormat] = useState(defaultFormat)
   const bodyValid = bodyIsValid(body)
   const [showKeywords, toggleShowKeywords] = useStateToggle(false)
   const [showBodySyntax, toggleShowBodySyntax] = useStateToggle(false)
@@ -163,8 +164,8 @@ export function CircularEditForm({
 
   const changesHaveBeenMade =
     body.trim() !== defaultBody.trim() ||
-    subject.trim() !== defaultSubject.trim()
-
+    subject.trim() !== defaultSubject.trim() ||
+    format !== defaultFormat
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>{headerText} GCN Circular</h1>
@@ -257,6 +258,7 @@ export function CircularEditForm({
             onChange={({ target: { value } }) => {
               setBody(value)
             }}
+            markdownStateSetter={setFormat}
           />
         ) : (
           <>

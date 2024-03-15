@@ -120,8 +120,13 @@ export function RichEditor({
   onChange,
   defaultValue,
   defaultMarkdown,
+  markdownStateSetter,
   ...props
-}: { defaultValue?: string; defaultMarkdown?: boolean } & Omit<
+}: {
+  defaultValue?: string
+  defaultMarkdown?: boolean
+  markdownStateSetter?: (value: 'text/plain' | 'text/markdown') => void
+} & Omit<
   Parameters<typeof Textarea>[0],
   'children' | 'defaultValue' | 'name' | 'id'
 >) {
@@ -153,7 +158,6 @@ export function RichEditor({
   }
 
   const toggleMarkdownButtonProps = {
-    onClick: toggleMarkdown,
     title: `Toggle between plain text and rich formatted Markdown text. Markdown is currently ${markdown ? 'enabled' : 'disabled'}.`,
   }
 
@@ -397,8 +401,19 @@ export function RichEditor({
             <PlainTextButton
               {...toggleMarkdownButtonProps}
               checked={!markdown}
+              onClick={() => {
+                markdownStateSetter?.('text/plain')
+                toggleMarkdown()
+              }}
             />
-            <MarkdownButton {...toggleMarkdownButtonProps} checked={markdown} />
+            <MarkdownButton
+              {...toggleMarkdownButtonProps}
+              checked={markdown}
+              onClick={() => {
+                markdownStateSetter?.('text/markdown')
+                toggleMarkdown()
+              }}
+            />
           </ButtonGroup>
         </Grid>
         {editing && (
