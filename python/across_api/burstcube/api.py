@@ -6,6 +6,7 @@ import gzip
 from typing import Annotated, BinaryIO, Tuple, Union
 
 from astropy.io import fits  # type: ignore
+from asyncer import asyncify
 from fastapi import Depends, File, HTTPException, Security, UploadFile, status
 
 from ..auth.api import claims, scope_authorize
@@ -25,7 +26,7 @@ from .schema import BurstCubeTOORequestsSchema, BurstCubeTOOSchema, BurstCubeTri
 from .toorequest import BurstCubeTOO, BurstCubeTOORequests
 
 
-def read_healpix_file(healpix_file: UploadFile) -> Tuple[fits.FITS_rec, str]:
+async def read_healpix_file(healpix_file: UploadFile) -> Tuple[fits.FITS_rec, str]:
     """Read in a HEALPix file in FITS format and return the HDUList. Supports
     gzipped FITS files"""
 
@@ -37,15 +38,15 @@ def read_healpix_file(healpix_file: UploadFile) -> Tuple[fits.FITS_rec, str]:
     # FIXME: Remove compression handling if this issue is resolved:
     # https://github.com/astropy/astropy/issues/16171
     if healpix_file.content_type == "application/x-gzip":
-        file = gzip.open(healpix_file.file, "rb")
+        file = await asyncify(gzip.open)(healpix_file.file, "rb")
     else:
         file = healpix_file.file
 
     # Open HEALPix fits file and extract data and ordering scheme
     try:
-        with fits.open(file) as hdu:
-            healpix_data = hdu[1].data
-            healpix_scheme = hdu[1].header["ORDERING"]
+        hdu = await asyncify(fits.open)(file)
+        healpix_data = hdu[1].data
+        healpix_scheme = hdu[1].header["ORDERING"]
     except (OSError, KeyError, IndexError):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -90,7 +91,7 @@ async def burstcube_too_submit(
     # If a HEALpix file was uploaded, open it and set the healpix_loc
     # and healpix_scheme attributes.
     if healpix_file is not None:
-        too.healpix_loc, too.healpix_scheme = read_healpix_file(healpix_file)
+        too.healpix_loc, too.healpix_scheme = await read_healpix_file(healpix_file)
     await too.post()
     return too.schema
 
@@ -133,7 +134,7 @@ async def burstcube_too_update(
     # If a HEALpix file was uploaded, open it and set the healpix_loc
     # and healpix_scheme attributes.
     if healpix_file is not None:
-        too.healpix_loc, too.healpix_scheme = read_healpix_file(healpix_file)
+        too.healpix_loc, too.healpix_scheme = await read_healpix_file(healpix_file)
     await too.put()
     return too.schema
 

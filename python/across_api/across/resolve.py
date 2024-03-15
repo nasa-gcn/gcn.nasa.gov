@@ -8,6 +8,7 @@ from typing import Optional, Tuple
 import httpx
 from astropy.coordinates.name_resolve import NameResolveError  # type: ignore
 from astropy.coordinates.sky_coordinate import SkyCoord  # type: ignore
+from asyncer import asyncify
 
 from ..base.common import ACROSSAPIBase
 from .schema import ResolveGetSchema, ResolveSchema
@@ -116,7 +117,7 @@ class Resolve(ACROSSAPIBase):
 
         # Check using the CDS resolver
         try:
-            skycoord = SkyCoord.from_name(self.name)
+            skycoord = await asyncify(SkyCoord.from_name)(self.name)
             self.ra, self.dec = skycoord.ra.deg, skycoord.dec.deg
             self.resolver = "CDS"
             return True

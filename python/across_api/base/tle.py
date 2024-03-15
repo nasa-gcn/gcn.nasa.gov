@@ -371,7 +371,7 @@ class TLEBase(ACROSSAPIBase):
         # of this format (for the NuSTAR mission), see here:
         # https://nustarsoc.caltech.edu/NuSTAR_Public/NuSTAROperationSite/NuSTAR.tle
         if self.tle_concat is not None:
-            if self.read_tle_concat() is True:
+            if await self.read_tle_concat() is True:
                 # Write the TLE to the database for next time
                 if self.tle is not None:
                     await self.tle.write()
@@ -383,7 +383,7 @@ class TLEBase(ACROSSAPIBase):
         # `tle_bad` days of the current epoch.
         if self.tle_url is not None:
             if self.epoch > Time.now().utc - self.tle_bad:
-                if self.read_tle_web() is True:
+                if await self.read_tle_web() is True:
                     # Write the TLE to the database for next time
                     if self.tle is not None:
                         await self.tle.write()

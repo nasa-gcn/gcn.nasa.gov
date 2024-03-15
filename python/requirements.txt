@@ -11,7 +11,9 @@ aioboto3==12.3.0
     #   -r requirements.in
     #   dynamodb-autoincrement
 aiobotocore[boto3]==2.11.2
-    # via aioboto3
+    # via
+    #   aioboto3
+    #   aiobotocore
 aiohttp==3.9.3
     # via aiobotocore
 aioitertools==0.11.0
@@ -22,6 +24,7 @@ annotated-types==0.6.0
     # via pydantic
 anyio==3.7.1
     # via
+    #   asyncer
     #   httpx
     #   starlette
 architect-functions==1.0.0
@@ -35,6 +38,8 @@ astropy-healpix==1.0.2
     # via -r requirements.in
 astropy-iers-data==0.2024.2.5.0.30.52
     # via astropy
+asyncer==0.0.5
+    # via -r requirements.in
 attrs==23.2.0
     # via
     #   aiohttp
