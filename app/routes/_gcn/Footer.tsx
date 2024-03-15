@@ -116,7 +116,7 @@ export function Footer() {
         <IdentifierLinkItem>
           <IdentifierLink
             rel="external"
-            href="https://www.nasa.gov/content/section-508-accessibility-at-nasa"
+            href="https://www.nasa.gov/accessibility/"
           >
             Accessibility
           </IdentifierLink>
