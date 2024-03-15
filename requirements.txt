@@ -4,6 +4,7 @@ ruff
 hypothesis
 pytest
 pytest-asyncio
+pytest-cov
 types-requests
 types-cachetools
 types-python-jose
