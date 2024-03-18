@@ -136,6 +136,8 @@ export function CircularEditForm({
     subjectIsValid(defaultSubject)
   )
   const [body, setBody] = useState(defaultBody)
+  const [subject, setSubject] = useState(defaultSubject)
+  const [format, setFormat] = useState(defaultFormat)
   const bodyValid = bodyIsValid(body)
   const [showKeywords, toggleShowKeywords] = useStateToggle(false)
   const [showBodySyntax, toggleShowBodySyntax] = useStateToggle(false)
@@ -160,6 +162,10 @@ export function CircularEditForm({
   }
   const bodyPlaceholder = useBodyPlaceholder()
 
+  const changesHaveBeenMade =
+    body.trim() !== defaultBody.trim() ||
+    subject.trim() !== defaultSubject.trim() ||
+    format !== defaultFormat
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>{headerText} GCN Circular</h1>
@@ -206,6 +212,7 @@ export function CircularEditForm({
             defaultValue={defaultSubject}
             required={true}
             onChange={({ target: { value } }) => {
+              setSubject(value)
               setSubjectValid(subjectIsValid(value))
             }}
           />
@@ -251,6 +258,7 @@ export function CircularEditForm({
             onChange={({ target: { value } }) => {
               setBody(value)
             }}
+            markdownStateSetter={setFormat}
           />
         ) : (
           <>
@@ -323,7 +331,11 @@ export function CircularEditForm({
           >
             Back
           </Link>
-          <Button disabled={sending || !valid} type="submit" value="save">
+          <Button
+            disabled={sending || !valid || !changesHaveBeenMade}
+            type="submit"
+            value="save"
+          >
             {saveButtonText}
           </Button>
           {sending && (
