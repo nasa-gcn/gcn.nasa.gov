@@ -35,7 +35,7 @@ function SortButton({
   return (
     <ButtonGroup type="segmented" {...props}>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
-        Sorted By{' '}
+        Sort by{' '}
         {sortOptions[sort as keyof typeof sortOptions] ||
           sortOptions.circularID}
       </Button>
