@@ -88,6 +88,9 @@ export default function () {
                     <NavLink key="email" to="contributing/email">
                       Email Data Flow
                     </NavLink>,
+                    <NavLink key="project" to="contributing/project">
+                      Github Project Board
+                    </NavLink>,
                   ]}
                 />
               </>,

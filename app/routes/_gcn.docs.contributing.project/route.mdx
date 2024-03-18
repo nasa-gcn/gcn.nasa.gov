@@ -1,0 +1,202 @@
+---
+handle:
+  breadcrumb: Project Board
+---
+
+import { Table } from '@trussworks/react-uswds'
+
+import issueScreenshot from './issue.png'
+import openTicketScreenshot from './openTicket.png'
+import projectBoardScreenshot from './projectBoard.png'
+import ticketMetadata from './ticketMetadata.png'
+
+# GitHub Project Board
+
+We use GitHub Projects to organize our development process. This is the [GCN Project Board.](https://github.com/orgs/nasa-gcn/projects/6)
+We chose GitHub Projects becase we already extensively use GitHub Issues and Milestones.
+[GitHub's Projects Documentation](https://docs.github.com/en/issues/planning-and-tracking-with-projects/learning-about-projects/about-projects)
+
+We have a total of six possible ticket states.
+
+<Table bordered compact stackedStyle="headers">
+  <thead>
+    <tr>
+      <th scope="col">Status</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>No Status</td>
+      <td>
+        These are tickets that have not been fully refined or pointed yet.
+      </td>
+    </tr>
+    <tr>
+      <td>Backlog</td>
+      <td>
+        These are tickets that are fully refined and pointed and are ready to
+        go. They may be planned for a particular sprint or have no sprint
+        attached.
+      </td>
+    </tr>
+    <tr>
+      <td>In Progress</td>
+      <td>
+        These are tickets that are under way. A developer should be assigned to
+        any tickets in progress.
+      </td>
+    </tr>
+    <tr>
+      <td>In Review</td>
+      <td>
+        We manually put tickets into review status when PRs are ready for
+        review.
+      </td>
+    </tr>
+    <tr>
+      <td>Blocked</td>
+      <td>
+        This is for tasks that are blocked and waiting on something from a
+        source other than the assigned developer.
+      </td>
+    </tr>
+    <tr>
+      <td>Done</td>
+      <td>
+        These are tickets that have merged PRs or completed tasks. Use (GitHub
+        trigger
+        words)[https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests]
+        ("closes #123") to ensure tickets are linked to PRs and this will
+        automatically happen on merge.
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+They appear visually as columns on our project board as seen in this screenshot.
+
+<img
+  src={projectBoardScreenshot}
+  alt="Screen shot of GCN Project in GitHub Projects"
+  width="3452"
+  height="1986"
+  className="height-auto"
+/>
+
+When you open a specific Issue while on the Project board, you will see ticket details open on the right hand side of the window. This is where you can find ticket metadata.
+
+<img
+  src={openTicketScreenshot}
+  alt="Screen shot of and open ticket on the GCN Project in GitHub Projects"
+  width="2242"
+  height="1964"
+  className="height-auto"
+/>
+
+Project specific metadata can be found by scrolling down in the right hand Issue pane. There are other types of ticket metadata preceding and following this section. The GitHub Project specific metadata section looks like the following screenshot.
+
+<img
+  src={ticketMetadata}
+  alt="Screen shot of ticket Project metadata in GitHub Project"
+  width="1216"
+  height="542"
+  className="height-auto"
+/>
+
+We create Issues for all work. All Issues should have a detailed title, description, and acceptance criteria. All issues must be pointed before moving into the Backlog or In Progress. Some Project metadata is also editable from an Issue page.
+
+<img
+  src={issueScreenshot}
+  alt="Screen shot of a GitHub Issue"
+  width="2548"
+  height="1972"
+  className="height-auto"
+/>
+
+## Pointing
+
+We point tickets as a group during planning meetings.
+We use the description and acceptance criteria written in the GitHub Issue to ensure group understanding of the work.
+Once we have agreed that we understand the scope and request, we vote on the level of complexity for that body of work.
+We use the unique numbers in the Fibonacci sequence to represent complexity. We only go up to 21 points, making our options 1, 2, 3, 5, 8, 13, and 21. We also have the additional options of `coffee` or `question mark`.
+We average the votes if there is not wide variation in pointing values, so a ticket may be pointed at values not found in our pointing options.
+If there is a difference of more than a couple of points, we discuss why we voted higher/lower. Someone might have information that the others don't have.
+
+<Table bordered compact stackedStyle="headers">
+  <thead>
+    <tr>
+      <th scope="col">Points</th>
+      <th scope="col">Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>This is something incredibly straightforward such as a copy fix.</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>This is twice the complexity of a one line or copy change.</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>
+        This is associated with a feature or bug fix of medium complexity. It is
+        larger than a few line changes, but is typically smaller than a fully
+        fledged feature, and includes more significant testing.
+      </td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>
+        This level of complexity represents a more full feature or a more
+        complex bug that takes a bit more effort than a 3. It might require more
+        intensive testing, in depth research, documentation, and/or higher code
+        complexity.
+      </td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>
+        This is quite large for one ticket. This is typically the highest we
+        like to point tickets. It may need to be broken down into smaller steps
+        where possible. This level of complexity could take a large part of a
+        sprint.
+      </td>
+    </tr>
+    <tr>
+      <td>13</td>
+      <td>
+        This is where we start deeply questioning the scope of the ticket. If a
+        ticket is 13 points, it is possible that it is not broken down into
+        small enough steps and would benefit from further refiment.
+      </td>
+    </tr>
+    <tr>
+      <td>21</td>
+      <td>
+        This is a wildly difficult task. This will take more than an
+        iteration/sprint. This task likely needs further refinement.
+      </td>
+    </tr>
+    <tr>
+      <td>coffee</td>
+      <td>This indicates that you are present but abstaining from voting.</td>
+    </tr>
+    <tr>
+      <td>question mark</td>
+      <td>
+        This is used when the description or acceptance criteria are too vague
+        to make an accurate estimate or there are any outstanding questions that
+        would prevent accurate pointing.
+      </td>
+    </tr>
+  </tbody>
+</Table>
+
+Tickets with clear descriptions and acceptance criteria are pointed before being placed in the backlog.
+
+## Iterations/sprints
+
+We use both sprint and iteration to mean a two week period of work. Our GitHub Project board uses iterations though these spans of work are more frequently known as sprints. Our team uses both words interchangeably.
