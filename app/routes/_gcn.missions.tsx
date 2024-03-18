@@ -50,6 +50,9 @@ export default function () {
               <NavLink key="agile" to="agile">
                 AGILE
               </NavLink>,
+              <NavLink key="einsteinprobe" to="einsteinprobe">
+                Einstein Probe
+              </NavLink>,
               <NavLink key="konus" to="konus">
                 Konus-Wind
               </NavLink>,
