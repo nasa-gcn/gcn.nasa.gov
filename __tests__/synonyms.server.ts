@@ -3,10 +3,7 @@ import type { AWSError, DynamoDB } from 'aws-sdk'
 import * as awsSDKMock from 'aws-sdk-mock'
 import crypto from 'crypto'
 
-import {
-  createSynonyms,
-  putSynonyms,
-} from '~/routes/_gcn.synonyms/synonyms.server'
+import { createSynonyms, putSynonyms } from '~/routes/synonyms/synonyms.server'
 
 jest.mock('@architect/functions')
 

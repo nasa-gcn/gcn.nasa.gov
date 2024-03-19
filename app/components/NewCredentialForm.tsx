@@ -22,7 +22,7 @@ import { useState } from 'react'
 import { ReCAPTCHA, verifyRecaptcha } from './ReCAPTCHA'
 import { getFormDataString } from '~/lib/utils'
 import { useRecaptchaSiteKey } from '~/root'
-import { ClientCredentialVendingMachine } from '~/routes/_gcn.user.credentials/client_credentials.server'
+import { ClientCredentialVendingMachine } from '~/routes/user.credentials/client_credentials.server'
 
 export async function loader(args: LoaderFunctionArgs) {
   return await handleCredentialLoader(args)

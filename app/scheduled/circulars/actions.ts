@@ -9,7 +9,7 @@ import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
 
-import type { Circular } from '~/routes/_gcn.circulars/circulars.lib'
+import type { Circular } from '~/routes/circulars/circulars.lib'
 
 export interface CircularAction<T = any> {
   initialize: () => T | Promise<T>

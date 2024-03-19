@@ -9,7 +9,7 @@ import type { AddressObject, Source } from 'mailparser'
 import { simpleParser } from 'mailparser'
 import addressparser from 'nodemailer/lib/addressparser'
 
-import type { SubmittedHow } from '~/routes/_gcn.circulars/circulars.lib'
+import type { SubmittedHow } from '~/routes/circulars/circulars.lib'
 
 const legacyAddress = 'mailnull@capella2.gsfc.nasa.gov'
 const legacyFromNameSplitter = ' via '

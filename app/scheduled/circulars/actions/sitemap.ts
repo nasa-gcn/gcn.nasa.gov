@@ -11,7 +11,7 @@ import type { CircularAction } from '../actions'
 import { Prefix as parentPrefix, putParams, s3 } from '../storage'
 import { origin } from '~/lib/env.server'
 import { maxEntriesPerSitemap, sitemap } from '~/lib/sitemap.server'
-import type { Circular } from '~/routes/_gcn.circulars/circulars.lib'
+import type { Circular } from '~/routes/circulars/circulars.lib'
 
 type SitemapContext = {
   items: Circular[]

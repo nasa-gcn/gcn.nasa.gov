@@ -1,6 +1,6 @@
 # General Coordinates Network Web Site
 
-![GCN diagram](app/routes/_gcn._index/hero/center-cropped.jpg)
+![GCN diagram](app/routes/_index/hero/center-cropped.jpg)
 
 [![Node.js CI status](https://github.com/nasa-gcn/gcn.nasa.gov/workflows/Node.js%20CI/badge.svg)](https://github.com/nasa-gcn/gcn.nasa.gov/actions)
 [![codecov](https://codecov.io/gh/nasa-gcn/gcn.nasa.gov/branch/main/graph/badge.svg?token=qBUHelfQxL)](https://codecov.io/gh/nasa-gcn/gcn.nasa.gov)

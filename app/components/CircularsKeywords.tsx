@@ -10,7 +10,7 @@ import { Link } from '@remix-run/react'
 import {
   emailAutoReplyChecklist,
   validSubjectKeywords,
-} from '~/routes/_gcn.circulars/circulars.lib'
+} from '~/routes/circulars/circulars.lib'
 
 export function CircularsKeywords() {
   return (

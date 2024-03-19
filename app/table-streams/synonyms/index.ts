@@ -15,7 +15,7 @@ import type {
 } from 'aws-lambda'
 
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
-import type { Synonym } from '~/routes/_gcn.synonyms/synonyms.lib'
+import type { Synonym } from '~/routes/synonyms/synonyms.lib'
 
 const index = 'synonyms'
 

@@ -19,7 +19,7 @@ import {
 import { useRef } from 'react'
 
 import TimeAgo from './TimeAgo'
-import type { RedactedClientCredential } from '~/routes/_gcn.user.credentials/client_credentials.server'
+import type { RedactedClientCredential } from '~/routes/user.credentials/client_credentials.server'
 
 export default function CredentialCard({
   name,
