@@ -58,6 +58,8 @@ jobs:
         run: npm ci
       - name: Download artifacts
         uses: actions/download-artifact@v4
+        with:
+          path: build
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
