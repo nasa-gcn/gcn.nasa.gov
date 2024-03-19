@@ -35,6 +35,4 @@ export default {
     if (!files) return []
     return `prettier --write ${filteredFiles}`
   },
-  '*.py': ['ruff format', 'ruff check'],
-  'python/*.py': () => 'mypy python',
 }

@@ -1,1 +1,0 @@
-Proposals content here

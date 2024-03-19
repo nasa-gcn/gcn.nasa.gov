@@ -6,10 +6,6 @@ remix-gcn
   method any
   src build/server
 
-/labs/api/*
-  method any
-  src python
-
 @email-incoming
 circulars
   src build/email-incoming/circulars
@@ -41,20 +37,6 @@ prefix app
 client_credentials
   sub *String
   client_id **String
-  PointInTimeRecovery true
-
-acrossapi_tle
-  satname *String
-  epoch **String
-  tle1 String
-  tle2 String
-
-burstcube_too
-  id *String
-
-burstcube_too_history
-  id *String
-  version **Number
   PointInTimeRecovery true
 
 sessions
@@ -113,11 +95,6 @@ legacy_users
   PointInTimeRecovery true
 
 @tables-indexes
-burstcube_too
-  gsipk *String 
-  created_on **String
-  name byCreatedOn
-
 email_notification_subscription
   topic *String
   name byTopic

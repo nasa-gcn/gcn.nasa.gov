@@ -48,11 +48,7 @@ export class ClientCredentialVendingMachine {
     if (!user) throw new Response('not signed in', { status: 403 })
     return new this(
       user.sub,
-      user.groups.filter(
-        (x) =>
-          x.startsWith('gcn.nasa.gov/kafka') ||
-          x == 'gcn.nasa.gov/burstcube-too-submitter'
-      )
+      user.groups.filter((x) => x.startsWith('gcn.nasa.gov/kafka'))
     )
   }
 
