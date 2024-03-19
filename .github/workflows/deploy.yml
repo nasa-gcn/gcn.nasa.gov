@@ -59,6 +59,7 @@ jobs:
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
+          merge-multiple: true
           path: build
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
