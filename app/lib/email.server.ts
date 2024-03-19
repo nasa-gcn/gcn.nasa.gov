@@ -21,7 +21,7 @@ import chunk from 'lodash/chunk'
 
 import { hostname } from './env.server'
 import { getEnvBannerHeaderAndDescription } from './utils'
-import { encodeToURL } from '~/routes/_gcn.unsubscribe.$jwt/jwt.server'
+import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
 const client = new SESv2Client({})
 // https://docs.aws.amazon.com/ses/latest/dg/quotas.html

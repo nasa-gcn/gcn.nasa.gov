@@ -14,7 +14,7 @@ import {
   formatCircularText,
   parseEventFromSubject,
   subjectIsValid,
-} from '../app/routes/_gcn.circulars/circulars.lib'
+} from '../app/routes/circulars/circulars.lib'
 
 describe('formatAuthor', () => {
   const email = 'foo@example.com'

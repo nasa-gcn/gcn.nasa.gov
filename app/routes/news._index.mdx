@@ -1,0 +1,272 @@
+---
+handle:
+  breadcrumb: News
+---
+
+import {
+  Collection,
+  CollectionCalendarDate,
+  CollectionDescription,
+  CollectionHeading,
+  CollectionItem,
+  Grid,
+} from '@trussworks/react-uswds'
+
+import { SendAnnouncmentButton } from './news/components'
+import { Anchor } from '~/components/Anchor'
+
+<Grid row>
+  <h1 className="grid-col-fill">GCN News and Events</h1>
+  <div className="grid-col-auto">
+    <SendAnnouncmentButton />
+  </div>
+</Grid>
+
+<Collection>
+
+## 2024
+
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'March 13, 2024'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New Announcement Feature, Code of Conduct, Circular Revisions</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        - **Announcements from the GCN Team to our User Community:**  These announcements will contain information on new GCN features, changes to GCN Notices schema, new GCN Notices topics, and planned system maintenance. All GCN users are automatically subscribed to GCN Announcements.  You can modify your subscription at any time by following the personalized link at the bottom of announcement emails, or logging into your account, selecting "Email Notifications" in the user dropdown menu and toggling the announcements on/off.
+
+        - **GCN Code of Conduct:** This [document](https://gcn.nasa.gov/docs/code-of-conduct) describes policies for community behavior as well as mechanisms for retractions, errata, reproduction of GCN Notices and Circulars, enforcement, and acknowledgements.  These policies formalize the informal standards that have supported the thriving GCN Community over the last 32 years.
+
+        - **Circulars Authors Can Request Revisions:** In accordance with the [erratum policy in the Code of Conduct](https://gcn.nasa.gov/docs/code-of-conduct#errata), minor corrections can be requested to be implemented in the Circulars archive with a version history of those changes.
+
+      </CollectionDescription>
+    </CollectionItem>
+
+## 2023
+
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'October 27, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New Swift-BAT/GUANO and IceCube Notices Available via GCN Kafka</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        The Swift-BAT/GUANO, IceCube, and GCN teams are pleased to announce the availability of new GCN notice types via the new GCN in JSON format.  JSON format notices can be streamed via [Kafka](/quickstart). These new notice types are *not* available via GCN Classic.
+
+        [**Swift-BAT/GUANO:**](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) gcn.notices.swift.bat.guano
+
+        - *Summary:* GUANO is a ground-based analysis of data from Swift BAT, significantly enhancing the sensitivity and sky area covered as compared to Swift's onboard triggering.
+        - *Occurence Rate:* The Swift/BAT-GUANO notices occur at a rate of 50 times per year.
+        - *Time Delay:* The post-event processing and communication of alert is distributed to GCN within 10 minutes to 5 hours of detection, depending on data downlink method and space-to-ground communications resource availability.
+        - *Notice Type:* The new [Swift/BAT-GUANO notice type](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) (gcn.notices.swift.bat.guano) provides timestamps, sky locations, durations, and other supplementary information on gamma-ray transients discovered through this system, to enable prompt follow-up by observers and other instruments.  The 'initial' notice distributed for any detection will not include localization information. In the majority of cases later 'update' notices will follow with a localization attached. ~1/4 of GUANO bursts will have arcminute-scale localizations, distributed in the form [RA, Dec, Error] the remainder will be more poorly localized and may be distributed as HEALPix maps.
+
+        [**IceCube LVK Neutrino Track Search:**](/missions/icecube#gcn-notice-types-in-gcn-over-kafka) gcn.notices.icecube.lvk_nu_track_search
+        - *Summary:* IceCube is a is a cubic-kilometer Cherenkov particle detector deployed in the Antarctic ice beneath the Amundsen-Scott South Pole Station. IceCube detects neutrinos by observing the light produced by relativistic charged particles created by neutrino interactions in or near the instrumented volume of ice.
+        - *Occurrence Rate:* The LVK Nu Track Search notices are triggered by [LIGO/Virgo/KAGRA alerts](/missions/lvk) and occur at the same rate of these alerts, searching for neutrino signals from both significant and low significance LVK alerts.
+        - *Time Delay:* Neutrino searches are performed in a +/- 500 second time window about the LVK alert, and Nu Track search results are generally available within ~1000 seconds of the LVK GW event time.
+        - *Notice Type:* The new [LVK Nu Track Search notice type](/missions/icecube#gcn-notice-types-in-gcn-over-kafka) (gcn.notices.icecube.lvk_nu_track_search) provides results from realtime searches for coincident neutrino signals from all LIGO/Virgo/KAGRA gravitational-wave alerts, using a realtime muon neutrino track-like event selection and the sky maps from gravitational wave detectors. Search results will include neutrino directions for observed coincident events with the aim to identify multi-messenger transient sources and seed electromagnetic followup up observations.
+
+        *Notice Schema and Examples:* The JSON schema defining the notice format and examples can be viewed in the [Schema Browser](/docs/schema) or the [GCN schema repository](https://github.com/nasa-gcn/gcn-schema).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'October 25, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New features for October 2023</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        This October, we've added some new features to GCN:
+
+        - **Help Desk Ticketing with Zendesk.** Now, when you contact us through our [help desk](/contact), we create a support ticket using [Zendesk](https://www.zendesk.com). The ticketing system will help us to resolve user questions more quickly and thoroughly.
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'September 19, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New features for September 2023</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        This September, we've added some new features to [GCN Circulars](/circulars):
+
+        - **Cross References.** Navigate the GCN Circulars archive faster with Circulars cross-references, arXiv preprints, DOIs, and other URLs displayed as hyperlinks.
+        - **Bibliographies.** Cite GCN Circulars by retrieving their [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu) bibcodes and BibTeX records from the GCN Circulars archive. See the [documentation](/docs/circulars/archive#citing-gcn-circulars) for details.
+        - **Archive Download.** Download the entire GCN Circulars archive as a tarball. See the [Advanced options](/circulars#advanced) section of the GCN Circulars archive.
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'August 23, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Important notes for GCN Kafka client users</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        Thanks to the feedback of some of our users, we have tracked down and fixed several reliability issues related to our Kafka brokers and clients. If you are consuming GCN Notices via Kafka in Python, then please take the actions noted below.
+
+        * **Daily Kafka outages have been resolved.** The GCN Kafka brokers had been experiencing daily outages at around 00:00 UTC and lasting from about a minute to an hour. We traced the problem to a log collection agent that was using excessive memory. We resolved the issue by disabling the agent.
+        * **Python sample code has been updated.** Our [Python client sample code](/docs/client#python) was missing some necessary error handling. Some errors that may occur in the `consumer.consume()` loop are reported in the returned Kafka message. If you consume GCN Notices via Kafka in Python using the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) client or [confluent-kafka-python](https://github.com/confluentinc/confluent-kafka-python), then please be sure to update your code as follows.
+
+          If your client consume loop looks like this:
+
+          ```python
+          while True:
+              for message in consumer.consume(timeout=1):
+                  value = message.value()
+                  # add your code to process the alert here
+          ```
+
+          then add an `if` statement to skip normal processing for errors, like this:
+
+          ```python
+          while True:
+              for message in consumer.consume(timeout=1):
+                  if message.error():
+                      print(message.error())
+                      continue
+                  value = message.value()
+                  # add your code to process the alert here
+          ```
+        * **New version of Python client.** We have released version 0.3.3 of our [official Python client, gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python). This version improves the reliability of authentication for long-lived connections. Please update to the latest version. If you are not using our official client but you are using [confluent-kafka-python](https://github.com/confluentinc/confluent-kafka-python) directly, then please update to the latest version of confluent-kafka-python (2.2.0 or newer).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'May 6, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>GCN Classic Outage Due to Local Network Maintenance</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        Due to planned network maintenance at GSFC, the connections to GCN Classic will be offline on Saturday, May 6 from 8AM ET (12:00 UTC) and concluding no later than 3PM ET (19:00 UTC).  This affects the following GCN services:
+        * GCN Classic Notices distribution via socket, VOEvent, and email
+        * GCN Classic Notices web site archive
+        * GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email
+        * Forwarding of GCN Circulars submitted to gcncirc@capella2.gsfc.nasa.gov, however submission to circulars@gcn.nasa.gov and the [web form](/circulars) will be unaffected.
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'April 6, 2023'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New GCN Circulars Service Coming April 17, 2023</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        We are pleased to announce that on April 17, 2023, the General Coordinates Network will launch the most significant overhaul of GCN Circulars since its inception in 1997. The modernized GCN Circulars experience will be part of the new GCN web site.
+        After the transition on April 17, you will be able to:
+        - Browse and search Circulars in our all-new [archive](/circulars).
+        - Sign up for and manage your own email subscriptions.
+        - Enroll yourself and your colleagues to submit Circulars with arXiv-style peer endorsements for new contributors.
+        - Submit Circulars with our new Web form, or continue to submit by email.
+
+        Here is what you need to know about preparing for the transition on April 17.
+        - If you use Circulars now, we will transfer your settings automatically.
+        - If you receive Circulars now, you will continue to receive them.
+        - If you submit Circulars now, you will still be able to submit from the same email addresses.
+        - Emails from Circulars will come from a new address, no-reply@gcn.nasa.gov.
+        - We will encourage you to submit Circulars to the new address, circulars@gcn.nasa.gov, but we will still support the old address gcncirc@capella2.gsfc.nasa.gov.
+        - The [new archive](/circulars) will include all past Circulars. We will freeze the old archive,
+          https://gcn.gsfc.nasa.gov/gcn3_archive.html.
+
+        To introduce GCN users to the [new GCN Circular system](/circulars), we invite you to join one of our three public Zoom webinars:
+
+        - April 18, 2023 12:00-13:00 UTC (best for Atlantic):
+          https://bit.ly/3nSOqLN
+
+        - April 18, 2023 20:00-21:00 UTC (best for Pacific):
+          https://bit.ly/3mdmAt7
+
+        - April 19, 2023 04:00-05:00 UTC (best for Asia and Oceania):
+          https://bit.ly/3UcHogZ
+      </CollectionDescription>
+
+    </CollectionItem>
+
+## 2022
+
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
+        <CollectionCalendarDate datetime={'September 22, 2022'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New GECAM Notice Types Available</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        GCN now distributes notices from the
+        [GECAM](https://gcn.nasa.gov/missions/gecam) mission. Start streaming
+        GECAM notices using [GCN Classic over Kafka](/quickstart), have them
+        [delivered to your email inbox using self-service email
+        subscriptions](#Self-Service-Configuration-of-Email-Notifications-for-GCN-Notices),
+        or receive them as legacy notices using GCN Classic. To modify GCN Classic
+        subscriptions, please [contact
+        us](/contact?service=gcn-classic).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={<CollectionCalendarDate datetime={'September 2, 2022'} />}
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Self-Service Configuration of Email Notifications for GCN Notices</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        Have GCN Notices delivered to your email inbox by signing up and managing
+        your subscriptions through this web site. To get started, sign in or sign
+        up and then select "Email Notifications" from the account dropdown menu.
+        Note that signing up here does not affect prior subscriptions on the old
+        web site, https://gcn.gsfc.nasa.gov. To unsubscribe from the old web site,
+        please [contact
+        us](/contact?service=gcn-classic).
+        See [GCN Circular 32517](/circulars/32517).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={<CollectionCalendarDate datetime={'August 1, 2022'} />}
+    >
+      <CollectionHeading headingLevel="h3"><Anchor>New GCN Webinars</Anchor></CollectionHeading>
+      <CollectionDescription>
+        GCN held three public webinars to introduce the new GCN, the GCN Classic
+        over Kafka service, and plans for new features and feedback. See the
+        [slides](https://nasa-gcn.github.io/gcn-presentation/).
+      </CollectionDescription>
+    </CollectionItem>
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={<CollectionCalendarDate datetime={'July 20, 2022'} />}
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>GCN Classic over Kafka Now Available</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        All three classic GCN Notice formats (text, VOEvent, 160-byte binary
+        packet) are now also available over Kafka. This new Kafka streaming
+        service can be used as a drop-in replacement for GCN Classic socket and
+        VOEvent subscribers, with an upcoming release serving email subscribers.
+        See [GCN Circular 32419](/circulars/32419).
+      </CollectionDescription>
+    </CollectionItem>
+
+  </Collection>

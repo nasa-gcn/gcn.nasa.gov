@@ -15,11 +15,11 @@ import { pack as tarPack } from 'tar-stream'
 import type { CircularAction } from '../actions'
 import { Prefix, putParams, s3 } from '../storage'
 import { staticBucket as Bucket, region } from '~/lib/env.server'
-import type { Circular } from '~/routes/_gcn.circulars/circulars.lib'
+import type { Circular } from '~/routes/circulars/circulars.lib'
 import {
   formatCircularJson,
   formatCircularText,
-} from '~/routes/_gcn.circulars/circulars.lib'
+} from '~/routes/circulars/circulars.lib'
 
 const archiveSuffix = '.tar.gz'
 

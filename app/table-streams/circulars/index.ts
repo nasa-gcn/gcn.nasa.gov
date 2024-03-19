@@ -20,8 +20,8 @@ import type {
 import { sendEmailBulk } from '~/lib/email.server'
 import { origin } from '~/lib/env.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
-import type { Circular } from '~/routes/_gcn.circulars/circulars.lib'
-import { formatCircularText } from '~/routes/_gcn.circulars/circulars.lib'
+import type { Circular } from '~/routes/circulars/circulars.lib'
+import { formatCircularText } from '~/routes/circulars/circulars.lib'
 
 const index = 'circulars'
 const fromName = 'GCN Circulars'

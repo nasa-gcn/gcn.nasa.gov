@@ -16,7 +16,7 @@ import { exampleSuffix, schemaSuffix } from './schema-data'
 import type {
   ReferencedSchema,
   Schema,
-} from '~/routes/_gcn.docs_._schema-browser.schema.($version).$/components'
+} from '~/routes/docs_._schema-browser.schema.($version).$/components'
 
 const GITHUB_API_TOKEN = getEnvOrDieInProduction('GITHUB_API_TOKEN')
 const octokit = new Octokit({ auth: GITHUB_API_TOKEN })

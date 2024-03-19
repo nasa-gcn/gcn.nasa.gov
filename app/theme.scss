@@ -316,8 +316,8 @@ input.react-tags__combobox-input:focus {
   background-image: none;
 
   @include at-media('tablet-lg') {
-    background-image: url('~/routes/_gcn._index/hero/center.jpg'),
-      url('~/routes/_gcn._index/hero/left.jpg');
+    background-image: url('~/routes/_index/hero/center.jpg'),
+      url('~/routes/_index/hero/left.jpg');
     background-repeat: no-repeat, repeat-x;
     background-size: auto 100%;
     background-position-x: right;
@@ -338,7 +338,7 @@ input.react-tags__combobox-input:focus {
 
 .gcn-hero-background-right {
   @include at-media('tablet-lg') {
-    background-image: url('~/routes/_gcn._index/hero/right.jpg');
+    background-image: url('~/routes/_index/hero/right.jpg');
     background-repeat: repeat-x;
     background-size: auto 100%;
     background-position-x: left;
