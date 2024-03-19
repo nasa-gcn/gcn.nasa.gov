@@ -11,32 +11,3 @@ on:
 jobs:
   node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
-
-  python:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Check for Lint
-        uses: chartboost/ruff-action@v1
-
-      - name: Check Formatting
-        uses: chartboost/ruff-action@v1
-        with:
-          args: format --check
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Pip Install
-        run: pip install -r requirements.txt
-
-      - name: Run Tests
-        run: pytest --cov --cov-report=xml
-
-      - name: MyPy
-        run: mypy python
-
-      - name: Upload to Codecov.io
-        uses: codecov/codecov-action@v3
