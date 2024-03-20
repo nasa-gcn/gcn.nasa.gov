@@ -164,8 +164,8 @@ export default function () {
     <>
       {result?.intent === 'correction' && (
         <Alert
-          type={'success'}
-          headingLevel={'h1'}
+          type="success"
+          headingLevel="h1"
           slim
           heading="Request Submitted"
         >
