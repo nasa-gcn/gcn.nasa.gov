@@ -31,7 +31,6 @@
     "@nasa-gcn/dynamodb-autoincrement": "^2.2.0",
     "@nasa-gcn/remark-rehype-astro": "^1.1.1",
     "@nasa-gcn/remix-seo": "^2.0.0",
-    "@octokit/request-error": "^5.0.1",
     "@octokit/rest": "^20.0.2",
     "@opensearch-project/opensearch": "^2.5.0",
     "@remix-run/architect": "^2.8.1",
