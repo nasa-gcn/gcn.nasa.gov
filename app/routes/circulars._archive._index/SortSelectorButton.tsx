@@ -40,7 +40,7 @@ function SortButton({
           sortOptions.circularID}
       </Button>
       <Button type="button" className={`${slimClasses} padding-x-2`}>
-        {<Icon.FilterList role="presentation" />}
+        <Icon.FilterList role="presentation" />
         {expanded ? (
           <Icon.ExpandLess role="presentation" />
         ) : (

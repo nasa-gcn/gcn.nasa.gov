@@ -92,7 +92,7 @@ export default function () {
               name="subject"
               id="subject"
               type="text"
-              defaultValue={'GCN Announcement: [NEW FEATURE]'}
+              defaultValue="GCN Announcement: [NEW FEATURE]"
               required
               onChange={({ target: { value } }) => {
                 setSubjectValid(Boolean(value))
@@ -148,7 +148,7 @@ export default function () {
             )}
           </div>
           <ButtonGroup>
-            <Link to={`/news`} className="usa-button usa-button--outline">
+            <Link to="/news" className="usa-button usa-button--outline">
               Back
             </Link>
             <Button disabled={!valid} type="submit" value="save">
