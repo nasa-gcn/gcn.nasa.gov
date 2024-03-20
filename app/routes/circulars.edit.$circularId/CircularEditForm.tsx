@@ -210,7 +210,7 @@ export function CircularEditForm({
             type="text"
             placeholder={useSubjectPlaceholder()}
             defaultValue={defaultSubject}
-            required={true}
+            required
             onChange={({ target: { value } }) => {
               setSubject(value)
               setSubjectValid(subjectIsValid(value))
@@ -253,7 +253,7 @@ export function CircularEditForm({
             placeholder={bodyPlaceholder}
             defaultValue={defaultBody}
             defaultMarkdown={defaultFormat === 'text/markdown'}
-            required={true}
+            required
             className={bodyValid ? 'usa-input--success' : undefined}
             onChange={({ target: { value } }) => {
               setBody(value)
@@ -280,7 +280,7 @@ export function CircularEditForm({
               aria-describedby="bodyDescription"
               placeholder={bodyPlaceholder}
               defaultValue={defaultBody}
-              required={true}
+              required
               className={classnames('maxw-full', {
                 'usa-input--success': bodyValid,
               })}

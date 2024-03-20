@@ -39,8 +39,8 @@ export default function () {
       id="modal-existing-idp"
       aria-labelledby="modal-existing-idp"
       aria-describedby="modal-existing-idp-description"
-      isInitiallyOpen={true}
-      forceAction={true}
+      isInitiallyOpen
+      forceAction
       renderToPortal={false}
     >
       <ModalHeading id="modal-existing-idp-heading">
