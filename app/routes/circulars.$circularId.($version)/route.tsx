@@ -104,8 +104,9 @@ export default function () {
             <Link
               to={`https://ui.adsabs.harvard.edu/abs/${bibcode}`}
               className="usa-button usa-button--outline"
+              title="Retrieve bibliographic record from the SAO/NASA Astrophysics Data Service (ADS)."
             >
-              Cite (ADS)
+              Cite
             </Link>
           ) : (
             <Button
@@ -114,7 +115,7 @@ export default function () {
               outline
               title="The ADS entry for this Circular is not yet available. ADS entries are updated every week on Monday at 08:00 UTC. Please check back later."
             >
-              Cite (ADS)
+              Cite
             </Button>
           )}
         </ButtonGroup>
