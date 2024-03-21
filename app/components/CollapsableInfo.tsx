@@ -19,7 +19,7 @@ export default function CollapsableInfo({
   buttonText,
   children,
 }: {
-  id: string
+  id?: string
   preambleText: ReactNode
   buttonText: ReactNode
   children: ReactNode
