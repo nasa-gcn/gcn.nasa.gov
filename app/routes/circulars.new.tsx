@@ -106,8 +106,8 @@ function ModalUnauthorized({ isAuthenticated }: { isAuthenticated?: boolean }) {
       id="modal-unauthorized"
       aria-labelledby="modal-unauthorized-heading"
       aria-describedby="modal-unauthorized-description"
-      isInitiallyOpen={true}
-      forceAction={true}
+      isInitiallyOpen
+      forceAction
       renderToPortal={false}
     >
       <ModalHeading id="modal-unauthorized-heading">

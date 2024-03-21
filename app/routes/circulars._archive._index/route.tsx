@@ -186,7 +186,7 @@ export default function () {
           role="search"
           id={formId}
         >
-          <Label srOnly={true} htmlFor="query">
+          <Label srOnly htmlFor="query">
             Search
           </Label>
           <TextInput

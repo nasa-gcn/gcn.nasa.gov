@@ -143,7 +143,7 @@ export default function () {
         autoCapitalize="off"
         autoCorrect="off"
         defaultValue={notification.name}
-        required={true}
+        required
         onChange={(e) => setNameValid(Boolean(e.target.value))}
       />
       <Label htmlFor="recipient">
@@ -158,7 +158,7 @@ export default function () {
         type="email"
         autoCapitalize="off"
         autoCorrect="off"
-        required={true}
+        required
         placeholder="email"
         defaultValue={notification.recipient}
         onChange={(e) => setRecipientValid(Boolean(e.target.value))}

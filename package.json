@@ -179,7 +179,8 @@
         "origin"
       ],
       "object-shorthand": "error",
-      "prefer-const": "error"
+      "prefer-const": "error",
+      "react/jsx-boolean-value": "error"
     },
     "overrides": [
       {

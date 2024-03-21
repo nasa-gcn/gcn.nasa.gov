@@ -94,7 +94,7 @@ describe('ClientSampleCode', () => {
       <ClientSampleCode
         clientId={clientId}
         clientSecret={clientSecret}
-        listTopics={true}
+        listTopics
         language="py"
         topics={[]}
       />

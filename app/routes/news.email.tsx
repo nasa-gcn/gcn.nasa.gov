@@ -93,7 +93,7 @@ export default function () {
               id="subject"
               type="text"
               defaultValue={'GCN Announcement: [NEW FEATURE]'}
-              required={true}
+              required
               onChange={({ target: { value } }) => {
                 setSubjectValid(Boolean(value))
               }}
@@ -110,7 +110,7 @@ export default function () {
           <Textarea
             name="body"
             id="body"
-            required={true}
+            required
             defaultValue={defaultBody}
             className={classnames('maxw-full', {
               'usa-input--success': bodyValid,
