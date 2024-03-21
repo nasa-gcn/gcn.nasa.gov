@@ -20,8 +20,8 @@ export default function CollapsableInfo({
   children,
 }: {
   id: string
-  preambleText: ReactElement | string
-  buttonText: string
+  preambleText: ReactNode
+  buttonText: ReactNode
   children: ReactNode
 }) {
   const [showContent, toggleShowContent] = useStateToggle(false)
