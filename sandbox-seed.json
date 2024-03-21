@@ -4754,363 +4754,363 @@
   ],
   "synonyms": [
     {
-      "uuid": "471b4932-6bf7-46bd-8ae9-937579351d40",
+      "synonymId": "471b4932-6bf7-46bd-8ae9-937579351d40",
       "eventId": "GRB 230911C"
     },
     {
-      "uuid": "471b4932-6bf7-46bd-8ae9-937579351d40",
+      "synonymId": "471b4932-6bf7-46bd-8ae9-937579351d40",
       "eventId": "GRB 230728A"
     },
     {
-      "uuid": "471b4932-6bf7-46bd-8ae9-937579351d40",
+      "synonymId": "471b4932-6bf7-46bd-8ae9-937579351d40",
       "eventId": "GRB 230919A"
     },
     {
-      "uuid": "090aa925-0276-47c0-96f9-a3027a9be761",
+      "synonymId": "090aa925-0276-47c0-96f9-a3027a9be761",
       "eventId": "GRB 230904A"
     },
     {
-      "uuid": "090aa925-0276-47c0-96f9-a3027a9be761",
+      "synonymId": "090aa925-0276-47c0-96f9-a3027a9be761",
       "eventId": "GRB 230824A"
     },
     {
-      "uuid": "090aa925-0276-47c0-96f9-a3027a9be761",
+      "synonymId": "090aa925-0276-47c0-96f9-a3027a9be761",
       "eventId": "IceCube-230914A"
     },
     {
-      "uuid": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230805B"
     },
     {
-      "uuid": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230827.256"
     },
     {
-      "uuid": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230803A"
     },
     {
-      "uuid": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
+      "synonymId": "8773cbbb-a06a-4370-ae02-c3e896650ef6",
       "eventId": "GRB 230918A"
     },
     {
-      "uuid": "5ed66644-3615-4870-9a09-d15a1dee2e0c",
+      "synonymId": "5ed66644-3615-4870-9a09-d15a1dee2e0c",
       "eventId": "GRB 230818A"
     },
     {
-      "uuid": "5ed66644-3615-4870-9a09-d15a1dee2e0c",
+      "synonymId": "5ed66644-3615-4870-9a09-d15a1dee2e0c",
       "eventId": "GRB 230816A"
     },
     {
-      "uuid": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
+      "synonymId": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
       "eventId": "GRB 230916B"
     },
     {
-      "uuid": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
+      "synonymId": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
       "eventId": "GRB 230812B"
     },
     {
-      "uuid": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
+      "synonymId": "fe00636d-ae9a-45fe-9941-9cbc6e84da04",
       "eventId": "GRB 230727A"
     },
     {
-      "uuid": "f9a356be-911c-414c-b58b-7fa870af6b6e",
+      "synonymId": "f9a356be-911c-414c-b58b-7fa870af6b6e",
       "eventId": "GRB 230913A"
     },
     {
-      "uuid": "f9a356be-911c-414c-b58b-7fa870af6b6e",
+      "synonymId": "f9a356be-911c-414c-b58b-7fa870af6b6e",
       "eventId": "GRB 230913.70"
     },
     {
-      "uuid": "8acd5039-f27c-4d0e-b82a-0b289ed02981",
+      "synonymId": "8acd5039-f27c-4d0e-b82a-0b289ed02981",
       "eventId": "GRB 230918B"
     },
     {
-      "uuid": "8acd5039-f27c-4d0e-b82a-0b289ed02981",
+      "synonymId": "8acd5039-f27c-4d0e-b82a-0b289ed02981",
       "eventId": "GRB 230906A"
     },
     {
-      "uuid": "5f8fcbda-2405-4e62-89b7-57ccdb08782f",
+      "synonymId": "5f8fcbda-2405-4e62-89b7-57ccdb08782f",
       "eventId": "GRB 230804A"
     },
     {
-      "uuid": "5f8fcbda-2405-4e62-89b7-57ccdb08782f",
+      "synonymId": "5f8fcbda-2405-4e62-89b7-57ccdb08782f",
       "eventId": "IceCube-230727A"
     },
     {
-      "uuid": "c43a6d5e-217b-44da-8354-c1be125e47b1",
+      "synonymId": "c43a6d5e-217b-44da-8354-c1be125e47b1",
       "eventId": "GRB 230805A"
     },
     {
-      "uuid": "c43a6d5e-217b-44da-8354-c1be125e47b1",
+      "synonymId": "c43a6d5e-217b-44da-8354-c1be125e47b1",
       "eventId": "GRB 230908A"
     },
     {
-      "uuid": "13e6c344-cc20-430d-b2a9-cbb453abd233",
+      "synonymId": "13e6c344-cc20-430d-b2a9-cbb453abd233",
       "eventId": "GRB 230903A"
     },
     {
-      "uuid": "13e6c344-cc20-430d-b2a9-cbb453abd233",
+      "synonymId": "13e6c344-cc20-430d-b2a9-cbb453abd233",
       "eventId": "IceCube-230823A"
     },
     {
-      "uuid": "13e6c344-cc20-430d-b2a9-cbb453abd233",
+      "synonymId": "13e6c344-cc20-430d-b2a9-cbb453abd233",
       "eventId": "GRB 230728.12"
     },
     {
-      "uuid": "260ff8fc-7e86-4c35-8b5f-f0bbaeb88179",
+      "synonymId": "260ff8fc-7e86-4c35-8b5f-f0bbaeb88179",
       "eventId": "GRB 230911D"
     },
     {
-      "uuid": "260ff8fc-7e86-4c35-8b5f-f0bbaeb88179",
+      "synonymId": "260ff8fc-7e86-4c35-8b5f-f0bbaeb88179",
       "eventId": "GRB 230824.72"
     },
     {
-      "uuid": "94ea437d-ff4c-4cbb-8e1b-2ecdc87e737b",
+      "synonymId": "94ea437d-ff4c-4cbb-8e1b-2ecdc87e737b",
       "eventId": "GRB 230904B"
     },
     {
-      "uuid": "94ea437d-ff4c-4cbb-8e1b-2ecdc87e737b",
+      "synonymId": "94ea437d-ff4c-4cbb-8e1b-2ecdc87e737b",
       "eventId": "GRB 230917A"
     },
     {
-      "uuid": "4b9c2382-f5d5-4d4d-8dea-eccaa1c1f9d2",
+      "synonymId": "4b9c2382-f5d5-4d4d-8dea-eccaa1c1f9d2",
       "eventId": "GRB 230815A"
     },
     {
-      "uuid": "4b9c2382-f5d5-4d4d-8dea-eccaa1c1f9d2",
+      "synonymId": "4b9c2382-f5d5-4d4d-8dea-eccaa1c1f9d2",
       "eventId": "GRB 230902.00"
     },
     {
-      "uuid": "fb5e4482-020c-4907-8984-b4cff2b594c1",
+      "synonymId": "fb5e4482-020c-4907-8984-b4cff2b594c1",
       "eventId": "GRB 230915A"
     },
     {
-      "uuid": "fb5e4482-020c-4907-8984-b4cff2b594c1",
+      "synonymId": "fb5e4482-020c-4907-8984-b4cff2b594c1",
       "eventId": "GRB 230911A"
     },
     {
-      "uuid": "8f9e97c0-ebed-4616-9446-4851bd2de2cb",
+      "synonymId": "8f9e97c0-ebed-4616-9446-4851bd2de2cb",
       "eventId": "GRB 230802A"
     },
     {
-      "uuid": "8f9e97c0-ebed-4616-9446-4851bd2de2cb",
+      "synonymId": "8f9e97c0-ebed-4616-9446-4851bd2de2cb",
       "eventId": "GRB 230806A"
     },
     {
-      "uuid": "8040d18b-90f1-4a87-bdf8-c9e3867064a1",
+      "synonymId": "8040d18b-90f1-4a87-bdf8-c9e3867064a1",
       "eventId": "GRB 230905B"
     },
     {
-      "uuid": "8040d18b-90f1-4a87-bdf8-c9e3867064a1",
+      "synonymId": "8040d18b-90f1-4a87-bdf8-c9e3867064a1",
       "eventId": "GRB 230826A"
     },
     {
-      "uuid": "bac2b5ea-2b18-4270-92e1-ad9356842b04",
+      "synonymId": "bac2b5ea-2b18-4270-92e1-ad9356842b04",
       "eventId": "GRB 230904C"
     },
     {
-      "uuid": "bac2b5ea-2b18-4270-92e1-ad9356842b04",
+      "synonymId": "bac2b5ea-2b18-4270-92e1-ad9356842b04",
       "eventId": "GRB 230921A"
     },
     {
-      "uuid": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
+      "synonymId": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
       "eventId": "GRB 230827B"
     },
     {
-      "uuid": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
+      "synonymId": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
       "eventId": "GRB 230723A"
     },
     {
-      "uuid": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
+      "synonymId": "a26b7a7a-373a-41d2-a24a-6552919f9f40",
       "eventId": "GRB 230814A"
     },
     {
-      "uuid": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
+      "synonymId": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
       "eventId": "GRB 230818B"
     },
     {
-      "uuid": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
+      "synonymId": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
       "eventId": "GRB 230911B"
     },
     {
-      "uuid": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
+      "synonymId": "bee236c9-c6e5-4c1d-bb13-0a9f2c33439a",
       "eventId": "GRB 230812.79"
     },
     {
-      "uuid": "1e61d317-c2bf-469c-838a-ad1d79161fef",
+      "synonymId": "1e61d317-c2bf-469c-838a-ad1d79161fef",
       "eventId": "GRB 230802B"
     },
     {
-      "uuid": "1e61d317-c2bf-469c-838a-ad1d79161fef",
+      "synonymId": "1e61d317-c2bf-469c-838a-ad1d79161fef",
       "eventId": "GRB 230807A"
     },
     {
-      "uuid": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
+      "synonymId": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
       "eventId": "IceCube-230707A"
     },
     {
-      "uuid": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
+      "synonymId": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
       "eventId": "GRB 230824.10"
     },
     {
-      "uuid": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
+      "synonymId": "5cc74db8-78c0-4cf5-bf75-48f07a92cc31",
       "eventId": "IceCube-230724A"
     },
     {
-      "uuid": "d0066bdb-de52-4843-a3f1-813609ada880",
+      "synonymId": "d0066bdb-de52-4843-a3f1-813609ada880",
       "eventId": "GRB 230828A"
     },
     {
-      "uuid": "d0066bdb-de52-4843-a3f1-813609ada880",
+      "synonymId": "d0066bdb-de52-4843-a3f1-813609ada880",
       "eventId": "IceCube-230725A"
     },
     {
-      "uuid": "b4e3c88b-0eca-4402-94aa-e5f4ec1b4f91",
+      "synonymId": "b4e3c88b-0eca-4402-94aa-e5f4ec1b4f91",
       "eventId": "GRB 230827A"
     },
     {
-      "uuid": "b4e3c88b-0eca-4402-94aa-e5f4ec1b4f91",
+      "synonymId": "b4e3c88b-0eca-4402-94aa-e5f4ec1b4f91",
       "eventId": "GRB 230820.80"
     },
     {
-      "uuid": "4389eb57-8b14-42e4-952a-2e1da985ffbc",
+      "synonymId": "4389eb57-8b14-42e4-952a-2e1da985ffbc",
       "eventId": "GRB 230808A"
     },
     {
-      "uuid": "4389eb57-8b14-42e4-952a-2e1da985ffbc",
+      "synonymId": "4389eb57-8b14-42e4-952a-2e1da985ffbc",
       "eventId": "GRB 230916.18"
     },
     {
-      "uuid": "d0fb4eb0-9f75-43b6-ab57-cce09f0a330a",
+      "synonymId": "d0fb4eb0-9f75-43b6-ab57-cce09f0a330a",
       "eventId": "GRB 230817A"
     },
     {
-      "uuid": "d0fb4eb0-9f75-43b6-ab57-cce09f0a330a",
+      "synonymId": "d0fb4eb0-9f75-43b6-ab57-cce09f0a330a",
       "eventId": "GRB 230916.19"
     },
     {
-      "uuid": "70b23e5f-3a50-47ae-ab04-3fcb628f3419",
+      "synonymId": "70b23e5f-3a50-47ae-ab04-3fcb628f3419",
       "eventId": "GRB 230820.82"
     },
     {
-      "uuid": "70b23e5f-3a50-47ae-ab04-3fcb628f3419",
+      "synonymId": "70b23e5f-3a50-47ae-ab04-3fcb628f3419",
       "eventId": "GRB 230910A"
     },
     {
-      "uuid": "b47ee2bd-a230-4054-a109-59731cdcba2a",
+      "synonymId": "b47ee2bd-a230-4054-a109-59731cdcba2a",
       "eventId": "GRB 230816.67"
     },
     {
-      "uuid": "b47ee2bd-a230-4054-a109-59731cdcba2a",
+      "synonymId": "b47ee2bd-a230-4054-a109-59731cdcba2a",
       "eventId": "GRB 230820.81"
     },
     {
-      "uuid": "d015209c-9750-47c6-b8e9-180ae8a85f01",
+      "synonymId": "d015209c-9750-47c6-b8e9-180ae8a85f01",
       "eventId": "GRB 230808B"
     },
     {
-      "uuid": "d015209c-9750-47c6-b8e9-180ae8a85f01",
+      "synonymId": "d015209c-9750-47c6-b8e9-180ae8a85f01",
       "eventId": "ZTF23aaoohpy"
     },
     {
-      "uuid": "1c340fe1-b776-4318-84c6-5472597339f0",
+      "synonymId": "1c340fe1-b776-4318-84c6-5472597339f0",
       "eventId": "GRB 230731A"
     },
     {
-      "uuid": "1c340fe1-b776-4318-84c6-5472597339f0",
+      "synonymId": "1c340fe1-b776-4318-84c6-5472597339f0",
       "eventId": "GRB 230815B"
     },
     {
-      "uuid": "58867707-d4e8-41f2-83e8-eb547901d365",
+      "synonymId": "58867707-d4e8-41f2-83e8-eb547901d365",
       "eventId": "GRB 230915B"
     },
     {
-      "uuid": "58867707-d4e8-41f2-83e8-eb547901d365",
+      "synonymId": "58867707-d4e8-41f2-83e8-eb547901d365",
       "eventId": "GRB 230818.98"
     },
     {
-      "uuid": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
+      "synonymId": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
       "eventId": "GRB 230916.13"
     },
     {
-      "uuid": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
+      "synonymId": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
       "eventId": "GRB 230816.80"
     },
     {
-      "uuid": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
+      "synonymId": "ee2aabed-a4f9-410b-9f48-681c1adcbb78",
       "eventId": "GRB 230822A"
     },
     {
-      "uuid": "1b669a28-08ff-47f8-a3ae-b2572007ca99",
+      "synonymId": "1b669a28-08ff-47f8-a3ae-b2572007ca99",
       "eventId": "GRB 230825.85"
     },
     {
-      "uuid": "1b669a28-08ff-47f8-a3ae-b2572007ca99",
+      "synonymId": "1b669a28-08ff-47f8-a3ae-b2572007ca99",
       "eventId": "GRB 230820A"
     },
     {
-      "uuid": "be25482a-dd6a-4963-8952-11953dfa7b0c",
+      "synonymId": "be25482a-dd6a-4963-8952-11953dfa7b0c",
       "eventId": "GRB 230821.64"
     },
     {
-      "uuid": "be25482a-dd6a-4963-8952-11953dfa7b0c",
+      "synonymId": "be25482a-dd6a-4963-8952-11953dfa7b0c",
       "eventId": "GRB 230824B"
     },
     {
-      "uuid": "ff7ff6ea-0106-47bb-8ce0-600ebefdecfd",
+      "synonymId": "ff7ff6ea-0106-47bb-8ce0-600ebefdecfd",
       "eventId": "GRB 230205A"
     },
     {
-      "uuid": "ff7ff6ea-0106-47bb-8ce0-600ebefdecfd",
+      "synonymId": "ff7ff6ea-0106-47bb-8ce0-600ebefdecfd",
       "eventId": "LIGO/Virgo S230917af"
     },
     {
-      "uuid": "4d073e7c-7d58-4139-8e89-e058fc083423",
+      "synonymId": "4d073e7c-7d58-4139-8e89-e058fc083423",
       "eventId": "GRB 230825.75"
     },
     {
-      "uuid": "4d073e7c-7d58-4139-8e89-e058fc083423",
+      "synonymId": "4d073e7c-7d58-4139-8e89-e058fc083423",
       "eventId": "GRB 230916.12"
     },
     {
-      "uuid": "a3afaf30-bcc7-4f00-8048-6dcde44039aa",
+      "synonymId": "a3afaf30-bcc7-4f00-8048-6dcde44039aa",
       "eventId": "GRB 230723B"
     },
     {
-      "uuid": "a3afaf30-bcc7-4f00-8048-6dcde44039aa",
+      "synonymId": "a3afaf30-bcc7-4f00-8048-6dcde44039aa",
       "eventId": "GRB 230824.58"
     },
     {
-      "uuid": "6ffdc88b-9817-4318-8aaa-14b52794fb5d",
+      "synonymId": "6ffdc88b-9817-4318-8aaa-14b52794fb5d",
       "eventId": "GRB 230916.11"
     },
     {
-      "uuid": "6ffdc88b-9817-4318-8aaa-14b52794fb5d",
+      "synonymId": "6ffdc88b-9817-4318-8aaa-14b52794fb5d",
       "eventId": "GRB 230903.72"
     },
     {
-      "uuid": "9ca71208-0a81-47b0-88a0-88d103df330e",
+      "synonymId": "9ca71208-0a81-47b0-88a0-88d103df330e",
       "eventId": "GRB 230811D"
     },
     {
-      "uuid": "9ca71208-0a81-47b0-88a0-88d103df330e",
+      "synonymId": "9ca71208-0a81-47b0-88a0-88d103df330e",
       "eventId": "GRB 230916A"
     },
     {
-      "uuid": "3702f560-30fa-4aa8-88f0-d27205fd23c6",
+      "synonymId": "3702f560-30fa-4aa8-88f0-d27205fd23c6",
       "eventId": "GRB 230905A"
     },
     {
-      "uuid": "3702f560-30fa-4aa8-88f0-d27205fd23c6",
+      "synonymId": "3702f560-30fa-4aa8-88f0-d27205fd23c6",
       "eventId": "LIGO/Virgo S230802aq"
     },
     {
-      "uuid": "62fe8590-42e4-4917-afea-db6a0a84079a",
+      "synonymId": "62fe8590-42e4-4917-afea-db6a0a84079a",
       "eventId": "GRB 230826.81"
     },
     {
-      "uuid": "62fe8590-42e4-4917-afea-db6a0a84079a",
+      "synonymId": "62fe8590-42e4-4917-afea-db6a0a84079a",
       "eventId": "GRB 230812A"
     }
   ],

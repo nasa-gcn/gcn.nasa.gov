@@ -140,7 +140,7 @@ legacy_users
   name legacyAnnouncementReceivers
 
 synonyms
-  uuid *String
+  synonymId *String
   name synonymsByUuid
 
 @aws
