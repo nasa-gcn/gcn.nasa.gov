@@ -22,7 +22,6 @@
     "deploy": "arc deploy --prune --production",
     "clean": "rimraf --glob build/static app/css \"build/**/index.*\" \"build/**/metafile.*\" \"build/**/version.txt\" \"app/**/*.css\" \"app/**/*.css.map\" sam.json sam.yaml .cache",
     "test": "jest",
-    "test-coverage": "jest --coverage",
     "typecheck": "tsc"
   },
   "dependencies": {
