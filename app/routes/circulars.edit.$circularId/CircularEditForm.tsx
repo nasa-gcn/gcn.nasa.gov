@@ -218,10 +218,8 @@ export function CircularEditForm({
         </InputGroup>
         <CollapsableInfo
           id="subjectDescription"
-          preambleText={
-            'The subject line must contain (and should start with) the name of the transient, which must start with one of the'
-          }
-          buttonText={'known keywords'}
+          preambleText="The subject line must contain (and should start with) the name of the transient, which must start with one of the"
+          buttonText="known keywords"
         >
           <CircularsKeywords />
         </CollapsableInfo>
