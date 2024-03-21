@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { redirect } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
@@ -14,10 +13,13 @@ import { getUser } from '../_auth/user.server'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
-  const isModerator =
-    user?.groups.includes('gcn.nasa.gov/circular-moderator') || false
+  const isModerator = user?.groups.includes('gcn.nasa.gov/circular-moderator')
 
-  if (!isModerator) return redirect('/')
+  if (!isModerator) {
+    throw new Response(null, {
+      status: 403,
+    })
+  }
   return null
 }
 

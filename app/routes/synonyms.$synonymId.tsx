@@ -10,6 +10,7 @@ import { redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, FormGroup, Icon } from '@trussworks/react-uswds'
 import { useState } from 'react'
+import invariant from 'tiny-invariant'
 
 import {
   deleteSynonyms,
@@ -19,24 +20,23 @@ import {
 import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ params: { synonymId } }: LoaderFunctionArgs) {
-  if (!synonymId) return { synonymId: null, eventIds: null }
+  invariant(synonymId)
   const synonyms = await getSynonymsByUuid(synonymId)
-  const eventIds = [] as string[]
-  synonyms.forEach((synonym) => {
-    eventIds.push(synonym.eventId)
-  })
+  const eventIds = synonyms.map((synonym) => synonym.eventId)
 
   return {
-    synonymId,
     eventIds,
   }
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({
+  request,
+  params: { synonymId },
+}: ActionFunctionArgs) {
+  invariant(synonymId)
   const data = await request.formData()
   const intent = getFormDataString(data, 'intent')
-  const synonymId = getFormDataString(data, 'synonymId')
-  if (!synonymId) return redirect('/synonyms')
+
   if (intent === 'edit') {
     const additions =
       getFormDataString(data, 'addSynonyms')?.split(',') || ([] as string[])
@@ -49,19 +49,19 @@ export async function action({ request }: ActionFunctionArgs) {
       additions: filtered_additions,
       subtractions: filtered_subtractions,
     })
-
-    return redirect(`/synonyms/${synonymId}`)
-  }
-  if (intent === 'delete') {
+    return null
+  } else if (intent === 'delete') {
     await deleteSynonyms(synonymId)
-
     return redirect('/synonyms')
+  } else {
+    throw new Response('Unknown intent.', {
+      status: 400,
+    })
   }
-  return null
 }
 
 export default function () {
-  const { synonymId, eventIds } = useLoaderData<typeof loader>()
+  const { eventIds } = useLoaderData<typeof loader>()
   const [deleteSynonyms, setDeleteSynonyms] = useState([] as string[])
   const [synonyms, setSynonyms] = useState(eventIds || [])
   const [addSynonyms, setAddSynonyms] = useState([] as string[])
@@ -72,7 +72,7 @@ export default function () {
       <ButtonGroup>
         <h1>Synonym Group</h1>
         <ButtonGroup className="margin-bottom-2">
-          <Link to={`/synonyms`} className="usa-button">
+          <Link to="/synonyms" className="usa-button">
             <div className="display-inline">
               <Icon.ArrowBack
                 role="presentation"
@@ -82,11 +82,6 @@ export default function () {
           </Link>
           <Form method="POST">
             <input type="hidden" name="intent" value="delete" />
-            <input
-              type="hidden"
-              name="synonymId"
-              value={synonymId || undefined}
-            />
             <Button type="submit">
               <Icon.Delete
                 role="presentation"
@@ -116,12 +111,27 @@ export default function () {
               type="button"
               onClick={(e) => {
                 if (!newSynonym) return
-                setSynonyms([...synonyms, newSynonym])
-                setAddSynonyms([...addSynonyms, newSynonym])
+                setDeleteSynonyms(
+                  deleteSynonyms.filter(function (item) {
+                    return item !== newSynonym
+                  })
+                )
+                const existingSynonyms = [...synonyms, newSynonym].filter(
+                  function (v, i, self) {
+                    return i == self.indexOf(v)
+                  }
+                )
+                setSynonyms(existingSynonyms)
+                const additionalSynonyms = [...addSynonyms, newSynonym].filter(
+                  function (v, i, self) {
+                    return i == self.indexOf(v)
+                  }
+                )
+                setAddSynonyms(additionalSynonyms)
                 setNewSynonym('')
               }}
             >
-              <Icon.Add /> Add
+              <Icon.Add role="presentation" /> Add
             </Button>
           </ButtonGroup>
         </FormGroup>
@@ -134,7 +144,6 @@ export default function () {
         }}
       >
         <input type="hidden" name="intent" value="edit" />
-        <input type="hidden" name="synonymId" value={synonymId || undefined} />
         <FormGroup>
           <input type="hidden" name="deleteSynonyms" value={deleteSynonyms} />
           <input type="hidden" name="addSynonyms" value={addSynonyms} />
@@ -153,9 +162,14 @@ export default function () {
                           return item !== synonym
                         })
                       )
+                      setAddSynonyms(
+                        synonyms.filter(function (item) {
+                          return item !== synonym
+                        })
+                      )
                     }}
                   >
-                    <Icon.Delete />
+                    <Icon.Delete aria-label="Delete" />
                   </Button>
                 </ButtonGroup>
               </li>
