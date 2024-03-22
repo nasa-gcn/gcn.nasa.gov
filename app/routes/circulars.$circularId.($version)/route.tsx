@@ -21,7 +21,7 @@ import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
-import { useFeature } from '~/root'
+import { useFeature, useModStatus, useSubmitterStatus } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> = {
@@ -119,16 +119,18 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        <Link
-          className="usa-button usa-button--outline"
-          to={`/circulars/correction/${circularId}`}
-        >
-          Request Correction
-        </Link>
+        {useSubmitterStatus() && (
+          <Link
+            className="usa-button usa-button--outline"
+            to={`/circulars/correction/${circularId}`}
+          >
+            Request Correction
+          </Link>
+        )}
         {result?.history && result.history.length > 0 && (
           <CircularsHistory circular={circularId} history={result?.history} />
         )}
-        {result?.userIsModerator && (
+        {useModStatus() && (
           <Link
             to={`/circulars/edit/${circularId}`}
             className="usa-button usa-button--outline"
