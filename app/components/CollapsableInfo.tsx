@@ -8,7 +8,6 @@
 import { Button, Icon } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 import { useState } from 'react'
-import type { ReactElement } from 'rehype-react/lib'
 
 /**
  * An expand/collapse component for form field information.
