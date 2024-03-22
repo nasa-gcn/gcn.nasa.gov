@@ -138,9 +138,6 @@
     "typescript": "^5.4.2",
     "yarn": "^1.22.21"
   },
-  "overrides": {
-    "@architect/hydrate": "github:lpsinger/hydrate#pip-fixes"
-  },
   "engines": {
     "node": ">=20"
   },
