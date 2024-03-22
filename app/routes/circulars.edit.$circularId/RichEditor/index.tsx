@@ -354,16 +354,6 @@ export function RichEditor({
         }
       }}
     >
-      {editing || (
-        <Preview
-          id="preview"
-          role="tabpanel"
-          aria-labelledby="previewButton"
-          className={styles.preview}
-        >
-          {value}
-        </Preview>
-      )}
       <Grid row className="position-absolute width-full padding-top-05">
         <Grid
           col="auto"
@@ -472,6 +462,16 @@ export function RichEditor({
         onKeyDown={onKeyDown}
         {...props}
       />
+      {editing || (
+        <Preview
+          id="preview"
+          role="tabpanel"
+          aria-labelledby="previewButton"
+          className={styles.preview}
+        >
+          {value}
+        </Preview>
+      )}
     </div>
   )
 }

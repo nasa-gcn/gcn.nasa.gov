@@ -14,14 +14,15 @@
   .preview,
   textarea {
     border-top: 56px solid transparent;
+    min-height: 256px;
+    max-width: 100%;
+    margin-top: 0;
   }
 
   .preview {
     width: 100%;
     height: 100%;
     max-width: 100%;
-    overflow: scroll;
-    position: absolute;
     padding: 10px;
     padding-top: 6px;
     border-left: 1px solid darkslategray;
@@ -30,15 +31,12 @@
   }
 
   textarea {
-    margin-top: 0;
-    max-width: 100%;
-    min-height: 256px;
     resize: vertical;
   }
 }
 
 .hidden {
-  visibility: hidden;
+  display: none;
 }
 
 .toolbarPopover {
