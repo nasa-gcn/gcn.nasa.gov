@@ -36,6 +36,7 @@ import {
   SegmentedRadioButtonGroup,
 } from './SegmentedRadioButton'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
+import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
 import { useFeature } from '~/root'
 
@@ -139,8 +140,6 @@ export function CircularEditForm({
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
   const bodyValid = bodyIsValid(body)
-  const [showKeywords, toggleShowKeywords] = useStateToggle(false)
-  const [showBodySyntax, toggleShowBodySyntax] = useStateToggle(false)
   const [showPreview, setShowPreview] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
@@ -217,33 +216,13 @@ export function CircularEditForm({
             }}
           />
         </InputGroup>
-        <div className="text-base margin-bottom-1" id="subjectDescription">
-          <small>
-            The subject line must contain (and should start with) the name of
-            the transient, which must start with one of the{' '}
-            <Button
-              unstyled
-              type="button"
-              className="usa-link"
-              aria-expanded={showKeywords}
-              onClick={toggleShowKeywords}
-            >
-              <small>
-                known keywords&nbsp;
-                {showKeywords ? (
-                  <Icon.ExpandLess role="presentation" />
-                ) : (
-                  <Icon.ExpandMore role="presentation" />
-                )}
-              </small>
-            </Button>
-          </small>
-          {showKeywords && (
-            <div className="text-base padding-x-2 padding-bottom-2">
-              <CircularsKeywords />
-            </div>
-          )}
-        </div>
+        <CollapsableInfo
+          id="subjectDescription"
+          preambleText="The subject line must contain (and should start with) the name of the transient, which must start with one of the"
+          buttonText="known keywords"
+        >
+          <CircularsKeywords />
+        </CollapsableInfo>
         <label hidden htmlFor="body">
           Body
         </label>
@@ -295,35 +274,20 @@ export function CircularEditForm({
             )}
           </>
         )}
-        <div className="text-base margin-bottom-1" id="bodyDescription">
-          <small>
-            Body text. If this is your first Circular, please review the{' '}
-            <Link to="/docs/circulars/styleguide">style guide</Link>. References
-            to Circulars, DOIs, arXiv preprints, and transients are
-            automatically shown as links; see{' '}
-            <Button
-              unstyled
-              type="button"
-              className="usa-link"
-              aria-expanded={showBodySyntax}
-              onClick={toggleShowBodySyntax}
-            >
-              <small>
-                syntax&nbsp;
-                {showBodySyntax ? (
-                  <Icon.ExpandLess role="presentation" />
-                ) : (
-                  <Icon.ExpandMore role="presentation" />
-                )}
-              </small>
-            </Button>
-          </small>
-        </div>
-        {showBodySyntax && (
-          <div className="text-base padding-x-2 padding-bottom-2">
-            <SyntaxReference />
-          </div>
-        )}
+        <CollapsableInfo
+          id="bodyDescription"
+          preambleText={
+            <>
+              Body text. If this is your first Circular, please review the{' '}
+              <Link to="/docs/circulars/styleguide">style guide</Link>.
+              References to Circulars, DOIs, arXiv preprints, and transients are
+              automatically shown as links; see
+            </>
+          }
+          buttonText="syntax"
+        >
+          <SyntaxReference />
+        </CollapsableInfo>
         <ButtonGroup>
           <Link
             to={`/circulars${searchString}`}
@@ -363,14 +327,4 @@ function useBodyPlaceholder() {
 
     ...
     `)
-}
-
-function useStateToggle(value: boolean) {
-  const [state, setState] = useState(value)
-
-  function toggle() {
-    setState((state) => !state)
-  }
-
-  return [state, toggle] as const
 }
