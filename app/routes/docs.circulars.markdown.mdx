@@ -3,6 +3,8 @@ handle:
   breadcrumb: Astro Flavored Markdown
 ---
 
+import { Table } from '@trussworks/react-uswds'
+
 import { feature } from '~/lib/env.server'
 import { SyntaxReference } from '~/routes/circulars.edit.$circularId/CircularEditForm.tsx'
 
@@ -21,7 +23,7 @@ GCN supports the use of Markdown to format text and tables when writing Circular
 
 Markdown supports a number of basic text formatting options. Text is made bold or italic by enclosing it with `**` and `*` symbols, respectively. Attaching a link to specific text is accomplished by using the format `[Link](URL)`, and URLs and emails can be easily linked to without hyperlink text by enclosing them in angle brackets.
 
-<table class="usa-table">
+<Table bordered stackedStyle="headers">
   <thead>
     <tr>
       <th>Example</th>
@@ -56,13 +58,13 @@ Markdown supports a number of basic text formatting options. Text is made bold o
     </td>
     <td>A Link to [https://gcn.nasa.gov](https://gcn.nasa.gov)</td>
   </tr>
-</table>
+</Table>
 
 ## Headers
 
 There are six levels of headers in Markdown. The number of `#` symbols at the beginning of a line determines the level of the header, with the first level being the largest and the sixth level being the smallest
 
-<table class="usa-table">
+<Table bordered stackedStyle="headers">
   <thead>
     <tr>
       <th>Example</th>
@@ -105,12 +107,12 @@ There are six levels of headers in Markdown. The number of `#` symbols at the be
       <h6>Header 6</h6>
     </td>
   </tr>
-</table>
+</Table>
 
 There is an alternate method for rendering text with the first and second header levels by following the header text with a line of `=` or `-` symbols, respectively.
 
 {/* prettier-ignore */}
-<table class="usa-table">
+<Table bordered stackedStyle="headers">
   <thead>
     <tr>
       <th>Example</th>
@@ -139,14 +141,14 @@ There is an alternate method for rendering text with the first and second header
       <h2>Header 2</h2>
     </td>
   </tr>
-</table>
+</Table>
 
 ## Lists
 
 Markdown supports both ordered and unordered lists. To create an unordered list, start a line with a `*`, `-`, or `+` symbol followed by a space. To create an ordered list, start a line with a number followed by a period and a space. Each item in a list is written on its own line.
 
 {/* prettier-ignore */}
-<table class="usa-table">
+<Table bordered stackedStyle="headers">
   <thead>
     <tr>
       <th>Example</th>
@@ -185,13 +187,12 @@ Markdown supports both ordered and unordered lists. To create an unordered list,
       </ol>
     </td>
   </tr>
-
-</table>
+</Table>
 
 Ordered and unordered nested lists are created by indenting the nested list items by four spaces.
 
 {/* prettier-ignore */}
-<table class="usa-table">
+<Table bordered stackedStyle="headers">
   <thead>
     <tr>
       <th>Example</th>
@@ -246,14 +247,14 @@ Ordered and unordered nested lists are created by indenting the nested list item
       </ol>
     </td>
   </tr>
-</table>
+</Table>
 
 ## Quotes and Code
 
 Markdown supports a format for quoting sources and for displaying code. To indicate text is quoted from elsewhere, add the `>` symbol before the quote. To format code in monospace text, enclose the code in backticks (`) for inline code. To render a block of code, include three backticks (```) on the lines before and after the code block.
 
 {/* prettier-ignore */}
-<table class="usa-table">
+<Table bordered stackedStyle="headers">
   <thead>
     <tr>
       <th>Example</th>
@@ -292,14 +293,14 @@ Markdown supports a format for quoting sources and for displaying code. To indic
       </code>
     </td>
   </tr>
-</table>
+</Table>
 
 ## Tables
 
 To format a table, use the `|` symbol to separate columns and `-` symbols to separate the header from the body. The first row of a table is rendered as the header, and the second row is the separator. The rest of the rows are the body of the table.
 
 {/* prettier-ignore */}
-<table class="usa-table">
+<Table bordered stackedStyle="headers">
   <thead>
     <tr>
       <th>Example</th>
@@ -316,7 +317,7 @@ To format a table, use the `|` symbol to separate columns and `-` symbols to sep
       ```
     </td>
     <td>
-      <table>
+      <Table>
         <thead>
           <tr>
             <th>Header 1</th>
@@ -333,10 +334,10 @@ To format a table, use the `|` symbol to separate columns and `-` symbols to sep
             <td>Row 2, Col 2</td>
           </tr>
         </tbody>
-      </table>
+      </Table>
     </td>
   </tr>
-</table>
+</Table>
 
 ## GCN Cross-References
 
