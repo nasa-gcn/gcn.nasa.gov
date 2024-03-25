@@ -1,0 +1,348 @@
+---
+handle:
+  breadcrumb: Astro Flavored Markdown
+---
+
+import { Table } from '@trussworks/react-uswds'
+
+import { feature } from '~/lib/env.server'
+import { SyntaxReference } from '~/routes/circulars.edit.$circularId/CircularEditForm.tsx'
+
+export async function loader() {
+  if (!feature('CIRCULARS_MARKDOWN')) throw new Response(null, { status: 404 })
+  return null
+}
+
+# Astro Flavored Markdown
+
+Markdown is a lightweight markup language that is used to format text with HTML while still maintaining plaintext readability. It is commonly used in web development and has been implemented by many platforms, including GitHub and Slack. More information on Markdown can be found in the documentation written by the creators of Markdown, John Gruber and Aaron Swartz, at [daringfireball.net](https://daringfireball.net/projects/markdown/).
+
+GCN supports the use of Markdown to format text and tables when writing Circulars. One can access a shortcut bar for quickly formatting text with Markdown by selecting the Markdown tab in the body section of the Circular submission web interface; the shortcut bar is then shown just above the text input area. This documentation describes the various formatting tools in the shortcut bar as well as the syntax that can be manually written to format text in Markdown.
+
+## Basic Text Formatting
+
+Markdown supports a number of basic text formatting options. Text is made bold or italic by enclosing it with `**` and `*` symbols, respectively. Attaching a link to specific text is accomplished by using the format `[Link](URL)`, and URLs and emails can be easily linked to without hyperlink text by enclosing them in angle brackets.
+
+<Table bordered stackedStyle="headers">
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>`This is **Bold**`</td>
+    <td>This is **Bold**</td>
+  </tr>
+  <tr>
+    <td>`This is *Italic*`</td>
+    <td>This is *Italic*</td>
+  </tr>
+  <tr>
+    <td>`**This is *Italic* in Bold**`</td>
+    <td>**This is *Italic* in Bold**</td>
+  </tr>
+  <tr>
+    <td>`This is ***Bold and Italic***`</td>
+    <td>This is ***Bold and Italic***</td>
+  </tr>
+  <tr>
+    <td>
+      `This is a [Link](https://gcn.nasa.gov)`
+    </td>
+    <td>This is a [Link](https://gcn.nasa.gov)</td>
+  </tr>
+  <tr>
+    <td>
+      `A Link to <https://gcn.nasa.gov>`
+    </td>
+    <td>A Link to [https://gcn.nasa.gov](https://gcn.nasa.gov)</td>
+  </tr>
+</Table>
+
+## Headers
+
+There are six levels of headers in Markdown. The number of `#` symbols at the beginning of a line determines the level of the header, with the first level being the largest and the sixth level being the smallest
+
+<Table bordered stackedStyle="headers">
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>`# Header 1`</td>
+    <td>
+      <h1>Header 1</h1>
+    </td>
+  </tr>
+  <tr>
+    <td>`## Header 2`</td>
+    <td>
+      <h2>Header 2</h2>
+    </td>
+  </tr>
+  <tr>
+    <td>`### Header 3`</td>
+    <td>
+      <h3>Header 3</h3>
+    </td>
+  </tr>
+  <tr>
+    <td>`#### Header 4`</td>
+    <td>
+      <h4>Header 4</h4>
+    </td>
+  </tr>
+  <tr>
+    <td>`##### Header 5`</td>
+    <td>
+      <h5>Header 5</h5>
+    </td>
+  </tr>
+  <tr>
+    <td>`###### Header 6`</td>
+    <td>
+      <h6>Header 6</h6>
+    </td>
+  </tr>
+</Table>
+
+There is an alternate method for rendering text with the first and second header levels by following the header text with a line of `=` or `-` symbols, respectively.
+
+{/* prettier-ignore */}
+<Table bordered stackedStyle="headers">
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>
+    ```
+    Header 1
+    ========
+    ```
+    </td>
+    <td>
+      <h1>Header 1</h1>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    ```
+    Header 2
+    --------
+    ```
+    </td>
+    <td>
+      <h2>Header 2</h2>
+    </td>
+  </tr>
+</Table>
+
+## Lists
+
+Markdown supports both ordered and unordered lists. To create an unordered list, start a line with a `*`, `-`, or `+` symbol followed by a space. To create an ordered list, start a line with a number followed by a period and a space. Each item in a list is written on its own line.
+
+{/* prettier-ignore */}
+<Table bordered stackedStyle="headers">
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>
+    ```
+    - Item 1
+    * Item 2
+    + Item 3
+    ```
+    </td>
+    <td>
+      <ul>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    ```
+    1. Item 1
+    2. Item 2
+    3. Item 3
+    ```
+    </td>
+    <td>
+      <ol>
+        <li>Item 1</li>
+        <li>Item 2</li>
+        <li>Item 3</li>
+      </ol>
+    </td>
+  </tr>
+</Table>
+
+Ordered and unordered nested lists are created by indenting the nested list items by four spaces.
+
+{/* prettier-ignore */}
+<Table bordered stackedStyle="headers">
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>
+    ```
+    - Item 1
+    - Item 2
+      - Item 2.1
+      - Item 2.2
+    - Item 3
+    ```
+    </td>
+    <td>
+      <ul>
+        <li>Item 1</li>
+        <li>
+          Item 2
+          <ul>
+            <li>Item 2.1</li>
+            <li>Item 2.2</li>
+          </ul>
+        </li>
+        <li> Item 3</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td>
+    ```
+    1. Item 1
+    2. Item 2
+        1. Item 2.1
+        2. Item 2.2
+    3. Item 3
+    ```
+    </td>
+    <td>
+      <ol>
+        <li>Item 1</li>
+        <li>
+          Item 2
+          <ol>
+            <li>Item 2.1</li>
+            <li>Item 2.2</li>
+          </ol>
+        </li>
+        <li> Item 3</li>
+      </ol>
+    </td>
+  </tr>
+</Table>
+
+## Quotes and Code
+
+Markdown supports a format for quoting sources and for displaying code. To indicate text is quoted from elsewhere, add the `>` symbol before the quote. To format code in monospace text, enclose the code in backticks (`) for inline code. To render a block of code, include three backticks (```) on the lines before and after the code block.
+
+{/* prettier-ignore */}
+<Table bordered stackedStyle="headers">
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>
+    ```
+    This is
+    >a quote
+    ```
+    </td>
+    <td>
+      This is <blockquote>a quote</blockquote>
+    </td>
+  </tr>
+  <tr>
+    <td>``This is `inline` code``</td>
+    <td>
+      This is <code>inline</code> code
+    </td>
+  </tr>
+  <tr>
+    <td>
+    ````
+    ```
+    Code Block line 1
+    Code Block line 2
+    ```
+    ````
+    </td>
+    <td>
+      <code>
+        Code block line 1<br></br>Code block line 2
+      </code>
+    </td>
+  </tr>
+</Table>
+
+## Tables
+
+To format a table, use the `|` symbol to separate columns and `-` symbols to separate the header from the body. The first row of a table is rendered as the header, and the second row is the separator. The rest of the rows are the body of the table.
+
+{/* prettier-ignore */}
+<Table bordered stackedStyle="headers">
+  <thead>
+    <tr>
+      <th>Example</th>
+      <th>Output</th>
+    </tr>
+  </thead>
+  <tr>
+    <td>
+      ```
+      | Header 1 | Header 2 |
+      | -------- | -------- |
+      | Row 1, Col 1 | Row 1, Col 2 |
+      | Row 2, Col 1 | Row 2, Col 2 |
+      ```
+    </td>
+    <td>
+      <Table>
+        <thead>
+          <tr>
+            <th>Header 1</th>
+            <th>Header 2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Row 1, Col 1</td>
+            <td>Row 1, Col 2</td>
+          </tr>
+          <tr>
+            <td>Row 2, Col 1</td>
+            <td>Row 2, Col 2</td>
+          </tr>
+        </tbody>
+      </Table>
+    </td>
+  </tr>
+</Table>
+
+## GCN Cross-References
+
+GCN also supports a cross-reference feature that allows for circulars to have links automatically generated for a number of commonly referenced sources, like DOIs, arXiv codes, and other circulars, when referenced in the body of a circular.
+
+<SyntaxReference />
+
+GCN cross-referencing is not impacted by Markdown formatting. Using Markdown for directly linking to web addresses is optional, but it can still be used for creating a hyperlink with custom text, as is shown in the basic text formatting section. Markdown hyperlinks to the aforementioned services supported by the GCN cross-reference feature are therefore also unnecessary.
