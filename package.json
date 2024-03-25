@@ -135,7 +135,7 @@
     "rimraf": "^5.0.0",
     "sass": "^1.64.2",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.2",
+    "typescript": "^5.4.3",
     "yarn": "^1.22.21"
   },
   "engines": {
