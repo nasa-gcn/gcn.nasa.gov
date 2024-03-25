@@ -16,7 +16,6 @@ export default function DetailsDropdownContent({
 }: Parameters<typeof Card>[0] & { onClose?: () => void }) {
   const contentRef = useRef<HTMLDivElement>(null)
 
-  // Use useOnClickOutside hook to handle clicks outside the component
   useOnClickOutside(contentRef, () => {
     if (onClose) onClose()
   })
