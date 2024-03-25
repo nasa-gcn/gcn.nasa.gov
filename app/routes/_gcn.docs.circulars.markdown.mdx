@@ -4,7 +4,7 @@ handle:
 ---
 
 import { feature } from '~/lib/env.server'
-import { SyntaxReference } from '~/routes/_gcn.circulars.edit.$circularId/CircularEditForm.tsx'
+import { SyntaxReference } from '~/routes/circulars.edit.$circularId/CircularEditForm.tsx'
 
 export async function loader() {
   if (!feature('CIRCULARS_MARKDOWN')) throw new Response(null, { status: 404 })
