@@ -17,7 +17,7 @@ export default function DetailsDropdownContent({
   const contentRef = useRef<HTMLDivElement>(null)
 
   useOnClickOutside(contentRef, () => {
-    if (onClose) onClose()
+    onClose?.()
   })
 
   return (
