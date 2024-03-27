@@ -132,6 +132,7 @@ export function DateSelector({
         className={classNames('maxw-card-xlg', {
           'display-none': !showContent,
         })}
+        onClose={() => setShowContent(false)}
       >
         <CardBody>
           <Grid row>
