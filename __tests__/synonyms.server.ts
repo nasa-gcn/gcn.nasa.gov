@@ -6,6 +6,7 @@ import crypto from 'crypto'
 import { createSynonyms, putSynonyms } from '~/routes/synonyms/synonyms.server'
 
 jest.mock('@architect/functions')
+const synonymId = 'abcde-abcde-abcde-abcde-abcde'
 
 describe('createSynonyms', () => {
   beforeAll(() => {
@@ -20,9 +21,7 @@ describe('createSynonyms', () => {
       },
     })
 
-    jest
-      .spyOn(crypto, 'randomUUID')
-      .mockReturnValue('abcde-abcde-abcde-abcde-abcde')
+    jest.spyOn(crypto, 'randomUUID').mockReturnValue(synonymId)
   })
 
   afterAll(() => {
@@ -47,12 +46,13 @@ describe('createSynonyms', () => {
     const synonymousEventIds = ['eventId1', 'eventId2']
     const result = await createSynonyms(synonymousEventIds)
 
-    expect(result).toBe('abcde-abcde-abcde-abcde-abcde')
+    expect(result).toBe(synonymId)
   })
 })
 
 describe('putSynonyms', () => {
   const mockBatchWrite = jest.fn()
+
   beforeAll(() => {
     const mockClient = {
       batchWrite: mockBatchWrite,
@@ -64,9 +64,7 @@ describe('putSynonyms', () => {
       },
     })
 
-    jest
-      .spyOn(crypto, 'randomUUID')
-      .mockReturnValue('abcde-abcde-abcde-abcde-abcde')
+    jest.spyOn(crypto, 'randomUUID').mockReturnValue(synonymId)
   })
 
   afterAll(() => {
@@ -76,40 +74,34 @@ describe('putSynonyms', () => {
   test('putSynonyms should not write to DynamoDB if no additions or subtractions', async () => {
     awsSDKMock.mock('DynamoDB.DocumentClient', 'batchWrite', mockBatchWrite)
 
-    const uuid = 'abcde-abcde-abcde-abcde-abcde'
-
-    await putSynonyms({ uuid })
+    await putSynonyms({ synonymId })
 
     expect(mockBatchWrite).not.toHaveBeenCalled()
   })
 
   test('putSynonyms should write to DynamoDB if there are additions', async () => {
     awsSDKMock.mock('DynamoDB.DocumentClient', 'batchWrite', mockBatchWrite)
-
-    const uuid = 'abcde-abcde-abcde-abcde-abcde'
     const additions = ['eventId1', 'eventId2']
-    await putSynonyms({ uuid, additions })
+    await putSynonyms({ synonymId, additions })
     const params = {
       RequestItems: {
         synonyms: [
-          [
-            {
-              PutRequest: {
-                Item: {
-                  eventId: 'eventId1',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
+          {
+            PutRequest: {
+              Item: {
+                eventId: 'eventId1',
+                synonymId,
               },
             },
-            {
-              PutRequest: {
-                Item: {
-                  eventId: 'eventId2',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
+          },
+          {
+            PutRequest: {
+              Item: {
+                eventId: 'eventId2',
+                synonymId,
               },
             },
-          ],
+          },
         ],
       },
     }
@@ -119,31 +111,14 @@ describe('putSynonyms', () => {
   test('putSynonyms should write to DynamoDB if there are subtractions', async () => {
     awsSDKMock.mock('DynamoDB.DocumentClient', 'batchWrite', mockBatchWrite)
 
-    const uuid = 'abcde-abcde-abcde-abcde-abcde'
     const subtractions = ['eventId3', 'eventId4']
 
-    await putSynonyms({ uuid, subtractions })
+    await putSynonyms({ synonymId, subtractions })
     const params = {
       RequestItems: {
         synonyms: [
-          [
-            {
-              DeleteRequest: {
-                Key: {
-                  eventId: 'eventId3',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
-              },
-            },
-            {
-              DeleteRequest: {
-                Key: {
-                  eventId: 'eventId4',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
-              },
-            },
-          ],
+          { DeleteRequest: { Key: { eventId: 'eventId3' } } },
+          { DeleteRequest: { Key: { eventId: 'eventId4' } } },
         ],
       },
     }
@@ -153,51 +128,44 @@ describe('putSynonyms', () => {
   test('putSynonyms should write to DynamoDB if there are additions and subtractions', async () => {
     awsSDKMock.mock('DynamoDB.DocumentClient', 'batchWrite', mockBatchWrite)
 
-    const uuid = 'abcde-abcde-abcde-abcde-abcde'
     const additions = ['eventId1', 'eventId2']
     const subtractions = ['eventId3', 'eventId4']
 
-    await putSynonyms({ uuid, additions, subtractions })
+    await putSynonyms({ synonymId, additions, subtractions })
 
     const params = {
       RequestItems: {
         synonyms: [
-          [
-            {
-              DeleteRequest: {
-                Key: {
-                  eventId: 'eventId3',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
+          {
+            DeleteRequest: {
+              Key: {
+                eventId: 'eventId3',
               },
             },
-            {
-              DeleteRequest: {
-                Key: {
-                  eventId: 'eventId4',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
+          },
+          {
+            DeleteRequest: {
+              Key: {
+                eventId: 'eventId4',
               },
             },
-          ],
-          [
-            {
-              PutRequest: {
-                Item: {
-                  eventId: 'eventId1',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
+          },
+          {
+            PutRequest: {
+              Item: {
+                eventId: 'eventId1',
+                synonymId,
               },
             },
-            {
-              PutRequest: {
-                Item: {
-                  eventId: 'eventId2',
-                  uuid: 'abcde-abcde-abcde-abcde-abcde',
-                },
+          },
+          {
+            PutRequest: {
+              Item: {
+                eventId: 'eventId2',
+                synonymId,
               },
             },
-          ],
+          },
         ],
       },
     }

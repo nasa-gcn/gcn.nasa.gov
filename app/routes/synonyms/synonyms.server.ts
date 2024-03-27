@@ -12,14 +12,13 @@ import crypto from 'crypto'
 
 import type { Synonym } from './synonyms.lib'
 
-export async function getSynonymsByUuid(uuid: string) {
+export async function getSynonymsByUuid(synonymId: string) {
   const db = await tables()
-
-  const { Items } = await db.synonym.query({
+  const { Items } = await db.synonyms.query({
     IndexName: 'synonymsByUuid',
-    KeyConditionExpression: 'uuid = :uuid',
+    KeyConditionExpression: 'synonymId = :synonymId',
     ExpressionAttributeValues: {
-      ':uuid': uuid,
+      ':synonymId': synonymId,
     },
   })
 
@@ -87,11 +86,11 @@ export async function searchSynonymsByEventId({
       _source: body,
     }: {
       _source: Synonym
-      fields: { eventId: string; uuid: string }
+      fields: { eventId: string; synonymId: string }
     }) =>
-      results[body.uuid]
-        ? results[body.uuid].push(body.eventId)
-        : (results[body.uuid] = [body.eventId])
+      results[body.synonymId]
+        ? results[body.synonymId].push(body.eventId)
+        : (results[body.synonymId] = [body.eventId])
   )
 
   return {
@@ -122,7 +121,7 @@ export async function createSynonyms(synonymousEventIds: string[]) {
       RequestItems: {
         [TableName]: synonymousEventIds.map((eventId) => ({
           PutRequest: {
-            Item: { uuid, eventId },
+            Item: { synonymId: uuid, eventId },
           },
         })),
       },
@@ -141,11 +140,11 @@ export async function createSynonyms(synonymousEventIds: string[]) {
  *  more than 25 synonyms at a time.
  */
 export async function putSynonyms({
-  uuid,
+  synonymId,
   additions,
   subtractions,
 }: {
-  uuid: string
+  synonymId: string
   additions?: string[]
   subtractions?: string[]
 }) {
@@ -154,21 +153,21 @@ export async function putSynonyms({
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
   const writes = []
-  if (subtractions) {
+  if (subtractions?.length) {
     const subtraction_writes = subtractions.map((eventId) => ({
       DeleteRequest: {
-        Key: { uuid, eventId },
+        Key: { eventId },
       },
     }))
-    writes.push(subtraction_writes)
+    writes.push(...subtraction_writes)
   }
-  if (additions) {
+  if (additions?.length) {
     const addition_writes = additions.map((eventId) => ({
       PutRequest: {
-        Item: { uuid, eventId },
+        Item: { synonymId, eventId },
       },
     }))
-    writes.push(addition_writes)
+    writes.push(...addition_writes)
   }
   const params = {
     RequestItems: {
@@ -182,21 +181,21 @@ export async function putSynonyms({
  * BatchWriteItem has a limit of 25 items, so the user may not delete
  *  more than 25 synonyms at a time.
  */
-export async function deleteSynonyms(uuid: string) {
+export async function deleteSynonyms(synonymId: string) {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
   const results = await db.synonyms.query({
     IndexName: 'synonymsByUuid',
-    KeyConditionExpression: 'uuid = :uuid',
+    KeyConditionExpression: 'synonymId = :synonymId',
     ProjectionExpression: 'eventId',
     ExpressionAttributeValues: {
-      ':uuid': uuid,
+      ':synonymId': synonymId,
     },
   })
   const writes = results.Items.map(({ eventId }) => ({
     DeleteRequest: {
-      Key: { uuid, eventId },
+      Key: { eventId },
     },
   }))
   const params = {
