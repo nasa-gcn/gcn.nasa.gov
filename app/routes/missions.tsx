@@ -23,47 +23,47 @@ export default function () {
               <NavLink key="." to="." end>
                 Missions, Instruments, and Facilities
               </NavLink>,
-              <NavLink key="fermi" to="fermi">
-                Fermi Gamma-ray Space Telescope
-              </NavLink>,
-              <NavLink key="swift" to="swift">
-                Neil Gehrels Swift Observatory
-              </NavLink>,
-              <NavLink key="lvk" to="lvk">
-                LIGO/Virgo/KAGRA
-              </NavLink>,
-              <NavLink key="icecube" to="icecube">
-                IceCube Neutrino Observatory
-              </NavLink>,
-              <NavLink key="hawc" to="hawc">
-                HAWC
+              <NavLink key="agile" to="agile">
+                AGILE
               </NavLink>,
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
-              <NavLink key="maxi" to="maxi">
-                MAXI
+              <NavLink key="fermi" to="fermi">
+                Fermi Gamma-ray Space Telescope
+              </NavLink>,
+              <NavLink key="gecam" to="gecam">
+                GECAM
+              </NavLink>,
+              <NavLink key="hawc" to="hawc">
+                HAWC
+              </NavLink>,
+              <NavLink key="icecube" to="icecube">
+                IceCube Neutrino Observatory
               </NavLink>,
               <NavLink key="integral" to="integral">
                 INTEGRAL
               </NavLink>,
-              <NavLink key="agile" to="agile">
-                AGILE
-              </NavLink>,
               <NavLink key="konus" to="konus">
                 Konus-Wind
               </NavLink>,
+              <NavLink key="lvk" to="lvk">
+                LIGO/Virgo/KAGRA
+              </NavLink>,
+              <NavLink key="maxi" to="maxi">
+                MAXI
+              </NavLink>,
               <NavLink key="moa" to="moa">
                 MOA
+              </NavLink>,
+              <NavLink key="swift" to="swift">
+                Neil Gehrels Swift Observatory
               </NavLink>,
               <NavLink key="snews" to="snews">
                 SNEWS
               </NavLink>,
               <NavLink key="sksn" to="sksn">
                 Super-Kamiokande
-              </NavLink>,
-              <NavLink key="gecam" to="gecam">
-                GECAM
               </NavLink>,
             ]}
           />
