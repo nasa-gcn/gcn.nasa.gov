@@ -32,6 +32,9 @@ export default function () {
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
+              <NavLink key="einsteinprobe" to="einsteinprobe">
+                Einstein Probe
+              </NavLink>,
               <NavLink key="fermi" to="fermi">
                 Fermi Gamma-ray Space Telescope
               </NavLink>,
