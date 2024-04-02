@@ -1,0 +1,74 @@
+---
+handle:
+  breadcrumb: SVOM
+---
+
+import logo from './logo.png'
+
+# Space Variable Objects Monitor
+
+{' '}
+
+<img
+  src={logo}
+  align="right"
+  width="250"
+  height="165"
+  alt="SVOM logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
+**Launch Date:** June 24, 2024
+
+**Start of Science Operations:** September 2024
+
+**End of Operations:** Mission duration of 3 years
+
+**Data Archive:**
+[HEASARC SVOM Archive](https://heasarc.gsfc.nasa.gov/docs/heasarc/missions/svom.html)
+
+The Space-based multi-band astronomical Variable Objects Monitor [SVOM](https://www.svom.eu/en/the-svom-mission/) is a Franco-Chinese mission, result of a collaboration between the two national space agencies, [CNSA (China National Space Administration)](https://www.cnsa.gov.cn/english/index.html) and [CNES (Centre national d'études spatiales)](https://irfu.cea.fr/dap/en/Phocea/Vie_des_labos/Ast/ast_technique.php?id_ast=2276). SVOM mission is dedicated to the study of the most distant explosions of stars, the gamma-ray bursts (GRBs).
+
+SVOM mission consists of 4 main instruments of which 2 are French (ECLAIRs and MXT) and 2 are Chinese (GRM and VT), transient alert messages will be sent for:
+
+ <div className="overflow-table">
+
+| Instruments       | Energy Range | Field of View | Localization                               |
+| ----------------- | ------------ | ------------- | ------------------------------------------ |
+| ECLAIRs           | 4-250 keV    | 2 ster        | ~TBD° radius (statistical, 90% confidence) |
+| Gamma Ray Monitor | 15-5000 keV  | 2.6 ster      | ~TBD° radius (statistical, 90% confidence) |
+
+ </div>
+
+#### JSON-Serialized GCN Notice Types in GCN Kafka
+
+SVOM distributes alerts and localizations detections of gamma-ray transients. These notices are published on the GCN Kafka topic `gcn.notices.svom`.
+
+The [GCN schema](/schema/stable/gcn/notices/svom/alert.schema.json) and
+example [JSON ECLAIRs message](gcn/notices/svom/eclairs/alert.slewing.example.json) and [JSON GRM message](gcn/notices/svom/grm/alert.grm.example.json) files are available to use. See the [Schema Browser](/docs/schema/stable/gcn/notices/svom/alert.schema.json) for more information on the properties defined in the schema.
+
+[Detailed Description and Examples](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/svom)
+
+ <div className="overflow-table">
+
+| Type                                | Contents                 | Latency |
+| ----------------------------------- | ------------------------ | ------- |
+| `Alert`                             | Detection of a burst     | TBD     |
+| `Alert` (eclairs-wakeup)            | Localization HEALPix map | TBD     |
+| `Alert` (eclairs.alert.not-slewing) | Localization HEALPix map | TBD     |
+| `Alert` (eclairs.alert.slewing)     | Localization HEALPix map | TBD     |
+| `Alert` (grm.alert.grm)             | Localization HEALPix map | TBD     |
+
+ </div>
+
+#### Yearly Trigger Rates
+
+ <div className="overflow-table">
+
+| Type                   | Yearly Rates |
+| ---------------------- | ------------ |
+| Short gamma-ray bursts | TBD          |
+| Long gamma-ray bursts  | TBD          |
+| Solar Flares           | TBD          |
+
+ </div>
