@@ -75,6 +75,10 @@ export default function () {
   return (
     <>
       <h2>Circular {circular.circularId}</h2>
+      <h3>Original Author</h3>
+      {circular.submitter}
+      <h3>Requestor</h3>
+      {correction.requestor}
       <h3>Subject</h3>
       <DiffedContent
         oldString={circular.subject}
