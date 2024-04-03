@@ -9,7 +9,7 @@ import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Checkbox, Grid } from '@trussworks/react-uswds'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { getUser } from './_auth/user.server'
 import type {
@@ -60,22 +60,15 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function () {
   const { changeRequests } = useLoaderData<typeof loader>()
-  const [disableSubmit, setDisableSubmit] = useState(true)
-  const [selectedList, setSelectedList] = useState<string[]>([])
+  const [selectedCount, setSelectedCount] = useState(0)
 
-  function checkboxOnChange(id: string, checked: boolean) {
+  function checkboxOnChange(checked: boolean) {
     if (checked) {
-      setSelectedList([...selectedList, id])
+      setSelectedCount(selectedCount + 1)
     } else {
-      setSelectedList(selectedList.filter((x) => x !== id))
+      setSelectedCount(selectedCount - 1)
     }
   }
-
-  function setBool() {
-    setDisableSubmit(selectedList.length === 0)
-  }
-
-  useEffect(() => setBool())
 
   return (
     <>
@@ -85,8 +78,8 @@ export default function () {
           <Link to="/circulars" className="usa-button usa-button--outline">
             Back
           </Link>
-          <Button type="submit" secondary disabled={disableSubmit}>
-            Bulk Delete
+          <Button type="submit" secondary disabled={selectedCount === 0}>
+            Delete Selected
           </Button>
         </ButtonGroup>
         <SegmentedCards>
@@ -108,7 +101,7 @@ function CircularChangeRequestRow({
   checkboxOnChange,
 }: {
   changeRequest: CircularChangeRequest
-  checkboxOnChange: (id: string, checked: boolean) => void
+  checkboxOnChange: (checked: boolean) => void
 }) {
   return (
     <Grid row>
@@ -118,7 +111,7 @@ function CircularChangeRequestRow({
           name="bulkItems"
           value={`${changeRequest.circularId}::${changeRequest.requestorSub}`}
           onChange={(e) => {
-            checkboxOnChange(e.target.id, e.target.checked)
+            checkboxOnChange(e.target.checked)
           }}
           label={
             <>
