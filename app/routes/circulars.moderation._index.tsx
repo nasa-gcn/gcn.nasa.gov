@@ -9,7 +9,7 @@ import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Checkbox, Grid } from '@trussworks/react-uswds'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { getUser } from './_auth/user.server'
 import type {
@@ -54,7 +54,6 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     })
 
-  console.log(selectedItems)
   await bulkDeleteChangeRequests(selectedItems, user)
   return null
 }
@@ -62,7 +61,21 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function () {
   const { changeRequests } = useLoaderData<typeof loader>()
   const [disableSubmit, setDisableSubmit] = useState(true)
-  const [selectedList, setSelectedList] = useState([])
+  const [selectedList, setSelectedList] = useState<string[]>([])
+
+  function checkboxOnChange(id: string, checked: boolean) {
+    if (checked) {
+      setSelectedList([...selectedList, id])
+    } else {
+      setSelectedList(selectedList.filter((x) => x !== id))
+    }
+  }
+
+  function setBool() {
+    setDisableSubmit(selectedList.length === 0)
+  }
+
+  useEffect(() => setBool())
 
   return (
     <>
@@ -81,6 +94,7 @@ export default function () {
             <CircularChangeRequestRow
               key={`${correction.circularId}-${correction.requestor}`}
               changeRequest={correction}
+              checkboxOnChange={checkboxOnChange}
             />
           ))}
         </SegmentedCards>
@@ -91,8 +105,10 @@ export default function () {
 
 function CircularChangeRequestRow({
   changeRequest,
+  checkboxOnChange,
 }: {
   changeRequest: CircularChangeRequest
+  checkboxOnChange: (id: string, checked: boolean) => void
 }) {
   return (
     <Grid row>
@@ -102,8 +118,7 @@ function CircularChangeRequestRow({
           name="bulkItems"
           value={`${changeRequest.circularId}::${changeRequest.requestorSub}`}
           onChange={(e) => {
-            console.log(e.target.id)
-            console.log(e.target.checked)
+            checkboxOnChange(e.target.id, e.target.checked)
           }}
           label={
             <>
