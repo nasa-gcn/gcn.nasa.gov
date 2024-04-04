@@ -64,9 +64,9 @@ export default function () {
 
   function checkboxOnChange(checked: boolean) {
     if (checked) {
-      setSelectedCount(selectedCount + 1)
+      setSelectedCount((value) => value + 1)
     } else {
-      setSelectedCount(selectedCount - 1)
+      setSelectedCount((value) => value - 1)
     }
   }
 
