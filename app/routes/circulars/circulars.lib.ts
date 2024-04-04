@@ -159,6 +159,7 @@ export const validSubjectKeywords = [
   'LOFAR',
   'LVC',
   'LVK',
+  'LXT',
   'MAGIC',
   'MASTER',
   'MAXI',
