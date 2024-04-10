@@ -21,13 +21,10 @@ import { validate } from 'email-validator'
 import { useState } from 'react'
 
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
-import { getEnvOrDie, origin } from '~/lib/env.server'
-import {
-  getBasicAuthHeaders,
-  getCanonicalUrlHeaders,
-  pickHeaders,
-} from '~/lib/headers.server'
+import { origin } from '~/lib/env.server'
+import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
+import { postZendeskRequest } from '~/lib/zendesk.server'
 import { useEmail, useName, useRecaptchaSiteKey } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -58,27 +55,11 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   )
 
-  const response = await fetch(
-    'https://nasa-gcn.zendesk.com/api/v2/requests.json',
-    {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getBasicAuthHeaders(
-          `${getEnvOrDie('ZENDESK_TOKEN_EMAIL')}/token`,
-          getEnvOrDie('ZENDESK_TOKEN')
-        ),
-      },
-      body: JSON.stringify({
-        request: { requester: { name, email }, subject, comment: { body } },
-      }),
-    }
-  )
-  if (!response.ok) {
-    console.error(response)
-    throw new Error(`Reqeust failed with status ${response.status}`)
-  }
-
+  await postZendeskRequest({
+    requester: { name, email },
+    subject,
+    comment: { body },
+  })
   return { email, subject }
 }
 
