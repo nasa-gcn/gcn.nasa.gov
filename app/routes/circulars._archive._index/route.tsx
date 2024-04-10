@@ -46,8 +46,9 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
-import { feature } from '~/lib/env.server'
+import { feature, origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
+import { postToZendesk } from '~/lib/zendesk.server'
 import { useModStatus } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
@@ -100,10 +101,19 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'correction':
       if (!circularId)
         throw new Response('circularId is required', { status: 400 })
+      if (!user?.name || !user.email) throw new Response(null, { status: 403 })
+
       await createChangeRequest(
         { circularId: parseFloat(circularId), ...props },
         user
       )
+      await postToZendesk({
+        requester: { name: user.name, email: user.email },
+        subject: `Change Request for Circular ${circularId}`,
+        comment: {
+          body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
+        },
+      })
       newCircular = null
       break
     case 'edit':
