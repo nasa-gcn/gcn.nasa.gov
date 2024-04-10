@@ -23,7 +23,7 @@ interface RequestComment {
   body: string
 }
 
-export async function postToZendesk(request: ZendeskRequest) {
+export async function postZendeskRequest(request: ZendeskRequest) {
   const response = await fetch(
     'https://nasa-gcn.zendesk.com/api/v2/requests.json',
     {
