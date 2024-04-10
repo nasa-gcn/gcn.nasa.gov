@@ -48,7 +48,7 @@ import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { feature, origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
-import { postToZendesk } from '~/lib/zendesk.server'
+import { postZendeskRequest } from '~/lib/zendesk.server'
 import { useModStatus } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
@@ -107,7 +107,7 @@ export async function action({ request }: ActionFunctionArgs) {
         { circularId: parseFloat(circularId), ...props },
         user
       )
-      await postToZendesk({
+      await postZendeskRequest({
         requester: { name: user.name, email: user.email },
         subject: `Change Request for Circular ${circularId}`,
         comment: {
