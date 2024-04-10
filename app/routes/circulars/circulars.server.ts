@@ -28,6 +28,7 @@ import {
 import type {
   Circular,
   CircularChangeRequest,
+  CircularChangeRequestKeys,
   CircularMetadata,
 } from './circulars.lib'
 import { sendEmail } from '~/lib/email.server'
@@ -457,6 +458,17 @@ export async function deleteChangeRequest(
     
     View the Circular at ${origin}/circulars/${circularId}`,
   })
+}
+
+export async function bulkDeleteChangeRequests(
+  changeRequests: CircularChangeRequestKeys[],
+  user: User
+) {
+  await Promise.all(
+    changeRequests.map((x) =>
+      deleteChangeRequest(x.circularId, x.requestorSub, user)
+    )
+  )
 }
 
 /**
