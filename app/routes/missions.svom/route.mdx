@@ -31,21 +31,21 @@ The SVOM spacecraft carries 4 main instruments of which 2 are French (ECLAIRs an
 
  <div className="overflow-table">
 
-| Instruments       | Energy Range | Field of View | Localization                               |
-| ----------------- | ------------ | ------------- | ------------------------------------------ |
-| ECLAIRs           | 4-250 keV    | 2 ster        | ~TBD° radius (statistical, 90% confidence) |
-| Gamma Ray Monitor | 15-5000 keV  | 2.6 ster      | ~TBD° radius (statistical, 90% confidence) |
+| Instruments       | Energy Range  | Field of View | Localization                               |
+| ----------------- | ------------- | ------------- | ------------------------------------------ |
+| ECLAIRs           | 4 - 250 keV   | 2 ster        | ~TBD° radius (statistical, 90% confidence) |
+| Gamma Ray Monitor | 15 - 5000 keV | 2.6 ster      | ~TBD° radius (statistical, 90% confidence) |
 
  </div>
 
 #### JSON-Serialized GCN Notice Types in GCN Kafka
 
-SVOM distributes alerts and localizations detections of gamma-ray transients. These notices are published on the GCN Kafka topic `gcn.notices.svom`.
+SVOM distributes alerts and localizations detections of gamma-ray transients. These notices are published on the GCN Kafka and VOEvent topics as `gcn.notices.svom` and `gcn.notices.svom.voevent`, respectively.
 
-The [GCN schema](/schema/stable/gcn/notices/svom/alert.schema.json) and
+{/\* The [GCN schema](/schema/stable/gcn/notices/svom/alert.schema.json) and
 example [JSON ECLAIRs message](gcn/notices/svom/eclairs/alert.slewing.example.json) and [JSON GRM message](gcn/notices/svom/grm/alert.grm.example.json) files are available to use. See the [Schema Browser](/docs/schema/stable/gcn/notices/svom/alert.schema.json) for more information on the properties defined in the schema.
 
-[Detailed Description and Examples](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/svom)
+[Detailed Description and Examples](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/svom) \*/}
 
  <div className="overflow-table">
 
@@ -59,9 +59,9 @@ example [JSON ECLAIRs message](gcn/notices/svom/eclairs/alert.slewing.example.js
 
  <div className="overflow-table">
 
-| Type              | Yearly Rates |
-| ----------------- | ------------ |
-| ECLAIRs           | TBD          |
-| Gamma Ray Monitor | TBD          |
+| Instrument        | Type                             | Yearly Rates |
+| ----------------- | -------------------------------- | ------------ |
+| ECLAIRs           | GRBs (TBD)                       | TBD          |
+| Gamma Ray Monitor | GRBs, and other transients (TBD) | TBD          |
 
  </div>
