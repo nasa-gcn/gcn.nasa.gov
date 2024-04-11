@@ -41,7 +41,7 @@ export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
       to={`https://arxiv.org/abs/${value}`}
       fetch={async () => {
         const response = await fetch(
-          `http://export.arxiv.org/api/query?id_list=${value}`
+          `https://export.arxiv.org/api/query?id_list=${value}`
         )
         const text = await response.text()
         const entry = new DOMParser()
