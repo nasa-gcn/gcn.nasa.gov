@@ -13,6 +13,7 @@ import {
   Title,
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
+import classNames from 'classnames'
 import { useState } from 'react'
 
 import { Meatball } from '~/components/meatball/Meatball'
@@ -86,9 +87,10 @@ export function Header() {
 
   return (
     <>
-      {expanded && (
-        <div className="usa-overlay is-visible" onClick={hideMobileNav} />
-      )}
+      <div
+        className={classNames('usa-overlay', { 'is-visible': expanded })}
+        onClick={hideMobileNav}
+      />
       <USWDSHeader basic className={`usa-header--dark ${styles.header}`}>
         <div className="usa-nav-container">
           <div className="usa-navbar">
@@ -102,6 +104,7 @@ export function Header() {
           </div>
           <PrimaryNav
             mobileExpanded={expanded}
+            onToggleMobileNav={toggleMobileNav}
             items={[
               <NavLink
                 className="usa-nav__link"
@@ -211,7 +214,6 @@ export function Header() {
                 </Link>
               ),
             ]}
-            onToggleMobileNav={toggleMobileNav}
           />
         </div>
       </USWDSHeader>
