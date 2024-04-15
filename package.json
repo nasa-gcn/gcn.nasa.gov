@@ -73,7 +73,7 @@
     "ts-dedent": "^2.2.0",
     "unified": "^10.0.0",
     "unist-builder": "^4.0.0",
-    "usehooks-ts": "^3.0.2"
+    "usehooks-ts": "^3.1.0"
   },
   "devDependencies": {
     "@architect/architect": "^10.16.3",
