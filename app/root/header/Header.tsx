@@ -14,7 +14,8 @@ import {
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
 import { useEmail, useUserIdp } from '~/root'
@@ -71,6 +72,16 @@ export function Header() {
   const idp = useUserIdp()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
+  const userMenuRef = useRef<HTMLDivElement>(null)
+
+  useOnClickOutside(menuRef, () => {
+    if (expanded) setExpanded(false)
+  })
+
+  useOnClickOutside(userMenuRef, () => {
+    if (userMenuIsOpen) setUserMenuIsOpen(false)
+  })
 
   function toggleMobileNav() {
     setExpanded((expanded) => !expanded)
@@ -87,10 +98,7 @@ export function Header() {
 
   return (
     <>
-      <div
-        className={classNames('usa-overlay', { 'is-visible': expanded })}
-        onClick={hideMobileNav}
-      />
+      <div className={classNames('usa-overlay', { 'is-visible': expanded })} />
       <USWDSHeader basic className={`usa-header--dark ${styles.header}`}>
         <div className="usa-nav-container">
           <div className="usa-navbar">
@@ -102,119 +110,123 @@ export function Header() {
             </Title>
             <NavMenuButton onClick={toggleMobileNav} label="Menu" />
           </div>
-          <PrimaryNav
-            mobileExpanded={expanded}
-            onToggleMobileNav={toggleMobileNav}
-            items={[
-              <NavLink
-                className="usa-nav__link"
-                to="/missions"
-                key="/missions"
-                onClick={hideMobileNav}
-              >
-                Missions
-              </NavLink>,
-              <NavLink
-                className="usa-nav__link"
-                to="/notices"
-                key="/notices"
-                onClick={hideMobileNav}
-              >
-                Notices
-              </NavLink>,
-              <NavLink
-                className="usa-nav__link"
-                to="/circulars"
-                key="/circulars"
-                onClick={hideMobileNav}
-              >
-                Circulars
-              </NavLink>,
-              <NavLink
-                className="usa-nav__link"
-                to="/docs"
-                key="/docs"
-                onClick={hideMobileNav}
-              >
-                Documentation
-              </NavLink>,
-              email ? (
-                <>
-                  <NavDropDownButton
-                    to="/user"
-                    type="button"
-                    key="user"
-                    label={email}
-                    isOpen={userMenuIsOpen}
-                    onToggle={() => {
-                      setUserMenuIsOpen(!userMenuIsOpen)
-                    }}
-                    menuId="user"
-                  />
-                  <Menu
-                    id="user"
-                    isOpen={userMenuIsOpen}
-                    items={[
-                      <NavLink
-                        end
-                        key="user"
-                        to="/user"
-                        onClick={onClickUserMenuItem}
-                      >
-                        Profile
-                      </NavLink>,
-                      <NavLink
-                        key="endorsements"
-                        to="/user/endorsements"
-                        onClick={onClickUserMenuItem}
-                      >
-                        Peer Endorsements
-                      </NavLink>,
-                      !idp && (
-                        <NavLink
-                          key="password"
-                          to="/user/password"
-                          onClick={onClickUserMenuItem}
-                        >
-                          Reset Password
-                        </NavLink>
-                      ),
-                      <NavLink
-                        key="credentials"
-                        to="/user/credentials"
-                        onClick={onClickUserMenuItem}
-                      >
-                        Client Credentials
-                      </NavLink>,
-                      <NavLink
-                        key="email"
-                        to="/user/email"
-                        onClick={onClickUserMenuItem}
-                      >
-                        Email Notifications
-                      </NavLink>,
-                      <Link
-                        key="logout"
-                        to="/logout"
-                        onClick={onClickUserMenuItem}
-                      >
-                        Sign Out
-                      </Link>,
-                    ]}
-                  />
-                </>
-              ) : (
-                <Link
+          <div ref={menuRef}>
+            <PrimaryNav
+              mobileExpanded={expanded}
+              onToggleMobileNav={toggleMobileNav}
+              items={[
+                <NavLink
                   className="usa-nav__link"
-                  to="/login"
-                  key="/login"
+                  to="/missions"
+                  key="/missions"
                   onClick={hideMobileNav}
                 >
-                  Sign in / Sign up
-                </Link>
-              ),
-            ]}
-          />
+                  Missions
+                </NavLink>,
+                <NavLink
+                  className="usa-nav__link"
+                  to="/notices"
+                  key="/notices"
+                  onClick={hideMobileNav}
+                >
+                  Notices
+                </NavLink>,
+                <NavLink
+                  className="usa-nav__link"
+                  to="/circulars"
+                  key="/circulars"
+                  onClick={hideMobileNav}
+                >
+                  Circulars
+                </NavLink>,
+                <NavLink
+                  className="usa-nav__link"
+                  to="/docs"
+                  key="/docs"
+                  onClick={hideMobileNav}
+                >
+                  Documentation
+                </NavLink>,
+                email ? (
+                  <>
+                    <NavDropDownButton
+                      to="/user"
+                      type="button"
+                      key="user"
+                      label={email}
+                      isOpen={userMenuIsOpen}
+                      onToggle={() => {
+                        setUserMenuIsOpen(!userMenuIsOpen)
+                      }}
+                      menuId="user"
+                    />
+                    <div ref={userMenuRef}>
+                      <Menu
+                        id="user"
+                        isOpen={userMenuIsOpen}
+                        items={[
+                          <NavLink
+                            end
+                            key="user"
+                            to="/user"
+                            onClick={onClickUserMenuItem}
+                          >
+                            Profile
+                          </NavLink>,
+                          <NavLink
+                            key="endorsements"
+                            to="/user/endorsements"
+                            onClick={onClickUserMenuItem}
+                          >
+                            Peer Endorsements
+                          </NavLink>,
+                          !idp && (
+                            <NavLink
+                              key="password"
+                              to="/user/password"
+                              onClick={onClickUserMenuItem}
+                            >
+                              Reset Password
+                            </NavLink>
+                          ),
+                          <NavLink
+                            key="credentials"
+                            to="/user/credentials"
+                            onClick={onClickUserMenuItem}
+                          >
+                            Client Credentials
+                          </NavLink>,
+                          <NavLink
+                            key="email"
+                            to="/user/email"
+                            onClick={onClickUserMenuItem}
+                          >
+                            Email Notifications
+                          </NavLink>,
+                          <Link
+                            key="logout"
+                            to="/logout"
+                            onClick={onClickUserMenuItem}
+                          >
+                            Sign Out
+                          </Link>,
+                        ]}
+                      />
+                    </div>
+                  </>
+                ) : (
+                  <Link
+                    className="usa-nav__link"
+                    to="/login"
+                    key="/login"
+                    onClick={hideMobileNav}
+                  >
+                    Sign in / Sign up
+                  </Link>
+                ),
+              ]}
+            />
+          </div>
         </div>
       </USWDSHeader>
     </>
