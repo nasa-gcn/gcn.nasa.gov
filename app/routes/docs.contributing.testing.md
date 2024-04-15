@@ -7,11 +7,6 @@ handle:
 
 Adding both unit and integration tests offers numerous benefits. Unit tests allow us to verify the correctness of individual components or units of code, ensuring they function as expected in isolation. This promotes reliability, simplifies debugging, and facilitates maintenance by catching regressions early in the development process. Integration tests evaluate the interactions between different components or modules, ensuring that they work together seamlessly. By detecting integration issues early, it enhances system stability and reduces the likelihood of bugs in production.
 
-Our tests currently exist in a few places:
-
-- `\__tests__\` in the project root contains some tests for the circulars library functions and the cognito server, as well as some component tests.
-- Some tests are defined in a `__tests__` folder in the same directory as the subject of the test, for example, `\app\lib\headers.server.ts` and `\app\lib\__tests__\headers.server.ts`
-
 ## Testing Tools
 
 We are using [Jest](https://jestjs.io/) for unit testing and [Playwright](https://playwright.dev/) for integration tests.
@@ -22,17 +17,23 @@ The Playwright tests are excluded from the Jest tests by including their directo
 
 It is helpful to install the **Playwright Test for VSCode** extension by Microsoft for running Playwright tests. These can be run through the terminal with `npx playwright test` or through the Testing tab in VSCode.
 
+Our tests currently exist in a few places:
+
+- `\__tests__\` in the project root contains some unit tests for the circulars library functions and the cognito server, as well as some component tests.
+- Some tests are defined in a `__tests__` folder in the same directory as the subject of the test, for example, `\app\lib\headers.server.ts` and `\app\lib\__tests__\headers.server.ts`
+- `\__playwright__\` in the project root contains the integration tests. Tests in the folder are ignored by jest.
+
 ## Generating Integration Tests
 
-For some integration tests, an auth state may be needed. To generate one locally, start your local environment with `npm run dev`. In another terminal or command line, run:
+Playwright can record actions in your browser which can then be saved as an integration test.
+
+To start the recording browser, run the following command:
 
 ```sh
-npx playwright codegen localhost:3333 --save-storage=auth.json
+npx playwright codegen demo.playwright.dev/todomvc
 ```
 
-This will open a test browser. Sign in and codegen will automatically create `auth.json` with your cookies and localStorage saved at the end of your session. Do NOT include the generated `auth.json` in your commits, as it may contain sensitive information. To record tests using this state data, start the code gen tool with `npx playwright codegen --load-storage=auth.json localhost:3333`.
-
-See Playwright's [getting started guide](https://playwright.dev/docs/getting-started-vscode) for more information.
+See https://playwright.dev/docs/codegen-intro for more infomation on codegen.
 
 ## Guidelines
 
