@@ -14,7 +14,7 @@ import {
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
@@ -79,7 +79,7 @@ export function Header() {
     typeof window !== 'undefined' ? window.innerWidth < 1025 : false
   )
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const updateMobile = () => {
         setMobile(window.innerWidth < 1025)
