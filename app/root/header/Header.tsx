@@ -14,7 +14,7 @@ import {
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
