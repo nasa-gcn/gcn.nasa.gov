@@ -14,7 +14,7 @@ import {
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
@@ -75,6 +75,20 @@ export function Header() {
   const menuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
+  const [mobile, setMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 1025 : false
+  )
+
+  useLayoutEffect(() => {
+    if (typeof window !== 'undefined') {
+      const updateMobile = () => {
+        setMobile(window.innerWidth < 1025)
+      }
+      window.addEventListener('resize', updateMobile)
+      return () => window.removeEventListener('resize', updateMobile)
+    }
+  }, [])
+
   useOnClickOutside(menuRef, () => {
     if (expanded) setExpanded(false)
   })
@@ -98,7 +112,11 @@ export function Header() {
 
   return (
     <>
-      <div className={classNames('usa-overlay', { 'is-visible': expanded })} />
+      <div
+        className={classNames('usa-overlay', {
+          'is-visible': expanded && mobile,
+        })}
+      />
       <USWDSHeader basic className={`usa-header--dark ${styles.header}`}>
         <div className="usa-nav-container">
           <div className="usa-navbar">
