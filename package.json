@@ -95,7 +95,7 @@
     "@remix-run/dev": "^2.8.1",
     "@remix-run/eslint-config": "^2.8.1",
     "@testing-library/jest-dom": "^6.1.4",
-    "@testing-library/react": "^14.1.2",
+    "@testing-library/react": "^15.0.2",
     "@trivago/prettier-plugin-sort-imports": "^4.2.1",
     "@types/color-convert": "^2.0.1",
     "@types/diff": "^5.0.9",
