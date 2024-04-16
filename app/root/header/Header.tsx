@@ -234,7 +234,7 @@ export function Header() {
                   </>
                 ) : (
                   <Link
-                    className="usa-nav__link"
+                    className="usa-nav__link text-no-wrap"
                     to="/login"
                     key="/login"
                     onClick={hideMobileNav}
