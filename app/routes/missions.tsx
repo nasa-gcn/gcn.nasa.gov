@@ -32,7 +32,7 @@ export default function () {
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
-              <NavLink key="einsteinprobe" to="einsteinprobe">
+              <NavLink key="einstein-probe" to="einstein-probe">
                 Einstein Probe
               </NavLink>,
               <NavLink key="fermi" to="fermi">
