@@ -93,8 +93,14 @@ export function Header() {
     if (expanded) setExpanded(false)
   })
 
-  useOnClickOutside(userMenuRef, () => {
-    if (userMenuIsOpen) setUserMenuIsOpen(false)
+  useOnClickOutside(userMenuRef, (event) => {
+    if (
+      !document
+        .querySelector('#userMenuDropdown')
+        ?.contains(event.target as Node) &&
+      userMenuIsOpen
+    )
+      setUserMenuIsOpen(false)
   })
 
   function toggleMobileNav() {
@@ -171,6 +177,7 @@ export function Header() {
                       to="/user"
                       type="button"
                       key="user"
+                      id="userMenuDropdown"
                       label={email}
                       isOpen={userMenuIsOpen}
                       onToggle={() => {
