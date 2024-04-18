@@ -5,23 +5,32 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { type Circular } from '../circulars/circulars.lib'
+import { type LoaderFunction } from '@remix-run/node'
+import { type useLoaderData } from '@remix-run/react'
+
 import { AstroDataLink, AstroDataLinkWithTooltip } from './AstroDataContext'
-import { useOrigin } from '~/root'
+import { type loader as arxivTooltipLoader } from '~/routes/api.tooltip.arxiv.$value'
+import { type loader as circularTooltipLoader } from '~/routes/api.tooltip.circular.$value'
+
+async function fetchTooltipData<loader extends LoaderFunction>(
+  className: string,
+  value: JSX.IntrinsicElements['data']['value']
+): Promise<ReturnType<typeof useLoaderData<loader>>> {
+  const response = await fetch(`/api/tooltip/${className}/${value}`)
+  if (!response.ok) throw new Error('failed to fetch tooltip')
+  return await response.json()
+}
 
 export function GcnCircular({
   children,
   value,
 }: JSX.IntrinsicElements['data']) {
-  const origin = useOrigin()
-
   return (
     <AstroDataLinkWithTooltip
       to={`/circulars/${value}`}
-      fetch={async () => {
-        const response = await fetch(`${origin}/circulars/${value}.json`)
-        return (await response.json()) as Circular
-      }}
+      fetch={() =>
+        fetchTooltipData<typeof circularTooltipLoader>('circular', value)
+      }
       label={({ subject, submitter }) => (
         <>
           <div>GCN {value}</div>
@@ -39,27 +48,7 @@ export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
   return (
     <AstroDataLinkWithTooltip
       to={`https://arxiv.org/abs/${value}`}
-      fetch={async () => {
-        const response = await fetch(
-          `https://export.arxiv.org/api/query?id_list=${value}`
-        )
-        const text = await response.text()
-        const entry = new DOMParser()
-          .parseFromString(text, 'text/xml')
-          .getElementsByTagName('entry')[0]
-
-        const title = entry.getElementsByTagName('title')[0].textContent
-
-        const published = entry.getElementsByTagName('published')[0].textContent
-        const year = published && new Date(published).getFullYear()
-
-        const authorElements = entry.getElementsByTagName('author')
-        let authors =
-          authorElements[0].getElementsByTagName('name')[0].textContent
-        if (authorElements.length > 1) authors += ' et al.'
-
-        return { title, year, authors }
-      }}
+      fetch={() => fetchTooltipData<typeof arxivTooltipLoader>('arxiv', value)}
       label={({ title, year, authors }) => (
         <>
           <div>arXiv:{value}</div>
