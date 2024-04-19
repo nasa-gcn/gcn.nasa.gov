@@ -3,7 +3,7 @@ handle:
   breadcrumb: Configuration
 ---
 
-import { Table } from '@trussworks/react-uswds'
+import { Alert, Table } from '@trussworks/react-uswds'
 
 import { Default, Description, Key } from './components'
 
@@ -41,6 +41,28 @@ For both [local development](.) and [deployment](deployment), the configuration 
 ## Supported environment variables
 
 _All_ environment variables are _optional in local development_. _All_ environment variables with the exception of `GCN_FEATURES` are _required in production deployment_.
+
+<Alert
+  type="warning"
+  heading="Important note about distinct API keys"
+  headingLevel="h4"
+>
+  Every API token documented below should have a distinct value for each [deployment stage](deployment#stages), beacuse:
+  - it minimizes the security impact of a compromise of the token in one stage, and
+  - it prevents rate limiting in one deployment stage from impacting other deployment stages.
+
+#### For Astrophysics Data Service (ADS)
+
+ADS only permits a single API token per registered email address. You can use [subaddressing (also called plus
+addressing)](https://datatracker.ietf.org/doc/html/rfc5233) to create
+separate ADS accounts.
+
+For example, if your personal ADS account is
+registered to `nancy.roman@nasa.gov`, then you can create a separate ADS
+account for GCN production by registering the email address
+`nancy.roman+gcn-prod@nasa.gov`.
+
+</Alert>
 
 <Table bordered compact stackedStyle="headers">
   <thead>
