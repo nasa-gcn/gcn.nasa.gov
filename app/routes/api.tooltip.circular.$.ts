@@ -11,7 +11,7 @@ import invariant from 'tiny-invariant'
 import { get } from './circulars/circulars.server'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 
-export async function loader({ params: { value } }: LoaderFunctionArgs) {
+export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
   invariant(value)
   const { subject, submitter } = await get(parseFloat(value))
   return json(
