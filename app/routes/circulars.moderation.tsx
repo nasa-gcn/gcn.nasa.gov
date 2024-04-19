@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import { Outlet } from '@remix-run/react'
+import { Link, Outlet } from '@remix-run/react'
 
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -19,6 +19,12 @@ export default function () {
   return (
     <>
       <h1>Circulars Moderation</h1>
+      <Link
+        to="/docs/circulars/corrections"
+        className="usa-button usa-button--outline"
+      >
+        Documentation on revision requests
+      </Link>
       <Outlet />
     </>
   )
