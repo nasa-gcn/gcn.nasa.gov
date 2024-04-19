@@ -11,7 +11,7 @@ import invariant from 'tiny-invariant'
 
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
 
-export async function loader({ params: { value } }: LoaderFunctionArgs) {
+export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
   invariant(value)
 
   const url = new URL('https://export.arxiv.org/api/query')

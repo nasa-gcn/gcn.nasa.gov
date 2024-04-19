@@ -9,8 +9,9 @@ import { type LoaderFunction } from '@remix-run/node'
 import { type useLoaderData } from '@remix-run/react'
 
 import { AstroDataLink, AstroDataLinkWithTooltip } from './AstroDataContext'
-import { type loader as arxivTooltipLoader } from '~/routes/api.tooltip.arxiv.$value'
-import { type loader as circularTooltipLoader } from '~/routes/api.tooltip.circular.$value'
+import { type loader as arxivTooltipLoader } from '~/routes/api.tooltip.arxiv.$'
+import { type loader as circularTooltipLoader } from '~/routes/api.tooltip.circular.$'
+import { type loader as doiTooltipLoader } from '~/routes/api.tooltip.doi.$'
 
 async function fetchTooltipData<loader extends LoaderFunction>(
   className: string,
@@ -66,7 +67,21 @@ export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
 
 export function Doi({ children, value }: JSX.IntrinsicElements['data']) {
   return (
-    <AstroDataLink to={`https://doi.org/${value}`}>{children}</AstroDataLink>
+    <AstroDataLinkWithTooltip
+      to={`https://doi.org/${value}`}
+      fetch={() => fetchTooltipData<typeof doiTooltipLoader>('doi', value)}
+      label={({ authors, pub, year, title }) => (
+        <>
+          <div>{pub}</div>
+          <div>
+            {authors}, {year}
+          </div>
+          <div>{title}</div>
+        </>
+      )}
+    >
+      {children}
+    </AstroDataLinkWithTooltip>
   )
 }
 
