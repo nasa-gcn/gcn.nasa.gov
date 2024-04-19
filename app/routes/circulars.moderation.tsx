@@ -19,12 +19,13 @@ export default function () {
   return (
     <>
       <h1>Circulars Moderation</h1>
-      <Link
-        to="/docs/circulars/corrections"
-        className="usa-button usa-button--outline"
-      >
-        Documentation on revision requests
-      </Link>
+      <p className="usa-paragraph">
+        See{' '}
+        <Link to="/docs/circulars/corrections">
+          documentation on Circulars moderation
+        </Link>
+        .
+      </p>
       <Outlet />
     </>
   )
