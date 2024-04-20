@@ -1,0 +1,19 @@
+.ra,
+.dec {
+  display: table-row;
+
+  & > span {
+    display: table-cell;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    background: inherit;
+    text-align: left;
+  }
+
+  .h,
+  .d {
+    text-align: right;
+  }
+}
