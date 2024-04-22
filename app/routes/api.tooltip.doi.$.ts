@@ -36,7 +36,6 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
   const item:
     | {
         bibstem: string[]
-        pub: string
         pub_raw: string
         title: string[]
         first_author: string
@@ -47,10 +46,18 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
   if (!item) throw new Response(null, { status: 404 })
 
   let pub = item.pub_raw
-  if (item.bibstem[0] && item.pub_raw.startsWith(item.pub))
-    pub = item.bibstem[0] + item.pub_raw.substring(item.pub.length)
-  pub = pub.replace(' Volume ', ' Vol. ')
-  pub = pub.replace(' Issue ', ' Iss. ')
+
+  // Replace journal name with journal abbreviation
+  if (item.bibstem[0])
+    pub = `${item.bibstem[0]}${pub.substring(pub.indexOf(','))}`
+
+  // Some articles' records contain markup like `<NUMPAGES>14</NUMPAGES> pp.`
+  // Strip out such tags.
+  pub = pub.replaceAll(/<[^>]+>/g, '')
+
+  // Abbreviate some common publishing terms
+  pub = pub.replaceAll(' Volume ', ' Vol. ')
+  pub = pub.replaceAll(' Issue ', ' Iss. ')
 
   let authors = item.first_author
   if (item.author_count > 1) authors += ' et al.'
