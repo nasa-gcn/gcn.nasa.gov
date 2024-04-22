@@ -15,7 +15,7 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import { useEffect, useRef, useState } from 'react'
-import { useOnClickOutside } from 'usehooks-ts'
+import { useOnClickOutside, useWindowSize } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
 import { useEmail, useUserIdp } from '~/root'
@@ -68,6 +68,7 @@ function NavDropDownButton({
 }
 
 export function Header() {
+  const isMobileWidth = useWindowSize().width < 1024
   const email = useEmail()
   const idp = useUserIdp()
   const [expanded, setExpanded] = useState(false)
@@ -75,19 +76,11 @@ export function Header() {
   const menuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
-  const [mobile, setMobile] = useState(
-    typeof window !== 'undefined' ? window.innerWidth < 1025 : false
-  )
+  const [mobile, setMobile] = useState(isMobileWidth ?? false)
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const updateMobile = () => {
-        setMobile(window.innerWidth < 1025)
-      }
-      window.addEventListener('resize', updateMobile)
-      return () => window.removeEventListener('resize', updateMobile)
-    }
-  }, [])
+    setMobile(isMobileWidth)
+  }, [isMobileWidth])
 
   useOnClickOutside(menuRef, () => {
     if (expanded) setExpanded(false)
