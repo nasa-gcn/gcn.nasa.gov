@@ -170,7 +170,7 @@ export function CircularEditForm({
       <h1>{headerText} GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <input type="hidden" name="intent" value={intent} />
-        {circularId && (
+        {circularId !== undefined && (
           <>
             <input type="hidden" name="circularId" value={circularId} />
             <InputGroup className="border-0 maxw-full">
@@ -181,7 +181,7 @@ export function CircularEditForm({
         )}
         <InputGroup className="border-0 maxw-full">
           <InputPrefix className="wide-input-prefix">
-            {circularId ? 'Editor' : 'From'}
+            {circularId !== undefined ? 'Editor' : 'From'}
           </InputPrefix>
           <span className="padding-1">{formattedContributor} </span>
           <Link
