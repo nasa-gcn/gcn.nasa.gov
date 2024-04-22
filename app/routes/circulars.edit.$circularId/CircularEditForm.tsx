@@ -181,7 +181,7 @@ export function CircularEditForm({
         )}
         <InputGroup className="border-0 maxw-full">
           <InputPrefix className="wide-input-prefix">
-            {circularId !== undefined ? 'Editor' : 'From'}
+            {circularId === undefined ? 'From' : 'Editor'}
           </InputPrefix>
           <span className="padding-1">{formattedContributor} </span>
           <Link
