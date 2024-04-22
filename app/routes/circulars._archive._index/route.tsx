@@ -99,7 +99,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const props = { body, subject, ...(format ? { format } : {}) }
   switch (intent) {
     case 'correction':
-      if (!circularId)
+      if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
       if (!user?.name || !user.email) throw new Response(null, { status: 403 })
 
@@ -117,7 +117,7 @@ export async function action({ request }: ActionFunctionArgs) {
       newCircular = null
       break
     case 'edit':
-      if (!circularId)
+      if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
       await putVersion(
         {
