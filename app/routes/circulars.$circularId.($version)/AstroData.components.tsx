@@ -95,7 +95,7 @@ export function Tns({ children, value }: JSX.IntrinsicElements['data']) {
       fetch={() => fetchTooltipData<typeof tnsTooltipLoader>('tns', value)}
       label={({ ra, dec, names }) => (
         <>
-          <div>{names}</div>
+          <div>{names.join(', ')}</div>
           <div className={styles.ra}>
             <span className={styles.h}>{ra[0]}</span>
             <span className={styles.sep}>

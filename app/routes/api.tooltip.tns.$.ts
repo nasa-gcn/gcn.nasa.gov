@@ -51,7 +51,13 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
   if (!(ra && dec && names)) throw new Response(null, { status: 404 })
 
   return json(
-    { ra: ra.split(splitter), dec: dec.split(splitter), names },
+    {
+      ra: ra.split(splitter),
+      dec: dec.split(splitter),
+      // Some TNS events have values of `internal_names` that have an orphaned
+      // leading or trailing comma, such as `', PS24brk'`. Strip them out.
+      names: names.split(/\s*,\s*/).filter(Boolean),
+    },
     { headers: publicStaticShortTermCacheControlHeaders }
   )
 }
