@@ -7,7 +7,6 @@
  */
 import {
   AdminGetUserCommand,
-  AdminListGroupsForUserCommand,
   type AttributeType,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { ActionFunctionArgs } from '@remix-run/node'
@@ -21,6 +20,7 @@ import {
   cognito,
   extractAttribute,
   extractAttributeRequired,
+  getUserGroupStrings,
 } from '~/lib/cognito.server'
 import { getEnvOrDie } from '~/lib/env.server'
 
@@ -100,18 +100,6 @@ async function getUserAttributes(Username: string) {
   }
 }
 
-async function getUserGroups(Username: string) {
-  const UserPoolId = getEnvOrDie('COGNITO_USER_POOL_ID')
-
-  const { Groups } = await cognito.send(
-    new AdminListGroupsForUserCommand({ UserPoolId, Username })
-  )
-
-  return Groups?.map(({ GroupName }) => GroupName).filter(Boolean) as
-    | string[]
-    | undefined
-}
-
 /**
  * GCN Circulars submission by third parties on behalf of users via an API.
  *
@@ -183,7 +171,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
   const [{ existingIdp, ...attrs }, groups] = await Promise.all([
     getUserAttributes(cognitoUserName),
-    getUserGroups(cognitoUserName),
+    getUserGroupStrings(cognitoUserName),
   ])
   if (existingIdp) throw new Response('Wrong IdP', { status: 400 })
 
