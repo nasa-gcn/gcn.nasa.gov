@@ -9,7 +9,6 @@ import { tables } from '@architect/functions'
 import {
   AdminAddUserToGroupCommand,
   AdminListGroupsForUserCommand,
-  ListUsersCommand,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { dedent } from 'ts-dedent'
@@ -20,6 +19,7 @@ import {
   cognito,
   extractAttribute,
   extractAttributeRequired,
+  getCognitoUserFromSub,
   listUsersInGroup,
   maybeThrow,
 } from '~/lib/cognito.server'
@@ -96,7 +96,7 @@ export class EndorsementsServer {
         }
       )
 
-    const user = await this.#getCognitoUserForSub(endorserSub)
+    const user = await getCognitoUserFromSub(endorserSub)
 
     const { Groups } = await cognito.send(
       new AdminListGroupsForUserCommand({
@@ -348,31 +348,6 @@ export class EndorsementsServer {
   }
 
   /**
-   * Gets another user from cognito
-   *
-   * @param escapedEndorserString - the sub of another user
-   * @returns a user if found, otherwise undefined
-   */
-  async #getCognitoUserForSub(sub: string) {
-    const escapedSub = sub.replaceAll('"', '\\"')
-    const user = (
-      await cognito.send(
-        new ListUsersCommand({
-          UserPoolId: process.env.COGNITO_USER_POOL_ID,
-          Filter: `sub = "${escapedSub}"`,
-        })
-      )
-    )?.Users?.[0]
-
-    if (!user)
-      throw new Response('Requested user does not exist', {
-        status: 400,
-      })
-
-    return user
-  }
-
-  /**
    * Adds a user to the circulars submitters group
    *
    * Throws an HTTP error if:
@@ -381,7 +356,7 @@ export class EndorsementsServer {
    * @param sub - sub of another user
    */
   async #addUserToGroup(sub: string) {
-    const { Username } = await this.#getCognitoUserForSub(sub)
+    const { Username } = await getCognitoUserFromSub(sub)
 
     await cognito.send(
       new AdminAddUserToGroupCommand({
