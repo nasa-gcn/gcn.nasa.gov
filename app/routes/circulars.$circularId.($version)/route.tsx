@@ -148,7 +148,7 @@ export default function () {
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
-      <ButtonGroup className="display-flex flex-row flex-align-center flex-justify-center">
+      <ButtonGroup className="display-flex flex-justify-center">
         <Link to={`${previousCircularLinkString}`} className="usa-button">
           <div className="position-relative">
             <Icon.ArrowBack
