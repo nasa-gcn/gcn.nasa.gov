@@ -84,7 +84,7 @@ function NestedCheckboxNode({
               <Link
                 className="usa-link"
                 to={link}
-                target={isExternal ? '_blank' : undefined}
+                target="_blank"
                 rel={isExternal ? 'noreferrer' : undefined}
                 onClick={(e) => {
                   e.stopPropagation()
