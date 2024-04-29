@@ -76,12 +76,6 @@ export function Header() {
   const menuRef = useRef<HTMLDivElement>(null)
   const userMenuRef = useRef<HTMLDivElement>(null)
 
-  const [mobile, setMobile] = useState(isMobileWidth ?? false)
-
-  useEffect(() => {
-    setMobile(isMobileWidth)
-  }, [isMobileWidth])
-
   useOnClickOutside(menuRef, () => {
     if (expanded) setExpanded(false)
   })
@@ -113,7 +107,7 @@ export function Header() {
     <>
       <div
         className={classNames('usa-overlay', {
-          'is-visible': expanded && mobile,
+          'is-visible': expanded && isMobileWidth,
         })}
       />
       <USWDSHeader basic className={`usa-header--dark ${styles.header}`}>
