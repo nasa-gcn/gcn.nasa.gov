@@ -11,6 +11,7 @@ import invariant from 'tiny-invariant'
 
 import { getEnvOrDieInProduction } from '~/lib/env.server'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import { stripTags } from '~/lib/utils'
 
 const adsTokenTooltip = getEnvOrDieInProduction('ADS_TOKEN_TOOLTIP')
 
@@ -53,7 +54,7 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
 
   // Some articles' records contain markup like `<NUMPAGES>14</NUMPAGES> pp.`
   // Strip out such tags.
-  pub = pub.replaceAll(/<[^>]+>/g, '')
+  pub = stripTags(pub)
 
   // Abbreviate some common publishing terms
   pub = pub.replaceAll(' Volume ', ' Vol. ')
