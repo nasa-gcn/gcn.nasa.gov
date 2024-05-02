@@ -368,14 +368,7 @@ export async function getVersions(circularId: number): Promise<number[]> {
 export async function createChangeRequest(
   item: Omit<
     Circular,
-    | 'sub'
-    | 'createdOn'
-    | 'submitter'
-    | 'submittedHow'
-    | 'bibcode'
-    | 'editedBy'
-    | 'version'
-    | 'editedOn'
+    'sub' | 'submittedHow' | 'bibcode' | 'editedBy' | 'version' | 'editedOn'
   >,
   user?: User
 ) {
@@ -386,11 +379,16 @@ export async function createChangeRequest(
     })
   const requestor = formatAuthor(user)
   const db = await tables()
+  const circular = (await db.circulars.get({
+    circularId: item.circularId,
+  })) as Circular
   await db.circulars_change_requests.put({
     ...item,
     requestorSub: user.sub,
     requestorEmail: user.email,
     requestor,
+    createdOn: item.createdOn ?? circular.createdOn,
+    submitter: item.submitter ?? circular.submitter,
   })
 
   await sendEmail({
@@ -518,6 +516,8 @@ export async function approveChangeRequest(
     editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
     editedOn: Date.now(),
     format: changeRequest.format,
+    submitter: changeRequest.submitter,
+    createdOn: changeRequest.createdOn,
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)

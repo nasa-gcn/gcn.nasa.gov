@@ -11,7 +11,7 @@ import RelativeTime from 'dayjs/plugin/relativeTime'
 
 dayjs.locale(locale)
 dayjs.extend(RelativeTime)
-const dateTimeFormat = new Intl.DateTimeFormat(locale.name, {
+export const dateTimeFormat = new Intl.DateTimeFormat(locale.name, {
   dateStyle: 'full',
   timeStyle: 'long',
   timeZone: 'utc',

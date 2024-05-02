@@ -19,6 +19,7 @@ import {
   getChangeRequest,
   moderatorGroup,
 } from './circulars/circulars.server'
+import { dateTimeFormat } from '~/components/TimeAgo'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -70,14 +71,22 @@ export async function loader({
 
 export default function () {
   const { circular, correction } = useLoaderData<typeof loader>()
-
   return (
     <>
       <h2>Circular {circular.circularId}</h2>
       <h3>Original Author</h3>
-      {circular.submitter}
+      <DiffedContent
+        oldString={circular.submitter}
+        newString={correction.submitter}
+      />
       <h3>Requestor</h3>
       {correction.requestor}
+      <h3>Created On</h3>
+      <DiffedContent
+        oldString={dateTimeFormat.format(circular.createdOn)}
+        newString={dateTimeFormat.format(correction.createdOn)}
+        method="lines"
+      />
       <h3>Subject</h3>
       <DiffedContent
         oldString={circular.subject}
@@ -104,14 +113,21 @@ export default function () {
   )
 }
 
+const methodMap = {
+  words: Diff.diffWords,
+  lines: Diff.diffLines,
+}
+
 function DiffedContent({
   oldString,
   newString,
+  method,
 }: {
   oldString: string
   newString: string
+  method?: 'words' | 'lines'
 }) {
-  const diff = Diff.diffWords(oldString, newString)
+  const diff = methodMap[method ?? 'words'](oldString, newString)
 
   return (
     <div>

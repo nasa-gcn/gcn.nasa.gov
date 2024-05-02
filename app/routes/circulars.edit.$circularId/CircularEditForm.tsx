@@ -9,11 +9,14 @@ import { Form, Link, useNavigation } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
+  DatePicker,
+  Grid,
   Icon,
   InputGroup,
   InputPrefix,
   Table,
   TextInput,
+  TimePicker,
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
 import { type ReactNode, useContext, useState } from 'react'
@@ -24,12 +27,17 @@ import { MarkdownBody } from '../circulars.$circularId.($version)/Body'
 import {
   type CircularFormat,
   bodyIsValid,
+  dateIsValid,
   subjectIsValid,
+  submitterIsValid,
 } from '../circulars/circulars.lib'
 import { RichEditor } from './RichEditor'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
+import { useModStatus } from '~/root'
+
+import styles from './CircularsEditForm.module.css'
 
 function SyntaxExample({
   label,
@@ -103,20 +111,24 @@ export function SyntaxReference() {
 export function CircularEditForm({
   formattedContributor,
   circularId,
-  submitter,
+  defaultSubmitter,
   defaultFormat,
   defaultBody,
   defaultSubject,
   searchString,
+  defaultCreatedOnDate,
+  defaultCreatedOnTime,
   intent,
 }: {
   formattedContributor: string
   circularId?: number
-  submitter?: string
+  defaultSubmitter?: string
   defaultFormat?: CircularFormat
   defaultBody: string
   defaultSubject: string
   searchString: string
+  defaultCreatedOnDate?: string
+  defaultCreatedOnTime?: string
   intent: 'correction' | 'edit' | 'new'
 }) {
   let formSearchString = '?index'
@@ -130,9 +142,15 @@ export function CircularEditForm({
   const [body, setBody] = useState(defaultBody)
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
+  const [date, setDate] = useState(defaultCreatedOnDate)
+  const [time, setTime] = useState(defaultCreatedOnTime ?? '12:00')
+  const dateValid = circularId ? dateIsValid(date, time) : true
+
+  const [submitter, setSubmitter] = useState(defaultSubmitter)
+  const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const sending = Boolean(useNavigation().formData)
-  const valid = subjectValid && bodyValid
+  const valid = subjectValid && bodyValid && dateValid && submitterValid
   let headerText, saveButtonText
 
   switch (intent) {
@@ -150,118 +168,193 @@ export function CircularEditForm({
       break
   }
   const bodyPlaceholder = useBodyPlaceholder()
-
   const changesHaveBeenMade =
     body.trim() !== defaultBody.trim() ||
     subject.trim() !== defaultSubject.trim() ||
-    format !== defaultFormat
+    format !== defaultFormat ||
+    submitter?.trim() !== defaultSubmitter ||
+    date !== defaultCreatedOnDate ||
+    time !== defaultCreatedOnTime
+
+  const userIsModerator = useModStatus()
+
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>{headerText} GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <input type="hidden" name="intent" value={intent} />
-        {circularId !== undefined && (
-          <>
-            <input type="hidden" name="circularId" value={circularId} />
+        <Grid>
+          <Grid row>
+            {circularId !== undefined && userIsModerator && (
+              <>
+                <input type="hidden" name="circularId" value={circularId} />
+                <InputGroup className="maxw-full">
+                  <InputPrefix className="wide-input-prefix">From</InputPrefix>
+                  <TextInput
+                    className="maxw-full"
+                    name="submitter"
+                    id="submitter"
+                    type="text"
+                    defaultValue={defaultSubmitter}
+                    onChange={(event) => setSubmitter(event.target.value)}
+                    required
+                  />
+                </InputGroup>
+              </>
+            )}
+          </Grid>
+          <Grid row>
             <InputGroup className="border-0 maxw-full">
-              <InputPrefix className="wide-input-prefix">From</InputPrefix>
-              <span className="padding-1">{submitter}</span>
+              <InputPrefix className="wide-input-prefix">
+                {circularId === undefined ? 'From' : 'Editor'}
+              </InputPrefix>
+              <span className="padding-1">{formattedContributor} </span>
+              <Link
+                to="/user"
+                title="Adjust how your name and affiliation appear in new GCN Circulars"
+              >
+                <Button unstyled type="button">
+                  <Icon.Edit role="presentation" /> Edit
+                </Button>
+              </Link>
             </InputGroup>
-          </>
-        )}
-        <InputGroup className="border-0 maxw-full">
-          <InputPrefix className="wide-input-prefix">
-            {circularId === undefined ? 'From' : 'Editor'}
-          </InputPrefix>
-          <span className="padding-1">{formattedContributor} </span>
-          <Link
-            to="/user"
-            title="Adjust how your name and affiliation appear in new GCN Circulars"
-          >
-            <Button unstyled type="button">
-              <Icon.Edit role="presentation" /> Edit
-            </Button>
-          </Link>
-        </InputGroup>
-        <InputGroup
-          className={classnames('maxw-full', {
-            'usa-input--error': subjectValid === false,
-            'usa-input--success': subjectValid,
-          })}
-        >
-          <InputPrefix className="wide-input-prefix">Subject</InputPrefix>
-          <TextInput
-            autoFocus
-            aria-describedby="subjectDescription"
-            className="maxw-full"
-            name="subject"
-            id="subject"
-            type="text"
-            placeholder={useSubjectPlaceholder()}
-            defaultValue={defaultSubject}
-            required
-            onChange={({ target: { value } }) => {
-              setSubject(value)
-              setSubjectValid(subjectIsValid(value))
-            }}
-          />
-        </InputGroup>
-        <CollapsableInfo
-          id="subjectDescription"
-          preambleText="The subject line must contain (and should start with) the name of the transient, which must start with one of the"
-          buttonText="known keywords"
-        >
-          <CircularsKeywords />
-        </CollapsableInfo>
-        <label hidden htmlFor="body">
-          Body
-        </label>
-        <RichEditor
-          aria-describedby="bodyDescription"
-          placeholder={bodyPlaceholder}
-          defaultValue={defaultBody}
-          defaultMarkdown={defaultFormat === 'text/markdown'}
-          required
-          className={bodyValid ? 'usa-input--success' : undefined}
-          onChange={({ target: { value } }) => {
-            setBody(value)
-          }}
-          markdownStateSetter={setFormat}
-        />
-        <CollapsableInfo
-          id="bodyDescription"
-          preambleText={
-            <>
-              Body text. If this is your first Circular, please review the{' '}
-              <Link to="/docs/circulars/styleguide">style guide</Link>.
-              References to Circulars, DOIs, arXiv preprints, and transients are
-              automatically shown as links; see
-            </>
-          }
-          buttonText="syntax"
-        >
-          <SyntaxReference />
-        </CollapsableInfo>
-        <ButtonGroup>
-          <Link
-            to={`/circulars${searchString}`}
-            className="usa-button usa-button--outline"
-          >
-            Back
-          </Link>
-          <Button
-            disabled={sending || !valid || !changesHaveBeenMade}
-            type="submit"
-            value="save"
-          >
-            {saveButtonText}
-          </Button>
-          {sending && (
-            <div className="padding-top-1 padding-bottom-1">
-              <Spinner /> Sending...
-            </div>
+          </Grid>
+          {circularId !== undefined && (
+            <Grid row>
+              <InputGroup
+                className={classnames(
+                  'tablet:margin-right-1 tablet:grid-col-auto',
+                  {
+                    'usa-input--error': !date || !Date.parse(date),
+                    'usa-input--success': date && Date.parse(date),
+                  }
+                )}
+              >
+                <InputPrefix className="wide-input-prefix">Date</InputPrefix>
+                <DatePicker
+                  defaultValue={defaultCreatedOnDate}
+                  className={classnames(
+                    styles.DatePicker,
+                    'border-0 flex-fill'
+                  )}
+                  onChange={(value) => {
+                    setDate(value ?? '')
+                  }}
+                  name="createdOnDate"
+                  id="createdOnDate"
+                  dateFormat="YYYY-MM-DD"
+                />
+              </InputGroup>
+              <InputGroup
+                className={classnames('tablet:grid-col-auto', {
+                  'usa-input--error': !time,
+                  'usa-input--success': time,
+                })}
+              >
+                {/* FIXME: see https://github.com/trussworks/react-uswds/issues/2806 */}
+                <input
+                  type="hidden"
+                  id="createdOnTime"
+                  name="createdOnTime"
+                  value={time}
+                />
+                <InputPrefix className="wide-input-prefix">Time</InputPrefix>
+                <TimePicker
+                  id="createdOnTimeSetter"
+                  name="createdOnTimeSetter"
+                  defaultValue={defaultCreatedOnTime}
+                  className={classnames(styles.TimePicker, 'margin-top-neg-3')}
+                  onChange={(value) => {
+                    setTime(value ?? '')
+                  }}
+                  step={1}
+                  label=""
+                />
+              </InputGroup>
+            </Grid>
           )}
-        </ButtonGroup>
+          <Grid row>
+            <InputGroup
+              className={classnames('maxw-full', {
+                'usa-input--error': subjectValid === false,
+                'usa-input--success': subjectValid,
+              })}
+            >
+              <InputPrefix className="wide-input-prefix">Subject</InputPrefix>
+              <TextInput
+                autoFocus
+                aria-describedby="subjectDescription"
+                className="maxw-full"
+                name="subject"
+                id="subject"
+                type="text"
+                placeholder={useSubjectPlaceholder()}
+                defaultValue={defaultSubject}
+                required
+                onChange={({ target: { value } }) => {
+                  setSubject(value)
+                  setSubjectValid(subjectIsValid(value))
+                }}
+              />
+            </InputGroup>
+          </Grid>
+          <CollapsableInfo
+            id="subjectDescription"
+            preambleText="The subject line must contain (and should start with) the name of the transient, which must start with one of the"
+            buttonText="known keywords"
+          >
+            <CircularsKeywords />
+          </CollapsableInfo>
+          <label hidden htmlFor="body">
+            Body
+          </label>
+          <RichEditor
+            aria-describedby="bodyDescription"
+            placeholder={bodyPlaceholder}
+            defaultValue={defaultBody}
+            defaultMarkdown={defaultFormat === 'text/markdown'}
+            required
+            className={bodyValid ? 'usa-input--success' : undefined}
+            onChange={({ target: { value } }) => {
+              setBody(value)
+            }}
+            markdownStateSetter={setFormat}
+          />
+          <CollapsableInfo
+            id="bodyDescription"
+            preambleText={
+              <>
+                Body text. If this is your first Circular, please review the{' '}
+                <Link to="/docs/circulars/styleguide">style guide</Link>.
+                References to Circulars, DOIs, arXiv preprints, and transients
+                are automatically shown as links; see
+              </>
+            }
+            buttonText="syntax"
+          >
+            <SyntaxReference />
+          </CollapsableInfo>
+          <ButtonGroup>
+            <Link
+              to={`/circulars${searchString}`}
+              className="usa-button usa-button--outline"
+            >
+              Back
+            </Link>
+            <Button
+              disabled={sending || !valid || !changesHaveBeenMade}
+              type="submit"
+              value="save"
+            >
+              {saveButtonText}
+            </Button>
+            {sending && (
+              <div className="padding-top-1 padding-bottom-1">
+                <Spinner /> Sending...
+              </div>
+            )}
+          </ButtonGroup>
+        </Grid>
       </Form>
     </AstroDataContext.Provider>
   )
