@@ -152,7 +152,7 @@ timeout 30
 hydrate false
 
 @cdn
-false
+enable false
 
 @search
 instanceType t3.small.search
