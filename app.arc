@@ -150,6 +150,7 @@ architecture arm64
 memory 256
 timeout 30
 hydrate false
+cdn false
 
 @search
 instanceType t3.small.search
