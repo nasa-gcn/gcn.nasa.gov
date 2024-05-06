@@ -20,7 +20,6 @@ import {
   moderatorGroup,
 } from './circulars/circulars.server'
 import { getFormDataString } from '~/lib/utils'
-import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> & SEOHandle = {
@@ -84,15 +83,11 @@ export default function () {
         oldString={circular.subject}
         newString={correction.subject}
       />
-      {useFeature('CIRCULARS_MARKDOWN') && (
-        <>
-          <h3>Format</h3>
-          <DiffedContent
-            oldString={circular.format ?? 'text/plain'}
-            newString={correction.format ?? 'text/plain'}
-          />
-        </>
-      )}
+      <h3>Format</h3>
+      <DiffedContent
+        oldString={circular.format ?? 'text/plain'}
+        newString={correction.format ?? 'text/plain'}
+      />
       <h3>Body</h3>
       <DiffedContent oldString={circular.body} newString={correction.body} />
       <Form method="POST">

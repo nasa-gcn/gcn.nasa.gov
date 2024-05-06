@@ -21,7 +21,7 @@ import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
-import { useFeature, useModStatus, useSubmitterStatus } from '~/root'
+import { useModStatus, useSubmitterStatus } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> = {
@@ -60,10 +60,7 @@ export default function () {
   const { circularId, body, bibcode, version, format, ...frontMatter } =
     useLoaderData<typeof loader>()
   const searchString = useSearchString()
-  const Body =
-    useFeature('CIRCULARS_MARKDOWN') && format === 'text/markdown'
-      ? MarkdownBody
-      : PlainTextBody
+  const Body = format === 'text/markdown' ? MarkdownBody : PlainTextBody
 
   const result = useRouteLoaderData<typeof parentLoader>(
     'routes/circulars.$circularId'
