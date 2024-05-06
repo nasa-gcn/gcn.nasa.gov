@@ -86,6 +86,7 @@
     "@aws-sdk/client-dynamodb": "^3.462.0",
     "@aws-sdk/client-s3": "^3.462.0",
     "@aws-sdk/client-sesv2": "^3.462.0",
+    "@aws-sdk/client-ssm": "^3.569.0",
     "@aws-sdk/lib-dynamodb": "^3.462.0",
     "@aws-sdk/lib-storage": "^3.462.0",
     "@aws-sdk/util-dynamodb": "^3.319.0",
