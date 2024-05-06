@@ -151,9 +151,6 @@ memory 256
 timeout 30
 hydrate false
 
-@cdn
-enable false
-
 @search
 instanceType t3.small.search
 instanceCount 3
