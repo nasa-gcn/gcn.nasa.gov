@@ -186,14 +186,14 @@ const JsonNoticeTypes = {
   IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
-  EinsteinProbe: ['gcn.notices.einstein_probe.wxt.alert'],
+  'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   Swift: '/missions/swift',
-  EinsteinProbe: '/missions/einstein-probe',
+  'Einstein Probe': '/missions/einstein-probe',
 }
 
 interface NoticeTypeCheckboxProps {
