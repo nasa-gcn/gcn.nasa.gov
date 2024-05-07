@@ -97,7 +97,7 @@ export default function () {
                       Email Data Flow
                     </NavLink>,
                     <NavLink key="project" to="contributing/project">
-                      Github Project Board
+                      GitHub Project Board
                     </NavLink>,
                     <NavLink key="testing" to="contributing/testing">
                       Testing

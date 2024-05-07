@@ -250,7 +250,7 @@ function SchemaBody({
           rel="external"
           to={`https://github.com/nasa-gcn/gcn-schema/blob/${selectedVersion}/${path}`}
         >
-          Github
+          GitHub
         </Link>
       </div>
       {result.properties && (
