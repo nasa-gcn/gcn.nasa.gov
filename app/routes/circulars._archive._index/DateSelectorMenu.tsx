@@ -17,7 +17,7 @@ import {
   Radio,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { type ChangeEvent, useRef, useState } from 'react'
+import { type ChangeEvent, forwardRef, useRef, useState } from 'react'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -68,15 +68,18 @@ function DateSelectorButton({
   )
 }
 
-export function DateSelector({
-  form,
-  defaultStartDate,
-  defaultEndDate,
-}: {
-  form?: string
-  defaultStartDate?: string
-  defaultEndDate?: string
-}) {
+export const DateSelector = forwardRef(function DateSelector(
+  {
+    form,
+    defaultStartDate,
+    defaultEndDate,
+  }: {
+    form?: string
+    defaultStartDate?: string
+    defaultEndDate?: string
+  },
+  ref: React.Ref<HTMLDivElement>
+) {
   const [showContent, setShowContent] = useState(false)
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
@@ -105,7 +108,7 @@ export function DateSelector({
   }
 
   return (
-    <>
+    <div ref={ref}>
       <input
         type="hidden"
         name="startDate"
@@ -218,6 +221,6 @@ export function DateSelector({
           </CardFooter>
         )}
       </DetailsDropdownContent>
-    </>
+    </div>
   )
-}
+})

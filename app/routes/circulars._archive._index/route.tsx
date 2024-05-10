@@ -24,7 +24,8 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useId, useState } from 'react'
+import { useId, useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import { getUser } from '../_auth/user.server'
 import {
@@ -170,6 +171,12 @@ export default function () {
   const formId = useId()
   const submit = useSubmit()
 
+  const dateSelectorRef = useRef<HTMLDivElement>(null)
+
+  useOnClickOutside(dateSelectorRef, () => {
+    console.log('clicked outside date selector')
+  })
+
   return (
     <>
       {result?.intent === 'correction' && (
@@ -224,6 +231,7 @@ export default function () {
           form={formId}
           defaultStartDate={startDate}
           defaultEndDate={endDate}
+          ref={dateSelectorRef}
         />
         {query && <SortSelector form={formId} defaultValue={sort} />}
         <Link to={`/circulars/new${searchString}`}>
