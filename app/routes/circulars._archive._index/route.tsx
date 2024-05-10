@@ -173,9 +173,14 @@ export default function () {
 
   const dateSelectorRef = useRef<HTMLDivElement>(null)
   const [showDateSelector, setShowDateSelector] = useState(false)
+  const SortSelectorRef = useRef<HTMLDivElement>(null)
+  const [showSortSelector, setShowSortSelector] = useState(false)
 
   useOnClickOutside(dateSelectorRef, () => {
     setShowDateSelector(false)
+  })
+  useOnClickOutside(SortSelectorRef, () => {
+    setShowSortSelector(false)
   })
 
   return (
@@ -236,7 +241,15 @@ export default function () {
           setShowContent={setShowDateSelector}
           ref={dateSelectorRef}
         />
-        {query && <SortSelector form={formId} defaultValue={sort} />}
+        {query && (
+          <SortSelector
+            form={formId}
+            defaultValue={sort}
+            showContent={showSortSelector}
+            setShowContent={setShowSortSelector}
+            ref={SortSelectorRef}
+          />
+        )}
         <Link to={`/circulars/new${searchString}`}>
           <Button
             type="button"
