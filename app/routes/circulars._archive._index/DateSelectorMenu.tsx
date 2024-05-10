@@ -86,7 +86,6 @@ export const DateSelector = forwardRef<HTMLDivElement, DateSelectorProps>(functi
   },
   ref: React.Ref<HTMLDivElement>
 ) {
-  // const [showDateSelector, setShowDateSelector] = useState(false)
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
       defaultEndDate
