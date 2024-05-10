@@ -175,7 +175,7 @@ export default function () {
   const [showDateSelector, setShowDateSelector] = useState(false)
 
   useOnClickOutside(dateSelectorRef, () => {
-    console.log('clicked outside date selector')
+    setShowDateSelector(false)
   })
 
   return (
