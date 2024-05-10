@@ -232,8 +232,8 @@ export default function () {
           form={formId}
           defaultStartDate={startDate}
           defaultEndDate={endDate}
-          showDateSelector={showDateSelector}
-          setShowDateSelector={setShowDateSelector}
+          showContent={showDateSelector}
+          setShowContent={setShowDateSelector}
           ref={dateSelectorRef}
         />
         {query && <SortSelector form={formId} defaultValue={sort} />}

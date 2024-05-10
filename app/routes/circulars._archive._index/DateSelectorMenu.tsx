@@ -69,163 +69,167 @@ function DateSelectorButton({
 }
 
 interface DateSelectorProps {
-  form?: string;
-  defaultStartDate?: string;
-  defaultEndDate?: string;
-  showDateSelector: boolean;
-  setShowDateSelector: React.Dispatch<React.SetStateAction<boolean>>;
+  form?: string
+  defaultStartDate?: string
+  defaultEndDate?: string
+  showContent: boolean
+  setShowContent: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-export const DateSelector = forwardRef<HTMLDivElement, DateSelectorProps>(function DateSelector(
-  {
-    form,
-    defaultStartDate,
-    defaultEndDate,
-    showDateSelector,
-    setShowDateSelector,
-  },
-  ref: React.Ref<HTMLDivElement>
-) {
-  const defaultShowDateRange = Boolean(
-    (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
-      defaultEndDate
-  )
-  const [showDateRange, setShowDateRange] = useState(defaultShowDateRange)
-  const startDateInputRef = useRef<HTMLInputElement>(null)
-  const endDateInputRef = useRef<HTMLInputElement>(null)
-  const submit = useSubmit()
+export const DateSelector = forwardRef<HTMLDivElement, DateSelectorProps>(
+  function DateSelector(
+    {
+      form,
+      defaultStartDate,
+      defaultEndDate,
+      showContent: showDateSelector,
+      setShowContent,
+    },
+    ref: React.Ref<HTMLDivElement>
+  ) {
+    const defaultShowDateRange = Boolean(
+      (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
+        defaultEndDate
+    )
+    const [showDateRange, setShowDateRange] = useState(defaultShowDateRange)
+    const startDateInputRef = useRef<HTMLInputElement>(null)
+    const endDateInputRef = useRef<HTMLInputElement>(null)
+    const submit = useSubmit()
 
-  function setStartDate(value: string) {
-    if (startDateInputRef.current) startDateInputRef.current.value = value
-  }
+    function setStartDate(value: string) {
+      if (startDateInputRef.current) startDateInputRef.current.value = value
+    }
 
-  function setEndDate(value: string) {
-    if (endDateInputRef.current) endDateInputRef.current.value = value
-  }
+    function setEndDate(value: string) {
+      if (endDateInputRef.current) endDateInputRef.current.value = value
+    }
 
-  function radioOnChange({ target: { value } }: ChangeEvent<HTMLInputElement>) {
-    setShowDateRange(false)
-    setStartDate(value)
-    setEndDate('')
-    setShowDateSelector(false)
-    const form = startDateInputRef.current?.form
-    if (form) submit(form)
-  }
+    function radioOnChange({
+      target: { value },
+    }: ChangeEvent<HTMLInputElement>) {
+      setShowDateRange(false)
+      setStartDate(value)
+      setEndDate('')
+      setShowContent(false)
+      const form = startDateInputRef.current?.form
+      if (form) submit(form)
+    }
 
-  return (
-    <div ref={ref}>
-      <input
-        type="hidden"
-        name="startDate"
-        form={form}
-        ref={startDateInputRef}
-        defaultValue={defaultStartDate}
-      />
-      <input
-        type="hidden"
-        name="endDate"
-        form={form}
-        ref={endDateInputRef}
-        defaultValue={defaultEndDate}
-      />
-      <DateSelectorButton
-        startDate={defaultStartDate}
-        endDate={defaultEndDate}
-        onClick={() => {
-          setShowDateSelector((shown) => !shown)
-        }}
-        expanded={showDateSelector}
-      />
-      <DetailsDropdownContent
-        className={classNames('maxw-card-xlg', {
-          'display-none': !showDateSelector,
-        })}
-      >
-        <CardBody>
-          <Grid row>
-            <Grid col={4} key="radio-alltime">
-              <Radio
-                form=""
-                id="radio-alltime"
-                name="radio-date"
-                value=""
-                label="All Time"
-                defaultChecked={!defaultStartDate && !defaultEndDate}
-                onChange={radioOnChange}
-              />
-            </Grid>
-            {Object.entries(dateSelectorLabels).map(([value, label]) => (
-              <Grid col={4} key={`radio-${value}`}>
+    return (
+      <div ref={ref}>
+        <input
+          type="hidden"
+          name="startDate"
+          form={form}
+          ref={startDateInputRef}
+          defaultValue={defaultStartDate}
+        />
+        <input
+          type="hidden"
+          name="endDate"
+          form={form}
+          ref={endDateInputRef}
+          defaultValue={defaultEndDate}
+        />
+        <DateSelectorButton
+          startDate={defaultStartDate}
+          endDate={defaultEndDate}
+          onClick={() => {
+            setShowContent((shown) => !shown)
+          }}
+          expanded={showDateSelector}
+        />
+        <DetailsDropdownContent
+          className={classNames('maxw-card-xlg', {
+            'display-none': !showDateSelector,
+          })}
+        >
+          <CardBody>
+            <Grid row>
+              <Grid col={4} key="radio-alltime">
                 <Radio
                   form=""
-                  id={`radio-${value}`}
+                  id="radio-alltime"
                   name="radio-date"
-                  value={value}
-                  label={label}
-                  defaultChecked={value === defaultStartDate}
+                  value=""
+                  label="All Time"
+                  defaultChecked={!defaultStartDate && !defaultEndDate}
                   onChange={radioOnChange}
                 />
               </Grid>
-            ))}
-            <Grid col={4}>
-              <Radio
-                form=""
-                id="radio-custom"
-                name="radio-date"
-                value="custom"
-                label="Custom Range..."
-                defaultChecked={defaultShowDateRange}
-                onChange={({ target: { checked } }) => {
-                  setShowDateRange(checked)
+              {Object.entries(dateSelectorLabels).map(([value, label]) => (
+                <Grid col={4} key={`radio-${value}`}>
+                  <Radio
+                    form=""
+                    id={`radio-${value}`}
+                    name="radio-date"
+                    value={value}
+                    label={label}
+                    defaultChecked={value === defaultStartDate}
+                    onChange={radioOnChange}
+                  />
+                </Grid>
+              ))}
+              <Grid col={4}>
+                <Radio
+                  form=""
+                  id="radio-custom"
+                  name="radio-date"
+                  value="custom"
+                  label="Custom Range..."
+                  defaultChecked={defaultShowDateRange}
+                  onChange={({ target: { checked } }) => {
+                    setShowDateRange(checked)
+                  }}
+                />
+              </Grid>
+            </Grid>
+            {showDateRange && (
+              <DateRangePicker
+                startDateHint="YYYY-MM-DD"
+                startDateLabel="Start Date"
+                className="margin-bottom-2"
+                startDatePickerProps={{
+                  form: '',
+                  id: 'event-date-start',
+                  name: 'event-date-start',
+                  dateFormat: 'YYYY-MM-DD',
+                  defaultValue: defaultStartDate,
+                  onChange: (value) => {
+                    setStartDate(value ?? '')
+                  },
+                }}
+                endDateHint="YYYY-MM-DD"
+                endDateLabel="End Date"
+                endDatePickerProps={{
+                  form: '',
+                  id: 'event-date-end',
+                  name: 'event-date-end',
+                  dateFormat: 'YYYY-MM-DD',
+                  defaultValue: defaultEndDate,
+                  onChange: (value) => {
+                    setEndDate(value ?? '')
+                  },
                 }}
               />
-            </Grid>
-          </Grid>
+            )}
+          </CardBody>
           {showDateRange && (
-            <DateRangePicker
-              startDateHint="YYYY-MM-DD"
-              startDateLabel="Start Date"
-              className="margin-bottom-2"
-              startDatePickerProps={{
-                form: '',
-                id: 'event-date-start',
-                name: 'event-date-start',
-                dateFormat: 'YYYY-MM-DD',
-                defaultValue: defaultStartDate,
-                onChange: (value) => {
-                  setStartDate(value ?? '')
-                },
-              }}
-              endDateHint="YYYY-MM-DD"
-              endDateLabel="End Date"
-              endDatePickerProps={{
-                form: '',
-                id: 'event-date-end',
-                name: 'event-date-end',
-                dateFormat: 'YYYY-MM-DD',
-                defaultValue: defaultEndDate,
-                onChange: (value) => {
-                  setEndDate(value ?? '')
-                },
-              }}
-            />
+            <CardFooter>
+              <Button
+                type="button"
+                onClick={() => {
+                  setShowContent(false)
+                  const form = startDateInputRef.current?.form
+                  if (form) submit(form)
+                }}
+              >
+                Submit
+              </Button>
+            </CardFooter>
           )}
-        </CardBody>
-        {showDateRange && (
-          <CardFooter>
-            <Button
-              type="button"
-              onClick={() => {
-                setShowDateSelector(false)
-                const form = startDateInputRef.current?.form
-                if (form) submit(form)
-              }}
-            >
-              Submit
-            </Button>
-          </CardFooter>
-        )}
-      </DetailsDropdownContent>
-    </div>
-  )
-})
+        </DetailsDropdownContent>
+      </div>
+    )
+  }
+)
