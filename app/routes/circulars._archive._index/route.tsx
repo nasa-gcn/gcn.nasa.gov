@@ -172,6 +172,7 @@ export default function () {
   const submit = useSubmit()
 
   const dateSelectorRef = useRef<HTMLDivElement>(null)
+  const [showDateSelector, setShowDateSelector] = useState(false)
 
   useOnClickOutside(dateSelectorRef, () => {
     console.log('clicked outside date selector')
@@ -231,6 +232,8 @@ export default function () {
           form={formId}
           defaultStartDate={startDate}
           defaultEndDate={endDate}
+          showDateSelector={showDateSelector}
+          setShowDateSelector={setShowDateSelector}
           ref={dateSelectorRef}
         />
         {query && <SortSelector form={formId} defaultValue={sort} />}

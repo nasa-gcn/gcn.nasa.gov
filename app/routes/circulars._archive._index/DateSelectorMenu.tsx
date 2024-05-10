@@ -68,19 +68,25 @@ function DateSelectorButton({
   )
 }
 
-export const DateSelector = forwardRef(function DateSelector(
+interface DateSelectorProps {
+  form?: string;
+  defaultStartDate?: string;
+  defaultEndDate?: string;
+  showDateSelector: boolean;
+  setShowDateSelector: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const DateSelector = forwardRef<HTMLDivElement, DateSelectorProps>(function DateSelector(
   {
     form,
     defaultStartDate,
     defaultEndDate,
-  }: {
-    form?: string
-    defaultStartDate?: string
-    defaultEndDate?: string
+    showDateSelector,
+    setShowDateSelector,
   },
   ref: React.Ref<HTMLDivElement>
 ) {
-  const [showContent, setShowContent] = useState(false)
+  // const [showDateSelector, setShowDateSelector] = useState(false)
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
       defaultEndDate
@@ -102,7 +108,7 @@ export const DateSelector = forwardRef(function DateSelector(
     setShowDateRange(false)
     setStartDate(value)
     setEndDate('')
-    setShowContent(false)
+    setShowDateSelector(false)
     const form = startDateInputRef.current?.form
     if (form) submit(form)
   }
@@ -127,13 +133,13 @@ export const DateSelector = forwardRef(function DateSelector(
         startDate={defaultStartDate}
         endDate={defaultEndDate}
         onClick={() => {
-          setShowContent((shown) => !shown)
+          setShowDateSelector((shown) => !shown)
         }}
-        expanded={showContent}
+        expanded={showDateSelector}
       />
       <DetailsDropdownContent
         className={classNames('maxw-card-xlg', {
-          'display-none': !showContent,
+          'display-none': !showDateSelector,
         })}
       >
         <CardBody>
@@ -211,7 +217,7 @@ export const DateSelector = forwardRef(function DateSelector(
             <Button
               type="button"
               onClick={() => {
-                setShowContent(false)
+                setShowDateSelector(false)
                 const form = startDateInputRef.current?.form
                 if (form) submit(form)
               }}
