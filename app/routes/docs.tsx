@@ -99,6 +99,9 @@ export default function () {
                     <NavLink key="project" to="contributing/project">
                       GitHub Project Board
                     </NavLink>,
+                    <NavLink key="npr7150" to="contributing/npr7150">
+                      NPR 7150
+                    </NavLink>,
                     <NavLink key="testing" to="contributing/testing">
                       Testing
                     </NavLink>,
