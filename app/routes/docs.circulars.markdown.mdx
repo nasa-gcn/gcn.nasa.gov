@@ -5,13 +5,7 @@ handle:
 
 import { Table } from '@trussworks/react-uswds'
 
-import { feature } from '~/lib/env.server'
 import { SyntaxReference } from '~/routes/circulars.edit.$circularId/CircularEditForm.tsx'
-
-export async function loader() {
-  if (!feature('CIRCULARS_MARKDOWN')) throw new Response(null, { status: 404 })
-  return null
-}
 
 # Astro Flavored Markdown
 

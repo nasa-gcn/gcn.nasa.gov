@@ -14,31 +14,22 @@ import {
   InputPrefix,
   Table,
   TextInput,
-  Textarea,
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
 import { type ReactNode, useContext, useState } from 'react'
 import { dedent } from 'ts-dedent'
 
 import { AstroDataContext } from '../circulars.$circularId.($version)/AstroDataContext'
-import {
-  MarkdownBody,
-  PlainTextBody,
-} from '../circulars.$circularId.($version)/Body'
+import { MarkdownBody } from '../circulars.$circularId.($version)/Body'
 import {
   type CircularFormat,
   bodyIsValid,
   subjectIsValid,
 } from '../circulars/circulars.lib'
 import { RichEditor } from './RichEditor'
-import {
-  SegmentedRadioButton,
-  SegmentedRadioButtonGroup,
-} from './SegmentedRadioButton'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
-import { useFeature } from '~/root'
 
 function SyntaxExample({
   label,
@@ -140,7 +131,6 @@ export function CircularEditForm({
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
   const bodyValid = bodyIsValid(body)
-  const [showPreview, setShowPreview] = useState(false)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid
   let headerText, saveButtonText
@@ -226,54 +216,18 @@ export function CircularEditForm({
         <label hidden htmlFor="body">
           Body
         </label>
-        {useFeature('CIRCULARS_MARKDOWN') ? (
-          <RichEditor
-            aria-describedby="bodyDescription"
-            placeholder={bodyPlaceholder}
-            defaultValue={defaultBody}
-            defaultMarkdown={defaultFormat === 'text/markdown'}
-            required
-            className={bodyValid ? 'usa-input--success' : undefined}
-            onChange={({ target: { value } }) => {
-              setBody(value)
-            }}
-            markdownStateSetter={setFormat}
-          />
-        ) : (
-          <>
-            <SegmentedRadioButtonGroup>
-              <SegmentedRadioButton
-                defaultChecked
-                onClick={() => setShowPreview(false)}
-              >
-                Edit
-              </SegmentedRadioButton>
-              <SegmentedRadioButton onClick={() => setShowPreview(true)}>
-                Preview
-              </SegmentedRadioButton>
-            </SegmentedRadioButtonGroup>
-            <Textarea
-              hidden={showPreview}
-              name="body"
-              id="body"
-              aria-describedby="bodyDescription"
-              placeholder={bodyPlaceholder}
-              defaultValue={defaultBody}
-              required
-              className={classnames('maxw-full', {
-                'usa-input--success': bodyValid,
-              })}
-              onChange={({ target: { value } }) => {
-                setBody(value)
-              }}
-            />
-            {showPreview && (
-              <PlainTextBody className="border padding-1 margin-top-1">
-                {body}
-              </PlainTextBody>
-            )}
-          </>
-        )}
+        <RichEditor
+          aria-describedby="bodyDescription"
+          placeholder={bodyPlaceholder}
+          defaultValue={defaultBody}
+          defaultMarkdown={defaultFormat === 'text/markdown'}
+          required
+          className={bodyValid ? 'usa-input--success' : undefined}
+          onChange={({ target: { value } }) => {
+            setBody(value)
+          }}
+          markdownStateSetter={setFormat}
+        />
         <CollapsableInfo
           id="bodyDescription"
           preambleText={

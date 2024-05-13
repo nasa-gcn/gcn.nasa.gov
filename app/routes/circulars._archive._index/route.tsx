@@ -46,7 +46,7 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
-import { feature, origin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
 import { useModStatus } from '~/root'
@@ -81,14 +81,9 @@ export async function action({ request }: ActionFunctionArgs) {
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
   const intent = getFormDataString(data, 'intent')
-  let format
-  if (feature('CIRCULARS_MARKDOWN')) {
-    format = getFormDataString(data, 'format') as CircularFormat | undefined
-    if (format && !circularFormats.includes(format)) {
-      throw new Response('Invalid format', { status: 400 })
-    }
-  } else {
-    format = undefined
+  const format = getFormDataString(data, 'format') as CircularFormat | undefined
+  if (format && !circularFormats.includes(format)) {
+    throw new Response('Invalid format', { status: 400 })
   }
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
