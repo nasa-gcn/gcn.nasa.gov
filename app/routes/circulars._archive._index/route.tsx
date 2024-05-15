@@ -165,7 +165,6 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
 
   const formId = useId()
   const submit = useSubmit()
@@ -241,49 +240,47 @@ export default function () {
         To navigate to a specific circular, enter the associated Circular ID
         (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
-      {clean && (
-        <>
-          <CircularsIndex
-            allItems={allItems}
-            searchString={searchString}
-            totalItems={totalItems}
-            query={query}
-          />
-          <div className="display-flex flex-row flex-wrap">
-            <div className="display-flex flex-align-self-center margin-right-2 width-auto">
-              <div>
-                <Select
-                  id="limit"
-                  className="width-auto height-5 padding-y-0 margin-y-0"
-                  name="limit"
-                  defaultValue="100"
-                  form="searchForm"
-                  onChange={({ target: { form } }) => {
-                    submit(form)
-                  }}
-                >
-                  <option value="10">10 / page</option>
-                  <option value="20">20 / page</option>
-                  <option value="50">50 / page</option>
-                  <option value="100">100 / page</option>
-                </Select>
-              </div>
-            </div>
-            <div className="display-flex flex-fill">
-              {totalPages > 1 && (
-                <CircularPagination
-                  query={query}
-                  page={page}
-                  limit={parseInt(limit)}
-                  totalPages={totalPages}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              )}
+      <>
+        <CircularsIndex
+          allItems={allItems}
+          searchString={searchString}
+          totalItems={totalItems}
+          query={query}
+        />
+        <div className="display-flex flex-row flex-wrap">
+          <div className="display-flex flex-align-self-center margin-right-2 width-auto">
+            <div>
+              <Select
+                id="limit"
+                className="width-auto height-5 padding-y-0 margin-y-0"
+                name="limit"
+                defaultValue="100"
+                form="searchForm"
+                onChange={({ target: { form } }) => {
+                  submit(form)
+                }}
+              >
+                <option value="10">10 / page</option>
+                <option value="20">20 / page</option>
+                <option value="50">50 / page</option>
+                <option value="100">100 / page</option>
+              </Select>
             </div>
           </div>
-        </>
-      )}
+          <div className="display-flex flex-fill">
+            {totalPages > 1 && (
+              <CircularPagination
+                query={query}
+                page={page}
+                limit={parseInt(limit)}
+                totalPages={totalPages}
+                startDate={startDate}
+                endDate={endDate}
+              />
+            )}
+          </div>
+        </div>
+      </>
     </>
   )
 }
