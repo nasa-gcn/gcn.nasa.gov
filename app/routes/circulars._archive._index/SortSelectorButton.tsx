@@ -63,8 +63,6 @@ export const SortSelector = forwardRef<HTMLDivElement, SortSelectorProps>(
     { form, defaultValue, showContent, setShowContent },
     ref: React.Ref<HTMLDivElement>
   ) {
-    // const [showContent, setShowContent] = useState(false)
-
     const submit = useSubmit()
 
     function radioOnChange({ target }: ChangeEvent<HTMLInputElement>) {
