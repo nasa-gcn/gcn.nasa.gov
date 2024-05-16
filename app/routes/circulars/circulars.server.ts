@@ -149,6 +149,10 @@ export async function search({
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
+  const isWildcardQuery = query && /^[a-zA-Z]*[0-9]+[a-zA-Z]*$/.test(query)
+
+  const cleanedQuery = isWildcardQuery ? query.replace(/[a-zA-Z]/g, '') : query
+
   const sortObj =
     sort === 'relevance' && query
       ? {}
@@ -170,14 +174,21 @@ export async function search({
     body: {
       query: {
         bool: {
-          must: query
-            ? {
-                multi_match: {
-                  query,
-                  fields: ['submitter', 'subject', 'body'],
-                },
-              }
-            : undefined,
+          must:
+            cleanedQuery && !isWildcardQuery
+              ? {
+                  multi_match: {
+                    query: cleanedQuery,
+                    fields: ['submitter', 'subject', 'body'],
+                  },
+                }
+              : cleanedQuery && isWildcardQuery
+                ? {
+                    wildcard: {
+                      subject: `*${cleanedQuery}*`,
+                    },
+                  }
+                : undefined,
           filter: {
             range: {
               createdOn: {
