@@ -17,7 +17,7 @@ import {
   Radio,
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
-import { type ChangeEvent, forwardRef, useRef, useState } from 'react'
+import { type ChangeEvent, useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
@@ -69,17 +69,15 @@ function DateSelectorButton({
   )
 }
 
-export const DateSelector = forwardRef<
-  HTMLDivElement,
-  {
-    form?: string
-    defaultStartDate?: string
-    defaultEndDate?: string
-  }
->(function DateSelector(
-  { form, defaultStartDate, defaultEndDate },
-  ref: React.Ref<HTMLDivElement>
-) {
+export function DateSelector({
+  form,
+  defaultStartDate,
+  defaultEndDate,
+}: {
+  form?: string
+  defaultStartDate?: string
+  defaultEndDate?: string
+}) {
   const dateSelectorRef = useRef<HTMLDivElement>(null)
   const [showDateSelector, setShowDateSelector] = useState(false)
   useOnClickOutside(dateSelectorRef, () => {
@@ -227,4 +225,4 @@ export const DateSelector = forwardRef<
       </DetailsDropdownContent>
     </div>
   )
-})
+}

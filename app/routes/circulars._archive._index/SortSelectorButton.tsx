@@ -16,7 +16,7 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import type { ChangeEvent } from 'react'
-import { forwardRef, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
@@ -52,16 +52,13 @@ function SortButton({
   )
 }
 
-export const SortSelector = forwardRef<
-  HTMLDivElement,
-  {
-    form?: string
-    defaultValue?: string
-  }
->(function SortSelector(
-  { form, defaultValue },
-  ref: React.Ref<HTMLDivElement>
-) {
+export function SortSelector({
+  form,
+  defaultValue,
+}: {
+  form?: string
+  defaultValue?: string
+}) {
   const submit = useSubmit()
   const SortSelectorRef = useRef<HTMLDivElement>(null)
   const [showSortSelector, setShowSortSelector] = useState(false)
@@ -117,4 +114,4 @@ export const SortSelector = forwardRef<
       </DetailsDropdownContent>
     </div>
   )
-})
+}
