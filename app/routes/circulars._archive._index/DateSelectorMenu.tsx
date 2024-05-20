@@ -75,19 +75,16 @@ export const DateSelector = forwardRef<
     form?: string
     defaultStartDate?: string
     defaultEndDate?: string
-    showContent: boolean
-    setShowContent: React.Dispatch<React.SetStateAction<boolean>>
   }
 >(function DateSelector(
-  {
-    form,
-    defaultStartDate,
-    defaultEndDate,
-    showContent: showDateSelector,
-    setShowContent,
-  },
+  { form, defaultStartDate, defaultEndDate },
   ref: React.Ref<HTMLDivElement>
 ) {
+  const dateSelectorRef = useRef<HTMLDivElement>(null)
+  const [showDateSelector, setShowDateSelector] = useState(false)
+  useOnClickOutside(dateSelectorRef, () => {
+    setShowDateSelector(false)
+  })
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
       defaultEndDate
@@ -109,13 +106,13 @@ export const DateSelector = forwardRef<
     setShowDateRange(false)
     setStartDate(value)
     setEndDate('')
-    setShowContent(false)
+    setShowDateSelector(false)
     const form = startDateInputRef.current?.form
     if (form) submit(form)
   }
 
   return (
-    <div ref={ref}>
+    <div ref={dateSelectorRef}>
       <input
         type="hidden"
         name="startDate"
@@ -134,7 +131,7 @@ export const DateSelector = forwardRef<
         startDate={defaultStartDate}
         endDate={defaultEndDate}
         onClick={() => {
-          setShowContent((shown) => !shown)
+          setShowDateSelector((shown) => !shown)
         }}
         expanded={showDateSelector}
       />
@@ -218,7 +215,7 @@ export const DateSelector = forwardRef<
             <Button
               type="button"
               onClick={() => {
-                setShowContent(false)
+                setShowDateSelector(false)
                 const form = startDateInputRef.current?.form
                 if (form) submit(form)
               }}

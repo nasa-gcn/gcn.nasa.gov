@@ -171,13 +171,6 @@ export default function () {
   const formId = useId()
   const submit = useSubmit()
 
-  const dateSelectorRef = useRef<HTMLDivElement>(null)
-  const [showDateSelector, setShowDateSelector] = useState(false)
-
-  useOnClickOutside(dateSelectorRef, () => {
-    setShowDateSelector(false)
-  })
-
   return (
     <>
       {result?.intent === 'correction' && (
@@ -232,9 +225,6 @@ export default function () {
           form={formId}
           defaultStartDate={startDate}
           defaultEndDate={endDate}
-          showContent={showDateSelector}
-          setShowContent={setShowDateSelector}
-          ref={dateSelectorRef}
         />
         {query && <SortSelector form={formId} defaultValue={sort} />}
         <Link to={`/circulars/new${searchString}`}>
