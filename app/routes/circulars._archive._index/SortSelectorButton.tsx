@@ -16,7 +16,8 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import type { ChangeEvent } from 'react'
-import { forwardRef } from 'react'
+import { forwardRef, useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -56,17 +57,20 @@ export const SortSelector = forwardRef<
   {
     form?: string
     defaultValue?: string
-    showContent: boolean
-    setShowContent: React.Dispatch<React.SetStateAction<boolean>>
   }
 >(function SortSelector(
-  { form, defaultValue, showContent, setShowContent },
+  { form, defaultValue },
   ref: React.Ref<HTMLDivElement>
 ) {
   const submit = useSubmit()
+  const SortSelectorRef = useRef<HTMLDivElement>(null)
+  const [showSortSelector, setShowSortSelector] = useState(false)
+  useOnClickOutside(SortSelectorRef, () => {
+    setShowSortSelector(false)
+  })
 
   function radioOnChange({ target }: ChangeEvent<HTMLInputElement>) {
-    setShowContent(false)
+    setShowSortSelector(false)
     if (target.form) submit(target.form)
   }
 
@@ -91,18 +95,18 @@ export const SortSelector = forwardRef<
   )
 
   return (
-    <div ref={ref}>
+    <div ref={SortSelectorRef}>
       <SortButton
         sort={sanitizedValue}
-        expanded={showContent}
+        expanded={showSortSelector}
         onClick={() => {
-          setShowContent((shown) => !shown)
+          setShowSortSelector((shown) => !shown)
         }}
       />
 
       <DetailsDropdownContent
         className={classNames('maxw-card-xlg', {
-          'display-none': !showContent,
+          'display-none': !showSortSelector,
         })}
       >
         <CardBody>
