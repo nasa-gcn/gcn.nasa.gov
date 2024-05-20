@@ -151,7 +151,7 @@ export default function () {
   searchParams.delete('index')
 
   const limit = searchParams.get('limit') || '100'
-  const query = searchParams.get('query') || undefined
+  const query = searchParams.get('query') || ''
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
@@ -187,6 +187,7 @@ export default function () {
       )}
       <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
+          preventScrollReset
           className="display-inline-block usa-search usa-search--small"
           role="search"
           id={formId}
@@ -204,7 +205,7 @@ export default function () {
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
               setInputQuery(value)
-              if (!value) submit(form)
+              if (!value) submit(form, { preventScrollReset: true })
             }}
           />
           <Button type="submit">
