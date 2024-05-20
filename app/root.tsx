@@ -238,10 +238,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New Announcement Feature, Code of Conduct, Circular Revisions. See{' '}
+          Introducing Einstein Probe Notices, Astro Flavored Markdown Circulars,
+          and Notices Schema v4.0.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-announcement-feature-code-of-conduct-circular-revisions"
+            to="/news#new-einstein-probe-notices-circulars-astro-flavored-markdown-and-notices-schema-v400"
           >
             news and announcements
           </Link>
