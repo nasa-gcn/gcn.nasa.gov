@@ -51,67 +51,66 @@ function SortButton({
   )
 }
 
-interface SortSelectorProps {
-  form?: string
-  defaultValue?: string
-  showContent: boolean
-  setShowContent: React.Dispatch<React.SetStateAction<boolean>>
-}
-
-export const SortSelector = forwardRef<HTMLDivElement, SortSelectorProps>(
-  function SortSelector(
-    { form, defaultValue, showContent, setShowContent },
-    ref: React.Ref<HTMLDivElement>
-  ) {
-    const submit = useSubmit()
-
-    function radioOnChange({ target }: ChangeEvent<HTMLInputElement>) {
-      setShowContent(false)
-      if (target.form) submit(target.form)
-    }
-
-    const sanitizedValue =
-      defaultValue && defaultValue in sortOptions ? defaultValue : 'circularID'
-
-    const SortRadioButtons = () => (
-      <>
-        {Object.entries(sortOptions).map(([value, label]) => (
-          <Radio
-            key={value}
-            id={value}
-            name="sort"
-            value={value}
-            label={label}
-            form={form}
-            defaultChecked={sanitizedValue === value}
-            onChange={radioOnChange}
-          />
-        ))}
-      </>
-    )
-
-    return (
-      <div ref={ref}>
-        <SortButton
-          sort={sanitizedValue}
-          expanded={showContent}
-          onClick={() => {
-            setShowContent((shown) => !shown)
-          }}
-        />
-
-        <DetailsDropdownContent
-          className={classNames('maxw-card-xlg', {
-            'display-none': !showContent,
-          })}
-        >
-          <CardBody>
-            <Grid col={1}>
-              <SortRadioButtons />
-            </Grid>
-          </CardBody>
-        </DetailsDropdownContent>
-      </div>
-    )
+export const SortSelector = forwardRef<
+  HTMLDivElement,
+  {
+    form?: string
+    defaultValue?: string
+    showContent: boolean
+    setShowContent: React.Dispatch<React.SetStateAction<boolean>>
   }
-)
+>(function SortSelector(
+  { form, defaultValue, showContent, setShowContent },
+  ref: React.Ref<HTMLDivElement>
+) {
+  const submit = useSubmit()
+
+  function radioOnChange({ target }: ChangeEvent<HTMLInputElement>) {
+    setShowContent(false)
+    if (target.form) submit(target.form)
+  }
+
+  const sanitizedValue =
+    defaultValue && defaultValue in sortOptions ? defaultValue : 'circularID'
+
+  const SortRadioButtons = () => (
+    <>
+      {Object.entries(sortOptions).map(([value, label]) => (
+        <Radio
+          key={value}
+          id={value}
+          name="sort"
+          value={value}
+          label={label}
+          form={form}
+          defaultChecked={sanitizedValue === value}
+          onChange={radioOnChange}
+        />
+      ))}
+    </>
+  )
+
+  return (
+    <div ref={ref}>
+      <SortButton
+        sort={sanitizedValue}
+        expanded={showContent}
+        onClick={() => {
+          setShowContent((shown) => !shown)
+        }}
+      />
+
+      <DetailsDropdownContent
+        className={classNames('maxw-card-xlg', {
+          'display-none': !showContent,
+        })}
+      >
+        <CardBody>
+          <Grid col={1}>
+            <SortRadioButtons />
+          </Grid>
+        </CardBody>
+      </DetailsDropdownContent>
+    </div>
+  )
+})
