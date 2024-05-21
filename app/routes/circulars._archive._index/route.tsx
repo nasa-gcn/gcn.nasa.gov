@@ -24,8 +24,7 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useId, useRef, useState } from 'react'
-import { useOnClickOutside } from 'usehooks-ts'
+import { useId, useState } from 'react'
 
 import { getUser } from '../_auth/user.server'
 import {
