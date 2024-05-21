@@ -62,6 +62,22 @@ Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP c
 
 This warning means that there have not been any recent alerts on that topic.
 
+### As a GCN Notice producer, what is the largest message that I can send over Kafka?
+
+The GCN Kafka brokers will accept messages up to about 4 MiB (4,194,304 bytes) in size. Please [contact us](/contact) if your mission requires larger messages.
+
+Note that if your messages are 1 MB (1,000,000 bytes) or more in size, then you will need to set the `message.max.bytes` [client configuration property](https://github.com/confluentinc/librdkafka/blob/master/CONFIGURATION.md) when you create your Kafka producer. For example, in Python you would set that property as follows:
+
+```python
+from gcn_kafka import Producer
+producer = Producer(
+    client_id='fill me in',
+    client_secret='fill me in',
+    **{'message.max.bytes': 4194304})
+```
+
+See GitHub issue [confluentinc/librdkafka#3125](https://github.com/confluentinc/librdkafka/issues/3125).
+
 ### How do I receive GCN Notices via email from GCN Classic over Kafka?
 
 To get started, [sign in or sign up](https://gcn.nasa.gov/login) and then select 'Email Notifications' from account dropdown menu. See also [GCN Circular 32517](/circulars/32517).
