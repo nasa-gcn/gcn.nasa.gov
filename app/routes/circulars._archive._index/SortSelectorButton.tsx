@@ -61,13 +61,13 @@ export function SortSelector({
 }) {
   const submit = useSubmit()
   const SortSelectorRef = useRef<HTMLDivElement>(null)
-  const [showSortSelector, setShowSortSelector] = useState(false)
+  const [showContent, setShowContent] = useState(false)
   useOnClickOutside(SortSelectorRef, () => {
-    setShowSortSelector(false)
+    setShowContent(false)
   })
 
   function radioOnChange({ target }: ChangeEvent<HTMLInputElement>) {
-    setShowSortSelector(false)
+    setShowContent(false)
     if (target.form) submit(target.form)
   }
 
@@ -95,15 +95,15 @@ export function SortSelector({
     <div ref={SortSelectorRef}>
       <SortButton
         sort={sanitizedValue}
-        expanded={showSortSelector}
+        expanded={showContent}
         onClick={() => {
-          setShowSortSelector((shown) => !shown)
+          setShowContent((shown) => !shown)
         }}
       />
 
       <DetailsDropdownContent
         className={classNames('maxw-card-xlg', {
-          'display-none': !showSortSelector,
+          'display-none': !showContent,
         })}
       >
         <CardBody>

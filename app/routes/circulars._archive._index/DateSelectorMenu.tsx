@@ -79,9 +79,9 @@ export function DateSelector({
   defaultEndDate?: string
 }) {
   const dateSelectorRef = useRef<HTMLDivElement>(null)
-  const [showDateSelector, setShowDateSelector] = useState(false)
+  const [showContent, setShowContent] = useState(false)
   useOnClickOutside(dateSelectorRef, () => {
-    setShowDateSelector(false)
+    setShowContent(false)
   })
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
@@ -104,7 +104,7 @@ export function DateSelector({
     setShowDateRange(false)
     setStartDate(value)
     setEndDate('')
-    setShowDateSelector(false)
+    setShowContent(false)
     const form = startDateInputRef.current?.form
     if (form) submit(form)
   }
@@ -129,13 +129,13 @@ export function DateSelector({
         startDate={defaultStartDate}
         endDate={defaultEndDate}
         onClick={() => {
-          setShowDateSelector((shown) => !shown)
+          setShowContent((shown) => !shown)
         }}
-        expanded={showDateSelector}
+        expanded={showContent}
       />
       <DetailsDropdownContent
         className={classNames('maxw-card-xlg', {
-          'display-none': !showDateSelector,
+          'display-none': !showContent,
         })}
       >
         <CardBody>
@@ -213,7 +213,7 @@ export function DateSelector({
             <Button
               type="button"
               onClick={() => {
-                setShowDateSelector(false)
+                setShowContent(false)
                 const form = startDateInputRef.current?.form
                 if (form) submit(form)
               }}
