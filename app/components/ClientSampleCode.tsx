@@ -16,8 +16,8 @@ export function useDomain() {
 
   if (hostname === 'gcn.nasa.gov') {
     return null
-  } else if (hostname?.endsWith('gcn.nasa.gov')) {
-    return hostname
+  } else if (hostname === 'dev.gcn.nasa.gov') {
+    return 'dev.gcn.nasa.gov'
   } else {
     return 'test.gcn.nasa.gov'
   }
