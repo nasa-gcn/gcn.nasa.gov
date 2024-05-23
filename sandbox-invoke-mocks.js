@@ -209,7 +209,17 @@ export default {
   'tables-streams': {
     circulars: {
       INSERT: {
-        circularId: 257,
+        circularId: 40000,
+        createdOn: 1677530723000,
+        submitter: 'Example User at Example <user@example.com>',
+        email: 'user@example.com',
+        subject: 'GRB 230000A: Global MASTER-Net observations',
+        body: 'This is a test',
+      },
+    },
+    'circulars-kafka-distribution': {
+      INSERT: {
+        circularId: 40000,
         createdOn: 1677530723000,
         submitter: 'Example User at Example <user@example.com>',
         email: 'user@example.com',
