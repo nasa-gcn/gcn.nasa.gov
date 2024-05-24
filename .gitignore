@@ -32,3 +32,6 @@ sam.yaml
 # https://playwright.dev/docs/auth
 /__playwright__/.auth
 auth.json
+
+# Draw.io auto-save files
+*.bkp
