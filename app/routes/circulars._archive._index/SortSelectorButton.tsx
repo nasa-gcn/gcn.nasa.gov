@@ -16,7 +16,8 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import type { ChangeEvent } from 'react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -58,9 +59,12 @@ export function SortSelector({
   form?: string
   defaultValue?: string
 }) {
-  const [showContent, setShowContent] = useState(false)
-
   const submit = useSubmit()
+  const ref = useRef<HTMLDivElement>(null)
+  const [showContent, setShowContent] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowContent(false)
+  })
 
   function radioOnChange({ target }: ChangeEvent<HTMLInputElement>) {
     setShowContent(false)
@@ -88,7 +92,7 @@ export function SortSelector({
   )
 
   return (
-    <>
+    <div ref={ref}>
       <SortButton
         sort={sanitizedValue}
         expanded={showContent}
@@ -108,6 +112,6 @@ export function SortSelector({
           </Grid>
         </CardBody>
       </DetailsDropdownContent>
-    </>
+    </div>
   )
 }

@@ -18,6 +18,7 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import { type ChangeEvent, useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -77,7 +78,11 @@ export function DateSelector({
   defaultStartDate?: string
   defaultEndDate?: string
 }) {
+  const ref = useRef<HTMLDivElement>(null)
   const [showContent, setShowContent] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowContent(false)
+  })
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
       defaultEndDate
@@ -105,7 +110,7 @@ export function DateSelector({
   }
 
   return (
-    <>
+    <div ref={ref}>
       <input
         type="hidden"
         name="startDate"
@@ -218,6 +223,6 @@ export function DateSelector({
           </CardFooter>
         )}
       </DetailsDropdownContent>
-    </>
+    </div>
   )
 }
