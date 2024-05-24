@@ -60,9 +60,9 @@ export function SortSelector({
   defaultValue?: string
 }) {
   const submit = useSubmit()
-  const SortSelectorRef = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const [showContent, setShowContent] = useState(false)
-  useOnClickOutside(SortSelectorRef, () => {
+  useOnClickOutside(ref, () => {
     setShowContent(false)
   })
 
@@ -92,7 +92,7 @@ export function SortSelector({
   )
 
   return (
-    <div ref={SortSelectorRef}>
+    <div ref={ref}>
       <SortButton
         sort={sanitizedValue}
         expanded={showContent}

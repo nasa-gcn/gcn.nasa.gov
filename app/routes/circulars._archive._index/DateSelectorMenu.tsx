@@ -78,9 +78,9 @@ export function DateSelector({
   defaultStartDate?: string
   defaultEndDate?: string
 }) {
-  const dateSelectorRef = useRef<HTMLDivElement>(null)
+  const ref = useRef<HTMLDivElement>(null)
   const [showContent, setShowContent] = useState(false)
-  useOnClickOutside(dateSelectorRef, () => {
+  useOnClickOutside(ref, () => {
     setShowContent(false)
   })
   const defaultShowDateRange = Boolean(
@@ -110,7 +110,7 @@ export function DateSelector({
   }
 
   return (
-    <div ref={dateSelectorRef}>
+    <div ref={ref}>
       <input
         type="hidden"
         name="startDate"
