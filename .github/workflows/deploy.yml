@@ -55,7 +55,7 @@ jobs:
         with:
           node-version: '20'
       - name: NPM Install
-        run: npm ci
+        run: npm ci --os=linux --cpu=arm64
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
