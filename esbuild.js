@@ -19,7 +19,7 @@ const options = {
   outExtension: { '.js': '.cjs' },
   external: ['@aws-sdk/*', 'aws-sdk'],
   platform: 'node',
-  target: ['node18'],
+  target: ['node20'],
   minify: !dev,
   sourcemap: dev,
 }
