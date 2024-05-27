@@ -17,7 +17,6 @@ import {
 import {
   Alert,
   Button,
-  ButtonGroup,
   Icon,
   Label,
   Select,
@@ -46,6 +45,7 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
+import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
@@ -185,7 +185,7 @@ export default function () {
           {requestedChangeCount > 1 ? 's' : ''}
         </Link>
       )}
-      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
+      <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           preventScrollReset
           className="display-inline-block usa-search usa-search--small"
@@ -197,6 +197,7 @@ export default function () {
           </Label>
           <TextInput
             autoFocus
+            className="minw-15"
             id="query"
             name="query"
             type="search"
@@ -223,14 +224,11 @@ export default function () {
         />
         {query && <SortSelector form={formId} defaultValue={sort} />}
         <Link to={`/circulars/new${searchString}`}>
-          <Button
-            type="button"
-            className="height-4 padding-top-0 padding-bottom-0"
-          >
+          <Button type="button" className="padding-y-1">
             <Icon.Edit role="presentation" /> New
           </Button>
         </Link>
-      </ButtonGroup>
+      </ToolbarButtonGroup>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
         GRB'). <br />

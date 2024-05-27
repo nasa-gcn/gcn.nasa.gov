@@ -31,7 +31,7 @@ function SortButton({
   sort?: string
   expanded?: boolean
 } & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
-  const slimClasses = 'height-4 padding-y-0'
+  const slimClasses = 'padding-y-1'
 
   return (
     <ButtonGroup type="segmented" {...props}>
