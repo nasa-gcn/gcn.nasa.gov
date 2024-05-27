@@ -18,6 +18,7 @@ import { MarkdownBody, PlainTextBody } from './Body'
 import { FrontMatter } from './FrontMatter'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
+import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
@@ -72,8 +73,11 @@ export default function () {
   }`
   return (
     <>
-      <ButtonGroup>
-        <Link to={`/circulars${searchString}`} className="usa-button">
+      <ToolbarButtonGroup className="flex-wrap">
+        <Link
+          to={`/circulars${searchString}`}
+          className="usa-button flex-align-stretch"
+        >
           <div className="position-relative">
             <Icon.ArrowBack
               role="presentation"
@@ -135,7 +139,7 @@ export default function () {
             Edit
           </Link>
         )}
-      </ButtonGroup>
+      </ToolbarButtonGroup>
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
