@@ -98,7 +98,7 @@
     "@playwright/test": "^1.42.1",
     "@remix-run/dev": "^2.8.1",
     "@remix-run/eslint-config": "^2.8.1",
-    "@testing-library/jest-dom": "^6.1.4",
+    "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^14.1.2",
     "@trivago/prettier-plugin-sort-imports": "^4.2.1",
     "@types/color-convert": "^2.0.1",
