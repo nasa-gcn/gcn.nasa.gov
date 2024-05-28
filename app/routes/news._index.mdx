@@ -44,7 +44,7 @@ import { Anchor } from '~/components/Anchor'
         #### Einstein Probe Notices
           The Einstein Probe new GCN notice type is now available in JSON format over [Kafka](/quickstart), but are not yet available via email.  They are not available via GCN Classic.
           - Summary: EP is a mission of the [Chinese Academy of Sciences (CAS)](https://ep.bao.ac.cn/ep/), in collaboration with the [European Space Agency (ESA)](https://www.cosmos.esa.int/web/einstein-probe/mission) and the [Max Planck Institute for Extraterrestrial Physics (MPE)](https://www.mpe.mpg.de/7867826/EinsteinProbe), dedicated to time-domain high-energy astrophysics. Its primary goals are to discover high-energy transients and monitor variable objects.
-          - Occurance Rate: The EP notices occur at a rate of ~100 times per year.
+          - Occurrence Rate: The EP notices occur at a rate of ~100 times per year.
           - Time Delay: The post-event processing and communication of alert is distributed to GCN within ~60 seconds of detection.
           - Notice Type: The [new WXT notice type (`gcn.notices.einstein_probe.wxt.alert`)](/missions/einstein_probe) provides trigger information including localization.
           - Notice Schema and Examples: The JSON schema defining the notice format and examples can be viewed in the [Schema Browser](/docs/schema) or the GCN [schema repository](https://github.com/nasa-gcn/gcn-schema).
@@ -57,7 +57,7 @@ import { Anchor } from '~/components/Anchor'
           - Addition of Einstein Probe WXT Notice topic
           - Addition of BurstCube Notice topic (not yet producing notices)
           - Change to localization core schema that simplifies localization uncertainty parameterization (now `ra_dec_error`) to allow either a single radius or three values that describe the localization region as an ellipse.  This change is not backwards compatible.
-          - Note that each JSON notice references the version of the schema it is adhering to, and `gcn.notices.icecube.lvk_nu_track_search` and `gcn.notices.swift.bat.guano` will be updated at a later date with advanced warning announced to the GCN user community.
+          - Note that each JSON notice references the version of the schema it is utilizing. `gcn.notices.icecube.lvk_nu_track_search` will update on the morning of June 18, 2024, and `gcn.notices.swift.bat.guano` will be updated at a later date.
 
       </CollectionDescription>
     </CollectionItem>
