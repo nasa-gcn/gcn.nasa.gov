@@ -31,7 +31,7 @@
     "@nasa-gcn/remark-rehype-astro": "^1.1.1",
     "@nasa-gcn/remix-seo": "^2.0.0",
     "@octokit/rest": "^20.0.2",
-    "@opensearch-project/opensearch": "^2.5.0",
+    "@opensearch-project/opensearch": "^2.8.0",
     "@remix-run/architect": "^2.8.1",
     "@remix-run/css-bundle": "^2.8.1",
     "@remix-run/node": "^2.8.1",
