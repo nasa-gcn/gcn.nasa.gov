@@ -250,10 +250,11 @@ export default function () {
               <div>
                 <Select
                   id="limit"
+                  title="Number of results per page"
                   className="width-auto height-5 padding-y-0 margin-y-0"
                   name="limit"
                   defaultValue="100"
-                  form="searchForm"
+                  form={formId}
                   onChange={({ target: { form } }) => {
                     submit(form)
                   }}
