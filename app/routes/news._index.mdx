@@ -47,7 +47,7 @@ import { Anchor } from '~/components/Anchor'
           - Summary: EP is a mission of the [Chinese Academy of Sciences (CAS)](https://ep.bao.ac.cn/ep/) in collaboration with the [European Space Agency (ESA)](https://www.cosmos.esa.int/web/einstein-probe/mission) and the [Max Planck Institute for Extraterrestrial Physics (MPE)](https://www.mpe.mpg.de/7867826/EinsteinProbe).  It is dedicated to time-domain high-energy astrophysics. Its primary goals are to discover high-energy transients and monitor variable objects.
           - Rate: Approximately 100 notices per year.
           - Time Delay: EP sends alerts via GCN within ~60 seconds of detection.
-          - Notice Type: The [new WXT notice type (`gcn.notices.einstein_probe.wxt.alert`)](/missions/einstein_probe) provides trigger information including localization.
+          - Notice Type: The [new WXT notice type (`gcn.notices.einstein_probe.wxt.alert`)](/missions/einstein-probe) provides trigger information including localization.
           - Notice Schema and Examples: The JSON schema defining the notice format and examples can be viewed in the [Schema Browser](/docs/schema/stable/gcn/notices/einstein_probe/wxt/alert.schema.json) or the GCN [schema repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/einstein_probe/wxt).
 
         #### Astro Flavored Markdown
@@ -58,7 +58,7 @@ import { Anchor } from '~/components/Anchor'
           - Addition of Einstein Probe WXT Notice topic
           - Addition of BurstCube Notice topic (not yet producing notices)
           - Change to localization core schema that simplifies localization uncertainty parameterization (now `ra_dec_error`) to allow either a single radius or three values that describe the localization region as an ellipse.  This change is not backwards compatible.
-          - Note that the `$schema` field in each GCN Notice identifies the version of the schema it is utilizing. `gcn.notices.icecube.lvk_nu_track_search` will update on the morning of June 18, 2024, and `gcn.notices.swift.bat.guano` will be updated at a later date.
+          - Note that the `$schema` field in each GCN Notice identifies the version of the schema it is utilizing. [`gcn.notices.icecube.lvk_nu_track_search`](/docs/schema/stable/gcn/notices/icecube) will update on the morning of June 18, 2024, and [`gcn.notices.swift.bat.guano`](/docs/schema/stable/gcn/notices/swift) will be updated at a later date.
 
       </CollectionDescription>
     </CollectionItem>
