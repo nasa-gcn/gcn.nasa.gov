@@ -37,7 +37,8 @@ export let send: (topic: string, value: string) => Promise<void>
 // testing.
 if (process.env.ARC_SANDBOX) {
   send = async (topic, value) => {
-    const producer = await kafka.producer()
+    const producer = kafka.producer()
+    await producer.connect()
     try {
       await producer.send({ topic, messages: [{ value }] })
     } finally {
