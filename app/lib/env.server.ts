@@ -44,6 +44,17 @@ function getHostname() {
   return new URL(getOrigin()).hostname
 }
 
+function getDomain() {
+  const hostname = getHostname()
+  if (hostname === 'gcn.nasa.gov') {
+    return undefined
+  } else if (hostname === 'dev.gcn.nasa.gov') {
+    return 'dev.gcn.nasa.gov'
+  } else {
+    return 'test.gcn.nasa.gov'
+  }
+}
+
 function getFeatures() {
   return (
     process.env.GCN_FEATURES?.toUpperCase().split(',').filter(Boolean) ?? []
@@ -67,6 +78,7 @@ function getRegion() {
 
 export const origin = /* @__PURE__ */ getOrigin()
 export const hostname = /* @__PURE__ */ getHostname()
+export const domain = /* @__PURE__ */ getDomain()
 export const features = /* @__PURE__ */ getFeatures()
 export const sessionSecret = /* @__PURE__ */ getSessionSecret()
 export const staticBucket = /* @__PURE__ */ getStaticBucket()

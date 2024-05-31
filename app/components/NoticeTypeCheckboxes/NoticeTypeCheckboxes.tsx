@@ -183,6 +183,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 }
 
 const JsonNoticeTypes = {
+  Circulars: ['gcn.circulars'],
   IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
@@ -190,6 +191,7 @@ const JsonNoticeTypes = {
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
+  Circulars: '/circulars',
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   Swift: '/missions/swift',
