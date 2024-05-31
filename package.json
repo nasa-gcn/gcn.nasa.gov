@@ -85,6 +85,7 @@
     "@architect/utils": "^3.1.9",
     "@aws-sdk/client-cognito-identity-provider": "^3.552.0",
     "@aws-sdk/client-dynamodb": "^3.552.0",
+    "@aws-sdk/client-ec2": "^3.552.0",
     "@aws-sdk/client-s3": "^3.552.0",
     "@aws-sdk/client-sesv2": "^3.552.0",
     "@aws-sdk/client-ssm": "^3.552.0",

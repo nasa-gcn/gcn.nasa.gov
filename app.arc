@@ -167,5 +167,6 @@ staticBucketPermissions  # Functions may only write to the /generated directory 
 missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
 emailOutgoing  # Grant the Lambda function permission to send email; add email templates.
 email-incoming  # Enable Lambda handlers for incoming emails
+vpc  # Place selected Lambdas inside a VPC
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 architect/plugin-lambda-invoker
