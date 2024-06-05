@@ -137,7 +137,7 @@ export default function () {
               setSubjectValid(Boolean(value))
             }}
           />
-          <Label htmlFor="email">What is your question?</Label>
+          <Label htmlFor="body">What is your question?</Label>
           <Textarea
             id="body"
             name="body"
