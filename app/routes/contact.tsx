@@ -20,6 +20,7 @@ import {
 import { validate } from 'email-validator'
 import { useState } from 'react'
 
+import Hint from '~/components/Hint'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
@@ -138,11 +139,16 @@ export default function () {
             }}
           />
           <Label htmlFor="body">What is your question?</Label>
+          <Hint id="bodyHint">
+            Make sure that you do not include any passwords or client secrets in
+            your message.
+          </Hint>
           <Textarea
             id="body"
             name="body"
             required
             placeholder="Body"
+            aria-describedby="bodyHint"
             onChange={({ target: { value } }) => {
               setBodyValid(Boolean(value))
             }}
