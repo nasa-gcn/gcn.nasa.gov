@@ -18,7 +18,7 @@ import type {
 } from 'aws-lambda'
 
 import { sendEmailBulk } from '~/lib/email.server'
-import { feature, origin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
 import { send as sendKafka } from '~/lib/kafka.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
@@ -123,11 +123,9 @@ export const handler = createTriggerHandler(
       if (eventName === 'INSERT') {
         promises.push(send(circular))
         const { sub, ...cleanedCircular } = circular
-        if (feature('CIRCULARS_KAFKA')) {
-          promises.push(
-            sendKafka('gcn.circulars', JSON.stringify(cleanedCircular))
-          )
-        }
+        promises.push(
+          sendKafka('gcn.circulars', JSON.stringify(cleanedCircular))
+        )
       }
     }
 
