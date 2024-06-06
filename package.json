@@ -109,7 +109,7 @@
     "@types/lodash": "^4.17.4",
     "@types/lucene": "^2.1.7",
     "@types/mailparser": "^3.4.1",
-    "@types/mdast": "^4.0.1",
+    "@types/mdast": "^4.0.4",
     "@types/memoizee": "^0.4.9",
     "@types/node": "^20.11.30",
     "@types/nodemailer": "^6.4.14",
