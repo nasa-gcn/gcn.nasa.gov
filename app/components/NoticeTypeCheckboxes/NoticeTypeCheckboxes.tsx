@@ -10,7 +10,6 @@ import { useState } from 'react'
 import type { NoticeFormat } from '../NoticeFormat'
 import { NestedCheckboxes } from '../nested-checkboxes/NestedCheckboxes'
 import { triggerRate } from './rates'
-import { useFeature } from '~/root'
 
 function humanizedCount(count: number, singular: string, plural?: string) {
   const noun = count === 1 ? singular : plural ?? `${singular}s`
@@ -184,6 +183,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 }
 
 const JsonNoticeTypes: { [key: string]: string[] } = {
+  Circulars: ['gcn.circulars'],
   IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
@@ -212,9 +212,6 @@ export function NoticeTypeCheckboxes({
   const [userSelected, setUserSelected] = useState(new Set<string>())
   const [selectedCounter, setSelectedCounter] = useState(0)
   const [alertEstimate, setAlertEstimate] = useState(0)
-
-  if (useFeature('CIRCULARS_KAFKA'))
-    JsonNoticeTypes['Circulars'] = ['gcn.circulars']
 
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
