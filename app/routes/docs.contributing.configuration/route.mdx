@@ -31,12 +31,14 @@ For both [local development](.) and [deployment](deployment), the configuration 
     BAR=value_of_bar_for_deployment
   ```
 
-- [**`arc env` command:**](https://arc.codes/docs/en/reference/cli/env) Adjust settings for production by running the following commands.
+- [**`arc env` command:**](https://arc.codes/docs/en/reference/cli/env) Adjust settings for one of the [deployments](deployments) by running the following commands.
 
   ```text
   npx arc env -e production --add FOO value_of_foo_for_deployment
   npx arc env -e production --add BAR value_of_bar_for_deployment
   ```
+
+  The updated settings will take effect the next time a deployment occurs.
 
 ## Supported environment variables
 
