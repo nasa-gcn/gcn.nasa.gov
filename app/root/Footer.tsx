@@ -102,21 +102,21 @@ export function Footer() {
           <a rel="external" href="https://www.nasa.gov/">
             NASA
           </a>{' '}
-          <a rel="external" href="https://www.nasa.gov/goddard">
+          <a rel="external" href="https://www.nasa.gov/goddard/">
             Goddard Space Flight Center
           </a>
         </IdentifierIdentity>
       </IdentifierMasthead>
       <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
         <IdentifierLinkItem>
-          <IdentifierLink rel="external" href="https://www.nasa.gov/about">
+          <IdentifierLink rel="external" href="https://www.nasa.gov/about/">
             About NASA
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
           <IdentifierLink
             rel="external"
-            href="https://www.nasa.gov/accessibility/"
+            href="https://www.nasa.gov/general/accessibility/"
           >
             Accessibility
           </IdentifierLink>
@@ -124,7 +124,7 @@ export function Footer() {
         <IdentifierLinkItem>
           <IdentifierLink
             rel="external"
-            href="https://www.nasa.gov/news/budget"
+            href="https://www.nasa.gov/budgets-plans-and-reports/"
           >
             Budget and Performance
           </IdentifierLink>
@@ -132,13 +132,13 @@ export function Footer() {
         <IdentifierLinkItem>
           <IdentifierLink
             rel="external"
-            href="https://www.nasa.gov/offices/odeo/no-fear-act"
+            href="https://www.nasa.gov/odeo/no-fear-act/"
           >
             No FEAR Act
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
-          <IdentifierLink rel="external" href="https://www.nasa.gov/FOIA">
+          <IdentifierLink rel="external" href="https://www.nasa.gov/FOIA/">
             FOIA Requests
           </IdentifierLink>
         </IdentifierLinkItem>
@@ -148,17 +148,14 @@ export function Footer() {
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
-          <IdentifierLink
-            rel="external"
-            href="https://www.nasa.gov/about/highlights/HP_Privacy.html"
-          >
+          <IdentifierLink rel="external" href="https://www.nasa.gov/privacy/">
             Privacy Policy
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
           <IdentifierLink
             rel="external"
-            href="https://www.nasa.gov/vulnerability-disclosure-policy"
+            href="https://www.nasa.gov/vulnerability-disclosure-policy/"
           >
             Vulnerability Disclosure Policy
           </IdentifierLink>
