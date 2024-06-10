@@ -142,30 +142,28 @@ function VersionSelector({
       >
         Version: {version}
       </DetailsDropdownButton>
-      <DetailsDropdownContent
-        className={classNames('maxw-card-xlg', {
-          'display-none': !showVersions,
-        })}
-      >
-        <CardHeader>
-          <h3>Versions</h3>
-        </CardHeader>
-        <CardBody className="padding-y-0">
-          {versions.map(({ name, ref }) => (
-            <div key={ref}>
-              <Link
-                className="usa-link"
-                to={`/docs/schema/${ref}/${path}`}
-                onClick={() => {
-                  setShowVersions(false)
-                }}
-              >
-                {name || ref}
-              </Link>
-            </div>
-          ))}
-        </CardBody>
-      </DetailsDropdownContent>
+      {showVersions && (
+        <DetailsDropdownContent>
+          <CardHeader>
+            <h3>Versions</h3>
+          </CardHeader>
+          <CardBody className="padding-y-0">
+            {versions.map(({ name, ref }) => (
+              <div key={ref}>
+                <Link
+                  className="usa-link"
+                  to={`/docs/schema/${ref}/${path}`}
+                  onClick={() => {
+                    setShowVersions(false)
+                  }}
+                >
+                  {name || ref}
+                </Link>
+              </div>
+            ))}
+          </CardBody>
+        </DetailsDropdownContent>
+      )}
     </div>
   )
 }

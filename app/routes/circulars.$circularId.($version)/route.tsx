@@ -171,31 +171,29 @@ function CircularsHistory({
       >
         Versions
       </DetailsDropdownButton>
-      <DetailsDropdownContent
-        className={classNames('maxw-card-xlg', {
-          'display-none': !showVersions,
-        })}
-      >
-        <CardBody>
-          <Link
-            onClick={() => setShowVersions(!showVersions)}
-            to={`/circulars/${circular}`}
-          >
-            Latest
-          </Link>
-          {history &&
-            history.map((version) => (
-              <div key={version}>
-                <Link
-                  onClick={() => setShowVersions(!showVersions)}
-                  to={`/circulars/${circular}/${version}`}
-                >
-                  Version {version}
-                </Link>
-              </div>
-            ))}
-        </CardBody>
-      </DetailsDropdownContent>
+      {showVersions && (
+        <DetailsDropdownContent>
+          <CardBody>
+            <Link
+              onClick={() => setShowVersions(!showVersions)}
+              to={`/circulars/${circular}`}
+            >
+              Latest
+            </Link>
+            {history &&
+              history.map((version) => (
+                <div key={version}>
+                  <Link
+                    onClick={() => setShowVersions(!showVersions)}
+                    to={`/circulars/${circular}/${version}`}
+                  >
+                    Version {version}
+                  </Link>
+                </div>
+              ))}
+          </CardBody>
+        </DetailsDropdownContent>
+      )}
     </div>
   )
 }
