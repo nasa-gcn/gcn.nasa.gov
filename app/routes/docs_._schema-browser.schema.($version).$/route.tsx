@@ -127,9 +127,9 @@ function VersionSelector({
   path: string
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [showVersions, setShowVersions] = useState(false)
+  const [showContent, setShowContent] = useState(false)
   useOnClickOutside(ref, () => {
-    setShowVersions(false)
+    setShowContent(false)
   })
 
   return (
@@ -137,12 +137,12 @@ function VersionSelector({
       <DetailsDropdownButton
         title="Select version"
         onClick={() => {
-          setShowVersions((shown) => !shown)
+          setShowContent((shown) => !shown)
         }}
       >
         Version: {version}
       </DetailsDropdownButton>
-      {showVersions && (
+      {showContent && (
         <DetailsDropdownContent>
           <CardHeader>
             <h3>Versions</h3>
@@ -154,7 +154,7 @@ function VersionSelector({
                   className="usa-link"
                   to={`/docs/schema/${ref}/${path}`}
                   onClick={() => {
-                    setShowVersions(false)
+                    setShowContent(false)
                   }}
                 >
                   {name || ref}

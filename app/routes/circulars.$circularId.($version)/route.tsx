@@ -156,25 +156,25 @@ function CircularsHistory({
   history?: number[]
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [showVersions, setShowVersions] = useState(false)
+  const [showContent, setShowContent] = useState(false)
   useOnClickOutside(ref, () => {
-    setShowVersions(false)
+    setShowContent(false)
   })
   return (
     <div ref={ref}>
       <DetailsDropdownButton
         outline
         onClick={() => {
-          setShowVersions((shown) => !shown)
+          setShowContent((shown) => !shown)
         }}
       >
         Versions
       </DetailsDropdownButton>
-      {showVersions && (
+      {showContent && (
         <DetailsDropdownContent>
           <CardBody>
             <Link
-              onClick={() => setShowVersions(!showVersions)}
+              onClick={() => setShowContent(!showContent)}
               to={`/circulars/${circular}`}
             >
               Latest
@@ -183,7 +183,7 @@ function CircularsHistory({
               history.map((version) => (
                 <div key={version}>
                   <Link
-                    onClick={() => setShowVersions(!showVersions)}
+                    onClick={() => setShowContent(!showContent)}
                     to={`/circulars/${circular}/${version}`}
                   >
                     Version {version}
