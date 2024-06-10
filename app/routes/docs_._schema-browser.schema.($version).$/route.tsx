@@ -18,9 +18,10 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import { dirname } from 'path'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import invariant from 'tiny-invariant'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../docs_._schema-browser'
 import type { Schema } from './components'
@@ -125,10 +126,14 @@ function VersionSelector({
   versions: { name: string | null; ref: string }[]
   path: string
 }) {
+  const ref = useRef<HTMLDivElement>(null)
   const [showVersions, setShowVersions] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowVersions(false)
+  })
 
   return (
-    <>
+    <div ref={ref}>
       <DetailsDropdownButton
         title="Select version"
         onClick={() => {
@@ -137,29 +142,31 @@ function VersionSelector({
       >
         Version: {version}
       </DetailsDropdownButton>
-      {showVersions && (
-        <DetailsDropdownContent>
-          <CardHeader>
-            <h3>Versions</h3>
-          </CardHeader>
-          <CardBody className="padding-y-0">
-            {versions.map(({ name, ref }) => (
-              <div key={ref}>
-                <Link
-                  className="usa-link"
-                  to={`/docs/schema/${ref}/${path}`}
-                  onClick={() => {
-                    setShowVersions(false)
-                  }}
-                >
-                  {name || ref}
-                </Link>
-              </div>
-            ))}
-          </CardBody>
-        </DetailsDropdownContent>
-      )}
-    </>
+      <DetailsDropdownContent
+        className={classNames('maxw-card-xlg', {
+          'display-none': !showVersions,
+        })}
+      >
+        <CardHeader>
+          <h3>Versions</h3>
+        </CardHeader>
+        <CardBody className="padding-y-0">
+          {versions.map(({ name, ref }) => (
+            <div key={ref}>
+              <Link
+                className="usa-link"
+                to={`/docs/schema/${ref}/${path}`}
+                onClick={() => {
+                  setShowVersions(false)
+                }}
+              >
+                {name || ref}
+              </Link>
+            </div>
+          ))}
+        </CardBody>
+      </DetailsDropdownContent>
+    </div>
   )
 }
 
