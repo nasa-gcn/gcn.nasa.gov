@@ -18,9 +18,10 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import { dirname } from 'path'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import invariant from 'tiny-invariant'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../docs_._schema-browser'
 import type { Schema } from './components'
@@ -125,19 +126,23 @@ function VersionSelector({
   versions: { name: string | null; ref: string }[]
   path: string
 }) {
-  const [showVersions, setShowVersions] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+  const [showContent, setShowContent] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowContent(false)
+  })
 
   return (
-    <>
+    <div ref={ref}>
       <DetailsDropdownButton
         title="Select version"
         onClick={() => {
-          setShowVersions((shown) => !shown)
+          setShowContent((shown) => !shown)
         }}
       >
         Version: {version}
       </DetailsDropdownButton>
-      {showVersions && (
+      {showContent && (
         <DetailsDropdownContent>
           <CardHeader>
             <h3>Versions</h3>
@@ -149,7 +154,7 @@ function VersionSelector({
                   className="usa-link"
                   to={`/docs/schema/${ref}/${path}`}
                   onClick={() => {
-                    setShowVersions(false)
+                    setShowContent(false)
                   }}
                 >
                   {name || ref}
@@ -159,7 +164,7 @@ function VersionSelector({
           </CardBody>
         </DetailsDropdownContent>
       )}
-    </>
+    </div>
   )
 }
 

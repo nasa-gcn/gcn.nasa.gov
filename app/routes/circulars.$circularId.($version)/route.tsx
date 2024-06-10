@@ -9,8 +9,9 @@ import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, CardBody, Icon } from '@trussworks/react-uswds'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../circulars.$circularId/route'
 import { get } from '../circulars/circulars.server'
@@ -154,23 +155,26 @@ function CircularsHistory({
   circular: number
   history?: number[]
 }) {
-  const [showVersions, setShowVersions] = useState<boolean>(false)
-
+  const ref = useRef<HTMLDivElement>(null)
+  const [showContent, setShowContent] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowContent(false)
+  })
   return (
-    <>
+    <div ref={ref}>
       <DetailsDropdownButton
         outline
         onClick={() => {
-          setShowVersions((shown) => !shown)
+          setShowContent((shown) => !shown)
         }}
       >
         Versions
       </DetailsDropdownButton>
-      {showVersions && (
+      {showContent && (
         <DetailsDropdownContent>
           <CardBody>
             <Link
-              onClick={() => setShowVersions(!showVersions)}
+              onClick={() => setShowContent(!showContent)}
               to={`/circulars/${circular}`}
             >
               Latest
@@ -179,7 +183,7 @@ function CircularsHistory({
               history.map((version) => (
                 <div key={version}>
                   <Link
-                    onClick={() => setShowVersions(!showVersions)}
+                    onClick={() => setShowContent(!showContent)}
                     to={`/circulars/${circular}/${version}`}
                   >
                     Version {version}
@@ -189,6 +193,6 @@ function CircularsHistory({
           </CardBody>
         </DetailsDropdownContent>
       )}
-    </>
+    </div>
   )
 }
