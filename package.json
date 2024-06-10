@@ -120,7 +120,7 @@
     "@types/source-map-support": "^0.5.8",
     "@types/tar-stream": "^3.1.1",
     "autoprefixer": "^10.4.19",
-    "aws-sdk-mock": "^5.9.0",
+    "aws-sdk-mock": "^6.0.3",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-jest": "^27.9.0",
