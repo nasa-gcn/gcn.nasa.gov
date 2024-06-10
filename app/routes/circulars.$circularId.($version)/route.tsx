@@ -9,8 +9,10 @@ import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, CardBody, Icon } from '@trussworks/react-uswds'
-import { useState } from 'react'
+import classNames from 'classnames'
+import { useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../circulars.$circularId/route'
 import { get } from '../circulars/circulars.server'
@@ -154,10 +156,13 @@ function CircularsHistory({
   circular: number
   history?: number[]
 }) {
-  const [showVersions, setShowVersions] = useState<boolean>(false)
-
+  const ref = useRef<HTMLDivElement>(null)
+  const [showVersions, setShowVersions] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowVersions(false)
+  })
   return (
-    <>
+    <div ref={ref}>
       <DetailsDropdownButton
         outline
         onClick={() => {
@@ -166,29 +171,31 @@ function CircularsHistory({
       >
         Versions
       </DetailsDropdownButton>
-      {showVersions && (
-        <DetailsDropdownContent>
-          <CardBody>
-            <Link
-              onClick={() => setShowVersions(!showVersions)}
-              to={`/circulars/${circular}`}
-            >
-              Latest
-            </Link>
-            {history &&
-              history.map((version) => (
-                <div key={version}>
-                  <Link
-                    onClick={() => setShowVersions(!showVersions)}
-                    to={`/circulars/${circular}/${version}`}
-                  >
-                    Version {version}
-                  </Link>
-                </div>
-              ))}
-          </CardBody>
-        </DetailsDropdownContent>
-      )}
-    </>
+      <DetailsDropdownContent
+        className={classNames('maxw-card-xlg', {
+          'display-none': !showVersions,
+        })}
+      >
+        <CardBody>
+          <Link
+            onClick={() => setShowVersions(!showVersions)}
+            to={`/circulars/${circular}`}
+          >
+            Latest
+          </Link>
+          {history &&
+            history.map((version) => (
+              <div key={version}>
+                <Link
+                  onClick={() => setShowVersions(!showVersions)}
+                  to={`/circulars/${circular}/${version}`}
+                >
+                  Version {version}
+                </Link>
+              </div>
+            ))}
+        </CardBody>
+      </DetailsDropdownContent>
+    </div>
   )
 }
