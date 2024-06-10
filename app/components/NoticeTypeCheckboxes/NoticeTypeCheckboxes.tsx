@@ -11,12 +11,20 @@ import type { NoticeFormat } from '../NoticeFormat'
 import { NestedCheckboxes } from '../nested-checkboxes/NestedCheckboxes'
 import { triggerRate } from './rates'
 
+const minRate = 1 / 7
+
 function humanizedCount(count: number, singular: string, plural?: string) {
   const noun = count === 1 ? singular : plural ?? `${singular}s`
   return `${count} ${noun}`
 }
 
 function humanizedRate(rate: number, singular: string, plural?: string) {
+  let isUpperBound
+  if (rate < minRate) {
+    isUpperBound = true
+    rate = minRate
+  }
+
   let unit = 'day'
   if (rate) {
     for (const { factor, unit: proposedUnit } of [
@@ -30,7 +38,7 @@ function humanizedRate(rate: number, singular: string, plural?: string) {
       if (rate > 0.5) break
     }
   }
-  return `${humanizedCount(Math.round(rate), singular, plural)} per ${unit}`
+  return `${isUpperBound ? '< ' : ''}${humanizedCount(Math.round(rate), singular, plural)} per ${unit}`
 }
 
 const NoticeTypes = {
@@ -280,7 +288,7 @@ export function NoticeTypeCheckboxes({
         childoncheckhandler={counterfunction}
       />
       <div className="text-bold text-ink">
-        {humanizedCount(selectedCounter, 'notice type')} selected for about{' '}
+        {humanizedCount(selectedCounter, 'notice type')} selected for{' '}
         {humanizedRate(alertEstimate, 'alert')}
       </div>
     </>
