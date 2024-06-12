@@ -158,6 +158,15 @@ export function CircularEditForm({
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
       <h1>{headerText} GCN Circular</h1>
+      {intent === 'correction' && (
+        <p className="usa-paragraph">
+          See{' '}
+          <Link to="/docs/circulars/corrections">
+            documentation on Circulars moderation
+          </Link>{' '}
+          for more information on corrections.
+        </p>
+      )}
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <input type="hidden" name="intent" value={intent} />
         {circularId !== undefined && (
