@@ -51,11 +51,13 @@ if (process.env.ARC_SANDBOX) {
     async () => {
       const producer = kafka.producer()
       await producer.connect()
-      process.once('beforeExit', async () => {
-        console.log('Disconnecting from Kafka')
-        await producer.disconnect()
-        console.log('Disconnected from Kafka')
-      })
+      ;['SIGINT', 'SIGTERM'].forEach((event) =>
+        process.once(event, async () => {
+          console.log('Disconnecting from Kafka')
+          await producer.disconnect()
+          console.log('Disconnected from Kafka')
+        })
+      )
       return producer
     },
     { promise: true }
