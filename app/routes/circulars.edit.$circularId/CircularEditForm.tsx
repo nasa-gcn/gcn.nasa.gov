@@ -188,7 +188,12 @@ export function CircularEditForm({
             {circularId !== undefined && userIsModerator && (
               <>
                 <input type="hidden" name="circularId" value={circularId} />
-                <InputGroup className="maxw-full">
+                <InputGroup
+                  className={classnames('maxw-full', {
+                    'usa-input--error': !submitterValid,
+                    'usa-input--success': submitterValid,
+                  })}
+                >
                   <InputPrefix className="wide-input-prefix">From</InputPrefix>
                   <TextInput
                     className="maxw-full"
@@ -251,7 +256,13 @@ export function CircularEditForm({
                   'usa-input--success': time,
                 })}
               >
-                {/* FIXME: see https://github.com/trussworks/react-uswds/issues/2806 */}
+                {/* FIXME: The TimePicker component does not by itself 
+                contribute useful form data because only the element has 
+                a name, and the field does not. So the form data is only 
+                populated correctly if the user selects an option from the 
+                dropdown, but not if they type a valid value into the combo box.
+                
+                See https://github.com/trussworks/react-uswds/issues/2806 */}
                 <input
                   type="hidden"
                   id="createdOnTime"
@@ -259,6 +270,10 @@ export function CircularEditForm({
                   value={time}
                 />
                 <InputPrefix className="wide-input-prefix">Time</InputPrefix>
+                {/* FIXME: Currently only 12 hour formats are supported. We should
+                switch to 24 hours as it is more common/useful for the community.
+                
+                See https://github.com/trussworks/react-uswds/issues/2947 */}
                 <TimePicker
                   id="createdOnTimeSetter"
                   name="createdOnTimeSetter"
