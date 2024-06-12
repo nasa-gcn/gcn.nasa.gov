@@ -138,7 +138,7 @@ export function dateIsValid(date?: string, time?: string) {
 }
 
 export function submitterIsValid(submitter?: string) {
-  return Boolean(submitter) //!== undefined
+  return Boolean(submitter)
 }
 
 export function emailIsAutoReply(subject: string) {

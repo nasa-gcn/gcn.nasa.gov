@@ -183,57 +183,50 @@ export function CircularEditForm({
       <h1>{headerText} GCN Circular</h1>
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <input type="hidden" name="intent" value={intent} />
-        <Grid>
-          <Grid row>
-            {circularId !== undefined && userIsModerator && (
-              <>
-                <input type="hidden" name="circularId" value={circularId} />
-                <InputGroup
-                  className={classnames('maxw-full', {
-                    'usa-input--error': !submitterValid,
-                    'usa-input--success': submitterValid,
-                  })}
-                >
-                  <InputPrefix className="wide-input-prefix">From</InputPrefix>
-                  <TextInput
-                    className="maxw-full"
-                    name="submitter"
-                    id="submitter"
-                    type="text"
-                    defaultValue={defaultSubmitter}
-                    onChange={(event) => setSubmitter(event.target.value)}
-                    required
-                  />
-                </InputGroup>
-              </>
-            )}
-          </Grid>
-          <Grid row>
-            <InputGroup className="border-0 maxw-full">
-              <InputPrefix className="wide-input-prefix">
-                {circularId === undefined ? 'From' : 'Editor'}
-              </InputPrefix>
-              <span className="padding-1">{formattedContributor} </span>
-              <Link
-                to="/user"
-                title="Adjust how your name and affiliation appear in new GCN Circulars"
-              >
-                <Button unstyled type="button">
-                  <Icon.Edit role="presentation" /> Edit
-                </Button>
-              </Link>
+        {circularId !== undefined && userIsModerator && (
+          <>
+            <input type="hidden" name="circularId" value={circularId} />
+            <InputGroup
+              className={classnames('maxw-full', {
+                'usa-input--error': !submitterValid,
+                'usa-input--success': submitterValid,
+              })}
+            >
+              <InputPrefix className="wide-input-prefix">From</InputPrefix>
+              <TextInput
+                className="maxw-full"
+                name="submitter"
+                id="submitter"
+                type="text"
+                defaultValue={defaultSubmitter}
+                onChange={(event) => setSubmitter(event.target.value)}
+                required
+              />
             </InputGroup>
-          </Grid>
-          {circularId !== undefined && (
-            <Grid row>
+          </>
+        )}
+        <InputGroup className="border-0 maxw-full">
+          <InputPrefix className="wide-input-prefix">
+            {circularId === undefined ? 'From' : 'Editor'}
+          </InputPrefix>
+          <span className="padding-1">{formattedContributor} </span>
+          <Link
+            to="/user"
+            title="Adjust how your name and affiliation appear in new GCN Circulars"
+          >
+            <Button unstyled type="button">
+              <Icon.Edit role="presentation" /> Edit
+            </Button>
+          </Link>
+        </InputGroup>
+        {circularId !== undefined && (
+          <Grid row gap="md">
+            <Grid tablet={{ col: 'auto' }}>
               <InputGroup
-                className={classnames(
-                  'tablet:margin-right-1 tablet:grid-col-auto',
-                  {
-                    'usa-input--error': !date || !Date.parse(date),
-                    'usa-input--success': date && Date.parse(date),
-                  }
-                )}
+                className={classnames({
+                  'usa-input--error': !date || !Date.parse(date),
+                  'usa-input--success': date && Date.parse(date),
+                })}
               >
                 <InputPrefix className="wide-input-prefix">Date</InputPrefix>
                 <DatePicker
@@ -250,8 +243,10 @@ export function CircularEditForm({
                   dateFormat="YYYY-MM-DD"
                 />
               </InputGroup>
+            </Grid>
+            <Grid tablet={{ col: 'auto' }}>
               <InputGroup
-                className={classnames('tablet:grid-col-auto', {
+                className={classnames({
                   'usa-input--error': !time,
                   'usa-input--success': time,
                 })}
@@ -287,89 +282,87 @@ export function CircularEditForm({
                 />
               </InputGroup>
             </Grid>
-          )}
-          <Grid row>
-            <InputGroup
-              className={classnames('maxw-full', {
-                'usa-input--error': subjectValid === false,
-                'usa-input--success': subjectValid,
-              })}
-            >
-              <InputPrefix className="wide-input-prefix">Subject</InputPrefix>
-              <TextInput
-                autoFocus
-                aria-describedby="subjectDescription"
-                className="maxw-full"
-                name="subject"
-                id="subject"
-                type="text"
-                placeholder={useSubjectPlaceholder()}
-                defaultValue={defaultSubject}
-                required
-                onChange={({ target: { value } }) => {
-                  setSubject(value)
-                  setSubjectValid(subjectIsValid(value))
-                }}
-              />
-            </InputGroup>
           </Grid>
-          <CollapsableInfo
-            id="subjectDescription"
-            preambleText="The subject line must contain (and should start with) the name of the transient, which must start with one of the"
-            buttonText="known keywords"
-          >
-            <CircularsKeywords />
-          </CollapsableInfo>
-          <label hidden htmlFor="body">
-            Body
-          </label>
-          <RichEditor
-            aria-describedby="bodyDescription"
-            placeholder={bodyPlaceholder}
-            defaultValue={defaultBody}
-            defaultMarkdown={defaultFormat === 'text/markdown'}
+        )}
+        <InputGroup
+          className={classnames('maxw-full', {
+            'usa-input--error': subjectValid === false,
+            'usa-input--success': subjectValid,
+          })}
+        >
+          <InputPrefix className="wide-input-prefix">Subject</InputPrefix>
+          <TextInput
+            autoFocus
+            aria-describedby="subjectDescription"
+            className="maxw-full"
+            name="subject"
+            id="subject"
+            type="text"
+            placeholder={useSubjectPlaceholder()}
+            defaultValue={defaultSubject}
             required
-            className={bodyValid ? 'usa-input--success' : undefined}
             onChange={({ target: { value } }) => {
-              setBody(value)
+              setSubject(value)
+              setSubjectValid(subjectIsValid(value))
             }}
-            markdownStateSetter={setFormat}
           />
-          <CollapsableInfo
-            id="bodyDescription"
-            preambleText={
-              <>
-                Body text. If this is your first Circular, please review the{' '}
-                <Link to="/docs/circulars/styleguide">style guide</Link>.
-                References to Circulars, DOIs, arXiv preprints, and transients
-                are automatically shown as links; see
-              </>
-            }
-            buttonText="syntax"
+        </InputGroup>
+        <CollapsableInfo
+          id="subjectDescription"
+          preambleText="The subject line must contain (and should start with) the name of the transient, which must start with one of the"
+          buttonText="known keywords"
+        >
+          <CircularsKeywords />
+        </CollapsableInfo>
+        <label hidden htmlFor="body">
+          Body
+        </label>
+        <RichEditor
+          aria-describedby="bodyDescription"
+          placeholder={bodyPlaceholder}
+          defaultValue={defaultBody}
+          defaultMarkdown={defaultFormat === 'text/markdown'}
+          required
+          className={bodyValid ? 'usa-input--success' : undefined}
+          onChange={({ target: { value } }) => {
+            setBody(value)
+          }}
+          markdownStateSetter={setFormat}
+        />
+        <CollapsableInfo
+          id="bodyDescription"
+          preambleText={
+            <>
+              Body text. If this is your first Circular, please review the{' '}
+              <Link to="/docs/circulars/styleguide">style guide</Link>.
+              References to Circulars, DOIs, arXiv preprints, and transients are
+              automatically shown as links; see
+            </>
+          }
+          buttonText="syntax"
+        >
+          <SyntaxReference />
+        </CollapsableInfo>
+        <ButtonGroup>
+          <Link
+            to={`/circulars${searchString}`}
+            className="usa-button usa-button--outline"
           >
-            <SyntaxReference />
-          </CollapsableInfo>
-          <ButtonGroup>
-            <Link
-              to={`/circulars${searchString}`}
-              className="usa-button usa-button--outline"
-            >
-              Back
-            </Link>
-            <Button
-              disabled={sending || !valid || !changesHaveBeenMade}
-              type="submit"
-              value="save"
-            >
-              {saveButtonText}
-            </Button>
-            {sending && (
-              <div className="padding-top-1 padding-bottom-1">
-                <Spinner /> Sending...
-              </div>
-            )}
-          </ButtonGroup>
-        </Grid>
+            Back
+          </Link>
+          <Button
+            disabled={sending || !valid || !changesHaveBeenMade}
+            type="submit"
+            value="save"
+          >
+            {saveButtonText}
+          </Button>
+          {sending && (
+            <div className="padding-top-1 padding-bottom-1">
+              <Spinner /> Sending...
+            </div>
+          )}
+        </ButtonGroup>
       </Form>
     </AstroDataContext.Provider>
   )

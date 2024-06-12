@@ -370,7 +370,9 @@ export async function createChangeRequest(
     Circular,
     'sub' | 'submittedHow' | 'bibcode' | 'editedBy' | 'version' | 'editedOn'
   >,
-  user?: User
+  user?: User,
+  submitter?: string,
+  createdOn?: number
 ) {
   validateCircular(item)
   if (!user)
