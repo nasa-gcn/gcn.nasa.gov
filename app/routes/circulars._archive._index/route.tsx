@@ -97,15 +97,17 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'correction':
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
+
       if (!user?.name || !user.email) throw new Response(null, { status: 403 })
-      let submitter, createdOnDate, createdOnTime, createdOn
+      let submitter
       if (user.groups.includes(moderatorGroup)) {
         submitter = getFormDataString(data, 'submitter')
-        createdOnDate = getFormDataString(data, 'createdOnDate')
-        createdOnTime = getFormDataString(data, 'createdOnTime')
-        createdOn = Date.parse(`${createdOnDate} ${createdOnTime} UTC`)
+        if (!submitter) throw new Response(null, { status: 400 })
       }
-      if (!submitter || !createdOnDate || !createdOnTime || !createdOn)
+      const createdOnDate = getFormDataString(data, 'createdOnDate')
+      const createdOnTime = getFormDataString(data, 'createdOnTime')
+      const createdOn = Date.parse(`${createdOnDate} ${createdOnTime} UTC`)
+      if (!createdOnDate || !createdOnTime || !createdOn)
         throw new Response(null, { status: 400 })
       await createChangeRequest(
         {

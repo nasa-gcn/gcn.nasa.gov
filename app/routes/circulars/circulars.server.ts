@@ -368,11 +368,16 @@ export async function getVersions(circularId: number): Promise<number[]> {
 export async function createChangeRequest(
   item: Omit<
     Circular,
-    'sub' | 'submittedHow' | 'bibcode' | 'editedBy' | 'version' | 'editedOn'
-  >,
-  user?: User,
-  submitter?: string,
-  createdOn?: number
+    | 'sub'
+    | 'submittedHow'
+    | 'bibcode'
+    | 'editedBy'
+    | 'version'
+    | 'editedOn'
+    | 'submitter'
+    | 'createdOn'
+  > & { submitter?: string; createdOn?: number },
+  user?: User
 ) {
   validateCircular(item)
   if (!user)

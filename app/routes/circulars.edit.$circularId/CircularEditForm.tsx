@@ -192,9 +192,9 @@ export function CircularEditForm({
       )}
       <Form method="POST" action={`/circulars${formSearchString}`}>
         <input type="hidden" name="intent" value={intent} />
+        <input type="hidden" name="circularId" value={circularId} />
         {circularId !== undefined && userIsModerator && (
           <>
-            <input type="hidden" name="circularId" value={circularId} />
             <InputGroup
               className={classnames('maxw-full', {
                 'usa-input--error': !submitterValid,
