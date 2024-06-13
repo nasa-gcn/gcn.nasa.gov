@@ -35,6 +35,7 @@ import {
   createChangeRequest,
   get,
   getChangeRequests,
+  moderatorGroup,
   put,
   putVersion,
   search,
@@ -97,9 +98,22 @@ export async function action({ request }: ActionFunctionArgs) {
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
       if (!user?.name || !user.email) throw new Response(null, { status: 403 })
-
+      let submitter, createdOnDate, createdOnTime, createdOn
+      if (user.groups.includes(moderatorGroup)) {
+        submitter = getFormDataString(data, 'submitter')
+        createdOnDate = getFormDataString(data, 'createdOnDate')
+        createdOnTime = getFormDataString(data, 'createdOnTime')
+        createdOn = Date.parse(`${createdOnDate} ${createdOnTime} UTC`)
+      }
+      if (!submitter || !createdOnDate || !createdOnTime || !createdOn)
+        throw new Response(null, { status: 400 })
       await createChangeRequest(
-        { circularId: parseFloat(circularId), ...props },
+        {
+          circularId: parseFloat(circularId),
+          ...props,
+          submitter,
+          createdOn,
+        },
         user
       )
       await postZendeskRequest({

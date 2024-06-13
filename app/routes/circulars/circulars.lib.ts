@@ -37,6 +37,8 @@ export interface CircularChangeRequest extends CircularMetadata {
   requestorSub: string
   requestorEmail: string
   format: CircularFormat
+  submitter: string
+  createdOn: number
 }
 
 export interface CircularChangeRequestKeys {
@@ -128,6 +130,15 @@ export function bodyIsValid(body: string) {
 
 export function formatIsValid(format: string): format is CircularFormat {
   return (circularFormats as any as string[]).includes(format)
+}
+
+/** For updated dates, check that the date is valid */
+export function dateIsValid(date?: string, time?: string) {
+  return !Number.isNaN(Date.parse(`${date}T${time}:00.000Z`))
+}
+
+export function submitterIsValid(submitter?: string) {
+  return Boolean(submitter)
 }
 
 export function emailIsAutoReply(subject: string) {
