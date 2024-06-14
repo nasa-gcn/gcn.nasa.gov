@@ -29,6 +29,20 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
+        <CollectionCalendarDate datetime={'June 14, 2024'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Circulars are Now Available via Kafka</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        Circulars can now be streamed over Kafka in JSON format on the topic `gcn.circulars`.  They can be added to your existing Kafka streaming codes or generated via the [QuickStart interface](/quickstart).
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
         <CollectionCalendarDate datetime={'May 29, 2024'} />
       }
     >

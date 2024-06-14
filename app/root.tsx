@@ -250,11 +250,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Introducing Einstein Probe, Astro Flavored Markdown, and Notices
-          Schema v4.0.0. See{' '}
+          Circulars now available via Kafka. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-einstein-probe-notices-circulars-astro-flavored-markdown-and-notices-schema-v400"
+            to="/news#circulars-are-now-available-via-kafka"
           >
             news and announcements
           </Link>
