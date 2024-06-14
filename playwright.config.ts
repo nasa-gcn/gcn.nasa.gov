@@ -37,27 +37,27 @@ export default defineConfig({
       name: 'chromium',
       use: {
         ...devices['Desktop Chrome'],
-        // storageState: '__playwright__/.auth/user.json',
+        storageState: '__playwright__/.auth/user.json',
       },
-      // dependencies: ['setup'],
+      dependencies: ['setup'],
     },
 
     {
       name: 'firefox',
       use: {
         ...devices['Desktop Firefox'],
-        // storageState: '__playwright__/.auth/user.json',
+        storageState: '__playwright__/.auth/user.json',
       },
-      // dependencies: ['setup'],
+      dependencies: ['setup'],
     },
 
     {
       name: 'webkit',
       use: {
         ...devices['Desktop Safari'],
-        // storageState: '__playwright__/.auth/user.json',
+        storageState: '__playwright__/.auth/user.json',
       },
-      // dependencies: ['setup'],
+      dependencies: ['setup'],
     },
 
     /* Test against mobile viewports. */
