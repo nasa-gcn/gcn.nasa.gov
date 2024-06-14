@@ -65,3 +65,9 @@ test.describe('Circulars correction page', () => {
     await expect(page.getByTestId('textarea')).toHaveValue(testCircular.body)
   })
 })
+
+test.describe('Circulars submission page', () => {
+  test('posts a submission successfully ', async ({ page }) => {
+    // Do stuff
+  })
+})
