@@ -68,6 +68,17 @@ test.describe('Circulars correction page', () => {
 
 test.describe('Circulars submission page', () => {
   test('posts a submission successfully ', async ({ page }) => {
-    // Do stuff
+    await page.goto('/circulars/new')
+    await page
+      .getByPlaceholder('GRB 240614A: observations of')
+      .fill('GRB Submission Playwright Test Subject')
+    await page
+      .getByTestId('textarea')
+      .fill('GRB Submission Playwright Test Body')
+    await page.getByRole('button', { name: 'Send' }).click()
+    await page.waitForURL('/circulars?index')
+    await expect(
+      page.getByRole('link', { name: 'GRB Submission Playwright' })
+    ).toBeVisible()
   })
 })
