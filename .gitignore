@@ -32,7 +32,6 @@ sam.yaml
 /playwright/.cache/
 # https://playwright.dev/docs/auth
 /__playwright__/.auth
-/__playwright__/auth.setup.ts
 auth.json
 
 # Draw.io auto-save files
