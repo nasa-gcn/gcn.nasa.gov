@@ -17,8 +17,11 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
-import { useCombobox } from 'downshift'
-import type { UseComboboxProps } from 'downshift'
+import {
+  type UseComboboxProps,
+  type UseComboboxStateChange,
+  useCombobox,
+} from 'downshift'
 import {
   forwardRef,
   useEffect,
@@ -26,7 +29,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useResizeObserver } from 'usehooks-ts'
+import { useDebounceCallback, useResizeObserver } from 'usehooks-ts'
 
 import { formatAuthor } from '../circulars/circulars.lib'
 import type {
@@ -385,6 +388,21 @@ const EndorserComboBox = forwardRef<
     setItems(fetcher.data?.submitters ?? [])
   }, [fetcher.data])
 
+  const onInputValueChange = useDebounceCallback(
+    ({ inputValue, isOpen }: UseComboboxStateChange<EndorsementUser>) => {
+      if (inputValue && isOpen) {
+        const data = new FormData()
+        data.set('filter', inputValue.split(' ')[0])
+        data.set('intent', 'filter')
+        fetcher.submit(data, { method: 'POST' })
+      } else {
+        setItems([])
+      }
+    },
+    500,
+    { trailing: true }
+  )
+
   const {
     reset,
     isOpen,
@@ -396,16 +414,7 @@ const EndorserComboBox = forwardRef<
     getToggleButtonProps,
   } = useCombobox<EndorsementUser>({
     items,
-    onInputValueChange({ inputValue, isOpen }) {
-      if (inputValue && isOpen) {
-        const data = new FormData()
-        data.set('filter', inputValue.split(' ')[0])
-        data.set('intent', 'filter')
-        fetcher.submit(data, { method: 'POST' })
-      } else {
-        setItems([])
-      }
-    },
+    onInputValueChange,
     itemToString(item) {
       return item ? formatAuthor(item) : ''
     },
