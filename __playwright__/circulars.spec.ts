@@ -81,7 +81,7 @@ test.describe('Circulars edit page', () => {
     await page.getByTestId('combo-box-input').fill(editTestsCircular.time)
     await page.locator('#subject').fill(editTestsCircular.subject)
     await page.getByTestId('textarea').fill(editTestsCircular.body)
-    await page.getByRole('button', { name: 'Update' }).click()
+    await page.getByRole('button', { name: 'Update' }).click({ timeout: 10000 })
     await page.waitForURL('/circulars?index')
     await expect(
       page.getByRole('link', {
@@ -92,7 +92,7 @@ test.describe('Circulars edit page', () => {
       .getByRole('link', {
         name: editTestsCircular.subject,
       })
-      .click()
+      .click({ timeout: 10000 })
   })
 })
 
@@ -128,7 +128,7 @@ test.describe('Circulars submission page', () => {
     await page
       .getByTestId('textarea')
       .fill('GRB Submission Playwright Test Body')
-    await page.getByRole('button', { name: 'Send' }).click()
+    await page.getByRole('button', { name: 'Send' }).click({ timeout: 10000 })
     await page.waitForURL('/circulars?index')
     await expect(
       page.getByRole('link', { name: 'GRB Submission Playwright' })
