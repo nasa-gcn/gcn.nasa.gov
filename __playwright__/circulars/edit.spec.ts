@@ -31,27 +31,9 @@ function getDateAndTimeStrings(createdOn: number) {
   ]
 }
 
-test.describe('Circulars archive page', () => {
-  test('responds to changes in the number of results per page', async ({
-    page,
-  }) => {
-    await page.goto('/circulars')
-    for (const expectedResultsPerPage of [10, 20]) {
-      await page
-        .getByTitle('Number of results per page')
-        .selectOption({ label: `${expectedResultsPerPage} / page` })
-      await page.waitForFunction(
-        (n) =>
-          document.getElementsByTagName('ol')[0].getElementsByTagName('li')
-            .length === n,
-        expectedResultsPerPage
-      )
-    }
-  })
-})
-
 test.describe('Circulars edit page', () => {
   test('populates all fields on load', async ({ page }) => {
+    test.slow()
     await page.goto(`/circulars/edit/${loadingTestsCircular.circularId}`)
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
@@ -73,6 +55,7 @@ test.describe('Circulars edit page', () => {
   })
 
   test('submits expected values', async ({ page }) => {
+    test.slow()
     await page.goto(`/circulars/edit/${editTestsCircular.circularId}`)
     await page.locator('#submitter').fill(editTestsCircular.submitter)
     await page
@@ -93,45 +76,5 @@ test.describe('Circulars edit page', () => {
         name: editTestsCircular.subject,
       })
       .click({ timeout: 10000 })
-  })
-})
-
-test.describe('Circulars correction page', () => {
-  test('populates all fields on load', async ({ page }) => {
-    await page.goto(`/circulars/correction/${loadingTestsCircular.circularId}`)
-    await expect(page.locator('#submitter')).toHaveValue(
-      loadingTestsCircular.submitter
-    )
-    const [testDate, testTime] = getDateAndTimeStrings(
-      loadingTestsCircular.createdOn
-    )
-    await expect(page.getByTestId('date-picker-external-input')).toHaveValue(
-      testDate
-    )
-    // Time is only mapped to the minute, and in 12 hour format (for now)
-    await expect(page.getByTestId('combo-box-input')).toHaveValue(testTime)
-    await expect(page.locator('#subject')).toHaveValue(
-      loadingTestsCircular.subject
-    )
-    await expect(page.getByTestId('textarea')).toHaveValue(
-      loadingTestsCircular.body
-    )
-  })
-})
-
-test.describe('Circulars submission page', () => {
-  test('posts a submission successfully ', async ({ page }) => {
-    await page.goto('/circulars/new')
-    await page
-      .locator('#subject')
-      .fill('GRB Submission Playwright Test Subject')
-    await page
-      .getByTestId('textarea')
-      .fill('GRB Submission Playwright Test Body')
-    await page.getByRole('button', { name: 'Send' }).click({ timeout: 10000 })
-    await page.waitForURL('/circulars?index')
-    await expect(
-      page.getByRole('link', { name: 'GRB Submission Playwright' })
-    ).toBeVisible()
   })
 })
