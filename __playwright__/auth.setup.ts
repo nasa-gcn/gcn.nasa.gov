@@ -6,18 +6,20 @@ dotenv.config()
 
 const authFile = '__playwright__/.auth/user.json'
 
-const testUsername = process.env.TEST_USERNAME
-const testPassword = process.env.TEST_PASSWORD
+const testUsername = 'TEST_USERNAME'
+const testPassword = 'TEST_PASSWORD'
 
 setup('authenticate', async ({ page }) => {
   // Perform authentication steps. Replace these actions with your own.
   if (!testUsername || !testPassword)
     throw new Error('Please define test account info')
   await page.goto('/login')
-  await page.getByRole('textbox', { name: 'name@host.com' }).fill(testUsername)
-  await page.getByRole('textbox', { name: 'Password' }).fill(testPassword)
-  await page.getByRole('button', { name: 'submit' }).click()
+  await page.getByPlaceholder('Enter any login').fill(testUsername)
+  await page.getByPlaceholder('and password').fill(testPassword)
+  await page.getByRole('button', { name: 'Sign-in' }).click()
   await page.waitForURL('/')
-  await expect(page.getByRole('button', { name: testUsername })).toBeVisible()
+  await expect(
+    page.getByRole('button', { name: 'user@example.com' })
+  ).toBeVisible()
   await page.context().storageState({ path: authFile })
 })
