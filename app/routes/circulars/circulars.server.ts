@@ -314,7 +314,9 @@ export async function circularRedirect(query: string) {
 }
 
 export async function putVersion(
-  circular: Omit<Circular, 'createdOn' | 'submitter' | 'submittedHow'>,
+  circular: Omit<Circular, 'createdOn' | 'submitter' | 'submittedHow'> & {
+    createdOn?: number
+  },
   user?: User
 ): Promise<number> {
   validateCircular(circular)
