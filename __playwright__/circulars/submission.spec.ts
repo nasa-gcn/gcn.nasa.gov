@@ -4,6 +4,7 @@ test.describe('Circulars submission page', () => {
   test('posts a submission successfully ', async ({ page }) => {
     test.slow()
     await page.goto('/circulars/new')
+    await page.locator('#subject').clear()
     await page
       .locator('#subject')
       .fill('GRB Submission Playwright Test Subject')
