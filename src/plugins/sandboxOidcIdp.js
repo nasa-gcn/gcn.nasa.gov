@@ -46,7 +46,11 @@ export const sandbox = {
               sub: id,
               email: 'user@example.com',
               'cognito:username': id,
-              'cognito:groups': ['gcn.nasa.gov/kafka-public-consumer'],
+              'cognito:groups': [
+                'gcn.nasa.gov/kafka-public-consumer',
+                'gcn.nasa.gov/circular-submitter',
+                'gcn.nasa.gov/circular-moderator',
+              ],
               identities: [{ providerName: 'Local Sandbox' }],
             }
           },
