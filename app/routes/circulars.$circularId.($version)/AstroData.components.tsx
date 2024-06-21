@@ -9,6 +9,7 @@ import { type LoaderFunction } from '@remix-run/node'
 import { type useLoaderData } from '@remix-run/react'
 
 import { AstroDataLinkWithTooltip } from './AstroDataContext'
+import { useSearchString } from '~/lib/utils'
 import { type loader as arxivTooltipLoader } from '~/routes/api.tooltip.arxiv.$'
 import { type loader as circularTooltipLoader } from '~/routes/api.tooltip.circular.$'
 import { type loader as doiTooltipLoader } from '~/routes/api.tooltip.doi.$'
@@ -29,9 +30,10 @@ export function GcnCircular({
   children,
   value,
 }: JSX.IntrinsicElements['data']) {
+  const searchString = useSearchString()
   return (
     <AstroDataLinkWithTooltip
-      to={`/circulars/${value}`}
+      to={`/circulars/${value}${searchString}`}
       fetch={() =>
         fetchTooltipData<typeof circularTooltipLoader>('circular', value)
       }
