@@ -23,7 +23,7 @@ function autolinkLiteral(tree: Parameters<typeof findAndReplace>[0]) {
     [
       regexp,
       (href: string) =>
-        h('a', { rel: 'external', href, target: '_blank' }, href),
+        h('a', { rel: 'noreferrer', href, target: '_blank' }, href),
     ],
     { ignore: ['data'] }
   )
