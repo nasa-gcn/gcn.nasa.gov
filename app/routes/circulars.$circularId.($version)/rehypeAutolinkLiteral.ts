@@ -20,7 +20,11 @@ const regexp = new RegExp(
 function autolinkLiteral(tree: Parameters<typeof findAndReplace>[0]) {
   findAndReplace(
     tree,
-    [regexp, (href: string) => h('a', { rel: 'external', href }, href)],
+    [
+      regexp,
+      (href: string) =>
+        h('a', { rel: 'external noopener', href, target: '_blank' }, href),
+    ],
     { ignore: ['data'] }
   )
   return tree

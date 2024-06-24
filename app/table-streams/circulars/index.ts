@@ -24,6 +24,8 @@ import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { formatCircularText } from '~/routes/circulars/circulars.lib'
 
+import { $id as circularsJsonSchemaId } from '@nasa-gcn/schema/gcn/circulars.schema.json'
+
 const index = 'circulars'
 const fromName = 'GCN Circulars'
 
@@ -124,7 +126,13 @@ export const handler = createTriggerHandler(
         promises.push(send(circular))
         const { sub, ...cleanedCircular } = circular
         promises.push(
-          sendKafka('gcn.circulars', JSON.stringify(cleanedCircular))
+          sendKafka(
+            'gcn.circulars',
+            JSON.stringify({
+              $schema: circularsJsonSchemaId,
+              ...cleanedCircular,
+            })
+          )
         )
       }
     }

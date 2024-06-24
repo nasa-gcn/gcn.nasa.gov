@@ -10,11 +10,12 @@ import { useState } from 'react'
 import type { NoticeFormat } from '../NoticeFormat'
 import { NestedCheckboxes } from '../nested-checkboxes/NestedCheckboxes'
 import { triggerRate } from './rates'
+import { useFeature } from '~/root'
 
 const minRate = 1 / 7
 
 function humanizedCount(count: number, singular: string, plural?: string) {
-  const noun = count === 1 ? singular : plural ?? `${singular}s`
+  const noun = count === 1 ? singular : (plural ?? `${singular}s`)
   return `${count} ${noun}`
 }
 
@@ -28,7 +29,9 @@ function humanizedRate(rate: number, singular: string, plural?: string) {
   let unit = 'day'
   if (rate) {
     for (const { factor, unit: proposedUnit } of [
-      { factor: 1, unit: 'day' },
+      { factor: 1 / 86400, unit: 'second' },
+      { factor: 3600, unit: 'hour' },
+      { factor: 24, unit: 'day' },
       { factor: 7, unit: 'week' },
       { factor: 4, unit: 'month' },
       { factor: 12, unit: 'year' },
@@ -192,6 +195,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 
 const JsonNoticeTypes: { [key: string]: string[] } = {
   Circulars: ['gcn.circulars'],
+  Heartbeat: ['gcn.heartbeat'],
   IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
@@ -200,6 +204,7 @@ const JsonNoticeTypes: { [key: string]: string[] } = {
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   Circulars: '/circulars',
+  Heartbeat: '/docs/faq#how-can-i-tell-that-my-kafka-client-is-working',
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   Swift: '/missions/swift',
@@ -221,6 +226,11 @@ export function NoticeTypeCheckboxes({
   const [selectedCounter, setSelectedCounter] = useState(0)
   const [alertEstimate, setAlertEstimate] = useState(0)
 
+  if (useFeature('SVOM_QUICKSTART')) {
+    JsonNoticeTypes.SVOM = ['gcn.notices.svom']
+    JsonNoticeTypeLinks.SVOM = '/missions/svom'
+  }
+
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
@@ -234,7 +244,11 @@ export function NoticeTypeCheckboxes({
     let estimate = 0
     for (const noticeType of userSelected) {
       estimate +=
-        triggerRate[`gcn.classic.${selectedFormat}.${noticeType}`] ?? 0
+        triggerRate[
+          selectedFormat === 'json'
+            ? noticeType
+            : `gcn.classic.${selectedFormat}.${noticeType}`
+        ] ?? 0
     }
     setAlertEstimate(estimate)
 

@@ -34,7 +34,7 @@ export function GcnCircular({
   return (
     <AstroDataLinkWithTooltip
       to={`/circulars/${value}${searchString}`}
-      fetch={() =>
+      fetchFunction={() =>
         fetchTooltipData<typeof circularTooltipLoader>('circular', value)
       }
       label={({ subject, submitter }) => (
@@ -54,7 +54,10 @@ export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
   return (
     <AstroDataLinkWithTooltip
       to={`https://arxiv.org/abs/${value}`}
-      fetch={() => fetchTooltipData<typeof arxivTooltipLoader>('arxiv', value)}
+      ext
+      fetchFunction={() =>
+        fetchTooltipData<typeof arxivTooltipLoader>('arxiv', value)
+      }
       label={({ title, year, authors }) => (
         <>
           <div>arXiv:{value}</div>
@@ -74,7 +77,10 @@ export function Doi({ children, value }: JSX.IntrinsicElements['data']) {
   return (
     <AstroDataLinkWithTooltip
       to={`https://doi.org/${value}`}
-      fetch={() => fetchTooltipData<typeof doiTooltipLoader>('doi', value)}
+      ext
+      fetchFunction={() =>
+        fetchTooltipData<typeof doiTooltipLoader>('doi', value)
+      }
       label={({ authors, pub, year, title }) => (
         <>
           <div>{pub}</div>
@@ -94,7 +100,10 @@ export function Tns({ children, value }: JSX.IntrinsicElements['data']) {
   return (
     <AstroDataLinkWithTooltip
       to={`https://www.wis-tns.org/object/${value}`}
-      fetch={() => fetchTooltipData<typeof tnsTooltipLoader>('tns', value)}
+      ext
+      fetchFunction={() =>
+        fetchTooltipData<typeof tnsTooltipLoader>('tns', value)
+      }
       label={({ ra, dec, names }) => (
         <>
           <div>{names.join(', ')}</div>

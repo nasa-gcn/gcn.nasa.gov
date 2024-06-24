@@ -9,6 +9,16 @@
       "body": "Jada L. Vail, Maggie L. Li (Cornell), Jacob Wise (LJMU), D. A. Perley (LJMU), Anna Y. Q. Ho (Cornell), Eric Burns (LSU), Michael Coughlin (UMN) report: \n\nWe report the identification of a fast-evolving red transient by the Zwicky Transient Facility (ZTF) and Spectral Energy Distribution Machine (SEDM). AT 2023sva is located at the position (J2000) of:\n\nRA = 00:56:59.19 (14.24662 deg)\nDec = +80:08:44.12 (80.14559 deg)\n\nIt was first detected by ZTF on 2023-09-17 09:38:31 UT at r = 17.71 +/- 0.05 mag (MJD=60204.40175) and g = 18.49 +/- 0.06 mag (MJD=60204.44580) as part of the public all-sky survey. ZTF also obtained a non-detection ~2 days prior at r > 20.91 mag  (MJD=60202.24319), indicating a fast rise rate of >1.5 mag/day in r. The transient was detected in follow-up Spectral Energy Distribution Machine (SEDM) observations at r = 20.22 +/- 0.08 mag (MJD=60205.48761) and g = 20.73 +/- 0.10 mag (MJD=60205.48597), implying red colors and rapid fading (~2.3 mag/day fade in r). \n\nAT2023sva was also detected by ATLAS (ATLAS23srq) at MJD 60204.43499 and saved to the TNS (Tonry et al. 2023, TNS Report No. 188327). The last ATLAS non-detection was at MJD 60202.48470. The Galactic latitude of AT 2023sva is 17.27 degrees, and the Galactic reddening toward the direction of AT 2023sva is: E(g-r) = 0.249 from Schlafly & Finkbeiner (2011).\n\nThe fast rise, fast decay, red color, and lack of an archival optical counterpart make AT 2023sva a strong candidate afterglow. We identify the temporally and spatially coincident Fermi-GBM trigger bn230916144 / 716527670, initially classified as a GRB with 64% probability at position (J2000) of RA, Dec = 00:26:52.8, +87:43:12. The localization error radius is 21.44 deg. The time of the GBM trigger was 2023-09-16 03:27:46 UT (MJD=60203.14428), 1.3 days prior to the first ZTF detection of AT 2023sva. If the Fermi-GBM trigger is indeed a GRB then we suggest this as the prompt counterpart to AT 2023sva. If the trigger is of another origin, then no identified prompt signal has been reported thus far.\n\nWe encourage spectroscopic follow-up observations.\n\nZTF is supported by the National Science Foundation under Grant No. AST-2034437 and a collaboration including Caltech, IPAC, the Weizmann Institute for Science, the Oskar Klein Center at Stockholm University, the University of Maryland, Deutsches Elektronen-Synchrotron and Humboldt University, the TANGO Consortium of Taiwan, the University of Wisconsin at Milwaukee, Trinity College Dublin, Lawrence Livermore National Laboratories, and IN2P3, France. Operations are conducted by COO, IPAC, and UW.\n\nSED Machine is based upon work supported by the National Science Foundation under Grant No. 1106171.\n"
     },
     {
+      "subject": "LIGO/Virgo/KAGRA S240630t: Updated Sky localization",
+      "eventId": "LIGO/Virgo/KAGRA S240630t",
+      "submittedHow": "web",
+      "createdOn": 1719767201026,
+      "circularId": 36796,
+      "submitter": "Christopher P L Berry at LVK Collaboration <christopher.berry@ligo.org>",
+      "format": "text/plain",
+      "body": "The LIGO Scientific Collaboration, the Virgo Collaboration, and the KAGRA Collaboration report:\n\nWe have conducted further analysis of the LIGO Hanford Observatory (H1), LIGO Livingston Observatory (L1), and Virgo Observatory (V1) data around the time of the compact binary merger (CBC) candidate S240630t (GCN Circular 36794). Parameter estimation has been performed using Bilby [1] and a new sky map, Bilby.multiorder.fits,0, distributed via GCN Notice, is available for retrieval from the GraceDB event page:\n\nhttps://gracedb.ligo.org/superevents/S240630t\n\nFor the Bilby.multiorder.fits,0 sky map, the 90% credible region is 670 deg2. Marginalized over the whole sky, the a posteriori luminosity distance estimate is 3161 +/- 841 Mpc (a posteriori mean +/- standard deviation).\n\nFor further information about analysis methodology and the contents of this alert, refer to the LIGO/Virgo/KAGRA Public Alerts User Guide https://emfollow.docs.ligo.org/.\n\n [1] Ashton et al. ApJS 241, 27 (2019) doi:10.3847/1538-4365/ab06fc and Morisaki et al. (2023) arXiv:2307.13380"
+    },
+    {
       "subject": "GRB230911C: LCOGT Optical Upper Limits",
       "submittedHow": "email",
       "createdOn": 1694465909124,
@@ -4727,6 +4737,16 @@
       "submitter": "Ulisse Quadri at Bassano Bresciano Obs <oabb@ulisse.bs.it>",
       "body": "U.Quadri, P.Madurini and L.Strabla (Bassano Bresciano Astronomical Observatory),\n\nMember of: \nAAVSO - American Association of Variable Star Observers.\nUAI/SSV - Unione Astrofili Italiani/sezione stelle variabili.\nGAC - Gruppo Astrofili Cremonesi.\n\nin a large collaboration with:\nM.G. Dainotti (National Astronomical Observatory of Japan), \nY. Niino (Tokyo University, Institute of Astronomy), \nK. Kalinowski (Aarhus University, Department of Physics and Astronomy),\nB. De Simone (Universita' degli Studi Di Salerno)\nreport: \n\nWe imaged the field of Swift J1727.8-1613(GRB 230824A) \n(Page et al., GCN 34537; Navaneeth et al., GCN 34538, Odeh et al., GCN 34543)\nwith the following telescopes:\n\n0.25-m f/4.8 Newton reflector at Bassano Bresciano Observatory, Italy - MPC Code 565. \n0.32-m f/8.0 (iTelescope) reflector at AstroCamp at Nerpio, Spain - MPC Code I89.\n0.51-m f/6.8 (iTelescope) Dall-Kirkham at Rio Hurtado Valley, Chile - MPC Code X07. \n \n\nWe clearly detected a bright object, in the same location as M.Odeh et al., GCN 34543, within \nthe uncertainty radius of the Swift localization, at:\n\nR.A. (J2000): 17:27:43.32\nDec. (J2000): -16:12:18.8\n\n\nThe results of our photometry are:\n\n------------------------------------------------------    \n    Date UT       Exp Time   R-mag    Err  IAU STATION\n------------------------------------------------------\n  \n2023-08-24.7967    18x20s    13.25   0.057    565\n2023-08-24.8018    18x20s    13.25   0.049    565  \n2023-08-24.8071    12x30s    13.24   0.048    565 \n2023-08-24.8124    12x30s    13.24   0.043    565 \n2023-08-24.8185    12x30s    13.24   0.042    565 \n2023-08-24.9030    10x60s    13.05     -      I89\n2023-08-25.1470    10x60s    12.80     -      X07\n------------------------------------------------------\n\nMagnitudes were estimated with the pan-STARRS cat. \nand are converted using Lupton (2005) equations.\n\nNot corrected for galactic dust extinction.\n\nFurther observations are planned.\n\nReference:\nhttp://www.osservatoriobassano.org/GRB.asp\n\nThe message may be cited.\n\n\n",
       "eventId": "GRB 230824A"
+    },
+    {
+      "subject": "Swift J1727.8-1613 (GRB 230824A): Bassano Bresciano Observatory optical observations",
+      "submittedHow": "email-legacy",
+      "bibcode": "2023GCN.34562....1Q",
+      "createdOn": 1693037110788,
+      "circularId": 21,
+      "submitter": "Ulisse Quadri at Bassano Bresciano Obs <oabb@ulisse.bs.it>",
+      "body": "U.Quadri, P.Madurini and L.Strabla (Bassano Bresciano Astronomical Observatory),\n\nMember of: \nAAVSO - American Association of Variable Star Observers.\nUAI/SSV - Unione Astrofili Italiani/sezione stelle variabili.\nGAC - Gruppo Astrofili Cremonesi.\n\nin a large collaboration with:\nM.G. Dainotti (National Astronomical Observatory of Japan), \nY. Niino (Tokyo University, Institute of Astronomy), \nK. Kalinowski (Aarhus University, Department of Physics and Astronomy),\nB. De Simone (Universita' degli Studi Di Salerno)\nreport: \n\nWe imaged the field of Swift J1727.8-1613(GRB 230824A) \n(Page et al., GCN 34537; Navaneeth et al., GCN 34538, Odeh et al., GCN 34543)\nwith the following telescopes:\n\n0.25-m f/4.8 Newton reflector at Bassano Bresciano Observatory, Italy - MPC Code 565. \n0.32-m f/8.0 (iTelescope) reflector at AstroCamp at Nerpio, Spain - MPC Code I89.\n0.51-m f/6.8 (iTelescope) Dall-Kirkham at Rio Hurtado Valley, Chile - MPC Code X07. \n \n\nWe clearly detected a bright object, in the same location as M.Odeh et al., GCN 34543, within \nthe uncertainty radius of the Swift localization, at:\n\nR.A. (J2000): 17:27:43.32\nDec. (J2000): -16:12:18.8\n\n\nThe results of our photometry are:\n\n------------------------------------------------------    \n    Date UT       Exp Time   R-mag    Err  IAU STATION\n------------------------------------------------------\n  \n2023-08-24.7967    18x20s    13.25   0.057    565\n2023-08-24.8018    18x20s    13.25   0.049    565  \n2023-08-24.8071    12x30s    13.24   0.048    565 \n2023-08-24.8124    12x30s    13.24   0.043    565 \n2023-08-24.8185    12x30s    13.24   0.042    565 \n2023-08-24.9030    10x60s    13.05     -      I89\n2023-08-25.1470    10x60s    12.80     -      X07\n------------------------------------------------------\n\nMagnitudes were estimated with the pan-STARRS cat. \nand are converted using Lupton (2005) equations.\n\nNot corrected for galactic dust extinction.\n\nFurther observations are planned.\n\nReference:\nhttp://www.osservatoriobassano.org/GRB.asp\n\nThe message may be cited.\n\n\n",
+      "eventId": "GRB 230824A"
     }
   ],
   "circulars_history": [
@@ -5124,6 +5144,16 @@
       "name": "Example Submitter",
       "affiliation": "Example",
       "submit": 1
+    }
+  ],
+  "circulars_change_requests": [
+    {
+      "circularId": 21,
+      "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
+      "body": "This is an example of a request with a missing createdOn field",
+      "requestor": "Example User at Example <example@example.com>",
+      "requestorEmail": "example@example.com",
+      "subject": "Optical Observations for GRB 971227"
     }
   ]
 }

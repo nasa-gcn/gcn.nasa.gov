@@ -35,6 +35,8 @@
  */
 
 export const triggerRate: Record<string, number> = {
+  'gcn.circulars': 8.4,
+  'gcn.heartbeat': 86400,
   'gcn.classic.binary.AGILE_GRB_POS_TEST': 6.714285714285714,
   'gcn.classic.binary.AGILE_MCAL_ALERT': 0.0,
   'gcn.classic.binary.AMON_NU_EM_COINC': 0.0,
@@ -274,4 +276,5 @@ export const triggerRate: Record<string, number> = {
   'gcn.notices.swift.bat.guano': 0.0,
   'igwn.gwalert': 90.42857142857143,
   'gcn.notices.einstein_probe.wxt.alert': 0.27,
+  'gcn.notices.svom': 0,
 }

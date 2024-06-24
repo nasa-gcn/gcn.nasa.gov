@@ -9,7 +9,7 @@ import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, redirect, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup } from '@trussworks/react-uswds'
-import * as Diff from 'diff'
+import { diffLines, diffWords } from 'diff'
 
 import { getUser } from './_auth/user.server'
 import {
@@ -114,8 +114,8 @@ export default function () {
 }
 
 const methodMap = {
-  words: Diff.diffWords,
-  lines: Diff.diffLines,
+  words: diffWords,
+  lines: diffLines,
 }
 
 function DiffedContent({
@@ -127,7 +127,10 @@ function DiffedContent({
   newString: string
   method?: 'words' | 'lines'
 }) {
-  const diff = methodMap[method ?? 'words'](oldString, newString)
+  const diff = methodMap[method && newString ? method : 'lines'](
+    oldString ?? '',
+    newString ?? ''
+  )
 
   return (
     <div>

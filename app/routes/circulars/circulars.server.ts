@@ -32,7 +32,7 @@ import type {
   CircularMetadata,
 } from './circulars.lib'
 import { sendEmail } from '~/lib/email.server'
-import { origin } from '~/lib/env.server'
+import { feature, origin } from '~/lib/env.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -158,6 +158,22 @@ export async function search({
           },
         }
 
+  const queryObj = query
+    ? feature('CICRULARS_LUCENE')
+      ? {
+          simple_query_string: {
+            query,
+            fields: ['submitter', 'subject', 'body'],
+          },
+        }
+      : {
+          multi_match: {
+            query,
+            fields: ['submitter', 'subject', 'body'],
+          },
+        }
+    : undefined
+
   const {
     body: {
       hits: {
@@ -170,14 +186,7 @@ export async function search({
     body: {
       query: {
         bool: {
-          must: query
-            ? {
-                multi_match: {
-                  query,
-                  fields: ['submitter', 'subject', 'body'],
-                },
-              }
-            : undefined,
+          must: queryObj,
           filter: {
             range: {
               createdOn: {
@@ -404,8 +413,8 @@ export async function createChangeRequest(
     to: [user.email],
     fromName: 'GCN Circulars',
     subject: 'GCN Circulars Change Request: Received',
-    body: dedent`Your change request has been created for GCN Circular ${item.circularId}. 
-    
+    body: dedent`Your change request has been created for GCN Circular ${item.circularId}.
+
     You will receive another email when your request has been reviewed.`,
   })
 }
@@ -461,8 +470,8 @@ export async function deleteChangeRequest(
     to: [requestorEmail],
     fromName: 'GCN Circulars',
     subject: 'GCN Circulars Change Request: Rejected',
-    body: dedent`Your change request has been rejected for GCN Circular ${circularId}. 
-    
+    body: dedent`Your change request has been rejected for GCN Circular ${circularId}.
+
     View the Circular at ${origin}/circulars/${circularId}`,
   })
 }
@@ -526,7 +535,7 @@ export async function approveChangeRequest(
     editedOn: Date.now(),
     format: changeRequest.format,
     submitter: changeRequest.submitter,
-    createdOn: changeRequest.createdOn,
+    createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)
@@ -535,8 +544,8 @@ export async function approveChangeRequest(
     to: [changeRequest.requestorEmail],
     fromName: 'GCN Circulars',
     subject: 'GCN Circulars Change Request: Approved',
-    body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}. 
-    
+    body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}.
+
     View the Circular at ${origin}/circulars/${changeRequest.circularId}`,
   })
 }

@@ -31,16 +31,26 @@ export const AstroDataContext = createContext<AstroDataContextProps>({})
  */
 export const AstroDataLink = forwardRef(
   (
-    { children, className, rel: origRel, ...props }: Omit<LinkProps, 'target'>,
+    {
+      children,
+      className,
+      rel: origRel,
+      external,
+      ...props
+    }: Omit<LinkProps, 'target'> & { external?: boolean },
     ref: Ref<HTMLAnchorElement>
   ) => {
     const context = useContext(AstroDataContext)
-    const rel = [origRel, context.rel].filter(Boolean).join(' ') || undefined
+    const target = external ? '_blank' : context.target
+    const rel =
+      [origRel, context.rel, external ? 'external noopener' : '']
+        .filter(Boolean)
+        .join(' ') || undefined
 
     return (
       <Link
         className={classNames('usa-link', className)}
-        target={context.target}
+        target={target}
         rel={rel}
         ref={ref}
         {...props}
@@ -60,13 +70,15 @@ export const AstroDataLink = forwardRef(
  * position the tooltip if the size changes when the content fills in.
  */
 export function AstroDataLinkWithTooltip<T>({
-  fetch,
+  fetchFunction,
   label,
   children,
+  ext,
   ...props
 }: Omit<Parameters<typeof AstroDataLink>[0], 'ref'> & {
-  fetch: () => T
+  fetchFunction: () => T
   label: (resolved: Awaited<T>) => ReactNode
+  ext?: boolean
 }) {
   return (
     <Tooltip
@@ -83,7 +95,7 @@ export function AstroDataLinkWithTooltip<T>({
             }
           >
             <Await
-              resolve={fetch()}
+              resolve={fetchFunction()}
               errorElement={
                 <>
                   <div>Not found</div>
@@ -98,6 +110,7 @@ export function AstroDataLinkWithTooltip<T>({
         </div>
       }
       asCustom={AstroDataLink}
+      external={Boolean(ext)}
     >
       {children}
     </Tooltip>

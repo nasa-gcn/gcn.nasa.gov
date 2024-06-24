@@ -157,6 +157,7 @@ function CircularsHistory({
 }) {
   const ref = useRef<HTMLDivElement>(null)
   const [showContent, setShowContent] = useState(false)
+  const searchString = useSearchString()
   useOnClickOutside(ref, () => {
     setShowContent(false)
   })
@@ -184,7 +185,7 @@ function CircularsHistory({
                 <div key={version}>
                   <Link
                     onClick={() => setShowContent(!showContent)}
-                    to={`/circulars/${circular}/${version}`}
+                    to={`/circulars/${circular}/${version}${searchString}`}
                   >
                     Version {version}
                   </Link>

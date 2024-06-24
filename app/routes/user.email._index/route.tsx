@@ -212,7 +212,11 @@ export default function () {
       <p className="usa-paragraph">
         Note that your preferenes here do not affect prior subscriptions on the
         old web site,{' '}
-        <a rel="external" href="https://gcn.gsfc.nasa.gov/">
+        <a
+          rel="external noopener"
+          target="_blank"
+          href="https://gcn.gsfc.nasa.gov/"
+        >
           https://gcn.gsfc.nasa.gov/
         </a>
         . To change your GCN Classic Notice subscriptions, please{' '}
