@@ -53,8 +53,8 @@ export default {
       rehypeSlug,
       (options) =>
         rehypeExternalLinks({
-          rel: 'external',
-          target: false,
+          rel: ['external', 'noopener'],
+          target: '_blank',
           ...options,
         }),
       (options) =>
