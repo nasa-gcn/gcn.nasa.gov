@@ -274,4 +274,5 @@ export const triggerRate: Record<string, number> = {
   'gcn.notices.swift.bat.guano': 0.0,
   'igwn.gwalert': 90.42857142857143,
   'gcn.notices.einstein_probe.wxt.alert': 0.27,
+  'gcn.notices.svom': 0,
 }

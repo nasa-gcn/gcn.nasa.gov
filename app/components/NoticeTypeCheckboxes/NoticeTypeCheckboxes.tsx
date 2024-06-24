@@ -196,6 +196,7 @@ const JsonNoticeTypes: { [key: string]: string[] } = {
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
   'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
+  SVOM: ['gcn.notices.svom'],
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
@@ -204,6 +205,7 @@ const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   Swift: '/missions/swift',
   'Einstein Probe': '/missions/einstein-probe',
+  SVOM: '/missions/svom',
 }
 
 interface NoticeTypeCheckboxProps {
