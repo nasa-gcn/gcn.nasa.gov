@@ -234,7 +234,11 @@ export function NoticeTypeCheckboxes({
     let estimate = 0
     for (const noticeType of userSelected) {
       estimate +=
-        triggerRate[`gcn.classic.${selectedFormat}.${noticeType}`] ?? 0
+        triggerRate[
+          selectedFormat === 'json'
+            ? noticeType
+            : `gcn.classic.${selectedFormat}.${noticeType}`
+        ] ?? 0
     }
     setAlertEstimate(estimate)
 
