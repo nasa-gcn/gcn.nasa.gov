@@ -5125,5 +5125,19 @@
       "affiliation": "Example",
       "submit": 1
     }
+  ],
+  "kafka_acls": [
+    {
+      "topicName": "test_topic_created_from_website",
+      "permissionType": "consumer",
+      "group": "gcn.nasa.gov/kafka-gcn-test-consumer",
+      "prefixed": false
+    },
+    {
+      "topicName": "test_topic_created_from_website",
+      "permissionType": "producer",
+      "group": "gcn.nasa.gov/kafka-gcn-test-producer",
+      "prefixed": false
+    }
   ]
 }

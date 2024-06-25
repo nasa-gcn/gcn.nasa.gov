@@ -46,6 +46,7 @@ import { useSpinDelay } from 'spin-delay'
 import invariant from 'tiny-invariant'
 
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
+import { adminGroup } from './lib/kafka.server'
 import { DevBanner } from './root/DevBanner'
 import { Footer } from './root/Footer'
 import NewsBanner from './root/NewsBanner'
@@ -116,6 +117,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
   const userIsMod = user?.groups.includes(moderatorGroup)
   const userIsVerifiedSubmitter = user?.groups.includes(group)
+  const userIsAdmin = user?.groups.includes(adminGroup)
 
   return {
     origin,
@@ -126,6 +128,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     idp,
     userIsMod,
     userIsVerifiedSubmitter,
+    userIsAdmin,
   }
 }
 
@@ -163,6 +166,11 @@ export function useModStatus() {
 export function useSubmitterStatus() {
   const { userIsVerifiedSubmitter } = useLoaderDataRoot()
   return userIsVerifiedSubmitter
+}
+
+export function useAdminStatus() {
+  const { userIsAdmin } = useLoaderDataRoot()
+  return userIsAdmin
 }
 
 export function useRecaptchaSiteKey() {
@@ -274,7 +282,7 @@ export function Layout({ children }: { children?: ReactNode }) {
 function ErrorUnexpected({ children }: { children?: ReactNode }) {
   return (
     <GridContainer className="usa-section">
-      <h1>Unexpected error {children}</h1>
+      <h1 id="unexpectedError">Unexpected error {children}</h1>
       <p className="usa-intro">An unexpected error occurred.</p>
       <FormGroup>
         <ButtonGroup>

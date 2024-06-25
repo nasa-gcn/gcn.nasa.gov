@@ -94,6 +94,16 @@ legacy_users
   email *String
   PointInTimeRecovery true
 
+kafka_acls
+  topicName *String
+  group **String
+  PointInTimeRecovery true
+
+kafka_acl_log
+  partitionKey *Number
+  syncedOn **Number
+  PointInTimeRecovery ture
+
 @tables-indexes
 email_notification_subscription
   topic *String
