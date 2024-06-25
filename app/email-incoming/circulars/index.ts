@@ -19,6 +19,7 @@ import {
   getReplyToAddresses,
   parseEmailContentFromSource,
 } from './parse'
+import type { UserData } from '~/lib/cognito.server'
 import {
   extractAttribute,
   extractAttributeRequired,
@@ -27,15 +28,6 @@ import {
 import { sendEmail } from '~/lib/email.server'
 import { hostname, origin } from '~/lib/env.server'
 import { group, putRaw } from '~/routes/circulars/circulars.server'
-
-interface UserData {
-  email: string
-  sub?: string
-  name?: string
-  affiliation?: string
-  receive?: boolean
-  submit?: boolean
-}
 
 interface EmailProps {
   subjectMessage: string

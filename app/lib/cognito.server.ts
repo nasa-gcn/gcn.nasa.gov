@@ -18,14 +18,25 @@ import {
   CreateGroupCommand,
   DeleteGroupCommand,
   GetGroupCommand,
+  ListUsersCommand,
   UpdateGroupCommand,
   paginateAdminListGroupsForUser,
   paginateListGroups,
+  paginateListUsers,
   paginateListUsersInGroup,
 } from '@aws-sdk/client-cognito-identity-provider'
 
 export const cognito = new CognitoIdentityProviderClient({})
 const UserPoolId = process.env.COGNITO_USER_POOL_ID
+
+export interface UserData {
+  email: string
+  sub?: string
+  name?: string
+  affiliation?: string
+  receive?: boolean
+  submit?: boolean
+}
 
 /**
  * Returns the value of a specified Attribute if it exists on a user object
@@ -56,6 +67,59 @@ export function extractAttributeRequired(
   if (value === undefined)
     throw new Error(`required user attribute ${key} is missing`)
   return value
+}
+
+/**
+ * Gets another user from cognito
+ *
+ * @param sub - the sub of another user
+ * @returns a user if found, otherwise undefined
+ */
+export async function getCognitoUserFromSub(sub: string) {
+  const escapedSub = sub.replaceAll('"', '\\"')
+  const user = (
+    await cognito.send(
+      new ListUsersCommand({
+        UserPoolId,
+        Filter: `sub = "${escapedSub}"`,
+      })
+    )
+  )?.Users?.[0]
+
+  if (!user?.Username)
+    throw new Response('Requested user does not exist', {
+      status: 400,
+    })
+
+  return user
+}
+
+export async function listUsers() {
+  const pages = paginateListUsers(
+    { client: cognito },
+    {
+      UserPoolId,
+    }
+  )
+  const users: UserData[] = []
+  for await (const page of pages) {
+    const nextUsers = page.Users
+    if (nextUsers)
+      users.push(
+        ...nextUsers
+          .filter((user) => Boolean(extractAttribute(user.Attributes, 'email')))
+          .map((user) => ({
+            sub: extractAttributeRequired(user.Attributes, 'sub'),
+            email: extractAttributeRequired(user.Attributes, 'email'),
+            name: extractAttribute(user.Attributes, 'name'),
+            affiliation: extractAttribute(
+              user.Attributes,
+              'custom:affiliation'
+            ),
+          }))
+      )
+  }
+  return users
 }
 
 export async function listUsersInGroup(GroupName: string) {
@@ -122,6 +186,13 @@ export async function getGroups() {
   return groups
 }
 
+export async function allGroupNames(): Promise<string[]> {
+  const names = (await getGroups())
+    .map((group) => group.GroupName)
+    .filter((group) => typeof group === 'string') as string[]
+  return names
+}
+
 export async function updateGroup(GroupName: string, Description: string) {
   const command = new UpdateGroupCommand({
     GroupName,
@@ -160,6 +231,13 @@ export async function listGroupsForUser(Username: string) {
   }
 
   return groups
+}
+
+export async function getUserGroupStrings(Username: string) {
+  const Groups = await listGroupsForUser(Username)
+  return Groups?.map(({ GroupName }) => GroupName).filter(Boolean) as
+    | string[]
+    | undefined
 }
 
 export async function removeUserFromGroup(Username: string, GroupName: string) {
