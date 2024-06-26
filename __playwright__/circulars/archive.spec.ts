@@ -49,13 +49,28 @@ test.describe('Circulars archive page', () => {
     )
   })
 
-  test('search finds no results for irrelevant query', async ({ page }) => {
+  test('search finds no results for query with typo', async ({ page }) => {
+    // this highlights this search behaviour does not capture cases where there is a minor typo
     await page.goto('/circulars?query=230812C')
     await page.waitForFunction(
       (n) =>
         document.getElementsByTagName('ol')[0].getElementsByTagName('li')
           .length === n,
       0
+    )
+  })
+
+  test('search finds results that contain exact string but not similar strings', async ({
+    page,
+  }) => {
+    // this highlights the search returns limited results because it is looking for exact matches to the string
+    // this should return many more results and include strings like 230812B
+    await page.goto('/circulars?query=230812')
+    await page.waitForFunction(
+      (n) =>
+        document.getElementsByTagName('ol')[0].getElementsByTagName('li')
+          .length === n,
+      1
     )
   })
 })
