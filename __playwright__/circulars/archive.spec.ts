@@ -17,4 +17,16 @@ test.describe('Circulars archive page', () => {
       )
     }
   })
+
+  test('search is functional via mouse click', async ({ page }) => {
+    await page.goto('/circulars')
+    await page.locator('#query').fill('GRB')
+    await page.getByRole('button', { name: 'Search' }).click()
+  })
+
+  test('search is functional via keyboard input', async ({ page }) => {
+    await page.goto('/circulars')
+    await page.locator('#query').fill('GRB')
+    await page.getByTestId('textInput').press('Enter')
+  })
 })
