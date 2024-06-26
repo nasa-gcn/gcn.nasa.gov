@@ -48,4 +48,14 @@ test.describe('Circulars archive page', () => {
       64
     )
   })
+
+  test('search finds no results for irrelevant query', async ({ page }) => {
+    await page.goto('/circulars?query=230812C')
+    await page.waitForFunction(
+      (n) =>
+        document.getElementsByTagName('ol')[0].getElementsByTagName('li')
+          .length === n,
+      0
+    )
+  })
 })
