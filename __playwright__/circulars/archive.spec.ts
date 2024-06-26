@@ -1,4 +1,6 @@
-import { test } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
+const expectedSubjectQueryResults = ['34769']
 
 test.describe('Circulars archive page', () => {
   test('responds to changes in the number of results per page', async ({
@@ -28,5 +30,12 @@ test.describe('Circulars archive page', () => {
     await page.goto('/circulars')
     await page.locator('#query').fill('GRB')
     await page.getByTestId('textInput').press('Enter')
+  })
+
+  test('search finds query string in body of circular', async ({ page }) => {
+    await page.goto('/circulars?query=ATLAS23srq')
+    await expect(
+      page.locator('a[href="/circulars/34730?query=ATLAS23srq"]')
+    ).toBeVisible()
   })
 })
