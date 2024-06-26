@@ -36,4 +36,16 @@ test.describe('Circulars archive page', () => {
       page.locator('a[href="/circulars/34730?query=ATLAS23srq"]')
     ).toBeVisible()
   })
+
+  test('search finds all results related to a specific object', async ({
+    page,
+  }) => {
+    await page.goto('/circulars?query=230812B')
+    await page.waitForFunction(
+      (n) =>
+        document.getElementsByTagName('ol')[0].getElementsByTagName('li')
+          .length >= n,
+      64
+    )
+  })
 })
