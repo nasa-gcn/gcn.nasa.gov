@@ -6,9 +6,6 @@ const testUsername = 'TEST_USERNAME'
 const testPassword = 'TEST_PASSWORD'
 
 setup('authenticate', async ({ page }) => {
-  // Perform authentication steps. Replace these actions with your own.
-  if (!testUsername || !testPassword)
-    throw new Error('Please define test account info')
   await page.goto('/login')
   await page.getByPlaceholder('Enter any login').fill(testUsername)
   await page.getByPlaceholder('and password').fill(testPassword)

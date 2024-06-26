@@ -54,26 +54,27 @@ test.describe('Circulars edit page', () => {
     )
   })
 
-  test('submits expected values', async ({ page }) => {
+  test('submits expected values', async ({ page, browserName }) => {
     test.slow()
+    const testSubject = `${editTestsCircular.subject} - ${browserName}`
     await page.goto(`/circulars/edit/${editTestsCircular.circularId}`)
     await page.locator('#submitter').fill(editTestsCircular.submitter)
     await page
       .getByTestId('date-picker-external-input')
       .fill(editTestsCircular.date)
     await page.getByTestId('combo-box-input').fill(editTestsCircular.time)
-    await page.locator('#subject').fill(editTestsCircular.subject)
+    await page.locator('#subject').fill(testSubject)
     await page.getByTestId('textarea').fill(editTestsCircular.body)
     await page.getByRole('button', { name: 'Update' }).click({ timeout: 10000 })
     await page.waitForURL('/circulars?index')
     await expect(
       page.getByRole('link', {
-        name: editTestsCircular.subject,
+        name: testSubject,
       })
     ).toBeVisible()
     await page
       .getByRole('link', {
-        name: editTestsCircular.subject,
+        name: testSubject,
       })
       .click({ timeout: 10000 })
   })

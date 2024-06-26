@@ -6,6 +6,32 @@ import { defineConfig, devices } from '@playwright/test'
  */
 // require('dotenv').config();
 
+const deviceList = ['Desktop Firefox', 'Desktop Chrome', 'Desktop Safari']
+
+const adminTests = deviceList.map((device) => {
+  return {
+    name: `Admin tests: ${device}`,
+    use: {
+      ...devices[device],
+      storageState: '__playwright__/.auth/adminUser.json',
+    },
+    testMatch: 'admin.spec.ts',
+    dependencies: ['adminSetup'],
+  }
+})
+
+const circularsTests = deviceList.map((device) => {
+  return {
+    name: `Circulars Tests: ${device}`,
+    use: {
+      ...devices[device],
+      storageState: '__playwright__/.auth/user.json',
+    },
+    testMatch: 'circulars/*',
+    dependencies: ['setup'],
+  }
+})
+
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
@@ -32,53 +58,10 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: 'setup', testMatch: /.*\.setup\.ts/ },
-    {
-      name: 'chromium',
-      use: {
-        ...devices['Desktop Chrome'],
-        storageState: '__playwright__/.auth/user.json',
-      },
-      dependencies: ['setup'],
-    },
-
-    {
-      name: 'firefox',
-      use: {
-        ...devices['Desktop Firefox'],
-        storageState: '__playwright__/.auth/user.json',
-      },
-      dependencies: ['setup'],
-    },
-
-    {
-      name: 'webkit',
-      use: {
-        ...devices['Desktop Safari'],
-        storageState: '__playwright__/.auth/user.json',
-      },
-      dependencies: ['setup'],
-    },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
+    { name: 'setup', testMatch: 'auth.setup.ts' },
+    { name: 'adminSetup', testMatch: 'admin.setup.ts' },
+    ...adminTests,
+    ...circularsTests,
   ],
 
   /* Run your local dev server before starting the tests */
