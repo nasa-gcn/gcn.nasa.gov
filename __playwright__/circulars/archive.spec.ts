@@ -1,7 +1,5 @@
 import { expect, test } from '@playwright/test'
 
-const expectedSubjectQueryResults = ['34769']
-
 test.describe('Circulars archive page', () => {
   test('responds to changes in the number of results per page', async ({
     page,
