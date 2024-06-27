@@ -143,6 +143,7 @@ export function CircularEditForm({
   const [format, setFormat] = useState(defaultFormat)
   const [date, setDate] = useState(defaultCreatedOnDate)
   const [time, setTime] = useState(defaultCreatedOnTime ?? '12:00:00')
+
   const dateValid = circularId ? dateIsValid(date, time) : true
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
@@ -265,6 +266,8 @@ export function CircularEditForm({
                   value={time}
                 />
                 <InputPrefix className="wide-input-prefix">Time</InputPrefix>
+                {/* FIXME: Currently only 12 hour formats are supported. We should
+                switch to 24 hours as it is more common/useful for the community.*/}
                 <input
                   type="time"
                   id="createdOnTimeSetter"
