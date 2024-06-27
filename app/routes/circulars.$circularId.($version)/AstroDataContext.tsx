@@ -106,7 +106,7 @@ export function AstroDataLinkWithTooltip<T>({
         </div>
       }
       asCustom={AstroDataLink}
-      isExternal={external}
+      external={external}
     >
       {children}
     </Tooltip>
