@@ -69,7 +69,6 @@ export const AstroDataLink = forwardRef(
 export function AstroDataLinkWithTooltip<T>({
   fetch,
   label,
-  isExternal,
   children,
   ...props
 }: Omit<Parameters<typeof AstroDataLink>[0], 'ref'> & {
