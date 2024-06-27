@@ -13,7 +13,8 @@ import {
   Title,
   Header as USWDSHeader,
 } from '@trussworks/react-uswds'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useClickAnyWhere, useWindowSize } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
 import { useEmail, useUserIdp } from '~/root'
@@ -31,7 +32,7 @@ function NavDropDownButton({
   label,
   menuId,
   isOpen,
-  onToggle,
+  onClick,
   isCurrent,
   className,
   ...props
@@ -39,13 +40,19 @@ function NavDropDownButton({
   label: string
   menuId: string
   isOpen: boolean
-  onToggle: () => void
   isCurrent?: boolean
 } & Parameters<typeof NavLink>[0]) {
   return (
     <NavLink
       className={`usa-nav__link ${className}`}
       style={{ padding: 0 }}
+      onClick={(e) => {
+        onClick?.(e)
+        // Always prevent default behavior because the button is supposed to
+        // toggle visibility, not follow the link
+        e.preventDefault()
+        e.stopPropagation()
+      }}
       {...props}
     >
       <button
@@ -54,10 +61,6 @@ function NavDropDownButton({
         data-testid="navDropDownButton"
         aria-expanded={isOpen}
         aria-controls={menuId}
-        onClick={(e) => {
-          onToggle()
-          e.preventDefault()
-        }}
       >
         <span>{label}</span>
       </button>
@@ -70,6 +73,7 @@ export function Header() {
   const idp = useUserIdp()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
+  const isMobile = useWindowSize().width < 1024
 
   function toggleMobileNav() {
     setExpanded((expanded) => !expanded)
@@ -79,10 +83,24 @@ export function Header() {
     setExpanded(false)
   }
 
-  function onClickUserMenuItem() {
-    if (userMenuIsOpen && !expanded) setUserMenuIsOpen(false)
-    hideMobileNav()
+  function hideUserMenu() {
+    setUserMenuIsOpen(false)
   }
+
+  // Hide the mobile nav if the screen is resized to a width larger than the
+  // mobile size breakpoint.
+  useEffect(() => {
+    if (!isMobile) {
+      hideMobileNav()
+      hideUserMenu()
+    }
+  }, [isMobile])
+
+  // Hide the user menu if the user clicks outside of it and we are not in
+  // mobile mode.
+  useClickAnyWhere(() => {
+    if (userMenuIsOpen && !isMobile) hideUserMenu()
+  })
 
   return (
     <>
@@ -101,38 +119,27 @@ export function Header() {
             <NavMenuButton onClick={toggleMobileNav} label="Menu" />
           </div>
           <PrimaryNav
+            onClick={(e) => {
+              // Hide the mobile nav if the user clicked on any child link
+              // element, but not if the user clicked the nav itself.
+              if (e.currentTarget !== e.target) hideMobileNav()
+            }}
             mobileExpanded={expanded}
             items={[
-              <NavLink
-                className="usa-nav__link"
-                to="/missions"
-                key="/missions"
-                onClick={hideMobileNav}
-              >
+              <NavLink className="usa-nav__link" to="/missions" key="/missions">
                 Missions
               </NavLink>,
-              <NavLink
-                className="usa-nav__link"
-                to="/notices"
-                key="/notices"
-                onClick={hideMobileNav}
-              >
+              <NavLink className="usa-nav__link" to="/notices" key="/notices">
                 Notices
               </NavLink>,
               <NavLink
                 className="usa-nav__link"
                 to="/circulars"
                 key="/circulars"
-                onClick={hideMobileNav}
               >
                 Circulars
               </NavLink>,
-              <NavLink
-                className="usa-nav__link"
-                to="/docs"
-                key="/docs"
-                onClick={hideMobileNav}
-              >
+              <NavLink className="usa-nav__link" to="/docs" key="/docs">
                 Documentation
               </NavLink>,
               email ? (
@@ -143,7 +150,7 @@ export function Header() {
                     key="user"
                     label={email}
                     isOpen={userMenuIsOpen}
-                    onToggle={() => {
+                    onClick={() => {
                       setUserMenuIsOpen(!userMenuIsOpen)
                     }}
                     menuId="user"
@@ -152,61 +159,31 @@ export function Header() {
                     id="user"
                     isOpen={userMenuIsOpen}
                     items={[
-                      <NavLink
-                        end
-                        key="user"
-                        to="/user"
-                        onClick={onClickUserMenuItem}
-                      >
+                      <NavLink end key="user" to="/user">
                         Profile
                       </NavLink>,
-                      <NavLink
-                        key="endorsements"
-                        to="/user/endorsements"
-                        onClick={onClickUserMenuItem}
-                      >
+                      <NavLink key="endorsements" to="/user/endorsements">
                         Peer Endorsements
                       </NavLink>,
                       !idp && (
-                        <NavLink
-                          key="password"
-                          to="/user/password"
-                          onClick={onClickUserMenuItem}
-                        >
+                        <NavLink key="password" to="/user/password">
                           Reset Password
                         </NavLink>
                       ),
-                      <NavLink
-                        key="credentials"
-                        to="/user/credentials"
-                        onClick={onClickUserMenuItem}
-                      >
+                      <NavLink key="credentials" to="/user/credentials">
                         Client Credentials
                       </NavLink>,
-                      <NavLink
-                        key="email"
-                        to="/user/email"
-                        onClick={onClickUserMenuItem}
-                      >
+                      <NavLink key="email" to="/user/email">
                         Email Notifications
                       </NavLink>,
-                      <Link
-                        key="logout"
-                        to="/logout"
-                        onClick={onClickUserMenuItem}
-                      >
+                      <Link key="logout" to="/logout">
                         Sign Out
                       </Link>,
                     ]}
                   />
                 </>
               ) : (
-                <Link
-                  className="usa-nav__link"
-                  to="/login"
-                  key="/login"
-                  onClick={hideMobileNav}
-                >
+                <Link className="usa-nav__link" to="/login" key="/login">
                   Sign in / Sign up
                 </Link>
               ),

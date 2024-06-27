@@ -30,6 +30,27 @@ export const set = {
   },
 }
 
+const localSandboxProfiles = {
+  admin: {
+    sub: '1234abcd-1234-abcd-1234-abcd1234abcd',
+    email: 'admin@example.com',
+    'cognito:username': 'admin@example.com',
+    'cognito:groups': ['gcn.nasa.gov/gcn-admin'],
+    identities: [{ providerName: 'Local Sandbox' }],
+  },
+  default: {
+    sub: '1234abcd-1234-abcd-1234-abcd1234abcd',
+    email: 'user@example.com',
+    'cognito:username': 'user@example.com',
+    'cognito:groups': [
+      'gcn.nasa.gov/kafka-public-consumer',
+      'gcn.nasa.gov/circular-submitter',
+      'gcn.nasa.gov/circular-moderator',
+    ],
+    identities: [{ providerName: 'Local Sandbox' }],
+  },
+}
+
 export const sandbox = {
   async start() {
     if (!process.env.ARC_OIDC_IDP_PORT) return
@@ -42,13 +63,7 @@ export const sandbox = {
         return {
           accountId: id,
           claims() {
-            return {
-              sub: id,
-              email: 'user@example.com',
-              'cognito:username': id,
-              'cognito:groups': ['gcn.nasa.gov/kafka-public-consumer'],
-              identities: [{ providerName: 'Local Sandbox' }],
-            }
+            return localSandboxProfiles[id] ?? localSandboxProfiles['default']
           },
         }
       },

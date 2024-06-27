@@ -6,6 +6,7 @@ node_modules
 /build/**/metafile.*
 /build/**/index.*
 /build/**/version.txt
+/build/**/*.node
 /coverage
 *.tsbuildinfo
 
@@ -32,3 +33,6 @@ sam.yaml
 # https://playwright.dev/docs/auth
 /__playwright__/.auth
 auth.json
+
+# Draw.io auto-save files
+*.bkp

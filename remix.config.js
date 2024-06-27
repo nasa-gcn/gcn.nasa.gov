@@ -14,6 +14,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 const esmOnlyModules = [
   '@nasa-gcn/remark-rehype-astro',
   'bail',
+  'before-after-hook',
   'bcp-47-match',
   'ccount',
   'character-entities',
@@ -31,8 +32,10 @@ const esmOnlyModules = [
   'trim-lines',
   'trough',
   'unified',
+  'universal-user-agent',
   'web-namespaces',
   'zwitch',
+  /^@octokit/,
   /^hast/,
   /^mdast/,
   /^micromark/,
@@ -50,8 +53,8 @@ export default {
       rehypeSlug,
       (options) =>
         rehypeExternalLinks({
-          rel: 'external',
-          target: false,
+          rel: ['external', 'noopener'],
+          target: '_blank',
           ...options,
         }),
       (options) =>

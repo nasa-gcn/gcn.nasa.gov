@@ -44,7 +44,7 @@ import iconTable from '@gitlab/svgs/dist/sprite_icons/table.svg'
 function SlimButton({ className, ...props }: Parameters<typeof Button>[0]) {
   return (
     <Button
-      className={classNames(className, 'height-4 padding-y-0 padding-x-105')}
+      className={classNames(className, 'height-4 padding-y-1 padding-x-105')}
       {...props}
     />
   )

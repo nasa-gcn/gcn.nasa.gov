@@ -2,7 +2,6 @@ import { Form, useFetcher } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
-  ButtonGroup,
   Grid,
   Icon,
   Modal,
@@ -14,6 +13,7 @@ import { useEffect, useRef } from 'react'
 
 import type { EmailNotificationVM } from '../user.email/email_notices.server'
 import TimeAgo from '~/components/TimeAgo'
+import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 
 export default function EmailNotificationCard({
   uuid,
@@ -60,7 +60,7 @@ export default function EmailNotificationCard({
             </div>
           </div>
           <div className="tablet:grid-col flex-auto">
-            <ButtonGroup>
+            <ToolbarButtonGroup>
               <testFetcher.Form method="POST">
                 <input type="hidden" name="recipient" value={recipient} />
                 <input type="hidden" name="intent" value="sendTest" />
@@ -95,7 +95,7 @@ export default function EmailNotificationCard({
                 />
                 Delete
               </ModalToggleButton>
-            </ButtonGroup>
+            </ToolbarButtonGroup>
           </div>
         </Grid>
         <Grid row className="width-full">

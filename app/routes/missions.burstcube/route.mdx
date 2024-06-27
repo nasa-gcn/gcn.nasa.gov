@@ -5,6 +5,12 @@ handle:
 
 import logo from './logo.png'
 
+import { Alert } from '@trussworks/react-uswds'
+
+<Alert type="warning" heading="Not yet active" headingLevel="h4">
+  BurstCube Notice types are not yet in production.
+</Alert>
+
 # BurstCube
 
 <img
@@ -48,8 +54,8 @@ example [JSON message](/schema/stable/gcn/notices/burstcube/alert.example.json) 
 
 | Type             | Contents                 | Latency |
 | ---------------- | ------------------------ | ------- |
-| `Alert`          | Detection of a burst     | 5 min   |
-| `Alert` (update) | Localization HEALPix map | 15 min  |
+| `alert`          | Detection of a burst     | 5 min   |
+| `alert` (update) | Localization HEALPix map | 15 min  |
 
 </div>
 

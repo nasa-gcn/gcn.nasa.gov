@@ -9,8 +9,9 @@ import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
 import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, CardBody, Icon } from '@trussworks/react-uswds'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../circulars.$circularId/route'
 import { get } from '../circulars/circulars.server'
@@ -18,10 +19,11 @@ import { MarkdownBody, PlainTextBody } from './Body'
 import { FrontMatter } from './FrontMatter'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
+import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
-import { useFeature, useModStatus, useSubmitterStatus } from '~/root'
+import { useModStatus, useSubmitterStatus } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> = {
@@ -60,10 +62,7 @@ export default function () {
   const { circularId, body, bibcode, version, format, ...frontMatter } =
     useLoaderData<typeof loader>()
   const searchString = useSearchString()
-  const Body =
-    useFeature('CIRCULARS_MARKDOWN') && format === 'text/markdown'
-      ? MarkdownBody
-      : PlainTextBody
+  const Body = format === 'text/markdown' ? MarkdownBody : PlainTextBody
 
   const result = useRouteLoaderData<typeof parentLoader>(
     'routes/circulars.$circularId'
@@ -75,8 +74,11 @@ export default function () {
   }`
   return (
     <>
-      <ButtonGroup>
-        <Link to={`/circulars${searchString}`} className="usa-button">
+      <ToolbarButtonGroup className="flex-wrap">
+        <Link
+          to={`/circulars${searchString}`}
+          className="usa-button flex-align-stretch"
+        >
           <div className="position-relative">
             <Icon.ArrowBack
               role="presentation"
@@ -138,7 +140,7 @@ export default function () {
             Edit
           </Link>
         )}
-      </ButtonGroup>
+      </ToolbarButtonGroup>
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
@@ -153,23 +155,26 @@ function CircularsHistory({
   circular: number
   history?: number[]
 }) {
-  const [showVersions, setShowVersions] = useState<boolean>(false)
-
+  const ref = useRef<HTMLDivElement>(null)
+  const [showContent, setShowContent] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowContent(false)
+  })
   return (
-    <>
+    <div ref={ref}>
       <DetailsDropdownButton
         outline
         onClick={() => {
-          setShowVersions((shown) => !shown)
+          setShowContent((shown) => !shown)
         }}
       >
         Versions
       </DetailsDropdownButton>
-      {showVersions && (
+      {showContent && (
         <DetailsDropdownContent>
           <CardBody>
             <Link
-              onClick={() => setShowVersions(!showVersions)}
+              onClick={() => setShowContent(!showContent)}
               to={`/circulars/${circular}`}
             >
               Latest
@@ -178,7 +183,7 @@ function CircularsHistory({
               history.map((version) => (
                 <div key={version}>
                   <Link
-                    onClick={() => setShowVersions(!showVersions)}
+                    onClick={() => setShowContent(!showContent)}
                     to={`/circulars/${circular}/${version}`}
                   >
                     Version {version}
@@ -188,6 +193,6 @@ function CircularsHistory({
           </CardBody>
         </DetailsDropdownContent>
       )}
-    </>
+    </div>
   )
 }

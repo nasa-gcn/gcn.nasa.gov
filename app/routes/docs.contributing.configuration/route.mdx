@@ -31,12 +31,14 @@ For both [local development](.) and [deployment](deployment), the configuration 
     BAR=value_of_bar_for_deployment
   ```
 
-- [**`arc env` command:**](https://arc.codes/docs/en/reference/cli/env) Adjust settings for production by running the following commands.
+- [**`arc env` command:**](https://arc.codes/docs/en/reference/cli/env) Adjust settings for one of the [deployments](deployments) by running the following commands.
 
   ```text
   npx arc env -e production --add FOO value_of_foo_for_deployment
   npx arc env -e production --add BAR value_of_bar_for_deployment
   ```
+
+  The updated settings will take effect the next time a deployment occurs.
 
 ## Supported environment variables
 
@@ -79,6 +81,19 @@ account for GCN production by registering the email address
         Signing key for session cookies. Should be a long, random string
       </Description>
       <Default>Hard-coded constant</Default>
+    </tr>
+    <tr>
+      <Key>`CDN_SECRET`</Key>
+      <Description>
+        Secret key that must be present in the `X-CDN-Secret` request header of
+        all requests to prove that the request came via the content delivery
+        network rather than directly to the origin. Should be a long, random
+        string
+      </Description>
+      <Default>
+        Requests are permitted regardless of the value of the `X-CDN-Secret`
+        header
+      </Default>
     </tr>
     <tr>
       <Key>`COGNITO_USER_POOL_ID`, `OIDC_CLIENT_ID`, `OIDC_CLIENT_SECRET`</Key>
@@ -156,6 +171,13 @@ account for GCN production by registering the email address
         (TNS)](https://www.wis-tns.org)
       </Description>
       <Default>TNS tooltips disabled</Default>
+    </tr>
+    <tr>
+      <Key>`KAFKA_CLIENT_ID`, `KAFKA_CLIENT_SECRET`</Key>
+      <Description>
+        Client credentials for producing GCN Circulars over Kafka
+      </Description>
+      <Default>Kafka producer is disabled</Default>
     </tr>
   </tbody>
 </Table>

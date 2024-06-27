@@ -18,6 +18,7 @@ import {
 } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import { type ChangeEvent, useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 
@@ -41,7 +42,7 @@ function DateSelectorButton({
   endDate?: string
   expanded?: boolean
 } & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
-  const slimClasses = 'height-4 padding-y-0'
+  const slimClasses = 'padding-y-1'
 
   return (
     <ButtonGroup type="segmented" {...props}>
@@ -77,7 +78,11 @@ export function DateSelector({
   defaultStartDate?: string
   defaultEndDate?: string
 }) {
+  const ref = useRef<HTMLDivElement>(null)
   const [showContent, setShowContent] = useState(false)
+  useOnClickOutside(ref, () => {
+    setShowContent(false)
+  })
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
       defaultEndDate
@@ -105,7 +110,7 @@ export function DateSelector({
   }
 
   return (
-    <>
+    <div ref={ref}>
       <input
         type="hidden"
         name="startDate"
@@ -218,6 +223,6 @@ export function DateSelector({
           </CardFooter>
         )}
       </DetailsDropdownContent>
-    </>
+    </div>
   )
 }

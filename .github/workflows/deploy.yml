@@ -19,7 +19,9 @@ jobs:
         with:
           node-version: '20'
       - name: NPM Install
-        run: npm ci
+        run: |
+          npm ci
+          npm i --os=linux --cpu=arm64
       - name: Build
         run: npm run build
       - name: Upload artifacts

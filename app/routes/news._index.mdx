@@ -29,6 +29,43 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
+        <CollectionCalendarDate datetime={'May 29, 2024'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New Einstein Probe Notices, Astro Flavored Markdown for Circulars, and Notices Schema v4.0.0</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        There are several new features and updates.  Please see below for details.
+
+        - [Einstein Probe Notices](#einstein-probe-notices)
+        - [Astro Flavored Markdown](#astro-flavored-markdown)
+        - [Notices Schema v4.0.0](#notices-schema-v400)
+
+        #### Einstein Probe Notices
+          GCN Notices for Einstein Probe (EP) are now available in JSON format over [Kafka](/quickstart). EP notices are not available via GCN Classic or email.
+          - Summary: EP is a mission of the [Chinese Academy of Sciences (CAS)](https://ep.bao.ac.cn/ep/) in collaboration with the [European Space Agency (ESA)](https://www.cosmos.esa.int/web/einstein-probe/mission) and the [Max Planck Institute for Extraterrestrial Physics (MPE)](https://www.mpe.mpg.de/7867826/EinsteinProbe).  It is dedicated to time-domain high-energy astrophysics. Its primary goals are to discover high-energy transients and monitor variable objects.
+          - Rate: Approximately 100 notices per year.
+          - Time Delay: EP sends alerts via GCN within ~60 seconds of detection.
+          - Notice Type: The [new WXT notice type (`gcn.notices.einstein_probe.wxt.alert`)](/missions/einstein-probe) provides trigger information including localization.
+          - Notice Schema and Examples: The JSON schema defining the notice format and examples can be viewed in the [Schema Browser](/docs/schema/stable/gcn/notices/einstein_probe/wxt/alert.schema.json) or the GCN [schema repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/einstein_probe/wxt).
+
+        #### Astro Flavored Markdown
+          You can now add rich text formatting, data tables, and references to journals and common astronomical databases to GCN Circulars using Astro Flavored Markdown, a dialect of the popular Markdown lightweight markup language. See [documentation on Astro Flavored Markdown](/docs/circulars/markdown).
+
+        #### Notices Schema v4.0.0
+        Explore GCN Schema via the [Schema Browser](/docs/schema/stable/gcn/notices).  Changes to the GCN Schema include:
+          - Addition of Einstein Probe WXT Notice topic
+          - Addition of BurstCube Notice topic (not yet producing notices)
+          - Change to localization core schema that simplifies localization uncertainty parameterization (now `ra_dec_error`) to allow either a single radius or three values that describe the localization region as an ellipse.  This change is not backwards compatible.
+          - Note that the `$schema` field in each GCN Notice identifies the version of the schema it is utilizing. [`gcn.notices.icecube.lvk_nu_track_search`](/docs/schema/stable/gcn/notices/icecube/lvk_nu_track_search.schema.json) will update on the morning of June 18, 2024, and [`gcn.notices.swift.bat.guano`](/docs/schema/stable/gcn/notices/swift/bat/Guano.schema.json) will be updated at a later date.
+
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
         <CollectionCalendarDate datetime={'March 13, 2024'} />
       }
     >

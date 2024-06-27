@@ -17,7 +17,6 @@ import {
 import {
   Alert,
   Button,
-  ButtonGroup,
   Icon,
   Label,
   Select,
@@ -36,6 +35,7 @@ import {
   createChangeRequest,
   get,
   getChangeRequests,
+  moderatorGroup,
   put,
   putVersion,
   search,
@@ -46,7 +46,8 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
-import { feature, origin } from '~/lib/env.server'
+import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
+import { origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
 import { useModStatus } from '~/root'
@@ -81,19 +82,17 @@ export async function action({ request }: ActionFunctionArgs) {
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
   const intent = getFormDataString(data, 'intent')
-  let format
-  if (feature('CIRCULARS_MARKDOWN')) {
-    format = getFormDataString(data, 'format') as CircularFormat | undefined
-    if (format && !circularFormats.includes(format)) {
-      throw new Response('Invalid format', { status: 400 })
-    }
-  } else {
-    format = undefined
+  const format = getFormDataString(data, 'format') as CircularFormat | undefined
+  if (format && !circularFormats.includes(format)) {
+    throw new Response('Invalid format', { status: 400 })
   }
   if (!body || !subject)
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
+  const createdOnDate = getFormDataString(data, 'createdOnDate')
+  const createdOnTime = getFormDataString(data, 'createdOnTime')
+  const createdOn = Date.parse(`${createdOnDate} ${createdOnTime} UTC`)
 
   let newCircular
   const props = { body, subject, ...(format ? { format } : {}) }
@@ -101,10 +100,22 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'correction':
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
-      if (!user?.name || !user.email) throw new Response(null, { status: 403 })
 
+      if (!user?.name || !user.email) throw new Response(null, { status: 403 })
+      let submitter
+      if (user.groups.includes(moderatorGroup)) {
+        submitter = getFormDataString(data, 'submitter')
+        if (!submitter) throw new Response(null, { status: 400 })
+      }
+      if (!createdOnDate || !createdOnTime || !createdOn)
+        throw new Response(null, { status: 400 })
       await createChangeRequest(
-        { circularId: parseFloat(circularId), ...props },
+        {
+          circularId: parseFloat(circularId),
+          ...props,
+          submitter,
+          createdOn,
+        },
         user
       )
       await postZendeskRequest({
@@ -119,10 +130,13 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'edit':
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
+      if (!createdOnDate || !createdOnTime || !createdOn)
+        throw new Response(null, { status: 400 })
       await putVersion(
         {
           circularId: parseFloat(circularId),
           ...props,
+          createdOn,
         },
         user
       )
@@ -156,7 +170,7 @@ export default function () {
   searchParams.delete('index')
 
   const limit = searchParams.get('limit') || '100'
-  const query = searchParams.get('query') || undefined
+  const query = searchParams.get('query') || ''
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
@@ -190,8 +204,9 @@ export default function () {
           {requestedChangeCount > 1 ? 's' : ''}
         </Link>
       )}
-      <ButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
+      <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
+          preventScrollReset
           className="display-inline-block usa-search usa-search--small"
           role="search"
           id={formId}
@@ -201,6 +216,7 @@ export default function () {
           </Label>
           <TextInput
             autoFocus
+            className="minw-15"
             id="query"
             name="query"
             type="search"
@@ -209,7 +225,7 @@ export default function () {
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
               setInputQuery(value)
-              if (!value) submit(form)
+              if (!value) submit(form, { preventScrollReset: true })
             }}
           />
           <Button type="submit">
@@ -227,14 +243,11 @@ export default function () {
         />
         {query && <SortSelector form={formId} defaultValue={sort} />}
         <Link to={`/circulars/new${searchString}`}>
-          <Button
-            type="button"
-            className="height-4 padding-top-0 padding-bottom-0"
-          >
+          <Button type="button" className="padding-y-1">
             <Icon.Edit role="presentation" /> New
           </Button>
         </Link>
-      </ButtonGroup>
+      </ToolbarButtonGroup>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
         GRB'). <br />
@@ -254,10 +267,11 @@ export default function () {
               <div>
                 <Select
                   id="limit"
+                  title="Number of results per page"
                   className="width-auto height-5 padding-y-0 margin-y-0"
                   name="limit"
                   defaultValue="100"
-                  form="searchForm"
+                  form={formId}
                   onChange={({ target: { form } }) => {
                     submit(form)
                   }}

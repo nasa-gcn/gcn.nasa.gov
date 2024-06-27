@@ -19,6 +19,7 @@ import {
 import { useRef } from 'react'
 
 import TimeAgo from './TimeAgo'
+import { ToolbarButtonGroup } from './ToolbarButtonGroup'
 import type { RedactedClientCredential } from '~/routes/user.credentials/client_credentials.server'
 
 export default function CredentialCard({
@@ -54,33 +55,35 @@ export default function CredentialCard({
           </div>
         </div>
         <div className="tablet:grid-col flex-auto margin-y-auto">
-          <ModalToggleButton
-            opener
-            disabled={disabled}
-            modalRef={ref}
-            type="button"
-            className="usa-button--secondary"
-          >
-            <Icon.Delete
-              role="presentation"
-              className="bottom-aligned margin-right-05"
-            />
-            Delete
-          </ModalToggleButton>
-          <Form
-            method="GET"
-            action="/quickstart/alerts"
-            className="display-inline"
-          >
-            <input type="hidden" name="clientId" value={client_id} />
-            <Button disabled={disabled} type="submit">
-              Select
-              <Icon.ArrowForward
+          <ToolbarButtonGroup>
+            <ModalToggleButton
+              opener
+              disabled={disabled}
+              modalRef={ref}
+              type="button"
+              className="usa-button--secondary"
+            >
+              <Icon.Delete
                 role="presentation"
-                className="bottom-aligned margin-left-05"
+                className="bottom-aligned margin-right-05"
               />
-            </Button>
-          </Form>
+              Delete
+            </ModalToggleButton>
+            <Form
+              method="GET"
+              action="/quickstart/alerts"
+              className="display-inline"
+            >
+              <input type="hidden" name="clientId" value={client_id} />
+              <Button disabled={disabled} type="submit">
+                Select
+                <Icon.ArrowForward
+                  role="presentation"
+                  className="bottom-aligned margin-left-05"
+                />
+              </Button>
+            </Form>
+          </ToolbarButtonGroup>
         </div>
       </Grid>
       <Modal

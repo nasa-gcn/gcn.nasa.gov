@@ -8,7 +8,6 @@
 import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
-import { useFeature } from '../root'
 import { SideNav, SideNavSub } from '~/components/SideNav'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -51,13 +50,9 @@ export default function () {
                     <NavLink key="styleguide" to="circulars/styleguide">
                       Style Guide
                     </NavLink>,
-                    <>
-                      {useFeature('CIRCULARS_MARKDOWN') && (
-                        <NavLink key="markdown" to="circulars/markdown">
-                          Markdown
-                        </NavLink>
-                      )}
-                    </>,
+                    <NavLink key="markdown" to="circulars/markdown">
+                      Markdown
+                    </NavLink>,
                   ]}
                 />
               </>,
@@ -97,7 +92,10 @@ export default function () {
                       Email Data Flow
                     </NavLink>,
                     <NavLink key="project" to="contributing/project">
-                      Github Project Board
+                      GitHub Project Board
+                    </NavLink>,
+                    <NavLink key="npr7150" to="contributing/npr7150">
+                      NPR 7150
                     </NavLink>,
                     <NavLink key="testing" to="contributing/testing">
                       Testing

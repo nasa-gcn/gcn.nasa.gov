@@ -284,31 +284,6 @@ input.react-tags__combobox-input:focus {
 }
 
 /*
- * Indeterminate checkboxes.
- * FIXME: remove if/when https://github.com/uswds/uswds/pull/5549 is merged
- */
-
-.usa-checkbox__input:indeterminate {
-  &:not(:disabled) {
-    @include format-input {
-      @include add-background-svg('checkbox-indeterminate', '~/img');
-      background-size: 75%;
-      background-position: center;
-      background-color: #0050d8;
-      box-shadow: 0 0 0 2px #0050d8;
-    }
-  }
-  &:disabled {
-    @include format-input {
-      @include add-background-svg('checkbox-indeterminate', '~/img');
-      background-size: 75%;
-      background-position: center;
-      background-color: rgba(27, 27, 27, 0.3);
-    }
-  }
-}
-
-/*
  * Hero formatting
  */
 

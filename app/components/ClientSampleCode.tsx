@@ -9,19 +9,7 @@ import { Link } from '@trussworks/react-uswds'
 import { dedent } from 'ts-dedent'
 
 import { Highlight } from './Highlight'
-import { useHostname } from '~/root'
-
-export function useDomain() {
-  const hostname = useHostname()
-
-  if (hostname === 'gcn.nasa.gov') {
-    return null
-  } else if (hostname?.endsWith('gcn.nasa.gov')) {
-    return hostname
-  } else {
-    return 'test.gcn.nasa.gov'
-  }
-}
+import { useDomain } from '~/root'
 
 export function ClientSampleCode({
   clientName,

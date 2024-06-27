@@ -7,6 +7,7 @@ import { Link } from '@remix-run/react'
 import { Alert } from '@trussworks/react-uswds'
 
 import deploymentScreenshot from './screenshot.png'
+import websiteArchitectureImg from './website.svg'
 
 # Deployment
 
@@ -19,6 +20,11 @@ The site's architecture within AWS is entirely **[serverless](https://en.wikiped
 We provision all AWS resources using **[infrastructure as code](https://en.wikipedia.org/wiki/Infrastructure_as_code)** so that the configuration of cloud services is automated and under version control. We use the [Architect](https://arc.codes/) serverless framework to model, generate, and orchestrate the AWS resources.
 
 We perform code and infrastructure changes automatically using **[continuous deployment](https://en.wikipedia.org/wiki/Continuous_deployment)** on [GitHub Actions](https://github.com/features/actions) (see our [deployment workflow](https://github.com/nasa-gcn/gcn.nasa.gov/blob/main/.github/workflows/deploy.yml)).
+
+<img
+  src={websiteArchitectureImg}
+  alt="Flow chart of GCN web site architecture"
+/>
 
 ## Stages
 

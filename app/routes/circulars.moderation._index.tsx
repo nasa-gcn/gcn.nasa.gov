@@ -8,7 +8,7 @@
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
-import { Button, ButtonGroup, Checkbox, Grid } from '@trussworks/react-uswds'
+import { Button, Checkbox, Grid } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 import { getUser } from './_auth/user.server'
@@ -22,6 +22,7 @@ import {
   moderatorGroup,
 } from './circulars/circulars.server'
 import SegmentedCards from '~/components/SegmentedCards'
+import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
@@ -74,14 +75,14 @@ export default function () {
     <>
       <h2>Pending Corrections</h2>
       <Form method="POST">
-        <ButtonGroup>
+        <ToolbarButtonGroup>
           <Link to="/circulars" className="usa-button usa-button--outline">
             Back
           </Link>
           <Button type="submit" secondary disabled={selectedCount === 0}>
             Delete Selected
           </Button>
-        </ButtonGroup>
+        </ToolbarButtonGroup>
         <SegmentedCards>
           {changeRequests.map((correction) => (
             <CircularChangeRequestRow
