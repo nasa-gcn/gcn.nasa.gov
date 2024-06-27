@@ -16,7 +16,6 @@ import {
   InputPrefix,
   Table,
   TextInput,
-  TimePicker,
 } from '@trussworks/react-uswds'
 import classnames from 'classnames'
 import { type ReactNode, useContext, useState } from 'react'
@@ -143,9 +142,8 @@ export function CircularEditForm({
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
   const [date, setDate] = useState(defaultCreatedOnDate)
-  const [time, setTime] = useState(defaultCreatedOnTime ?? '12:00')
+  const [time, setTime] = useState(defaultCreatedOnTime ?? '12:00:00')
   const dateValid = circularId ? dateIsValid(date, time) : true
-
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
@@ -260,13 +258,6 @@ export function CircularEditForm({
                   'usa-input--success': time,
                 })}
               >
-                {/* FIXME: The TimePicker component does not by itself 
-                contribute useful form data because only the element has 
-                a name, and the field does not. So the form data is only 
-                populated correctly if the user selects an option from the 
-                dropdown, but not if they type a valid value into the combo box.
-                
-                See https://github.com/trussworks/react-uswds/issues/2806 */}
                 <input
                   type="hidden"
                   id="createdOnTime"
@@ -274,20 +265,15 @@ export function CircularEditForm({
                   value={time}
                 />
                 <InputPrefix className="wide-input-prefix">Time</InputPrefix>
-                {/* FIXME: Currently only 12 hour formats are supported. We should
-                switch to 24 hours as it is more common/useful for the community.
-                
-                See https://github.com/trussworks/react-uswds/issues/2947 */}
-                <TimePicker
+                <input
+                  type="time"
                   id="createdOnTimeSetter"
                   name="createdOnTimeSetter"
-                  defaultValue={defaultCreatedOnTime}
-                  className={classnames(styles.TimePicker, 'margin-top-neg-3')}
-                  onChange={(value) => {
-                    setTime(value ?? '')
+                  step="1"
+                  value={time}
+                  onChange={(e) => {
+                    setTime(e.target.value ?? '')
                   }}
-                  step={1}
-                  label=""
                 />
               </InputGroup>
             </Grid>

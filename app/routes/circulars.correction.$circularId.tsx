@@ -41,7 +41,7 @@ export async function loader({
     circularId: circular.circularId,
     defaultSubmitter: circular.submitter,
     defaultCreatedOnDate: defaultDateTime[0],
-    defaultCreatedOnTime: defaultDateTime[1].substring(0, 5),
+    defaultCreatedOnTime: defaultDateTime[1].replace(/\.\d{3}Z$/, ''),
     searchString: '',
   }
 }
