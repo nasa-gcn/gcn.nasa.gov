@@ -35,13 +35,13 @@ export const AstroDataLink = forwardRef(
       children,
       className,
       rel: origRel,
-      isExternal,
+      isExternal: external,
       ...props
     }: Omit<LinkProps, 'target'> & { isExternal?: boolean },
     ref: Ref<HTMLAnchorElement>
   ) => {
     const context = useContext(AstroDataContext)
-    const target = isExternal ? '_blank' : context.target
+    const target = external ? '_blank' : context.target
     const rel = [origRel, context.rel].filter(Boolean).join(' ') || undefined
 
     return (
@@ -74,7 +74,7 @@ export function AstroDataLinkWithTooltip<T>({
 }: Omit<Parameters<typeof AstroDataLink>[0], 'ref'> & {
   fetch: () => T
   label: (resolved: Awaited<T>) => ReactNode
-  isExternal?: boolean
+  external?: boolean
 }) {
   return (
     <Tooltip
@@ -106,7 +106,7 @@ export function AstroDataLinkWithTooltip<T>({
         </div>
       }
       asCustom={AstroDataLink}
-      isExternal={isExternal}
+      isExternal={external}
     >
       {children}
     </Tooltip>
