@@ -35,9 +35,9 @@ export const AstroDataLink = forwardRef(
       children,
       className,
       rel: origRel,
-      isExternal: external,
+      external,
       ...props
-    }: Omit<LinkProps, 'target'> & { isExternal?: boolean },
+    }: Omit<LinkProps, 'target'> & { external?: boolean },
     ref: Ref<HTMLAnchorElement>
   ) => {
     const context = useContext(AstroDataContext)
