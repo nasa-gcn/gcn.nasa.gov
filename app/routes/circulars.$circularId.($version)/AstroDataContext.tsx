@@ -42,7 +42,10 @@ export const AstroDataLink = forwardRef(
   ) => {
     const context = useContext(AstroDataContext)
     const target = external ? '_blank' : context.target
-    const rel = [origRel, context.rel].filter(Boolean).join(' ') || undefined
+    const rel =
+      [origRel, context.rel, external ? 'external noopener' : '']
+        .filter(Boolean)
+        .join(' ') || undefined
 
     return (
       <Link
