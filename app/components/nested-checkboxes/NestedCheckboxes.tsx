@@ -47,7 +47,7 @@ function NestedCheckboxNode({
     nodes.map((node) => node.defaultChecked || false)
   )
 
-  const isExternal = link && isExternalLink(link)
+  const external = link && isExternalLink(link)
 
   function updateParent() {
     if (topLevelRef.current) {
@@ -85,7 +85,7 @@ function NestedCheckboxNode({
                 className="usa-link"
                 to={link}
                 target="_blank"
-                rel={isExternal ? 'noopener' : undefined}
+                rel={external ? 'noopener' : undefined}
                 onClick={(e) => {
                   e.stopPropagation()
                 }}

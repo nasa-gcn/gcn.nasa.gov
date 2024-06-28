@@ -31,16 +31,26 @@ export const AstroDataContext = createContext<AstroDataContextProps>({})
  */
 export const AstroDataLink = forwardRef(
   (
-    { children, className, rel: origRel, ...props }: Omit<LinkProps, 'target'>,
+    {
+      children,
+      className,
+      rel: origRel,
+      external,
+      ...props
+    }: Omit<LinkProps, 'target'> & { external?: boolean },
     ref: Ref<HTMLAnchorElement>
   ) => {
     const context = useContext(AstroDataContext)
-    const rel = [origRel, context.rel].filter(Boolean).join(' ') || undefined
+    const target = external ? '_blank' : context.target
+    const rel =
+      [origRel, context.rel, external ? 'external noopener' : '']
+        .filter(Boolean)
+        .join(' ') || undefined
 
     return (
       <Link
         className={classNames('usa-link', className)}
-        target={context.target}
+        target={target}
         rel={rel}
         ref={ref}
         {...props}
@@ -67,6 +77,7 @@ export function AstroDataLinkWithTooltip<T>({
 }: Omit<Parameters<typeof AstroDataLink>[0], 'ref'> & {
   fetch: () => T
   label: (resolved: Awaited<T>) => ReactNode
+  external?: boolean
 }) {
   return (
     <Tooltip
@@ -98,6 +109,7 @@ export function AstroDataLinkWithTooltip<T>({
         </div>
       }
       asCustom={AstroDataLink}
+      external={Boolean(external)}
     >
       {children}
     </Tooltip>
