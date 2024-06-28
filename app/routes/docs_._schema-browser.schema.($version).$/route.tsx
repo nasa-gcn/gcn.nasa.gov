@@ -252,7 +252,8 @@ function SchemaBody({
         View the source on{' '}
         <Link
           className="usa-link"
-          rel="external"
+          rel="external noopener"
+          target="_blank"
           to={`https://github.com/nasa-gcn/gcn-schema/blob/${selectedVersion}/${path}`}
         >
           GitHub
@@ -303,7 +304,8 @@ function SchemaBody({
             individually valid, based on their respective properties. See{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               to="https://json-schema.org/understanding-json-schema/reference/combining.html#allof"
             >
               allOf
@@ -323,7 +325,8 @@ function SchemaBody({
             individually valid based on their respective properties. See{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               to="https://json-schema.org/understanding-json-schema/reference/combining.html#anyof"
             >
               anyOf
@@ -343,7 +346,8 @@ function SchemaBody({
             individually valid based on their respective properties. See{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               to="https://json-schema.org/understanding-json-schema/reference/combining.html#oneof"
             >
               oneOf

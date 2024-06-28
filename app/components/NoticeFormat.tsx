@@ -48,7 +48,8 @@ export function NoticeFormatInput({
         <>
           VOEvent XML. See{' '}
           <a
-            rel="external"
+            rel="external noopener"
+            target="_blank"
             href="http://ivoa.net/Documents/latest/VOEvent.html"
           >
             documentation
@@ -64,7 +65,8 @@ export function NoticeFormatInput({
         <>
           160-byte binary format. Field packing is{' '}
           <a
-            rel="external"
+            rel="external noopener"
+            target="_blank"
             href="https://gcn.gsfc.nasa.gov/sock_pkt_def_doc.html"
           >
             specific to each notice type.
@@ -80,7 +82,11 @@ export function NoticeFormatInput({
             description: (
               <>
                 New notice types in JSON format defined using{' '}
-                <a href="https://json-schema.org" rel="external">
+                <a
+                  href="https://json-schema.org"
+                  rel="external noopener"
+                  target="_blank"
+                >
                   JSON schema
                 </a>
               </>

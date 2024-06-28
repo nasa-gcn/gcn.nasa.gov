@@ -39,7 +39,8 @@ export function ClientSampleCode({
             Open a terminal and run this command to install with{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               href="https://pip.pypa.io/"
             >
               pip
@@ -51,7 +52,8 @@ export function ClientSampleCode({
             or this command to install with with{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               href="https://docs.conda.io/"
             >
               conda
@@ -118,7 +120,8 @@ export function ClientSampleCode({
             Open a terminal and run this command to install with{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               href="https://www.npmjs.com"
             >
               npm
@@ -201,7 +204,8 @@ export function ClientSampleCode({
             Open a terminal and run this command to install with{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               href="https://www.npmjs.com"
             >
               npm
@@ -286,7 +290,8 @@ export function ClientSampleCode({
             First,{' '}
             <Link
               className="usa-link"
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               href="https://github.com/edenhill/librdkafka#installation"
             >
               install librdkafka
@@ -540,14 +545,16 @@ export function ClientSampleCode({
             The following instructions are for the official Kafka command line
             tools which use Java and come with either{' '}
             <a
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               href="https://kafka.apache.org/documentation/#quickstart"
             >
               Apache Kafka
             </a>{' '}
             version 3.4.0 or newer or{' '}
             <a
-              rel="external"
+              rel="external noopener"
+              target="_blank"
               href="https://docs.confluent.io/kafka/operations-tools/kafka-tools.html"
             >
               Confluent

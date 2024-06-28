@@ -53,7 +53,8 @@ export default function AnnounceBanner({
             <p>
               If you cannot attend live, then you can get the{' '}
               <Link
-                rel="external"
+                rel="external noopener"
+                target="_blank"
                 href="https://nasa-gcn.github.io/gcn-presentation/"
               >
                 presentation
@@ -77,7 +78,7 @@ export function AnnouncementEvent(props: {
     <Grid mobileLg={{ col: 4 }}>
       {props.time}
       <div>(best for {props.region}):</div>
-      <Link rel="external" href={props.link}>
+      <Link rel="external noopener" target="_blank" href={props.link}>
         {props.linkstring}
       </Link>
     </Grid>
