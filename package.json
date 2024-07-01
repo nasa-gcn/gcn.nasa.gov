@@ -193,6 +193,12 @@
           "children": "never",
           "propElementValues": "always"
         }
+      ],
+      "react/jsx-no-target-blank": [
+        "error",
+        {
+          "allowReferrer": true
+        }
       ]
     },
     "overrides": [

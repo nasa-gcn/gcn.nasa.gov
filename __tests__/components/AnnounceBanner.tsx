@@ -71,7 +71,7 @@ describe('AnnounceBanner component', () => {
       'href',
       'https://nasa-gcn.github.io/gcn-presentation/'
     )
-    expect(link).toHaveAttribute('rel', 'external')
+    expect(link).toHaveAttribute('rel', 'external noopener')
   })
 })
 

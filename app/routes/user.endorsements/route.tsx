@@ -129,7 +129,11 @@ export default function () {
       </p>
       <p className="usa-paragraph">
         Peer endorsements (inspired by{' '}
-        <a rel="external" href="https://info.arxiv.org/help/endorsement.html">
+        <a
+          rel="external noopener"
+          target="_blank"
+          href="https://info.arxiv.org/help/endorsement.html"
+        >
           arXiv
         </a>
         ) help us to grow the GCN community sustainably while protecting the

@@ -95,27 +95,44 @@ export function Footer() {
         </IdentifierLogos>
         <IdentifierIdentity domain="gcn.nasa.gov">
           A service of the{' '}
-          <a rel="external" href="https://science.gsfc.nasa.gov/astrophysics/">
+          <a
+            rel="external noopener"
+            target="_blank"
+            href="https://science.gsfc.nasa.gov/astrophysics/"
+          >
             Astrophysics Science Division
           </a>{' '}
           at{' '}
-          <a rel="external" href="https://www.nasa.gov/">
+          <a
+            rel="external noopener"
+            target="_blank"
+            href="https://www.nasa.gov/"
+          >
             NASA
           </a>{' '}
-          <a rel="external" href="https://www.nasa.gov/goddard/">
+          <a
+            rel="external noopener"
+            target="_blank"
+            href="https://www.nasa.gov/goddard/"
+          >
             Goddard Space Flight Center
           </a>
         </IdentifierIdentity>
       </IdentifierMasthead>
       <IdentifierLinks navProps={{ 'aria-label': 'Important links' }}>
         <IdentifierLinkItem>
-          <IdentifierLink rel="external" href="https://www.nasa.gov/about/">
+          <IdentifierLink
+            rel="external noopener"
+            target="_blank"
+            href="https://www.nasa.gov/about/"
+          >
             About NASA
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
           <IdentifierLink
-            rel="external"
+            rel="external noopener"
+            target="_blank"
             href="https://www.nasa.gov/general/accessibility/"
           >
             Accessibility
@@ -123,7 +140,8 @@ export function Footer() {
         </IdentifierLinkItem>
         <IdentifierLinkItem>
           <IdentifierLink
-            rel="external"
+            rel="external noopener"
+            target="_blank"
             href="https://www.nasa.gov/budgets-plans-and-reports/"
           >
             Budget and Performance
@@ -131,30 +149,44 @@ export function Footer() {
         </IdentifierLinkItem>
         <IdentifierLinkItem>
           <IdentifierLink
-            rel="external"
+            rel="external noopener"
+            target="_blank"
             href="https://www.nasa.gov/odeo/no-fear-act/"
           >
             No FEAR Act
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
-          <IdentifierLink rel="external" href="https://www.nasa.gov/FOIA/">
+          <IdentifierLink
+            rel="external noopener"
+            target="_blank"
+            href="https://www.nasa.gov/FOIA/"
+          >
             FOIA Requests
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
-          <IdentifierLink rel="external" href="https://oig.nasa.gov/">
+          <IdentifierLink
+            rel="external noopener"
+            target="_blank"
+            href="https://oig.nasa.gov/"
+          >
             Office of the Inspector General
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
-          <IdentifierLink rel="external" href="https://www.nasa.gov/privacy/">
+          <IdentifierLink
+            rel="external noopener"
+            target="_blank"
+            href="https://www.nasa.gov/privacy/"
+          >
             Privacy Policy
           </IdentifierLink>
         </IdentifierLinkItem>
         <IdentifierLinkItem>
           <IdentifierLink
-            rel="external"
+            rel="external noopener"
+            target="_blank"
             href="https://www.nasa.gov/vulnerability-disclosure-policy/"
           >
             Vulnerability Disclosure Policy
@@ -163,7 +195,7 @@ export function Footer() {
       </IdentifierLinks>
       <IdentifierGov aria-label="U.S. government information and services">
         Looking for U.S. government information and services?{' '}
-        <a rel="external" href="https://www.usa.gov">
+        <a rel="external noopener" target="_blank" href="https://www.usa.gov">
           Visit USA.gov
         </a>
       </IdentifierGov>
