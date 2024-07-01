@@ -127,7 +127,10 @@ function DiffedContent({
   newString: string
   method?: 'words' | 'lines'
 }) {
-  const diff = methodMap[method ?? 'words'](oldString, newString)
+  const diff = methodMap[method && newString ? method : 'lines'](
+    oldString ?? '',
+    newString ?? 'Missing, please fix'
+  )
 
   return (
     <div>
