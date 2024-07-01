@@ -10,6 +10,7 @@ import { useState } from 'react'
 import type { NoticeFormat } from '../NoticeFormat'
 import { NestedCheckboxes } from '../nested-checkboxes/NestedCheckboxes'
 import { triggerRate } from './rates'
+import { useFeature } from '~/root'
 
 const minRate = 1 / 7
 
@@ -196,7 +197,6 @@ const JsonNoticeTypes: { [key: string]: string[] } = {
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
   'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
-  SVOM: ['gcn.notices.svom'],
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
@@ -205,7 +205,6 @@ const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   Swift: '/missions/swift',
   'Einstein Probe': '/missions/einstein-probe',
-  SVOM: '/missions/svom',
 }
 
 interface NoticeTypeCheckboxProps {
@@ -222,6 +221,11 @@ export function NoticeTypeCheckboxes({
   const [userSelected, setUserSelected] = useState(new Set<string>())
   const [selectedCounter, setSelectedCounter] = useState(0)
   const [alertEstimate, setAlertEstimate] = useState(0)
+
+  if (useFeature('SVOM_QUICKSTART')) {
+    JsonNoticeTypes.SVOM = ['gcn.notices.svom']
+    JsonNoticeTypeLinks.SVOM = '/missions/svom'
+  }
 
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
