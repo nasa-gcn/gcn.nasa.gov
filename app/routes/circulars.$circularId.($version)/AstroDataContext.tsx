@@ -70,14 +70,15 @@ export const AstroDataLink = forwardRef(
  * position the tooltip if the size changes when the content fills in.
  */
 export function AstroDataLinkWithTooltip<T>({
-  fetch,
+  fetchFunction,
   label,
   children,
+  ext,
   ...props
 }: Omit<Parameters<typeof AstroDataLink>[0], 'ref'> & {
-  fetch: () => T
+  fetchFunction: () => T
   label: (resolved: Awaited<T>) => ReactNode
-  external?: boolean
+  ext?: boolean
 }) {
   return (
     <Tooltip
@@ -94,7 +95,7 @@ export function AstroDataLinkWithTooltip<T>({
             }
           >
             <Await
-              resolve={fetch()}
+              resolve={fetchFunction()}
               errorElement={
                 <>
                   <div>Not found</div>
@@ -109,7 +110,7 @@ export function AstroDataLinkWithTooltip<T>({
         </div>
       }
       asCustom={AstroDataLink}
-      external={Boolean(external)}
+      external={Boolean(ext)}
     >
       {children}
     </Tooltip>
