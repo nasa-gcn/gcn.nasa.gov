@@ -91,7 +91,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
   const createdOnDate =
-  getFormDataString(data, 'createdOn') || Date.now().toString()
+    getFormDataString(data, 'createdOn') || Date.now().toString()
   const createdOn = Date.parse(createdOnDate)
 
   let newCircular
