@@ -404,8 +404,8 @@ export async function createChangeRequest(
     to: [user.email],
     fromName: 'GCN Circulars',
     subject: 'GCN Circulars Change Request: Received',
-    body: dedent`Your change request has been created for GCN Circular ${item.circularId}. 
-    
+    body: dedent`Your change request has been created for GCN Circular ${item.circularId}.
+
     You will receive another email when your request has been reviewed.`,
   })
 }
@@ -461,8 +461,8 @@ export async function deleteChangeRequest(
     to: [requestorEmail],
     fromName: 'GCN Circulars',
     subject: 'GCN Circulars Change Request: Rejected',
-    body: dedent`Your change request has been rejected for GCN Circular ${circularId}. 
-    
+    body: dedent`Your change request has been rejected for GCN Circular ${circularId}.
+
     View the Circular at ${origin}/circulars/${circularId}`,
   })
 }
@@ -535,8 +535,8 @@ export async function approveChangeRequest(
     to: [changeRequest.requestorEmail],
     fromName: 'GCN Circulars',
     subject: 'GCN Circulars Change Request: Approved',
-    body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}. 
-    
+    body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}.
+
     View the Circular at ${origin}/circulars/${changeRequest.circularId}`,
   })
 }

@@ -9,7 +9,6 @@ import { Form, Link, useNavigation } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
-  DatePicker,
   Grid,
   Icon,
   InputGroup,
@@ -26,7 +25,7 @@ import { MarkdownBody } from '../circulars.$circularId.($version)/Body'
 import {
   type CircularFormat,
   bodyIsValid,
-  dateIsValid,
+  datetimeIsValid,
   subjectIsValid,
   submitterIsValid,
 } from '../circulars/circulars.lib'
@@ -35,8 +34,6 @@ import { CircularsKeywords } from '~/components/CircularsKeywords'
 import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
 import { useModStatus } from '~/root'
-
-import styles from './CircularsEditForm.module.css'
 
 function SyntaxExample({
   label,
@@ -115,8 +112,7 @@ export function CircularEditForm({
   defaultBody,
   defaultSubject,
   searchString,
-  defaultCreatedOnDate,
-  defaultCreatedOnTime,
+  defaultCreatedOnDateTime,
   intent,
 }: {
   formattedContributor: string
@@ -126,8 +122,7 @@ export function CircularEditForm({
   defaultBody: string
   defaultSubject: string
   searchString: string
-  defaultCreatedOnDate?: string
-  defaultCreatedOnTime?: string
+  defaultCreatedOnDateTime?: string
   intent: 'correction' | 'edit' | 'new'
 }) {
   let formSearchString = '?index'
@@ -141,15 +136,15 @@ export function CircularEditForm({
   const [body, setBody] = useState(defaultBody)
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
-  const [date, setDate] = useState(defaultCreatedOnDate)
-  const [time, setTime] = useState(defaultCreatedOnTime ?? '12:00:00')
+  const [dateTime, setDateTime] = useState(defaultCreatedOnDateTime ?? '')
+  const [dateValid, setDateValid] = useState(true)
 
-  const dateValid = circularId ? dateIsValid(date, time) : true
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid && dateValid && submitterValid
+
   let headerText, saveButtonText
 
   switch (intent) {
@@ -172,8 +167,7 @@ export function CircularEditForm({
     subject.trim() !== defaultSubject.trim() ||
     format !== defaultFormat ||
     submitter?.trim() !== defaultSubmitter ||
-    date !== defaultCreatedOnDate ||
-    time !== defaultCreatedOnTime
+    dateTime !== defaultCreatedOnDateTime
 
   const userIsModerator = useModStatus()
 
@@ -232,51 +226,19 @@ export function CircularEditForm({
             <Grid tablet={{ col: 'auto' }}>
               <InputGroup
                 className={classnames({
-                  'usa-input--error': !date || !Date.parse(date),
-                  'usa-input--success': date && Date.parse(date),
+                  'usa-input--error': !dateTime || !Date.parse(dateTime),
+                  'usa-input--success': dateTime && Date.parse(dateTime),
                 })}
               >
                 <InputPrefix className="wide-input-prefix">Date</InputPrefix>
-                <DatePicker
-                  defaultValue={defaultCreatedOnDate}
-                  className={classnames(
-                    styles.DatePicker,
-                    'border-0 flex-fill'
-                  )}
-                  onChange={(value) => {
-                    setDate(value ?? '')
-                  }}
-                  name="createdOnDate"
-                  id="createdOnDate"
-                  dateFormat="YYYY-MM-DD"
-                />
-              </InputGroup>
-            </Grid>
-            <Grid tablet={{ col: 'auto' }}>
-              <InputGroup
-                className={classnames({
-                  'usa-input--error': !time,
-                  'usa-input--success': time,
-                })}
-              >
                 <input
-                  type="hidden"
-                  id="createdOnTime"
-                  name="createdOnTime"
-                  value={time}
-                />
-                <InputPrefix className="wide-input-prefix">Time</InputPrefix>
-                {/* FIXME: Currently only 12 hour formats are supported. We should
-                switch to 24 hours as it is more common/useful for the community.*/}
-                <input
-                  type="time"
-                  id="createdOnTimeSetter"
-                  name="createdOnTimeSetter"
-                  step="1"
-                  value={time}
-                  onChange={(e) => {
-                    setTime(e.target.value ?? '')
+                  defaultValue={defaultCreatedOnDateTime}
+                  onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                    setDateTime(e.currentTarget.value)
+                    setDateValid(datetimeIsValid(e.currentTarget.value))
                   }}
+                  name="createdOn"
+                  id="createdOn"
                 />
               </InputGroup>
             </Grid>

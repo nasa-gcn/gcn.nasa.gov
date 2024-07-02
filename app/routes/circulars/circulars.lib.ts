@@ -141,6 +141,10 @@ export function submitterIsValid(submitter?: string) {
   return Boolean(submitter)
 }
 
+export function datetimeIsValid(date: string) {
+  return !Number.isNaN(Date.parse(date))
+}
+
 export function emailIsAutoReply(subject: string) {
   const lowercaseSubject = subject.toLowerCase()
   return emailAutoReplyChecklist.some((x) => lowercaseSubject.includes(x))
