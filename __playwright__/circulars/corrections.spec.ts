@@ -13,12 +13,9 @@ const loadingTestsCircular = {
   version: 3,
 }
 
-function getDateAndTimeStrings(createdOn: number) {
+function getDateTimeString(createdOn: number) {
   const date = new Date(createdOn)
-  return [
-    date.toISOString().split('T')[0],
-    `${date.getUTCHours() % 12}:${date.getUTCMinutes()}${date.getUTCHours() > 12 ? 'pm' : 'am'}`,
-  ]
+  return date.toISOString()
 }
 
 test.describe('Circulars correction page', () => {
@@ -28,14 +25,8 @@ test.describe('Circulars correction page', () => {
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
     )
-    const [testDate, testTime] = getDateAndTimeStrings(
-      loadingTestsCircular.createdOn
-    )
-    await expect(page.getByTestId('date-picker-external-input')).toHaveValue(
-      testDate
-    )
-    // Time is only mapped to the minute, and in 12 hour format (for now)
-    await expect(page.getByTestId('combo-box-input')).toHaveValue(testTime)
+    const testDateTime = getDateTimeString(loadingTestsCircular.createdOn)
+    await expect(page.locator('#createdOnDate')).toHaveValue(testDateTime)
     await expect(page.locator('#subject')).toHaveValue(
       loadingTestsCircular.subject
     )
