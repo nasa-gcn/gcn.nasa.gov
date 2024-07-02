@@ -55,7 +55,9 @@ export function Arxiv({ children, value }: JSX.IntrinsicElements['data']) {
     <AstroDataLinkWithTooltip
       to={`https://arxiv.org/abs/${value}`}
       ext
-      fetchFunction={() => fetchTooltipData<typeof arxivTooltipLoader>('arxiv', value)}
+      fetchFunction={() =>
+        fetchTooltipData<typeof arxivTooltipLoader>('arxiv', value)
+      }
       label={({ title, year, authors }) => (
         <>
           <div>arXiv:{value}</div>
@@ -76,7 +78,9 @@ export function Doi({ children, value }: JSX.IntrinsicElements['data']) {
     <AstroDataLinkWithTooltip
       to={`https://doi.org/${value}`}
       ext
-      fetchFunction={() => fetchTooltipData<typeof doiTooltipLoader>('doi', value)}
+      fetchFunction={() =>
+        fetchTooltipData<typeof doiTooltipLoader>('doi', value)
+      }
       label={({ authors, pub, year, title }) => (
         <>
           <div>{pub}</div>
@@ -97,7 +101,9 @@ export function Tns({ children, value }: JSX.IntrinsicElements['data']) {
     <AstroDataLinkWithTooltip
       to={`https://www.wis-tns.org/object/${value}`}
       ext
-      fetchFunction={() => fetchTooltipData<typeof tnsTooltipLoader>('tns', value)}
+      fetchFunction={() =>
+        fetchTooltipData<typeof tnsTooltipLoader>('tns', value)
+      }
       label={({ ra, dec, names }) => (
         <>
           <div>{names.join(', ')}</div>
