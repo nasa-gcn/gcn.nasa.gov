@@ -26,7 +26,7 @@ test.describe('Circulars correction page', () => {
       loadingTestsCircular.submitter
     )
     const testDateTime = getDateTimeString(loadingTestsCircular.createdOn)
-    await expect(page.locator('#createdOnDate')).toHaveValue(testDateTime)
+    await expect(page.locator('#createdOn')).toHaveValue(testDateTime)
     await expect(page.locator('#subject')).toHaveValue(
       loadingTestsCircular.subject
     )

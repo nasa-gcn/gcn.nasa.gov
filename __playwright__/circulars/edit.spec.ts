@@ -35,7 +35,7 @@ test.describe('Circulars edit page', () => {
       loadingTestsCircular.submitter
     )
     const testDateTime = getDateTimeString(loadingTestsCircular.createdOn)
-    await expect(page.locator('#createdOnDate')).toHaveValue(testDateTime)
+    await expect(page.locator('#createdOn')).toHaveValue(testDateTime)
     await expect(page.locator('#subject')).toHaveValue(
       loadingTestsCircular.subject
     )
@@ -49,7 +49,7 @@ test.describe('Circulars edit page', () => {
     const testSubject = `${editTestsCircular.subject} - ${browserName}`
     await page.goto(`/circulars/edit/${editTestsCircular.circularId}`)
     await page.locator('#submitter').fill(editTestsCircular.submitter)
-    await page.locator('#createdOnDate').fill(editTestsCircular.createdOn)
+    await page.locator('#createdOn').fill(editTestsCircular.createdOn)
     await page.locator('#subject').fill(testSubject)
     await page.getByTestId('textarea').fill(editTestsCircular.body)
     await page.getByRole('button', { name: 'Update' }).click({ timeout: 10000 })
