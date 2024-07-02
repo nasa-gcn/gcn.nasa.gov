@@ -526,7 +526,7 @@ export async function approveChangeRequest(
     editedOn: Date.now(),
     format: changeRequest.format,
     submitter: changeRequest.submitter,
-    createdOn: changeRequest.createdOn,
+    createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)
