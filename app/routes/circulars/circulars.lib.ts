@@ -134,7 +134,7 @@ export function formatIsValid(format: string): format is CircularFormat {
 
 /** For updated dates, check that the date is valid */
 export function dateIsValid(date?: string, time?: string) {
-  return !Number.isNaN(Date.parse(`${date}T${time}:00.000Z`))
+  return !Number.isNaN(Date.parse(`${date}T${time}.000Z`))
 }
 
 export function submitterIsValid(submitter?: string) {
