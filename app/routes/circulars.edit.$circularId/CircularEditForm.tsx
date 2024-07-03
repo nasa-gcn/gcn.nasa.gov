@@ -9,7 +9,6 @@ import { Form, Link, useNavigation } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
-  Grid,
   Icon,
   InputGroup,
   InputPrefix,
@@ -222,27 +221,24 @@ export function CircularEditForm({
           </Link>
         </InputGroup>
         {circularId !== undefined && (
-          <Grid row gap="md">
-            <Grid tablet={{ col: 'auto' }}>
-              <InputGroup
-                className={classnames({
-                  'usa-input--error': !dateTime || !Date.parse(dateTime),
-                  'usa-input--success': dateTime && Date.parse(dateTime),
-                })}
-              >
-                <InputPrefix className="wide-input-prefix">Date</InputPrefix>
-                <input
-                  defaultValue={defaultCreatedOnDateTime}
-                  onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                    setDateTime(e.currentTarget.value)
-                    setDateValid(datetimeIsValid(e.currentTarget.value))
-                  }}
-                  name="createdOn"
-                  id="createdOn"
-                />
-              </InputGroup>
-            </Grid>
-          </Grid>
+          <InputGroup
+            className={classnames('maxw-full', {
+              'usa-input--error': !dateTime || !Date.parse(dateTime),
+              'usa-input--success': dateTime && Date.parse(dateTime),
+            })}
+          >
+            <InputPrefix className="wide-input-prefix">Date</InputPrefix>
+            <input
+              defaultValue={defaultCreatedOnDateTime}
+              onInput={(e: React.FormEvent<HTMLInputElement>) => {
+                setDateTime(e.currentTarget.value)
+                setDateValid(datetimeIsValid(e.currentTarget.value))
+              }}
+              name="createdOn"
+              id="createdOn"
+              className="maxw-full"
+            />
+          </InputGroup>
         )}
         <InputGroup
           className={classnames('maxw-full', {
