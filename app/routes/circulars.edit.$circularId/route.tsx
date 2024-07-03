@@ -30,8 +30,7 @@ export async function loader({
     throw new Response(null, { status: 403 })
   const formattedContributor = formatAuthor(user)
   const circular = await get(parseFloat(circularId))
-  const defaultDateTime = new Date(circular.createdOn ?? 0)
-    .toISOString()
+  const defaultDateTime = new Date(circular.createdOn ?? 0).toISOString()
 
   return {
     formattedContributor,
