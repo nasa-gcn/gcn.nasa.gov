@@ -141,7 +141,7 @@ export function submitterIsValid(submitter?: string) {
   return Boolean(submitter)
 }
 
-export function datetimeIsValid(date: string) {
+export function dateTimeIsValid(date: string) {
   return !Number.isNaN(Date.parse(date))
 }
 

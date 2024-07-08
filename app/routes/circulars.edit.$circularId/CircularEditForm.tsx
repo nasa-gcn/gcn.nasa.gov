@@ -24,7 +24,7 @@ import { MarkdownBody } from '../circulars.$circularId.($version)/Body'
 import {
   type CircularFormat,
   bodyIsValid,
-  datetimeIsValid,
+  dateTimeIsValid,
   subjectIsValid,
   submitterIsValid,
 } from '../circulars/circulars.lib'
@@ -136,13 +136,12 @@ export function CircularEditForm({
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
   const [dateTime, setDateTime] = useState(defaultCreatedOnDateTime ?? '')
-  const [dateValid, setDateValid] = useState(true)
-
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
+  const dateTimeValid = dateTimeIsValid(dateTime)
   const sending = Boolean(useNavigation().formData)
-  const valid = subjectValid && bodyValid && dateValid && submitterValid
+  const valid = subjectValid && bodyValid && dateTimeValid && submitterValid
 
   let headerText, saveButtonText
 
@@ -230,9 +229,8 @@ export function CircularEditForm({
             <InputPrefix className="wide-input-prefix">Date</InputPrefix>
             <input
               defaultValue={defaultCreatedOnDateTime}
-              onInput={(e: React.FormEvent<HTMLInputElement>) => {
-                setDateTime(e.currentTarget.value)
-                setDateValid(datetimeIsValid(e.currentTarget.value))
+              onInput={({ currentTarget: { value } }) => {
+                setDateTime(value)
               }}
               name="createdOn"
               id="createdOn"
