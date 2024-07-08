@@ -41,23 +41,18 @@ test.describe('Circulars archive page', () => {
     page,
   }) => {
     await page.goto('/circulars?query=230812B')
-    await page.waitForFunction(
-      (n) =>
-        document.getElementsByTagName('ol')[0].getElementsByTagName('li')
-          .length >= n,
-      64
-    )
+    await page.waitForLoadState()
+    await expect(page.locator('ol', { has: page.locator('li') })).toBeVisible()
+    expect(await page.locator('ol > li').count()).toBe(64)
   })
 
   test('search finds no results for query with typo', async ({ page }) => {
     // this highlights this search behaviour does not capture cases where there is a minor typo
     await page.goto('/circulars?query=230812C')
-    await page.waitForFunction(
-      (n) =>
-        document.getElementsByTagName('ol')[0].getElementsByTagName('li')
-          .length === n,
-      0
-    )
+    await page.waitForLoadState()
+    await expect(
+      page.locator('ol', { has: page.locator('li') })
+    ).not.toBeVisible()
   })
 
   test('search finds results that contain exact string but not similar strings', async ({
