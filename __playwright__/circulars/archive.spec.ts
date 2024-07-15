@@ -58,14 +58,12 @@ test.describe('Circulars archive page', () => {
   test('search finds results that contain exact string but not similar strings', async ({
     page,
   }) => {
-    // this highlights the search returns limited results because it is looking for exact matches to the string
-    // this should return many more results and include strings like 230812B
+    // This highlights the search returns limited results because it is looking for exact matches to the string
+    // This should return many more results and include strings like 230812B
     await page.goto('/circulars?query=230812')
-    await page.waitForFunction(
-      (n) =>
-        document.getElementsByTagName('ol')[0].getElementsByTagName('li')
-          .length === n,
-      1
-    )
+    const orderedListLocator = page.locator('ol')
+    const listItemLocator = orderedListLocator.locator('li')
+
+    await expect(listItemLocator).toHaveCount(1)
   })
 })
