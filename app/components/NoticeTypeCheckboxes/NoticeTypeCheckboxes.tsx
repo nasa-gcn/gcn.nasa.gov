@@ -10,6 +10,7 @@ import { useState } from 'react'
 import type { NoticeFormat } from '../NoticeFormat'
 import { NestedCheckboxes } from '../nested-checkboxes/NestedCheckboxes'
 import { triggerRate } from './rates'
+import { useFeature } from '~/root'
 
 const minRate = 1 / 7
 
@@ -220,6 +221,11 @@ export function NoticeTypeCheckboxes({
   const [userSelected, setUserSelected] = useState(new Set<string>())
   const [selectedCounter, setSelectedCounter] = useState(0)
   const [alertEstimate, setAlertEstimate] = useState(0)
+
+  if (useFeature('SVOM_QUICKSTART')) {
+    JsonNoticeTypes.SVOM = ['gcn.notices.svom']
+    JsonNoticeTypeLinks.SVOM = '/missions/svom'
+  }
 
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
