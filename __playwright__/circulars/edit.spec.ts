@@ -22,11 +22,6 @@ const editTestsCircular = {
   circularId: 34730,
 }
 
-function getDateTimeString(createdOn: number) {
-  const date = new Date(createdOn)
-  return date.toISOString()
-}
-
 test.describe('Circulars edit page', () => {
   test('populates all fields on load', async ({ page }) => {
     test.slow()
@@ -34,7 +29,7 @@ test.describe('Circulars edit page', () => {
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
     )
-    const testDateTime = getDateTimeString(loadingTestsCircular.createdOn)
+    const testDateTime = new Date(loadingTestsCircular.createdOn).toISOString()
     await expect(page.locator('#createdOn')).toHaveValue(testDateTime)
     await expect(page.locator('#subject')).toHaveValue(
       loadingTestsCircular.subject
