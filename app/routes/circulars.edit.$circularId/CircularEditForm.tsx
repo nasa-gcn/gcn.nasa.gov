@@ -139,7 +139,7 @@ export function CircularEditForm({
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
-  const dateTimeValid = dateTimeIsValid(dateTime)
+  const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid && dateTimeValid && submitterValid
 
