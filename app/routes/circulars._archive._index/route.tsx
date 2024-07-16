@@ -90,9 +90,9 @@ export async function action({ request }: ActionFunctionArgs) {
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
-  const createdOnDate = getFormDataString(data, 'createdOnDate')
-  const createdOnTime = getFormDataString(data, 'createdOnTime')
-  const createdOn = Date.parse(`${createdOnDate} ${createdOnTime} UTC`)
+  const createdOnDate =
+    getFormDataString(data, 'createdOn') || Date.now().toString()
+  const createdOn = Date.parse(createdOnDate)
 
   let newCircular
   const props = { body, subject, ...(format ? { format } : {}) }
@@ -107,7 +107,8 @@ export async function action({ request }: ActionFunctionArgs) {
         submitter = getFormDataString(data, 'submitter')
         if (!submitter) throw new Response(null, { status: 400 })
       }
-      if (!createdOnDate || !createdOnTime || !createdOn)
+
+      if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
       await createChangeRequest(
         {
@@ -130,7 +131,7 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'edit':
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
-      if (!createdOnDate || !createdOnTime || !createdOn)
+      if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
       await putVersion(
         {

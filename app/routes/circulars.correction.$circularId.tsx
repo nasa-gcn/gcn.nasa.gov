@@ -29,9 +29,7 @@ export async function loader({
   const user = await getUser(request)
   if (!user?.groups.includes(group)) throw new Response(null, { status: 403 })
   const circular = await get(parseFloat(circularId))
-  const defaultDateTime = new Date(circular.createdOn ?? 0)
-    .toISOString()
-    .split('T')
+  const defaultDateTime = new Date(circular.createdOn ?? 0).toISOString()
 
   return {
     formattedContributor: user ? formatAuthor(user) : '',
@@ -40,8 +38,7 @@ export async function loader({
     defaultFormat: circular.format,
     circularId: circular.circularId,
     defaultSubmitter: circular.submitter,
-    defaultCreatedOnDate: defaultDateTime[0],
-    defaultCreatedOnTime: defaultDateTime[1].substring(0, 5),
+    defaultCreatedOnDateTime: defaultDateTime,
     searchString: '',
   }
 }

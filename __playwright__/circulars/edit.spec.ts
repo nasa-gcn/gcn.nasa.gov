@@ -16,19 +16,10 @@ const loadingTestsCircular = {
 const editTestsCircular = {
   subject:
     'ZTF and SEDM Observations of the Candidate Optical Afterglow AT 2024sva',
-  date: '2024-09-18',
-  time: '6:00am',
+  createdOn: '2024-09-18 06:00',
   submitter: 'example@example.com',
   body: 'Smaller body for Playwright test',
   circularId: 34730,
-}
-
-function getDateAndTimeStrings(createdOn: number) {
-  const date = new Date(createdOn)
-  return [
-    date.toISOString().split('T')[0],
-    `${date.getUTCHours() % 12}:${date.getUTCMinutes()}${date.getUTCHours() > 12 ? 'pm' : 'am'}`,
-  ]
 }
 
 test.describe('Circulars edit page', () => {
@@ -38,14 +29,8 @@ test.describe('Circulars edit page', () => {
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
     )
-    const [testDate, testTime] = getDateAndTimeStrings(
-      loadingTestsCircular.createdOn
-    )
-    await expect(page.getByTestId('date-picker-external-input')).toHaveValue(
-      testDate
-    )
-    // Time is only mapped to the minute, and in 12 hour format (for now)
-    await expect(page.getByTestId('combo-box-input')).toHaveValue(testTime)
+    const testDateTime = new Date(loadingTestsCircular.createdOn).toISOString()
+    await expect(page.locator('#createdOn')).toHaveValue(testDateTime)
     await expect(page.locator('#subject')).toHaveValue(
       loadingTestsCircular.subject
     )
@@ -59,10 +44,7 @@ test.describe('Circulars edit page', () => {
     const testSubject = `${editTestsCircular.subject} - ${browserName}`
     await page.goto(`/circulars/edit/${editTestsCircular.circularId}`)
     await page.locator('#submitter').fill(editTestsCircular.submitter)
-    await page
-      .getByTestId('date-picker-external-input')
-      .fill(editTestsCircular.date)
-    await page.getByTestId('combo-box-input').fill(editTestsCircular.time)
+    await page.locator('#createdOn').fill(editTestsCircular.createdOn)
     await page.locator('#subject').fill(testSubject)
     await page.getByTestId('textarea').fill(editTestsCircular.body)
     await page.getByRole('button', { name: 'Update' }).click({ timeout: 10000 })
