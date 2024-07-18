@@ -18,8 +18,3 @@ updates:
       remix:
         patterns:
           - '@remix-run/*'
-
-  - package-ecosystem: pip
-    directory: /
-    schedule:
-      interval: weekly
