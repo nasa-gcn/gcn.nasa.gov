@@ -15,7 +15,7 @@ import { useFeature } from '~/root'
 const minRate = 1 / 7
 
 function humanizedCount(count: number, singular: string, plural?: string) {
-  const noun = count === 1 ? singular : plural ?? `${singular}s`
+  const noun = count === 1 ? singular : (plural ?? `${singular}s`)
   return `${count} ${noun}`
 }
 
