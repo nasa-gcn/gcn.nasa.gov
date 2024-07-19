@@ -43,7 +43,7 @@
     "classnames": "^2.5.1",
     "color-convert": "^2.0.1",
     "cross-env": "^7.0.3",
-    "dayjs": "^1.11.10",
+    "dayjs": "^1.11.12",
     "diff": "^5.2.0",
     "downshift": "^7.2.1",
     "email-validator": "^2.0.4",
