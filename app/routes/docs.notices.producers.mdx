@@ -49,6 +49,13 @@ also happy to work with the mission teams to help construct your alerts.
          Draft Your Schema
       </ProcessListHeading>
       As a GCN Notice producer, you can create your own instrument-specific schema. Please contribute your schema to our [GitHub repository](https://github.com/nasa-gcn/gcn-schema), placing it in a folder under <code>gcn/notices/<i>mission</i></code> and submit a pull request for the GCN Team to review. For details, please refer to the [schema documentation](/docs/notices/schema).
+
+      ### Tag a Schema Version
+      The schema follows the principles of [Semantic Versioning](https://semver.org). Updates are categorized as major, minor, or patch, depending on the type of change. A major change is defined as any modification that breaks compatibility with the core schema, such as a change in a property or the addition of a new property that affects the mission pipelines. Introducing a new mission and new core schema constitutes a minor change, while modifying the new mission schema and adding a new property to the core schema are considered patches.
+
+      ### Version Announcement
+      For version updates, the GCN team will contact team members who are using the modified schema. GCN will explain the need for the new version and request them to update the pipelines. Once approved by the mission teams, we will tag a new version and announce it on the GCN website for the users.
+
    </ProcessListItem>
    <ProcessListItem>
       <ProcessListHeading type="h3">
@@ -82,9 +89,8 @@ also happy to work with the mission teams to help construct your alerts.
       <ProcessListHeading type="h3">
          Create or Update the Mission Page
       </ProcessListHeading>
-      Create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls)
-or by sending text to the [GCN Team](https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn).
-   </ProcessListItem>
+      GCN team will create a new mission page by submitting a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls) and will request mission team members feedback for the mission details.
+  </ProcessListItem>
 
    <ProcessListItem>
       <ProcessListHeading type="h3">
