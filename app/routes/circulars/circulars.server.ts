@@ -32,7 +32,7 @@ import type {
   CircularMetadata,
 } from './circulars.lib'
 import { sendEmail } from '~/lib/email.server'
-import { origin } from '~/lib/env.server'
+import { feature, origin } from '~/lib/env.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -158,6 +158,22 @@ export async function search({
           },
         }
 
+  const queryObj = query
+    ? feature('CICRULARS_LUCENE')
+      ? {
+          simple_query_string: {
+            query,
+            fields: ['submitter', 'subject', 'body'],
+          },
+        }
+      : {
+          multi_match: {
+            query,
+            fields: ['submitter', 'subject', 'body'],
+          },
+        }
+    : undefined
+
   const {
     body: {
       hits: {
@@ -170,14 +186,7 @@ export async function search({
     body: {
       query: {
         bool: {
-          must: query
-            ? {
-                multi_match: {
-                  query,
-                  fields: ['submitter', 'subject', 'body'],
-                },
-              }
-            : undefined,
+          must: queryObj,
           filter: {
             range: {
               createdOn: {
