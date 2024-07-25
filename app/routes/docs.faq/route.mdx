@@ -3,6 +3,8 @@ handle:
   breadcrumb: Frequently Asked Questions
 ---
 
+import { SampleHeartbeat } from './SampleHeartbeat'
+
 # Frequently Asked Questions
 
 ## Kafka
@@ -62,12 +64,7 @@ Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP c
 
 Subscribe to the topic `gcn.heartbeat`, which broadcasts a test message approximately once a second. The contents of the heartbeat messages looks like this:
 
-```json
-{
-  "$schema": "https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/core/Alert.schema.json",
-  "alert_datetime": "2024-07-25T15:50:35.792451Z"
-}
-```
+<SampleHeartbeat />
 
 ### I have an intermittent or flaky Internet connection. How do I ensure that my Kafka client script won't miss messages?
 
