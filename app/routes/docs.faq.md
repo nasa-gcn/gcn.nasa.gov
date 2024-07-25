@@ -58,6 +58,23 @@ Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP c
   </tbody>
 </table>
 
+### How can I tell that my Kafka client is working?
+
+Subscribe to the topic `gcn.heartbeat`, which broadcasts a test message approximately once a second. The contents of the heartbeat messages looks like this:
+
+```json
+{
+  "$schema": "https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/core/Alert.schema.json",
+  "alert_datetime": "2024-07-25T15:50:35.792451Z"
+}
+```
+
+### I have an intermittent or flaky Internet connection. How do I ensure that my Kafka client script won't miss messages?
+
+A common mistake that we see is that users stop and restart their Kafka client script to try to resolve connectivity issues. We do not recommend this.
+
+Instead, simply leave your client script running. As long as you leave your client running, the GCN Kafka broker will remember the last record that it sent to you by saving your [consumer offset](https://docs.confluent.io/platform/current/clients/consumer.html#offset-management). Shortly after your Internet connection stabilizes, the broker will send your client any messages that were queued while your connection was down.
+
 ### What does the warning `Subscribed topic not available: gcn.classic.text.AGILE_GRB_GROUND: Broker: Unknown topic or partition'` mean?
 
 This warning means that there have not been any recent alerts on that topic.
