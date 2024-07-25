@@ -29,7 +29,9 @@ function humanizedRate(rate: number, singular: string, plural?: string) {
   let unit = 'day'
   if (rate) {
     for (const { factor, unit: proposedUnit } of [
-      { factor: 1, unit: 'day' },
+      { factor: 1 / 86400, unit: 'second' },
+      { factor: 3600, unit: 'hour' },
+      { factor: 24, unit: 'day' },
       { factor: 7, unit: 'week' },
       { factor: 4, unit: 'month' },
       { factor: 12, unit: 'year' },
@@ -193,6 +195,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 
 const JsonNoticeTypes: { [key: string]: string[] } = {
   Circulars: ['gcn.circulars'],
+  Heartbeat: ['gcn.heartbeat'],
   IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
@@ -201,6 +204,7 @@ const JsonNoticeTypes: { [key: string]: string[] } = {
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   Circulars: '/circulars',
+  Heartbeat: '/docs/faq#how-can-i-tell-that-my-kafka-client-is-working',
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   Swift: '/missions/swift',
