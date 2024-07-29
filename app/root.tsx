@@ -250,10 +250,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Circulars now available via Kafka and New Schema Release v4.1.0. See{' '}
+          New! Circulars over Kafka, heartbeat topic, and schema v4.1.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#circulars-are-now-available-via-kafka-and-new-schema-release-v410"
+            to="/news#circulars-are-now-available-via-kafka-new-schema-release-v410-and-heartbeat-kafka-topic"
           >
             news and announcements
           </Link>
