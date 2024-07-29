@@ -29,18 +29,19 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
-        <CollectionCalendarDate datetime={'July 29, 2024'} />
+        <CollectionCalendarDate datetime={'July 30, 2024'} />
       }
     >
       <CollectionHeading headingLevel="h3">
-        <Anchor>Circulars are Now Available via Kafka, and New Schema Release v4.1.0</Anchor>
+        <Anchor>Circulars are Now Available via Kafka, New Schema Release v4.1.0 and Heartbeat Kafka Topic</Anchor>
       </CollectionHeading>
       <CollectionDescription>
-        - **Circulars can now be streamed over Kafka in JSON format** on the topic `gcn.circulars`.  They can be added to your existing Kafka streaming codes or generated via the [QuickStart interface](/quickstart).
+        - **Stream Circulars over Kafka in JSON format** on the topic `gcn.circulars`.  Add Circulars to your existing Kafka streaming codes or generated via the [Start Streaming Interface](/quickstart).
         - **Schema v4.1.0** includes the following updates:
-          - Inclusion of [Circulars schema](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/circulars.schema.json)
-          - Inclusion of the `id` property (Event core schema) in [Einstein Probe Notices](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/einstein_probe/wxt/alert.schema.json)
-          - Modification in the [Pointing core schema](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/core/Pointing.schema.json) from `ra, dec` to `ra_pointing, dec_pointing` to remove ambiguity with source position
+          - [Circulars schema](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/circulars.schema.json).
+          - `id` property (from the Event core schema) in [Einstein Probe Notices](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/einstein_probe/wxt/alert.schema.json).
+          - [Pointing core schema](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/core/Pointing.schema.json) changed from `ra` and `dec` to `ra_pointing` and `dec_pointing` to remove ambiguity with source position.
+        - **GCN Heartbeat Kafka Topic** (`gcn.heartbeat`) broadcasts a test message approximately once a second.
       </CollectionDescription>
     </CollectionItem>
 
