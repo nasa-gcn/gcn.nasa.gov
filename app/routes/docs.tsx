@@ -177,6 +177,9 @@ export default function () {
                     <NavLink key="schema" to="notices/schema">
                       Unified Schema
                     </NavLink>,
+                    <NavLink key="healpix" to="notices/healpix">
+                      HEALPix
+                    </NavLink>,
                     <NavLink key="archive" to="notices/archive">
                       Archive
                     </NavLink>,

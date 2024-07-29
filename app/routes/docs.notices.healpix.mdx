@@ -1,0 +1,65 @@
+---
+handle:
+  breadcrumb: HEALPix Maps
+---
+
+import { Highlight } from '~/components/Highlight'
+import { Tab, Tabs } from '~/components/tabs'
+
+# HEALPix Sky Maps
+
+HEALPix stands for <b>H</b>ierarchical, <b>E</b>qual <b>A</b>rea, and iso-<b>L</b>atitude <b>Pix</b>elisation is a scheme for indexing positions on the unit sphere.
+For localization of events, the multi-messenger community uses the standard (HEALPix)[https://healpix.sourceforge.io] format with the file extension `.fits.gz`, as well as multi-resolution HEALPix format with the file extension `.multiorder.fits`. The preferred format is the multi-resolution HEALPix format, that is only format explicitly listed in the GCN.
+
+## Multi-Order Sky Maps
+
+GCN strongly encourages the use of multi-order sky maps. These are a more complex form of healpix sky maps that utilize a variable resolution, with higher probability regions having higher resolution and lower probability regions being encoded with a lower resolution. This is signicantly more efficient than single-resolution healpix sky maps with respect to storage footprint and read speed. However, interpreting these multi-order sky maps can be more complex.
+
+## Working with HEALPix Maps
+
+HEALPix data is distrubuted in standard format with the file extension '''.fits.gz'''. These files are FITS image files and can be utilized with many common FITS tools. These files usually stored as HEALPix projection,
+
+### Reading Sky Maps
+
+Sky maps can be parsed using python; to start, import a handful of packages (note: while this documentation covers the use of '''astropy-healpix''', there are several packages that are ab)
+'''
+import astropy_healpix as ah
+import numpy as np
+
+from astropy import units as u
+from astropy.table import QTable
+'''
+
+A given sky map can then be read in as
+'''
+skymap = QTable.read('skymap.multiofits)
+'''
+
+### Most Probable Sky Location
+
+The index of the highest probability point can be found by doing the following
+'''
+hp_index = np.argmax(skymap['PROBDENSITY'])
+uniq = skymap[hq_index]['UNIQ']
+
+level, ipix = ah.uniq_to_level_ipix(uniq)
+nside = ah.level_to_nside(level)
+
+ra, dec = ah.healpix_to_lonlat(ipix, nside, order='nested')
+'''
+
+### Probability Density at a Known Position
+
+Similarly,
+
+### Find the 90% Probability Region
+
+## Further documentation
+
+Additional information can be found the (LIGO website)[https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_sky maps.html#what-problem-do-multi-resolution-sky-maps-solve]
+
+## Libraries for reference
+
+(mhealpy)[https://mhealpy.readthedocs.io/en/latest/]
+
+(astropy-healpix)[https://astropy-healpix.readthedocs.io/en/latest/]
