@@ -53,6 +53,7 @@ Here is a basic schema file, `sample.schema.json`, and an example file, `sample.
             },
           ],
           properties: {
+            $schema: true,
             example_field_1: {
               type: 'string',
               description: 'A custom field that can hold text',
@@ -121,7 +122,7 @@ List of core schema to include fields from. [Browse the core schema](/docs/schem
 
 #### `properties`
 
-Optional mapping of custom, mission-specific fields. Field names should use [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each entry should at least have a description and a type. See the [list of available data types](https://json-schema.org/understanding-json-schema/reference/type.html).
+Mapping of custom, mission-specific fields. The first property, `'$schema: true'`, must be included when using `'unevaluatedProperties': false`, otherwise the inclusion of the `$schema` property in your example files will cause validation to fail. Field names should use [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each entry should at least have a description and a type. See the [list of available data types](https://json-schema.org/understanding-json-schema/reference/type.html).
 
 ## Extended Example
 
