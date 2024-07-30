@@ -29,6 +29,25 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
+        <CollectionCalendarDate datetime={'July 30, 2024'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Circulars are Now Available via Kafka, Heartbeat Kafka Topic, and Schema Release v4.1.0</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        - **Stream Circulars over Kafka in JSON format** on the topic `gcn.circulars`.  Add Circulars to your existing Kafka streaming codes or generated via the [Start Streaming GCN Notices interface](/quickstart).
+        - **GCN Heartbeat Kafka Topic** (`gcn.heartbeat`) broadcasts a test message approximately once a second.
+        - **Schema v4.1.0** includes the following updates:
+          - [Circulars schema](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/circulars.schema.json).
+          - `id` property (from the Event core schema) in [Einstein Probe Notices](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/einstein_probe/wxt/alert.schema.json).
+          - [Pointing core schema](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/core/Pointing.schema.json) changed from `ra` and `dec` to `ra_pointing` and `dec_pointing` to remove ambiguity with source position.
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
         <CollectionCalendarDate datetime={'May 29, 2024'} />
       }
     >
