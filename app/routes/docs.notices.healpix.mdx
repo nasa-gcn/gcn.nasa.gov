@@ -21,8 +21,9 @@ HEALPix data is distrubuted in standard format with the file extension `.fits.gz
 
 ### Reading Sky Maps
 
-Sky maps can be parsed using python; to start, import a handful of packages (note: while this documentation covers the use of ```astropy-healpix```, there are several packages that are ab)
-```
+Sky maps can be parsed using python; to start, import a handful of packages (note: while this documentation covers the use of `astropy-healpix`, there are several packages that are ab)
+
+```python
 import astropy_healpix as ah
 import numpy as np
 
@@ -31,14 +32,16 @@ from astropy.table import QTable
 ```
 
 A given sky map can then be read in as
-```
+
+```python
 skymap = QTable.read('skymap.multiofits)
 ```
 
 ### Most Probable Sky Location
 
 The index of the highest probability point can be found by doing the following
-```
+
+```python
 hp_index = np.argmax(skymap['PROBDENSITY'])
 uniq = skymap[hq_index]['UNIQ']
 
@@ -53,6 +56,31 @@ ra, dec = ah.healpix_to_lonlat(ipix, nside, order='nested')
 Similarly,
 
 ### Find the 90% Probability Region
+
+The estimation of a 90% probability region, involves sorting the pixel, calculating the area of each pixel, and then proceeding by the probability of each pixel.
+
+```python
+#Sort the pixels by decending probability density
+skymap.sort('PROBDENSITY', reverse=True)
+
+#Area of each pixel
+level, ipix = ah.uniq_to_level_ipix(skymap['UNIQ'])
+pixel_area = ah.nside_to_pixel_area(ah.level_to_nside(level))
+
+#Pixel area times the probability
+prob = pixel_area * skymap['PROBDENSITY']
+
+#Cummulative sum of probability
+cumprob = np.cumsum(prob)
+
+#Pixels for which cummulative is 0.9
+i = cumprob.searchsorted(0.9)
+
+#Sum of the areas of the pixels up to that one
+area_90 = pixel_area[:i].sum()
+area_90.to_value(u.deg**2)
+
+```
 
 ## Further documentation
 
