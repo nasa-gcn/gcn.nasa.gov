@@ -17,28 +17,28 @@ GCN strongly encourages the use of multi-order sky maps. These are a more comple
 
 ## Working with HEALPix Maps
 
-HEALPix data is distrubuted in standard format with the file extension '''.fits.gz'''. These files are FITS image files and can be utilized with many common FITS tools. These files usually stored as HEALPix projection,
+HEALPix data is distrubuted in standard format with the file extension ```.fits.gz```. These files are FITS image files and can be utilized with many common FITS tools. These files usually stored as HEALPix projection,
 
 ### Reading Sky Maps
 
-Sky maps can be parsed using python; to start, import a handful of packages (note: while this documentation covers the use of '''astropy-healpix''', there are several packages that are ab)
-'''
+Sky maps can be parsed using python; to start, import a handful of packages (note: while this documentation covers the use of ```astropy-healpix```, there are several packages that are ab)
+```
 import astropy_healpix as ah
 import numpy as np
 
 from astropy import units as u
 from astropy.table import QTable
-'''
+```
 
 A given sky map can then be read in as
-'''
+```
 skymap = QTable.read('skymap.multiofits)
-'''
+```
 
 ### Most Probable Sky Location
 
 The index of the highest probability point can be found by doing the following
-'''
+```
 hp_index = np.argmax(skymap['PROBDENSITY'])
 uniq = skymap[hq_index]['UNIQ']
 
@@ -46,7 +46,7 @@ level, ipix = ah.uniq_to_level_ipix(uniq)
 nside = ah.level_to_nside(level)
 
 ra, dec = ah.healpix_to_lonlat(ipix, nside, order='nested')
-'''
+```
 
 ### Probability Density at a Known Position
 
