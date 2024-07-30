@@ -1,8 +1,21 @@
+---
+handle:
+  breadcrumb: Lucene Search
+---
+
 import { feature } from '~/lib/env.server'
 
 export function loader() {
   if (feature('CIRCULARS_LUCENE')) return null
   else throw new Response(null, { status: 404 })
-
-
 }
+
+# Lucene Search
+
+The Circulars Archive now has a full-text search feature that allows for specifying the field a search term should match. The search feature uses the [Lucene query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html) to specify the field and search term. The search feature supports the following fields:
+
+- Subject: `subject`
+- Body: `body`
+- Submitter: `submitter`
+
+By default, a query that does not contain lucene syntax will attempt to match the query against all 3 fields. For example, the query 'SWIFT' will match any circular that contains the word 'SWIFT' in the subject, body, or submitter fields, whereas the query 'subect:SWIFT' will only match circulars where the subject contains the word 'SWIFT'.
