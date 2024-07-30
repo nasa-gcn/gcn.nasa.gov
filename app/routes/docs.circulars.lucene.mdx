@@ -1,0 +1,8 @@
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  if (feature('CIRCULARS_LUCENE')) return null
+  else throw new Response(null, { status: 404 })
+
+
+}
