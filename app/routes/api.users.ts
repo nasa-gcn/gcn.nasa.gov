@@ -11,32 +11,29 @@ export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const filter = getFormDataString(data, 'filter')
   const groupFilter = getFormDataString(data, 'group')
-  console.log('filter: ', filter)
-  console.log('group: ', groupFilter)
   let users: UserLookup[] = []
-
   if (filter?.length) {
     if (groupFilter) {
-      users = (await listUsersInGroup(groupFilter)).map((x) => {
-        return {
-          sub: x.Attributes?.find((x) => x.Name == 'sub')?.Value,
-          email: x.Attributes?.find((x) => x.Name == 'email')?.Value ?? '',
-          name: x.Attributes?.find((x) => x.Name == 'name')?.Value,
-          affiliation: x.Attributes?.find((x) => x.Name == 'affilitation')
-            ?.Value,
-        }
-      })
+      users = (await listUsersInGroup(groupFilter))
+        .map((x) => {
+          return {
+            sub: x.Attributes?.find((x) => x.Name == 'sub')?.Value,
+            email: x.Attributes?.find((x) => x.Name == 'email')?.Value ?? '',
+            name: x.Attributes?.find((x) => x.Name == 'name')?.Value,
+            affiliation: x.Attributes?.find((x) => x.Name == 'affilitation')
+              ?.Value,
+          }
+        })
+        .filter(
+          ({ name, email }) =>
+            email !== undefined &&
+            (name?.toLowerCase().includes(filter.toLowerCase()) ||
+              email?.toLowerCase().includes(filter.toLowerCase()))
+        )
+        .slice(0, 5)
     } else {
       users = await listUsers(filter)
-      console.log(users)
     }
-    users
-      .filter(
-        ({ name, email }) =>
-          email !== undefined &&
-          (name?.includes(filter) || email?.includes(filter))
-      )
-      .slice(0, 5)
   }
 
   return {

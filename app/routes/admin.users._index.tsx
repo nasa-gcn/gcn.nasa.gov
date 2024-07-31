@@ -42,7 +42,7 @@ export default function () {
             setUserSub(selectedItem?.sub ?? '')
           }
         />
-        <Button type="submit" disabled={!userSub}>
+        <Button type="submit" className="margin-y-1" disabled={!userSub}>
           Edit
         </Button>
       </Form>

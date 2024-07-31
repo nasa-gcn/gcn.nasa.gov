@@ -103,12 +103,12 @@ export async function listUsers(filterString: string) {
           .filter(
             (user) =>
               Boolean(extractAttribute(user.Attributes, 'email')) &&
-              (extractAttribute(user.Attributes, 'name')?.includes(
-                filterString
-              ) ||
-                extractAttribute(user.Attributes, 'email')?.includes(
-                  filterString
-                ))
+              (extractAttribute(user.Attributes, 'name')
+                ?.toLowerCase()
+                .includes(filterString.toLowerCase()) ||
+                extractAttribute(user.Attributes, 'email')
+                  ?.toLowerCase()
+                  .includes(filterString.toLowerCase()))
           )
           .map((user) => ({
             sub: extractAttributeRequired(user.Attributes, 'sub'),
