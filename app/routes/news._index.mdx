@@ -37,7 +37,7 @@ import { Anchor } from '~/components/Anchor'
       </CollectionHeading>
       <CollectionDescription>
         - **Stream Circulars over Kafka in JSON format** on the topic `gcn.circulars`.  Add Circulars to your existing Kafka streaming codes or generated via the [Start Streaming GCN Notices interface](/quickstart).
-        - **GCN Heartbeat Kafka Topic** (`gcn.heartbeat`) broadcasts a test message approximately once a second.
+        - [**GCN Heartbeat Kafka Topic**](docs/faq#how-can-i-tell-that-my-kafka-client-is-working) (`gcn.heartbeat`) broadcasts a test message approximately once a second that can be used to test your Kafka connection.
         - **Schema v4.1.0** includes the following updates:
           - [Circulars schema](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/circulars.schema.json).
           - `id` property (from the Event core schema) in [Einstein Probe Notices](https://gcn.nasa.gov/docs/schema/v4.1.0/gcn/notices/einstein_probe/wxt/alert.schema.json).
