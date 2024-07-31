@@ -15,9 +15,10 @@ import type {
 } from 'aws-lambda'
 
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
-import type { Synonym } from '~/routes/synonyms/synonyms.lib'
+import type { Synonym, SynonymGroup } from '~/routes/synonyms/synonyms.lib'
+import { getSynonymsByUuid } from '~/routes/synonyms/synonyms.server'
 
-const index = 'synonyms'
+const index = 'synonym-groups'
 
 function unmarshallTrigger(item?: Record<string, LambdaTriggerAttributeValue>) {
   return unmarshall(item as Record<string, AttributeValue>)
@@ -34,26 +35,31 @@ async function removeIndex(id: string) {
   }
 }
 
-async function putIndex(synonym: Synonym) {
+async function putIndex(synonymGroup: SynonymGroup) {
   const client = await getSearchClient()
   await client.index({
     index,
-    body: synonym,
+    id: synonymGroup.synonymId,
+    body: synonymGroup,
   })
 }
 
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
-    const id = unmarshallTrigger(dynamodb!.Keys).id as string
+    if (!eventName || !dynamodb) return
     const promises = []
-
-    if (eventName === 'REMOVE') {
+    const id = unmarshallTrigger(dynamodb!.Keys).synonymId
+    const synonym = unmarshallTrigger(dynamodb!.NewImage) as Synonym
+    const dynamoSynonyms = await getSynonymsByUuid(synonym.synonymId)
+    const group = {
+      synonymId: synonym.synonymId,
+      eventIds: dynamoSynonyms.map((synonym) => synonym.eventId),
+    }
+    if (eventName === 'REMOVE' && group.eventIds.length === 0) {
       promises.push(removeIndex(id))
     } /* (eventName === 'INSERT' || eventName === 'MODIFY') */ else {
-      const synonym = unmarshallTrigger(dynamodb!.NewImage) as Synonym
-      promises.push(putIndex(synonym))
+      promises.push(putIndex(group))
     }
-
     await Promise.all(promises)
   }
 )
