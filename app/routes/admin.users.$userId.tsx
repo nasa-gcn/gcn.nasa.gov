@@ -8,16 +8,21 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, Checkbox } from '@trussworks/react-uswds'
-import { useState } from 'react'
 
 import { getUser } from './_auth/user.server'
 import {
   addUserToGroup,
-  allGroupNames,
   getCognitoUserFromSub,
+  getGroups,
   listGroupsForUser,
   removeUserFromGroup,
 } from '~/lib/cognito.server'
+
+interface GroupSelectionItem {
+  groupName: string
+  selected: boolean
+  description: string
+}
 
 export async function loader({
   params: { userId },
@@ -32,18 +37,29 @@ export async function loader({
   const userGroups = (await listGroupsForUser(user.Username)).map(
     (group) => group.GroupName
   )
-  const allGroups = await allGroupNames()
-  return { user, allGroups, userGroups }
+  const allGroups: GroupSelectionItem[] = (await getGroups())
+    .map((x) => {
+      return {
+        groupName: x.GroupName ?? '',
+        selected: userGroups.includes(x.GroupName),
+        description: x.Description ?? '',
+      }
+    })
+    .filter((x) => Boolean(x.groupName))
+  return { user, allGroups }
 }
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({
+  request,
+  params: { userId },
+}: ActionFunctionArgs) {
   const user = await getUser(request)
   if (!user?.groups.includes('gcn.nasa.gov/gcn-admin'))
     throw new Response(null, { status: 403 })
   const data = await request.formData()
-  const { Username, ...selectedGroups } = Object.fromEntries(data)
-  if (!Username) throw new Response(null, { status: 400 })
-  const currentUserGroups = (await listGroupsForUser(Username.toString())).map(
+  const { ...selectedGroups } = Object.fromEntries(data)
+  if (!userId) throw new Response(null, { status: 400 })
+  const currentUserGroups = (await listGroupsForUser(userId)).map(
     (x) => x.GroupName
   ) as string[]
   const selectedGroupsNames = Object.keys(selectedGroups)
@@ -51,39 +67,34 @@ export async function action({ request }: ActionFunctionArgs) {
   await Promise.all([
     ...selectedGroupsNames
       .filter((x) => !currentUserGroups.includes(x))
-      .map((x) => addUserToGroup(Username.toString(), x)),
+      .map((x) => addUserToGroup(userId, x)),
     ...currentUserGroups
       .filter((x) => !selectedGroupsNames.includes(x))
-      .map((x) => removeUserFromGroup(Username.toString(), x)),
+      .map((x) => removeUserFromGroup(userId, x)),
   ])
 
   return null
 }
 
 export default function () {
-  const { user, allGroups, userGroups } = useLoaderData<typeof loader>()
+  const { user, allGroups } = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
 
   return (
     <>
       <h1>Manage User Settings</h1>
       {user.Attributes?.find((x) => x.Name == 'email')?.Value}
-      <h2>Groups</h2>
       <fetcher.Form method="POST">
-        <input
-          type="hidden"
-          name="Username"
-          id="Username"
-          value={user.Username}
-        />
-        {allGroups.map(
-          (groupName) =>
-            groupName && (
-              <div key={groupName}>
-                <GroupsCheckbox userGroups={userGroups} groupName={groupName} />
-              </div>
-            )
-        )}
+        <h2>Groups</h2>
+        {allGroups.map(({ groupName, description, selected }) => (
+          <div key={groupName}>
+            <GroupsCheckbox
+              groupName={groupName}
+              description={description}
+              selected={selected}
+            />
+          </div>
+        ))}
         <Button type="submit">Save</Button>
       </fetcher.Form>
     </>
@@ -91,21 +102,21 @@ export default function () {
 }
 
 function GroupsCheckbox({
-  userGroups,
   groupName,
+  description,
+  selected,
 }: {
-  userGroups: string[]
   groupName: string
+  description: string
+  selected: boolean
 }) {
-  const [checked, setChecked] = useState(userGroups.includes(groupName))
-
   return (
     <Checkbox
       id={groupName}
       name={groupName}
       label={groupName}
-      checked={checked}
-      onChange={() => setChecked(!checked)}
+      defaultChecked={selected}
+      labelDescription={description}
     />
   )
 }

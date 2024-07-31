@@ -26,17 +26,10 @@ import {
   paginateListUsersInGroup,
 } from '@aws-sdk/client-cognito-identity-provider'
 
+import type { User } from '~/routes/_auth/user.server'
+
 export const cognito = new CognitoIdentityProviderClient({})
 const UserPoolId = process.env.COGNITO_USER_POOL_ID
-
-export interface UserData {
-  email: string
-  sub?: string
-  name?: string
-  affiliation?: string
-  receive?: boolean
-  submit?: boolean
-}
 
 /**
  * Returns the value of a specified Attribute if it exists on a user object
@@ -94,20 +87,29 @@ export async function getCognitoUserFromSub(sub: string) {
   return user
 }
 
-export async function listUsers() {
+export async function listUsers(filterString: string) {
   const pages = paginateListUsers(
     { client: cognito },
     {
       UserPoolId,
     }
   )
-  const users: UserData[] = []
+  const users: Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[] = []
   for await (const page of pages) {
     const nextUsers = page.Users
     if (nextUsers)
       users.push(
         ...nextUsers
-          .filter((user) => Boolean(extractAttribute(user.Attributes, 'email')))
+          .filter(
+            (user) =>
+              Boolean(extractAttribute(user.Attributes, 'email')) &&
+              (extractAttribute(user.Attributes, 'name')?.includes(
+                filterString
+              ) ||
+                extractAttribute(user.Attributes, 'email')?.includes(
+                  filterString
+                ))
+          )
           .map((user) => ({
             sub: extractAttributeRequired(user.Attributes, 'sub'),
             email: extractAttributeRequired(user.Attributes, 'email'),
@@ -180,17 +182,13 @@ export async function getGroups() {
   const groups: GroupType[] = []
   for await (const page of pages) {
     const nextGroups = page.Groups
-    if (nextGroups) groups.push(...nextGroups)
+    if (nextGroups)
+      groups.push(
+        ...nextGroups.filter((group) => group.GroupName !== undefined)
+      )
   }
 
   return groups
-}
-
-export async function allGroupNames(): Promise<string[]> {
-  const names = (await getGroups())
-    .map((group) => group.GroupName)
-    .filter((group) => typeof group === 'string') as string[]
-  return names
 }
 
 export async function updateGroup(GroupName: string, Description: string) {
