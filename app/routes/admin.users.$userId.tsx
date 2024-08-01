@@ -33,8 +33,7 @@ export async function loader({
     throw new Response(null, { status: 403 })
   if (!userId) throw new Response(null, { status: 404 })
   const user = await getCognitoUserFromSub(userId)
-  if (!user.Username) throw new Response(null, { status: 400 })
-  const userGroups = (await listGroupsForUser(user.Username)).map(
+  const userGroups = (await listGroupsForUser(userId)).map(
     (group) => group.GroupName
   )
   const allGroups: GroupSelectionItem[] = (await getGroups())
@@ -95,7 +94,9 @@ export default function () {
             />
           </div>
         ))}
-        <Button type="submit">Save</Button>
+        <Button type="submit" disabled={fetcher.state === 'submitting'}>
+          Save
+        </Button>
       </fetcher.Form>
     </>
   )

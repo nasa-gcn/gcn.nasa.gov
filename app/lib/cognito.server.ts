@@ -184,7 +184,11 @@ export async function getGroups() {
     const nextGroups = page.Groups
     if (nextGroups)
       groups.push(
-        ...nextGroups.filter((group) => group.GroupName !== undefined)
+        ...nextGroups.filter(
+          (group) =>
+            group.GroupName !== undefined &&
+            !group.GroupName.startsWith('us-east-1')
+        )
       )
   }
 
@@ -208,7 +212,8 @@ export async function deleteGroup(GroupName: string) {
   await cognito.send(command)
 }
 
-export async function addUserToGroup(Username: string, GroupName: string) {
+export async function addUserToGroup(sub: string, GroupName: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
   const command = new AdminAddUserToGroupCommand({
     UserPoolId,
     Username,
@@ -217,7 +222,8 @@ export async function addUserToGroup(Username: string, GroupName: string) {
   await cognito.send(command)
 }
 
-export async function listGroupsForUser(Username: string) {
+export async function listGroupsForUser(sub: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
   const pages = paginateAdminListGroupsForUser(
     { client: cognito },
     { UserPoolId, Username }
@@ -238,7 +244,8 @@ export async function getUserGroupStrings(Username: string) {
     | undefined
 }
 
-export async function removeUserFromGroup(Username: string, GroupName: string) {
+export async function removeUserFromGroup(sub: string, GroupName: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
   const command = new AdminRemoveUserFromGroupCommand({
     UserPoolId,
     Username,
