@@ -1,19 +1,34 @@
 import type { ActionFunctionArgs } from '@remix-run/node'
 
 import { getUser } from './_auth/user.server'
+import { adminGroup } from './admin'
+import { submitterGroup } from './circulars/circulars.server'
 import type { UserLookup } from '~/components/UserLookup'
-import { listUsers, listUsersInGroup } from '~/lib/cognito.server'
+import {
+  checkUserIsVerified,
+  listUsers,
+  listUsersInGroup,
+} from '~/lib/cognito.server'
 import { getFormDataString } from '~/lib/utils'
+
+// Groups verified users are allowed to search
+const filterableGroups = [submitterGroup]
 
 export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
+  const userIsAdmin = user.groups.includes(adminGroup)
+  const userIsVerified = await checkUserIsVerified(user.sub)
   const data = await request.formData()
   const filter = getFormDataString(data, 'filter')
   const groupFilter = getFormDataString(data, 'group')
   let users: UserLookup[] = []
   if (filter?.length) {
-    if (groupFilter) {
+    if (
+      groupFilter &&
+      ((filterableGroups.includes(groupFilter) && userIsVerified) ||
+        userIsAdmin)
+    ) {
       users = (await listUsersInGroup(groupFilter))
         .map((x) => {
           return {
@@ -31,7 +46,7 @@ export async function action({ request }: ActionFunctionArgs) {
               email?.toLowerCase().includes(filter.toLowerCase()))
         )
         .slice(0, 5)
-    } else {
+    } else if (userIsAdmin) {
       users = await listUsers(filter)
     }
   }

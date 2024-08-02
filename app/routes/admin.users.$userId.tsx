@@ -10,6 +10,7 @@ import { useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, Checkbox } from '@trussworks/react-uswds'
 
 import { getUser } from './_auth/user.server'
+import { adminGroup } from './admin'
 import {
   addUserToGroup,
   getCognitoUserFromSub,
@@ -20,7 +21,7 @@ import {
 
 interface GroupSelectionItem {
   groupName: string
-  selected: boolean
+  defaultChecked: boolean
   description: string
 }
 
@@ -29,7 +30,7 @@ export async function loader({
   request,
 }: LoaderFunctionArgs) {
   const currentUser = await getUser(request)
-  if (!currentUser?.groups.includes('gcn.nasa.gov/gcn-admin'))
+  if (!currentUser?.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
   if (!userId) throw new Response(null, { status: 404 })
   const user = await getCognitoUserFromSub(userId)
@@ -40,7 +41,7 @@ export async function loader({
     .map((x) => {
       return {
         groupName: x.GroupName ?? '',
-        selected: userGroups.includes(x.GroupName),
+        defaultChecked: userGroups.includes(x.GroupName),
         description: x.Description ?? '',
       }
     })
@@ -53,7 +54,7 @@ export async function action({
   params: { userId },
 }: ActionFunctionArgs) {
   const user = await getUser(request)
-  if (!user?.groups.includes('gcn.nasa.gov/gcn-admin'))
+  if (!user?.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
   const data = await request.formData()
   const { ...selectedGroups } = Object.fromEntries(data)
@@ -85,12 +86,12 @@ export default function () {
       {user.Attributes?.find((x) => x.Name == 'email')?.Value}
       <fetcher.Form method="POST">
         <h2>Groups</h2>
-        {allGroups.map(({ groupName, description, selected }) => (
+        {allGroups.map(({ groupName, description, defaultChecked }) => (
           <div key={groupName}>
             <GroupsCheckbox
               groupName={groupName}
               description={description}
-              selected={selected}
+              defaultChecked={defaultChecked}
             />
           </div>
         ))}
@@ -105,18 +106,18 @@ export default function () {
 function GroupsCheckbox({
   groupName,
   description,
-  selected,
+  defaultChecked,
 }: {
   groupName: string
   description: string
-  selected: boolean
+  defaultChecked: boolean
 }) {
   return (
     <Checkbox
       id={groupName}
       name={groupName}
       label={groupName}
-      defaultChecked={selected}
+      defaultChecked={defaultChecked}
       labelDescription={description}
     />
   )

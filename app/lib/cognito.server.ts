@@ -13,6 +13,7 @@ import type {
 } from '@aws-sdk/client-cognito-identity-provider'
 import {
   AdminAddUserToGroupCommand,
+  AdminGetUserCommand,
   AdminRemoveUserFromGroupCommand,
   CognitoIdentityProviderClient,
   CreateGroupCommand,
@@ -242,6 +243,18 @@ export async function getUserGroupStrings(Username: string) {
   return Groups?.map(({ GroupName }) => GroupName).filter(Boolean) as
     | string[]
     | undefined
+}
+
+export async function checkUserIsVerified(sub: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
+
+  const { UserAttributes } = await cognito.send(
+    new AdminGetUserCommand({
+      UserPoolId,
+      Username,
+    })
+  )
+  return extractAttribute(UserAttributes, 'email_verified')
 }
 
 export async function removeUserFromGroup(sub: string, GroupName: string) {

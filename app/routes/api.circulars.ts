@@ -15,7 +15,7 @@ import invariant from 'tiny-invariant'
 
 import { getOpenIDClient } from './_auth/auth.server'
 import { type User, parseGroups, parseIdp } from './_auth/user.server'
-import { group, put } from './circulars/circulars.server'
+import { put, submitterGroup } from './circulars/circulars.server'
 import {
   cognito,
   extractAttribute,
@@ -166,7 +166,7 @@ export async function action({ request }: ActionFunctionArgs) {
   } = await parseAccessToken(bearer)
 
   // Make sure that the access token contains the required scope for this API
-  if (!scope.split(' ').includes(group))
+  if (!scope.split(' ').includes(submitterGroup))
     throw new Response('Invalid scope', { status: 403 })
 
   const [{ existingIdp, ...attrs }, groups] = await Promise.all([

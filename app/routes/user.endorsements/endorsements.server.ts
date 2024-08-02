@@ -14,7 +14,7 @@ import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { dedent } from 'ts-dedent'
 
 import { clearUserToken, getUser } from '../_auth/user.server'
-import { group } from '../circulars/circulars.server'
+import { submitterGroup } from '../circulars/circulars.server'
 import {
   cognito,
   extractAttribute,
@@ -65,7 +65,7 @@ export class EndorsementsServer {
   }
 
   userIsSubmitter() {
-    return this.#currentUserGroups.includes(group)
+    return this.#currentUserGroups.includes(submitterGroup)
   }
 
   static async create(request: Request) {
@@ -105,7 +105,7 @@ export class EndorsementsServer {
       })
     )
 
-    if (!Groups?.find(({ GroupName }) => GroupName === group))
+    if (!Groups?.find(({ GroupName }) => GroupName === submitterGroup))
       throw new Response('User is not in the submitters group', {
         status: 400,
       })
@@ -362,7 +362,7 @@ export class EndorsementsServer {
       new AdminAddUserToGroupCommand({
         Username,
         UserPoolId: process.env.COGNITO_USER_POOL_ID,
-        GroupName: group,
+        GroupName: submitterGroup,
       })
     )
   }
@@ -371,7 +371,7 @@ export class EndorsementsServer {
 async function getUsersInGroup(): Promise<EndorsementUser[]> {
   let users
   try {
-    users = await listUsersInGroup(group)
+    users = await listUsersInGroup(submitterGroup)
   } catch (error) {
     maybeThrow(error, 'returning fake users')
     return [

@@ -12,12 +12,13 @@ import { Button, Label } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 import { getUser } from './_auth/user.server'
-import UserLookupComboBox from '~/components/UserLookup'
+import { adminGroup } from './admin'
+import { UserLookupComboBox } from '~/components/UserLookup'
 import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
-  if (!user?.groups.includes('gcn.nasa.gov/gcn-admin'))
+  if (!user?.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
   return null
 }

@@ -11,9 +11,11 @@ import { GridContainer, SideNav } from '@trussworks/react-uswds'
 
 import { getUser } from './_auth/user.server'
 
+export const adminGroup = 'gcn.nasa.gov/gcn-admin'
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
-  if (!user?.groups.includes('gcn.nasa.gov/gcn-admin'))
+  if (!user?.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
   return null
 }

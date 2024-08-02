@@ -22,7 +22,7 @@ import { useResizeObserver } from 'usehooks-ts'
 import type { EndorsementRequest, EndorsementRole } from './endorsements.server'
 import { EndorsementsServer } from './endorsements.server'
 import SegmentedCards from '~/components/SegmentedCards'
-import UserLookupComboBox from '~/components/UserLookup'
+import { UserLookupComboBox } from '~/components/UserLookup'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -379,7 +379,6 @@ export function EndorsementRequestForm() {
             group="gcn.nasa.gov/circular-submitter"
             className="maxw-full"
             disabled={submitting}
-            ref={ref}
             onSelectedItemChange={({ selectedItem }) =>
               setEndorserSub(selectedItem?.sub ?? '')
             }
