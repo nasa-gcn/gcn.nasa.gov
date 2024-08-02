@@ -3,6 +3,8 @@ handle:
   breadcrumb: Sample Code
 ---
 
+import { Highlight } from '~/components/Highlight'
+
 # Sample Code
 
 Here is a collection of functions and example code that may be useful
@@ -164,3 +166,62 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
             continue
     print(message.value())
 ```
+
+# Working With JSON Schema
+
+GCN Notices are distributed in JSON format, this guide describes how to handle JSON data using a schema.
+
+## Parsing JSON Notices
+
+Read the JSON data from [sample.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [sample.example.json](https://gcn.nasa.gov/docs/notices/schema), parses it into Python dictionaries.
+
+```python
+import json
+
+# Load and parse schema and example JSON files
+with open('sample.schema.json', 'r') as schema_file:
+    schema = json.load(schema_file)
+
+with open('sample.example.json', 'r') as example_file:
+    example = json.load(example_file)
+
+print('Schema:', schema)
+print('Example:', example)
+```
+
+## Encoding and Decoding of Embedded Data
+
+The following code sample shows how to encode/decode a file in Python. The `base64` package includes the methods `b64decode` and `b64encode` to make this task simple.
+
+```python
+import base64
+
+# Parse the content of your file to a base64 encoded string:
+with open("path/to/your/file", 'rb') as file:
+    encoded_string = base64.b64encode(file.read())
+
+print(encoded_string)
+# b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
+
+# Decode and write the content to a local file:
+with open("path/to/destination/file", 'wb') as file:
+    file.write(base64.b64decode(encoded_string))
+
+```
+
+For example, if we wanted to include a FITS file in a notice, you would need to add a property to your schema definition and define the value to be the following:
+
+<Highlight
+language="json"
+code={JSON.stringify(
+{
+type: 'string',
+contentEncoding: 'base64',
+contentMediaType: 'image/fits',
+},
+null,
+2
+)}
+/>
+
+Then in your data production pipeline, you can use the encoding steps to convert your file to a bytestring, and set the value of the property to said bytestring. See [non JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html) for more information.
