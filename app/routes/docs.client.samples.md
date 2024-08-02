@@ -3,6 +3,9 @@ handle:
   breadcrumb: Sample Code
 ---
 
+import { Highlight } from '~/components/Highlight'
+import { Tab, Tabs } from '~/components/tabs'
+
 # Sample Code
 
 Here is a collection of functions and example code that may be useful
@@ -164,16 +167,6 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
             continue
     print(message.value())
 ```
-
----
-
-handle:
-breadcrumb: HEALPix Maps
-
----
-
-import { Highlight } from '~/components/Highlight'
-import { Tab, Tabs } from '~/components/tabs'
 
 ## HEALPix Sky Maps
 
