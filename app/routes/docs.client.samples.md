@@ -209,7 +209,7 @@ with open("path/to/destination/file", 'wb') as file:
 
 ```
 
-For example, if we wanted to include a FITS file in a notice, you would need to add a property to your schema definition and define the value to be the following:
+If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
 
 <Highlight
 language="json"
