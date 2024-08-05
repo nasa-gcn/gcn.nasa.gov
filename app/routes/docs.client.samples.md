@@ -224,4 +224,4 @@ null,
 )}
 />
 
-Then in your data production pipeline, you can use the encoding steps to convert your file to a bytestring, and set the value of the property to said bytestring. See [non JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html) for more information.
+In your data production pipeline, you can use the encoding steps to convert your file to a bytestring and set the value of the property to this bytestring. See [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html) for more information.
