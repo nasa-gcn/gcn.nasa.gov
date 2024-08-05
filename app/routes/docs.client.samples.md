@@ -173,7 +173,7 @@ GCN Notices are distributed in JSON format, this guide describes how to handle J
 
 ## Parsing JSON Notices
 
-Read the JSON data from [sample.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [sample.example.json](https://gcn.nasa.gov/docs/notices/schema), parses it into Python dictionaries.
+Read the JSON data from [sample.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [sample.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
 
 ```python
 import json
