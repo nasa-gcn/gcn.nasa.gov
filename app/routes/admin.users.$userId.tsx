@@ -13,6 +13,7 @@ import { getUser } from './_auth/user.server'
 import { adminGroup } from './admin'
 import {
   addUserToGroup,
+  gcnGroupPrefix,
   getCognitoUserFromSub,
   getGroups,
   listGroupsForUser,
@@ -66,10 +67,14 @@ export async function action({
 
   await Promise.all([
     ...selectedGroupsNames
-      .filter((x) => !currentUserGroups.includes(x))
+      .filter(
+        (x) => x.startsWith(gcnGroupPrefix) && !currentUserGroups.includes(x)
+      )
       .map((x) => addUserToGroup(userId, x)),
     ...currentUserGroups
-      .filter((x) => !selectedGroupsNames.includes(x))
+      .filter(
+        (x) => x.startsWith(gcnGroupPrefix) && !selectedGroupsNames.includes(x)
+      )
       .map((x) => removeUserFromGroup(userId, x)),
   ])
 

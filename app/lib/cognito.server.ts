@@ -29,6 +29,7 @@ import {
 
 import type { User } from '~/routes/_auth/user.server'
 
+export const gcnGroupPrefix = 'gcn.nasa.gov/'
 export const cognito = new CognitoIdentityProviderClient({})
 const UserPoolId = process.env.COGNITO_USER_POOL_ID
 
@@ -188,7 +189,7 @@ export async function getGroups() {
         ...nextGroups.filter(
           (group) =>
             group.GroupName !== undefined &&
-            !group.GroupName.startsWith('us-east-1')
+            group.GroupName.startsWith(gcnGroupPrefix)
         )
       )
   }
