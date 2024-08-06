@@ -52,7 +52,10 @@ import NewsBanner from './root/NewsBanner'
 import { type BreadcrumbHandle, Title } from './root/Title'
 import { Header } from './root/header/Header'
 import { getUser } from './routes/_auth/user.server'
-import { group, moderatorGroup } from './routes/circulars/circulars.server'
+import {
+  moderatorGroup,
+  submitterGroup,
+} from './routes/circulars/circulars.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 // FIXME: no top-level await, no import function
@@ -115,7 +118,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const idp = user?.idp
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
   const userIsMod = user?.groups.includes(moderatorGroup)
-  const userIsVerifiedSubmitter = user?.groups.includes(group)
+  const userIsVerifiedSubmitter = user?.groups.includes(submitterGroup)
 
   return {
     origin,

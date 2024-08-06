@@ -26,7 +26,7 @@ import {
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { hostname, origin } from '~/lib/env.server'
-import { group, putRaw } from '~/routes/circulars/circulars.server'
+import { putRaw, submitterGroup } from '~/routes/circulars/circulars.server'
 
 interface UserData {
   email: string
@@ -120,7 +120,7 @@ export const handler = createEmailIncomingMessageHandler(
 async function getCognitoUserData(
   userEmail: string
 ): Promise<UserData | undefined> {
-  const users = await listUsersInGroup(group)
+  const users = await listUsersInGroup(submitterGroup)
   const Attributes = users.find(
     ({ Attributes }) =>
       extractAttributeRequired(Attributes, 'email') == userEmail
