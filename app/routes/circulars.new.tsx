@@ -18,7 +18,7 @@ import {
 import { getUser } from './_auth/user.server'
 import { CircularEditForm } from './circulars.edit.$circularId/CircularEditForm'
 import { formatAuthor } from './circulars/circulars.lib'
-import { group } from './circulars/circulars.server'
+import { submitterGroup } from './circulars/circulars.server'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
@@ -34,7 +34,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let isAuthenticated, isAuthorized, formattedAuthor
   if (user) {
     isAuthenticated = true
-    if (user.groups.includes(group)) isAuthorized = true
+    if (user.groups.includes(submitterGroup)) isAuthorized = true
     formattedAuthor = formatAuthor(user)
   }
   return json(

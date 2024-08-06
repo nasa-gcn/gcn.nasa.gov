@@ -13,17 +13,23 @@ import type {
 } from '@aws-sdk/client-cognito-identity-provider'
 import {
   AdminAddUserToGroupCommand,
+  AdminGetUserCommand,
   AdminRemoveUserFromGroupCommand,
   CognitoIdentityProviderClient,
   CreateGroupCommand,
   DeleteGroupCommand,
   GetGroupCommand,
+  ListUsersCommand,
   UpdateGroupCommand,
   paginateAdminListGroupsForUser,
   paginateListGroups,
+  paginateListUsers,
   paginateListUsersInGroup,
 } from '@aws-sdk/client-cognito-identity-provider'
 
+import type { User } from '~/routes/_auth/user.server'
+
+export const gcnGroupPrefix = 'gcn.nasa.gov/'
 export const cognito = new CognitoIdentityProviderClient({})
 const UserPoolId = process.env.COGNITO_USER_POOL_ID
 
@@ -56,6 +62,68 @@ export function extractAttributeRequired(
   if (value === undefined)
     throw new Error(`required user attribute ${key} is missing`)
   return value
+}
+
+/**
+ * Gets another user from cognito
+ *
+ * @param sub - the sub of another user
+ * @returns a user if found, otherwise undefined
+ */
+export async function getCognitoUserFromSub(sub: string) {
+  const escapedSub = sub.replaceAll('"', '\\"')
+  const user = (
+    await cognito.send(
+      new ListUsersCommand({
+        UserPoolId,
+        Filter: `sub = "${escapedSub}"`,
+      })
+    )
+  )?.Users?.[0]
+
+  if (!user?.Username)
+    throw new Response('Requested user does not exist', {
+      status: 400,
+    })
+
+  return user
+}
+
+export async function listUsers(filterString: string) {
+  const pages = paginateListUsers(
+    { client: cognito },
+    {
+      UserPoolId,
+    }
+  )
+  const users: Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[] = []
+  for await (const page of pages) {
+    const nextUsers = page.Users
+    if (nextUsers)
+      users.push(
+        ...nextUsers
+          .filter(
+            (user) =>
+              Boolean(extractAttribute(user.Attributes, 'email')) &&
+              (extractAttribute(user.Attributes, 'name')
+                ?.toLowerCase()
+                .includes(filterString.toLowerCase()) ||
+                extractAttribute(user.Attributes, 'email')
+                  ?.toLowerCase()
+                  .includes(filterString.toLowerCase()))
+          )
+          .map((user) => ({
+            sub: extractAttributeRequired(user.Attributes, 'sub'),
+            email: extractAttributeRequired(user.Attributes, 'email'),
+            name: extractAttribute(user.Attributes, 'name'),
+            affiliation: extractAttribute(
+              user.Attributes,
+              'custom:affiliation'
+            ),
+          }))
+      )
+  }
+  return users
 }
 
 export async function listUsersInGroup(GroupName: string) {
@@ -116,7 +184,14 @@ export async function getGroups() {
   const groups: GroupType[] = []
   for await (const page of pages) {
     const nextGroups = page.Groups
-    if (nextGroups) groups.push(...nextGroups)
+    if (nextGroups)
+      groups.push(
+        ...nextGroups.filter(
+          (group) =>
+            group.GroupName !== undefined &&
+            group.GroupName.startsWith(gcnGroupPrefix)
+        )
+      )
   }
 
   return groups
@@ -139,7 +214,8 @@ export async function deleteGroup(GroupName: string) {
   await cognito.send(command)
 }
 
-export async function addUserToGroup(Username: string, GroupName: string) {
+export async function addUserToGroup(sub: string, GroupName: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
   const command = new AdminAddUserToGroupCommand({
     UserPoolId,
     Username,
@@ -148,7 +224,8 @@ export async function addUserToGroup(Username: string, GroupName: string) {
   await cognito.send(command)
 }
 
-export async function listGroupsForUser(Username: string) {
+export async function listGroupsForUser(sub: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
   const pages = paginateAdminListGroupsForUser(
     { client: cognito },
     { UserPoolId, Username }
@@ -162,7 +239,27 @@ export async function listGroupsForUser(Username: string) {
   return groups
 }
 
-export async function removeUserFromGroup(Username: string, GroupName: string) {
+export async function getUserGroupStrings(Username: string) {
+  const Groups = await listGroupsForUser(Username)
+  return Groups?.map(({ GroupName }) => GroupName).filter(Boolean) as
+    | string[]
+    | undefined
+}
+
+export async function checkUserIsVerified(sub: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
+
+  const { UserAttributes } = await cognito.send(
+    new AdminGetUserCommand({
+      UserPoolId,
+      Username,
+    })
+  )
+  return extractAttribute(UserAttributes, 'email_verified')
+}
+
+export async function removeUserFromGroup(sub: string, GroupName: string) {
+  const { Username } = await getCognitoUserFromSub(sub)
   const command = new AdminRemoveUserFromGroupCommand({
     UserPoolId,
     Username,
