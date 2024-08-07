@@ -5,23 +5,15 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { AttributeValue } from '@aws-sdk/client-dynamodb'
-import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import { errors } from '@opensearch-project/opensearch'
-import type {
-  DynamoDBRecord,
-  AttributeValue as LambdaTriggerAttributeValue,
-} from 'aws-lambda'
+import type { DynamoDBRecord } from 'aws-lambda'
 
+import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import type { Synonym } from '~/routes/synonyms/synonyms.lib'
 
 const index = 'synonyms'
-
-function unmarshallTrigger(item?: Record<string, LambdaTriggerAttributeValue>) {
-  return unmarshall(item as Record<string, AttributeValue>)
-}
 
 async function removeIndex(id: string) {
   const client = await getSearchClient()
