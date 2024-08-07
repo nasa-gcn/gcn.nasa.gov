@@ -169,7 +169,7 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 
 ## Working With JSON Schema
 
-GCN Notices are distributed in JSON format. This guide describes how to programmatically read JSON schema.
+For new missions, GCN Notices are preferably distributed in JSON format. This guide describes how to programmatically read the JSON schema.
 
 ## Parsing JSON Notices
 
