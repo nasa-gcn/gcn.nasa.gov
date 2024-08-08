@@ -5155,5 +5155,19 @@
       "requestorEmail": "example@example.com",
       "subject": "Optical Observations for GRB 971227"
     }
+  ],
+  "kafka_acls": [
+    {
+      "topicName": "test_topic_created_from_website",
+      "permissionType": "consumer",
+      "cognitoGroup": "gcn.nasa.gov/kafka-gcn-test-consumer",
+      "prefixed": false
+    },
+    {
+      "topicName": "test_topic_created_from_website",
+      "permissionType": "producer",
+      "cognitoGroup": "gcn.nasa.gov/kafka-gcn-test-producer",
+      "prefixed": false
+    }
   ]
 }
