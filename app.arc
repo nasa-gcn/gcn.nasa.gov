@@ -159,6 +159,9 @@ volumeSize 10
 dedicatedMasterCount 3
 dedicatedMasterType t3.small.search
 
+@storage-private
+notices
+
 @plugins
 plugin-remix
 sandboxOidcIdp  # Sandbox identity provider
@@ -169,3 +172,4 @@ emailOutgoing  # Grant the Lambda function permission to send email; add email t
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 architect/plugin-lambda-invoker
+architect/plugin-storage-private 
