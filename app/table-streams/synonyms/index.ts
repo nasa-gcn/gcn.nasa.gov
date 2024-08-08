@@ -39,19 +39,15 @@ async function putIndex(synonymGroup: SynonymGroup) {
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     if (!eventName || !dynamodb) return
-    const promises = []
-    const id = unmarshallTrigger(dynamodb!.Keys).synonymId
-    const synonym = unmarshallTrigger(dynamodb!.NewImage) as Synonym
-    const dynamoSynonyms = await getSynonymsByUuid(synonym.synonymId)
-    const group = {
-      synonymId: synonym.synonymId,
-      eventIds: dynamoSynonyms.map((synonym) => synonym.eventId),
+    const { synonymId } = unmarshallTrigger(dynamodb!.NewImage) as Synonym
+    const dynamoSynonyms = await getSynonymsByUuid(synonymId)
+    if (dynamoSynonyms.length > 0) {
+      await putIndex({
+        synonymId,
+        eventIds: dynamoSynonyms.map((synonym) => synonym.eventId),
+      })
+    } else {
+      await removeIndex(synonymId)
     }
-    if (eventName === 'REMOVE' && group.eventIds.length === 0) {
-      promises.push(removeIndex(id))
-    } /* (eventName === 'INSERT' || eventName === 'MODIFY') */ else {
-      promises.push(putIndex(group))
-    }
-    await Promise.all(promises)
   }
 )

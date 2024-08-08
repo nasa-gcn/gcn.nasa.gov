@@ -28,7 +28,6 @@ jest.mock('@architect/functions', () => ({
 
 const mockIndex = jest.fn()
 const mockDelete = jest.fn()
-const mockGet = jest.fn()
 const mockQuery = jest.fn()
 
 const mockStreamEvent = {
@@ -81,11 +80,9 @@ describe('testing put synonymGroup table-stream', () => {
     mockQuery.mockResolvedValue({ Items: mockItems })
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
     putData.body.eventIds = [eventId]
-    mockGet.mockResolvedValue(null)
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      get: mockGet,
     })
 
     await handler(mockStreamEvent)
@@ -106,13 +103,9 @@ describe('testing put synonymGroup table-stream', () => {
     mockQuery.mockResolvedValue({ Items: mockItems })
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
     putData.body.eventIds = [existingEventId, eventId]
-    mockGet.mockResolvedValue({
-      body: { _source: { synonymId, eventIds: [existingEventId] } },
-    })
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      get: mockGet,
     })
 
     await handler(mockStreamEvent)
@@ -133,13 +126,9 @@ describe('testing put synonymGroup table-stream', () => {
     mockQuery.mockResolvedValue({ Items: mockItems })
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
     putData.body.eventIds = [existingEventId, eventId]
-    mockGet.mockResolvedValue({
-      body: { _source: { synonymId, eventIds: [existingEventId, eventId] } },
-    })
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      get: mockGet,
     })
 
     await handler(mockStreamEvent)
@@ -160,13 +149,9 @@ describe('testing delete synonymGroup table-stream', () => {
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
     mockStreamEvent.Records[0].eventName = 'REMOVE'
     putData.body.eventIds = [existingEventId]
-    mockGet.mockResolvedValue({
-      body: { _source: { synonymId, eventIds: [existingEventId, eventId] } },
-    })
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      get: mockGet,
     })
 
     await handler(mockStreamEvent)
@@ -188,13 +173,9 @@ describe('testing delete synonymGroup table-stream', () => {
       index: 'synonym-groups',
       id: synonymId,
     }
-    mockGet.mockResolvedValue({
-      body: { _source: { synonymId, eventIds: [eventId] } },
-    })
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      get: mockGet,
     })
 
     await handler(mockStreamEvent)
