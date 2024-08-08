@@ -37,7 +37,7 @@ import { feature, origin } from '~/lib/env.server'
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
 
-export const group = 'gcn.nasa.gov/circular-submitter'
+export const submitterGroup = 'gcn.nasa.gov/circular-submitter'
 export const moderatorGroup = 'gcn.nasa.gov/circular-moderator'
 
 const getDynamoDBAutoIncrement = memoizee(
@@ -288,7 +288,7 @@ export async function put(
   >,
   user?: User
 ) {
-  if (!user?.groups.includes(group))
+  if (!user?.groups.includes(submitterGroup))
     throw new Response('User is not in the submitters group', {
       status: 403,
     })

@@ -12,7 +12,7 @@ import { useLoaderData } from '@remix-run/react'
 import { getUser } from './_auth/user.server'
 import { CircularEditForm } from './circulars.edit.$circularId/CircularEditForm'
 import { formatAuthor } from './circulars/circulars.lib'
-import { get, group } from './circulars/circulars.server'
+import { get, submitterGroup } from './circulars/circulars.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
@@ -27,7 +27,8 @@ export async function loader({
   if (!circularId) throw new Response(null, { status: 404 })
 
   const user = await getUser(request)
-  if (!user?.groups.includes(group)) throw new Response(null, { status: 403 })
+  if (!user?.groups.includes(submitterGroup))
+    throw new Response(null, { status: 403 })
   const circular = await get(parseFloat(circularId))
   const defaultDateTime = new Date(circular.createdOn ?? 0).toISOString()
 

@@ -7,7 +7,6 @@
  */
 import {
   AdminGetUserCommand,
-  AdminListGroupsForUserCommand,
   type AttributeType,
 } from '@aws-sdk/client-cognito-identity-provider'
 import type { ActionFunctionArgs } from '@remix-run/node'
@@ -16,11 +15,12 @@ import invariant from 'tiny-invariant'
 
 import { getOpenIDClient } from './_auth/auth.server'
 import { type User, parseGroups, parseIdp } from './_auth/user.server'
-import { group, put } from './circulars/circulars.server'
+import { put, submitterGroup } from './circulars/circulars.server'
 import {
   cognito,
   extractAttribute,
   extractAttributeRequired,
+  getUserGroupStrings,
 } from '~/lib/cognito.server'
 import { getEnvOrDie } from '~/lib/env.server'
 
@@ -100,18 +100,6 @@ async function getUserAttributes(Username: string) {
   }
 }
 
-async function getUserGroups(Username: string) {
-  const UserPoolId = getEnvOrDie('COGNITO_USER_POOL_ID')
-
-  const { Groups } = await cognito.send(
-    new AdminListGroupsForUserCommand({ UserPoolId, Username })
-  )
-
-  return Groups?.map(({ GroupName }) => GroupName).filter(Boolean) as
-    | string[]
-    | undefined
-}
-
 /**
  * GCN Circulars submission by third parties on behalf of users via an API.
  *
@@ -178,12 +166,12 @@ export async function action({ request }: ActionFunctionArgs) {
   } = await parseAccessToken(bearer)
 
   // Make sure that the access token contains the required scope for this API
-  if (!scope.split(' ').includes(group))
+  if (!scope.split(' ').includes(submitterGroup))
     throw new Response('Invalid scope', { status: 403 })
 
   const [{ existingIdp, ...attrs }, groups] = await Promise.all([
     getUserAttributes(cognitoUserName),
-    getUserGroups(cognitoUserName),
+    getUserGroupStrings(cognitoUserName),
   ])
   if (existingIdp) throw new Response('Wrong IdP', { status: 400 })
 

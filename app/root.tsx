@@ -52,7 +52,10 @@ import NewsBanner from './root/NewsBanner'
 import { type BreadcrumbHandle, Title } from './root/Title'
 import { Header } from './root/header/Header'
 import { getUser } from './routes/_auth/user.server'
-import { group, moderatorGroup } from './routes/circulars/circulars.server'
+import {
+  moderatorGroup,
+  submitterGroup,
+} from './routes/circulars/circulars.server'
 
 import highlightStyle from 'highlight.js/styles/github.css'
 // FIXME: no top-level await, no import function
@@ -115,7 +118,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const idp = user?.idp
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
   const userIsMod = user?.groups.includes(moderatorGroup)
-  const userIsVerifiedSubmitter = user?.groups.includes(group)
+  const userIsVerifiedSubmitter = user?.groups.includes(submitterGroup)
 
   return {
     origin,
@@ -250,11 +253,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Introducing Einstein Probe, Astro Flavored Markdown, and Notices
-          Schema v4.0.0. See{' '}
+          New! Circulars over Kafka, Heartbeat Topic, and Schema v4.1.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-einstein-probe-notices-circulars-astro-flavored-markdown-and-notices-schema-v400"
+            to="/news#circulars-are-now-available-via-kafka-heartbeat-kafka-topic-and-schema-release-v410"
           >
             news and announcements
           </Link>
