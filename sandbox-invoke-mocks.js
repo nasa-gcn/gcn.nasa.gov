@@ -217,6 +217,20 @@ export default {
         body: 'This is a test',
       },
     },
+    synonyms: {
+      INSERT: {
+        eventId: 'GRB 230727A',
+        synonymId: 'fe00636d-ae9a-45fe-9941-9cbc6e84da04',
+      },
+      REMOVE: {
+        eventId: 'GRB 230727A',
+        synonymId: 'fe00636d-ae9a-45fe-9941-9cbc6e84da04',
+      },
+      MODIFY: {
+        eventId: 'GRB 230727A',
+        synonymId: 'fe00636d-ae9a-45fe-9941-9cbc6e84da04',
+      },
+    },
     'circulars-kafka-distribution': {
       INSERT: {
         circularId: 40000,

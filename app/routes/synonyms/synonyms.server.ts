@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb/dist-types/DynamoDBDocument'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
 
@@ -54,7 +54,7 @@ export async function searchSynonymsByEventId({
   if (eventId) {
     query.bool.should.push({
       match: {
-        eventId: {
+        eventIds: {
           query: eventId,
           fuzziness: 'AUTO',
         },
@@ -70,7 +70,7 @@ export async function searchSynonymsByEventId({
       },
     },
   } = await client.search({
-    index: 'synonyms',
+    index: 'synonym-groups',
     from: page && limit && (page - 1) * limit,
     size: limit,
     body: {
