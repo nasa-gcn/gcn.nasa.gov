@@ -292,7 +292,7 @@ export default function () {
               unstyled
               className="padding-105 text-center"
             >
-              Cancel
+              Go back
             </ModalToggleButton>
           </ButtonGroup>
         </ModalFooter>
