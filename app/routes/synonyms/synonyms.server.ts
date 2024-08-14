@@ -10,7 +10,8 @@ import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
 
-import type { Synonym } from './synonyms.lib'
+import type { Circular } from '../circulars/circulars.lib'
+import type { Synonym, SynonymGroup } from './synonyms.lib'
 
 export async function getSynonymsByUuid(synonymId: string) {
   const db = await tables()
@@ -34,7 +35,7 @@ export async function searchSynonymsByEventId({
   page: number
   eventId?: string
 }): Promise<{
-  synonyms: Record<string, string[]>
+  synonyms: SynonymGroup[]
   totalItems: number
   totalPages: number
   page: number
@@ -56,7 +57,7 @@ export async function searchSynonymsByEventId({
       match: {
         eventIds: {
           query: eventId,
-          fuzziness: 'AUTO',
+          fuzziness: '1',
         },
       },
     })
@@ -79,18 +80,13 @@ export async function searchSynonymsByEventId({
   })
 
   const totalPages: number = Math.ceil(totalItems / limit)
-  const results: Record<string, string[]> = {}
-
-  hits.forEach(
+  const results = hits.map(
     ({
       _source: body,
     }: {
-      _source: Synonym
-      fields: { eventId: string; synonymId: string }
-    }) =>
-      results[body.synonymId]
-        ? results[body.synonymId].push(body.eventId)
-        : (results[body.synonymId] = [body.eventId])
+      _source: SynonymGroup
+      fields: { eventIds: []; synonymId: string }
+    }) => body
   )
 
   return {
@@ -99,6 +95,31 @@ export async function searchSynonymsByEventId({
     totalPages,
     page,
   }
+}
+
+async function validateEventIds({ eventIds }: { eventIds: string[] }) {
+  const promises = eventIds.map((eventId) => {
+    return getSynonymMembers(eventId)
+  })
+
+  const validityResponse = await Promise.all(promises)
+  const filteredResponses = validityResponse.filter((resp) => {
+    return resp.length
+  })
+
+  return filteredResponses.length === eventIds.length
+}
+
+async function getSynonymMembers(eventId: string) {
+  const db = await tables()
+  const { Items } = await db.circulars.query({
+    IndexName: 'circularsByEventId',
+    KeyConditionExpression: 'eventId = :eventId',
+    ExpressionAttributeValues: {
+      ':eventId': eventId,
+    },
+  })
+  return Items as Circular[]
 }
 
 /*
@@ -111,23 +132,24 @@ export async function searchSynonymsByEventId({
  */
 export async function createSynonyms(synonymousEventIds: string[]) {
   const uuid = crypto.randomUUID()
-
-  if (synonymousEventIds.length > 0) {
-    const db = await tables()
-    const client = db._doc as unknown as DynamoDBDocument
-    const TableName = db.name('synonyms')
-
-    await client.batchWrite({
-      RequestItems: {
-        [TableName]: synonymousEventIds.map((eventId) => ({
-          PutRequest: {
-            Item: { synonymId: uuid, eventId },
-          },
-        })),
-      },
-    })
+  if (!synonymousEventIds.length) {
+    throw new Response('EventIds are required.', { status: 400 })
   }
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('synonyms')
 
+  const isValid = await validateEventIds({ eventIds: synonymousEventIds })
+  if (!isValid) throw new Response('eventId does not exist', { status: 400 })
+  await client.batchWrite({
+    RequestItems: {
+      [TableName]: synonymousEventIds.map((eventId) => ({
+        PutRequest: {
+          Item: { synonymId: uuid, eventId },
+        },
+      })),
+    },
+  })
   return uuid
 }
 
@@ -149,6 +171,10 @@ export async function putSynonyms({
   subtractions?: string[]
 }) {
   if (!subtractions?.length && !additions?.length) return
+  if (additions?.length) {
+    const isValid = await validateEventIds({ eventIds: additions })
+    if (!isValid) throw new Response('eventId does not exist', { status: 400 })
+  }
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
@@ -204,4 +230,54 @@ export async function deleteSynonyms(synonymId: string) {
     },
   }
   await client.batchWrite(params)
+}
+
+export async function autoCompleteEventIds({
+  query,
+}: {
+  query: string
+}): Promise<{
+  options: string[]
+}> {
+  const cleanedQuery = query.replace('-', ' ')
+  const client = await getSearchClient()
+  const {
+    body: {
+      hits: { hits },
+    },
+  } = await client.search({
+    index: 'circulars',
+    body: {
+      query: {
+        bool: {
+          must: [
+            {
+              query_string: {
+                query: `*${cleanedQuery}*`,
+                fields: ['eventId'],
+                fuzziness: 'AUTO',
+              },
+            },
+          ],
+        },
+      },
+      fields: ['eventId'],
+      _source: false,
+      from: 0,
+      size: 10,
+      track_total_hits: true,
+    },
+  })
+  const options = hits.map(
+    ({
+      fields: {
+        eventId: [eventId],
+      },
+    }: {
+      _id: string
+      fields: { eventId: string }
+    }) => eventId
+  )
+
+  return { options }
 }
