@@ -155,7 +155,7 @@ synonyms
 
 kafka_acls
   cognitoGroup *String
-  permissionType **String
+  userClientType **String
   name aclsByGroup
 
 @aws

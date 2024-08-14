@@ -26,13 +26,14 @@ import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
 import TimeAgo from '~/components/TimeAgo'
-import type { KafkaACL, PermissionType } from '~/lib/kafka.server'
+import type { KafkaACL, UserClientType } from '~/lib/kafka.server'
 import {
   adminGroup,
   createKafkaACL,
   deleteKafkaACL,
   getKafkaACLsFromDynamoDB,
   getLastSyncDate,
+  updateBrokersFromDb,
   updateDbFromBrokers,
 } from '~/lib/kafka.server'
 import { getFormDataString } from '~/lib/utils'
@@ -57,15 +58,23 @@ export async function action({ request }: ActionFunctionArgs) {
     await updateDbFromBrokers(user)
     return null
   }
+
+  if (intent === 'migrateFromDB') {
+    await updateBrokersFromDb(user)
+    return null
+  }
+
   const topicName = getFormDataString(data, 'topicName')
-  const permissionType = getFormDataString(
+  const userClientType = getFormDataString(
     data,
-    'permissionType'
-  ) as PermissionType
+    'userClientType'
+  ) as UserClientType
+  const permissionTypeString = getFormDataString(data, 'permissionType')
   const group = getFormDataString(data, 'group')
   const includePrefixed = getFormDataString(data, 'includePrefixed')
-  if (!topicName || !permissionType || !group)
+  if (!topicName || !userClientType || !group || !permissionTypeString)
     throw new Response(null, { status: 400 })
+  const permissionType = parseInt(permissionTypeString)
   const promises = []
 
   switch (intent) {
@@ -73,9 +82,10 @@ export async function action({ request }: ActionFunctionArgs) {
       promises.push(
         deleteKafkaACL(user, {
           topicName,
-          permissionType,
+          userClientType,
           cognitoGroup: group,
-          prefixed: false,
+          prefixed: topicName.endsWith('.'),
+          permissionType,
         })
       )
       break
@@ -83,9 +93,10 @@ export async function action({ request }: ActionFunctionArgs) {
       promises.push(
         createKafkaACL(user, {
           topicName,
-          permissionType,
+          userClientType,
           cognitoGroup: group,
           prefixed: false,
+          permissionType,
         })
       )
 
@@ -93,9 +104,10 @@ export async function action({ request }: ActionFunctionArgs) {
         promises.push(
           createKafkaACL(user, {
             topicName: `${topicName}.`,
-            permissionType,
+            userClientType,
             cognitoGroup: group,
             prefixed: true,
+            permissionType,
           })
         )
       break
@@ -112,6 +124,7 @@ export default function Index() {
   const [aclData, setAclData] = useState(dynamoDbAclData)
   const updateFetcher = useFetcher<typeof action>()
   const aclFetcher = useFetcher<typeof loader>()
+  const brokerFromDbFetcher = useFetcher()
 
   useEffect(() => {
     setAclData(aclFetcher.data?.dynamoDbAclData ?? aclData)
@@ -136,7 +149,10 @@ export default function Index() {
           type="submit"
           name="intent"
           value="migrateFromBroker"
-          disabled={updateFetcher.state !== 'idle'}
+          disabled={
+            updateFetcher.state !== 'idle' ||
+            brokerFromDbFetcher.state !== 'idle'
+          }
         >
           Pull ACLs from Broker
         </Button>
@@ -152,6 +168,26 @@ export default function Index() {
           <TimeAgo time={latestSync.syncedOn} />
         </p>
       )}
+
+      <brokerFromDbFetcher.Form>
+        <Button
+          type="submit"
+          name="intent"
+          value="migrateFromDB"
+          disabled={
+            updateFetcher.state !== 'idle' ||
+            brokerFromDbFetcher.state !== 'idle'
+          }
+        >
+          Update Broker from DB
+        </Button>
+        {brokerFromDbFetcher.state !== 'idle' && (
+          <span className="text-middle">
+            <Spinner /> Updating...
+          </span>
+        )}
+      </brokerFromDbFetcher.Form>
+
       {aclData && (
         <>
           <aclFetcher.Form method="GET">
@@ -188,24 +224,26 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
   const fetcher = useFetcher()
   const disabled = fetcher.state !== 'idle'
 
+  const permissionMap: { [key: number]: string } = {
+    2: 'Deny',
+    3: 'Allow',
+  }
+
   return (
     <>
       <Grid row style={disabled ? { opacity: '50%' } : undefined}>
         <div className="tablet:grid-col flex-fill">
           <div>
-            <small>
-              <strong>Topic:</strong> {acl.topicName}
-            </small>
+            <strong>Group:</strong> {acl.cognitoGroup}
           </div>
           <div>
-            <small>
-              <strong>Permission Type:</strong> {acl.permissionType}
-            </small>
+            <strong>Client Type:</strong> {acl.userClientType}
           </div>
           <div>
-            <small>
-              <strong>Group:</strong> {acl.cognitoGroup}
-            </small>
+            <strong>Permission:</strong> {permissionMap[acl.permissionType]}
+          </div>
+          <div>
+            <strong>Topic:</strong> {acl.topicName}
           </div>
         </div>
         <div className="tablet:grid-col flex-auto margin-y-auto">
@@ -239,12 +277,17 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
             name="permissionType"
             value={acl.permissionType}
           />
+          <input
+            type="hidden"
+            name="userClientType"
+            value={acl.userClientType}
+          />
           <ModalHeading id="modal-delete-heading">
             Delete Kafka ACL
           </ModalHeading>
           <p id="modal-delete-description">
             This will delete the DynamoDB entry and{' '}
-            {acl.permissionType == 'consumer'
+            {acl.userClientType == 'consumer'
               ? '"read" and "describe"'
               : '"create", "write", and "describe"'}{' '}
             Kafka ACLs. Do you wish to continue?

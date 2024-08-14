@@ -5159,15 +5159,17 @@
   "kafka_acls": [
     {
       "topicName": "test_topic_created_from_website",
-      "permissionType": "consumer",
+      "userClientType": "consumer",
       "cognitoGroup": "gcn.nasa.gov/kafka-gcn-test-consumer",
-      "prefixed": false
+      "prefixed": false,
+      "permissionType": "3"
     },
     {
       "topicName": "test_topic_created_from_website",
-      "permissionType": "producer",
+      "userClientType": "producer",
       "cognitoGroup": "gcn.nasa.gov/kafka-gcn-test-producer",
-      "prefixed": false
+      "prefixed": false,
+      "permissionType": "3"
     }
   ]
 }

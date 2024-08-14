@@ -82,12 +82,13 @@ if (process.env.ARC_SANDBOX) {
 
 export type KafkaACL = {
   topicName: string
-  permissionType: PermissionType
+  userClientType: UserClientType
   cognitoGroup: string
   prefixed: boolean
+  permissionType: number
 }
 
-export type PermissionType = 'producer' | 'consumer'
+export type UserClientType = 'producer' | 'consumer'
 
 export const adminGroup = 'gcn.nasa.gov/gcn-admin'
 
@@ -128,7 +129,7 @@ export async function createKafkaACL(user: User, acl: KafkaACL) {
     ],
   })
   const acls =
-    acl.permissionType == 'producer'
+    acl.userClientType == 'producer'
       ? createProducerAcls(acl)
       : createConsumerAcls(acl)
   await adminClient.createAcls({ acl: acls })
@@ -203,54 +204,33 @@ export async function getAclsFromBrokers() {
   const acls = await adminClient.describeAcls({
     resourceType: AclResourceTypes.TOPIC,
     host: '*',
-    permissionType: AclPermissionTypes.ALLOW,
+    permissionType: AclPermissionTypes.ANY,
     operation: AclOperationTypes.ANY,
     resourcePatternType: ResourcePatternTypes.ANY,
   })
   await adminClient.disconnect()
   const results: KafkaACL[] = []
   for (const item of acls.resources) {
+    console.log('Item:', item)
     const topicName = item.resourceName
+
     const prefixed = item.resourcePatternType === ResourcePatternTypes.PREFIXED
-    const producerRules = producerOperations.every((op) =>
-      item.acls.map((x) => x.operation).includes(op)
+    results.push(
+      ...item.acls
+        .filter((acl) => acl.operation !== AclOperationTypes.DESCRIBE)
+        .map((acl) => {
+          const principal = acl.principal.split('-')
+          return {
+            topicName,
+            prefixed,
+            permissionType: acl.permissionType,
+            cognitoGroup: acl.principal.replace('User:', ''),
+            userClientType: principal[principal.length - 1] as UserClientType,
+          }
+        })
     )
-    const producerGroup =
-      producerRules &&
-      [
-        ...new Set(
-          item.acls
-            .filter((acl) => producerOperations.includes(acl.operation))
-            .map((x) => x.principal)
-        ),
-      ][0]?.replace('User:', '')
-    const consumerRules = consumerOperations.every((op) =>
-      item.acls.map((x) => x.operation).includes(op)
-    )
-    const consumerGroup =
-      consumerRules &&
-      [
-        ...new Set(
-          item.acls
-            .filter((acl) => consumerOperations.includes(acl.operation))
-            .map((x) => x.principal)
-        ),
-      ][0]?.replace('User:', '')
-    if (producerRules && producerGroup)
-      results.push({
-        topicName,
-        permissionType: 'producer',
-        cognitoGroup: producerGroup,
-        prefixed,
-      })
-    if (consumerRules && consumerGroup)
-      results.push({
-        topicName,
-        permissionType: 'consumer',
-        cognitoGroup: consumerGroup,
-        prefixed,
-      })
   }
+
   return results
 }
 
@@ -263,7 +243,7 @@ export async function deleteKafkaACL(user: User, acl: KafkaACL) {
   })
 
   const acls =
-    acl.permissionType == 'producer'
+    acl.userClientType == 'producer'
       ? createProducerAcls(acl)
       : createConsumerAcls(acl)
 
@@ -294,7 +274,7 @@ function mapAclAndOperations(acl: KafkaACL, operations: AclOperationTypes[]) {
       principal: `User:${acl.cognitoGroup}`,
       host: '*',
       operation,
-      permissionType: AclPermissionTypes.ALLOW,
+      permissionType: acl.permissionType,
     }
   })
 }
@@ -302,7 +282,7 @@ function mapAclAndOperations(acl: KafkaACL, operations: AclOperationTypes[]) {
 export async function updateBrokersFromDb(user: User) {
   const dbDefinedAcls = await getKafkaACLsFromDynamoDB(user)
   const mappedAcls = dbDefinedAcls.flatMap((x) =>
-    x.permissionType === 'producer'
+    x.userClientType === 'producer'
       ? createProducerAcls(x)
       : createConsumerAcls(x)
   )

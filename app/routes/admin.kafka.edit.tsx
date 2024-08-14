@@ -52,10 +52,9 @@ function KafkaAclForm({ groups }: { groups: string[] }) {
           autoCapitalize="off"
           autoCorrect="off"
           required
-          onChange={(e) => console.log(e.target.value)}
         />
-        <Label htmlFor="permissionType">Permission</Label>
-        <Select id="permissionType" name="permissionType">
+        <Label htmlFor="userClientType">Client Type</Label>
+        <Select id="userClientType" name="userClientType">
           <option value="producer">Producer</option>
           <option value="consumer">Consumer</option>
         </Select>
@@ -71,6 +70,11 @@ function KafkaAclForm({ groups }: { groups: string[] }) {
               {group}
             </option>
           ))}
+        </Select>
+        <Label htmlFor="permissionType">Permission</Label>
+        <Select id="permissionType" name="permissionType">
+          <option value="3">Allow</option>
+          <option value="2">Deny</option>
         </Select>
         <Checkbox
           id="includePrefixed"
