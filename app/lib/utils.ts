@@ -72,3 +72,19 @@ export function useSearchString() {
   if (searchString) searchString = `?${searchString}`
   return searchString
 }
+
+export function calculateLimit({
+  isGroupView,
+  limit,
+}: {
+  isGroupView: boolean | undefined
+  limit: number | undefined
+}) {
+  const defaultLimit = isGroupView ? 20 : 100
+
+  if (!isGroupView) {
+    return limit || defaultLimit
+  } else {
+    return limit && limit < 20 ? limit : defaultLimit
+  }
+}

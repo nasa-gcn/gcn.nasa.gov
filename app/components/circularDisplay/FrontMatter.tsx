@@ -8,8 +8,8 @@
 import { Grid } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 
-import { type Circular, formatDateISO } from '../circulars/circulars.lib'
 import TimeAgo from '~/components/TimeAgo'
+import { type Circular, formatDateISO } from '~/routes/circulars/circulars.lib'
 
 const submittedHowMap = {
   web: 'Web form',

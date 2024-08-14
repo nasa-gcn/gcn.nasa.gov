@@ -19,12 +19,9 @@ import { useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import dedent from 'ts-dedent'
 
-import {
-  MarkdownBody,
-  PlainTextBody,
-} from '../../circulars.$circularId.($version)/Body'
 import { GitLabIcon } from './GitLabIcon'
 import { onKeyDown } from './onKeyDown'
+import { MarkdownBody, PlainTextBody } from '~/components/circularDisplay/Body'
 import { TabButton, TabButtonGroup } from '~/components/tabs'
 
 import styles from './index.module.css'
@@ -275,7 +272,7 @@ export function RichEditor({
 
         | Heading 1    | Heading 2    |
         | ------------ | ------------ |
-        | Row 1, col 1 | Row 1, col 2 | 
+        | Row 1, col 1 | Row 1, col 2 |
         | Row 2, col 1 | Row 2, col 2 |
 
         `
