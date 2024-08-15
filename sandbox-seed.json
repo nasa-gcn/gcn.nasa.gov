@@ -5158,15 +5158,15 @@
   ],
   "kafka_acls": [
     {
-      "topicName": "test_topic_created_from_website",
-      "userClientType": "consumer",
+      "aclId": "12345678-abcd-1234-abcd-1234abcd1234",
+      "resourceName": "test_topic_created_from_website",
       "cognitoGroup": "gcn.nasa.gov/kafka-gcn-test-consumer",
       "prefixed": false,
       "permissionType": "3"
     },
     {
-      "topicName": "test_topic_created_from_website",
-      "userClientType": "producer",
+      "aclId": "62fe8590-42e4-4917-afea-db6a0a84079a",
+      "resourceName": "test_topic_created_from_website",
       "cognitoGroup": "gcn.nasa.gov/kafka-gcn-test-producer",
       "prefixed": false,
       "permissionType": "3"

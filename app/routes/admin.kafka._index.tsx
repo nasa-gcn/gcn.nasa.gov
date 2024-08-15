@@ -64,52 +64,49 @@ export async function action({ request }: ActionFunctionArgs) {
     return null
   }
 
-  const topicName = getFormDataString(data, 'topicName')
-  const userClientType = getFormDataString(
-    data,
-    'userClientType'
-  ) as UserClientType
-  const permissionTypeString = getFormDataString(data, 'permissionType')
-  const group = getFormDataString(data, 'group')
-  const includePrefixed = getFormDataString(data, 'includePrefixed')
-  if (!topicName || !userClientType || !group || !permissionTypeString)
-    throw new Response(null, { status: 400 })
-  const permissionType = parseInt(permissionTypeString)
+  const aclId = getFormDataString(data, 'aclId')
   const promises = []
 
   switch (intent) {
     case 'delete':
-      promises.push(
-        deleteKafkaACL(user, {
-          topicName,
-          userClientType,
-          cognitoGroup: group,
-          prefixed: topicName.endsWith('.'),
-          permissionType,
-        })
-      )
+      if (!aclId) throw new Response(null, { status: 400 })
+      promises.push(deleteKafkaACL(user, [aclId]))
       break
     case 'create':
+      const resourceName = getFormDataString(data, 'resourceName')
+      const userClientType = getFormDataString(
+        data,
+        'userClientType'
+      ) as UserClientType
+      const permissionTypeString = getFormDataString(data, 'permissionType')
+      const group = getFormDataString(data, 'group')
+      const includePrefixed = getFormDataString(data, 'includePrefixed')
+      const resourceTypeString = getFormDataString(data, 'resourceType')
+
+      if (
+        !resourceName ||
+        !userClientType ||
+        !group ||
+        !permissionTypeString ||
+        !resourceTypeString
+      )
+        throw new Response(null, { status: 400 })
+
+      const permissionType = parseInt(permissionTypeString) // Allow, deny
+      const resourceType = parseInt(resourceTypeString)
+
       promises.push(
-        createKafkaACL(user, {
-          topicName,
+        createKafkaACL(
+          user,
           userClientType,
-          cognitoGroup: group,
-          prefixed: false,
+          resourceName,
+          group,
           permissionType,
-        })
+          resourceType,
+          Boolean(includePrefixed)
+        )
       )
 
-      if (includePrefixed)
-        promises.push(
-          createKafkaACL(user, {
-            topicName: `${topicName}.`,
-            userClientType,
-            cognitoGroup: group,
-            prefixed: true,
-            permissionType,
-          })
-        )
       break
     default:
       break
@@ -208,7 +205,7 @@ export default function Index() {
           </aclFetcher.Form>
           <SegmentedCards>
             {aclData
-              .sort((a, b) => a.topicName.localeCompare(b.topicName))
+              .sort((a, b) => a.resourceName.localeCompare(b.resourceName))
               .map((x, index) => (
                 <KafkaAclCard key={index} acl={x} />
               ))}
@@ -234,16 +231,16 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
       <Grid row style={disabled ? { opacity: '50%' } : undefined}>
         <div className="tablet:grid-col flex-fill">
           <div>
-            <strong>Group:</strong> {acl.cognitoGroup}
+            <strong>Group:</strong> {acl.principal}
           </div>
-          <div>
+          {/* <div>
             <strong>Client Type:</strong> {acl.userClientType}
-          </div>
+          </div> */}
           <div>
             <strong>Permission:</strong> {permissionMap[acl.permissionType]}
           </div>
           <div>
-            <strong>Topic:</strong> {acl.topicName}
+            <strong>Resource:</strong> {acl.resourceName}
           </div>
         </div>
         <div className="tablet:grid-col flex-auto margin-y-auto">
@@ -270,27 +267,13 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
         renderToPortal={false}
       >
         <fetcher.Form method="POST" action="/admin/kafka">
-          <input type="hidden" name="topicName" value={acl.topicName} />
-          <input type="hidden" name="group" value={acl.cognitoGroup} />
-          <input
-            type="hidden"
-            name="permissionType"
-            value={acl.permissionType}
-          />
-          <input
-            type="hidden"
-            name="userClientType"
-            value={acl.userClientType}
-          />
+          <input type="hidden" name="aclId" value={acl.aclId} />
           <ModalHeading id="modal-delete-heading">
             Delete Kafka ACL
           </ModalHeading>
           <p id="modal-delete-description">
-            This will delete the DynamoDB entry and{' '}
-            {acl.userClientType == 'consumer'
-              ? '"read" and "describe"'
-              : '"create", "write", and "describe"'}{' '}
-            Kafka ACLs. Do you wish to continue?
+            This will delete the DynamoDB entry and associated "read","create",
+            "write", and "describe" ACLs. Do you wish to continue?
           </p>
           <ModalFooter>
             <ModalToggleButton modalRef={ref} closer outline>

@@ -95,8 +95,7 @@ legacy_users
   PointInTimeRecovery true
 
 kafka_acls
-  topicName *String
-  cognitoGroup **String
+  aclId *String
   PointInTimeRecovery true
 
 kafka_acl_log
@@ -154,9 +153,8 @@ synonyms
   name synonymsByUuid
 
 kafka_acls
-  cognitoGroup *String
-  userClientType **String
-  name aclsByGroup
+  resourceName *String
+  name aclsByResourceName
 
 @aws
 runtime nodejs20.x
