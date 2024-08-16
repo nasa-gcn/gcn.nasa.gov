@@ -3,8 +3,6 @@ handle:
   breadcrumb: Sample Code
 ---
 
-import { Highlight } from '~/components/Highlight'
-
 # Sample Code
 
 Here is a collection of functions and example code that may be useful
@@ -14,7 +12,7 @@ and some samples from the FAQs section of the [gcn-kafka-python](https://github.
 
 To contribute your own ideas, make a GitHub pull request to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md), or [contact us](/contact).
 
-## Parsing
+## Parsing XML
 
 Within your consumer loop, use the following functions to convert the
 content of `message.value()` into other data types.
@@ -171,7 +169,7 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 
 For new missions, GCN Notices are preferably distributed in JSON format. This guide describes how to programmatically read the JSON schema.
 
-## Parsing JSON Notices
+## Parsing JSON
 
 Read the JSON data from [sample.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [sample.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
 
@@ -211,17 +209,12 @@ with open("path/to/destination/file", 'wb') as file:
 
 If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
 
-<Highlight
-language="json"
-code={JSON.stringify(
+```python
 {
-type: 'string',
-contentEncoding: 'base64',
-contentMediaType: 'image/fits',
-},
-null,
-2
-)}
-/>
+    type: 'string',
+    contentEncoding: 'base64',
+    contentMediaType: 'image/fits',
+}
+```
 
 In your data production pipeline, you can use the encoding steps to convert your file to a bytestring and set the value of the property to this bytestring. See [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html) for more information.
