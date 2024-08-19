@@ -19,6 +19,7 @@ import {
   ModalToggleButton,
   TextInput,
 } from '@trussworks/react-uswds'
+import { groupBy, sortBy } from 'lodash'
 import { useEffect, useRef, useState } from 'react'
 
 import { getUser } from './_auth/user.server'
@@ -43,7 +44,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!user || !user.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
   const { aclFilter } = Object.fromEntries(new URL(request.url).searchParams)
-  const dynamoDbAclData = await getKafkaACLsFromDynamoDB(user, aclFilter)
+  const dynamoDbAclData = groupBy(
+    sortBy(await getKafkaACLsFromDynamoDB(user, aclFilter), [
+      'resourceName',
+      'principal',
+    ]),
+    'resourceName'
+  )
   const latestSync = await getLastSyncDate()
   return { dynamoDbAclData, latestSync }
 }
@@ -54,6 +61,7 @@ export async function action({ request }: ActionFunctionArgs) {
     throw new Response(null, { status: 403 })
   const data = await request.formData()
   const intent = getFormDataString(data, 'intent')
+
   if (intent === 'migrateFromBroker') {
     await updateDbFromBrokers(user)
     return null
@@ -64,11 +72,11 @@ export async function action({ request }: ActionFunctionArgs) {
     return null
   }
 
-  const aclId = getFormDataString(data, 'aclId')
   const promises = []
 
   switch (intent) {
     case 'delete':
+      const aclId = getFormDataString(data, 'aclId')
       if (!aclId) throw new Response(null, { status: 400 })
       promises.push(deleteKafkaACL(user, [aclId]))
       break
@@ -78,8 +86,8 @@ export async function action({ request }: ActionFunctionArgs) {
         data,
         'userClientType'
       ) as UserClientType
-      const permissionTypeString = getFormDataString(data, 'permissionType')
       const group = getFormDataString(data, 'group')
+      const permissionTypeString = getFormDataString(data, 'permissionType')
       const includePrefixed = getFormDataString(data, 'includePrefixed')
       const resourceTypeString = getFormDataString(data, 'resourceType')
 
@@ -122,6 +130,7 @@ export default function Index() {
   const updateFetcher = useFetcher<typeof action>()
   const aclFetcher = useFetcher<typeof loader>()
   const brokerFromDbFetcher = useFetcher()
+  const ref = useRef<ModalRef>(null)
 
   useEffect(() => {
     setAclData(aclFetcher.data?.dynamoDbAclData ?? aclData)
@@ -140,7 +149,6 @@ export default function Index() {
         data from topics, create or delete topics, manage consumer groups, and
         perform administrative tasks.
       </p>
-
       <updateFetcher.Form method="POST" action="/admin/kafka">
         <Button
           type="submit"
@@ -159,36 +167,35 @@ export default function Index() {
           </span>
         )}
       </updateFetcher.Form>
-      {latestSync && (
+      {latestSync ? (
         <p>
           Last synced by {latestSync.syncedBy}{' '}
           <TimeAgo time={latestSync.syncedOn} />
         </p>
+      ) : (
+        <br />
       )}
-
-      <brokerFromDbFetcher.Form>
-        <Button
-          type="submit"
-          name="intent"
-          value="migrateFromDB"
-          disabled={
-            updateFetcher.state !== 'idle' ||
-            brokerFromDbFetcher.state !== 'idle'
-          }
-        >
-          Update Broker from DB
-        </Button>
-        {brokerFromDbFetcher.state !== 'idle' && (
-          <span className="text-middle">
-            <Spinner /> Updating...
-          </span>
-        )}
-      </brokerFromDbFetcher.Form>
-
+      <ModalToggleButton
+        opener
+        disabled={
+          updateFetcher.state !== 'idle' || brokerFromDbFetcher.state !== 'idle'
+        }
+        modalRef={ref}
+        type="button"
+      >
+        Update Broker from DB
+      </ModalToggleButton>
+      {brokerFromDbFetcher.state !== 'idle' && (
+        <span className="text-middle">
+          <Spinner /> Updating...
+        </span>
+      )}
       {aclData && (
         <>
           <aclFetcher.Form method="GET">
-            <Label htmlFor="aclFilter">Filter ({aclData.length} results)</Label>
+            <Label htmlFor="aclFilter">
+              Filter ({Object.keys(aclData).length} results)
+            </Label>
             <TextInput id="aclFilter" name="aclFilter" type="text" />
             <Button
               type="submit"
@@ -204,14 +211,50 @@ export default function Index() {
             )}
           </aclFetcher.Form>
           <SegmentedCards>
-            {aclData
-              .sort((a, b) => a.resourceName.localeCompare(b.resourceName))
-              .map((x, index) => (
-                <KafkaAclCard key={index} acl={x} />
+            {Object.keys(aclData)
+              .sort((a, b) => a.localeCompare(b))
+              .flatMap((key) => (
+                <span key={key}>
+                  <h3>Resource: {key}</h3>
+                  {aclData[key].map((acl, index) => (
+                    <KafkaAclCard key={`${key}-${index}`} acl={acl} />
+                  ))}
+                </span>
               ))}
           </SegmentedCards>
         </>
       )}
+      <Modal
+        id="modal-update"
+        ref={ref}
+        aria-labelledby="modal-update-heading"
+        aria-describedby="modal-update-description"
+        renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
+      >
+        <brokerFromDbFetcher.Form method="POST" action="/admin/kafka">
+          <ModalHeading id="modal-update-heading">Confirm Update</ModalHeading>
+          <p id="modal-update-description">
+            This will affect some_number of ACLs currently defined on the
+            broker. If you want to maintain the ACLs defined on the brokers,
+            click cancel to close this window then click the Pull ACLs from
+            Broker button.
+          </p>
+          <p>This action cannot be undone.</p>
+          <ModalFooter>
+            <ModalToggleButton modalRef={ref} closer outline>
+              Cancel
+            </ModalToggleButton>
+            <Button
+              data-close-modal
+              type="submit"
+              name="intent"
+              value="migrateFromDB"
+            >
+              Confirm
+            </Button>
+          </ModalFooter>
+        </brokerFromDbFetcher.Form>
+      </Modal>
     </>
   )
 }
@@ -221,26 +264,56 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
   const fetcher = useFetcher()
   const disabled = fetcher.state !== 'idle'
 
+  // TODO: These maps can probably be refactored, since they are
+  // just inverting the enum from kafka, but importing them
+  // directly here causes some errors. Same for mapping them to
+  // dropdowns
   const permissionMap: { [key: number]: string } = {
     2: 'Deny',
     3: 'Allow',
   }
 
+  const operationMap: { [key: number]: string } = {
+    0: 'Unknown',
+    1: 'Any',
+    2: 'All',
+    3: 'Read',
+    4: 'Write',
+    5: 'Create',
+    6: 'Delete',
+    7: 'Alter',
+    8: 'Describe',
+    9: 'Cluster Action',
+    10: 'Describe Configs',
+    11: 'Alter Configs',
+    12: 'Idempotent Write',
+  }
+
+  const resourceTypeMap: { [key: number]: string } = {
+    0: 'Unknown',
+    1: 'Any',
+    2: 'Topic',
+    3: 'Group',
+    4: 'Cluster',
+    5: 'Transactional Id',
+    6: 'Delegation Token',
+  }
+
   return (
     <>
       <Grid row style={disabled ? { opacity: '50%' } : undefined}>
-        <div className="tablet:grid-col flex-fill">
+        <div className="tablet:grid-col flex-fill margin-y-1">
+          <div>
+            <strong>Type:</strong> {resourceTypeMap[acl.resourceType]}
+          </div>
           <div>
             <strong>Group:</strong> {acl.principal}
           </div>
-          {/* <div>
-            <strong>Client Type:</strong> {acl.userClientType}
-          </div> */}
           <div>
             <strong>Permission:</strong> {permissionMap[acl.permissionType]}
           </div>
           <div>
-            <strong>Resource:</strong> {acl.resourceName}
+            <strong>Operation:</strong> {operationMap[acl.operation]}
           </div>
         </div>
         <div className="tablet:grid-col flex-auto margin-y-auto">
@@ -272,8 +345,8 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
             Delete Kafka ACL
           </ModalHeading>
           <p id="modal-delete-description">
-            This will delete the DynamoDB entry and associated "read","create",
-            "write", and "describe" ACLs. Do you wish to continue?
+            This will delete the DynamoDB entry and remove the ACL from the
+            broker. Do you wish to continue?
           </p>
           <ModalFooter>
             <ModalToggleButton modalRef={ref} closer outline>

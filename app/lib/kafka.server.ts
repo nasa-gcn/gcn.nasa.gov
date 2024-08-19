@@ -9,6 +9,7 @@ import { tables } from '@architect/functions'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import crypto from 'crypto'
+import type { AclFilter } from 'gcn-kafka'
 import { Kafka } from 'gcn-kafka'
 import type { AclEntry } from 'kafkajs'
 import {
@@ -81,17 +82,6 @@ if (process.env.ARC_SANDBOX) {
   }
 }
 
-/**
- * AclEntry already contains definitions for the following:
- *
- *   principal: string                          --> 'User:{cognito_group_name}'
- *   host: string                               --> '*'
- *   operation: AclOperationTypes               --> Read,Write, etc from enum
- *   permissionType: AclPermissionTypes         --> Allow, Deny, etc from enum
- *   resourceType: AclResourceTypes             --> TOPIC, etc
- *   resourceName: string                       --> name of topic: 'gcn.notices.burstcube'
- *   resourcePatternType: ResourcePatternTypes  --> PREFIXED or LITERAL
- */
 export type KafkaACL = AclEntry & {
   aclId?: string
 }
@@ -139,9 +129,9 @@ export async function createKafkaACL(
             resourceName,
             principal: `User:${group}`,
             host: '*',
-            operation, // Read, write, etc
-            permissionType, // Allow, deny etc
-            resourcePatternType: 3, // LITERAL | PREFIXED
+            operation,
+            permissionType,
+            resourcePatternType: 3,
             resourceType,
           }
         })
@@ -150,9 +140,9 @@ export async function createKafkaACL(
             resourceName,
             principal: `User:${group}`,
             host: '*',
-            operation, // Read, write, etc
+            operation,
             permissionType,
-            resourcePatternType: 3, // LITERAL | PREFIX
+            resourcePatternType: 3,
             resourceType,
           }
         })
@@ -280,13 +270,13 @@ export async function getAclsFromBrokers() {
 export async function deleteKafkaACL(user: User, aclIds: string[]) {
   validateUser(user)
   const db = await tables()
-  const acls = await Promise.all(
+  const acls: KafkaACL[] = await Promise.all(
     aclIds.map((aclId) => db.kafka_acls.get({ aclId }))
   )
 
   const adminClient = adminKafka.admin()
   await adminClient.connect()
-  await adminClient.deleteAcls({ filters: acls })
+  await adminClient.deleteAcls({ filters: acls as AclFilter[] })
   await adminClient.disconnect()
 
   await Promise.all(

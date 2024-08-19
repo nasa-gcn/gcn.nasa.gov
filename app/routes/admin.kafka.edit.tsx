@@ -39,20 +39,25 @@ function KafkaAclForm({ groups }: { groups: string[] }) {
       <h1>Create Kafka ACLs</h1>
       <Form method="POST" action="/admin/kafka">
         <Label htmlFor="name">
-          Topic
+          Resource Name
           <span title="required" className="usa-label--required">
             *
           </span>
         </Label>
         <TextInput
           autoFocus
-          id="topicName"
-          name="topicName"
+          id="resourceName"
+          name="resourceName"
           type="text"
           autoCapitalize="off"
           autoCorrect="off"
           required
         />
+        <Label htmlFor="resourceType">Resource Type</Label>
+        <Select id="resourceType" name="resourceType">
+          <option value="2">Topic</option>
+          <option value="3">Group</option>
+        </Select>
         <Label htmlFor="userClientType">Client Type</Label>
         <Select id="userClientType" name="userClientType">
           <option value="producer">Producer</option>
