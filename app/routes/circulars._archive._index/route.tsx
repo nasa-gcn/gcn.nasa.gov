@@ -110,22 +110,25 @@ export async function action({ request }: ActionFunctionArgs) {
 
       if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
-      await createChangeRequest(
-        {
-          circularId: parseFloat(circularId),
-          ...props,
-          submitter,
-          createdOn,
-        },
-        user
-      )
-      await postZendeskRequest({
+
+      const zendeskResponse = await postZendeskRequest({
         requester: { name: user.name, email: user.email },
         subject: `Change Request for Circular ${circularId}`,
         comment: {
           body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
         },
       })
+
+      await createChangeRequest(
+        {
+          circularId: parseFloat(circularId),
+          ...props,
+          submitter,
+          createdOn,
+          zendeskTicketId: zendeskResponse.request.id,
+        },
+        user
+      )
       newCircular = null
       break
     case 'edit':

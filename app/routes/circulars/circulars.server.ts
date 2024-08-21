@@ -33,6 +33,7 @@ import type {
 } from './circulars.lib'
 import { sendEmail } from '~/lib/email.server'
 import { feature, origin } from '~/lib/env.server'
+import { closeZendeskTicket } from '~/lib/zendesk.server'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -387,7 +388,7 @@ export async function createChangeRequest(
     | 'editedOn'
     | 'submitter'
     | 'createdOn'
-  > & { submitter?: string; createdOn?: number },
+  > & { submitter?: string; createdOn?: number; zendeskTicketId: number },
   user?: User
 ) {
   validateCircular(item)
@@ -462,10 +463,11 @@ export async function deleteChangeRequest(
       { status: 403 }
     )
 
-  const requestorEmail = (await getChangeRequest(circularId, requestorSub))
-    .requestorEmail
+  const changeRequest = await getChangeRequest(circularId, requestorSub)
+  const requestorEmail = changeRequest.requestorEmail
   await deleteChangeRequestRaw(circularId, requestorSub)
-
+  if (changeRequest.zendeskTicketId)
+    await closeZendeskTicket(changeRequest.zendeskTicketId)
   await sendEmail({
     to: [requestorEmail],
     fromName: 'GCN Circulars',
@@ -539,7 +541,8 @@ export async function approveChangeRequest(
   })
 
   await deleteChangeRequestRaw(circularId, requestorSub)
-
+  if (changeRequest.zendeskTicketId)
+    await closeZendeskTicket(changeRequest.zendeskTicketId)
   await sendEmail({
     to: [changeRequest.requestorEmail],
     fromName: 'GCN Circulars',

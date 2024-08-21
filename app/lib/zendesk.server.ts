@@ -43,6 +43,34 @@ export async function postZendeskRequest(request: ZendeskRequest) {
 
   if (!response.ok) {
     console.error(response)
-    throw new Error(`Reqeust failed with status ${response.status}`)
+    throw new Error(`Request failed with status ${response.status}`)
   }
+  return await response.json()
+}
+
+export async function closeZendeskTicket(ticketId: number) {
+  const response = await fetch(
+    `https://nasa-gcn.zendesk.com/api/v2/tickets/${ticketId}.json`,
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        ...getBasicAuthHeaders(
+          `${getEnvOrDie('ZENDESK_TOKEN_EMAIL')}/token`,
+          getEnvOrDie('ZENDESK_TOKEN')
+        ),
+      },
+      body: JSON.stringify({
+        ticket: {
+          status: 'solved',
+        },
+      }),
+    }
+  )
+
+  if (!response.ok) {
+    console.error(response)
+    throw new Error(`Request failed with status ${response.status}`)
+  }
+  return await response.json()
 }
