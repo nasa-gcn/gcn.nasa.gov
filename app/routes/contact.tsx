@@ -42,6 +42,11 @@ export async function loader() {
 export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
+function containsHtml(input: string): boolean {
+  const htmlRegex = /<[a-z/][\s\S]*>/g
+  return htmlRegex.test(input)
+}
+
 export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
 
@@ -55,6 +60,9 @@ export async function action({ request }: ActionFunctionArgs) {
       return result
     }
   )
+
+  if ([name, subject, email, body].some((x) => containsHtml(x)))
+    throw new Response(null, { status: 400 })
 
   await postZendeskRequest({
     requester: { name, email },
@@ -111,9 +119,10 @@ export default function () {
             name="name"
             type="text"
             required
+            validationStatus={nameValid ? 'success' : 'error'}
             defaultValue={defaultName}
             onChange={({ target: { value } }) => {
-              setNameValid(Boolean(value))
+              setNameValid(Boolean(value) && !containsHtml(value))
             }}
           />
           <Label htmlFor="email">What is your email address?</Label>
@@ -121,10 +130,11 @@ export default function () {
             id="email"
             name="email"
             type="email"
+            validationStatus={emailValid ? 'success' : 'error'}
             required
             defaultValue={defaultEmail}
             onChange={({ target: { value } }) => {
-              setEmailValid(validate(value))
+              setEmailValid(validate(value) && !containsHtml(value))
             }}
           />
           <Label htmlFor="subject">What is your question about?</Label>
@@ -135,7 +145,7 @@ export default function () {
             required
             placeholder="Subject"
             onChange={({ target: { value } }) => {
-              setSubjectValid(Boolean(value))
+              setSubjectValid(Boolean(value) && !containsHtml(value))
             }}
           />
           <Label htmlFor="body">What is your question?</Label>
@@ -150,7 +160,7 @@ export default function () {
             placeholder="Body"
             aria-describedby="bodyHint"
             onChange={({ target: { value } }) => {
-              setBodyValid(Boolean(value))
+              setBodyValid(Boolean(value) && !containsHtml(value))
             }}
           />
           <ReCAPTCHA
