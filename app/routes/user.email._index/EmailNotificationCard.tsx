@@ -168,13 +168,13 @@ export default function EmailNotificationCard({
           This will send a generic test email to {recipient}. Do you wish to
           continue?
         </p>
-        <ReCAPTCHA
-          onChange={(value) => {
-            setRecaptchaValid(Boolean(value))
-          }}
-        />
-        <ModalFooter>
-          <testFetcher.Form method="POST">
+        <testFetcher.Form method="POST">
+          <ReCAPTCHA
+            onChange={(value) => {
+              setRecaptchaValid(Boolean(value))
+            }}
+          />
+          <ModalFooter>
             <input type="hidden" name="recipient" value={recipient} />
             <input type="hidden" name="intent" value="sendTest" />
             <ModalToggleButton
@@ -196,8 +196,8 @@ export default function EmailNotificationCard({
               />
               Send
             </Button>
-          </testFetcher.Form>
-        </ModalFooter>
+          </ModalFooter>
+        </testFetcher.Form>
       </Modal>
     </>
   )
