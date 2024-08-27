@@ -26,7 +26,7 @@ export default function () {
                 About GCN
               </NavLink>,
               <NavLink key="admin" to="admin">
-                Admin
+                Administration
               </NavLink>,
               <>
                 <NavLink key="circulars" to="circulars">
