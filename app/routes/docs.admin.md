@@ -1,4 +1,4 @@
-# Admin
+# Administration
 
 The admin pages allow authorized users to manage users' Kafka group settings.
 
