@@ -25,9 +25,6 @@ export default function () {
               <NavLink key="." to="." end>
                 About GCN
               </NavLink>,
-              <NavLink key="admin" to="admin">
-                Administration
-              </NavLink>,
               <>
                 <NavLink key="circulars" to="circulars">
                   Circulars
@@ -191,6 +188,9 @@ export default function () {
               </NavLink>,
               <NavLink key="schema" to="schema">
                 Schema Browser
+              </NavLink>,
+              <NavLink key="admin" to="admin">
+                Administration
               </NavLink>,
             ]}
           />
