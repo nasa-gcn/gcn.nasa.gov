@@ -1,5 +1,7 @@
 # Administration
 
+This documentation is not relevant for most users. It is included because the source code is open to the public.
+
 The admin pages allow authorized users to manage users' Kafka group settings.
 
 ## User Group Management
