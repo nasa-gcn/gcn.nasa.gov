@@ -11,6 +11,7 @@ on:
 jobs:
   node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
+    secrets: inherit
   playwright:
     timeout-minutes: 60
     runs-on: ubuntu-latest
