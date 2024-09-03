@@ -11,7 +11,8 @@ on:
 jobs:
   node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
-    secrets: inherit
+    secrets:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   playwright:
     timeout-minutes: 60
     runs-on: ubuntu-latest
