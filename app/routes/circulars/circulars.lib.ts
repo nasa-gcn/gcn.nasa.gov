@@ -39,7 +39,7 @@ export interface CircularChangeRequest extends CircularMetadata {
   format: CircularFormat
   submitter: string
   createdOn: number
-  zendeskTicketId?: number
+  zendeskTicketId: number
 }
 
 export interface CircularChangeRequestKeys {
