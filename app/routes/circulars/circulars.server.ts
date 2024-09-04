@@ -466,8 +466,6 @@ export async function deleteChangeRequest(
   const changeRequest = await getChangeRequest(circularId, requestorSub)
   const requestorEmail = changeRequest.requestorEmail
   await deleteChangeRequestRaw(circularId, requestorSub)
-  if (changeRequest.zendeskTicketId)
-    await closeZendeskTicket(changeRequest.zendeskTicketId)
   await sendEmail({
     to: [requestorEmail],
     fromName: 'GCN Circulars',
