@@ -527,28 +527,32 @@ export async function approveChangeRequest(
   const circular = await get(circularId)
   const autoincrementVersion = await getDynamoDBVersionAutoIncrement(circularId)
 
-  await autoincrementVersion.put({
-    ...circular,
-    body: changeRequest.body,
-    subject: changeRequest.subject,
-    editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
-    editedOn: Date.now(),
-    format: changeRequest.format,
-    submitter: changeRequest.submitter,
-    createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
-  })
-
-  await deleteChangeRequestRaw(circularId, requestorSub)
-  if (changeRequest.zendeskTicketId)
-    await closeZendeskTicket(changeRequest.zendeskTicketId)
-  await sendEmail({
-    to: [changeRequest.requestorEmail],
-    fromName: 'GCN Circulars',
-    subject: 'GCN Circulars Change Request: Approved',
-    body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}.
+  const promises = [
+    autoincrementVersion.put({
+      ...circular,
+      body: changeRequest.body,
+      subject: changeRequest.subject,
+      editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
+      editedOn: Date.now(),
+      format: changeRequest.format,
+      submitter: changeRequest.submitter,
+      createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
+    }),
+    deleteChangeRequestRaw(circularId, requestorSub),
+    sendEmail({
+      to: [changeRequest.requestorEmail],
+      fromName: 'GCN Circulars',
+      subject: 'GCN Circulars Change Request: Approved',
+      body: dedent`Your change request has been approved for GCN Circular ${changeRequest.circularId}.
 
     View the Circular at ${origin}/circulars/${changeRequest.circularId}`,
-  })
+    }),
+  ]
+
+  if (changeRequest.zendeskTicketId)
+    promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))
+
+  await Promise.all(promises)
 }
 
 /**
