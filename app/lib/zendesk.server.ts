@@ -72,5 +72,4 @@ export async function closeZendeskTicket(ticketId: number) {
     console.error(response)
     throw new Error(`Request failed with status ${response.status}`)
   }
-  return await response.json()
 }
