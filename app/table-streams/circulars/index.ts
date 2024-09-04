@@ -113,19 +113,19 @@ export const handler = createTriggerHandler(
       promises.push(removeIndex(id))
     } /* (eventName === 'INSERT' || eventName === 'MODIFY') */ else {
       const circular = unmarshallTrigger(dynamodb!.NewImage) as Circular
-      promises.push(putIndex(circular))
+      const { sub, ...cleanedCircular } = circular
+      promises.push(
+        putIndex(circular),
+        sendKafka(
+          'gcn.circulars',
+          JSON.stringify({
+            $schema: circularsJsonSchemaId,
+            ...cleanedCircular,
+          })
+        )
+      )
       if (eventName === 'INSERT') {
         promises.push(send(circular))
-        const { sub, ...cleanedCircular } = circular
-        promises.push(
-          sendKafka(
-            'gcn.circulars',
-            JSON.stringify({
-              $schema: circularsJsonSchemaId,
-              ...cleanedCircular,
-            })
-          )
-        )
       }
     }
 
