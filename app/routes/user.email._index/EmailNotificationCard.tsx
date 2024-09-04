@@ -41,6 +41,7 @@ export default function EmailNotificationCard({
     ) {
       testModalRef.current.toggleModal(undefined, true)
       setRecaptchaValid(false)
+      grecaptcha.reset()
     }
   }, [testFetcher.state, testFetcher.data, testModalRef])
 
@@ -174,7 +175,7 @@ export default function EmailNotificationCard({
               setRecaptchaValid(Boolean(value))
             }}
           />
-          <ModalFooter>
+          <ModalFooter className="display-flex">
             <input type="hidden" name="recipient" value={recipient} />
             <input type="hidden" name="intent" value="sendTest" />
             <ModalToggleButton
@@ -190,10 +191,7 @@ export default function EmailNotificationCard({
               data-close-modal
               disabled={!(recaptchaValid && testFetcher.state === 'idle')}
             >
-              <Icon.MailOutline
-                role="presentation"
-                className="bottom-aligned margin-right-05"
-              />
+              <Icon.MailOutline role="presentation" />
               Send
             </Button>
           </ModalFooter>
