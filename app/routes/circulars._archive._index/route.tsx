@@ -111,7 +111,7 @@ export async function action({ request }: ActionFunctionArgs) {
       if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
 
-      const zendeskResponse = await postZendeskRequest({
+      const {request: {id: zendeskTicketId}} = await postZendeskRequest({
         requester: { name: user.name, email: user.email },
         subject: `Change Request for Circular ${circularId}`,
         comment: {
@@ -125,7 +125,7 @@ export async function action({ request }: ActionFunctionArgs) {
           ...props,
           submitter,
           createdOn,
-          zendeskTicketId: zendeskResponse.request.id,
+          zendeskTicketId,
         },
         user
       )
