@@ -27,6 +27,7 @@ import {
 } from '../user.email/email_notices.server'
 import EmailNotificationCard from './EmailNotificationCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
+import { verifyRecaptcha } from '~/components/ReCAPTCHA'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
@@ -49,6 +50,8 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       break
     case 'sendTest':
+      const recaptchaResponse = getFormDataString(data, 'g-recaptcha-response')
+      await verifyRecaptcha(recaptchaResponse)
       const recipient = getFormDataString(data, 'recipient')
       if (recipient) {
         await sendTestEmail(recipient)
