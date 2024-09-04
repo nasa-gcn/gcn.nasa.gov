@@ -2,6 +2,7 @@ import { Form, useFetcher } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
+  ButtonGroup,
   Grid,
   Icon,
   Modal,
@@ -175,25 +176,27 @@ export default function EmailNotificationCard({
               setRecaptchaValid(Boolean(value))
             }}
           />
-          <ModalFooter className="display-flex">
+          <ModalFooter>
             <input type="hidden" name="recipient" value={recipient} />
             <input type="hidden" name="intent" value="sendTest" />
-            <ModalToggleButton
-              data-close-modal
-              modalRef={testConfirmRef}
-              closer
-            >
-              Cancel
-            </ModalToggleButton>
-            <Button
-              type="submit"
-              outline
-              data-close-modal
-              disabled={!(recaptchaValid && testFetcher.state === 'idle')}
-            >
-              <Icon.MailOutline role="presentation" />
-              Send
-            </Button>
+            <ButtonGroup>
+              <ModalToggleButton
+                data-close-modal
+                modalRef={testConfirmRef}
+                closer
+              >
+                Cancel
+              </ModalToggleButton>
+              <Button
+                type="submit"
+                outline
+                data-close-modal
+                disabled={!(recaptchaValid && testFetcher.state === 'idle')}
+              >
+                <Icon.MailOutline role="presentation" />
+                Send
+              </Button>
+            </ButtonGroup>
           </ModalFooter>
         </testFetcher.Form>
       </Modal>
