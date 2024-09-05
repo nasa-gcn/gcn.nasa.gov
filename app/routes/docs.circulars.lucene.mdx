@@ -12,7 +12,7 @@ export function loader() {
 
 # Lucene Search
 
-The full-text search feature allows for searching keywords in a specific field of the circular. The search feature uses the [Lucene query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html) to specify the field and search term. 
+The full-text search feature allows for searching keywords in a specific field of the circular. The search feature uses the [Lucene query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html) to specify the field and search term.
 
 ## Searching by Field
 
@@ -51,5 +51,3 @@ Wildcards can be used to match a patterned search term to a field, such as searc
 - `subject:"SWIFT" OR body:"GRB"`: Matches circulars where the subject contains 'SWIFT' or the body contains 'GRB'.
 - `subject:"GRB21*"`: Matches circulars where the subject contains 'GRB21' followed by any number of characters.
 - `subject:"GRB21?"`: Matches circulars where the subject contains 'GRB21' followed by a single character.
-
-
