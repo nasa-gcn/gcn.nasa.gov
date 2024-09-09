@@ -8,7 +8,7 @@
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, redirect, useLoaderData } from '@remix-run/react'
-import { Button, ButtonGroup } from '@trussworks/react-uswds'
+import { Button, ButtonGroup, Checkbox } from '@trussworks/react-uswds'
 import { diffLines, diffWords } from 'diff'
 
 import { getUser } from './_auth/user.server'
@@ -41,11 +41,18 @@ export async function action({
     throw new Response(null, { status: 403 })
   const data = await request.formData()
   const intent = getFormDataString(data, 'intent')
+  const redistribute = getFormDataString(data, 'redistribute') === 'on'
+
   if (!intent || !circularId || !requestor)
     throw new Response(null, { status: 400 })
   switch (intent) {
     case 'approve':
-      await approveChangeRequest(parseFloat(circularId), requestor, user)
+      await approveChangeRequest(
+        parseFloat(circularId),
+        requestor,
+        user,
+        redistribute
+      )
       break
     case 'reject':
       await deleteChangeRequest(parseFloat(circularId), requestor, user)
@@ -100,6 +107,13 @@ export default function () {
       <h3>Body</h3>
       <DiffedContent oldString={circular.body} newString={correction.body} />
       <Form method="POST">
+        <Checkbox
+          id="redistribute"
+          name="redistribute"
+          label="Redistribute new version as an email"
+          labelDescription="Only select this option if the change alters the factual content of the Circular."
+          className="margin-y-1"
+        />
         <ButtonGroup>
           <Button type="submit" name="intent" value="approve">
             Approve
