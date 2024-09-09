@@ -34,6 +34,7 @@ import type {
 import { sendEmail } from '~/lib/email.server'
 import { feature, origin } from '~/lib/env.server'
 import { closeZendeskTicket } from '~/lib/zendesk.server'
+import { send } from '~/table-streams/circulars'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
@@ -516,7 +517,8 @@ async function deleteChangeRequestRaw(
 export async function approveChangeRequest(
   circularId: number,
   requestorSub: string,
-  user: User
+  user: User,
+  redistribute: boolean
 ) {
   if (!user?.groups.includes(moderatorGroup))
     throw new Response('User is not in the moderators group', {
@@ -527,17 +529,19 @@ export async function approveChangeRequest(
   const circular = await get(circularId)
   const autoincrementVersion = await getDynamoDBVersionAutoIncrement(circularId)
 
+  const newVersion = {
+    ...circular,
+    body: changeRequest.body,
+    subject: changeRequest.subject,
+    editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
+    editedOn: Date.now(),
+    format: changeRequest.format,
+    submitter: changeRequest.submitter,
+    createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
+  }
+
   const promises = [
-    autoincrementVersion.put({
-      ...circular,
-      body: changeRequest.body,
-      subject: changeRequest.subject,
-      editedBy: `${formatAuthor(user)} on behalf of ${changeRequest.requestor}`,
-      editedOn: Date.now(),
-      format: changeRequest.format,
-      submitter: changeRequest.submitter,
-      createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
-    }),
+    autoincrementVersion.put(newVersion),
     deleteChangeRequestRaw(circularId, requestorSub),
     sendEmail({
       to: [changeRequest.requestorEmail],
@@ -548,6 +552,8 @@ export async function approveChangeRequest(
     View the Circular at ${origin}/circulars/${changeRequest.circularId}`,
     }),
   ]
+
+  if (redistribute) promises.push(send(newVersion))
 
   if (changeRequest.zendeskTicketId)
     promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))

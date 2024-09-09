@@ -85,7 +85,7 @@ async function getLegacyEmails() {
   return emails
 }
 
-async function send(circular: Circular) {
+export async function send(circular: Circular) {
   const [emails, legacyEmails] = await Promise.all([
     getEmails(),
     getLegacyEmails(),

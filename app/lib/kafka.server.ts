@@ -8,10 +8,10 @@
 import { Kafka } from 'gcn-kafka'
 import memoizee from 'memoizee'
 
-import { domain, getEnvOrDie } from './env.server'
+import { domain, getEnvOrDieInProduction } from './env.server'
 
-const client_id = getEnvOrDie('KAFKA_CLIENT_ID')
-const client_secret = getEnvOrDie('KAFKA_CLIENT_SECRET')
+const client_id = getEnvOrDieInProduction('KAFKA_CLIENT_ID') ?? ''
+const client_secret = getEnvOrDieInProduction('KAFKA_CLIENT_SECRET')
 const kafka = new Kafka({
   client_id,
   client_secret,
