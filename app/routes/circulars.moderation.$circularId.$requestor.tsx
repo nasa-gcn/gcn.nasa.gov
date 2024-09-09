@@ -111,7 +111,7 @@ export default function () {
           id="redistribute"
           name="redistribute"
           label="Redistribute new version as an email"
-          labelDescription="Major data changes constitute redistributing an email."
+          labelDescription="Only select this option if the change alters the factual content of the Circular."
           className="margin-y-1"
         />
         <ButtonGroup>
