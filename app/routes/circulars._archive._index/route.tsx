@@ -112,14 +112,15 @@ export async function action({ request }: ActionFunctionArgs) {
       if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
 
-      let zendeskTicketId
+      let zendeskTicketId: number | undefined
 
       try {
         zendeskTicketId = (
           await getChangeRequest(parseFloat(circularId), user.sub)
         ).zendeskTicketId
       } catch (error) {
-        console.info('No existing request found')
+        const err = error as Response
+        if (err.status !== 404) throw err
       }
 
       if (!zendeskTicketId) {
@@ -141,7 +142,7 @@ export async function action({ request }: ActionFunctionArgs) {
           ...props,
           submitter,
           createdOn,
-          zendeskTicketId: parseFloat(zendeskTicketId),
+          zendeskTicketId,
         },
         user
       )
