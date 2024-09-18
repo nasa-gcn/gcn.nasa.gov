@@ -36,9 +36,8 @@ export async function loader({
   let existingRequest
   try {
     existingRequest = await getChangeRequest(parseFloat(circularId), user.sub)
-  } catch (error) {
-    const err = error as Response
-    if (err.status !== 404) throw err
+  } catch (err) {
+    if (!(err instanceof Response && err.status === 404)) throw err
   }
   const circular = existingRequest ?? (await get(parseFloat(circularId)))
   const defaultDateTime = new Date(circular.createdOn ?? 0).toISOString()

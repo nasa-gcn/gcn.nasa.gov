@@ -118,9 +118,8 @@ export async function action({ request }: ActionFunctionArgs) {
         zendeskTicketId = (
           await getChangeRequest(parseFloat(circularId), user.sub)
         ).zendeskTicketId
-      } catch (error) {
-        const err = error as Response
-        if (err.status !== 404) throw err
+      } catch (err) {
+        if (!(err instanceof Response && err.status === 404)) throw err
       }
 
       if (!zendeskTicketId) {
