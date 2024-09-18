@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import { Button, Grid, GridContainer, Icon } from '@trussworks/react-uswds'
 import React, { useState } from 'react'
 
@@ -37,10 +38,13 @@ export function LuceneAccordion() {
             hidden={!isOpen}
             className="usa-accordion__content usa-prose padding-y-1"
           >
-            This is where the content for the advanced search will be displayed.
-            This will include a brief explanation of what Lucene is and how to
-            use it. There will also be a link to the Lucene documentation and
-            modal
+            To narrow the search results, use Lucene search syntax. This allows
+            for specifying which circular field to search (submitter, subject,
+            and/or body). Further documentation can be found on the{' '}
+            <Link className="usa-link" to="/docs/circulars/lucene">
+              Lucene Search Syntax Page
+            </Link>
+            {'. '}
           </div>
         </div>
       </div>
