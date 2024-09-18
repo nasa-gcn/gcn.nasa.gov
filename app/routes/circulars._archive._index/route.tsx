@@ -34,6 +34,7 @@ import {
   circularRedirect,
   createChangeRequest,
   get,
+  getChangeRequest,
   getChangeRequests,
   moderatorGroup,
   put,
@@ -111,15 +112,27 @@ export async function action({ request }: ActionFunctionArgs) {
       if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
 
-      const {
-        request: { id: zendeskTicketId },
-      } = await postZendeskRequest({
-        requester: { name: user.name, email: user.email },
-        subject: `Change Request for Circular ${circularId}`,
-        comment: {
-          body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
-        },
-      })
+      let zendeskTicketId: number | undefined
+
+      try {
+        zendeskTicketId = (
+          await getChangeRequest(parseFloat(circularId), user.sub)
+        ).zendeskTicketId
+      } catch (err) {
+        if (!(err instanceof Response && err.status === 404)) throw err
+      }
+
+      if (!zendeskTicketId) {
+        zendeskTicketId = await postZendeskRequest({
+          requester: { name: user.name, email: user.email },
+          subject: `Change Request for Circular ${circularId}`,
+          comment: {
+            body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
+          },
+        })
+      }
+
+      if (!zendeskTicketId) throw new Response(null, { status: 500 })
 
       await createChangeRequest(
         {
