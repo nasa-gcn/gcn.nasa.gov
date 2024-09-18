@@ -123,15 +123,13 @@ export async function action({ request }: ActionFunctionArgs) {
       }
 
       if (!zendeskTicketId) {
-        ;({
-          request: { id: zendeskTicketId },
-        } = await postZendeskRequest({
+        zendeskTicketId = await postZendeskRequest({
           requester: { name: user.name, email: user.email },
           subject: `Change Request for Circular ${circularId}`,
           comment: {
             body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
           },
-        }))
+        })
         if (!zendeskTicketId) throw new Response(null, { status: 500 })
       }
 

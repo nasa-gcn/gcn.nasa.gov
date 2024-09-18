@@ -45,7 +45,13 @@ export async function postZendeskRequest(request: ZendeskRequest) {
     console.error(response)
     throw new Error(`Request failed with status ${response.status}`)
   }
-  return await response.json()
+
+  const responseJson = await response.json()
+  if (!responseJson.request.id) {
+    throw new Response(null, { status: 500 })
+  }
+
+  return responseJson.request.id
 }
 
 export async function closeZendeskTicket(ticketId: number) {
