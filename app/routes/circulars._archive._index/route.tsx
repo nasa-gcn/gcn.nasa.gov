@@ -132,6 +132,8 @@ export async function action({ request }: ActionFunctionArgs) {
         })
       }
 
+      if (!zendeskTicketId) throw new Response(null, { status: 500 })
+
       await createChangeRequest(
         {
           circularId: parseFloat(circularId),
