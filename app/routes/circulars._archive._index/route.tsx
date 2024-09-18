@@ -130,7 +130,6 @@ export async function action({ request }: ActionFunctionArgs) {
             body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
           },
         })
-        if (!zendeskTicketId) throw new Response(null, { status: 500 })
       }
 
       await createChangeRequest(
