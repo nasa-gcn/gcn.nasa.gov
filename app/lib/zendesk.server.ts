@@ -48,7 +48,8 @@ export async function postZendeskRequest(request: ZendeskRequest) {
 
   const responseJson = await response.json()
   if (!responseJson.request.id) {
-    throw new Response(null, { status: 500 })
+    console.error(responseJson)
+    throw new Error("ZenDesk request succeeded, but did not return a request ID")
   }
 
   return responseJson.request.id
