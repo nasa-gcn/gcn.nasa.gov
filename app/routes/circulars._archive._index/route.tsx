@@ -43,6 +43,7 @@ import {
 import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
+import { LuceneAccordion } from './CircularsLuceneMenu'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
@@ -260,6 +261,9 @@ export default function () {
         To navigate to a specific circular, enter the associated Circular ID
         (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
+
+      <LuceneAccordion />
+
       {clean && (
         <>
           <CircularsIndex
