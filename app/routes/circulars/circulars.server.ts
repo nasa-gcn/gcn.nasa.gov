@@ -31,10 +31,9 @@ import type {
   CircularChangeRequestKeys,
   CircularMetadata,
 } from './circulars.lib'
-import { sendEmail } from '~/lib/email.server'
+import { send, sendEmail } from '~/lib/email.server'
 import { feature, origin } from '~/lib/env.server'
 import { closeZendeskTicket } from '~/lib/zendesk.server'
-import { send } from '~/table-streams/circulars'
 
 // A type with certain keys required.
 type Require<T, K extends keyof T> = Omit<T, K> & Required<Pick<T, K>>
