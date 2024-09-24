@@ -10,10 +10,10 @@ import { errors } from '@opensearch-project/opensearch'
 import type { DynamoDBRecord } from 'aws-lambda'
 
 import { unmarshallTrigger } from '../utils'
-import { send } from '~/lib/email.server'
 import { send as sendKafka } from '~/lib/kafka.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
+import { send } from '~/routes/circulars/circulars.server'
 
 import { $id as circularsJsonSchemaId } from '@nasa-gcn/schema/gcn/circulars.schema.json'
 

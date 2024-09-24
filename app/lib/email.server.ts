@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { services, tables } from '@architect/functions'
+import { services } from '@architect/functions'
 import type {
   BulkEmailEntry,
   SendBulkEmailCommandInput,
@@ -17,20 +17,15 @@ import {
   SendBulkEmailCommand,
   SendEmailCommand,
 } from '@aws-sdk/client-sesv2'
-import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import chunk from 'lodash/chunk'
 
-import { hostname, origin } from './env.server'
+import { hostname } from './env.server'
 import { getEnvBannerHeaderAndDescription } from './utils'
-import type { Circular } from '~/routes/circulars/circulars.lib'
-import { formatCircularText } from '~/routes/circulars/circulars.lib'
 import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
 const client = new SESv2Client({})
 // https://docs.aws.amazon.com/ses/latest/dg/quotas.html
 const maxRecipientsPerMessage = 50
-const fromName = 'GCN Circulars'
 
 interface MessageProps {
   /** The name to show in the From: address. */
@@ -82,65 +77,6 @@ async function sendSES(sendCommandInput: SendEmailCommandInput) {
       console.warn(`SES threw ${e.name}. This would be an error in production.`)
     }
   }
-}
-
-async function getEmails() {
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('circulars_subscriptions')
-  const pages = paginateScan(
-    { client },
-    { AttributesToGet: ['email'], TableName }
-  )
-  const emails: string[] = []
-  for await (const page of pages) {
-    const newEmails = page.Items?.map(({ email }) => email)
-    if (newEmails) emails.push(...newEmails)
-  }
-  return emails
-}
-
-async function getLegacyEmails() {
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('legacy_users')
-  const pages = paginateQuery(
-    { client },
-    {
-      IndexName: 'legacyReceivers',
-      KeyConditionExpression: 'receive = :receive',
-      ExpressionAttributeValues: {
-        ':receive': 1,
-      },
-      ProjectionExpression: 'email',
-      TableName,
-    }
-  )
-  const emails: string[] = []
-  for await (const page of pages) {
-    const newEmails = page.Items?.map(({ email }) => email)
-    if (newEmails) emails.push(...newEmails)
-  }
-  return emails
-}
-
-export async function send(circular: Circular) {
-  const [emails, legacyEmails] = await Promise.all([
-    getEmails(),
-    getLegacyEmails(),
-  ])
-  const to = [...emails, ...legacyEmails]
-  await sendEmailBulk({
-    fromName,
-    to,
-    subject: circular.subject,
-    body: `${formatCircularText(
-      circular
-    )}\n\n\nView this GCN Circular online at ${origin}/circulars/${
-      circular.circularId
-    }.`,
-    topic: 'circulars',
-  })
 }
 
 /** Send an email to many recipients in parallel. */
