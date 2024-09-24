@@ -60,7 +60,7 @@ function getFrom(fromName: string) {
   return `${fromName} <no-reply@${hostname}>`
 }
 
-async function sendSES(sendCommandInput: SendEmailCommandInput) {
+async function send(sendCommandInput: SendEmailCommandInput) {
   const command = new SendEmailCommand(sendCommandInput)
   try {
     await client.send(command)
@@ -133,7 +133,7 @@ export async function sendEmail({
   subject,
   body,
 }: MessageProps) {
-  await sendSES({
+  await send({
     Destination: {
       ToAddresses: to,
     },
