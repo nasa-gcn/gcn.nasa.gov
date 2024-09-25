@@ -37,9 +37,9 @@ export function LuceneAccordion({
           </Button>
           <Button
             type="button"
-            onClick={() => populateSearch('body:"Tomas Ahumada Mena"')}
+            onClick={() => populateSearch('submitter:"Tomas Ahumada Mena"')}
           >
-            body:"Tomas Ahumada Mena"
+            submitter:"Tomas Ahumada Mena"
           </Button>
         </div>
       </div>
