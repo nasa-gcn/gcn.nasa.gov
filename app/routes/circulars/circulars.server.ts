@@ -160,7 +160,7 @@ export async function search({
         }
 
   const queryObj = query
-    ? feature('CICRULARS_LUCENE')
+    ? feature('CIRCULARS_LUCENE')
       ? {
           simple_query_string: {
             query,
