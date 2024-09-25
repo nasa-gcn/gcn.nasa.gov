@@ -4,7 +4,7 @@ import { Button } from '@trussworks/react-uswds'
 export function LuceneAccordion({
   querySetter,
 }: {
-  querySetter: (arg0: string) => void
+  querySetter: (value: string) => void
 }) {
   function populateSearch() {
     querySetter('value')
