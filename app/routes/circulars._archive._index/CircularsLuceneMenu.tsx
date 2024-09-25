@@ -23,20 +23,25 @@ export function LuceneAccordion({
           Lucene Search Syntax Page
         </Link>
         {'. '}
-        <div>Lucene Examples</div>
+        <h4>Lucene Examples:</h4>
         <div>
           <Button
             type="button"
+            className="usa-button--outline"
             onClick={() => populateSearch('subject:"SWIFT"')}
           >
             subject:"SWIFT"
           </Button>
-
-          <Button type="button" onClick={() => populateSearch('body:"GRB"')}>
+          <Button
+            type="button"
+            className="usa-button--outline"
+            onClick={() => populateSearch('body:"GRB"')}
+          >
             body:"GRB"
           </Button>
           <Button
             type="button"
+            className="usa-button--outline"
             onClick={() => populateSearch('submitter:"Tomas Ahumada Mena"')}
           >
             submitter:"Tomas Ahumada Mena"
