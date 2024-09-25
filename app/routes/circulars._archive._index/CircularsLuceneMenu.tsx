@@ -2,14 +2,14 @@ import { Link } from '@remix-run/react'
 import { Button } from '@trussworks/react-uswds'
 
 export function LuceneAccordion({
+  query,
   querySetter,
 }: {
+  query?: string
   querySetter: (value: string) => void
 }) {
-  function populateSearch() {
-    querySetter('value')
-    console.log('clickedPopulateSearch')
-    return null
+  function populateSearch(value: string) {
+    querySetter(`${query} ${value}`)
   }
   return (
     <details>
@@ -24,7 +24,7 @@ export function LuceneAccordion({
         </Link>
         {'. '}
         <div>
-          <Button type="button" onClick={() => populateSearch()}>
+          <Button type="button" onClick={() => populateSearch('test')}>
             child
           </Button>
         </div>

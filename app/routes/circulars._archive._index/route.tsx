@@ -228,6 +228,7 @@ export default function () {
             name="query"
             type="search"
             defaultValue={inputQuery}
+            value={inputQuery}
             placeholder="Search"
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
@@ -262,7 +263,7 @@ export default function () {
         (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
       {useFeature('CIRCULARS_LUCENE') && (
-        <LuceneAccordion querySetter={setInputQuery} />
+        <LuceneAccordion query={inputQuery} querySetter={setInputQuery} />
       )}
       {clean && (
         <>
