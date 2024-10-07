@@ -27,21 +27,21 @@ export function LuceneAccordion({
         <div>
           <Button
             type="button"
-            className="usa-button--outline"
-            onClick={() => populateSearch('subject:"SWIFT"')}
+            outline
+            onClick={() => populateSearch('subject:"Swift"')}
           >
-            subject:"SWIFT"
+            subject:"Swift"
           </Button>
           <Button
             type="button"
-            className="usa-button--outline"
+            outline
             onClick={() => populateSearch('body:"GRB"')}
           >
             body:"GRB"
           </Button>
           <Button
             type="button"
-            className="usa-button--outline"
+            outline
             onClick={() => populateSearch('submitter:"Tomas Ahumada Mena"')}
           >
             submitter:"Tomas Ahumada Mena"
