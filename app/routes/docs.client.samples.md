@@ -343,16 +343,16 @@ Additional information can be found on the [LIGO website](https://emfollow.docs.
 
 ## Papers
 
-(1) Calabretta, M. R., & Roukema, B. F. 2007, Mon. Notices Royal Astron. Soc., 381, 865. [doi:10.1111/j.1365-2966.2007.12297.x](https://academic.oup.com/mnras/article/381/2/865/1021805?login=true)
+(1) Calabretta, M. R., & Roukema, B. F. 2007, Mon. Notices Royal Astron. Soc., 381, 865. [doi: 10.1111/j.1365-2966.2007.12297.x](https://doi.org/10.1111/j.1365-2966.2007.12297.x)
 
-(2) Górski, K.M., Hivon, E., Banday, A.J., et al. 2005, Astrophys. J., 622, 759. [doi:10.1086/427976](https://iopscience.iop.org/article/10.1086/427976)
+(2) Górski, K.M., Hivon, E., Banday, A.J., et al. 2005, Astrophys. J., 622, 759. [doi: 10.1086/427976](https://doi.org/10.1086/427976)
 
-(3) Górski, K. M., Wandelt, B. D., et al. 1999. [arXiv:astro-ph/9905275](https://arxiv.org/abs/astro-ph/9905275)
+(3) Górski, K. M., Wandelt, B. D., et al. 1999. [doi: 10.48550/arXiv.astro-ph/9905275](https://doi.org/10.48550/arXiv.astro-ph/9905275)
 
-(4) Fernique, P., Allen, et al. 2015, Astron. Astrophys., 578, A114. [doi:10.1051/0004-6361/201526075](https://www.aanda.org/articles/aa/full_html/2015/06/aa26075-15/aa26075-15.html)
+(4) Fernique, P., Allen, et al. 2015, Astron. Astrophys., 578, A114. [doi: 10.1051/0004-6361/201526075](https://doi.org/10.1051/0004-6361/201526075)
 
-(5) Fernique, P., Boch, T., et al. 2014, IVOA Recommendation. [arXiv:1505.02937](https://arxiv.org/abs/1505.02937)
+(5) Fernique, P., Boch, T., et al. 2014, IVOA Recommendation. [doi: 10.48550/arXiv.1505.02937](https://doi.org/10.48550/arXiv.1505.02937)
 
-(6) Martinez-Castellanos, I., Singer, L. P., et al. 2022, Astrophys. J., 163, 259. [doi:10.3847/1538-3881/ac6260](https://iopscience.iop.org/article/10.3847/1538-3881/ac6260)
+(6) Martinez-Castellanos, I., Singer, L. P., et al. 2022, Astrophys. J., 163, 259. [doi: 10.3847/1538-3881/ac6260](https://doi.org/10.3847/1538-3881/ac6260)
 
-(7) Singer, L. P., & Price, L. R. 2016, Phys. Rev. D, 93, 024013. [doi:10.1103/PhysRevD.93.024013](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.93.024013)
+(7) Singer, L. P., & Price, L. R. 2016, Phys. Rev. D, 93, 024013. [doi: 10.1103/PhysRevD.93.024013](https://doi.org/10.1103/PhysRevD.93.024013)
