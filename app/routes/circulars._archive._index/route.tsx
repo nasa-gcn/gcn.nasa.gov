@@ -44,6 +44,7 @@ import {
 import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
+import { LuceneAccordion } from './CircularsLuceneMenu'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
@@ -51,7 +52,7 @@ import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { useModStatus } from '~/root'
+import { useFeature, useModStatus } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -240,6 +241,7 @@ export default function () {
             name="query"
             type="search"
             defaultValue={inputQuery}
+            value={inputQuery}
             placeholder="Search"
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
@@ -273,6 +275,9 @@ export default function () {
         To navigate to a specific circular, enter the associated Circular ID
         (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
+      {useFeature('CIRCULARS_LUCENE') && (
+        <LuceneAccordion query={inputQuery} querySetter={setInputQuery} />
+      )}
       {clean && (
         <>
           <CircularsIndex
