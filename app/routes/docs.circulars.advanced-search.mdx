@@ -1,0 +1,49 @@
+---
+handle:
+  breadcrumb: Advanced Search
+---
+
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  if (feature('CIRCULARS_LUCENE')) return null
+  else throw new Response(null, { status: 404 })
+}
+
+# Advanced Search
+
+The full-text search feature allows for searching keywords in a specific field of the circular. The search feature uses the [Lucene query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html) to specify the field and search term.
+
+## Searching by Field
+
+Searches can be performed by specifying the field and search term. The syntax for this is `field:"search term"`. For example, to search for circulars with the word 'Swift' in the subject field, the query would be `subject:"Swift"`.
+
+The following fields are supported: `subject`, `body`, and `submitter`.
+
+By default, a query that does not contain lucene syntax will attempt to match the query against all 3 fields. For example, the query `Swift` will match any circular that contains the word 'Swift' in the subject, body, or submitter fields, whereas the query `subject:"Swift"` will only match circulars where the subject contains the word 'Swift'.
+
+## Compound Queries
+
+These separate field queries can be combined using additional keywords to form compound queries. The following keywords are supported:
+
+- `AND`: The AND operator requires that both conditions are met. For example, `subject:"Swift" AND body:"GRB"` will match circulars where the subject contains 'Swift' and the body contains 'GRB'.
+- `OR`: The OR operator requires that at least one condition is met. For example, `subject:"Swift" OR body:"GRB"` will match circulars where the subject contains 'Swift' or the body contains 'GRB'.
+
+By default, the AND operator is used if no operator is specified. For example, `subject:"Swift" body:"GRB"` is equivalent to `subject:"Swift" AND body:"GRB"`.
+
+## Wildcards
+
+Wildcards can be used to match a patterned search term to a field, such as searching for all Circulars related to GRBs detected in a given year by using the query `subject:"GRB21*"`. The following wildcards are supported:
+
+- `*`: Matches any number of characters.
+- `?`: Matches a single character.
+
+## Examples
+
+- `Swift`: Matches circulars where the subject, body, or submitter contains 'Swift'.
+- `subject:"Swift"`: Matches circulars where the subject contains 'Swift'.
+- `body:"Swift"`: Matches circulars where the body contains 'Swift'.
+- `subject:"Swift" AND body:"GRB"`: Matches circulars where the subject contains 'Swift' and the body contains 'GRB'.
+- `subject:"Swift" OR body:"GRB"`: Matches circulars where the subject contains 'Swift' or the body contains 'GRB'.
+- `subject:"GRB21*"`: Matches circulars where the subject contains 'GRB21' followed by any number of characters.
+- `subject:"GRB21?"`: Matches circulars where the subject contains 'GRB21' followed by a single character.
