@@ -23,6 +23,8 @@ import {
 } from '@trussworks/react-uswds'
 import { useId, useState } from 'react'
 
+import { getUser } from './_auth/user.server'
+import { moderatorGroup } from './circulars/circulars.server'
 import type { SynonymGroup } from './synonyms/synonyms.lib'
 import { searchSynonymsByEventId } from './synonyms/synonyms.server'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
@@ -30,12 +32,17 @@ import PaginationSelectionFooter from '~/components/pagination/PaginationSelecti
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-export async function loader({ request: { url } }: LoaderFunctionArgs) {
-  const { searchParams } = new URL(url)
+export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getUser(request)
+  if (!user?.groups.includes(moderatorGroup))
+    throw new Response(null, { status: 403 })
+
+  const { searchParams } = new URL(request.url)
   const query = searchParams.get('query') || undefined
   const limit = parseInt(searchParams.get('limit') || '100')
   const page = parseInt(searchParams.get('page') || '1')
   const synonyms = searchSynonymsByEventId({ page, eventId: query, limit })
+
   return synonyms
 }
 

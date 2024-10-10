@@ -8,7 +8,7 @@
 import { useSubmit } from '@remix-run/react'
 import { Select } from '@trussworks/react-uswds'
 
-import GCNPagination from './GCNPagination'
+import Pagination from './Pagination'
 
 export default function PaginationSelectionFooter({
   page,
@@ -48,7 +48,7 @@ export default function PaginationSelectionFooter({
       </div>
       <div className="display-flex flex-fill">
         {totalPages > 1 && (
-          <GCNPagination
+          <Pagination
             query={query}
             page={page}
             limit={limit}

@@ -60,6 +60,7 @@ export async function loader({
   const { options } = query
     ? await autoCompleteEventIds({ query })
     : { options: [] }
+
   return {
     eventIds,
     options,
@@ -81,11 +82,13 @@ export async function action({
     const subtractions =
       getFormDataString(data, 'deleteSynonyms')?.split(',') || ([] as string[])
     const filtered_subtractions = subtractions.filter((sub) => sub)
+
     await putSynonyms({
       synonymId,
       additions: filtered_additions,
       subtractions: filtered_subtractions,
     })
+
     return null
   } else if (intent === 'delete') {
     await deleteSynonyms(synonymId)
@@ -99,11 +102,11 @@ export async function action({
 
 export default function () {
   const { eventIds, options } = useLoaderData<typeof loader>()
-  const uniqueOptions = Array.from(new Set(options)) as string[]
-  const [deleteSynonyms, setDeleteSynonyms] = useState([] as string[])
-  const [synonyms, setSynonyms] = useState(eventIds || [])
-  const [addSynonyms, setAddSynonyms] = useState([] as string[])
-  const uniqueSynonyms = Array.from(new Set(synonyms)) as string[]
+  const uniqueOptions = Array.from(new Set(options))
+  const [deleteSynonyms, setDeleteSynonyms] = useState<string[]>([])
+  const [synonyms, setSynonyms] = useState<string[]>(eventIds || [])
+  const [addSynonyms, setAddSynonyms] = useState<string[]>([])
+  const uniqueSynonyms = Array.from(new Set(synonyms))
   const [input, setInput] = useState('')
   const modalRef = useRef<ModalRef>(null)
   const ref = useRef<HTMLDivElement>(null)
@@ -222,7 +225,7 @@ export default function () {
                         })
                       )
                       setAddSynonyms(
-                        synonyms.filter(function (item) {
+                        addSynonyms.filter(function (item) {
                           return item !== synonym
                         })
                       )
@@ -277,7 +280,7 @@ export default function () {
               unstyled
               className="padding-105 text-center"
             >
-              Go back
+              Cancel
             </ModalToggleButton>
           </ButtonGroup>
         </ModalFooter>

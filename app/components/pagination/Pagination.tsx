@@ -35,7 +35,7 @@ function getPageLink({
   return searchString && `?${searchString}`
 }
 
-export default function GCNPagination({
+export default function Pagination({
   page,
   totalPages,
   ...queryStringProps
