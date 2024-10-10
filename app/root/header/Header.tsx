@@ -111,7 +111,7 @@ export function Header() {
       <USWDSHeader basic className={`usa-header--dark ${styles.header}`}>
         <div className="usa-nav-container">
           <div className="usa-navbar">
-            <Title>
+            <Title style={{ width: 'max-content' }}>
               <Link to="/">
                 <Meatball className="width-auto" />
                 <span>General Coordinates Network</span>
