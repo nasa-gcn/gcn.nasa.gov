@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { useClickAnyWhere, useWindowSize } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
-import { useEmail, useUserIdp } from '~/root'
+import { useEmail, useModStatus, useUserIdp } from '~/root'
 
 import styles from './header.module.css'
 
@@ -74,6 +74,7 @@ export function Header() {
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const isMobile = useWindowSize().width < 1024
+  const isModerator = useModStatus()
 
   function toggleMobileNav() {
     setExpanded((expanded) => !expanded)
@@ -139,6 +140,15 @@ export function Header() {
               >
                 Circulars
               </NavLink>,
+              isModerator ? (
+                <NavLink
+                  className="usa-nav__link"
+                  to="/synonyms"
+                  key="/synonyms"
+                >
+                  Synonyms
+                </NavLink>
+              ) : null,
               <NavLink className="usa-nav__link" to="/docs" key="/docs">
                 Documentation
               </NavLink>,
