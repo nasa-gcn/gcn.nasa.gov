@@ -93,6 +93,7 @@ The GCN Notice will highlight:
 - Overall search results p-values for the generic and Bayesian searches (`pval_generic` and `pval_bayesian`)
 - If the analysis p-value from either search is less than 10%, the number (`n_events_coincident`) and per-event information for coincident neutrino events (for events with a per-event p-value of less than 10%) are also provided:
   - `event_dt` - relative timing of neutrino to GW alert (sec)
+  - `id` - unique identifier label for coincident neutrino event (string)
   - `ra`, `dec` - reconstructed neutrino event direction (deg., J200),
   - `ra_uncertainty` - circular direction error (deg.) at 90% confidence.
   - `event_pval_generic`, `event_pval_bayesian` - per-event p-values for each search. In the case of multiple coincidences, can be used to determine relative importance of each event to search results.
