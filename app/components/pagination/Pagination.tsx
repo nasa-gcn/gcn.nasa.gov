@@ -17,27 +17,31 @@ function getPageLink({
   query,
   startDate,
   endDate,
+  view,
 }: {
   page: number
   limit?: number
   query?: string
   startDate?: string
   endDate?: string
+  view?: string
 }) {
   const searchParams = new URLSearchParams()
   if (page > 1) searchParams.set('page', page.toString())
-  if (limit && limit != 100) searchParams.set('limit', limit.toString())
+  if (limit) searchParams.set('limit', limit.toString())
   if (query) searchParams.set('query', query)
   if (startDate) searchParams.set('startDate', startDate)
   if (endDate) searchParams.set('endDate', endDate)
+  searchParams.set('view', view || 'index')
 
   const searchString = searchParams.toString()
   return searchString && `?${searchString}`
 }
 
-export default function ({
+export default function Pagination({
   page,
   totalPages,
+  view,
   ...queryStringProps
 }: {
   page: number
@@ -46,8 +50,10 @@ export default function ({
   query?: string
   startDate?: string
   endDate?: string
+  view?: string
 }) {
   const pages = usePagination({ currentPage: page, totalPages })
+
   return (
     <nav aria-label="Pagination" className="usa-pagination">
       <ul className="usa-pagination__list">
@@ -63,6 +69,7 @@ export default function ({
                     <Link
                       to={getPageLink({
                         page: pageProps.number,
+                        view,
                         ...queryStringProps,
                       })}
                       className="usa-pagination__link usa-pagination__previous-page"
@@ -102,6 +109,7 @@ export default function ({
                     <Link
                       to={getPageLink({
                         page: pageProps.number,
+                        view,
                         ...queryStringProps,
                       })}
                       className="usa-pagination__link usa-pagination__next-page"
@@ -124,6 +132,7 @@ export default function ({
                   <Link
                     to={getPageLink({
                       page: pageProps.number,
+                      view,
                       ...queryStringProps,
                     })}
                     className={classNames('usa-pagination__button', {

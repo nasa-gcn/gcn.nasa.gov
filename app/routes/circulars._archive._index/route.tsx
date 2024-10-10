@@ -14,22 +14,28 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
-import {
-  Alert,
-  Button,
-  Icon,
-  Label,
-  Select,
-  TextInput,
-} from '@trussworks/react-uswds'
+import { Alert, Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
-import { getUser } from '../_auth/user.server'
+import CircularsHeader from './CircularsHeader'
+import CircularsIndex from './CircularsIndex'
+import { DateSelector } from './DateSelectorMenu'
+import { SortSelector } from './SortSelectorButton'
+import SynonymGroupIndex from './SynonymGroupIndex'
+import Hint from '~/components/Hint'
+import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
+import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
+import { feature, origin } from '~/lib/env.server'
+import { calculateLimit, getFormDataString } from '~/lib/utils'
+import { postZendeskRequest } from '~/lib/zendesk.server'
+import { useModStatus } from '~/root'
+import { getUser } from '~/routes/_auth/user.server'
 import {
   type CircularFormat,
+  type CircularMetadata,
   circularFormats,
-} from '../circulars/circulars.lib'
+} from '~/routes/circulars/circulars.lib'
 import {
   circularRedirect,
   createChangeRequest,
@@ -40,33 +46,35 @@ import {
   put,
   putVersion,
   search,
-} from '../circulars/circulars.server'
-import CircularPagination from './CircularPagination'
-import CircularsHeader from './CircularsHeader'
-import CircularsIndex from './CircularsIndex'
-import { DateSelector } from './DateSelectorMenu'
-import { SortSelector } from './SortSelectorButton'
-import Hint from '~/components/Hint'
-import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
-import { origin } from '~/lib/env.server'
-import { getFormDataString } from '~/lib/utils'
-import { postZendeskRequest } from '~/lib/zendesk.server'
-import { useModStatus } from '~/root'
+} from '~/routes/circulars/circulars.server'
+import type { SynonymGroupWithMembers } from '~/routes/synonyms/synonyms.lib'
+import { groupMembersByEventId } from '~/routes/synonyms/synonyms.server'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ request: { url } }: LoaderFunctionArgs) {
+  const synonymFlagIsOn = feature('SYNONYMS')
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
-  if (query) {
+  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
+  const isGroupView = view === 'group'
+
+  if (query && view === 'index') {
     await circularRedirect(query)
   }
+
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
-  const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
+  const initialLimit = searchParams.get('limit') || '100'
+  const limit = clamp(
+    calculateLimit({ isGroupView, limit: parseInt(initialLimit) }),
+    1,
+    100
+  )
   const sort = searchParams.get('sort') || 'circularId'
-  const results = await search({
+  const searchFunction = view != 'group' ? search : groupMembersByEventId
+  const results = await searchFunction({
     query,
     page: page - 1,
     limit,
@@ -75,7 +83,15 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
     sort,
   })
   const requestedChangeCount = (await getChangeRequests()).length
-  return { page, ...results, requestedChangeCount }
+
+  return {
+    page,
+    ...results,
+    requestedChangeCount,
+    synonymFlagIsOn,
+    limit,
+    isGroupView,
+  }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -170,10 +186,34 @@ export async function action({ request }: ActionFunctionArgs) {
   return { newCircular, intent }
 }
 
+function handleSearchParams(
+  searchParams: URLSearchParams,
+  synonymFlagIsOn: boolean
+) {
+  // Strip off the ?index param if we navigated here from a form.
+  // See https://remix.run/docs/en/main/guides/index-query-param.
+  searchParams.delete('index')
+  const query = searchParams.get('query') || ''
+  const startDate = searchParams.get('startDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
+  const sort = searchParams.get('sort') || 'circularID'
+  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
+
+  return { query, startDate, endDate, sort, view }
+}
+
 export default function () {
   const result = useActionData<typeof action>()
-  const { items, page, totalPages, totalItems, requestedChangeCount } =
-    useLoaderData<typeof loader>()
+  const {
+    items,
+    page,
+    totalPages,
+    totalItems,
+    requestedChangeCount,
+    synonymFlagIsOn,
+    limit,
+    isGroupView,
+  } = useLoaderData<typeof loader>()
 
   // Concatenate items from the action and loader functions
   const allItems = [
@@ -181,6 +221,8 @@ export default function () {
     ...(items || []),
   ]
 
+  const formId = useId()
+  const submit = useSubmit()
   const [searchParams] = useSearchParams()
   const userIsModerator = useModStatus()
 
@@ -188,20 +230,17 @@ export default function () {
   // See https://remix.run/docs/en/main/guides/index-query-param.
   searchParams.delete('index')
 
-  const limit = searchParams.get('limit') || '100'
-  const query = searchParams.get('query') || ''
-  const startDate = searchParams.get('startDate') || undefined
-  const endDate = searchParams.get('endDate') || undefined
-  const sort = searchParams.get('sort') || 'circularID'
+  const { query, startDate, endDate, sort, view } = handleSearchParams(
+    searchParams,
+    synonymFlagIsOn
+  )
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
+  const viewState = isGroupView ? 'Index' : 'Group'
   const clean = inputQuery === query
-
-  const formId = useId()
-  const submit = useSubmit()
 
   return (
     <>
@@ -216,13 +255,16 @@ export default function () {
           it shortly.
         </Alert>
       )}
+
       <CircularsHeader />
+
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
           Review {requestedChangeCount} Requested Change
           {requestedChangeCount > 1 ? 's' : ''}
         </Link>
       )}
+
       <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           preventScrollReset
@@ -233,6 +275,7 @@ export default function () {
           <Label srOnly htmlFor="query">
             Search
           </Label>
+          <input type="hidden" name="view" value={view} />
           <TextInput
             autoFocus
             className="minw-15"
@@ -255,12 +298,31 @@ export default function () {
             />
           </Button>
         </Form>
-        <DateSelector
-          form={formId}
-          defaultStartDate={startDate}
-          defaultEndDate={endDate}
-        />
-        {query && <SortSelector form={formId} defaultValue={sort} />}
+
+        {!isGroupView && (
+          <DateSelector
+            form={formId}
+            defaultStartDate={startDate}
+            defaultEndDate={endDate}
+          />
+        )}
+
+        {query && !isGroupView && (
+          <SortSelector form={formId} defaultValue={sort} />
+        )}
+
+        {synonymFlagIsOn && (
+          <Link
+            to={`/circulars?view=${viewState.toLowerCase()}&limit=${limit}`}
+            preventScrollReset
+          >
+            <Button
+              type="button"
+              className="padding-y-1"
+            >{`${viewState} View`}</Button>
+          </Link>
+        )}
+
         <Link to={`/circulars/new${searchString}`}>
           <Button type="button" className="padding-y-1">
             <Icon.Edit role="presentation" /> New
@@ -275,46 +337,31 @@ export default function () {
       </Hint>
       {clean && (
         <>
-          <CircularsIndex
-            allItems={allItems}
-            searchString={searchString}
-            totalItems={totalItems}
+          {!isGroupView && (
+            <CircularsIndex
+              allItems={allItems as CircularMetadata[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          )}
+          {isGroupView && synonymFlagIsOn && (
+            <SynonymGroupIndex
+              allItems={items as SynonymGroupWithMembers[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          )}
+
+          <PaginationSelectionFooter
             query={query}
+            page={page}
+            limit={limit}
+            totalPages={totalPages}
+            form={formId}
+            view={view}
           />
-          <div className="display-flex flex-row flex-wrap">
-            <div className="display-flex flex-align-self-center margin-right-2 width-auto">
-              <div>
-                <Select
-                  id="limit"
-                  title="Number of results per page"
-                  className="width-auto height-5 padding-y-0 margin-y-0"
-                  name="limit"
-                  defaultValue="100"
-                  form={formId}
-                  onChange={({ target: { form } }) => {
-                    submit(form)
-                  }}
-                >
-                  <option value="10">10 / page</option>
-                  <option value="20">20 / page</option>
-                  <option value="50">50 / page</option>
-                  <option value="100">100 / page</option>
-                </Select>
-              </div>
-            </div>
-            <div className="display-flex flex-fill">
-              {totalPages > 1 && (
-                <CircularPagination
-                  query={query}
-                  page={page}
-                  limit={parseInt(limit)}
-                  totalPages={totalPages}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              )}
-            </div>
-          </div>
         </>
       )}
     </>

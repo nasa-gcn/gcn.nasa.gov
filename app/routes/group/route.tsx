@@ -5,18 +5,18 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
-import { getUser } from '../_auth/user.server'
-import { moderatorGroup } from '../circulars/circulars.server'
+import { feature } from '~/lib/env.server'
+import type { BreadcrumbHandle } from '~/root/Title'
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await getUser(request)
-  if (!user?.groups.includes(moderatorGroup))
-    throw new Response(null, { status: 403 })
+export const handle: BreadcrumbHandle = {
+  breadcrumb: 'Circulars',
+}
 
+export function loader() {
+  if (!feature('SYNONYMS')) throw new Response(null, { status: 403 })
   return null
 }
 
