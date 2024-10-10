@@ -14,14 +14,7 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
-import {
-  Alert,
-  Button,
-  Icon,
-  Label,
-  Select,
-  TextInput,
-} from '@trussworks/react-uswds'
+import { Alert, Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
@@ -41,13 +34,13 @@ import {
   putVersion,
   search,
 } from '../circulars/circulars.server'
-import CircularPagination from './CircularPagination'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
+import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
@@ -281,40 +274,13 @@ export default function () {
             totalItems={totalItems}
             query={query}
           />
-          <div className="display-flex flex-row flex-wrap">
-            <div className="display-flex flex-align-self-center margin-right-2 width-auto">
-              <div>
-                <Select
-                  id="limit"
-                  title="Number of results per page"
-                  className="width-auto height-5 padding-y-0 margin-y-0"
-                  name="limit"
-                  defaultValue="100"
-                  form={formId}
-                  onChange={({ target: { form } }) => {
-                    submit(form)
-                  }}
-                >
-                  <option value="10">10 / page</option>
-                  <option value="20">20 / page</option>
-                  <option value="50">50 / page</option>
-                  <option value="100">100 / page</option>
-                </Select>
-              </div>
-            </div>
-            <div className="display-flex flex-fill">
-              {totalPages > 1 && (
-                <CircularPagination
-                  query={query}
-                  page={page}
-                  limit={parseInt(limit)}
-                  totalPages={totalPages}
-                  startDate={startDate}
-                  endDate={endDate}
-                />
-              )}
-            </div>
-          </div>
+          <PaginationSelectionFooter
+            query={query}
+            page={page}
+            limit={parseInt(limit)}
+            totalPages={totalPages}
+            form={formId}
+          />
         </>
       )}
     </>

@@ -10,16 +10,13 @@ import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { getUser } from '../_auth/user.server'
+import { moderatorGroup } from '../circulars/circulars.server'
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
-  const isModerator = user?.groups.includes('gcn.nasa.gov/circular-moderator')
+  if (!user?.groups.includes(moderatorGroup))
+    throw new Response(null, { status: 403 })
 
-  if (!isModerator) {
-    throw new Response(null, {
-      status: 403,
-    })
-  }
   return null
 }
 
