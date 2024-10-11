@@ -253,7 +253,7 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Circulars over Kafka, Heartbeat Topic, and Schema v4.1.0. See{' '}
+          New! October 18 GCN Classic Outage and Schema v4.2.0. See{' '}
           <Link
             className="usa-link"
             to="/news#circulars-are-now-available-via-kafka-heartbeat-kafka-topic-and-schema-release-v410"

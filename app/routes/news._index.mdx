@@ -29,6 +29,26 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none"
       variantComponent={
+        <CollectionCalendarDate datetime={'October 15, 2024'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>GCN Classic Outage and Schema Release v4.2.0</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        - Due to planned network maintenance at GSFC, the connections to GCN Classic will have intermittent loss of network connectivity on Friday, October 18 from 7 pm ET (23:00 UTC) until 11 pm ET (3:00 UTC October 19). This affects the following GCN services:
+          - GCN Classic Notices distribution via socket, VOEvent, and email
+          - GCN Classic Notices web site archive
+          - GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email, however JSON-format Notices distrbution via GCN Kafka will be unaffected
+          - Forwarding of GCN Circulars submitted to gcncirc@capella2.gsfc.nasa.gov, however submission to circulars@gcn.nasa.gov and the [web form](/circulars) will be unaffected.
+        - **Schema v4.2.0** includes the following update:
+          - `id` property (from the Event core schema) added to [IceCube lvk_nu_track_search notices](https://gcn.nasa.gov/docs/schema/v4.2.0/gcn/notices/icecube/lvk_nu_track_search.schema.json).
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none"
+      variantComponent={
         <CollectionCalendarDate datetime={'July 30, 2024'} />
       }
     >
