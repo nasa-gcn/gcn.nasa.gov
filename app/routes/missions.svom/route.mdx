@@ -3,7 +3,7 @@ handle:
   breadcrumb: SVOM
 ---
 
-import logo from './logo.png'
+import logo from './logo_svom_black.svg'
 
 # Space Variable Objects Monitor (SVOM)
 
@@ -18,26 +18,25 @@ import logo from './logo.png'
 
 **Launch Date:** June 22, 2024
 
-**Anticipated Start of Science Operations:** September 2024
+**Anticipated Start of Science Operations:** December 2024
 
 **End of Operations:** Mission duration of 3 years
 
 **Data Archive:**
 [HEASARC SVOM Archive](https://heasarc.gsfc.nasa.gov/docs/heasarc/missions/svom.html)
 
-The [Space-based multi-band astronomical Variable Objects Monitor (SVOM)](https://www.svom.eu/en/the-svom-mission/) is a French-Chinese mission, result of a collaboration between the two national space agencies, [China National Space Administration (CNSA)](https://www.cnsa.gov.cn/english/index.html) and [Centre national d'études spatiales (CNES)](https://irfu.cea.fr/dap/en/Phocea/Vie_des_labos/Ast/ast_technique.php?id_ast=2276). SVOM mission is dedicated to the study of the most distant explosions of stars, the gamma-ray bursts (GRBs).
+The [Space-based multi-band astronomical Variable Objects Monitor (SVOM)](https://www.svom.eu/en/the-svom-mission/) is a French-Chinese mission, result of a collaboration between the two national space agencies, [China National Space Administration (CNSA)](https://www.cnsa.gov.cn/english/index.html) and [Centre national d'études spatiales (CNES)](https://irfu.cea.fr/dap/en/Phocea/Vie_des_labos/Ast/ast_technique.php?id_ast=2276). SVOM mission is dedicated to the study of the the most powerful transient phenomena, with a particular emphasis on gamma-ray bursts (GRBs).
 
-The SVOM spacecraft carries 4 main instruments of which 2 are French (ECLAIRs and MXT) and 2 are Chinese (GRM and VT). Transient alert messages will be sent for:
+The SVOM spacecraft carries four multi-wavelength instruments: ECLAIRs, Gamma Ray burst Monitor (GRM), Microchannel X-ray Telescope (MXT) and Visual Telescope (VT). ECLAIRs and GRM can detect gamma-ray transient sources in real-time with localisation capabilities for ECLAIRs. SVOM can transfer the alerts in near real-time with a typical latency of less than 30s for 2/3 of the alerts and perform autonomous slew for performing x-ray and optical follow-up of the source with the smaller field of view of theMXT and VT instrument
 
  <div className="overflow-table">
 
-| Instruments                        | Energy Range            | Field of View | Localization                                   |
-| ---------------------------------- | ----------------------- | ------------- | ---------------------------------------------- |
-| ECLAIRs                            | 4 - 250 keV             | 2 ster        | ~8' radius (statistical, 90% confidence)       |
-| Gamma Ray burst Monitor (GRM)      | 15 - 5000 keV           | 2.6 ster      | ~1-10° radius (statistical, 90% confidence)    |
-| Microchannel X-ray Telescope (MXT) | 15 - 5000 keV           | 1.1° x 1.1°   | ~10-100'' radius (statistical, 90% confidence) |
-| Visual Telescope (VT)              | Blue Band: 450 - 650 nm | 26' x 26'     | ~TBD'' radius (statistical, 90% confidence)    |
-| Visual Telescope (VT)                | Red Band: 650 - 1000 nm |  26' x 26'              |  ~TBD'' radius (statistical, 90% confidence)                                       |
+| Instruments | Energy Range                                           | Field of View | Localization                                   |
+| ----------- | ------------------------------------------------------ | ------------- | ---------------------------------------------- |
+| ECLAIRs     | 4 - 250 keV                                            | 2 ster        | ~8' radius (statistical, 90% confidence)       |
+| GRM         | 15 - 5000 keV                                          | 2.6 ster      | ~1-10° radius (statistical, 90% confidence)    |
+| MXT         | 0.2 - 10 keV                                           | 1.1° x 1.1°   | ~10-100'' radius (statistical, 90% confidence) |
+| VT          | 450 - 650 nm (Blue band) <br/>650 - 1000 nm (Red band) | 26' x 26'     | ~1'' radius (statistical, 90% confidence)      |
 
  </div>
 
@@ -50,8 +49,8 @@ SVOM distributes alerts and localizations detections of gamma-ray transients. Th
 | Type               | Contents                                                                                  | Latency   |
 | ------------------ | ----------------------------------------------------------------------------------------- | --------- |
 | `trigger`          | eclairs.trigger.wakeup, eclairs.trigger.not-slewing, eclairs.trigger.slewing, grm.trigger | ~1-10 sec |
-| `refined`          | eclairs.refined, grm.refined, eclgrm.refined                                              | ~10 min   |
 | `mxt.localisation` | mxt.localisation                                                                          | ~1 min    |
+| `refined`          | eclairs.refined, grm.refined, eclgrm.refined                                              | ~10 min   |
 
  </div>
 
@@ -59,9 +58,9 @@ SVOM distributes alerts and localizations detections of gamma-ray transients. Th
 
  <div className="overflow-table">
 
-| Instrument        | Type                             | Yearly Rates |
-| ----------------- | -------------------------------- | ------------ |
-| ECLAIRs           | GRBs (TBD)                       | TBD          |
-| Gamma Ray Monitor | GRBs, and other transients (TBD) | TBD          |
+| Instrument | Type                       | Yearly Rates |
+| ---------- | -------------------------- | ------------ |
+| ECLAIRs    | GRBs, and other transients | 50 GRBs/yr   |
+| GRM        | GRBs, and other transients | 90 GRBs/yr   |
 
  </div>
