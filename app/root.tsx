@@ -256,7 +256,7 @@ export function Layout({ children }: { children?: ReactNode }) {
           New! October 18 GCN Classic Outage and Schema v4.2.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#circulars-are-now-available-via-kafka-heartbeat-kafka-topic-and-schema-release-v410"
+            to="/news#gcn-classic-outage-and-schema-release-v420"
           >
             news and announcements
           </Link>
