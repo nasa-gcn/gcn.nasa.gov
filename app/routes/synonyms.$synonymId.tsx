@@ -76,17 +76,13 @@ export async function action({
   const intent = getFormDataString(data, 'intent')
 
   if (intent === 'edit') {
-    const additions =
-      getFormDataString(data, 'addSynonyms')?.split(',') || ([] as string[])
-    const filtered_additions = additions.filter((add) => add)
-    const subtractions =
-      getFormDataString(data, 'deleteSynonyms')?.split(',') || ([] as string[])
-    const filtered_subtractions = subtractions.filter((sub) => sub)
+    const additions = data.getAll('addSynonyms') as string[]
+    const subtractions = data.getAll('deleteSynonyms') as string[]
 
     await putSynonyms({
       synonymId,
-      additions: filtered_additions,
-      subtractions: filtered_subtractions,
+      additions,
+      subtractions,
     })
 
     return null
@@ -207,8 +203,24 @@ export default function () {
       >
         <input type="hidden" name="intent" value="edit" />
         <FormGroup>
-          <input type="hidden" name="deleteSynonyms" value={deleteSynonyms} />
-          <input type="hidden" name="addSynonyms" value={addSynonyms} />
+          {addSynonyms.map((synonym) => (
+            <input
+              key={synonym}
+              type="hidden"
+              name="addSynonyms"
+              value={synonym}
+              id={`add-${synonym}`}
+            />
+          ))}
+          {deleteSynonyms.map((synonym) => (
+            <input
+              key={synonym}
+              type="hidden"
+              name="deleteSynonyms"
+              value={synonym}
+              id={`delete-${synonym}`}
+            />
+          ))}
           <ul className="usa-list usa-list--unstyled">
             {uniqueSynonyms?.map((synonym) => (
               <li key={synonym}>
