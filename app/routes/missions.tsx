@@ -9,6 +9,7 @@ import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav } from '~/components/SideNav'
+import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = { breadcrumb: 'Missions' }
@@ -50,6 +51,11 @@ export default function () {
               <NavLink key="integral" to="integral">
                 INTEGRAL
               </NavLink>,
+              useFeature('KM3NET_QUICKSTART') && (
+                <NavLink key="km3net" to="km3net">
+                  KM3NeT
+                </NavLink>
+              ),
               <NavLink key="konus" to="konus">
                 Konus-Wind
               </NavLink>,
