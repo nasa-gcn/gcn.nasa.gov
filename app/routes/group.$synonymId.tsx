@@ -7,7 +7,8 @@
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { Icon } from '@trussworks/react-uswds'
+import { Button, Icon } from '@trussworks/react-uswds'
+import { useRef, useState } from 'react'
 
 import type { SynonymGroup } from './synonyms/synonyms.lib'
 import {
@@ -40,6 +41,18 @@ export default function Group() {
   const { members, eventIds, view, limit, page } =
     useLoaderData<typeof loader>()
   const searchString = `?view=${view}&limit=${limit}&page=${page}`
+  const detailsRef = useRef<NodeListOf<HTMLDetailsElement>>()
+  const [allOpen, setAllOpen] = useState(false)
+  const buttonText = allOpen ? 'Close' : 'Open'
+
+  const toggleDetails = () => {
+    setAllOpen(!allOpen)
+    if (detailsRef.current) {
+      detailsRef.current.forEach((details) => {
+        details.open = !allOpen
+      })
+    }
+  }
 
   return (
     <>
@@ -56,11 +69,17 @@ export default function Group() {
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
         </Link>
+        <Button
+          type="button"
+          onClick={toggleDetails}
+        >{`${buttonText} All`}</Button>
       </ToolbarButtonGroup>
+
       <h1>{`Group ${eventIds.join(', ')}`}</h1>
-      {members.map((circular) => (
-        <div key={circular.circularId}>
-          <details>
+
+      <div ref={(el) => (detailsRef.current = el?.querySelectorAll('details'))}>
+        {members.map((circular) => (
+          <details key={circular.circularId}>
             <summary>
               <Link to={`/circulars/${circular.circularId}`}>
                 {circular.subject}
@@ -80,8 +99,8 @@ export default function Group() {
               <PlainTextBody className="margin-2" children={circular.body} />
             </div>
           </details>
-        </div>
-      ))}
+        ))}
+      </div>
     </>
   )
 }
