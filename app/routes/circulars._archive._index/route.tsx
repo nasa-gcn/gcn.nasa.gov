@@ -216,6 +216,11 @@ export default function () {
           {requestedChangeCount > 1 ? 's' : ''}
         </Link>
       )}
+      {userIsModerator && (
+        <Link to="/synonyms" className="usa-button usa-button--outline">
+          Synonym Moderation
+        </Link>
+      )}
       <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           preventScrollReset
