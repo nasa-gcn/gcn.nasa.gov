@@ -242,6 +242,11 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.Fermi = '/missions/fermi'
   }
 
+  if (useFeature('SUPER_K_QUICKSTART')) {
+    JsonNoticeTypes['Super Kamiokande'] = ['gcn.notices.superk']
+    JsonNoticeTypeLinks['Super Kamiokande'] = '/missions/sksn'
+  }
+
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
