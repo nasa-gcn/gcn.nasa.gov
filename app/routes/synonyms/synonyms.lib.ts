@@ -23,7 +23,3 @@ export interface SynonymGroupWithMembers {
   group: SynonymGroup
   members: Circular[]
 }
-export interface SynonymValidityCheck {
-  eventId: string
-  count: number
-}
