@@ -231,6 +231,11 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
   }
 
+  if (useFeature('FERMI_GBM_QUICKSTART')) {
+    JsonNoticeTypes.Fermi = ['gcn.notices.fermi.gbm']
+    JsonNoticeTypeLinks.Fermi = '/missions/fermi'
+  }
+
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
