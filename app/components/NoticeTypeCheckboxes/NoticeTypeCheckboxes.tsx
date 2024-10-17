@@ -231,6 +231,14 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
   }
 
+  if (useFeature('SUPER_K_QUICKSTART')) {
+    JsonNoticeTypes['Super Kamiokande'] = [
+      'gcn.notices.superk.sn_alert.real',
+      'gcn.notices.superk.sn_alert.test',
+    ]
+    JsonNoticeTypeLinks['Super Kamiokande'] = '/missions/sksn'
+  }
+
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
