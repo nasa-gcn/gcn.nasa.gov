@@ -12,7 +12,7 @@ and some samples from the FAQs section of the [gcn-kafka-python](https://github.
 
 To contribute your own ideas, make a GitHub pull request to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md), or [contact us](/contact).
 
-## Parsing
+## Parsing XML
 
 Within your consumer loop, use the following functions to convert the
 content of `message.value()` into other data types.
@@ -164,3 +164,57 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
             continue
     print(message.value())
 ```
+
+## Working With JSON Schema
+
+For new missions, GCN Notices are preferably distributed in JSON format. This guide describes how to programmatically read the JSON schema.
+
+## Parsing JSON
+
+Read the JSON data from [sample.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [sample.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
+
+```python
+import json
+
+# Load and parse schema and example JSON files
+with open('sample.schema.json', 'r') as schema_file:
+    schema = json.load(schema_file)
+
+with open('sample.example.json', 'r') as example_file:
+    example = json.load(example_file)
+
+print('Schema:', schema)
+print('Example:', example)
+```
+
+## Encoding and Decoding of Embedded Data
+
+The following code sample shows how to encode/decode a file in Python. The `base64` package includes the methods `b64decode` and `b64encode` to make this task simple.
+
+```python
+import base64
+
+# Parse the content of your file to a base64 encoded string:
+with open("path/to/your/file", 'rb') as file:
+    encoded_string = base64.b64encode(file.read())
+
+print(encoded_string)
+# b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
+
+# Decode and write the content to a local file:
+with open("path/to/destination/file", 'wb') as file:
+    file.write(base64.b64decode(encoded_string))
+
+```
+
+If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
+
+```python
+{
+    type: 'string',
+    contentEncoding: 'base64',
+    contentMediaType: 'image/fits',
+}
+```
+
+In your data production pipeline, you can use the encoding steps to convert your file to a bytestring and set the value of the property to this bytestring. See [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html) for more information.
