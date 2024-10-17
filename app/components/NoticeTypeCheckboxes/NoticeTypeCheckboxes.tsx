@@ -232,7 +232,13 @@ export function NoticeTypeCheckboxes({
   }
 
   if (useFeature('FERMI_GBM_QUICKSTART')) {
-    JsonNoticeTypes.Fermi = ['gcn.notices.fermi.gbm']
+    JsonNoticeTypes.Fermi = [
+      'gcn.notices.fermi.gbm.alert',
+      'gcn.notices.fermi.gbm.final_position',
+      'gcn.notices.fermi.gbm.flight_position',
+      'gcn.notices.fermi.gbm.ground_position',
+      'gcn.notices.fermi.gbm.subthreshold',
+    ]
     JsonNoticeTypeLinks.Fermi = '/missions/fermi'
   }
 
