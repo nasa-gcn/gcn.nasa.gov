@@ -231,6 +231,11 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
   }
 
+  if (useFeature('KM3NET_QUICKSTART')) {
+    JsonNoticeTypes.KM3NET = ['gcn.notices.km3net']
+    JsonNoticeTypeLinks.KM3NET = '/missions/km3net'
+  }
+
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
