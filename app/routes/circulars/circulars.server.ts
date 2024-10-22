@@ -22,6 +22,7 @@ import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_auth/user.server'
+import { createSynonyms, synonymExists } from '../synonyms/synonyms.server'
 import {
   bodyIsValid,
   formatAuthor,
@@ -310,7 +311,11 @@ export async function put(
   }
 
   const eventId = parseEventFromSubject(item.subject)
-  if (eventId) circular.eventId = eventId
+  if (eventId) {
+    circular.eventId = eventId
+    const synonymRecordExists = await synonymExists({ eventId })
+    if (!synonymRecordExists) createSynonyms([eventId])
+  }
 
   return await putRaw(circular)
 }
