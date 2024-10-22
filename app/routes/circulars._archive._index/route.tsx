@@ -27,7 +27,7 @@ import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { feature, origin } from '~/lib/env.server'
-import { calculateLimit, getFormDataString } from '~/lib/utils'
+import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
 import { useModStatus } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
@@ -66,12 +66,7 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const page = parseInt(searchParams.get('page') || '1')
-  const initialLimit = searchParams.get('limit') || '100'
-  const limit = clamp(
-    calculateLimit({ isGroupView, limit: parseInt(initialLimit) }),
-    1,
-    100
-  )
+  const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
   const sort = searchParams.get('sort') || 'circularId'
   const searchFunction = view != 'group' ? search : groupMembersByEventId
   const results = await searchFunction({

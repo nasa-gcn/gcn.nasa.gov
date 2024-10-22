@@ -61,20 +61,19 @@ export default function Group() {
       <h1>{`Group ${eventIds.join(', ')}`}</h1>
       {members.map((circular) => (
         <>
-          <div className="border margin-2">
-            <h2 className="margin-2">{`GCN Circular ${circular.circularId}`}</h2>
-            <div className="margin-2">
-              <FrontMatter
-                createdOn={circular.createdOn}
-                submitter={circular.submitter}
-                subject={circular.subject}
-                submittedHow={circular.submittedHow}
-                editedBy={circular.editedBy}
-                editedOn={circular.editedOn}
-              />
-            </div>
-            <PlainTextBody className="margin-2" children={circular.body} />
+          <h2 className="margin-2">{`GCN Circular ${circular.circularId}`}</h2>
+          <div className="margin-2">
+            <FrontMatter
+              createdOn={circular.createdOn}
+              submitter={circular.submitter}
+              subject={circular.subject}
+              submittedHow={circular.submittedHow}
+              editedBy={circular.editedBy}
+              editedOn={circular.editedOn}
+            />
           </div>
+          <PlainTextBody className="margin-2" children={circular.body} />
+          <hr />
         </>
       ))}
     </>
