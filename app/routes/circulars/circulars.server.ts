@@ -311,13 +311,10 @@ export async function put(
   }
 
   const eventId = parseEventFromSubject(item.subject)
-  if (eventId) {
-    circular.eventId = eventId
-    const synonymRecordExists = await synonymExists({ eventId })
-    if (!synonymRecordExists) createSynonyms([eventId])
-  }
-
-  return await putRaw(circular)
+  if (eventId) circular.eventId = eventId
+  const result = await putRaw(circular)
+  if (eventId && !(await synonymExists({ eventId }))) createSynonyms([eventId])
+  return result
 }
 
 export async function circularRedirect(query: string) {
