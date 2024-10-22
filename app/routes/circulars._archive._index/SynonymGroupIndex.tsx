@@ -36,15 +36,15 @@ export default function ({
                 {group.eventIds.join(', ')}
               </Link>
             </summary>
-            <ul>
+            <ol className="margin-left-3">
               {members.map(({ circularId, subject }) => {
                 return (
-                  <li key={circularId}>
+                  <li key={circularId} value={circularId}>
                     <Link to={`/circular/${circularId}`}>{subject}</Link>
                   </li>
                 )
               })}
-            </ul>
+            </ol>
           </details>
         </div>
       ))}

@@ -7,8 +7,7 @@
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
-import { Button, Icon } from '@trussworks/react-uswds'
-import { useRef, useState } from 'react'
+import { Icon } from '@trussworks/react-uswds'
 
 import type { SynonymGroup } from './synonyms/synonyms.lib'
 import {
@@ -41,18 +40,6 @@ export default function Group() {
   const { members, eventIds, view, limit, page } =
     useLoaderData<typeof loader>()
   const searchString = `?view=${view}&limit=${limit}&page=${page}`
-  const detailsRef = useRef<NodeListOf<HTMLDetailsElement>>()
-  const [allOpen, setAllOpen] = useState(false)
-  const buttonText = allOpen ? 'Close' : 'Open'
-
-  const toggleDetails = () => {
-    setAllOpen(!allOpen)
-    if (detailsRef.current) {
-      detailsRef.current.forEach((details) => {
-        details.open = !allOpen
-      })
-    }
-  }
 
   return (
     <>
@@ -69,38 +56,27 @@ export default function Group() {
           </div>
           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
         </Link>
-        <Button
-          type="button"
-          onClick={toggleDetails}
-        >{`${buttonText} All`}</Button>
       </ToolbarButtonGroup>
 
       <h1>{`Group ${eventIds.join(', ')}`}</h1>
-
-      <div ref={(el) => (detailsRef.current = el?.querySelectorAll('details'))}>
-        {members.map((circular) => (
-          <details key={circular.circularId}>
-            <summary>
-              <Link to={`/circulars/${circular.circularId}`}>
-                {circular.subject}
-              </Link>
-            </summary>
-            <div>
-              <div className="margin-2">
-                <FrontMatter
-                  createdOn={circular.createdOn}
-                  submitter={circular.submitter}
-                  subject={circular.subject}
-                  submittedHow={circular.submittedHow}
-                  editedBy={circular.editedBy}
-                  editedOn={circular.editedOn}
-                />
-              </div>
-              <PlainTextBody className="margin-2" children={circular.body} />
+      {members.map((circular) => (
+        <>
+          <div className="border margin-2">
+            <h2 className="margin-2">{`GCN Circular ${circular.circularId}`}</h2>
+            <div className="margin-2">
+              <FrontMatter
+                createdOn={circular.createdOn}
+                submitter={circular.submitter}
+                subject={circular.subject}
+                submittedHow={circular.submittedHow}
+                editedBy={circular.editedBy}
+                editedOn={circular.editedOn}
+              />
             </div>
-          </details>
-        ))}
-      </div>
+            <PlainTextBody className="margin-2" children={circular.body} />
+          </div>
+        </>
+      ))}
     </>
   )
 }
