@@ -122,6 +122,20 @@ async function getSynonymMembers(eventId: string) {
   return Items as Circular[]
 }
 
+export async function synonymExists({ eventId }: { eventId: string }) {
+  const db = await tables()
+  const { Items } = await db.synonyms.query({
+    KeyConditionExpression: '#eventId = :eventId',
+    ExpressionAttributeNames: {
+      '#eventId': 'eventId',
+    },
+    ExpressionAttributeValues: {
+      ':eventId': eventId,
+    },
+  })
+  return Items.length >= 1
+}
+
 /*
  * If an eventId already has a synonym and is passed in, it will unlink the
  * eventId from the old synonym and the only remaining link will be to the
