@@ -302,7 +302,8 @@ export async function getSynonymById(synonymId: string) {
       fields: { eventIds: []; synonymId: string }
     }) => body
   )
-  return results[0]
+
+  return results[0] as SynonymGroup
 }
 
 export async function groupMembersByEventId({
@@ -352,9 +353,7 @@ async function getSynonymMembers(eventId: string) {
 }
 
 export async function getAllSynonymMembers(eventIds: string[]) {
-  const promises = eventIds.map((eventId) => {
-    return getSynonymMembers(eventId)
-  })
+  const promises = eventIds.map(getSynonymMembers)
   const results = (await Promise.all(promises)).flat()
   return results
 }
