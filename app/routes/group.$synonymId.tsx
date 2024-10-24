@@ -8,8 +8,8 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 import { Icon } from '@trussworks/react-uswds'
+import invariant from 'tiny-invariant'
 
-import type { SynonymGroup } from './synonyms/synonyms.lib'
 import {
   getAllSynonymMembers,
   getSynonymById,
@@ -23,14 +23,14 @@ export async function loader({
   params: { synonymId },
   request: { url },
 }: LoaderFunctionArgs) {
-  if (!feature('SYNONYMS')) throw new Response(null, { status: 403 })
-  if (!synonymId) throw new Response('Id is required', { status: 400 })
+  if (!feature('SYNONYMS')) throw new Response(null, { status: 404 })
+  invariant(synonymId)
 
   const { searchParams } = new URL(url)
   const view = searchParams.get('view') || 'group'
-  const limit = searchParams.get('limit') || 20
-  const page = searchParams.get('page') || 1
-  const synonym = (await getSynonymById(synonymId)) as SynonymGroup
+  const limit = searchParams.get('limit') || '20'
+  const page = searchParams.get('page') || '1'
+  const synonym = await getSynonymById(synonymId)
   const members = await getAllSynonymMembers(synonym.eventIds)
 
   return { members, eventIds: synonym.eventIds, view, limit, page }
@@ -39,13 +39,17 @@ export async function loader({
 export default function Group() {
   const { members, eventIds, view, limit, page } =
     useLoaderData<typeof loader>()
-  const searchString = `?view=${view}&limit=${limit}&page=${page}`
+  const searchParams = new URLSearchParams()
+  if (view) searchParams.set('view', view)
+  if (view) searchParams.set('limit', limit)
+  if (view) searchParams.set('page', page)
+  const searchString = searchParams.toString()
 
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
         <Link
-          to={`/circulars${searchString}`}
+          to={`/circulars?${searchString}`}
           className="usa-button flex-align-stretch"
         >
           <div className="position-relative">
@@ -60,7 +64,7 @@ export default function Group() {
 
       <h1>{`Group ${eventIds.join(', ')}`}</h1>
       {members.map((circular) => (
-        <>
+        <div key={circular.circularId}>
           <h2 className="margin-2">{`GCN Circular ${circular.circularId}`}</h2>
           <div className="margin-2">
             <FrontMatter
@@ -74,7 +78,7 @@ export default function Group() {
           </div>
           <PlainTextBody className="margin-2" children={circular.body} />
           <hr />
-        </>
+        </div>
       ))}
     </>
   )

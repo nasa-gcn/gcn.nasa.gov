@@ -16,7 +16,7 @@ export const handle: BreadcrumbHandle = {
 }
 
 export function loader() {
-  if (!feature('SYNONYMS')) throw new Response(null, { status: 403 })
+  if (!feature('SYNONYMS')) throw new Response(null, { status: 404 })
   return null
 }
 
