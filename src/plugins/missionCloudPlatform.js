@@ -9,10 +9,6 @@
 // Custom permissions for deployment on Mission Cloud Platform
 export const deploy = {
   start({ cloudformation }) {
-    // Mission Cloud Platform does not support user-defined bucket policies;
-    // they must be set manually by an administrator
-    delete cloudformation.Resources.StaticBucketPolicy
-
     // Mission Cloud Platform does not support user-defined public access block
     // configurations; they must be set manually by an administrator
     delete cloudformation.Resources.StaticBucket.Properties
