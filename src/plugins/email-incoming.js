@@ -112,6 +112,24 @@ export const deploy = {
                 },
               },
             },
+            {
+              Sid: 'AllowSSLRequestsOnly',
+              Action: 's3:*',
+              Effect: 'Deny',
+              Resource: [
+                { 'Fn::GetAtt': 'EmailIncomingBucket.Arn' },
+                {
+                  'Fn::Sub': [
+                    `\${bukkit}/*`,
+                    { bukkit: { 'Fn::GetAtt': 'EmailIncomingBucket.Arn' } },
+                  ],
+                },
+              ],
+              Condition: {
+                Bool: { 'aws:SecureTransport': false },
+              },
+              Principal: '*',
+            },
           ],
         },
       },
