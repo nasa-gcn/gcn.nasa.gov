@@ -1,0 +1,230 @@
+---
+handle:
+  breadcrumb: VOEvent Transport Protocol Migration
+---
+
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardGroup,
+  CardHeader,
+  GridContainer,
+  Icon,
+  IconList,
+  IconListContent,
+  IconListIcon,
+  IconListItem,
+} from '@trussworks/react-uswds'
+
+import { feature } from '~/lib/env.server'
+
+export function loader() {
+  if (feature('VTP_MIGRATION')) return null
+  else throw new Response(null, { status: 404 })
+}
+
+# VOEvent Transport Protocol Migration
+
+VOEvent Transport Protocol (VTP) is a product of the [International Virtual Observatory Alliance (IVOA)](https://www.ivoa.net) that provides a mechanism for distribution of VOEvents to astronomical communities. The [Comet VOEvent broker for Python](https://comet.transientskp.org/en/latest/) and the [GCN Classic VOEvent distribution system](https://gcn.gsfc.nasa.gov/voevent.html) have been operational for many years, but are not actively developed or maintained. VTP is also unsafe on the modern Internet because it lacks security features to protect against "man-in-the-middle" attacks ([although there are proposals to fix the security issues with VTP](https://comet.transientskp.org/en/stable/appendix/VOEvent-OpenPGP.html), they have not been widely adopted).
+
+This migration plan addresses only the transport protocol, not the XML data serialization of VOEvents or the [VOEvent-specific schema](https://wiki.ivoa.net/internal/IVOA/IvoaVOEvent/voevent_v2.html). GCN continues to distribute VOEvent XML from all GCN Classic notice types and new VOEvent messages via Kafka for missions that provide it to GCN.
+
+## The Future of VTP
+
+Organizations including the new GCN, Rubin, SCiMMA, have moved away from VTP in favor of more modern, general-purpose data distribution protocols like [Kafka](client). Kafka is widely used throughout industry, is well supported, and is growing in its use in astronomy. As GCN services move from GCN Classic to the new GCN, we are planning to retire the existing GCN Classic VOEvent system as it is currently implemented in several cloud-based servers that do not meet NASA standards. The GCN team is gradually migrating to or replacing GCN Classic services in the new GCN, and is not planning any new development in GCN Classic.
+
+We intend for this transition to be planned, announced, and implemented with ample warning for the user community. We propose 3 alternatives for how to complete this transition, and are soliciting [user feedback](vtp#feedback-survey). We know that many pipelines, robotic telescopes, and users depend on this service and we aim to be minimally distriptive to their operations.
+
+## GCN VTP Migration Options
+
+The GCN team is exploring the following options to meet the VOEvent needs of the GCN user community. The current GCN VOEvent broker must be updated to meet NASA standards, with a minimum change for VOEvent users to update their server names.
+
+<br />
+
+{/* prettier-ignore */}
+<CardGroup>
+  <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
+    <CardHeader className="bg-base-lighter height-card">
+      <p className="margin-0 text-base-dark">Option 1:</p>
+      <h4 className="usa-card__heading">Replace GCN VTP Broker with VOEvents over Kafka</h4>
+    </CardHeader>
+    <CardBody>
+      <IconList>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Service already exists and is available for use
+          </IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Self service subscription</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Open source</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Secure</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Broker is the server, minimal firewall configuration{' '}
+          </IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Client-side filtering</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-orange">
+            <Icon.ErrorOutline aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Requires users to modify their client code to stream notices via
+            Kafka using [GCN Kafka Client](client)
+          </IconListContent>
+        </IconListItem>
+      </IconList>
+    </CardBody>
+  </Card>
+  <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
+    <CardHeader className="bg-base-lighter height-card">
+      <p className="margin-0 text-base-dark">Option 2:</p>
+      <h4 className="usa-card__heading">Replace GCN VTP Broker with Comet</h4>
+    </CardHeader>
+    <CardBody>
+      <IconList>
+        <IconListItem>
+          <IconListIcon className="text-orange">
+            <Icon.ErrorOutline aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Requires new development from GCN</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Self service subscription</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Open source</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-red">
+            <Icon.Close aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Not secure</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Broker is the server, minimal firewall configuration
+          </IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-green">
+            <Icon.Check aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            User programmable [server-side
+            filtering](https://github.com/lpsinger/pygcn/tree/filter?tab=readme-ov-file#server-side-filtering)
+          </IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-orange">
+            <Icon.ErrorOutline aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Requires update to broker hostname and client
+          </IconListContent>
+        </IconListItem>
+      </IconList>
+    </CardBody>
+  </Card>
+  <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
+    <CardHeader className="bg-base-lighter height-card">
+      <p className="margin-0 text-base-dark">Option 3:</p>
+      <h4 className="usa-card__heading">Migrate GCN VTP Broker to AWS</h4>
+    </CardHeader>
+    <CardBody>
+      <IconList>
+        <IconListItem>
+          <IconListIcon className="text-red">
+            <Icon.Close aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Requires significant development effort by GCN team
+          </IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-red">
+            <Icon.Close aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Subscription changes require submitting support tickets to GCN team
+          </IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-red">
+            <Icon.Close aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Closed source</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-red">
+            <Icon.Close aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Not secure</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-red">
+            <Icon.Close aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Broker is the client, consumers require firewall rules
+          </IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-orange">
+            <Icon.ErrorOutline aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>Requires update to broker hostname</IconListContent>
+        </IconListItem>
+        <IconListItem>
+          <IconListIcon className="text-red">
+            <Icon.Close aria-hidden="true" />
+          </IconListIcon>
+          <IconListContent>
+            Optional server-side filtering configured via support tickets to GCN
+            team
+          </IconListContent>
+        </IconListItem>
+      </IconList>
+    </CardBody>
+  </Card>
+</CardGroup>
+
+## Feedback Survey
+
+To collect your feedback, we request that you fill out [this survey](https://forms.gle/8tVRkmQd2v99FqYYA) by November 30, 2024.
