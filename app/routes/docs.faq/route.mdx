@@ -108,6 +108,13 @@ Some email clients in some configurations are known to add extra line breaks to 
 
 Note that it used to be common practice for Circulars submitters to add line breaks to manually wrap long paragraphs in GCN Circulars. This practice is no longer recommended in the [GCN Circulars style guide](circulars/styleguide).
 
+### Why do I receive duplicates of old GCN Circulars over Kafka on the `gcn.circulars` topic?
+
+We publish a record to the `gcn.circulars` topic whenever a Circular is created _or modified_. A Circular can be modified in one of two situations:
+
+- when a [correction](/docs/circulars/corrections) is made to an existing Circular, resulting a new version of it, or
+- when bibilographic data is added to a Circular from the [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu/). GCN [syncronizes with ADS every Monday at 08:00 UTC](/docs/circulars/archive#citing-gcn-circulars), resulting in a bulk update of many of the GCN Circulars from the preceding one-week period.
+
 ## Accounts
 
 ### How do I sign in as a legacy GCN Classic Circulars user?
