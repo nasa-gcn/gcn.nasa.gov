@@ -161,11 +161,11 @@ dedicatedMasterType t3.small.search
 
 @plugins
 plugin-remix
-sandboxOidcIdp  # Sandbox identity provider
-lambdaCognitoPermissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
-staticBucketPermissions  # Functions may only write to the /generated directory in the static bucket.
-missionCloudPlatform  # Custom permissions for deployment on Mission Cloud Platform
-emailOutgoing  # Grant the Lambda function permission to send email; add email templates.
+sandbox-oidc-idp  # Sandbox identity provider
+lambda-cognito-permissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
+static-bucket-permissions  # Functions may only write to the /generated directory in the static bucket.
+mission-cloud-platform  # Custom permissions for deployment on Mission Cloud Platform
+email-outgoing  # Grant the Lambda function permission to send email; add email templates.
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 architect/plugin-lambda-invoker
