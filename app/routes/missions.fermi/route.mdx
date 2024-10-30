@@ -1,3 +1,4 @@
+import { WithFeature } from '~/root'
 ---
 handle:
   breadcrumb: Fermi
@@ -36,11 +37,13 @@ import logo from './logo.svg'
 
 </div>
 
+<WithFeature GBM_JSON>
 **JSON-Serialized GCN Notices Types in GCN Kafka:**
 
 Fermi/GBM distributes JSON-serialized notices for the detection of gamma-ray transients on the GCN Kafka topic `gcn.notices.fermi.gbm`.
 
 For schemas and exmaples see [/schema/stable/gcn/notices/fermi/gbm](/schema/stable/gcn/notices/fermi/gbm) or use the [Schema Browser](/docs/schema/stable/gcn/notices/fermi/gbm/).
+</WithFeature>
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 
