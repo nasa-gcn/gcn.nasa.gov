@@ -16,6 +16,7 @@ async function* getAdsEntries() {
   const url = new URL('https://api.adsabs.harvard.edu/v1/search/query')
   url.searchParams.set('q', 'bibstem:GCN')
   url.searchParams.set('fl', 'bibcode,volume')
+  url.searchParams.set('sort', 'bibcode asc')
   url.searchParams.set('rows', '2000')
   let start = 0
   let length
@@ -42,28 +43,38 @@ async function* getAdsEntries() {
 
 export async function handler() {
   const db = await tables()
+  const seenCircularIds = new Set<number>()
   for await (const entries of getAdsEntries()) {
     await Promise.all(
-      entries.map(async ({ bibcode, circularId }) => {
-        try {
-          await db.circulars.update({
-            ConditionExpression: 'attribute_exists(circularId)',
-            ExpressionAttributeValues: {
-              ':bibcode': bibcode,
-            },
-            Key: { circularId },
-            UpdateExpression: 'set bibcode = :bibcode',
-          })
-        } catch (e) {
-          if (e instanceof ConditionalCheckFailedException) {
-            console.error(
-              `Attempted to update Circular ${circularId}, which does not exist in DynamoDB`
-            )
-          } else {
-            throw e
+      entries
+        .filter(({ circularId }) => {
+          // Filter out duplicate entries for the same circular ID;
+          // prefer the chronologically earlier entries which are also entries
+          // with lexically least value of bibcode
+          const result = !seenCircularIds.has(circularId)
+          seenCircularIds.add(circularId)
+          return result
+        })
+        .map(async ({ bibcode, circularId }) => {
+          try {
+            await db.circulars.update({
+              ConditionExpression: 'attribute_exists(circularId)',
+              ExpressionAttributeValues: {
+                ':bibcode': bibcode,
+              },
+              Key: { circularId },
+              UpdateExpression: 'set bibcode = :bibcode',
+            })
+          } catch (e) {
+            if (e instanceof ConditionalCheckFailedException) {
+              console.error(
+                `Attempted to update Circular ${circularId}, which does not exist in DynamoDB`
+              )
+            } else {
+              throw e
+            }
           }
-        }
-      })
+        })
     )
   }
 }
