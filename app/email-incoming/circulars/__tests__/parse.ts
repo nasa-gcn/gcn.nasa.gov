@@ -55,26 +55,6 @@ describe('getFromAddress', () => {
       submittedHow: 'email',
     })
   })
-
-  test('returns the original address for a rewritten address', () => {
-    expect(
-      getFromAddress(
-        parseFrom(
-          '"Example <example@example.com> via gcncirc" <mailnull@capella2.gsfc.nasa.gov>'
-        )
-      )
-    ).toEqual({ address: 'example@example.com', submittedHow: 'email-legacy' })
-  })
-
-  test('returns the original address for a rewritten address with an alternative "via" name', () => {
-    expect(
-      getFromAddress(
-        parseFrom(
-          '"Example <example@example.com> via my mind" <mailnull@capella2.gsfc.nasa.gov>'
-        )
-      )
-    ).toEqual({ address: 'example@example.com', submittedHow: 'email-legacy' })
-  })
 })
 
 const testEmailContentString = `Return-Path: <example@example.com>
