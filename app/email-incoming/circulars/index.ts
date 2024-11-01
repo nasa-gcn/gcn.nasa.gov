@@ -27,6 +27,10 @@ import {
 import { sendEmail } from '~/lib/email.server'
 import { hostname, origin } from '~/lib/env.server'
 import { putRaw, submitterGroup } from '~/routes/circulars/circulars.server'
+import {
+  createSynonyms,
+  synonymExists,
+} from '~/routes/synonyms/synonyms.server'
 
 interface UserData {
   email: string
@@ -99,6 +103,8 @@ export const handler = createEmailIncomingMessageHandler(
     // Removes sub as a property if it is undefined from the legacy users
     if (!circular.sub) delete circular.sub
     const { circularId } = await putRaw(circular)
+    if (eventId && !(await synonymExists({ eventId })))
+      await createSynonyms([eventId])
 
     // Send a success email
     await sendSuccessEmail({
