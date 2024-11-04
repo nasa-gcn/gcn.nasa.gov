@@ -12,7 +12,7 @@ and some samples from the FAQs section of the [gcn-kafka-python](https://github.
 
 To contribute your own ideas, make a GitHub pull request to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md), or [contact us](/contact).
 
-## Parsing
+## Parsing XML
 
 Within your consumer loop, use the following functions to convert the
 content of `message.value()` into other data types.
@@ -164,3 +164,69 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
             continue
     print(message.value())
 ```
+
+## Working With JSON Schema
+
+GCN Notices for new missions are typically distributed in JSON format. This guide explains how to programmatically read the JSON schema.
+
+## Parsing JSON
+
+Read the JSON data from [\*.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [\*.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
+
+```python
+from gcn_kafka import Consumer
+import json
+
+# Connect as a consumer
+consumer = Consumer(client_id='fill me in',
+                    client_secret='fill me in')
+
+# Subscribe to topics and receive alerts
+consumer.subscribe(['gcn.circulars'])
+
+# Continuously consume and parse messages as JSON
+for message in consumer.consume(timeout=1):
+    if not message.error():
+        json_data = json.loads(message.value().decode('utf-8'))
+        print("Received JSON Notice:", json_data)
+```
+
+This code subscribes to a Kafka topic, consumes the messages, and parses the JSON data into Python dictionaries.
+
+## Encoding and Decoding of Embedded Data
+
+The following code demonstrates how to encode and decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` and `b64encode` methods to make this task simple. Additionally, JSON is serialized with Unicode, not ASCII, requires the proper handling of non-ASCII characters when encoding and decoding data.
+
+```python
+import base64
+
+
+# Encode the content of a file to a Base64 string
+with open("path/to/your/file", 'rb') as file:
+    encoded_string = base64.b64encode(file.read())
+
+print(encoded_string)
+
+# Output: A Base64 encoded bytestring, e.g., b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
+with open("path/to/encoded_file.txt", 'wb') as encoded_file:
+    encoded_file.write(encoded_string)
+
+# Decode and write the content to a local file:
+with open("path/to/encoded_file.txt", 'rb') as encoded_file:
+    decoded_data = base64.b64decode(encoded_file.read())
+
+with open("path/to/destination/file", 'wb') as file:
+    file.write(decoded_data)
+```
+
+If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
+
+```python
+{
+    type: 'string',
+    contentEncoding: 'base64',
+    contentMediaType: 'image/fits',
+}
+```
+
+In your data production pipeline, you can use the encoding steps to convert your file to a bytestring and set the value of the property to this bytestring. See [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html) for more information.
