@@ -98,7 +98,7 @@ export async function sendEmailBulk({
           subject,
           body: getBody(body),
         }),
-        TemplateName: s.emailOutgoing.template,
+        TemplateName: s.email_outgoing.template,
       },
     },
   }

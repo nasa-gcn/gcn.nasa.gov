@@ -22,6 +22,18 @@ As you are developing your schema, don't hesitate to [contact us](/contact) with
 
 To get started, fork the [nasa-gcn/gcn-schema](https://github.com/nasa-gcn/gcn-schema) repository on GitHub and check it out on your computer. If you are new to GitHub, refer to our [GitHub primer](/docs/contributing/github).
 
+After you have forked and cloned the repository, make sure that Node.js and NPM are installed on your computer. There are several options to install Node.js and NPM. Pick _one_ of the following:
+
+- Download and run [the Node.js installer for your operating system](https://nodejs.org/en/download/).
+- Install and use the [Node Version Manager, nvm](https://github.com/nvm-sh/nvm).
+- Install using a [package manager](https://nodejs.org/en/download/package-manager/).
+
+Finally, run the following command inside the repository working directory to install the pre-commit hooks for code formatting and syntax checking:
+
+```
+npm install
+```
+
 ## File Naming Conventions
 
 Create a folder in the repository for your mission following the naming convention <code>gcn/notices/<i>mission</i></code>. Add one or more files for schema definitions named <code>gcn/notices/<i>mission</i>/<i>schema_name</i>.schema.json</code>. The mission name should be lowercase and the schema name should be [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each file corresponds to a [Kafka topic](/docs/notices/producers) named <code>gcn.notices.<i>mission</i>.<i>schema_name</i></code>.
