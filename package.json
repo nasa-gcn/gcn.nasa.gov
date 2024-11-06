@@ -106,7 +106,7 @@
     "@types/color-convert": "^2.0.4",
     "@types/diff": "^5.2.1",
     "@types/grecaptcha": "^3.0.6",
-    "@types/jest": "^29.5.5",
+    "@types/jest": "^29.5.14",
     "@types/lodash": "^4.17.13",
     "@types/lucene": "^2.1.7",
     "@types/mailparser": "^3.4.1",
