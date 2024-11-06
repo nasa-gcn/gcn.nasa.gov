@@ -98,3 +98,24 @@ If a deployment is already in progress and you trigger another deployment to the
   height="1880"
   className="height-auto"
 />
+
+## To deploy manually
+
+Use the continuous deployment procedure above to deploy routine code changes or
+changes to [environment variables](/docs/contributiong/configuration).
+
+On rare occasions that code changes require the creating or modifying AWS
+resources other than code, static assets, and environment variables, it may be
+necessary to manually deploy the web site from your development computer,
+beacuse of the limited permissions associated with the AWS IAM role used by the
+continuous deployment pipeline. To manually deploy the web site from your own
+computer, first [configure the AWS credentials file on your computer](https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html).
+Then, run the following commands:
+
+```
+npm run clean
+npm i
+npm i --os=linux --cpu=arm64
+npm run build
+npx arc deploy --prune --production --no-hydrate
+```
