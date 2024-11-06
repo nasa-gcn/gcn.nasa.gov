@@ -44,6 +44,17 @@ import { WithFeature } from '~/root'
 Fermi/GBM distributes JSON-serialized notices for the detection of gamma-ray transients on the GCN Kafka topic `gcn.notices.fermi.gbm`.
 
 For schemas and examples see [/schema/stable/gcn/notices/fermi/gbm](/schema/stable/gcn/notices/fermi/gbm) or use the [Schema Browser](/docs/schema/stable/gcn/notices/fermi/gbm/).
+
+Detailed description and examples of Fermi/GBM Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/fermi/gbm).
+
+<div className="overflow-table">
+
+| Type                                   | Contents                               | Latency |
+| -------------------------------------- | -------------------------------------- | ------- |
+| `gcn.notices.fermi.gbm.alert`                        | Localization, Count Rate, Significance | ~5 seconds  |
+
+</div>
+
 </WithFeature>
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
