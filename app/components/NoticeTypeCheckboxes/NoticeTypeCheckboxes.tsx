@@ -244,6 +244,11 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks['Super Kamiokande'] = '/missions/sksn'
   }
 
+  if (useFeature('CHIME_QUICKSTART')) {
+    JsonNoticeTypes.Chime = ['gcn.notices.chime.alert']
+    JsonNoticeTypeLinks.Chime = '/missions/chime'
+  }
+
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
