@@ -135,7 +135,7 @@
     "lowlight": "^3.0.0",
     "nasawds": "^4.0.63",
     "npm-run-all": "^4.1.5",
-    "oidc-provider": "^8.4.7",
+    "oidc-provider": "^8.5.3",
     "postcss-csso": "^6.0.1",
     "prettier": "3.3.3",
     "rehype-autolink-headings": "^6.1.1",
