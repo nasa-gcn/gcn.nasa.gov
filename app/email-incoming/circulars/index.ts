@@ -48,7 +48,15 @@ interface EmailProps {
 
 const fromName = 'GCN Circulars'
 
-export const handler = createEmailIncomingMessageHandler(
+// Export handler entrypoint for instrumentation with OpenTelemetry.
+// From https://aws-otel.github.io/docs/getting-started/lambda/lambda-js#requirements:
+//
+// > For TypeScript users, if you are using esbuild (either directly or through
+// > tools such as the AWS CDK), you must export your handler function through
+// > module.exports rather than with the export keyword! The AWS mananaged layer
+// > for ADOT JavaScript needs to hot-patch your handler at runtime, but can't
+// > because esbuild makes your handler immutable when using the export keyword.
+module.exports.handler = createEmailIncomingMessageHandler(
   async ({ content }) => {
     const parsed = await parseEmailContentFromSource(content)
     const { address: userEmail, submittedHow } = getFromAddress(parsed.from)
