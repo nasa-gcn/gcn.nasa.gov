@@ -174,22 +174,26 @@ For new missions, GCN Notices are preferably distributed in JSON format. This gu
 Read the JSON data from [sample.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [sample.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
 
 ```python
+from gcn_kafka import Consumer
 import json
 
-# Load and parse schema and example JSON files
-with open('sample.schema.json', 'r') as schema_file:
-    schema = json.load(schema_file)
+# Connect as a consumer
+consumer = Consumer(client_id='fill me in',
+                    client_secret='fill me in')
 
-with open('sample.example.json', 'r') as example_file:
-    example = json.load(example_file)
+# Subscribe to topics and receive alerts
+consumer.subscribe(['gcn.classic.voevent.FERMI_GBM_SUBTHRESH'])
 
-print('Schema:', schema)
-print('Example:', example)
+# Continuously consume and parse messages as JSON
+for message in consumer.consume(timeout=1):
+    if not message.error():
+        json_data = json.loads(message.value().decode('utf-8'))
+        print("Received JSON Notice:", json_data)
 ```
 
 ## Encoding and Decoding of Embedded Data
 
-The following code sample shows how to encode/decode a file in Python. The `base64` package includes the methods `b64decode` and `b64encode` to make this task simple.
+The following code sample shows how to encode/decode a file in Python. The [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) package includes the methods `b64decode` and `b64encode` to make this task simple.
 
 ```python
 import base64
