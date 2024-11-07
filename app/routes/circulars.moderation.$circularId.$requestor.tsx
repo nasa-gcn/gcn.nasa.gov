@@ -7,7 +7,7 @@
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Form, redirect, useLoaderData } from '@remix-run/react'
+import { Form, Link, redirect, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Checkbox } from '@trussworks/react-uswds'
 import { diffLines, diffWords } from 'diff'
 
@@ -80,7 +80,12 @@ export default function () {
   const { circular, correction } = useLoaderData<typeof loader>()
   return (
     <>
-      <h2>Circular {circular.circularId}</h2>
+      <h2>
+        Circular{' '}
+        <Link to={`/circulars/${circular.circularId}`}>
+          {circular.circularId}
+        </Link>
+      </h2>
       <h3>Original Author</h3>
       <DiffedContent
         oldString={circular.submitter}
