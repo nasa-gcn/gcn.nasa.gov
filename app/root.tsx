@@ -253,10 +253,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! October 18 GCN Classic Outage and Schema v4.2.0. See{' '}
+          Announcing GCN Classic Migration Survey, End of Legacy Circulars
+          Email. See{' '}
           <Link
             className="usa-link"
-            to="/news#gcn-classic-outage-and-schema-release-v420"
+            to="/news#-gcn-classic-migration-survey-and-legacy-circular-submission-email-retirement"
           >
             news and announcements
           </Link>
