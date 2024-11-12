@@ -12,7 +12,7 @@ import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
-  breadcrumb: 'Circulars',
+  breadcrumb: 'Circular Group',
 }
 
 export function loader() {

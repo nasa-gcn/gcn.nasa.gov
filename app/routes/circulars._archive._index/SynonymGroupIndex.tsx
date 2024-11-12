@@ -32,7 +32,7 @@ export default function ({
         <div key={group.synonymId}>
           <details>
             <summary>
-              <Link to={`/group/${group.synonymId}${searchString}`}>
+              <Link to={`/circulars/group/${group.synonymId}${searchString}`}>
                 {group.eventIds.join(', ')}
               </Link>
             </summary>
@@ -40,7 +40,7 @@ export default function ({
               {members.map(({ circularId, subject }) => {
                 return (
                   <li key={circularId} value={circularId}>
-                    <Link to={`/circular/${circularId}`}>{subject}</Link>
+                    <Link to={`/circulars/${circularId}`}>{subject}</Link>
                   </li>
                 )
               })}
