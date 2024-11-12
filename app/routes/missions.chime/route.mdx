@@ -1,0 +1,13 @@
+---
+handle:
+  breadcrumb: Chime
+---
+
+import { feature } from '~/lib/env.server'
+
+export async function loader() {
+  if (!feature('CHIME')) throw new Response(null, { status: 404 })
+  return null
+}
+
+# Chime

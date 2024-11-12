@@ -9,6 +9,7 @@ import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav } from '~/components/SideNav'
+import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = { breadcrumb: 'Missions' }
@@ -32,6 +33,11 @@ export default function () {
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
+              useFeature('CHIME') && (
+                <NavLink key="chime" to="chime">
+                  Chime
+                </NavLink>
+              ),
               <NavLink key="einstein-probe" to="einstein-probe">
                 Einstein Probe
               </NavLink>,
