@@ -18,6 +18,11 @@ import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { PlainTextBody } from '~/components/circularDisplay/Body'
 import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
 import { feature } from '~/lib/env.server'
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle = {
+  breadcrumb: 'Circular Group Overview',
+}
 
 export async function loader({
   params: { synonymId },
@@ -62,7 +67,7 @@ export default function Group() {
         </Link>
       </ToolbarButtonGroup>
 
-      <h1>{`Group ${eventIds.join(', ')}`}</h1>
+      <h1>{eventIds.join(', ')}</h1>
       {members.map((circular) => (
         <div key={circular.circularId}>
           <h2 className="margin-2">{`GCN Circular ${circular.circularId}`}</h2>
