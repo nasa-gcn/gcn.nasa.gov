@@ -3,14 +3,14 @@ handle:
   breadcrumb: Chime
 ---
 
-import logo from './logo.svg'
 import { feature } from '~/lib/env.server'
+
+import logo from './logo.svg'
 
 export async function loader() {
   if (!feature('CHIME')) throw new Response(null, { status: 404 })
   return null
 }
-
 
 # Canadian Hydrogen Intensity Mapping Experiment (CHIME)
 
