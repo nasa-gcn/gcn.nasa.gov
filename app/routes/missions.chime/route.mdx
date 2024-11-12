@@ -6,7 +6,7 @@ handle:
 import { feature } from '~/lib/env.server'
 
 export async function loader() {
-  if (!feature('CHIME_QUICKSTART')) throw new Response(null, { status: 404 })
+  if (!feature('CHIME')) throw new Response(null, { status: 404 })
   return null
 }
 
