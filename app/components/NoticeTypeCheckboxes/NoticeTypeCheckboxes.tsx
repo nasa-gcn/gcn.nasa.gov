@@ -244,7 +244,7 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks['Super Kamiokande'] = '/missions/sksn'
   }
 
-  if (useFeature('CHIME_QUICKSTART')) {
+  if (useFeature('CHIME')) {
     JsonNoticeTypes.Chime = ['gcn.notices.chime.alert']
     JsonNoticeTypeLinks.Chime = '/missions/chime'
   }
