@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: Chime
+  breadcrumb: CHIME
 ---
 
 import { feature } from '~/lib/env.server'
@@ -17,23 +17,20 @@ export async function loader() {
 <img
   src={logo}
   align="right"
-  width="568"
-  height="420"
-  alt="Einstein Probe logo"
+  width="990"
+  height="765"
+  alt="Chime logo"
   className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
 />
 
 **Launch Date:** September 7, 2017
 
 The [Canadian Hydrogen Intensity Mapping Experiment (CHIME)](https://chime-experiment.ca/en) is a transit radio telescope
-located in Penticton BC, Canada. It consists of 4 semi cylindrical reflectors, each with 2000
+located in Penticton, BC, Canada. It consists of 4 semicylindrical reflectors, each with 2000
 square meters of collecting area and 256 dual-polarization antennas. The telescope
 observes between 400 MHz and 800 MHz and covers an instantaneous field of view of ~200
-square degrees. CHIME houses several electronic “backends” which are tailored for specific
-scientific goals, such as generating cosmological maps of hydrogen density, detecting short
-duration radio transients known as Fast Radio Bursts (FRBs), and observing and timing
-pulsars. In particular, the FRB backend operates at ~1 ms time resolution and ~ 0.4 MHz
-frequency resolution.
+square degrees. CHIME houses several electronic backends, which are tailored for specific
+scientific goals, such as generating cosmological maps of hydrogen density, detecting Fast Radio Bursts (FRBs), and observing and timing pulsars. In particular, the FRB backend operates at ~1 ms time resolution and ~ 0.4 MHz frequency resolution.
 
 <div className="overflow-table">
 
@@ -45,7 +42,7 @@ frequency resolution.
 
 **JSON-Serialized GCN Notices Types in GCN Kafka:**
 
-CHIME distributes alerts for the detection of fast radio bursts. These notices are published on the GCN Kafka topic `gcn.notices.chime.frb.alert`.
+CHIME distributes alerts for the detection of fast radio bursts. These notices are published on the GCN Kafka topic `gcn.notices.chime.frb`.
 
 The [GCN schema] (/schema/stable/gcn/notices/chime/frb/alert.schema.json) and example [JSON message](/schema/stable/gcn/notices/chime/frb/alert.example.json) files are available to use for CHIME FRB Schema. See the [Schema Browser](/docs/schema/stable/gcn/notices/chime/frb/alert.schema.json) for more information on the properties defined in the schema.
 
