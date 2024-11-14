@@ -11,6 +11,8 @@ import {
 
 jest.mock('@architect/functions')
 const synonymId = 'abcde-abcde-abcde-abcde-abcde'
+const altSynonymId1 = 'zyxw-zyxw-zyxw-zyxw-zyxw'
+const altSynonymId2 = 'lmno-lmno-lmno-lmno-lmno'
 const exampleCirculars = [
   {
     Items: [
@@ -124,10 +126,6 @@ describe('putSynonyms', () => {
   const mockBatchWrite = jest.fn()
   const mockQuery = jest.fn()
 
-  beforeAll(() => {
-    jest.spyOn(crypto, 'randomUUID').mockReturnValue(synonymId)
-  })
-
   afterAll(() => {
     jest.restoreAllMocks()
     awsSDKMock.restore('DynamoDB')
@@ -180,6 +178,7 @@ describe('putSynonyms', () => {
   })
 
   test('putSynonyms should write to DynamoDB if there are additions', async () => {
+    jest.spyOn(crypto, 'randomUUID').mockReturnValue(synonymId)
     const mockClient = {
       batchWrite: mockBatchWrite,
       query: mockQuery,
@@ -225,6 +224,10 @@ describe('putSynonyms', () => {
   })
 
   test('putSynonyms should write to DynamoDB if there are subtractions', async () => {
+    jest
+      .spyOn(crypto, 'randomUUID')
+      .mockImplementationOnce(() => altSynonymId1)
+      .mockImplementationOnce(() => altSynonymId2)
     const mockClient = {
       batchWrite: mockBatchWrite,
     }
@@ -242,8 +245,16 @@ describe('putSynonyms', () => {
     const params = {
       RequestItems: {
         synonyms: [
-          { DeleteRequest: { Key: { eventId: 'eventId3' } } },
-          { DeleteRequest: { Key: { eventId: 'eventId4' } } },
+          {
+            PutRequest: {
+              Item: { eventId: 'eventId3', synonymId: altSynonymId1 },
+            },
+          },
+          {
+            PutRequest: {
+              Item: { eventId: 'eventId4', synonymId: altSynonymId2 },
+            },
+          },
         ],
       },
     }
@@ -251,6 +262,10 @@ describe('putSynonyms', () => {
   })
 
   test('putSynonyms should write to DynamoDB if there are additions and subtractions', async () => {
+    jest
+      .spyOn(crypto, 'randomUUID')
+      .mockImplementationOnce(() => altSynonymId1)
+      .mockImplementationOnce(() => altSynonymId2)
     const mockClient = {
       batchWrite: mockBatchWrite,
       query: mockQuery,
@@ -278,16 +293,18 @@ describe('putSynonyms', () => {
       RequestItems: {
         synonyms: [
           {
-            DeleteRequest: {
-              Key: {
+            PutRequest: {
+              Item: {
                 eventId: 'eventId3',
+                synonymId: altSynonymId1,
               },
             },
           },
           {
-            DeleteRequest: {
-              Key: {
+            PutRequest: {
+              Item: {
                 eventId: 'eventId4',
+                synonymId: altSynonymId2,
               },
             },
           },
