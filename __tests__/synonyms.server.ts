@@ -4,7 +4,10 @@ import * as awsSDKMock from 'aws-sdk-mock'
 import crypto from 'crypto'
 
 import type { Circular } from '~/routes/circulars/circulars.lib'
-import { createSynonyms, putSynonyms } from '~/routes/synonyms/synonyms.server'
+import {
+  moderatorCreateSynonyms,
+  putSynonyms,
+} from '~/routes/synonyms/synonyms.server'
 
 jest.mock('@architect/functions')
 const synonymId = 'abcde-abcde-abcde-abcde-abcde'
@@ -36,7 +39,7 @@ const exampleCirculars = [
   { Items: [] },
 ]
 
-describe('createSynonyms', () => {
+describe('moderatorCreateSynonyms', () => {
   beforeEach(() => {
     const mockBatchWrite = jest.fn()
     const mockQuery = jest.fn()
@@ -65,7 +68,7 @@ describe('createSynonyms', () => {
     jest.restoreAllMocks()
   })
 
-  test('createSynonyms should write to DynamoDB', async () => {
+  test('moderatorCreateSynonyms should write to DynamoDB', async () => {
     const mockBatchWriteItem = jest.fn(
       (
         params: DynamoDB.DocumentClient.BatchWriteItemInput,
@@ -81,12 +84,12 @@ describe('createSynonyms', () => {
     awsSDKMock.mock('DynamoDB', 'batchWriteItem', mockBatchWriteItem)
 
     const synonymousEventIds = ['eventId1', 'eventId2']
-    const result = await createSynonyms(synonymousEventIds)
+    const result = await moderatorCreateSynonyms(synonymousEventIds)
 
     expect(result).toBe(synonymId)
   })
 
-  test('createSynonyms with nonexistent eventId throws Response 400', async () => {
+  test('moderatorCreateSynonyms with nonexistent eventId throws Response 400', async () => {
     const mockBatchWriteItem = jest.fn(
       (
         params: DynamoDB.DocumentClient.BatchWriteItemInput,
@@ -103,7 +106,7 @@ describe('createSynonyms', () => {
 
     const synonymousEventIds = ['eventId1', 'nope']
     try {
-      await createSynonyms(synonymousEventIds)
+      await moderatorCreateSynonyms(synonymousEventIds)
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
       expect(error).toBeInstanceOf(Response)

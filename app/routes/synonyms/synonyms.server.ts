@@ -6,7 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { PutItemCommand } from '@aws-sdk/client-dynamodb'
+import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
 
@@ -122,20 +123,6 @@ async function getSynonymMembers(eventId: string) {
   return Items as Circular[]
 }
 
-export async function synonymExists({ eventId }: { eventId: string }) {
-  const db = await tables()
-  const { Items } = await db.synonyms.query({
-    KeyConditionExpression: '#eventId = :eventId',
-    ExpressionAttributeNames: {
-      '#eventId': 'eventId',
-    },
-    ExpressionAttributeValues: {
-      ':eventId': eventId,
-    },
-  })
-  return Items.length >= 1
-}
-
 /*
  * If an eventId already has a synonym and is passed in, it will unlink the
  * eventId from the old synonym and the only remaining link will be to the
@@ -144,17 +131,17 @@ export async function synonymExists({ eventId }: { eventId: string }) {
  * BatchWriteItem has a limit of 25 items, so the user may not add more than
  * 25 synonyms at a time.
  */
-export async function createSynonyms(synonymousEventIds: string[]) {
-  const uuid = crypto.randomUUID()
+export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   if (!synonymousEventIds.length) {
     throw new Response('EventIds are required.', { status: 400 })
   }
+  const uuid = crypto.randomUUID()
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
-
   const isValid = await validateEventIds({ eventIds: synonymousEventIds })
   if (!isValid) throw new Response('eventId does not exist', { status: 400 })
+
   await client.batchWrite({
     RequestItems: {
       [TableName]: synonymousEventIds.map((eventId) => ({
@@ -165,6 +152,25 @@ export async function createSynonyms(synonymousEventIds: string[]) {
     },
   })
   return uuid
+}
+
+export async function tryInitSynonym(eventId: string) {
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('synonyms')
+  try {
+    const params = {
+      TableName,
+      Item: {
+        synonymId: { S: crypto.randomUUID() },
+        eventId: { S: eventId },
+      },
+      ConditionExpression: 'attribute_not_exists(eventId)',
+    }
+    await client.send(new PutItemCommand(params))
+  } catch (error) {
+    if ((error as Error).name !== 'ConditionalCheckFailedException') throw error
+  }
 }
 
 /*
@@ -195,10 +201,11 @@ export async function putSynonyms({
   const writes = []
   if (subtractions?.length) {
     const subtraction_writes = subtractions.map((eventId) => ({
-      DeleteRequest: {
-        Key: { eventId },
+      PutRequest: {
+        Item: { synonymId: crypto.randomUUID(), eventId },
       },
     }))
+
     writes.push(...subtraction_writes)
   }
   if (additions?.length) {
@@ -233,9 +240,10 @@ export async function deleteSynonyms(synonymId: string) {
       ':synonymId': synonymId,
     },
   })
+
   const writes = results.Items.map(({ eventId }) => ({
-    DeleteRequest: {
-      Key: { eventId },
+    PutRequest: {
+      Item: { synonymId: crypto.randomUUID(), eventId },
     },
   }))
   const params = {
