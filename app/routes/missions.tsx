@@ -35,7 +35,7 @@ export default function () {
               </NavLink>,
               useFeature('CHIME') && (
                 <NavLink key="chime" to="chime">
-                  Chime
+                  CHIME
                 </NavLink>
               ),
               <NavLink key="einstein-probe" to="einstein-probe">

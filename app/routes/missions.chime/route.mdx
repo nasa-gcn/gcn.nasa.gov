@@ -1,13 +1,67 @@
 ---
 handle:
-  breadcrumb: Chime
+  breadcrumb: CHIME
 ---
 
 import { feature } from '~/lib/env.server'
+
+import logo from './logo.svg'
 
 export async function loader() {
   if (!feature('CHIME')) throw new Response(null, { status: 404 })
   return null
 }
 
-# Chime
+# Canadian Hydrogen Intensity Mapping Experiment (CHIME)
+
+<img
+  src={logo}
+  align="right"
+  width="990"
+  height="765"
+  alt="CHIME logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
+**Launch Date:** September 7, 2017
+
+The [Canadian Hydrogen Intensity Mapping Experiment (CHIME)](https://chime-experiment.ca/en) is a transit radio telescope
+located in Penticton, BC, Canada. It consists of 4 semicylindrical reflectors, each with 2000
+square meters of collecting area and 256 dual-polarization antennas. The telescope
+observes between 400 MHz and 800 MHz and covers an instantaneous field of view of ~200
+square degrees. CHIME houses several electronic backends, which are tailored for specific
+scientific goals, such as generating cosmological maps of hydrogen density, detecting Fast Radio Bursts (FRBs), and observing and timing pulsars. In particular, the FRB backend operates at ~1 ms time resolution and ~ 0.4 MHz frequency resolution.
+
+<div className="overflow-table">
+
+| Instruments | Energy Range  | Field of View        | Localization |
+| ----------- | ------------- | -------------------- | ------------ |
+| CHIME/FRB   | 400 - 800 MHz | ~200 deg<sup>2</sup> | ~arcmin      |
+
+</div>
+
+**JSON-Serialized GCN Notices Types in GCN Kafka:**
+
+CHIME distributes alerts for the detection of fast radio bursts. These notices are published on the GCN Kafka topic `gcn.notices.chime.frb`.
+
+The [GCN schema] (/schema/stable/gcn/notices/chime/frb/alert.schema.json) and example [JSON message](/schema/stable/gcn/notices/chime/frb/alert.example.json) files are available to use for CHIME FRB Schema. See the [Schema Browser](/docs/schema/stable/gcn/notices/chime/frb/alert.schema.json) for more information on the properties defined in the schema.
+
+Detailed description and examples of CHIME Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/chime/frb).
+
+<div className="overflow-table">
+
+| Type                          | Contents                                                                 | Latency |
+| ----------------------------- | ------------------------------------------------------------------------ | ------- |
+| `gcn.notices.chime.frb.alert` | Localization, time of arrival, dispersion measure, signal-to-noise ratio | ~1 min  |
+
+</div>
+
+**Yearly Trigger Rates:**
+
+<div className="overflow-table">
+
+| Instrument | Type              | Rates |
+| ---------- | ----------------- | ----- |
+| CHIME/FRB  | Fast Radio Bursts | ~600  |
+
+</div>
