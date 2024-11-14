@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import { PutItemCommand } from '@aws-sdk/client-dynamodb'
 import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
@@ -156,18 +155,19 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
 
 export async function tryInitSynonym(eventId: string) {
   const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('synonyms')
+
   try {
-    const params = {
-      TableName,
-      Item: {
-        synonymId: { S: crypto.randomUUID() },
-        eventId: { S: eventId },
+    await db.synonyms.update({
+      Key: { eventId },
+      UpdateExpression: 'set #synonymId = :synonymId',
+      ExpressionAttributeNames: {
+        '#synonymId': 'synonymId',
+      },
+      ExpressionAttributeValues: {
+        ':synonymId': crypto.randomUUID(),
       },
       ConditionExpression: 'attribute_not_exists(eventId)',
-    }
-    await client.send(new PutItemCommand(params))
+    })
   } catch (error) {
     if ((error as Error).name !== 'ConditionalCheckFailedException') throw error
   }
