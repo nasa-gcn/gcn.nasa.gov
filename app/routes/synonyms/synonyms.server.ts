@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
 
@@ -130,17 +130,17 @@ async function getSynonymMembers(eventId: string) {
  * BatchWriteItem has a limit of 25 items, so the user may not add more than
  * 25 synonyms at a time.
  */
-export async function createSynonyms(synonymousEventIds: string[]) {
-  const uuid = crypto.randomUUID()
+export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   if (!synonymousEventIds.length) {
     throw new Response('EventIds are required.', { status: 400 })
   }
+  const uuid = crypto.randomUUID()
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
-
   const isValid = await validateEventIds({ eventIds: synonymousEventIds })
   if (!isValid) throw new Response('eventId does not exist', { status: 400 })
+
   await client.batchWrite({
     RequestItems: {
       [TableName]: synonymousEventIds.map((eventId) => ({
@@ -151,6 +151,26 @@ export async function createSynonyms(synonymousEventIds: string[]) {
     },
   })
   return uuid
+}
+
+export async function tryInitSynonym(eventId: string) {
+  const db = await tables()
+
+  try {
+    await db.synonyms.update({
+      Key: { eventId },
+      UpdateExpression: 'set #synonymId = :synonymId',
+      ExpressionAttributeNames: {
+        '#synonymId': 'synonymId',
+      },
+      ExpressionAttributeValues: {
+        ':synonymId': crypto.randomUUID(),
+      },
+      ConditionExpression: 'attribute_not_exists(eventId)',
+    })
+  } catch (error) {
+    if ((error as Error).name !== 'ConditionalCheckFailedException') throw error
+  }
 }
 
 /*
@@ -181,10 +201,11 @@ export async function putSynonyms({
   const writes = []
   if (subtractions?.length) {
     const subtraction_writes = subtractions.map((eventId) => ({
-      DeleteRequest: {
-        Key: { eventId },
+      PutRequest: {
+        Item: { synonymId: crypto.randomUUID(), eventId },
       },
     }))
+
     writes.push(...subtraction_writes)
   }
   if (additions?.length) {
@@ -219,9 +240,10 @@ export async function deleteSynonyms(synonymId: string) {
       ':synonymId': synonymId,
     },
   })
+
   const writes = results.Items.map(({ eventId }) => ({
-    DeleteRequest: {
-      Key: { eventId },
+    PutRequest: {
+      Item: { synonymId: crypto.randomUUID(), eventId },
     },
   }))
   const params = {
