@@ -198,11 +198,9 @@ export default function () {
               <NavLink key="schema" to="schema">
                 Schema Browser
               </NavLink>,
-              useFeature('VTP_MIGRATION') && (
-                <NavLink key="vtp" to="vtp">
-                  VOEvent Transport Protocol Migration
-                </NavLink>
-              ),
+              <NavLink key="vtp" to="vtp">
+                VOEvent Transport Protocol Migration
+              </NavLink>,
               <NavLink key="admin" to="admin">
                 Administration
               </NavLink>,

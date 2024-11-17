@@ -26,7 +26,6 @@ import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
-  breadcrumb: 'Moderation',
   getSitemapEntries: () => null,
 }
 

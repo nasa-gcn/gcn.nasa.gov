@@ -22,6 +22,7 @@ import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_auth/user.server'
+import { tryInitSynonym } from '../synonyms/synonyms.server'
 import {
   bodyIsValid,
   formatAuthor,
@@ -311,8 +312,9 @@ export async function put(
 
   const eventId = parseEventFromSubject(item.subject)
   if (eventId) circular.eventId = eventId
-
-  return await putRaw(circular)
+  const result = await putRaw(circular)
+  if (eventId) await tryInitSynonym(eventId)
+  return result
 }
 
 export async function circularRedirect(query: string) {

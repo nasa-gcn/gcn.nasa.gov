@@ -4,10 +4,15 @@ import * as awsSDKMock from 'aws-sdk-mock'
 import crypto from 'crypto'
 
 import type { Circular } from '~/routes/circulars/circulars.lib'
-import { createSynonyms, putSynonyms } from '~/routes/synonyms/synonyms.server'
+import {
+  moderatorCreateSynonyms,
+  putSynonyms,
+} from '~/routes/synonyms/synonyms.server'
 
 jest.mock('@architect/functions')
 const synonymId = 'abcde-abcde-abcde-abcde-abcde'
+const altSynonymId1 = 'zyxw-zyxw-zyxw-zyxw-zyxw'
+const altSynonymId2 = 'lmno-lmno-lmno-lmno-lmno'
 const exampleCirculars = [
   {
     Items: [
@@ -36,7 +41,7 @@ const exampleCirculars = [
   { Items: [] },
 ]
 
-describe('createSynonyms', () => {
+describe('moderatorCreateSynonyms', () => {
   beforeEach(() => {
     const mockBatchWrite = jest.fn()
     const mockQuery = jest.fn()
@@ -65,7 +70,7 @@ describe('createSynonyms', () => {
     jest.restoreAllMocks()
   })
 
-  test('createSynonyms should write to DynamoDB', async () => {
+  test('moderatorCreateSynonyms should write to DynamoDB', async () => {
     const mockBatchWriteItem = jest.fn(
       (
         params: DynamoDB.DocumentClient.BatchWriteItemInput,
@@ -81,12 +86,12 @@ describe('createSynonyms', () => {
     awsSDKMock.mock('DynamoDB', 'batchWriteItem', mockBatchWriteItem)
 
     const synonymousEventIds = ['eventId1', 'eventId2']
-    const result = await createSynonyms(synonymousEventIds)
+    const result = await moderatorCreateSynonyms(synonymousEventIds)
 
     expect(result).toBe(synonymId)
   })
 
-  test('createSynonyms with nonexistent eventId throws Response 400', async () => {
+  test('moderatorCreateSynonyms with nonexistent eventId throws Response 400', async () => {
     const mockBatchWriteItem = jest.fn(
       (
         params: DynamoDB.DocumentClient.BatchWriteItemInput,
@@ -103,7 +108,7 @@ describe('createSynonyms', () => {
 
     const synonymousEventIds = ['eventId1', 'nope']
     try {
-      await createSynonyms(synonymousEventIds)
+      await moderatorCreateSynonyms(synonymousEventIds)
     } catch (error) {
       // eslint-disable-next-line jest/no-conditional-expect
       expect(error).toBeInstanceOf(Response)
@@ -120,10 +125,6 @@ describe('createSynonyms', () => {
 describe('putSynonyms', () => {
   const mockBatchWrite = jest.fn()
   const mockQuery = jest.fn()
-
-  beforeAll(() => {
-    jest.spyOn(crypto, 'randomUUID').mockReturnValue(synonymId)
-  })
 
   afterAll(() => {
     jest.restoreAllMocks()
@@ -177,6 +178,7 @@ describe('putSynonyms', () => {
   })
 
   test('putSynonyms should write to DynamoDB if there are additions', async () => {
+    jest.spyOn(crypto, 'randomUUID').mockReturnValue(synonymId)
     const mockClient = {
       batchWrite: mockBatchWrite,
       query: mockQuery,
@@ -222,6 +224,10 @@ describe('putSynonyms', () => {
   })
 
   test('putSynonyms should write to DynamoDB if there are subtractions', async () => {
+    jest
+      .spyOn(crypto, 'randomUUID')
+      .mockImplementationOnce(() => altSynonymId1)
+      .mockImplementationOnce(() => altSynonymId2)
     const mockClient = {
       batchWrite: mockBatchWrite,
     }
@@ -239,8 +245,16 @@ describe('putSynonyms', () => {
     const params = {
       RequestItems: {
         synonyms: [
-          { DeleteRequest: { Key: { eventId: 'eventId3' } } },
-          { DeleteRequest: { Key: { eventId: 'eventId4' } } },
+          {
+            PutRequest: {
+              Item: { eventId: 'eventId3', synonymId: altSynonymId1 },
+            },
+          },
+          {
+            PutRequest: {
+              Item: { eventId: 'eventId4', synonymId: altSynonymId2 },
+            },
+          },
         ],
       },
     }
@@ -248,6 +262,10 @@ describe('putSynonyms', () => {
   })
 
   test('putSynonyms should write to DynamoDB if there are additions and subtractions', async () => {
+    jest
+      .spyOn(crypto, 'randomUUID')
+      .mockImplementationOnce(() => altSynonymId1)
+      .mockImplementationOnce(() => altSynonymId2)
     const mockClient = {
       batchWrite: mockBatchWrite,
       query: mockQuery,
@@ -275,16 +293,18 @@ describe('putSynonyms', () => {
       RequestItems: {
         synonyms: [
           {
-            DeleteRequest: {
-              Key: {
+            PutRequest: {
+              Item: {
                 eventId: 'eventId3',
+                synonymId: altSynonymId1,
               },
             },
           },
           {
-            DeleteRequest: {
-              Key: {
+            PutRequest: {
+              Item: {
                 eventId: 'eventId4',
+                synonymId: altSynonymId2,
               },
             },
           },

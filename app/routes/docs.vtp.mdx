@@ -17,13 +17,6 @@ import {
   IconListItem,
 } from '@trussworks/react-uswds'
 
-import { feature } from '~/lib/env.server'
-
-export function loader() {
-  if (feature('VTP_MIGRATION')) return null
-  else throw new Response(null, { status: 404 })
-}
-
 # VOEvent Transport Protocol Migration
 
 VOEvent Transport Protocol (VTP) is a product of the [International Virtual Observatory Alliance (IVOA)](https://www.ivoa.net) that provides a mechanism for distribution of VOEvents to astronomical communities. The [Comet VOEvent broker for Python](https://comet.transientskp.org/en/latest/) and the [GCN Classic VOEvent distribution system](https://gcn.gsfc.nasa.gov/voevent.html) have been operational for many years, but are not actively developed or maintained. VTP is also unsafe on the modern Internet because it lacks security features to protect against "man-in-the-middle" attacks ([although there are proposals to fix the security issues with VTP](https://comet.transientskp.org/en/stable/appendix/VOEvent-OpenPGP.html), they have not been widely adopted).
