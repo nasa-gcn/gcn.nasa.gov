@@ -77,7 +77,7 @@ export default function () {
               <NavLink key="sksn" to="sksn">
                 Super-Kamiokande
               </NavLink>,
-              useFeature('CHIME') && (
+              useFeature('SVOM') && (
                 <NavLink key="svom" to="svom">
                   SVOM
                 </NavLink>
