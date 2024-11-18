@@ -32,7 +32,7 @@
     "@nasa-gcn/remix-seo": "^2.0.1",
     "@nasa-gcn/schema": "^4.2.0",
     "@octokit/rest": "^21.0.2",
-    "@opensearch-project/opensearch": "^2.11.0",
+    "@opensearch-project/opensearch": "^2.13.0",
     "@remix-run/architect": "~2.10.3",
     "@remix-run/css-bundle": "~2.10.3",
     "@remix-run/node": "~2.10.3",
