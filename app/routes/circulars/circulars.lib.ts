@@ -70,6 +70,7 @@ const subjectMatchers: SubjectMatcher[] = [
     /Baksan\sNeutrino\sObservatory\sAlert[.\s_-]*(\d{6}.\d{2})/i,
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
   ],
+  [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id}`],
 ]
 
 /** Format a Circular as plain text. */

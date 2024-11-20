@@ -71,6 +71,7 @@ describe('parseEventFromSubject', () => {
   const lvkEvent = 'LIGO/Virgo S200224ca'
   const sgrEvent = 'SGR 1935+2154'
   const ztfEvent = 'ZTF23aabmzlp'
+  const epEvent = 'EP241119a'
 
   test('handles nonsense subject cases', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
@@ -227,6 +228,53 @@ describe('parseEventFromSubject', () => {
       const iceSubjectWithHyphen =
         'IceCube observation of a high-energy IceCube-221223A neutrino candidate track-like event'
       expect(parseEventFromSubject(iceSubjectWithHyphen)).toBe(iceEvent)
+    })
+  })
+
+  describe('EP', () => {
+    test('handles EP event names with space', () => {
+      const epSubject = 'EP 241119a: Global MASTER-Net observations report'
+      expect(parseEventFromSubject(epSubject)).toBe(epEvent)
+    })
+
+    test('handles EP event names with space in misc positions', () => {
+      const epSubjectWithSpace =
+        'Global MASTER-Net EP 241119a observations report'
+      expect(parseEventFromSubject(epSubjectWithSpace)).toBe(epEvent)
+    })
+
+    test('handles EP event names without space', () => {
+      const epSubjectWithNoSpace = 'EP241119a EP detection'
+      expect(parseEventFromSubject(epSubjectWithNoSpace)).toBe(epEvent)
+    })
+
+    test('handles EP event names without spaces in misc positions', () => {
+      const epSubjectWithSpace = 'EP detection of EP241119a GRB'
+      expect(parseEventFromSubject(epSubjectWithSpace)).toBe(epEvent)
+    })
+
+    test('handles EP event name with an underscore', () => {
+      const epSubjectWithUnderscore =
+        'EP_241119a: Global MASTER-Net observations report'
+      expect(parseEventFromSubject(epSubjectWithUnderscore)).toBe(epEvent)
+    })
+
+    test('handles EP event names with an underscore in misc positions', () => {
+      const epSubjectWithUnderscore =
+        'Global MASTER-Net EP_241119a observations report'
+      expect(parseEventFromSubject(epSubjectWithUnderscore)).toBe(epEvent)
+    })
+
+    test('handles EP event name with a hyphen', () => {
+      const epSubjectWithHyphen =
+        'EP-241119a: Global MASTER-Net observations report'
+      expect(parseEventFromSubject(epSubjectWithHyphen)).toBe(epEvent)
+    })
+
+    test('handles EP event name with a hyphen in misc positions', () => {
+      const epSubjectWithHyphen =
+        'Global MASTER-Net EP-241119a observations report'
+      expect(parseEventFromSubject(epSubjectWithHyphen)).toBe(epEvent)
     })
   })
 
