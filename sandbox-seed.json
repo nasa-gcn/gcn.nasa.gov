@@ -5153,7 +5153,8 @@
       "body": "This is an example of a request with a missing createdOn field",
       "requestor": "Example User at Example <example@example.com>",
       "requestorEmail": "example@example.com",
-      "subject": "Optical Observations for GRB 971227"
+      "subject": "Optical Observations for GRB 971227",
+      "submitter": "Example User at Example <example@example.com>"
     }
   ]
 }
