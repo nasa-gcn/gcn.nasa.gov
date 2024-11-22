@@ -249,7 +249,7 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.Chime = '/missions/chime'
   }
 
-  if (useFeature('KM3NET_QUICKSTART')) {
+  if (useFeature('KM3NET')) {
     JsonNoticeTypes.KM3NET = ['gcn.notices.km3net']
     JsonNoticeTypeLinks.KM3NET = '/missions/km3net'
   }
