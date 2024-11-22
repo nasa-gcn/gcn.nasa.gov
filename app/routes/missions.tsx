@@ -56,7 +56,7 @@ export default function () {
               <NavLink key="integral" to="integral">
                 INTEGRAL
               </NavLink>,
-              useFeature('KM3NET_QUICKSTART') && (
+              useFeature('KM3NET') && (
                 <NavLink key="km3net" to="km3net">
                   KM3NeT
                 </NavLink>
