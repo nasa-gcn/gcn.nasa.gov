@@ -168,4 +168,5 @@ mission-cloud-platform  # Custom permissions for deployment on Mission Cloud Pla
 email-outgoing  # Grant the Lambda function permission to send email; add email templates.
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
+nasa-gcn/architect-plugin-tracing
 architect/plugin-lambda-invoker
