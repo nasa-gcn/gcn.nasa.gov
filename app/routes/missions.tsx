@@ -56,6 +56,11 @@ export default function () {
               <NavLink key="integral" to="integral">
                 INTEGRAL
               </NavLink>,
+              useFeature('KM3NET') && (
+                <NavLink key="km3net" to="km3net">
+                  KM3NeT
+                </NavLink>
+              ),
               <NavLink key="konus" to="konus">
                 Konus-Wind
               </NavLink>,

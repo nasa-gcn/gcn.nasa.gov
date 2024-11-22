@@ -1,0 +1,13 @@
+---
+handle:
+  breadcrumb: KM3Net
+---
+
+import { feature } from '~/lib/env.server'
+
+export async function loader() {
+  if (!feature('KM3NET')) throw new Response(null, { status: 404 })
+  return null
+}
+
+# KM3NeT
