@@ -112,7 +112,7 @@
     "@types/mailparser": "^3.4.1",
     "@types/mdast": "^4.0.4",
     "@types/memoizee": "^0.4.9",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.9.3",
     "@types/nodemailer": "^6.4.16",
     "@types/react": "^18.2.24",
     "@types/react-copy-to-clipboard": "^5.0.5",
