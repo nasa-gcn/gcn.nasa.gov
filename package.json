@@ -113,7 +113,7 @@
     "@types/mdast": "^4.0.4",
     "@types/memoizee": "^0.4.9",
     "@types/node": "^22.9.3",
-    "@types/nodemailer": "^6.4.16",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18.2.24",
     "@types/react-copy-to-clipboard": "^5.0.5",
     "@types/react-dom": "^18.2.8",
