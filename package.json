@@ -94,7 +94,7 @@
     "@aws-sdk/util-dynamodb": "^3.319.0",
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
-    "@gitlab/svgs": "^3.83.0",
+    "@gitlab/svgs": "^3.122.0",
     "@nasa-gcn/architect-plugin-search": "^1.4.0",
     "@nasa-gcn/eslint-config-gitignore": "^0.0.2",
     "@playwright/test": "^1.48.2",
