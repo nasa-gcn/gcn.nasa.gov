@@ -171,7 +171,7 @@ For new missions, GCN Notices are preferably distributed in JSON format. This gu
 
 ## Parsing JSON
 
-Read the JSON data from [sample.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [sample.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
+Read the JSON data from [*.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [*.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
 
 ```python
 from gcn_kafka import Consumer
