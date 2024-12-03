@@ -144,7 +144,7 @@ synonyms
   name synonymsByUuid
 
 @aws
-runtime nodejs20.x
+runtime nodejs22.x
 region us-east-1
 architecture arm64
 memory 256
