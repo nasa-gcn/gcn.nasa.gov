@@ -9,6 +9,7 @@ import { tables } from '@architect/functions'
 import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
+import { slug } from 'github-slugger'
 
 import type { Circular } from '../circulars/circulars.lib'
 import type {
@@ -28,6 +29,19 @@ export async function getSynonymsByUuid(synonymId: string) {
   })
 
   return Items as Synonym[]
+}
+
+export async function getSynonymsBySlug(slug: string) {
+  const db = await tables()
+  const { Items } = await db.synonyms.query({
+    IndexName: 'synonymsBySlug',
+    KeyConditionExpression: 'slug = :slug',
+    ExpressionAttributeValues: {
+      ':slug': slug,
+    },
+  })
+  const synonym = Items[0]
+  return getSynonymsByUuid(synonym.synonymId)
 }
 
 export async function searchSynonymsByEventId({
@@ -76,7 +90,7 @@ export async function searchSynonymsByEventId({
     },
   } = await client.search({
     index: 'synonym-groups',
-    from: page && limit && (page - 1) * limit,
+    from: page && limit && page * limit,
     size: limit,
     body: {
       query,
@@ -89,7 +103,7 @@ export async function searchSynonymsByEventId({
       _source: body,
     }: {
       _source: SynonymGroup
-      fields: { eventIds: []; synonymId: string }
+      fields: { eventIds: string[]; synonymId: string; slugs: string[] }
     }) => body
   )
 
@@ -137,7 +151,7 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
     RequestItems: {
       [TableName]: synonymousEventIds.map((eventId) => ({
         PutRequest: {
-          Item: { synonymId: uuid, eventId },
+          Item: { synonymId: uuid, eventId, slug: slug(eventId) },
         },
       })),
     },
@@ -154,9 +168,11 @@ export async function tryInitSynonym(eventId: string) {
       UpdateExpression: 'set #synonymId = :synonymId',
       ExpressionAttributeNames: {
         '#synonymId': 'synonymId',
+        '#slug': 'slug',
       },
       ExpressionAttributeValues: {
         ':synonymId': crypto.randomUUID(),
+        ':slug': slug(eventId),
       },
       ConditionExpression: 'attribute_not_exists(eventId)',
     })
@@ -194,7 +210,7 @@ export async function putSynonyms({
   if (subtractions?.length) {
     const subtraction_writes = subtractions.map((eventId) => ({
       PutRequest: {
-        Item: { synonymId: crypto.randomUUID(), eventId },
+        Item: { synonymId: crypto.randomUUID(), eventId, slug: slug(eventId) },
       },
     }))
 
@@ -203,7 +219,7 @@ export async function putSynonyms({
   if (additions?.length) {
     const addition_writes = additions.map((eventId) => ({
       PutRequest: {
-        Item: { synonymId, eventId },
+        Item: { synonymId, eventId, slug: slug(eventId) },
       },
     }))
     writes.push(...addition_writes)
@@ -294,38 +310,6 @@ export async function autoCompleteEventIds({
   )
 
   return { options }
-}
-
-export async function getSynonymById(synonymId: string) {
-  const client = await getSearchClient()
-  const {
-    body: {
-      hits: { hits },
-    },
-  } = await client.search({
-    index: 'synonym-groups',
-    body: {
-      query: {
-        bool: {
-          should: {
-            match: {
-              synonymId,
-            },
-          },
-        },
-      },
-    },
-  })
-  const results = hits.map(
-    ({
-      _source: body,
-    }: {
-      _source: SynonymGroup
-      fields: { eventIds: []; synonymId: string }
-    }) => body
-  )
-
-  return results[0] as SynonymGroup
 }
 
 export async function groupMembersByEventId({
