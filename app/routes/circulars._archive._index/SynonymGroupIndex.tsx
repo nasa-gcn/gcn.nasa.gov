@@ -32,7 +32,9 @@ export default function ({
         <div key={group.synonymId}>
           <details>
             <summary>
-              <Link to={`/circulars/group/${group.synonymId}${searchString}`}>
+              <Link
+                to={`/circulars/events/${group.slugs.sort()[0]}${searchString}`}
+              >
                 {group.eventIds.join(', ')}
               </Link>
             </summary>

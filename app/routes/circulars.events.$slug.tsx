@@ -10,9 +10,10 @@ import { Link, useLoaderData } from '@remix-run/react'
 import { Icon } from '@trussworks/react-uswds'
 import invariant from 'tiny-invariant'
 
+import type { Synonym } from './synonyms/synonyms.lib'
 import {
   getAllSynonymMembers,
-  getSynonymById,
+  getSynonymsBySlug,
 } from './synonyms/synonyms.server'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { PlainTextBody } from '~/components/circularDisplay/Body'
@@ -21,24 +22,27 @@ import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
-  breadcrumb: 'Circular Group Overview',
+  breadcrumb: 'Circular Event Group',
 }
 
 export async function loader({
-  params: { synonymId },
+  params: { slug },
   request: { url },
 }: LoaderFunctionArgs) {
   if (!feature('SYNONYMS')) throw new Response(null, { status: 404 })
-  invariant(synonymId)
+  invariant(slug)
 
   const { searchParams } = new URL(url)
   const view = searchParams.get('view') || 'group'
   const limit = searchParams.get('limit') || '20'
   const page = searchParams.get('page') || '1'
-  const synonym = await getSynonymById(synonymId)
-  const members = await getAllSynonymMembers(synonym.eventIds)
+  const synonyms = await getSynonymsBySlug(slug)
+  const eventIds = synonyms.map((synonym: Synonym) => {
+    return synonym.eventId
+  })
+  const members = await getAllSynonymMembers(eventIds)
 
-  return { members, eventIds: synonym.eventIds, view, limit, page }
+  return { members, eventIds, view, limit, page }
 }
 
 export default function Group() {

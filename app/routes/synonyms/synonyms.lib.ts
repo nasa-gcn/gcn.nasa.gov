@@ -11,12 +11,14 @@ import type { Circular } from '~/routes/circulars/circulars.lib'
 export interface Synonym {
   eventId: string
   synonymId: string
+  slug: string
 }
 
 /* Layout of materialized view in OpenSearch */
 export interface SynonymGroup {
   synonymId: string
   eventIds: string[]
+  slugs: string[]
 }
 
 export interface SynonymGroupWithMembers {
