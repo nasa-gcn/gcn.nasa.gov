@@ -87,7 +87,6 @@ export async function action({ request }: ActionFunctionArgs) {
   const createdOnDate =
     getFormDataString(data, 'createdOn') || Date.now().toString()
   const createdOn = Date.parse(createdOnDate)
-
   let newCircular
   const props = { body, subject, ...(format ? { format } : {}) }
   switch (intent) {
@@ -101,8 +100,9 @@ export async function action({ request }: ActionFunctionArgs) {
         submitter = getFormDataString(data, 'submitter')
         if (!submitter) throw new Response(null, { status: 400 })
       }
+      const eventId = getFormDataString(data, 'eventId')
 
-      if (!createdOnDate || !createdOn)
+      if (!createdOnDate || !createdOn || !eventId)
         throw new Response(null, { status: 400 })
 
       let zendeskTicketId: number | undefined
@@ -134,6 +134,7 @@ export async function action({ request }: ActionFunctionArgs) {
           submitter,
           createdOn,
           zendeskTicketId,
+          eventId,
         },
         user
       )

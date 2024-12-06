@@ -1,25 +1,28 @@
 import { expect, test } from '@playwright/test'
 
 const loadingTestsCircular = {
-  subject:
-    'AMON Coincidence Alert from the sub-threshold IceCube-HAWC search NuEm-230927A',
-  submittedHow: 'email-legacy',
-  editedOn: 1695837395712,
-  circularId: 34776,
-  submitter: 'Hugo Ayala at Pennsylvania State University <hgayala@psu.edu>',
-  body: 'The AMON,  IceCube, and HAWC collaborations report:\n\nThe AMON NuEm stream channel found a coincidence alert from the\nIceCube online neutrino selection + HAWC daily monitoring analysis.\nThe analysis looks for IceCube neutrino events -mostly atmospheric\nin origin- around the position and transit time of a HAWC cluster of\nlikely gamma rays, as identified in the integrated observations from\na single transit, in this case having a duration of 6.06 hours.\n\nThe HAWC transit interval starts from 2023/09/27 01:10:10 UT  to\n2023/09/27 07:20:17 UT\n(End of the HAWC transit time)\n\nThe location of the coincidence is reported as\nRA (J2000): 331.92 deg\nDec (J2000): 12.44 deg\nLocation uncertainty (50% containment): 0.13 deg (statistical only).\nLocation uncertainty (90% containment): 0.24 deg (statistical only).\n\nThe false alarm rate (FAR) of this coincidence is 3.9 per year.\nWe encourage follow-up observations of the alert region contingent on\nthe availability of resources and interest, given the quoted FAR.\n\nAMON seeks to perform a real-time correlation analysis of the\nhigh-energy signals across all known astronomical messengers. More\ninformation about AMON can be found in https://www.amon.psu.edu/\nInformation on the IceCube collaboration: http://icecube.wisc.edu/\nInformation on the HAWC collaboration: https://www.hawc-observatory.org\n',
-  editedBy: 'Example at Example <example@example.com>',
-  createdOn: 1694188746530,
-  version: 3,
+  subject: 'LIGO/Virgo/KAGRA S240630t: Updated Sky localization',
+  eventId: 'LIGO/Virgo/KAGRA S240630t',
+  submittedHow: 'web',
+  createdOn: 1719767201026,
+  circularId: 36796,
+  submitter:
+    'Christopher P L Berry at LVK Collaboration <christopher.berry@ligo.org>',
+  format: 'text/plain',
+  body: 'The LIGO Scientific Collaboration, the Virgo Collaboration, and the KAGRA Collaboration report:\n\nWe have conducted further analysis of the LIGO Hanford Observatory (H1), LIGO Livingston Observatory (L1), and Virgo Observatory (V1) data around the time of the compact binary merger (CBC) candidate S240630t (GCN Circular 36794). Parameter estimation has been performed using Bilby [1] and a new sky map, Bilby.multiorder.fits,0, distributed via GCN Notice, is available for retrieval from the GraceDB event page:\n\nhttps://gracedb.ligo.org/superevents/S240630t\n\nFor the Bilby.multiorder.fits,0 sky map, the 90% credible region is 670 deg2. Marginalized over the whole sky, the a posteriori luminosity distance estimate is 3161 +/- 841 Mpc (a posteriori mean +/- standard deviation).\n\nFor further information about analysis methodology and the contents of this alert, refer to the LIGO/Virgo/KAGRA Public Alerts User Guide https://emfollow.docs.ligo.org/.\n\n [1] Ashton et al. ApJS 241, 27 (2019) doi:10.3847/1538-4365/ab06fc and Morisaki et al. (2023) arXiv:2307.13380',
 }
 
 const editTestsCircular = {
   subject:
-    'ZTF and SEDM Observations of the Candidate Optical Afterglow AT 2024sva',
+    'ZTF23aaoohpy/AT2023lcr: JWST observations consistent with the presence of a supernova',
+  submittedHow: 'web',
+  bibcode: '2023GCN.34370....1M',
   createdOn: '2024-09-18 06:00',
-  submitter: 'example@example.com',
-  body: 'Smaller body for Playwright test',
-  circularId: 34730,
+  circularId: 34370,
+  submitter:
+    'Antonio Martin-Carrillo at UCD,Space Science Group <antonio.martin-carrillo@ucd.ie>',
+  body: 'A. Martin-Carrillo (UCD), B. Schneider (MIT), T. Laskar (Utah), B. P. Gompertz (U. Birmingham), D. B. Malesani (Radboud and DAWN/NBI), A. de Ugarte Postigo (OCA/CNRS), A. J. Levan (Radboud), G. Finneran (UCD), J.F. Agui Fernandez (IAA-CSIC),  C.C. Thoene (ASU-CAS), V. D\'Elia (ASI-SSDC and INAF-OAR) and L. Izzo (INAF-OACN and DARK/NBI) report on behalf of a larger collaboration:\n\nWe obtained photometric observations of the orphan GRB afterglow ZTF23aaoohpy/AT2023lcr (Andreoni et al., GCN 3402; Swain et al., GCN 34022; Kumar et al., GCN 34025; Adami et al., GCN 34030; Perley et al., GCN 34031; Jiang et al., GCN 34040; Chen et al., GCN 34043) with the James Webb Space Telescope on 7 August 2023 (DDT program 4554, PI Martin-Carrillo). This was about 50.6 days after the likely explosion epoch (Gompertz et al., GCN 34023). Observations were obtained with the NIRCam instrument in the F115W, F150W, F277W, and F356W filters.\n\nAt the location of the optical/NIR transient, we detect a point-like source in all four bands, with F115W(AB) ~ 25.48 +/- 0.20. A fainter, extended source is observed about 0.5" to the S-W, which could be the host galaxy of AT 2023lcr.\n\nThese observations are in excess of the expected power-law decay of the GRB afterglow and are consistent with a supernova component.\n\nFurther analysis and observations are ongoing.\n\nWe thank the staff of STScI for their work to get these observations rapidly scheduled, in particular Alison Vick, Tony Keyes, Mario Gennaro and Armin Rest.',
+  eventId: 'ZTF23aaoohpy',
 }
 
 test.describe('Circulars edit page', () => {

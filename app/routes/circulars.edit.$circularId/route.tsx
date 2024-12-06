@@ -40,6 +40,7 @@ export async function loader({
     circularId: circular.circularId,
     defaultSubmitter: circular.submitter,
     defaultCreatedOnDateTime: defaultDateTime,
+    defaultEventId: circular.eventId,
     searchString: '',
   }
 }

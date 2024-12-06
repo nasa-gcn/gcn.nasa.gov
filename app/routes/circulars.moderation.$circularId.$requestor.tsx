@@ -104,6 +104,12 @@ export default function () {
         oldString={circular.subject}
         newString={correction.subject}
       />
+      <h3>Event ID</h3>
+      <DiffedContent
+        oldString={circular.eventId ?? ''}
+        newString={correction.eventId ?? ''}
+        method="lines"
+      />
       <h3>Format</h3>
       <DiffedContent
         oldString={circular.format ?? 'text/plain'}

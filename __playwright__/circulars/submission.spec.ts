@@ -7,14 +7,16 @@ test.describe('Circulars submission page', () => {
     await page.locator('#subject').clear()
     await page
       .locator('#subject')
-      .fill('GRB Submission Playwright Test Subject')
+      .fill('GRB123456a Submission Playwright Test Subject')
     await page
       .getByTestId('textarea')
       .fill('GRB Submission Playwright Test Body')
     await page.getByRole('button', { name: 'Send' }).click({ timeout: 10000 })
     await page.waitForURL('/circulars?index')
     await expect(
-      page.getByRole('link', { name: 'GRB Submission Playwright' })
+      page.getByRole('link', {
+        name: 'GRB123456a Submission Playwright Test Subject',
+      })
     ).toBeVisible()
   })
 })
