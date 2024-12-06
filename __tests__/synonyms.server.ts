@@ -17,6 +17,12 @@ import {
 } from '~/routes/synonyms/synonyms.server'
 
 jest.mock('@architect/functions')
+jest.mock('github-slugger', () => ({
+  slug: (eventId: string) => {
+    return eventId.toLowerCase()
+  },
+}))
+
 const synonymId = 'abcde-abcde-abcde-abcde-abcde'
 const altSynonymId1 = 'zyxw-zyxw-zyxw-zyxw-zyxw'
 const altSynonymId2 = 'lmno-lmno-lmno-lmno-lmno'
@@ -212,6 +218,7 @@ describe('putSynonyms', () => {
             PutRequest: {
               Item: {
                 eventId: 'eventId1',
+                slug: 'eventid1',
                 synonymId,
               },
             },
@@ -220,6 +227,7 @@ describe('putSynonyms', () => {
             PutRequest: {
               Item: {
                 eventId: 'eventId2',
+                slug: 'eventid2',
                 synonymId,
               },
             },
@@ -254,12 +262,20 @@ describe('putSynonyms', () => {
         synonyms: [
           {
             PutRequest: {
-              Item: { eventId: 'eventId3', synonymId: altSynonymId1 },
+              Item: {
+                eventId: 'eventId3',
+                slug: 'eventid3',
+                synonymId: altSynonymId1,
+              },
             },
           },
           {
             PutRequest: {
-              Item: { eventId: 'eventId4', synonymId: altSynonymId2 },
+              Item: {
+                eventId: 'eventId4',
+                slug: 'eventid4',
+                synonymId: altSynonymId2,
+              },
             },
           },
         ],
@@ -303,6 +319,7 @@ describe('putSynonyms', () => {
             PutRequest: {
               Item: {
                 eventId: 'eventId3',
+                slug: 'eventid3',
                 synonymId: altSynonymId1,
               },
             },
@@ -311,6 +328,7 @@ describe('putSynonyms', () => {
             PutRequest: {
               Item: {
                 eventId: 'eventId4',
+                slug: 'eventid4',
                 synonymId: altSynonymId2,
               },
             },
@@ -319,6 +337,7 @@ describe('putSynonyms', () => {
             PutRequest: {
               Item: {
                 eventId: 'eventId1',
+                slug: 'eventid1',
                 synonymId,
               },
             },
@@ -327,6 +346,7 @@ describe('putSynonyms', () => {
             PutRequest: {
               Item: {
                 eventId: 'eventId2',
+                slug: 'eventid2',
                 synonymId,
               },
             },
