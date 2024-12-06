@@ -546,6 +546,7 @@ export async function approveChangeRequest(
     format: changeRequest.format,
     submitter: changeRequest.submitter,
     createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
+    eventId: changeRequest.eventId,
   }
 
   const promises = [

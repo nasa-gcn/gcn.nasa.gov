@@ -112,6 +112,10 @@ export function formatDateISO(date: number) {
   return new Date(date).toISOString().replace(/\.\d+Z$/, 'Z')
 }
 
+export function eventIdIsValid(eventId: string) {
+  return parseEventFromSubject(eventId) !== undefined
+}
+
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */
 export function subjectIsValid(subject: string) {
   if (subject.length) {

@@ -49,6 +49,7 @@ export async function loader({
     defaultFormat: circular.format,
     circularId: circular.circularId,
     defaultSubmitter: circular.submitter,
+    defaultEventId: circular.eventId,
     defaultCreatedOnDateTime: defaultDateTime,
     searchString: '',
   }
