@@ -90,7 +90,7 @@ export async function searchSynonymsByEventId({
     },
   } = await client.search({
     index: 'synonym-groups',
-    from: page && limit && page * limit,
+    from: page * limit,
     size: limit,
     body: {
       query,
