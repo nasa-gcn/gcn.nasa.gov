@@ -14,6 +14,7 @@ const putData = {
   id: synonymId,
   body: {
     synonymId,
+    slugs: [] as string[],
     eventIds: [] as string[],
   },
 }
@@ -21,7 +22,11 @@ const putData = {
 jest.mock('@nasa-gcn/architect-functions-search', () => ({
   search: jest.fn(),
 }))
-
+jest.mock('github-slugger', () => ({
+  slug: (eventId: string) => {
+    return eventId.toLowerCase()
+  },
+}))
 jest.mock('@architect/functions', () => ({
   tables: jest.fn(),
 }))
