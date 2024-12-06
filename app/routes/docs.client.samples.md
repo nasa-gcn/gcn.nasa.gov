@@ -191,17 +191,21 @@ for message in consumer.consume(timeout=1):
         print("Received JSON Notice:", json_data)
 ```
 
+This code subscribes to a Kafka topic, consumes messages, decodes the bytes, and parses the JSON data into Python dictionaries.
+
 ## Encoding and Decoding of Embedded Data
 
-The following code demonstrates how to encode and decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`] module provides the `b64decode` and `b64encode` methods to make this task simple.
+The following code demonstrates how to encode and decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` and `b64encode` methods to make this task simple.
 
 ```python
 import base64
+
 # Encode the content of a file to a Base64 string
 with open("path/to/your/file", 'rb') as file:
     encoded_string = base64.b64encode(file.read())
 
 print(encoded_string)
+
 # Output: A Base64 encoded bytestring, e.g., b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
 with open("path/to/encoded_file.txt", 'wb') as encoded_file:
     encoded_file.write(encoded_string)
@@ -212,7 +216,6 @@ with open("path/to/encoded_file.txt", 'rb') as encoded_file:
 
 with open("path/to/destination/file", 'wb') as file:
     file.write(decoded_data)
-
 ```
 
 If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
