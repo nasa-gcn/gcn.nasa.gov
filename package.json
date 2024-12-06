@@ -83,7 +83,7 @@
   "devDependencies": {
     "@architect/architect": "^11.1.0",
     "@architect/plugin-lambda-invoker": "^2.0.1",
-    "@architect/utils": "^3.1.9",
+    "@architect/utils": "^4.0.6",
     "@aws-sdk/client-cognito-identity-provider": "^3.552.0",
     "@aws-sdk/client-dynamodb": "^3.552.0",
     "@aws-sdk/client-s3": "^3.552.0",
