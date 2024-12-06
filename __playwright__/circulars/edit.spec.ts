@@ -14,11 +14,15 @@ const loadingTestsCircular = {
 
 const editTestsCircular = {
   subject:
-    'ZTF23aabmzlp and SEDM Observations of the Candidate Optical Afterglow AT ZTF23aabmzlp',
+    'ZTF23aaoohpy/AT2023lcr: JWST observations consistent with the presence of a supernova',
+  submittedHow: 'web',
+  bibcode: '2023GCN.34370....1M',
   createdOn: '2024-09-18 06:00',
-  submitter: 'example@example.com',
-  body: 'Smaller body for Playwright test',
-  circularId: 34730,
+  circularId: 34370,
+  submitter:
+    'Antonio Martin-Carrillo at UCD,Space Science Group <antonio.martin-carrillo@ucd.ie>',
+  body: 'A. Martin-Carrillo (UCD), B. Schneider (MIT), T. Laskar (Utah), B. P. Gompertz (U. Birmingham), D. B. Malesani (Radboud and DAWN/NBI), A. de Ugarte Postigo (OCA/CNRS), A. J. Levan (Radboud), G. Finneran (UCD), J.F. Agui Fernandez (IAA-CSIC),  C.C. Thoene (ASU-CAS), V. D\'Elia (ASI-SSDC and INAF-OAR) and L. Izzo (INAF-OACN and DARK/NBI) report on behalf of a larger collaboration:\n\nWe obtained photometric observations of the orphan GRB afterglow ZTF23aaoohpy/AT2023lcr (Andreoni et al., GCN 3402; Swain et al., GCN 34022; Kumar et al., GCN 34025; Adami et al., GCN 34030; Perley et al., GCN 34031; Jiang et al., GCN 34040; Chen et al., GCN 34043) with the James Webb Space Telescope on 7 August 2023 (DDT program 4554, PI Martin-Carrillo). This was about 50.6 days after the likely explosion epoch (Gompertz et al., GCN 34023). Observations were obtained with the NIRCam instrument in the F115W, F150W, F277W, and F356W filters.\n\nAt the location of the optical/NIR transient, we detect a point-like source in all four bands, with F115W(AB) ~ 25.48 +/- 0.20. A fainter, extended source is observed about 0.5" to the S-W, which could be the host galaxy of AT 2023lcr.\n\nThese observations are in excess of the expected power-law decay of the GRB afterglow and are consistent with a supernova component.\n\nFurther analysis and observations are ongoing.\n\nWe thank the staff of STScI for their work to get these observations rapidly scheduled, in particular Alison Vick, Tony Keyes, Mario Gennaro and Armin Rest.',
+  eventId: 'ZTF23aaoohpy',
 }
 
 test.describe('Circulars edit page', () => {
