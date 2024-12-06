@@ -191,7 +191,7 @@ for message in consumer.consume(timeout=1):
         print("Received JSON Notice:", json_data)
 ```
 
-This code subscribes to a Kafka topic, consumes messages, decodes the bytes, and parses the JSON data into Python dictionaries.
+This code subscribes to a Kafka topic, consumes the messages, and parses the JSON data into Python dictionaries.
 
 ## Encoding and Decoding of Embedded Data
 
