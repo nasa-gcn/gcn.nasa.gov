@@ -222,10 +222,6 @@ export default function () {
   const [searchParams] = useSearchParams()
   const userIsModerator = useModStatus()
 
-  // Strip off the ?index param if we navigated here from a form.
-  // See https://remix.run/docs/en/main/guides/index-query-param.
-  searchParams.delete('index')
-
   const { query, startDate, endDate, sort, view } = handleSearchParams(
     searchParams,
     synonymFlagIsOn
