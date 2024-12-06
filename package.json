@@ -148,6 +148,9 @@
     "typescript": "^5.7.2",
     "yarn": "^1.22.21"
   },
+  "overrides": {
+    "@architect/deploy": "github:DocLM/deploy#d3116f41d5fda00337ebfda543a69d3b3d4546be"
+  },
   "engines": {
     "node": ">=20"
   },
