@@ -5,16 +5,17 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Await, Link, type LinkProps } from '@remix-run/react'
+import { Link, type LinkProps } from '@remix-run/react'
 import { Tooltip } from '@trussworks/react-uswds'
 import classNames from 'classnames'
 import {
   type ReactNode,
   type Ref,
-  Suspense,
   createContext,
   forwardRef,
   useContext,
+  useEffect,
+  useState,
 } from 'react'
 
 import styles from './AstroDataContext.module.css'
@@ -76,37 +77,39 @@ export function AstroDataLinkWithTooltip<T>({
   ext,
   ...props
 }: Omit<Parameters<typeof AstroDataLink>[0], 'ref'> & {
-  fetchFunction: () => T
-  label: (resolved: Awaited<T>) => ReactNode
+  fetchFunction: () => Promise<T>
+  label: (resolved: T) => ReactNode
   ext?: boolean
 }) {
+  const [state, setState] = useState<T>()
+  const [error, setError] = useState(false)
+
+  useEffect(() => {
+    fetchFunction()
+      .then(setState)
+      .catch(() => setError(true))
+  }, [fetchFunction])
+
   return (
     <Tooltip
       {...props}
       label={
         <div className={classNames('width-card-lg font-ui-sm', styles.detail)}>
-          <Suspense
-            fallback={
-              <>
-                <div>Loading...</div>
-                <div>&nbsp;</div>
-                <div>&nbsp;</div>
-              </>
-            }
-          >
-            <Await
-              resolve={fetchFunction()}
-              errorElement={
-                <>
-                  <div>Not found</div>
-                  <div>&nbsp;</div>
-                  <div>&nbsp;</div>
-                </>
-              }
-            >
-              {label}
-            </Await>
-          </Suspense>
+          {error ? (
+            <>
+              <div>Not found</div>
+              <div>&nbsp;</div>
+              <div>&nbsp;</div>
+            </>
+          ) : state ? (
+            label(state)
+          ) : (
+            <>
+              <div>Loading...</div>
+              <div>&nbsp;</div>
+              <div>&nbsp;</div>
+            </>
+          )}
         </div>
       }
       asCustom={AstroDataLink}
