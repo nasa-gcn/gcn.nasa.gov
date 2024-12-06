@@ -193,21 +193,25 @@ for message in consumer.consume(timeout=1):
 
 ## Encoding and Decoding of Embedded Data
 
-The following code sample shows how to encode/decode a file in Python. The [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) package includes the methods `b64decode` and `b64encode` to make this task simple.
+The following code demonstrates how to encode and decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`] module provides the `b64decode` and `b64encode` methods to make this task simple.
 
 ```python
 import base64
-
-# Parse the content of your file to a base64 encoded string:
+# Encode the content of a file to a Base64 string
 with open("path/to/your/file", 'rb') as file:
     encoded_string = base64.b64encode(file.read())
 
 print(encoded_string)
-# b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
+# Output: A Base64 encoded bytestring, e.g., b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
+with open("path/to/encoded_file.txt", 'wb') as encoded_file:
+    encoded_file.write(encoded_string)
 
 # Decode and write the content to a local file:
+with open("path/to/encoded_file.txt", 'rb') as encoded_file:
+    decoded_data = base64.b64decode(encoded_file.read())
+
 with open("path/to/destination/file", 'wb') as file:
-    file.write(base64.b64decode(encoded_string))
+    file.write(decoded_data)
 
 ```
 
