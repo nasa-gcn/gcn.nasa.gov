@@ -9,7 +9,7 @@ import { type LoaderFunction } from '@remix-run/node'
 import { type useLoaderData } from '@remix-run/react'
 
 import { AstroDataLinkWithTooltip } from './AstroDataContext'
-import { useSearchString } from '~/lib/utils'
+import { throwForStatus, useSearchString } from '~/lib/utils'
 import { type loader as arxivTooltipLoader } from '~/routes/api.tooltip.arxiv.$'
 import { type loader as circularTooltipLoader } from '~/routes/api.tooltip.circular.$'
 import { type loader as doiTooltipLoader } from '~/routes/api.tooltip.doi.$'
@@ -22,7 +22,7 @@ async function fetchTooltipData<loader extends LoaderFunction>(
   value: JSX.IntrinsicElements['data']['value']
 ): Promise<ReturnType<typeof useLoaderData<loader>>> {
   const response = await fetch(`/api/tooltip/${className}/${value}`)
-  if (!response.ok) throw new Error('failed to fetch tooltip')
+  throwForStatus(response)
   return await response.json()
 }
 

@@ -72,3 +72,13 @@ export function useSearchString() {
   if (searchString) searchString = `?${searchString}`
   return searchString
 }
+
+/** Throw an error if the request failed.
+ *
+ * Based on https://requests.readthedocs.io/en/latest/api/#requests.Response.raise_for_status.
+ */
+export function throwForStatus(response: Response) {
+  if (!response.ok) {
+    throw new Error('Request failed', { cause: response })
+  }
+}

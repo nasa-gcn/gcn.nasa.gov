@@ -10,6 +10,7 @@ import invariant from 'tiny-invariant'
 
 import { getEnvOrDie } from '~/lib/env.server'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import { throwForStatus } from '~/lib/utils'
 
 const splitter = /[:.]/
 
@@ -33,10 +34,7 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
     body: formData,
   })
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error('TNS request failed')
-  }
+  throwForStatus(response)
 
   const {
     objname,
