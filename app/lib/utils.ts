@@ -6,11 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { useSearchParams } from '@remix-run/react'
-import { stripHtml } from 'string-strip-html'
-
-export function stripTags(text: string) {
-  return stripHtml(text).result
-}
 
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
