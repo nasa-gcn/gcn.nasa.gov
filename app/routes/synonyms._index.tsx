@@ -41,9 +41,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const query = searchParams.get('query') || undefined
   const limit = parseInt(searchParams.get('limit') || '100')
   const page = parseInt(searchParams.get('page') || '1')
-  const synonyms = searchSynonymsByEventId({ page, eventId: query, limit })
+  const synonyms = await searchSynonymsByEventId({
+    page: page - 1,
+    eventId: query,
+    limit,
+  })
 
-  return synonyms
+  return { items: synonyms.items, totalPages: synonyms.totalPages, page }
 }
 
 function SynonymList({ synonyms }: { synonyms: SynonymGroup[] }) {
@@ -62,7 +66,7 @@ function SynonymList({ synonyms }: { synonyms: SynonymGroup[] }) {
   )
 }
 export default function () {
-  const { synonyms, page, totalPages } = useLoaderData<typeof loader>()
+  const { items, page, totalPages } = useLoaderData<typeof loader>()
   const submit = useSubmit()
   const formId = useId()
   const [searchParams] = useSearchParams()
@@ -116,7 +120,7 @@ export default function () {
           </ToolbarButtonGroup>
         </Grid>
       </GridContainer>
-      <SynonymList synonyms={synonyms} />
+      <SynonymList synonyms={items} />
       <PaginationSelectionFooter
         query={query}
         page={page}

@@ -1,3 +1,10 @@
+/*!
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 import { tables } from '@architect/functions'
 import { search } from '@nasa-gcn/architect-functions-search'
 import type { DynamoDBRecord } from 'aws-lambda'
@@ -14,6 +21,7 @@ const putData = {
   id: synonymId,
   body: {
     synonymId,
+    slugs: [] as string[],
     eventIds: [] as string[],
   },
 }
@@ -21,7 +29,11 @@ const putData = {
 jest.mock('@nasa-gcn/architect-functions-search', () => ({
   search: jest.fn(),
 }))
-
+jest.mock('github-slugger', () => ({
+  slug: (eventId: string) => {
+    return eventId.toLowerCase()
+  },
+}))
 jest.mock('@architect/functions', () => ({
   tables: jest.fn(),
 }))

@@ -30,6 +30,7 @@ export const AstroDataContext = createContext<AstroDataContextProps>({})
 /**
  * An Astro Flavored Markdown enriched link.
  */
+// eslint-disable-next-line react/display-name
 export const AstroDataLink = forwardRef(
   (
     {
