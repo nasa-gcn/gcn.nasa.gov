@@ -7,6 +7,7 @@
  */
 import { getEnvOrDie } from './env.server'
 import { getBasicAuthHeaders } from './headers.server'
+import { throwForStatus } from './utils'
 
 interface ZendeskRequest {
   requester: Requester
@@ -41,16 +42,13 @@ export async function postZendeskRequest(request: ZendeskRequest) {
     }
   )
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error(`Request failed with status ${response.status}`)
-  }
+  throwForStatus(response)
 
   const responseJson = await response.json()
   if (!responseJson.request.id) {
-    console.error(responseJson)
     throw new Error(
-      'ZenDesk request succeeded, but did not return a request ID'
+      'ZenDesk request succeeded, but did not return a request ID',
+      { cause: responseJson }
     )
   }
 
@@ -77,8 +75,5 @@ export async function closeZendeskTicket(ticketId: number) {
     }
   )
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error(`Request failed with status ${response.status}`)
-  }
+  throwForStatus(response)
 }
