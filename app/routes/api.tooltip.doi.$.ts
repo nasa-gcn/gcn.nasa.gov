@@ -11,7 +11,7 @@ import invariant from 'tiny-invariant'
 
 import { getEnvOrDieInProduction } from '~/lib/env.server'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
-import { stripTags } from '~/lib/utils'
+import { stripTags } from '~/lib/utils.server'
 
 const adsTokenTooltip = getEnvOrDieInProduction('ADS_TOKEN_TOOLTIP')
 
