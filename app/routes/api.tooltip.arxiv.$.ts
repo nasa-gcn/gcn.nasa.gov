@@ -10,6 +10,7 @@ import { DOMParser } from '@xmldom/xmldom'
 import invariant from 'tiny-invariant'
 
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import { throwForStatus } from '~/lib/utils'
 
 export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
   invariant(value)
@@ -18,10 +19,7 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
   url.searchParams.set('id_list', value)
   const response = await fetch(url)
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error('arXiv request failed')
-  }
+  throwForStatus(response)
 
   const text = await response.text()
   const entry = new DOMParser()
