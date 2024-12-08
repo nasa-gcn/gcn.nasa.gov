@@ -1,6 +1,17 @@
 import { Link } from '@remix-run/react'
+import { Button } from '@trussworks/react-uswds'
+import CopyToClipboard from 'react-copy-to-clipboard'
 
 export function LuceneAccordion() {
+  function copyableButton(text: string) {
+    return (
+      <CopyToClipboard text={text}>
+        <Button type="button" outline>
+          {text}
+        </Button>
+      </CopyToClipboard>
+    )
+  }
   return (
     <details>
       <summary>Advanced Search</summary>
@@ -13,6 +24,12 @@ export function LuceneAccordion() {
           Lucene Search Syntax Page
         </Link>
         {'. '}
+        <h4>Lucene Examples (click to copy):</h4>
+        <div>
+          {copyableButton('subject:"Swift"')}
+          {copyableButton('body:"GRB"')}
+          {copyableButton('submitter:"Tomas Ahumada Mena"')}
+        </div>
       </div>
     </details>
   )
