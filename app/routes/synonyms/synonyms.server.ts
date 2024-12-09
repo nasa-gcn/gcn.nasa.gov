@@ -336,7 +336,7 @@ export async function groupMembersByEventId({
   const groupedItems = searchResults.items.map(async (group) => {
     const promises = group.eventIds.map((eventId) => getSynonymMembers(eventId))
     const members = (await Promise.all(promises)).flat()
-    return { group, members }
+    return { ...group, members }
   })
   const items = await Promise.all(groupedItems)
   return {

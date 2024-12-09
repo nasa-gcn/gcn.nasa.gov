@@ -28,14 +28,12 @@ export default function ({
         </h3>
       )}
 
-      {allItems.map(({ group, members }) => (
-        <div key={group.synonymId}>
+      {allItems.map(({ synonymId, eventIds, slugs, members }) => (
+        <div key={synonymId}>
           <details>
             <summary>
-              <Link
-                to={`/circulars/events/${group.slugs.sort()[0]}${searchString}`}
-              >
-                {group.eventIds.join(', ')}
+              <Link to={`/circulars/events/${slugs.sort()[0]}${searchString}`}>
+                {eventIds.join(', ')}
               </Link>
             </summary>
             <ol className="margin-left-3">

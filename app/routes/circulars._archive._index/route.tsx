@@ -333,17 +333,16 @@ export default function () {
       </Hint>
       {clean && (
         <>
-          {!isGroupView && (
-            <CircularsIndex
-              allItems={allItems as CircularMetadata[]}
+          {isGroupView ? (
+            <SynonymGroupIndex
+              allItems={items as SynonymGroupWithMembers[]}
               searchString={searchString}
               totalItems={totalItems}
               query={query}
             />
-          )}
-          {isGroupView && synonymFlagIsOn && (
-            <SynonymGroupIndex
-              allItems={items as SynonymGroupWithMembers[]}
+          ) : (
+            <CircularsIndex
+              allItems={allItems as CircularMetadata[]}
               searchString={searchString}
               totalItems={totalItems}
               query={query}

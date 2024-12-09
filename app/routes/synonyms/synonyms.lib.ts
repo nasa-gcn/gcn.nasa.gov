@@ -21,7 +21,6 @@ export interface SynonymGroup {
   slugs: string[]
 }
 
-export interface SynonymGroupWithMembers {
-  group: SynonymGroup
+export interface SynonymGroupWithMembers extends SynonymGroup {
   members: Circular[]
 }
