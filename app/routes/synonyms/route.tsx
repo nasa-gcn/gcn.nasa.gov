@@ -5,12 +5,19 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { getUser } from '../_auth/user.server'
 import { moderatorGroup } from '../circulars/circulars.server'
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Synonyms',
+  getSitemapEntries: () => null,
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)

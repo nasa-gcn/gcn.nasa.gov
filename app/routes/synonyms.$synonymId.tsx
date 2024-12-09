@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import {
@@ -43,6 +44,12 @@ import {
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { getFormDataString } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Edit',
+  getSitemapEntries: () => null,
+}
 
 export async function loader({
   request,
