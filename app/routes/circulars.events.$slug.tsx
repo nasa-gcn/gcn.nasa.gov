@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
 import { Icon } from '@trussworks/react-uswds'
 import invariant from 'tiny-invariant'
 
@@ -25,33 +25,22 @@ export const handle: BreadcrumbHandle = {
   breadcrumb: 'Circular Event Group',
 }
 
-export async function loader({
-  params: { slug },
-  request: { url },
-}: LoaderFunctionArgs) {
+export async function loader({ params: { slug } }: LoaderFunctionArgs) {
   if (!feature('SYNONYMS')) throw new Response(null, { status: 404 })
   invariant(slug)
 
-  const { searchParams } = new URL(url)
-  const view = searchParams.get('view') || 'group'
-  const limit = searchParams.get('limit') || '20'
-  const page = searchParams.get('page') || '1'
   const synonyms = await getSynonymsBySlug(slug)
   const eventIds = synonyms.map((synonym: Synonym) => {
     return synonym.eventId
   })
   const members = await getAllSynonymMembers(eventIds)
 
-  return { members, eventIds, view, limit, page }
+  return { members, eventIds }
 }
 
 export default function Group() {
-  const { members, eventIds, view, limit, page } =
-    useLoaderData<typeof loader>()
-  const searchParams = new URLSearchParams()
-  if (view) searchParams.set('view', view)
-  if (view) searchParams.set('limit', limit)
-  if (view) searchParams.set('page', page)
+  const { members, eventIds } = useLoaderData<typeof loader>()
+  const [searchParams] = useSearchParams()
   const searchString = searchParams.toString()
 
   return (
