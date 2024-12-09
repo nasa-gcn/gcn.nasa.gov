@@ -149,7 +149,8 @@
     "yarn": "^1.22.21"
   },
   "overrides": {
-    "@architect/deploy": "github:DocLM/deploy#d3116f41d5fda00337ebfda543a69d3b3d4546be"
+    "@architect/deploy": "github:DocLM/deploy#d3116f41d5fda00337ebfda543a69d3b3d4546be",
+    "@architect/inventory": "github:lpsinger/inventory#esm-graph-with-top-level-await"
   },
   "engines": {
     "node": ">=20"
