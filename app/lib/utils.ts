@@ -77,19 +77,3 @@ export function throwForStatus(response: Response) {
     throw new Error('Request failed', { cause: response })
   }
 }
-
-export function calculateLimit({
-  isGroupView,
-  limit,
-}: {
-  isGroupView: boolean | undefined
-  limit: number | undefined
-}) {
-  const defaultLimit = isGroupView ? 20 : 100
-
-  if (!isGroupView) {
-    return limit || defaultLimit
-  } else {
-    return limit && limit < 20 ? limit : defaultLimit
-  }
-}
