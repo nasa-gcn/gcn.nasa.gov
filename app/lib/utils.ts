@@ -45,7 +45,7 @@ export function getFormDataString(formData: FormData, key: string) {
   }
 }
 
-export function getEnvBannerHeaderAndDescription(hostname: string) {
+export function getEnvBannerHeaderAndDescription(hostname?: string) {
   const production_hostname = 'gcn.nasa.gov'
   let heading, description
   if (hostname === `dev.${production_hostname}`) {
