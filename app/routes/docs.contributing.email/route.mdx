@@ -20,7 +20,7 @@ Note that each flow chart represents the email processing for a single one of GC
 
 <img src={circularsIngestionImg} alt="Flow chart of GCN Circulars ingestion" />
 
-Authorized GCN users can [submit GCN Circulars](/docs/circulars/submitting) in any one of three ways: by logging in and completing the [Web form](/circulars/new), by submitting an email to circulars@<i>stage</i>.gcn.nasa.gov, or by submitting an email to the legacy GCN Classic server at <span>gcncirc</span>@capella2.gsfc.nasa.gov.
+Authorized GCN users can [submit GCN Circulars](/docs/circulars/submitting) in either of two ways: by logging in and completing the [Web form](/circulars/new) or by submitting an email to circulars@<i>stage</i>.gcn.nasa.gov.
 
 ### By Web form
 
@@ -35,10 +35,6 @@ To submit a Circular via email, the user sends an email to circulars@<i>stage</i
 - Otherwise, the Lambda function checks that the From: address matches the email address of a user who belongs to the `circular-submitter` group.
 - The Lambda checks that the subject validates against a list of [allowed and disallowed keywords](/docs/circulars/styleguide#message-content).
 - If all of the above checks pass, then the Circular is accepted, stored in the database, and distributed to GCN Circulars subscribers.
-
-### By email to <span>gcncirc</span>@capella2.gsfc.nasa.gov
-
-The legacy, on-premise GCN Classic server at NASA Goddard Space Flight Center, capella2.gsfc.nasa.gov, is configured to forward messages addressed to <span>gcncirc</span>@capella2.gsfc.nasa.gov to <span>circulars</span>@gcn.nasa.gov. Once received by Amazon SES, processing proceeds the same as above.
 
 ## Support Requests
 
