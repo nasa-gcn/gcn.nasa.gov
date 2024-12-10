@@ -240,6 +240,8 @@ export async function get(
   circularId: number,
   version?: number
 ): Promise<Circular> {
+  if (isNaN(circularId) || (version !== undefined && isNaN(version)))
+    throw new Response(null, { status: 404 })
   const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
   const result = await circularVersions.get(version)
   if (!result)
@@ -367,6 +369,7 @@ export async function putVersion(
  * @returns an array of previous versions of a Circular sorted by version
  */
 export async function getVersions(circularId: number): Promise<number[]> {
+  if (isNaN(circularId)) throw new Response(null, { status: 404 })
   const circularVersionsAutoIncrement =
     await getDynamoDBVersionAutoIncrement(circularId)
   return await circularVersionsAutoIncrement.list()
