@@ -39,21 +39,10 @@ describe('getFromAddress', () => {
     ).toThrow('From address is missing')
   })
 
-  test("raises if the from address name does not contain ' via '", () => {
-    expect(() =>
-      getFromAddress(
-        parseFrom(
-          '"Example <example@example.com>" <mailnull@capella2.gsfc.nasa.gov>'
-        )
-      )
-    ).toThrow("Expected From name to contain ' via '")
-  })
-
   test('returns the address verbatim for a normal email address', () => {
-    expect(getFromAddress(parseFrom('example@example.com'))).toEqual({
-      address: 'example@example.com',
-      submittedHow: 'email',
-    })
+    expect(getFromAddress(parseFrom('example@example.com'))).toEqual(
+      'example@example.com'
+    )
   })
 })
 
