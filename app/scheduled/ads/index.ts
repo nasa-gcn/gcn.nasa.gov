@@ -7,6 +7,7 @@
  */
 import { tables } from '@architect/functions'
 import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
+import 'source-map-support/register'
 
 import { getEnvOrDie } from '~/lib/env.server'
 

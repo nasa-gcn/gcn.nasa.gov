@@ -2,9 +2,8 @@ import { type RequestHandler, createRequestHandler } from '@remix-run/architect'
 import * as build from '@remix-run/dev/server-build'
 import { installGlobals } from '@remix-run/node'
 import { type APIGatewayProxyStructuredResultV2 } from 'aws-lambda'
-import sourceMapSupport from 'source-map-support'
+import 'source-map-support/register'
 
-sourceMapSupport.install()
 installGlobals({ nativeFetch: true })
 
 const remixHandler = createRequestHandler({
