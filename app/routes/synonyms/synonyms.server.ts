@@ -165,7 +165,7 @@ export async function tryInitSynonym(eventId: string) {
   try {
     await db.synonyms.update({
       Key: { eventId },
-      UpdateExpression: 'set #synonymId = :synonymId',
+      UpdateExpression: 'set #synonymId = :synonymId, #slug = :slug',
       ExpressionAttributeNames: {
         '#synonymId': 'synonymId',
         '#slug': 'slug',
