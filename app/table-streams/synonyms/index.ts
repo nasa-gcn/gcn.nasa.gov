@@ -45,6 +45,7 @@ export const handler = createTriggerHandler(
       await putIndex({
         synonymId,
         eventIds: dynamoSynonyms.map((synonym) => synonym.eventId),
+        slugs: dynamoSynonyms.map((synonym) => synonym.slug),
       })
     } else {
       await removeIndex(synonymId)

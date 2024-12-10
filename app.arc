@@ -143,6 +143,10 @@ synonyms
   synonymId *String
   name synonymsByUuid
 
+synonyms
+  slug *String
+  name synonymsBySlug
+
 @aws
 runtime nodejs22.x
 region us-east-1

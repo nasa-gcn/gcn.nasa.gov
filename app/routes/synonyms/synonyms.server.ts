@@ -9,9 +9,14 @@ import { tables } from '@architect/functions'
 import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
+import { slug } from 'github-slugger'
 
 import type { Circular } from '../circulars/circulars.lib'
-import type { Synonym, SynonymGroup } from './synonyms.lib'
+import type {
+  Synonym,
+  SynonymGroup,
+  SynonymGroupWithMembers,
+} from './synonyms.lib'
 
 export async function getSynonymsByUuid(synonymId: string) {
   const db = await tables()
@@ -26,6 +31,19 @@ export async function getSynonymsByUuid(synonymId: string) {
   return Items as Synonym[]
 }
 
+export async function getSynonymsBySlug(slug: string) {
+  const db = await tables()
+  const { Items } = await db.synonyms.query({
+    IndexName: 'synonymsBySlug',
+    KeyConditionExpression: 'slug = :slug',
+    ExpressionAttributeValues: {
+      ':slug': slug,
+    },
+  })
+  const synonym = Items[0]
+  return getSynonymsByUuid(synonym.synonymId)
+}
+
 export async function searchSynonymsByEventId({
   limit = 10,
   page,
@@ -35,7 +53,7 @@ export async function searchSynonymsByEventId({
   page: number
   eventId?: string
 }): Promise<{
-  synonyms: SynonymGroup[]
+  items: SynonymGroup[]
   totalItems: number
   totalPages: number
   page: number
@@ -72,7 +90,7 @@ export async function searchSynonymsByEventId({
     },
   } = await client.search({
     index: 'synonym-groups',
-    from: page && limit && (page - 1) * limit,
+    from: page * limit,
     size: limit,
     body: {
       query,
@@ -85,12 +103,12 @@ export async function searchSynonymsByEventId({
       _source: body,
     }: {
       _source: SynonymGroup
-      fields: { eventIds: []; synonymId: string }
+      fields: { eventIds: string[]; synonymId: string; slugs: string[] }
     }) => body
   )
 
   return {
-    synonyms: results,
+    items: results,
     totalItems,
     totalPages,
     page,
@@ -108,18 +126,6 @@ async function validateEventIds({ eventIds }: { eventIds: string[] }) {
   })
 
   return filteredResponses.length === eventIds.length
-}
-
-async function getSynonymMembers(eventId: string) {
-  const db = await tables()
-  const { Items } = await db.circulars.query({
-    IndexName: 'circularsByEventId',
-    KeyConditionExpression: 'eventId = :eventId',
-    ExpressionAttributeValues: {
-      ':eventId': eventId,
-    },
-  })
-  return Items as Circular[]
 }
 
 /*
@@ -145,7 +151,7 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
     RequestItems: {
       [TableName]: synonymousEventIds.map((eventId) => ({
         PutRequest: {
-          Item: { synonymId: uuid, eventId },
+          Item: { synonymId: uuid, eventId, slug: slug(eventId) },
         },
       })),
     },
@@ -162,9 +168,11 @@ export async function tryInitSynonym(eventId: string) {
       UpdateExpression: 'set #synonymId = :synonymId',
       ExpressionAttributeNames: {
         '#synonymId': 'synonymId',
+        '#slug': 'slug',
       },
       ExpressionAttributeValues: {
         ':synonymId': crypto.randomUUID(),
+        ':slug': slug(eventId),
       },
       ConditionExpression: 'attribute_not_exists(eventId)',
     })
@@ -202,7 +210,7 @@ export async function putSynonyms({
   if (subtractions?.length) {
     const subtraction_writes = subtractions.map((eventId) => ({
       PutRequest: {
-        Item: { synonymId: crypto.randomUUID(), eventId },
+        Item: { synonymId: crypto.randomUUID(), eventId, slug: slug(eventId) },
       },
     }))
 
@@ -211,7 +219,7 @@ export async function putSynonyms({
   if (additions?.length) {
     const addition_writes = additions.map((eventId) => ({
       PutRequest: {
-        Item: { synonymId, eventId },
+        Item: { synonymId, eventId, slug: slug(eventId) },
       },
     }))
     writes.push(...addition_writes)
@@ -302,4 +310,56 @@ export async function autoCompleteEventIds({
   )
 
   return { options }
+}
+
+export async function groupMembersByEventId({
+  limit = 10,
+  page,
+  eventId,
+  query,
+}: {
+  limit?: number
+  page: number
+  eventId?: string
+  query?: string
+}): Promise<{
+  items: SynonymGroupWithMembers[]
+  totalItems: number
+  totalPages: number
+}> {
+  const searchTerm = eventId || query
+  const searchResults = await searchSynonymsByEventId({
+    limit,
+    page,
+    eventId: searchTerm,
+  })
+  const groupedItems = searchResults.items.map(async (group) => {
+    const promises = group.eventIds.map((eventId) => getSynonymMembers(eventId))
+    const members = (await Promise.all(promises)).flat()
+    return { ...group, members }
+  })
+  const items = await Promise.all(groupedItems)
+  return {
+    items,
+    totalItems: searchResults.totalItems,
+    totalPages: searchResults.totalPages,
+  }
+}
+
+async function getSynonymMembers(eventId: string) {
+  const db = await tables()
+  const { Items } = await db.circulars.query({
+    IndexName: 'circularsByEventId',
+    KeyConditionExpression: 'eventId = :eventId',
+    ExpressionAttributeValues: {
+      ':eventId': eventId,
+    },
+  })
+  return Items as Circular[]
+}
+
+export async function getAllSynonymMembers(eventIds: string[]) {
+  const promises = eventIds.map(getSynonymMembers)
+  const results = (await Promise.all(promises)).flat()
+  return results
 }
