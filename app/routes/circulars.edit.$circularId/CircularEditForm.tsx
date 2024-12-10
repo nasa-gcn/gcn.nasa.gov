@@ -19,8 +19,6 @@ import classnames from 'classnames'
 import { type ReactNode, useContext, useState } from 'react'
 import { dedent } from 'ts-dedent'
 
-import { AstroDataContext } from '../circulars.$circularId.($version)/AstroDataContext'
-import { MarkdownBody } from '../circulars.$circularId.($version)/Body'
 import {
   type CircularFormat,
   bodyIsValid,
@@ -33,6 +31,8 @@ import { RichEditor } from './RichEditor'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
+import { AstroDataContext } from '~/components/circularDisplay/AstroDataContext'
+import { MarkdownBody } from '~/components/circularDisplay/Body'
 import { useModStatus } from '~/root'
 
 function SyntaxExample({

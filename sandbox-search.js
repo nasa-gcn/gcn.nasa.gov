@@ -13,7 +13,11 @@ export default async function () {
   const { circulars, synonyms } = JSON.parse(text)
   const groups = Object.entries(groupBy(synonyms, 'synonymId')).flatMap(
     ([synonymId, values]) => [
-      { synonymId, eventIds: values.map(({ eventId }) => eventId) },
+      {
+        synonymId,
+        eventIds: values.map(({ eventId }) => eventId),
+        slugs: values.map(({ slug }) => slug),
+      },
     ]
   )
   return [

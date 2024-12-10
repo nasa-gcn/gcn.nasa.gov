@@ -16,24 +16,28 @@ export default function PaginationSelectionFooter({
   limit,
   query,
   form,
+  view,
 }: {
   page: number
   totalPages: number
   limit?: number
   query?: string
   form: string
+  view?: string
 }) {
   const submit = useSubmit()
+
   return (
     <div className="display-flex flex-row flex-wrap">
       <div className="display-flex flex-align-self-center margin-right-2 width-auto">
         <div>
+          <input type="hidden" form={form} name="view" id="view" value={view} />
           <Select
             id="limit"
             title="Number of results per page"
             className="width-auto height-5 padding-y-0 margin-y-0"
             name="limit"
-            defaultValue="100"
+            value={limit}
             form={form}
             onChange={({ target: { form } }) => {
               submit(form)
@@ -53,6 +57,7 @@ export default function PaginationSelectionFooter({
             page={page}
             limit={limit}
             totalPages={totalPages}
+            view={view}
           />
         )}
       </div>

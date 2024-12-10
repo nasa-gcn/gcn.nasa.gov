@@ -1,3 +1,10 @@
+/*!
+ * Copyright © 2023 United States Government as represented by the
+ * Administrator of the National Aeronautics and Space Administration.
+ * All Rights Reserved.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
 import { tables } from '@architect/functions'
 import { search } from '@nasa-gcn/architect-functions-search'
 import type { DynamoDBRecord } from 'aws-lambda'
@@ -14,12 +21,23 @@ const putData = {
   id: synonymId,
   body: {
     synonymId,
+    slugs: [] as string[],
     eventIds: [] as string[],
   },
 }
 
 jest.mock('@nasa-gcn/architect-functions-search', () => ({
   search: jest.fn(),
+}))
+
+// Github-slugger is mocked to prevent jest failing to properly load the package. If Jest attempts
+// to load it, it will encounter a syntax error. Since these eventIds do not have any characters that
+// would be changed by the slugger, ensuring they are all lowercase is enough to mock the behavior
+// of github-slugger in this case.
+jest.mock('github-slugger', () => ({
+  slug: (eventId: string) => {
+    return eventId.toLowerCase()
+  },
 }))
 
 jest.mock('@architect/functions', () => ({
