@@ -29,7 +29,7 @@ import PaginationSelectionFooter from '~/components/pagination/PaginationSelecti
 import { feature, origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { useModStatus } from '~/root'
+import { useFeature, useModStatus } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 import {
   type CircularFormat,
@@ -83,7 +83,6 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
     page,
     ...results,
     requestedChangeCount,
-    synonymFlagIsOn,
     limit,
     isGroupView,
   }
@@ -182,22 +181,6 @@ export async function action({ request }: ActionFunctionArgs) {
   return { newCircular, intent }
 }
 
-function handleSearchParams(
-  searchParams: URLSearchParams,
-  synonymFlagIsOn: boolean
-) {
-  // Strip off the ?index param if we navigated here from a form.
-  // See https://remix.run/docs/en/main/guides/index-query-param.
-  searchParams.delete('index')
-  const query = searchParams.get('query') || ''
-  const startDate = searchParams.get('startDate') || undefined
-  const endDate = searchParams.get('endDate') || undefined
-  const sort = searchParams.get('sort') || 'circularID'
-  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
-
-  return { query, startDate, endDate, sort, view }
-}
-
 export default function () {
   const result = useActionData<typeof action>()
   const {
@@ -206,7 +189,6 @@ export default function () {
     totalPages,
     totalItems,
     requestedChangeCount,
-    synonymFlagIsOn,
     limit,
     isGroupView,
   } = useLoaderData<typeof loader>()
@@ -221,11 +203,17 @@ export default function () {
   const submit = useSubmit()
   const [searchParams] = useSearchParams()
   const userIsModerator = useModStatus()
+  const synonymFlagIsOn = useFeature('SYNONYMS')
 
-  const { query, startDate, endDate, sort, view } = handleSearchParams(
-    searchParams,
-    synonymFlagIsOn
-  )
+  // Strip off the ?index param if we navigated here from a form.
+  // See https://remix.run/docs/en/main/guides/index-query-param.
+  searchParams.delete('index')
+
+  const query = searchParams.get('query') || ''
+  const startDate = searchParams.get('startDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
+  const sort = searchParams.get('sort') || 'circularID'
+  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
