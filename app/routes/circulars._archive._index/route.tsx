@@ -18,24 +18,6 @@ import { Alert, Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
-import CircularsHeader from './CircularsHeader'
-import CircularsIndex from './CircularsIndex'
-import { DateSelector } from './DateSelectorMenu'
-import { SortSelector } from './SortSelectorButton'
-import SynonymGroupIndex from './SynonymGroupIndex'
-import Hint from '~/components/Hint'
-import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
-import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
-import { feature, origin } from '~/lib/env.server'
-import { getFormDataString } from '~/lib/utils'
-import { postZendeskRequest } from '~/lib/zendesk.server'
-import { useFeature, useModStatus } from '~/root'
-import { getUser } from '~/routes/_auth/user.server'
-import {
-  type CircularFormat,
-  type CircularMetadata,
-  circularFormats,
-} from '~/routes/circulars/circulars.lib'
 import {
   circularRedirect,
   createChangeRequest,
@@ -52,13 +34,20 @@ import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
+import SynonymGroupIndex from './SynonymGroupIndex'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
-import { origin } from '~/lib/env.server'
+import { feature, origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
 import { useFeature, useModStatus } from '~/root'
+import { getUser } from '~/routes/_auth/user.server'
+import {
+  type CircularFormat,
+  type CircularMetadata,
+  circularFormats,
+} from '~/routes/circulars/circulars.lib'
 import type { SynonymGroupWithMembers } from '~/routes/synonyms/synonyms.lib'
 import { groupMembersByEventId } from '~/routes/synonyms/synonyms.server'
 
