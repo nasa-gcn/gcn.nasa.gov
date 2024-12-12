@@ -106,7 +106,6 @@ export async function searchSynonymsByEventId({
       fields: { eventIds: string[]; synonymId: string; slugs: string[] }
     }) => body
   )
-
   return {
     items: results,
     totalItems,
@@ -139,7 +138,7 @@ export async function opensearchKeywordSearch({
   if (response.body.hits.hits.length > 0) {
     return response.body.hits.hits[0]._source
   } else {
-    return null
+    return []
   }
 }
 

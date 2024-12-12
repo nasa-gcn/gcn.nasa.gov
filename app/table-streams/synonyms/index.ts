@@ -50,12 +50,24 @@ export const handler = createTriggerHandler(
     ) as Synonym
     const dynamoSynonyms = await getSynonymsByUuid(synonymId)
     const opensearchSynonym = await opensearchKeywordSearch({ eventId })
-    const previousSynonymId = opensearchSynonym.synonymId
-    const dynamoPreviousGroup = (
-      await getSynonymsByUuid(previousSynonymId)
-    ).filter((synonym) => synonym.eventId != eventId)
+    const previousSynonymId = opensearchSynonym
+      ? opensearchSynonym.synonymId
+      : null
+    const dynamoPreviousGroup = previousSynonymId
+      ? (await getSynonymsByUuid(previousSynonymId)).filter(
+          (synonym) => synonym.eventId != eventId
+        )
+      : []
 
-    if (dynamoPreviousGroup.length === 0) await removeIndex(previousSynonymId)
+    if (dynamoPreviousGroup.length === 0 && previousSynonymId) {
+      await removeIndex(previousSynonymId)
+    } else {
+      await putIndex({
+        synonymId: previousSynonymId,
+        eventIds: dynamoPreviousGroup.map((synonym) => synonym.eventId),
+        slugs: dynamoPreviousGroup.map((synonym) => synonym.slug),
+      })
+    }
 
     if (dynamoSynonyms.length > 0) {
       await putIndex({
