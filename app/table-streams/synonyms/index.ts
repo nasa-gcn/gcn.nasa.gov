@@ -13,12 +13,16 @@ import 'source-map-support/register'
 import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import type { Synonym, SynonymGroup } from '~/routes/synonyms/synonyms.lib'
-import { getSynonymsByUuid } from '~/routes/synonyms/synonyms.server'
+import {
+  getSynonymsByUuid,
+  opensearchKeywordSearch,
+} from '~/routes/synonyms/synonyms.server'
 
 const index = 'synonym-groups'
 
 async function removeIndex(id: string) {
   const client = await getSearchClient()
+
   try {
     await client.delete({ index, id })
   } catch (e) {
@@ -40,8 +44,19 @@ async function putIndex(synonymGroup: SynonymGroup) {
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     if (!eventName || !dynamodb) return
-    const { synonymId } = unmarshallTrigger(dynamodb!.NewImage) as Synonym
+
+    const { synonymId, eventId } = unmarshallTrigger(
+      dynamodb!.NewImage
+    ) as Synonym
     const dynamoSynonyms = await getSynonymsByUuid(synonymId)
+    const opensearchSynonym = await opensearchKeywordSearch({ eventId })
+    const previousSynonymId = opensearchSynonym.synonymId
+    const dynamoPreviousGroup = await getSynonymsByUuid(previousSynonymId)
+
+    if (dynamoPreviousGroup.length === 0) {
+      await removeIndex(previousSynonymId)
+    }
+
     if (dynamoSynonyms.length > 0) {
       await putIndex({
         synonymId,

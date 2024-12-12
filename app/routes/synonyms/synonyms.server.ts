@@ -115,6 +115,34 @@ export async function searchSynonymsByEventId({
   }
 }
 
+export async function opensearchKeywordSearch({
+  eventId,
+}: {
+  eventId: string
+}) {
+  const client = await getSearchClient()
+  const indexName = 'synonym-groups'
+
+  const query = {
+    query: {
+      term: {
+        'eventIds.keyword': eventId,
+      },
+    },
+  }
+
+  const response = await client.search({
+    index: indexName,
+    body: query,
+  })
+
+  if (response.body.hits.hits.length > 0) {
+    return response.body.hits.hits[0]._source
+  } else {
+    return null
+  }
+}
+
 async function validateEventIds({ eventIds }: { eventIds: string[] }) {
   const promises = eventIds.map((eventId) => {
     return getSynonymMembers(eventId)
