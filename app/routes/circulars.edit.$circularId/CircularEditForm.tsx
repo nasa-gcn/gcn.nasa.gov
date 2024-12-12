@@ -277,7 +277,7 @@ export function CircularEditForm({
         >
           <CircularsKeywords />
         </CollapsableInfo>
-        {intent === 'correction' && (
+        {intent !== 'new' && (
           <InputGroup
             className={classnames('maxw-full', {
               'usa-input--error': eventIdValid === false,
