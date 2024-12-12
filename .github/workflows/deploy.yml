@@ -24,6 +24,12 @@ jobs:
           npm i --os=linux --cpu=arm64
       - name: Build
         run: npm run build
+      - name: Summarize Lamdba deployment bundle sizes
+        run: |
+          echo '# Lambda Sizes' >> $GITHUB_STEP_SUMMARY
+          echo '|Size|Build Directory|' >> $GITHUB_STEP_SUMMARY
+          echo '|-|-|' >> $GITHUB_STEP_SUMMARY
+          du -hs $(find build -name 'index.*js' -exec dirname {} \;) | perl -pe 's/^\s*/|/; s/(\s+)/|/; s/$/|/' >> $GITHUB_STEP_SUMMARY
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:

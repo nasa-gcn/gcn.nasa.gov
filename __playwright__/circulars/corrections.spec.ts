@@ -1,16 +1,15 @@
 import { expect, test } from '@playwright/test'
 
 const loadingTestsCircular = {
-  subject:
-    'AMON Coincidence Alert from the sub-threshold IceCube-HAWC search NuEm-230927A',
-  submittedHow: 'email-legacy',
-  editedOn: 1695837395712,
-  circularId: 34776,
-  submitter: 'Hugo Ayala at Pennsylvania State University <hgayala@psu.edu>',
-  body: 'The AMON,  IceCube, and HAWC collaborations report:\n\nThe AMON NuEm stream channel found a coincidence alert from the\nIceCube online neutrino selection + HAWC daily monitoring analysis.\nThe analysis looks for IceCube neutrino events -mostly atmospheric\nin origin- around the position and transit time of a HAWC cluster of\nlikely gamma rays, as identified in the integrated observations from\na single transit, in this case having a duration of 6.06 hours.\n\nThe HAWC transit interval starts from 2023/09/27 01:10:10 UT  to\n2023/09/27 07:20:17 UT\n(End of the HAWC transit time)\n\nThe location of the coincidence is reported as\nRA (J2000): 331.92 deg\nDec (J2000): 12.44 deg\nLocation uncertainty (50% containment): 0.13 deg (statistical only).\nLocation uncertainty (90% containment): 0.24 deg (statistical only).\n\nThe false alarm rate (FAR) of this coincidence is 3.9 per year.\nWe encourage follow-up observations of the alert region contingent on\nthe availability of resources and interest, given the quoted FAR.\n\nAMON seeks to perform a real-time correlation analysis of the\nhigh-energy signals across all known astronomical messengers. More\ninformation about AMON can be found in https://www.amon.psu.edu/\nInformation on the IceCube collaboration: http://icecube.wisc.edu/\nInformation on the HAWC collaboration: https://www.hawc-observatory.org\n',
-  editedBy: 'Example at Example <example@example.com>',
-  createdOn: 1694188746530,
-  version: 3,
+  subject: 'LIGO/Virgo/KAGRA S240630t: Updated Sky localization',
+  eventId: 'LIGO/Virgo/KAGRA S240630t',
+  submittedHow: 'web',
+  createdOn: 1719767201026,
+  circularId: 36796,
+  submitter:
+    'Christopher P L Berry at LVK Collaboration <christopher.berry@ligo.org>',
+  format: 'text/plain',
+  body: 'The LIGO Scientific Collaboration, the Virgo Collaboration, and the KAGRA Collaboration report:\n\nWe have conducted further analysis of the LIGO Hanford Observatory (H1), LIGO Livingston Observatory (L1), and Virgo Observatory (V1) data around the time of the compact binary merger (CBC) candidate S240630t (GCN Circular 36794). Parameter estimation has been performed using Bilby [1] and a new sky map, Bilby.multiorder.fits,0, distributed via GCN Notice, is available for retrieval from the GraceDB event page:\n\nhttps://gracedb.ligo.org/superevents/S240630t\n\nFor the Bilby.multiorder.fits,0 sky map, the 90% credible region is 670 deg2. Marginalized over the whole sky, the a posteriori luminosity distance estimate is 3161 +/- 841 Mpc (a posteriori mean +/- standard deviation).\n\nFor further information about analysis methodology and the contents of this alert, refer to the LIGO/Virgo/KAGRA Public Alerts User Guide https://emfollow.docs.ligo.org/.\n\n [1] Ashton et al. ApJS 241, 27 (2019) doi:10.3847/1538-4365/ab06fc and Morisaki et al. (2023) arXiv:2307.13380',
 }
 
 test.describe('Circulars correction page', () => {

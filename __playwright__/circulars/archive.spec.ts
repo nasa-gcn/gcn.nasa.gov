@@ -6,9 +6,10 @@ test.describe('Circulars archive page', () => {
   }) => {
     await page.goto('/circulars')
     for (const expectedResultsPerPage of [10, 20]) {
-      await page
-        .getByTitle('Number of results per page')
-        .selectOption({ label: `${expectedResultsPerPage} / page` })
+      const locator = page.getByTestId('Select')
+      await expect(locator).toBeVisible()
+      await locator.click()
+      await locator.selectOption(`${expectedResultsPerPage} / page`)
       await page.waitForFunction(
         (n) =>
           document.getElementsByTagName('ol')[0].getElementsByTagName('li')

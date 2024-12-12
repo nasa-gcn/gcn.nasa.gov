@@ -104,6 +104,12 @@ export default function () {
         oldString={circular.subject}
         newString={correction.subject}
       />
+      <h3>Event ID</h3>
+      <DiffedContent
+        oldString={circular.eventId ?? ''}
+        newString={correction.eventId ?? ''}
+        method="lines"
+      />
       <h3>Format</h3>
       <DiffedContent
         oldString={circular.format ?? 'text/plain'}
@@ -132,11 +138,6 @@ export default function () {
   )
 }
 
-const methodMap = {
-  words: diffWords,
-  lines: diffLines,
-}
-
 function DiffedContent({
   oldString,
   newString,
@@ -146,10 +147,10 @@ function DiffedContent({
   newString: string
   method?: 'words' | 'lines'
 }) {
-  const diff = methodMap[method && newString ? method : 'lines'](
-    oldString ?? '',
-    newString ?? ''
-  )
+  const diff =
+    method == 'words'
+      ? diffWords(oldString, newString)
+      : diffLines(oldString, newString)
 
   return (
     <div>

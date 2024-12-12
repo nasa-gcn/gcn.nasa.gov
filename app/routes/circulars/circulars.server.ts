@@ -22,6 +22,7 @@ import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_auth/user.server'
+import { tryInitSynonym } from '../synonyms/synonyms.server'
 import {
   bodyIsValid,
   formatAuthor,
@@ -239,6 +240,8 @@ export async function get(
   circularId: number,
   version?: number
 ): Promise<Circular> {
+  if (isNaN(circularId) || (version !== undefined && isNaN(version)))
+    throw new Response(null, { status: 404 })
   const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
   const result = await circularVersions.get(version)
   if (!result)
@@ -311,8 +314,9 @@ export async function put(
 
   const eventId = parseEventFromSubject(item.subject)
   if (eventId) circular.eventId = eventId
-
-  return await putRaw(circular)
+  const result = await putRaw(circular)
+  if (eventId) await tryInitSynonym(eventId)
+  return result
 }
 
 export async function circularRedirect(query: string) {
@@ -365,6 +369,7 @@ export async function putVersion(
  * @returns an array of previous versions of a Circular sorted by version
  */
 export async function getVersions(circularId: number): Promise<number[]> {
+  if (isNaN(circularId)) throw new Response(null, { status: 404 })
   const circularVersionsAutoIncrement =
     await getDynamoDBVersionAutoIncrement(circularId)
   return await circularVersionsAutoIncrement.list()
@@ -544,6 +549,7 @@ export async function approveChangeRequest(
     format: changeRequest.format,
     submitter: changeRequest.submitter,
     createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
+    eventId: changeRequest.eventId,
   }
 
   const promises = [

@@ -244,6 +244,16 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks['Super Kamiokande'] = '/missions/sksn'
   }
 
+  if (useFeature('CHIME')) {
+    JsonNoticeTypes.Chime = ['gcn.notices.chime.alert']
+    JsonNoticeTypeLinks.Chime = '/missions/chime'
+  }
+
+  if (useFeature('KM3NET')) {
+    JsonNoticeTypes.KM3NET = ['gcn.notices.km3net']
+    JsonNoticeTypeLinks.KM3NET = '/missions/km3net'
+  }
+
   const counterfunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)

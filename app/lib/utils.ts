@@ -6,11 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { useSearchParams } from '@remix-run/react'
-import { stripHtml } from 'string-strip-html'
-
-export function stripTags(text: string) {
-  return stripHtml(text).result
-}
 
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
@@ -45,7 +40,7 @@ export function getFormDataString(formData: FormData, key: string) {
   }
 }
 
-export function getEnvBannerHeaderAndDescription(hostname: string) {
+export function getEnvBannerHeaderAndDescription(hostname?: string) {
   const production_hostname = 'gcn.nasa.gov'
   let heading, description
   if (hostname === `dev.${production_hostname}`) {
@@ -71,4 +66,14 @@ export function useSearchString() {
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
   return searchString
+}
+
+/** Throw an error if the request failed.
+ *
+ * Based on https://requests.readthedocs.io/en/latest/api/#requests.Response.raise_for_status.
+ */
+export function throwForStatus(response: Response) {
+  if (!response.ok) {
+    throw new Error('Request failed', { cause: response })
+  }
 }

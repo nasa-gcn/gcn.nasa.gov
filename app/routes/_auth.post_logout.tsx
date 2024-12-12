@@ -54,10 +54,7 @@ export default function () {
         </p>
         <p className="text-base">
           To change your sign-in method,{' '}
-          <a href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn">
-            contact us for help
-          </a>
-          .
+          <a href="/contact">contact us for help</a>.
         </p>
       </div>
       <ModalFooter>

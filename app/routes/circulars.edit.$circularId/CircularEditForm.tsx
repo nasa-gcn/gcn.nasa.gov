@@ -19,12 +19,11 @@ import classnames from 'classnames'
 import { type ReactNode, useContext, useState } from 'react'
 import { dedent } from 'ts-dedent'
 
-import { AstroDataContext } from '../circulars.$circularId.($version)/AstroDataContext'
-import { MarkdownBody } from '../circulars.$circularId.($version)/Body'
 import {
   type CircularFormat,
   bodyIsValid,
   dateTimeIsValid,
+  eventIdIsValid,
   subjectIsValid,
   submitterIsValid,
 } from '../circulars/circulars.lib'
@@ -32,6 +31,8 @@ import { RichEditor } from './RichEditor'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
+import { AstroDataContext } from '~/components/circularDisplay/AstroDataContext'
+import { MarkdownBody } from '~/components/circularDisplay/Body'
 import { useModStatus } from '~/root'
 
 function SyntaxExample({
@@ -112,6 +113,7 @@ export function CircularEditForm({
   defaultSubject,
   searchString,
   defaultCreatedOnDateTime,
+  defaultEventId,
   intent,
 }: {
   formattedContributor: string
@@ -122,6 +124,7 @@ export function CircularEditForm({
   defaultSubject: string
   searchString: string
   defaultCreatedOnDateTime?: string
+  defaultEventId?: string
   intent: 'correction' | 'edit' | 'new'
 }) {
   let formSearchString = '?index'
@@ -132,16 +135,21 @@ export function CircularEditForm({
   const [subjectValid, setSubjectValid] = useState(
     subjectIsValid(defaultSubject)
   )
+  const [eventIdValid, setEventIdValid] = useState(
+    eventIdIsValid(defaultEventId ?? '') || intent === 'new'
+  )
   const [body, setBody] = useState(defaultBody)
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
   const [dateTime, setDateTime] = useState(defaultCreatedOnDateTime ?? '')
   const [submitter, setSubmitter] = useState(defaultSubmitter)
+  const [eventId, setEventId] = useState(defaultEventId)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
   const sending = Boolean(useNavigation().formData)
-  const valid = subjectValid && bodyValid && dateTimeValid && submitterValid
+  const valid =
+    subjectValid && bodyValid && dateTimeValid && submitterValid && eventIdValid
 
   let headerText, saveButtonText
 
@@ -165,7 +173,8 @@ export function CircularEditForm({
     subject.trim() !== defaultSubject.trim() ||
     format !== defaultFormat ||
     submitter?.trim() !== defaultSubmitter ||
-    dateTime !== defaultCreatedOnDateTime
+    dateTime !== defaultCreatedOnDateTime ||
+    eventId?.trim() !== defaultEventId
 
   const userIsModerator = useModStatus()
 
@@ -268,6 +277,29 @@ export function CircularEditForm({
         >
           <CircularsKeywords />
         </CollapsableInfo>
+        {intent === 'correction' && (
+          <InputGroup
+            className={classnames('maxw-full', {
+              'usa-input--error': eventIdValid === false,
+              'usa-input--success': eventIdValid,
+            })}
+          >
+            <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
+            <TextInput
+              autoFocus
+              className="maxw-full"
+              name="eventId"
+              id="eventId"
+              type="text"
+              defaultValue={defaultEventId}
+              required
+              onChange={({ target: { value } }) => {
+                setEventId(value)
+                setEventIdValid(eventIdIsValid(value))
+              }}
+            />
+          </InputGroup>
+        )}
         <label hidden htmlFor="body">
           Body
         </label>

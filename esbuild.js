@@ -1,5 +1,5 @@
 import esbuild from 'esbuild'
-import { copyFile } from 'fs/promises'
+import { copyFile, writeFile } from 'fs/promises'
 import { glob } from 'glob'
 import { extname } from 'node:path'
 import { basename, dirname, join } from 'path'
@@ -24,7 +24,8 @@ const options = {
   platform: 'node',
   target: ['node20'],
   minify: !dev,
-  sourcemap: dev,
+  sourcemap: true,
+  sourcesContent: false,
   metafile: true,
   loader: { '.node': 'empty' },
   plugins: [
@@ -40,6 +41,17 @@ const options = {
                   copyFile(input, join(dirname(entryPoint), basename(input)))
                 )
             )
+          )
+        })
+      },
+    },
+    {
+      name: 'write metafile to output directory',
+      setup(build) {
+        build.onEnd(async ({ metafile }) => {
+          await writeFile(
+            join(build.initialOptions.outdir, 'metafile.lambda.json'),
+            JSON.stringify(metafile)
           )
         })
       },

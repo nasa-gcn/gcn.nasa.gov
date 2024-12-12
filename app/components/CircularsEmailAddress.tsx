@@ -9,7 +9,7 @@ import { useHostname } from '~/root'
 
 export function useCircularsEmailAddress() {
   let hostname = useHostname()
-  if (!hostname.endsWith('gcn.nasa.gov')) hostname = 'test.gcn.nasa.gov'
+  if (!hostname?.endsWith('gcn.nasa.gov')) hostname = 'test.gcn.nasa.gov'
   return `circulars@${hostname}`
 }
 

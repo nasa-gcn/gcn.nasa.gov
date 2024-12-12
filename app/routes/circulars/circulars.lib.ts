@@ -70,6 +70,7 @@ const subjectMatchers: SubjectMatcher[] = [
     /Baksan\sNeutrino\sObservatory\sAlert[.\s_-]*(\d{6}.\d{2})/i,
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
   ],
+  [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id}`],
 ]
 
 /** Format a Circular as plain text. */
@@ -109,6 +110,10 @@ export function formatCircularJson({ sub, ...props }: Circular) {
 /** Convert a date to an ISO 8601 string with seconds precision. */
 export function formatDateISO(date: number) {
   return new Date(date).toISOString().replace(/\.\d+Z$/, 'Z')
+}
+
+export function eventIdIsValid(eventId: string) {
+  return parseEventFromSubject(eventId) !== undefined
 }
 
 /** Return true if the subject is valid, false if it is invalid, or undefined if it is an empty string */

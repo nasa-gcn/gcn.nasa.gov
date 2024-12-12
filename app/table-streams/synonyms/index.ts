@@ -8,6 +8,7 @@
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import { errors } from '@opensearch-project/opensearch'
 import type { DynamoDBRecord } from 'aws-lambda'
+import 'source-map-support/register'
 
 import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
@@ -45,6 +46,7 @@ export const handler = createTriggerHandler(
       await putIndex({
         synonymId,
         eventIds: dynamoSynonyms.map((synonym) => synonym.eventId),
+        slugs: dynamoSynonyms.map((synonym) => synonym.slug),
       })
     } else {
       await removeIndex(synonymId)

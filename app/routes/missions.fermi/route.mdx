@@ -5,6 +5,8 @@ handle:
 
 import logo from './logo.svg'
 
+import { WithFeature } from '~/root'
+
 # Fermi Gamma-ray Space Telescope
 
 <img
@@ -35,6 +37,25 @@ import logo from './logo.svg'
 | [Gamma-ray Burst Monitor (GBM)](https://gammaray.msfc.nasa.gov/gbm/) | 8 keV–30 MeV       | 8.8 ster      | ≳1–10° radius (statistical + systematic) |
 
 </div>
+
+<WithFeature GBM_JSON>
+**JSON-Serialized GCN Notices Types in GCN Kafka:**
+
+Fermi/GBM distributes JSON-serialized notices for the detection of gamma-ray transients on the GCN Kafka topic `gcn.notices.fermi.gbm`.
+
+For schemas and examples see [/schema/stable/gcn/notices/fermi/gbm](/schema/stable/gcn/notices/fermi/gbm) or use the [Schema Browser](/docs/schema/stable/gcn/notices/fermi/gbm/).
+
+Detailed description and examples of Fermi/GBM Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/fermi/gbm).
+
+<div className="overflow-table">
+
+| Type                          | Contents                               | Latency    |
+| ----------------------------- | -------------------------------------- | ---------- |
+| `gcn.notices.fermi.gbm.alert` | Localization, Count Rate, Significance | ~5 seconds |
+
+</div>
+
+</WithFeature>
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 

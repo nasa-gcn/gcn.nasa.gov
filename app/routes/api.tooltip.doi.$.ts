@@ -11,7 +11,8 @@ import invariant from 'tiny-invariant'
 
 import { getEnvOrDieInProduction } from '~/lib/env.server'
 import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
-import { stripTags } from '~/lib/utils'
+import { throwForStatus } from '~/lib/utils'
+import { stripTags } from '~/lib/utils.server'
 
 const adsTokenTooltip = getEnvOrDieInProduction('ADS_TOKEN_TOOLTIP')
 
@@ -29,10 +30,7 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
     headers: { Authorization: `Bearer ${adsTokenTooltip}` },
   })
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error('ADS request failed')
-  }
+  throwForStatus(response)
 
   const item:
     | {

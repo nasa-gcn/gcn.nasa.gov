@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { stripTags } from '~/lib/utils'
+import { stripTags } from '~/lib/utils.server'
 
 describe('stripTags', () => {
   const textBody = '<NUMPAGES>123</NUMPAGES>'
