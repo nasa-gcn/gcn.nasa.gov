@@ -51,11 +51,11 @@ export const handler = createTriggerHandler(
     const dynamoSynonyms = await getSynonymsByUuid(synonymId)
     const opensearchSynonym = await opensearchKeywordSearch({ eventId })
     const previousSynonymId = opensearchSynonym.synonymId
-    const dynamoPreviousGroup = await getSynonymsByUuid(previousSynonymId)
+    const dynamoPreviousGroup = (
+      await getSynonymsByUuid(previousSynonymId)
+    ).filter((synonym) => synonym.eventId != eventId)
 
-    if (dynamoPreviousGroup.length === 0) {
-      await removeIndex(previousSynonymId)
-    }
+    if (dynamoPreviousGroup.length === 0) await removeIndex(previousSynonymId)
 
     if (dynamoSynonyms.length > 0) {
       await putIndex({
