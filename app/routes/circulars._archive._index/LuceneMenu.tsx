@@ -22,21 +22,18 @@ export function LuceneAccordion() {
   return (
     <details>
       <summary>Advanced Search</summary>
-
+      To narrow the search results, use Lucene search syntax. This allows for
+      specifying which circular field to search (submitter, subject, and/or
+      body). Further documentation can be found{' '}
+      <Link className="usa-link" to="/docs/circulars/advanced-search">
+        here
+      </Link>
+      {'. '}
+      <h4>Lucene Examples (click to copy):</h4>
       <div>
-        To narrow the search results, use Lucene search syntax. This allows for
-        specifying which circular field to search (submitter, subject, and/or
-        body). Further documentation can be found{' '}
-        <Link className="usa-link" to="/docs/circulars/advanced-search">
-          here
-        </Link>
-        {'. '}
-        <h4>Lucene Examples (click to copy):</h4>
-        <div>
-          {copyableButton('subject:"Swift"')}
-          {copyableButton('body:"GRB"')}
-          {copyableButton('submitter:"Tomas Ahumada Mena"')}
-        </div>
+        {copyableButton('subject:"Swift"')}
+        {copyableButton('body:"GRB"')}
+        {copyableButton('submitter:"Tomas Ahumada Mena"')}
       </div>
     </details>
   )
