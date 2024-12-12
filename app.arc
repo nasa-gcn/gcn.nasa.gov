@@ -165,6 +165,7 @@ dedicatedMasterType t3.small.search
 
 @plugins
 plugin-remix
+enable-source-maps  # Enable Node.js source map support.
 sandbox-oidc-idp  # Sandbox identity provider
 lambda-cognito-permissions  # Grant the Lambda function access to Cognito to run the credential vending machine.
 static-bucket-permissions  # Functions may only write to the /generated directory in the static bucket.
