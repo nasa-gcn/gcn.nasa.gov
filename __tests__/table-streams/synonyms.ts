@@ -105,8 +105,10 @@ afterEach(() => {
 
 describe('testing synonymGroup table-stream', () => {
   test('insert initial synonym record where no previous opensearch record exists', async () => {
+    putData.id = synonymId
+    putData.body.synonymId = synonymId
     putData.body.eventIds = [eventId]
-    putData.body.slugs.push(eventSlug)
+    putData.body.slugs = [eventSlug]
 
     const mockSearch = jest
       .fn()
@@ -139,6 +141,8 @@ describe('testing synonymGroup table-stream', () => {
   })
 
   test('insert into existing synonym group with removal of previous now unused group', async () => {
+    putData.id = synonymId
+    putData.body.synonymId = synonymId
     putData.body.eventIds = [existingEventId, eventId]
     putData.body.slugs = [existingEventSlug, eventSlug]
 
@@ -249,6 +253,8 @@ describe('testing synonymGroup table-stream', () => {
 
     expect(mockSearch).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(2)
+    putData.id = synonymId
+    putData.body.synonymId = synonymId
     putData.body.eventIds = [existingEventId, eventId]
     putData.body.slugs = [existingEventSlug, eventSlug]
     expect(mockIndex).toHaveBeenCalledWith(putData)
@@ -336,5 +342,63 @@ describe('testing synonymGroup table-stream', () => {
     expect(mockIndex).toHaveBeenNthCalledWith(2, currentPut)
     expect(mockIndex).toHaveBeenCalledTimes(2)
     expect(mockDelete).not.toHaveBeenCalled()
+  })
+
+  test('insert into new synonym group with removal of previous now unused group', async () => {
+    putData.id = synonymId
+    putData.body.synonymId = synonymId
+    putData.body.eventIds = [eventId]
+    putData.body.slugs = [eventSlug]
+
+    const mockItems = [{ synonymId, eventId, slug: eventSlug }]
+
+    const mockSearch = jest.fn().mockReturnValue({
+      body: {
+        hits: {
+          hits: [
+            {
+              _source: {
+                synonymId: previousSynonymId,
+                eventIds: [eventId],
+                slugs: [eventSlug],
+              },
+            },
+          ],
+        },
+      },
+    })
+
+    const implementedMockQuery = mockQuery.mockImplementation((query) => {
+      if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
+        return { Items: [] }
+      } else {
+        return { Items: mockItems }
+      }
+    })
+
+    ;(search as unknown as jest.Mock).mockReturnValue({
+      index: mockIndex,
+      delete: mockDelete,
+      search: mockSearch,
+    })
+
+    const mockClient = {
+      synonyms: {
+        query: implementedMockQuery,
+      },
+    }
+
+    ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
+
+    await handler(mockStreamEvent)
+
+    expect(mockSearch).toHaveBeenCalledTimes(1)
+    expect(mockQuery).toHaveBeenCalledTimes(2)
+    // the new group opensearch record is updated
+    expect(mockIndex).toHaveBeenCalledWith(putData)
+    expect(mockIndex).toHaveBeenCalledTimes(1)
+    // the old group opensearch record is deleted
+    expect(mockDelete).toHaveBeenCalledWith(deleteData)
+    expect(mockDelete).toHaveBeenCalledTimes(1)
   })
 })
