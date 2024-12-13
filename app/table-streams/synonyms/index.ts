@@ -59,9 +59,9 @@ export const handler = createTriggerHandler(
         )
       : []
 
-    if (dynamoPreviousGroup.length === 0 && previousSynonymId) {
+    if (previousSynonymId && dynamoPreviousGroup.length === 0) {
       await removeIndex(previousSynonymId)
-    } else {
+    } else if (previousSynonymId && dynamoPreviousGroup.length > 0) {
       await putIndex({
         synonymId: previousSynonymId,
         eventIds: dynamoPreviousGroup.map((synonym) => synonym.eventId),

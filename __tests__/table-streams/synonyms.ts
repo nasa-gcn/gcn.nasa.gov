@@ -29,10 +29,6 @@ const putData = {
   },
 }
 
-const mockPreviousItems = [
-  { synonymId: previousSynonymId, eventId, slug: eventSlug },
-]
-
 const deleteData = {
   index: 'synonym-groups',
   id: previousSynonymId,
@@ -109,12 +105,14 @@ describe('testing synonymGroup table-stream', () => {
   test('insert initial synonym record where no previous opensearch record exists', async () => {
     putData.body.eventIds = [eventId]
     putData.body.slugs.push(eventSlug)
-    const mockItems = [{ synonymId, eventId, slug: eventSlug }]
+
     const mockSearch = jest
       .fn()
       .mockReturnValue({ body: { hits: { hits: [] } } })
 
-    mockQuery.mockResolvedValue({ Items: mockItems })
+    mockQuery.mockResolvedValue({
+      Items: [{ synonymId, eventId, slug: eventSlug }],
+    })
 
     const mockClient = {
       synonyms: {
@@ -132,16 +130,19 @@ describe('testing synonymGroup table-stream', () => {
     await handler(mockStreamEvent)
 
     expect(mockIndex).toHaveBeenCalledWith(putData)
+    expect(mockIndex).toHaveBeenCalledTimes(1)
     expect(mockDelete).not.toHaveBeenCalled()
   })
 
   test('insert into existing synonym group with removal of previous now unused group', async () => {
     putData.body.eventIds = [existingEventId, eventId]
     putData.body.slugs = [existingEventSlug, eventSlug]
+
     const mockItems = [
       { synonymId, eventId: existingEventId, slug: existingEventSlug },
       { synonymId, eventId, slug: eventSlug },
     ]
+
     const mockSearch = jest.fn().mockReturnValue({
       body: {
         hits: {
@@ -160,16 +161,18 @@ describe('testing synonymGroup table-stream', () => {
 
     const implementedMockQuery = mockQuery.mockImplementation((query) => {
       if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
-        return { Items: mockPreviousItems }
+        return { Items: [] }
       } else {
         return { Items: mockItems }
       }
     })
+
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
       search: mockSearch,
     })
+
     const mockClient = {
       synonyms: {
         query: implementedMockQuery,
@@ -177,14 +180,6 @@ describe('testing synonymGroup table-stream', () => {
     }
 
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
-
-    mockQuery.mockImplementation((query) => {
-      if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
-        return { Items: mockPreviousItems }
-      } else {
-        return { Items: mockItems }
-      }
-    })
 
     await handler(mockStreamEvent)
 
