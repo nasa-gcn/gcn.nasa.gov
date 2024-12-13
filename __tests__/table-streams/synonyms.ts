@@ -132,6 +132,8 @@ describe('testing synonymGroup table-stream', () => {
     expect(mockIndex).toHaveBeenCalledWith(putData)
     expect(mockIndex).toHaveBeenCalledTimes(1)
     expect(mockDelete).not.toHaveBeenCalled()
+    expect(mockQuery).toHaveBeenCalledTimes(1)
+    expect(mockSearch).toHaveBeenCalledTimes(1)
   })
 
   test('insert into existing synonym group with removal of previous now unused group', async () => {
@@ -183,9 +185,13 @@ describe('testing synonymGroup table-stream', () => {
 
     await handler(mockStreamEvent)
 
+    expect(mockSearch).toHaveBeenCalledTimes(1)
+    expect(mockQuery).toHaveBeenCalledTimes(2)
     // the new group opensearch record is updated
     expect(mockIndex).toHaveBeenCalledWith(putData)
+    expect(mockIndex).toHaveBeenCalledTimes(1)
     // the old group opensearch record is deleted
     expect(mockDelete).toHaveBeenCalledWith(deleteData)
+    expect(mockDelete).toHaveBeenCalledTimes(1)
   })
 })
