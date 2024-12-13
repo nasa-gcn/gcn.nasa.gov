@@ -2,6 +2,7 @@ import { tables } from '@architect/functions'
 import { BatchGetItemCommand } from '@aws-sdk/client-dynamodb'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateScan } from '@aws-sdk/lib-dynamodb'
+import { slug } from 'github-slugger'
 
 import { type Circular } from '~/routes/circulars/circulars.lib'
 
@@ -68,6 +69,7 @@ export async function backfillSynonyms() {
                 Item: {
                   synonymId: crypto.randomUUID(),
                   eventId,
+                  slug: slug(eventId),
                 },
               },
             })),
