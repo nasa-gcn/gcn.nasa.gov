@@ -13,10 +13,7 @@ import 'source-map-support/register'
 import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import type { Synonym, SynonymGroup } from '~/routes/synonyms/synonyms.lib'
-import {
-  getSynonymsByUuid,
-  opensearchKeywordSearch,
-} from '~/routes/synonyms/synonyms.server'
+import { getSynonymsByUuid } from '~/routes/synonyms/synonyms.server'
 
 const index = 'synonym-groups'
 
@@ -48,11 +45,15 @@ export const handler = createTriggerHandler(
     const { synonymId, eventId } = unmarshallTrigger(
       dynamodb!.NewImage
     ) as Synonym
+    let previousSynonymId = null
+    if (dynamodb!.OldImage) {
+      const { synonymId: oldSynonymId } = unmarshallTrigger(
+        dynamodb!.OldImage
+      ) as Synonym
+      previousSynonymId = oldSynonymId
+    }
+
     const dynamoSynonyms = await getSynonymsByUuid(synonymId)
-    const opensearchSynonym = await opensearchKeywordSearch({ eventId })
-    const previousSynonymId = opensearchSynonym
-      ? opensearchSynonym.synonymId
-      : null
     const dynamoPreviousGroup = previousSynonymId
       ? (await getSynonymsByUuid(previousSynonymId)).filter(
           (synonym) => synonym.eventId != eventId

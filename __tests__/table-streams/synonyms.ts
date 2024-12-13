@@ -77,6 +77,58 @@ const mockStreamEvent = {
   ],
 }
 
+const mockStreamEventWithOldRecord = {
+  Records: [
+    {
+      eventID: '1',
+      eventName: 'INSERT',
+      eventVersion: '1.0',
+      eventSource: 'aws:dynamodb',
+      awsRegion: 'us-west-2',
+      dynamodb: {
+        Keys: {
+          synonymId: {
+            S: synonymId,
+          },
+          eventId: {
+            S: eventId,
+          },
+          slug: {
+            S: eventSlug,
+          },
+        },
+        NewImage: {
+          synonymId: {
+            S: synonymId,
+          },
+          eventId: {
+            S: eventId,
+          },
+          slug: {
+            S: eventSlug,
+          },
+        },
+        OldImage: {
+          synonymId: {
+            S: previousSynonymId,
+          },
+          eventId: {
+            S: eventId,
+          },
+          slug: {
+            S: eventSlug,
+          },
+        },
+        SequenceNumber: '111',
+        SizeBytes: 26,
+        StreamViewType: 'NEW_IMAGE',
+      },
+      eventSourceARN:
+        'arn:aws:dynamodb:us-west-2:123456789012:table/synonym-groups/stream/2020-01-01T00:00:00.000',
+    } as DynamoDBRecord,
+  ],
+}
+
 // Github-slugger is mocked to prevent jest failing to properly load the package. If Jest attempts
 // to load it, it will encounter a syntax error. Since all places where a slug would be created have been mocked,
 // it doesn't need to return anything.
@@ -107,10 +159,6 @@ describe('testing synonymGroup table-stream', () => {
     putData.body.eventIds = [eventId]
     putData.body.slugs = [eventSlug]
 
-    const mockSearch = jest
-      .fn()
-      .mockReturnValue({ body: { hits: { hits: [] } } })
-
     mockQuery.mockResolvedValue({
       Items: [{ synonymId, eventId, slug: eventSlug }],
     })
@@ -125,7 +173,6 @@ describe('testing synonymGroup table-stream', () => {
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      search: mockSearch,
     })
 
     await handler(mockStreamEvent)
@@ -134,7 +181,6 @@ describe('testing synonymGroup table-stream', () => {
     expect(mockIndex).toHaveBeenCalledTimes(1)
     expect(mockDelete).not.toHaveBeenCalled()
     expect(mockQuery).toHaveBeenCalledTimes(1)
-    expect(mockSearch).toHaveBeenCalledTimes(1)
   })
 
   test('insert into existing synonym group with removal of previous now unused group', async () => {
@@ -148,22 +194,6 @@ describe('testing synonymGroup table-stream', () => {
       { synonymId, eventId, slug: eventSlug },
     ]
 
-    const mockSearch = jest.fn().mockReturnValue({
-      body: {
-        hits: {
-          hits: [
-            {
-              _source: {
-                synonymId: previousSynonymId,
-                eventIds: [eventId],
-                slugs: [eventSlug],
-              },
-            },
-          ],
-        },
-      },
-    })
-
     const implementedMockQuery = mockQuery.mockImplementation((query) => {
       if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
         return { Items: [] }
@@ -175,7 +205,6 @@ describe('testing synonymGroup table-stream', () => {
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      search: mockSearch,
     })
 
     const mockClient = {
@@ -186,9 +215,8 @@ describe('testing synonymGroup table-stream', () => {
 
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
 
-    await handler(mockStreamEvent)
+    await handler(mockStreamEventWithOldRecord)
 
-    expect(mockSearch).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(2)
     // the new group opensearch record is updated
     expect(mockIndex).toHaveBeenCalledWith(putData)
@@ -205,24 +233,12 @@ describe('testing synonymGroup table-stream', () => {
     ]
 
     const mockPreviousItems = [
-      { synonymId, eventId: additionalEventId, slug: additionalEventSlug },
-    ]
-
-    const mockSearch = jest.fn().mockReturnValue({
-      body: {
-        hits: {
-          hits: [
-            {
-              _source: {
-                synonymId: previousSynonymId,
-                eventIds: [eventId, additionalEventId],
-                slugs: [eventSlug, additionalEventSlug],
-              },
-            },
-          ],
-        },
+      {
+        synonymId: previousSynonymId,
+        eventId: additionalEventId,
+        slug: additionalEventSlug,
       },
-    })
+    ]
 
     const implementedMockQuery = mockQuery.mockImplementation((query) => {
       if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
@@ -235,7 +251,6 @@ describe('testing synonymGroup table-stream', () => {
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      search: mockSearch,
     })
 
     const mockClient = {
@@ -246,9 +261,8 @@ describe('testing synonymGroup table-stream', () => {
 
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
 
-    await handler(mockStreamEvent)
+    await handler(mockStreamEventWithOldRecord)
 
-    expect(mockSearch).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(2)
     putData.id = synonymId
     putData.body.synonymId = synonymId
@@ -275,22 +289,6 @@ describe('testing synonymGroup table-stream', () => {
       },
     ]
 
-    const mockSearch = jest.fn().mockReturnValue({
-      body: {
-        hits: {
-          hits: [
-            {
-              _source: {
-                synonymId: previousSynonymId,
-                eventIds: [eventId, additionalEventId],
-                slugs: [eventSlug, additionalEventSlug],
-              },
-            },
-          ],
-        },
-      },
-    })
-
     const implementedMockQuery = mockQuery.mockImplementation((query) => {
       if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
         return { Items: mockPreviousItems }
@@ -302,7 +300,6 @@ describe('testing synonymGroup table-stream', () => {
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      search: mockSearch,
     })
 
     const mockClient = {
@@ -313,9 +310,8 @@ describe('testing synonymGroup table-stream', () => {
 
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
 
-    await handler(mockStreamEvent)
+    await handler(mockStreamEventWithOldRecord)
 
-    expect(mockSearch).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(2)
     putData.id = synonymId
     putData.body.synonymId = synonymId
@@ -339,22 +335,6 @@ describe('testing synonymGroup table-stream', () => {
 
     const mockItems = [{ synonymId, eventId, slug: eventSlug }]
 
-    const mockSearch = jest.fn().mockReturnValue({
-      body: {
-        hits: {
-          hits: [
-            {
-              _source: {
-                synonymId: previousSynonymId,
-                eventIds: [eventId],
-                slugs: [eventSlug],
-              },
-            },
-          ],
-        },
-      },
-    })
-
     const implementedMockQuery = mockQuery.mockImplementation((query) => {
       if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
         return { Items: [] }
@@ -366,7 +346,6 @@ describe('testing synonymGroup table-stream', () => {
     ;(search as unknown as jest.Mock).mockReturnValue({
       index: mockIndex,
       delete: mockDelete,
-      search: mockSearch,
     })
 
     const mockClient = {
@@ -377,9 +356,8 @@ describe('testing synonymGroup table-stream', () => {
 
     ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
 
-    await handler(mockStreamEvent)
+    await handler(mockStreamEventWithOldRecord)
 
-    expect(mockSearch).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(2)
     // the new group opensearch record is updated
     expect(mockIndex).toHaveBeenCalledWith(putData)
