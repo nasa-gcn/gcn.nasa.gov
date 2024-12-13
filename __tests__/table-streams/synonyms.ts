@@ -277,24 +277,6 @@ describe('testing synonymGroup table-stream', () => {
         slug: additionalEventSlug,
       },
     ]
-    const currentPut = {
-      index: 'synonym-groups',
-      id: synonymId,
-      body: {
-        synonymId,
-        slugs: [eventSlug],
-        eventIds: [eventId],
-      },
-    }
-    const additionalPut = {
-      index: 'synonym-groups',
-      id: previousSynonymId,
-      body: {
-        synonymId: previousSynonymId,
-        slugs: [additionalEventSlug],
-        eventIds: [additionalEventId],
-      },
-    }
 
     const mockSearch = jest.fn().mockReturnValue({
       body: {
@@ -338,8 +320,16 @@ describe('testing synonymGroup table-stream', () => {
 
     expect(mockSearch).toHaveBeenCalledTimes(1)
     expect(mockQuery).toHaveBeenCalledTimes(2)
-    expect(mockIndex).toHaveBeenNthCalledWith(1, additionalPut)
-    expect(mockIndex).toHaveBeenNthCalledWith(2, currentPut)
+    putData.id = synonymId
+    putData.body.synonymId = synonymId
+    putData.body.eventIds = [eventId]
+    putData.body.slugs = [eventSlug]
+    expect(mockIndex).toHaveBeenCalledWith(putData)
+    putData.id = previousSynonymId
+    putData.body.synonymId = previousSynonymId
+    putData.body.eventIds = [additionalEventId]
+    putData.body.slugs = [additionalEventSlug]
+    expect(mockIndex).toHaveBeenCalledWith(putData)
     expect(mockIndex).toHaveBeenCalledTimes(2)
     expect(mockDelete).not.toHaveBeenCalled()
   })
