@@ -17,10 +17,11 @@ export async function backfillSynonyms() {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
+  const circularTableName = db.name('circulars')
   const pages = paginateScan(
     { client },
     {
-      TableName,
+      TableName: circularTableName,
     }
   )
 
