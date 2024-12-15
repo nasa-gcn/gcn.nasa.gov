@@ -10,7 +10,7 @@ import type { action } from 'app/routes/api.users'
 import classnames from 'classnames'
 import type { UseComboboxProps, UseComboboxStateChange } from 'downshift'
 import { useCombobox } from 'downshift'
-import { debounce } from 'lodash'
+import debounce from 'lodash/debounce.js'
 import { useCallback, useEffect, useState } from 'react'
 
 import { formatAuthor } from '~/routes/circulars/circulars.lib'
