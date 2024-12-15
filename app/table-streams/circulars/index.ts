@@ -8,7 +8,6 @@
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import { errors } from '@opensearch-project/opensearch'
 import type { DynamoDBRecord } from 'aws-lambda'
-import 'source-map-support/register'
 
 import { unmarshallTrigger } from '../utils'
 import { send as sendKafka } from '~/lib/kafka.server'

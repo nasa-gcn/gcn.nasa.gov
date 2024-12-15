@@ -5,8 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import 'source-map-support/register'
-
 import { forAllCirculars } from './actions'
 import { sitemapAction } from './actions/sitemap'
 import { statsAction } from './actions/stats'
