@@ -6,12 +6,11 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { readFile } from 'fs/promises'
-import groupBy from 'lodash/groupBy.js'
 
 export default async function () {
   const text = await readFile('sandbox-seed.json', { encoding: 'utf-8' })
   const { circulars, synonyms } = JSON.parse(text)
-  const groups = Object.entries(groupBy(synonyms, 'synonymId')).flatMap(
+  const groups = Object.entries(Object.groupBy(synonyms, 'synonymId')).flatMap(
     ([synonymId, values]) => [
       {
         synonymId,
