@@ -47,7 +47,7 @@
     "diff": "^7.0.0",
     "downshift": "^9.0.8",
     "email-validator": "^2.0.4",
-    "gcn-kafka": "^0.2.3",
+    "gcn-kafka": "^0.3.0",
     "github-slugger": "^2.0.0",
     "hast-util-find-and-replace": "^5.0.1",
     "hastscript": "^8.0.0",

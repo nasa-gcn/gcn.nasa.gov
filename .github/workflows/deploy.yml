@@ -21,7 +21,8 @@ jobs:
       - name: NPM Install
         run: |
           npm ci
-          npm i --os=linux --cpu=arm64
+          rm -rf node_modules/@mongodb-js/zstd
+          npm i --platform=linux --arch=arm64
       - name: Build
         run: npm run build
       - name: Summarize Lamdba deployment bundle sizes
