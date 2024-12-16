@@ -31,16 +31,22 @@ const options = {
     {
       name: 'copy Node API modules to output directories',
       setup(build) {
-        build.onEnd(async ({ metafile: { outputs } }) => {
-          await Promise.all(
-            Object.entries(outputs).flatMap(([entryPoint, { inputs }]) =>
-              Object.keys(inputs)
-                .filter((input) => extname(input) === '.node')
-                .map((input) =>
-                  copyFile(input, join(dirname(entryPoint), basename(input)))
-                )
+        build.onEnd(async ({ metafile }) => {
+          if (metafile) {
+            await Promise.all(
+              Object.entries(metafile.outputs).flatMap(
+                ([entryPoint, { inputs }]) =>
+                  Object.keys(inputs)
+                    .filter((input) => extname(input) === '.node')
+                    .map((input) =>
+                      copyFile(
+                        input,
+                        join(dirname(entryPoint), basename(input))
+                      )
+                    )
+              )
             )
-          )
+          }
         })
       },
     },
@@ -48,10 +54,12 @@ const options = {
       name: 'write metafile to output directory',
       setup(build) {
         build.onEnd(async ({ metafile }) => {
-          await writeFile(
-            join(build.initialOptions.outdir, 'metafile.lambda.json'),
-            JSON.stringify(metafile)
-          )
+          if (metafile) {
+            await writeFile(
+              join(build.initialOptions.outdir, 'metafile.lambda.json'),
+              JSON.stringify(metafile)
+            )
+          }
         })
       },
     },
