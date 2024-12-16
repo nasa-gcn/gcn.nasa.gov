@@ -6,19 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Link } from '@remix-run/react'
-import { Button } from '@trussworks/react-uswds'
-import CopyToClipboard from 'react-copy-to-clipboard'
+
+import { CopyableCode } from '~/components/CopyableCode'
 
 export function LuceneAccordion() {
-  function copyableButton(text: string) {
-    return (
-      <CopyToClipboard text={text}>
-        <Button type="button" outline>
-          {text}
-        </Button>
-      </CopyToClipboard>
-    )
-  }
   return (
     <details>
       <summary>Advanced Search</summary>
@@ -33,9 +24,11 @@ export function LuceneAccordion() {
       </p>
       <h4>Lucene Examples (click to copy):</h4>
       <div>
-        {copyableButton('subject:"Swift"')}
-        {copyableButton('body:"GRB"')}
-        {copyableButton('submitter:"Tomas Ahumada Mena"')}
+        <CopyableCode text='subject:"Swift"' />
+        <br />
+        <CopyableCode text='body:"GRB"' />
+        <br />
+        <CopyableCode text='submitter:"Tomas Ahumada Mena"' />
       </div>
     </details>
   )
