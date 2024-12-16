@@ -11,7 +11,6 @@ import {
   transformRecipients,
   /* @ts-expect-error: aws-lambda-ses-forwarder does not have type definitions */
 } from 'aws-lambda-ses-forwarder'
-import 'source-map-support/register'
 
 import { createEmailIncomingMessageHandler } from '../handler'
 import { getEnvOrDie, hostname } from '~/lib/env.server'

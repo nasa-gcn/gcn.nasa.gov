@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import 'source-map-support/register'
 
 import {
   bodyIsValid,

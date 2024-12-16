@@ -24,8 +24,7 @@ const options = {
   platform: 'node',
   target: ['node20'],
   minify: !dev,
-  sourcemap: true,
-  sourcesContent: false,
+  sourcemap: dev,
   metafile: true,
   loader: { '.node': 'empty' },
   plugins: [
