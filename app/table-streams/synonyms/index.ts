@@ -19,6 +19,7 @@ const index = 'synonym-groups'
 
 async function removeIndex(id: string) {
   const client = await getSearchClient()
+
   try {
     await client.delete({ index, id })
   } catch (e) {
@@ -40,8 +41,35 @@ async function putIndex(synonymGroup: SynonymGroup) {
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     if (!eventName || !dynamodb) return
-    const { synonymId } = unmarshallTrigger(dynamodb!.NewImage) as Synonym
+
+    const { synonymId, eventId } = unmarshallTrigger(
+      dynamodb!.NewImage
+    ) as Synonym
+    let previousSynonymId = null
+    if (dynamodb!.OldImage) {
+      const { synonymId: oldSynonymId } = unmarshallTrigger(
+        dynamodb!.OldImage
+      ) as Synonym
+      previousSynonymId = oldSynonymId
+    }
+
     const dynamoSynonyms = await getSynonymsByUuid(synonymId)
+    const dynamoPreviousGroup = previousSynonymId
+      ? (await getSynonymsByUuid(previousSynonymId)).filter(
+          (synonym) => synonym.eventId != eventId
+        )
+      : []
+
+    if (previousSynonymId && dynamoPreviousGroup.length === 0) {
+      await removeIndex(previousSynonymId)
+    } else if (previousSynonymId && dynamoPreviousGroup.length > 0) {
+      await putIndex({
+        synonymId: previousSynonymId,
+        eventIds: dynamoPreviousGroup.map((synonym) => synonym.eventId),
+        slugs: dynamoPreviousGroup.map((synonym) => synonym.slug),
+      })
+    }
+
     if (dynamoSynonyms.length > 0) {
       await putIndex({
         synonymId,

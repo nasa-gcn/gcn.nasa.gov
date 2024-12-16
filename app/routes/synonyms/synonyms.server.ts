@@ -106,7 +106,6 @@ export async function searchSynonymsByEventId({
       fields: { eventIds: string[]; synonymId: string; slugs: string[] }
     }) => body
   )
-
   return {
     items: results,
     totalItems,
