@@ -52,7 +52,7 @@
     "hast-util-find-and-replace": "^5.0.1",
     "hastscript": "^8.0.0",
     "highlight.js": "^11.10.0",
-    "isbot": "^5.1.17",
+    "isbot": "^5.1.18",
     "lodash": "^4.17.21",
     "lucene": "^2.1.1",
     "mailparser": "^3.6.5",
