@@ -1,5 +1,5 @@
 import esbuild from 'esbuild'
-import { copyFile, writeFile } from 'fs/promises'
+import { copyFile, unlink, writeFile } from 'fs/promises'
 import { glob } from 'glob'
 import { extname } from 'node:path'
 import { basename, dirname, join } from 'path'
@@ -26,25 +26,57 @@ const options = {
   minify: !dev,
   sourcemap: dev,
   metafile: true,
-  loader: { '.node': 'empty' },
+  loader: { '.node': 'copy' },
+  publicPath: './',
   plugins: [
     {
       name: 'copy Node API modules to output directories',
       setup(build) {
+        const resolving = Symbol('resolving')
+        build.onResolve(
+          { filter: /\.node$/ },
+          async ({ path, pluginData, ...resolveOptions }) => {
+            // Skip .node modules that don't exist. @mongodb-js/zstd tries to
+            // import Release/zstd.node and falls back to Debug/zstd.node; the
+            // latter does not exist on production builds.
+            if (pluginData === resolving) return
+            const result = await build.resolve(path, {
+              ...resolveOptions,
+              pluginData: resolving,
+            })
+            if (result.errors.length === 0) {
+              return result
+            } else {
+              return {
+                path: '/dev/null',
+                external: true,
+                warnings: [
+                  {
+                    text: 'failed to resolve Node API module; replacing with /dev/null',
+                  },
+                ],
+              }
+            }
+          }
+        )
         build.onEnd(async ({ metafile }) => {
           if (metafile) {
+            const { outputs } = metafile
+            // Copy bundled .node modules from outdir to the Lambda directory.
             await Promise.all(
-              Object.entries(metafile.outputs).flatMap(
-                ([entryPoint, { inputs }]) =>
-                  Object.keys(inputs)
-                    .filter((input) => extname(input) === '.node')
-                    .map((input) =>
-                      copyFile(
-                        input,
-                        join(dirname(entryPoint), basename(input))
-                      )
-                    )
+              Object.entries(outputs).flatMap(([entryPoint, { imports }]) =>
+                imports
+                  .filter(({ path }) => extname(path) === '.node')
+                  .map(({ path }) =>
+                    copyFile(path, join(dirname(entryPoint), basename(path)))
+                  )
               )
+            )
+            // Delete .node modules in outdir.
+            await Promise.all(
+              Object.keys(outputs)
+                .filter((path) => extname(path) === '.node')
+                .map(unlink)
             )
           }
         })
