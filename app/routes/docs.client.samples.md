@@ -15,6 +15,9 @@ and some samples from the FAQs section of the [gcn-kafka-python](https://github.
 
 To contribute your own ideas, make a GitHub pull request to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md), or [contact us](/contact).
 
+- [Working with Kafka messages](#parsing)
+- [HEALPix Sky Maps](#healpix-sky-maps)
+
 ## Parsing
 
 Within your consumer loop, use the following functions to convert the
