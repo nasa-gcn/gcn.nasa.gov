@@ -177,10 +177,6 @@ For localization of events, the multi-messenger community uses the standard [HEA
 
 GCN strongly encourages the use of multi-order sky maps. They utilize a variable resolution, with higher probability regions having higher resolution and lower probability regions being encoded with a lower resolution. This is signicantly more efficient than single-resolution HEALPix sky maps with respect to storage footprint and read speed. However, interpreting these multi-order sky maps can be more complex.
 
-### Working with HEALPix Maps
-
-HEALPix data is distrubuted in standard format with the file extension `.fits.gz`. These files are FITS image files and can be utilized with many common FITS tools. Typically, the data is stored using the HEALPix projection.
-
 #### Reading Sky Maps
 
 Sky maps can be parsed using python; to start, import a handful of packages (note: while this documentation covers the use of `astropy-healpix`, there are several packages that can be used for this purpose; a number of alternatives are listed at the bottom of this page)
