@@ -162,6 +162,8 @@ availabilityZoneCount 3
 volumeSize 10
 dedicatedMasterCount 3
 dedicatedMasterType t3.small.search
+autoSoftwareUpdateEnabled true
+offPeakWindowEnabled true
 
 @plugins
 plugin-remix
