@@ -167,7 +167,7 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 
 ## Working With JSON Schema
 
-For new missions, GCN Notices are preferably distributed in JSON format. This guide describes how to programmatically read the JSON schema.
+For new missions, it is preferable to distribute GCN Notices in JSON format. This guide explains how to programmatically read the JSON schema.
 
 ## Parsing JSON
 
@@ -182,7 +182,7 @@ consumer = Consumer(client_id='fill me in',
                     client_secret='fill me in')
 
 # Subscribe to topics and receive alerts
-consumer.subscribe(['gcn.classic.voevent.FERMI_GBM_SUBTHRESH'])
+consumer.subscribe(['gcn.circulars'])
 
 # Continuously consume and parse messages as JSON
 for message in consumer.consume(timeout=1):
@@ -195,10 +195,11 @@ This code subscribes to a Kafka topic, consumes the messages, and parses the JSO
 
 ## Encoding and Decoding of Embedded Data
 
-The following code demonstrates how to encode and decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` and `b64encode` methods to make this task simple.
+The following code demonstrates how to encode and decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` and `b64encode` methods to make this task simple. Additionally, JSON is serialized with Unicode, not ASCII, requires the proper handling of non-ASCII characters when encoding and decoding data.
 
 ```python
 import base64
+
 
 # Encode the content of a file to a Base64 string
 with open("path/to/your/file", 'rb') as file:
