@@ -44,8 +44,6 @@ def parse_voevent_alert_to_dict(message_value):
 Use the following to save the data to a local file:
 
 ```python
-import json
-
 def save_alert(message):
     with open('path/to/your/file', 'wb') as file:
         file.write(message.value())
