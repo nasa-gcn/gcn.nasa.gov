@@ -250,7 +250,6 @@ i = cumprob.searchsorted(0.9)
 #Sum of the areas of the pixels up to that one
 area_90 = pixel_area[:i].sum()
 area_90.to_value(u.deg**2)
-
 ```
 
 #### Flat Resolution HEALPix Sky maps
