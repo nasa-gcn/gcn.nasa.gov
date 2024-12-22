@@ -296,7 +296,7 @@ radius = 2.5
 xyz = hp.ang2vec(ra, dec, lonlat=True)
 
 # Obtain an array of indices for the pixels inside the circle
-ipix_disc = hp.query_disc(nside, xyz, radius)
+ipix_disc = hp.query_disc(nside, xyz, np.deg2rad(radius))
 
 # Sum the probability in all of the matching pixels:
 hpx[ipix_disc].sum()
