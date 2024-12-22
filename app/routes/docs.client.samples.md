@@ -192,7 +192,7 @@ from astropy.table import QTable
 A given sky map can then be read in as
 
 ```python
-skymap = QTable.read('skymap.multiofits)
+skymap = QTable.read('skymap.multiorder.fits')
 ```
 
 #### Most Probable Sky Location
