@@ -278,9 +278,7 @@ ipix_max = np.argmax(hpx)
 hpx[ipix_max] / hp.nside2pixarea(nside, degrees=True)
 
 # Highest probability pixel on the sky
-theta, phi = hp.pix2ang(nside, ipix_max)
-ra = np.rad2deg(phi)
-dec = np.rad2deg(0.5 * np.pi - theta)
+ra, dec = hp.pix2ang(nside, ipix_max, lonlat=True)
 ra, dec
 ```
 
