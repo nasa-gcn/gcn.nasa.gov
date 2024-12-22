@@ -267,7 +267,7 @@ hpx, header = hp.read_map('skymap.fits.gz', h=True)
 np.mollview(hpx)
 ```
 
-Most Probable Sky Location
+#### Most Probable Sky Location
 
 ```python
 # Find the highest probability pixel
