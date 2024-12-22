@@ -287,7 +287,7 @@ ra, dec
 We call hp.query_disc to obtain an array of indices for the pixels inside the circle.
 
 ```python
-# First define the Cartesian coordinates of the center of the Circle
+# First define the Cartesian coordinates of the center of the circle
 ra = 180.0
 dec = -45.0
 radius = 2.5
