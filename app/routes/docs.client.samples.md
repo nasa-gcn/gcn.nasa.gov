@@ -179,7 +179,7 @@ GCN strongly encourages the use of multi-order sky maps. They utilize a variable
 
 #### Reading Sky Maps
 
-Sky maps can be parsed using python; to start, import a handful of packages (note: while this documentation covers the use of `astropy-healpix`, there are several packages that can be used for this purpose; a number of [alternatives](#references) are listed at the bottom of this page)
+Sky maps can be parsed using Python; to start, import a handful of packages (note: while this documentation covers the use of `astropy-healpix`, there are several packages that can be used for this purpose; a number of [alternatives](#references) are listed at the bottom of this page)
 
 ```python
 import astropy_healpix as ah
