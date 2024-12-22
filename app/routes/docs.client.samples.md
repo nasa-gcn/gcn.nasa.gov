@@ -228,7 +228,7 @@ prob_density = skymap[match_index]['PROBDENSITY'].to_value(u.deg**-2)
 
 #### 90% Probability Region
 
-The estimation of a 90% probability region, involves sorting the pixel, calculating the area of each pixel, sorting by probability, and then summing the probability of each pixel until 90% is reached.
+The estimation of a 90% probability region involves sorting the pixels, calculating the area of each pixel, and then summing the probability of each pixel until 90% is reached.
 
 ```python
 #Sort the pixels by decending probability density
