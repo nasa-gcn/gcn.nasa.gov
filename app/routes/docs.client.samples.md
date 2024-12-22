@@ -307,7 +307,6 @@ ipix_disc = hp.query_disc(nside, xyz, radius)
 
 # Sum the probability in all of the matching pixels:
 hpx[ipix_disc].sum()
-
 ```
 
 #### Integrated probability in a Polygon
