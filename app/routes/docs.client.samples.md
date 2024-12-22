@@ -3,9 +3,6 @@ handle:
   breadcrumb: Sample Code
 ---
 
-import { Highlight } from '~/components/Highlight'
-import { Tab, Tabs } from '~/components/tabs'
-
 # Sample Code
 
 Here is a collection of functions and example code that may be useful
