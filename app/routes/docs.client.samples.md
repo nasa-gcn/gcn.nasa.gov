@@ -252,7 +252,7 @@ area_90 = pixel_area[:i].sum()
 area_90.to_value(u.deg**2)
 ```
 
-#### Flat Resolution HEALPix Sky maps
+### Flat Resolution HEALPix Sky maps
 
 Let's say you have a sky map fits file, read in Python with Healpy:
 
