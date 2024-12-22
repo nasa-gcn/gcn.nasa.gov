@@ -201,7 +201,7 @@ The index of the highest probability point
 
 ```python
 hp_index = np.argmax(skymap['PROBDENSITY'])
-uniq = skymap[hq_index]['UNIQ']
+uniq = skymap[hp_index]['UNIQ']
 
 level, ipix = ah.uniq_to_level_ipix(uniq)
 nside = ah.level_to_nside(level)
