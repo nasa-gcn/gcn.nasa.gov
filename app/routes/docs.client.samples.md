@@ -292,13 +292,8 @@ ra = 180.0
 dec = -45.0
 radius = 2.5
 
-# We convert to spherical polar coordinates
-theta = 0.5 * np.pi - np.deg2rad(dec)
-phi = np.deg2rad(ra)
-radius = np.deg2rad(radius)
-
 # Calculate Cartesian coordinates of the center of the Circle
-xyz = hp.ang2vec(theta, phi)
+xyz = hp.ang2vec(ra, dec, lonlat=True)
 
 # Obtain an array of indices for the pixels inside the circle
 ipix_disc = hp.query_disc(nside, xyz, radius)
