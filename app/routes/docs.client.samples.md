@@ -219,7 +219,7 @@ ra, dec = 197.450341598 * u.deg, -23.3814675445 * u.deg
 level, ipix = ah.uniq_to_level_ipix(skymap['UNIQ'])
 nside = ah.level_to_nside(level)
 
-match_ipix = ad.lonlat_to_healpix(ra, dec, nside, order='nested')
+match_ipix = ah.lonlat_to_healpix(ra, dec, nside, order='nested')
 
 match_index = np.flatnonzero(ipix == match_ipix)[0]
 
