@@ -254,7 +254,7 @@ area_90.to_value(u.deg**2)
 
 ### Flat Resolution HEALPix Sky maps
 
-Let's say you have a sky map fits file, read in Python with Healpy:
+Let's say you have a sky map fits file. To read in Python with Healpy:
 
 ```python
 import healpy as hp
