@@ -263,7 +263,7 @@ import numpy as np
 # Read both the HEALPix image data and the FITS header
 hpx, header = hp.read_map('skymap.fits.gz', h=True)
 
-# Plotting a Mollweide-projection all-sky map
+# Plot a Mollweide-projection all-sky image
 np.mollview(hpx)
 ```
 
