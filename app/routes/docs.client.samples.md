@@ -170,7 +170,7 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 
 ## HEALPix Sky Maps
 
-HEALPix (<b>H</b>ierarchical, <b>E</b>qual <b>A</b>rea, and iso-<b>L</b>atitude <b>Pix</b>elisation) is a scheme for indexing positions on the unit sphere.
+[HEALPix](https://healpix.sourceforge.io) (<b>H</b>ierarchical, <b>E</b>qual <b>A</b>rea, and iso-<b>L</b>atitude <b>Pix</b>elisation) is a scheme for indexing positions on the unit sphere.
 For localization of events, the multi-messenger community uses the standard [HEALPix](https://healpix.sourceforge.io) format with the file extension `.fits.gz`, as well as multi-resolution HEALPix format with the file extension `.multiorder.fits`. The preferred format is the multi-resolution HEALPix format.
 
 ### Multi-Order Sky Maps
