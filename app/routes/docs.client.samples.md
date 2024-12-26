@@ -257,12 +257,14 @@ Let's say you have a sky map fits file. To read in Python with Healpy:
 ```python
 import healpy as hp
 import numpy as np
+from matplotlib import pyplot as plt
 
 # Read both the HEALPix image data and the FITS header
 hpx, header = hp.read_map('skymap.fits.gz', h=True)
 
 # Plot a Mollweide-projection all-sky image
 np.mollview(hpx)
+plt.show()
 ```
 
 #### Most Probable Sky Location
@@ -306,17 +308,17 @@ We can use the `hp.query_polygon` function to find the pixels inside a polygon a
 ```python
 #  Indices of the pixels within a polygon (defined by the Cartesian coordinates of its vertices)
 
-xyz = [[-0.5, -0.4, -0.5],
-        [-0.4, -0.4, -0.6],
-        [-0.6, -0.3, -0.6],
-        [-0.7 , -0.4, -0.5]]
+xyz = [[0, 0, 0],
+       [1, 0, 0],
+       [1, 1, 0],
+       [0, 1, 0]]
 ipix_poly = hp.query_polygon(nside, xyz)
 hpx[ipix_poly].sum()
 ```
 
 ##### Other Documentation and HEALPix Packages
 
-Additional information can be found on the [LIGO website](https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_sky maps.html)
+Additional information can be found on the [LIGO website](https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_skymaps.html)
 
 [healpy](https://healpy.readthedocs.io/en/latest/): Official python library for handling the pixlated data on sphere
 
