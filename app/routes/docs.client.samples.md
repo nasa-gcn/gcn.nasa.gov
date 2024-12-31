@@ -272,6 +272,7 @@ plt.show()
 ```python
 # Reading Sky Maps with Healpy
 healpix_image = hp.read_map('bayestar.fits.gz,0')
+npix = len(hpx)
 
 # Lateral resolution of the HEALPix map
 nside = hp.npix2nside(npix)
