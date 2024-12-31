@@ -270,6 +270,12 @@ plt.show()
 #### Most Probable Sky Location
 
 ```python
+# Reading Sky Maps with Healpy
+healpix_image = hp.read_map('bayestar.fits.gz,0')
+
+# Lateral resolution of the HEALPix map
+nside = hp.npix2nside(npix)
+
 # Find the highest probability pixel
 ipix_max = np.argmax(hpx)
 
