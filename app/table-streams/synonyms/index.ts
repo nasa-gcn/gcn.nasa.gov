@@ -41,43 +41,22 @@ async function putIndex(synonymGroup: SynonymGroup) {
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     if (!eventName || !dynamodb) return
-
-    const { synonymId, eventId } = unmarshallTrigger(
-      dynamodb!.NewImage
-    ) as Synonym
-    let previousSynonymId = null
-    if (dynamodb!.OldImage) {
-      const { synonymId: oldSynonymId } = unmarshallTrigger(
-        dynamodb!.OldImage
-      ) as Synonym
-      previousSynonymId = oldSynonymId
-    }
-
-    const dynamoSynonyms = await getSynonymsByUuid(synonymId)
-    const dynamoPreviousGroup = previousSynonymId
-      ? (await getSynonymsByUuid(previousSynonymId)).filter(
-          (synonym) => synonym.eventId != eventId
-        )
-      : []
-
-    if (previousSynonymId && dynamoPreviousGroup.length === 0) {
-      await removeIndex(previousSynonymId)
-    } else if (previousSynonymId && dynamoPreviousGroup.length > 0) {
-      await putIndex({
-        synonymId: previousSynonymId,
-        eventIds: dynamoPreviousGroup.map((synonym) => synonym.eventId),
-        slugs: dynamoPreviousGroup.map((synonym) => synonym.slug),
-      })
-    }
-
-    if (dynamoSynonyms.length > 0) {
-      await putIndex({
-        synonymId,
-        eventIds: dynamoSynonyms.map((synonym) => synonym.eventId),
-        slugs: dynamoSynonyms.map((synonym) => synonym.slug),
-      })
-    } else {
-      await removeIndex(synonymId)
-    }
+    await Promise.all(
+      [dynamodb.OldImage, dynamodb.NewImage]
+        .filter((image) => image !== undefined)
+        .map(async (image) => {
+          const { synonymId } = unmarshallTrigger(image) as Synonym
+          const synonyms = await getSynonymsByUuid(synonymId)
+          if (synonyms.length > 0) {
+            await putIndex({
+              synonymId,
+              eventIds: synonyms.map((synonym) => synonym.eventId),
+              slugs: synonyms.map((synonym) => synonym.slug),
+            })
+          } else {
+            await removeIndex(synonymId)
+          }
+        })
+    )
   }
 )
