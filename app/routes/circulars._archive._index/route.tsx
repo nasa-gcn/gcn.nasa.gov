@@ -18,9 +18,21 @@ import { Alert, Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
+import {
+  circularRedirect,
+  createChangeRequest,
+  get,
+  getChangeRequest,
+  getChangeRequests,
+  moderatorGroup,
+  put,
+  putVersion,
+  search,
+} from '../circulars/circulars.server'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
 import { DateSelector } from './DateSelectorMenu'
+import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
 import SynonymGroupIndex from './SynonymGroupIndex'
 import Hint from '~/components/Hint'
@@ -36,17 +48,6 @@ import {
   type CircularMetadata,
   circularFormats,
 } from '~/routes/circulars/circulars.lib'
-import {
-  circularRedirect,
-  createChangeRequest,
-  get,
-  getChangeRequest,
-  getChangeRequests,
-  moderatorGroup,
-  put,
-  putVersion,
-  search,
-} from '~/routes/circulars/circulars.server'
 import type { SynonymGroupWithMembers } from '~/routes/synonyms/synonyms.lib'
 import { groupMembersByEventId } from '~/routes/synonyms/synonyms.server'
 
@@ -319,6 +320,7 @@ export default function () {
         To navigate to a specific circular, enter the associated Circular ID
         (e.g. 'gcn123', 'Circular 123', or '123').
       </Hint>
+      {useFeature('CIRCULARS_LUCENE') && <LuceneAccordion />}
       {clean && (
         <>
           {isGroupView ? (
