@@ -247,11 +247,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Announcing GCN Classic Migration Survey, End of Legacy Circulars
-          Email. See{' '}
+          GCN at AAS 245, Legacy Circulars Address Retirement. See{' '}
           <Link
             className="usa-link"
-            to="/news#-gcn-classic-migration-survey-and-legacy-circular-submission-email-retirement"
+            to="/news#--gcn-at-aas-245-legacy-circulars-address-retirement"
           >
             news and announcements
           </Link>

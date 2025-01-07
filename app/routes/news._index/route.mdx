@@ -12,7 +12,8 @@ import {
   Grid,
 } from '@trussworks/react-uswds'
 
-import { SendAnnouncmentButton } from './news/components'
+import { SendAnnouncmentButton } from '../news/components'
+import gcnteam from './AAS243_booth.jpg'
 import { Anchor } from '~/components/Anchor'
 
 <Grid row>
@@ -23,6 +24,44 @@ import { Anchor } from '~/components/Anchor'
 </Grid>
 
 <Collection>
+
+## 2025
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+        <CollectionCalendarDate datetime={'January 7, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>  GCN at AAS 245, Legacy Circulars Address Retirement</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        <div className="grid-row">
+          <div className="tablet:grid-col-9 margin-right-1">
+            #### Visit GCN at the NASA Booth at the 245th AAS Meeting
+              If you are at the [245th AAS meeting](https://aas.org/meetings/aas245) in National Harbor, MD on January 12-16, 2025, be sure to stop by the GCN table at the NASA booth in the exhibit hall to:
+                - play with our [Raspberry Pi Kafka demo](https://github.com/nasa-gcn/gcn-raspberry-pi-demo)
+                - sign up for GCN, if you aren't already subscribed
+                - collect an all new official GCN patch
+                - talk with the GCN developers about your feature requests and issues.
+          </div>
+          <div className="grid-col-auto">
+            <img
+              src={gcnteam}
+              alt="GCN Booth at AAS 243"
+              width="180"
+              height="220"
+              className="height-auto"
+            />
+          </div>
+        </div>
+        #### Retirement of Legacy Email Submission Address
+            We retired the legacy email address (gcncirc@capella2.gsfc.nasa.gov) for GCN Circular submission on **December 31, 2024**. Utilize one of the other Circular submission methods:
+            - Email circulars@gcn.nasa.gov
+            - Submit via the [web form](/circulars/new), which also offers enhanced features with Markdown capability to add tables, links, and formatting.
+      </CollectionDescription>
+    </CollectionItem>
 
 ## 2024
 
