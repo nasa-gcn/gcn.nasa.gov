@@ -173,7 +173,7 @@ For localization of events, the multi-messenger community uses the standard [HEA
 
 ### Multi-Order Sky Maps
 
-GCN strongly encourages the use of multi-order sky maps. They utilize a variable resolution, with higher probability regions having higher resolution and lower probability regions being encoded with a lower resolution. Variable resolution allows multi-order sky maps to be significantly more efficient than single-resolution HEALPix sky maps with respect to both storage footprint and read speed. 
+GCN strongly encourages the use of multi-order sky maps. They utilize a variable resolution, with higher probability regions having higher resolution and lower probability regions being encoded with a lower resolution. Variable resolution allows multi-order sky maps to be significantly more efficient than single-resolution HEALPix sky maps with respect to both storage footprint and read speed.
 
 #### Reading Sky Maps
 
@@ -268,7 +268,9 @@ plt.show()
 ```
 
 #### Most Probable Sky Location
+
 The point on the sky with the highest probability can be found by finding the maximum value in the HEALPix sky map
+
 ```python
 # Reading Sky Maps with Healpy
 healpix_image = hp.read_map('bayestar.fits.gz,0')
