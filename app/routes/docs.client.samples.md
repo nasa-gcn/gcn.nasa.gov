@@ -165,58 +165,75 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
     print(message.value())
 ```
 
-## Working With JSON Schema
+## Parsing JSON
 
 GCN Notices for new missions are typically distributed in JSON format. This guide explains how to programmatically read the JSON schema.
 
-## Parsing JSON
-
-Read the JSON data from [\*.schema.json](https://gcn.nasa.gov/docs/notices/schema) and [\*.example.json](https://gcn.nasa.gov/docs/notices/schema), which parses it into Python dictionaries.
+Start with subscribing to a Kafka topic and parsing the JSON data
 
 ```python
 from gcn_kafka import Consumer
 import json
 
-# Connect as a consumer
-consumer = Consumer(client_id='fill me in',
-                    client_secret='fill me in')
+# Connect as a Kafka consumer
+consumer = Consumer(client_id='fill me in', # Replace with your client ID
+    client_secret='fill me in',             # Replace with your client secret
+    config={"message.max.bytes": 204194304},
+)
 
-# Subscribe to topics and receive alerts
+# Subscribe to Kafka topic
 consumer.subscribe(['gcn.circulars'])
 
-# Continuously consume and parse messages as JSON
+# Continuously consume and parse JSON data
 for message in consumer.consume(timeout=1):
-    if not message.error():
-        json_data = json.loads(message.value().decode('utf-8'))
-        print("Received JSON Notice:", json_data)
+    if message.error():
+        print(message.error())
+        continue
+
+    # Print the topic and message ID
+    print(f"topic={message.topic()}, offset={message.offset()}")
+
+    # Kafka message value as a Base64-encoded string
+    value = message.value()
 ```
 
-This code subscribes to a Kafka topic, consumes the messages, and parses the JSON data into Python dictionaries.
+## Decoding Embedded Data
 
-## Encoding and Decoding of Embedded Data
+The following code demonstrates how to decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` and `b64encode` methods to make this task simple. Additionally, JSON is serialized with Unicode, not ASCII, requires the proper handling of non-ASCII characters when encoding and decoding data.
 
-The following code demonstrates how to encode and decode bytes to `base64` for transfer over an ASCII medium. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` and `b64encode` methods to make this task simple. Additionally, JSON is serialized with Unicode, not ASCII, requires the proper handling of non-ASCII characters when encoding and decoding data.
+In continuation of consumer loop, use the following functions to decode `base64` text to bytes, write into a `.fits` file
 
 ```python
 import base64
 
+# Convert the Kafka message value to a string
+value_str = value.decode("utf-8").strip()
 
-# Encode the content of a file to a Base64 string
-with open("path/to/your/file", 'rb') as file:
-    encoded_string = base64.b64encode(file.read())
+# Parse the JSON data
+value_json = json.loads(value_str)
 
-print(encoded_string)
+# Extract the Base64-encoded skymap
+skymap_string = value_json["event"]["skymap"]
 
-# Output: A Base64 encoded bytestring, e.g., b'a1512dabc1b6adb3cd1b6dcb6d4c6......'
-with open("path/to/encoded_file.txt", 'wb') as encoded_file:
-    encoded_file.write(encoded_string)
+# Function to validate Base64 strings
+def is_base64(s):
+    try:
+        base64.b64decode(s, validate=True)
+        return True
+    except Exception:
+        return False
 
-# Decode and write the content to a local file:
-with open("path/to/encoded_file.txt", 'rb') as encoded_file:
-    decoded_data = base64.b64decode(encoded_file.read())
+# Validate the skymap string
+if not is_base64(skymap_string):
+    print("Invalid Base64 string.")
+    continue
 
-with open("path/to/destination/file", 'wb') as file:
-    file.write(decoded_data)
+# Decode the Base64 string
+decoded_bytes = base64.b64decode(skymap_string)
+
+# Save the decoded data as a FITS file
+with open("skymap.fits", "wb") as fitsFile:
+    fitsFile.write(decoded_bytes)
 ```
 
 If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
