@@ -30,6 +30,24 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
+        <CollectionCalendarDate datetime={'January ??, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>  Circulars over Kafka EventID Backfill</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        In preparation for new search and sort features in the GCN Circulars archive, we will be backfilling the automatically assigned eventID (e.g. GRB YYMMDDA) derived from each GCN Circular subject. EventIDs have been included in all JSON versions of Circulars starting with GCN Circ 37912.  The backfill of all prior Circulars will result in the following behavior that may impact some users:
+          - a revision of each Circular will lead to a new version in the archive, with the only change as adding the JSON eventID
+          - ~38k Circular revision will be distributed over Kafka
+          - revised Circulars will not be redistributed over email
+        The eventID backfill will be done in batches beginning on DATE.
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
         <CollectionCalendarDate datetime={'January 7, 2025'} />
       }
     >
