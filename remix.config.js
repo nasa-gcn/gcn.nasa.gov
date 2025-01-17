@@ -1,6 +1,7 @@
 import properties from 'highlight.js/lib/languages/properties'
 import { common } from 'lowlight'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeCitation from 'rehype-citation'
 import rehypeClassNames from 'rehype-class-names'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHighlight from 'rehype-highlight'
@@ -76,6 +77,12 @@ export default {
           ...options,
         }),
       (options) => rehypeAutolinkHeadings({ behavior: 'wrap', ...options }),
+      (options) =>
+        rehypeCitation({
+          bibliography: 'references.bib',
+          linkCitations: true,
+          ...options,
+        }),
     ],
     remarkPlugins: [remarkGfm],
   },
