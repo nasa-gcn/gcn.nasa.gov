@@ -327,14 +327,14 @@ hpx[ipix_poly].sum()
 
 #### Other Documentation and HEALPix Packages
 
-Additional information can be found on the [LIGO website](https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_skymaps.html)
+- Additional information can be found on the [LIGO website](https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_skymaps.html)
 
-[healpy](https://healpy.readthedocs.io/en/latest/): Official python library for handling the pixlated data on sphere
+- [healpy](https://healpy.readthedocs.io/en/latest/): Official python library for handling the pixlated data on sphere
 
-[astropy-healpix](https://pypi.org/project/astropy-healpix/): Integrates HEALPix with Astropy for data manipulation and analysis
+- [astropy-healpix](https://pypi.org/project/astropy-healpix/): Integrates HEALPix with Astropy for data manipulation and analysis
 
-[mhealpy](https://mhealpy.readthedocs.io/en/latest/): Object-oriented wrapper of healpy for handling the multi-resolution maps
+- [mhealpy](https://mhealpy.readthedocs.io/en/latest/): Object-oriented wrapper of healpy for handling the multi-resolution maps
 
-[MOCpy](https://cds-astro.github.io/mocpy/): Python library allowing easy creation, parsing and manipulation of Multi-Order Coverage maps.
+- [MOCpy](https://cds-astro.github.io/mocpy/): Python library allowing easy creation, parsing and manipulation of Multi-Order Coverage maps.
 
 ## Bibilography
