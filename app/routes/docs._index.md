@@ -25,7 +25,3 @@ To begin receiving GCN notices via Kafka, users have two options for setting up 
 ## History
 
 Learn about how and why GCN was created, and how it became an essential component of multimessenger astrophysics in the [History of GCN](/docs/history).
-
-## Roadmap
-
-Check out our [roadmap](/docs/roadmap) for features that are under development, including the Unified Schema and the GRB Name Server.
