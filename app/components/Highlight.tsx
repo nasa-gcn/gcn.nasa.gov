@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Icon, Tooltip } from '@trussworks/react-uswds'
+import classNames from 'classnames'
 import hljs from 'highlight.js/lib/common'
 import properties from 'highlight.js/lib/languages/properties'
 import { useState } from 'react'
@@ -17,10 +18,12 @@ export function Highlight({
   code,
   language,
   filename,
+  className,
 }: {
   code: string
   language: string
   filename?: string
+  className?: string
 }) {
   const [copyTooltip, setCopyTooltip] = useState('Copy')
 
@@ -32,7 +35,7 @@ export function Highlight({
   }
 
   return (
-    <div className="position-relative">
+    <div className={classNames('position-relative', className)}>
       <div className="pin-right pin-top">
         {filename && (
           <Tooltip
