@@ -29,9 +29,7 @@ export function LuceneAccordion() {
           code='subject:"Swift"'
           className="grid-col-4"
         />
-
         <Highlight language="sh" code='body:"GRB"' className="grid-col-4" />
-
         <Highlight
           language="sh"
           code='submitter:"Tomas Ahumada Mena"'
