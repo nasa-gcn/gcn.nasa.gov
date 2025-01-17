@@ -192,9 +192,6 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="roadmap" to="roadmap">
-                Road Map
-              </NavLink>,
               <NavLink key="schema" to="schema">
                 Schema Browser
               </NavLink>,
