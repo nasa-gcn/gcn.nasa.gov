@@ -169,7 +169,7 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 ## HEALPix Sky Maps
 
 [HEALPix](https://healpix.sourceforge.io) (<b>H</b>ierarchical, <b>E</b>qual <b>A</b>rea, and iso-<b>L</b>atitude <b>Pix</b>elisation) is a scheme for indexing positions on the unit sphere.
-For localization of events, the multi-messenger community uses the standard [HEALPix](https://healpix.sourceforge.io) format with the file extension `.fits.gz`, as well as multi-resolution HEALPix format with the file extension `.multiorder.fits`. The preferred format is the multi-resolution HEALPix format.
+For localization of events, the multi-messenger community uses the standard HEALPix, @2005ApJ...622..759G with the file extension `.fits.gz`, as well as multi-resolution HEALPix, @2015A&A...578A.114F with the file extension `.multiorder.fits`. The preferred format is the multi-resolution HEALPix format.
 
 ### Multi-Order Sky Maps
 
@@ -325,7 +325,7 @@ ipix_poly = hp.query_polygon(nside, xyz)
 hpx[ipix_poly].sum()
 ```
 
-##### Other Documentation and HEALPix Packages
+#### Other Documentation and HEALPix Packages
 
 Additional information can be found on the [LIGO website](https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_skymaps.html)
 
@@ -337,18 +337,4 @@ Additional information can be found on the [LIGO website](https://emfollow.docs.
 
 [MOCpy](https://cds-astro.github.io/mocpy/): Python library allowing easy creation, parsing and manipulation of Multi-Order Coverage maps.
 
-## References
-
-(1) Calabretta, M. R., & Roukema, B. F. 2007, Mon. Notices Royal Astron. Soc., 381, 865. [doi: 10.1111/j.1365-2966.2007.12297.x](https://doi.org/10.1111/j.1365-2966.2007.12297.x)
-
-(2) Górski, K.M., Hivon, E., Banday, A.J., et al. 2005, Astrophys. J., 622, 759. [doi: 10.1086/427976](https://doi.org/10.1086/427976)
-
-(3) Górski, K. M., Wandelt, B. D., et al. 1999. [doi: 10.48550/arXiv.astro-ph/9905275](https://doi.org/10.48550/arXiv.astro-ph/9905275)
-
-(4) Fernique, P., Allen, et al. 2015, Astron. Astrophys., 578, A114. [doi: 10.1051/0004-6361/201526075](https://doi.org/10.1051/0004-6361/201526075)
-
-(5) Fernique, P., Boch, T., et al. 2014, IVOA Recommendation. [doi: 10.48550/arXiv.1505.02937](https://doi.org/10.48550/arXiv.1505.02937)
-
-(6) Martinez-Castellanos, I., Singer, L. P., et al. 2022, Astrophys. J., 163, 259. [doi: 10.3847/1538-3881/ac6260](https://doi.org/10.3847/1538-3881/ac6260)
-
-(7) Singer, L. P., & Price, L. R. 2016, Phys. Rev. D, 93, 024013. [doi: 10.1103/PhysRevD.93.024013](https://doi.org/10.1103/PhysRevD.93.024013)
+## Bibilography
