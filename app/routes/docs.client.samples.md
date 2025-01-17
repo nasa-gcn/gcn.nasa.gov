@@ -326,7 +326,7 @@ hpx[ipix_poly].sum()
 ```
 
 #### Other Documentation and HEALPix Packages
-
+For more information and resources on the analysis and manipulation of pixelated data on a sphere, explore the following links:
 - Additional information can be found on the [LIGO website](https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_skymaps.html)
 
 - [healpy](https://healpy.readthedocs.io/en/latest/): Official python library for handling the pixlated data on sphere
