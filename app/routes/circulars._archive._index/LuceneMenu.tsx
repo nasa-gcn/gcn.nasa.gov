@@ -7,7 +7,7 @@
  */
 import { Link } from '@remix-run/react'
 
-import { CopyableCode } from '~/components/CopyableCode'
+import { Highlight } from '~/components/Highlight'
 
 export function LuceneAccordion() {
   return (
@@ -24,11 +24,19 @@ export function LuceneAccordion() {
       </p>
       <h4>Lucene Examples (click to copy):</h4>
       <div>
-        <CopyableCode text='subject:"Swift"' />
-        <br />
-        <CopyableCode text='body:"GRB"' />
-        <br />
-        <CopyableCode text='submitter:"Tomas Ahumada Mena"' />
+        <Highlight
+          language="sh"
+          code='subject:"Swift"'
+          className="grid-col-4"
+        />
+
+        <Highlight language="sh" code='body:"GRB"' className="grid-col-4" />
+
+        <Highlight
+          language="sh"
+          code='submitter:"Tomas Ahumada Mena"'
+          className="grid-col-4"
+        />
       </div>
     </details>
   )
