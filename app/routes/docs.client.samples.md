@@ -292,7 +292,7 @@ ra, dec
 
 #### Integrated probability in a Circle
 
-We can calculate the integrated probability within an arbitrary circle on the sky
+We can calculate the integrated probability within an arbitrary circle on the sky:
 
 ```python
 # First define the Cartesian coordinates of the center of the circle
