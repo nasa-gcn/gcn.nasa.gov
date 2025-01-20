@@ -252,7 +252,7 @@ area_90.to_value(u.deg**2)
 
 ### Flat Resolution HEALPix Sky maps
 
-A sky map `.fits.gz` file can be read in using `healpy`
+A sky map `.fits.gz` file can be read in using `healpy`:
 
 ```python
 import healpy as hp
