@@ -331,7 +331,7 @@ For more information and resources on the analysis of pixelated data on a sphere
 
 - Additional information can be found on the [LIGO website](https://emfollow.docs.ligo.org/userguide/tutorial/multiorder_skymaps.html)
 
-- [healpy](https://healpy.readthedocs.io/en/latest/): Official python library for handling the pixlated data on sphere
+- [healpy](https://healpy.readthedocs.io/en/latest/): Official Python library for handling the pixelated data on sphere
 
 - [astropy-healpix](https://pypi.org/project/astropy-healpix/): Integrates HEALPix with Astropy for data manipulation and analysis
 
