@@ -312,7 +312,7 @@ hpx[ipix_disc].sum()
 
 #### Integrated probability in a Polygon
 
-Similar to the integrated probability within a circle, it is possible to calculate the integrated probability of the source lying within an arbitrary polygon
+Similar to the integrated probability within a circle, it is possible to calculate the integrated probability of the source lying within an arbitrary polygon:
 
 ```python
 #  Indices of the pixels within a polygon (defined by the Cartesian coordinates of its vertices)
