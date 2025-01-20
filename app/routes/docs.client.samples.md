@@ -269,7 +269,7 @@ plt.show()
 
 #### Most Probable Sky Location
 
-The point on the sky with the highest probability can be found by finding the maximum value in the HEALPix sky map
+The point on the sky with the highest probability can be found by finding the maximum value in the HEALPix sky map:
 
 ```python
 # Reading Sky Maps with Healpy
