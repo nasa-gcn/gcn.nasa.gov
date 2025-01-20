@@ -187,7 +187,7 @@ from astropy import units as u
 from astropy.table import QTable
 ```
 
-A given sky map can then be read in as
+A given sky map can then be read in as:
 
 ```python
 skymap = QTable.read('skymap.multiorder.fits')
