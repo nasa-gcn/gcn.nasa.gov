@@ -195,7 +195,7 @@ skymap = QTable.read('skymap.multiorder.fits')
 
 #### Most Probable Sky Location
 
-The index of the highest probability point
+Let's calculate the index of the sky point with the highest probability density, as follows:
 
 ```python
 hp_index = np.argmax(skymap['PROBDENSITY'])
