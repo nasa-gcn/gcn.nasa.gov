@@ -325,7 +325,7 @@ ipix_poly = hp.query_polygon(nside, xyz)
 hpx[ipix_poly].sum()
 ```
 
-#### Additional Documentation and HEALPix Packages
+#### Other Documentation and HEALPix Packages
 
 For more information and resources on the analysis of pixelated data on a sphere, explore the following links:
 
