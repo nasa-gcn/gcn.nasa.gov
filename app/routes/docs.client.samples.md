@@ -209,7 +209,7 @@ ra, dec = ah.healpix_to_lonlat(ipix, nside, order='nested')
 
 #### Probability Density at a Known Position
 
-Similarly, one can calculate the probability density at a known position
+Similarly, one can calculate the probability density at a known position:
 
 ```python
 ra, dec = 197.450341598 * u.deg, -23.3814675445 * u.deg
