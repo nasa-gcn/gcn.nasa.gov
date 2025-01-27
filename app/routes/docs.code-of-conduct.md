@@ -9,8 +9,6 @@ GCN Notices and Circulars are rapid communications which are by definition preli
 
 The sharing of preliminary analysis and results in an open and respectful manner enables the productive exchange of information and ideas. Notices and Circulars contain factual information on observations and analysis of astronomical transients, not opinions, speculation, or disagreements with individuals or groups. The Circulars [style guide](/circulars/styleguide) provides additional criteria and community standards for Circular content.
 
-GCN is committed to adhere to the [NASA Astrophysics Statement of Principles](https://cor.gsfc.nasa.gov/docs/HQ/NASA-Astrophysics-Statement-of-Principles-Nov2022.pdf).
-
 ## Retractions
 
 If an initial automated or manually-generated Notice/Circular is later deemed to be misclassified as an astronomical object, the generating team should promptly submit another Notice/Circular informing the community of the retracted claim.
