@@ -23,7 +23,7 @@ The GCN team welcomes cross-compatibility between community astronomical resourc
 
 ## Enforcement
 
-The GCN system and community aim to foster an inclusive environment for the exchange of information and ideas. Mistakes are completely understandable in these forms of rapid communication, and the GCN team is happy to work with users to correct any unintentional errors. GCN will not tolerate users who are intentionally disrespectful, misrepresent data or analysis, plagiarize, or reproduce data or analysis without permission of the originator or proper citation.
+The GCN system and community aim to foster an open environment for the exchange of information and ideas. Mistakes are completely understandable in these forms of rapid communication, and the GCN team is happy to work with users to correct any unintentional errors. GCN will not tolerate users who are intentionally disrespectful, misrepresent data or analysis, plagiarize, or reproduce data or analysis without permission of the originator or proper citation.
 
 Circulars submitting privileges are granted for new users via the GCN [peer endorsement system](/user/endorsements). Any user found to intentionally violate these policies will have their Circulars/Notices submission privileges revoked. This may lead to a review of the peer endorser who approved the offending user.
 
