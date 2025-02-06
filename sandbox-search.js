@@ -11,7 +11,7 @@ export default async function () {
   const text = await readFile('sandbox-seed.json', { encoding: 'utf-8' })
   const { circulars, synonyms } = JSON.parse(text)
   const groups = Object.entries(
-    Object.groupBy(synonyms, ({ synonymId }) => ({ synonymId }))
+    Object.groupBy(synonyms, ({ synonymId }) => synonymId)
   ).flatMap(([synonymId, values]) => [
     {
       synonymId,
