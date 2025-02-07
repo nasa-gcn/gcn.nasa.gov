@@ -162,6 +162,7 @@ export const validSubjectKeywords = [
   'Chandra',
   'EP',
   'Fermi',
+  'FRB',
   'FXT',
   'GRANDMA',
   'GRB',
