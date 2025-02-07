@@ -261,20 +261,39 @@ export default function () {
             Search
           </Label>
           <input type="hidden" name="view" value={view} />
-          <TextInput
-            autoFocus
-            className="minw-15"
-            id="query"
-            name="query"
-            type="search"
-            defaultValue={inputQuery}
-            placeholder="Search"
-            aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form, { preventScrollReset: true })
-            }}
-          />
+          {isGroupView && (
+            <TextInput
+              autoFocus
+              className="minw-15"
+              id="query"
+              name="query"
+              type="search"
+              placeholder="Search eventID"
+              defaultValue={inputQuery}
+              aria-describedby="searchHint"
+              onChange={({ target: { form, value } }) => {
+                setInputQuery(value)
+                if (!value) submit(form, { preventScrollReset: true })
+              }}
+            />
+          )}
+          {!isGroupView && (
+            <TextInput
+              autoFocus
+              className="minw-15"
+              id="query"
+              name="query"
+              type="search"
+              placeholder="Search"
+              defaultValue={inputQuery}
+              aria-describedby="searchHint"
+              onChange={({ target: { form, value } }) => {
+                setInputQuery(value)
+                if (!value) submit(form, { preventScrollReset: true })
+              }}
+            />
+          )}
+
           <Button type="submit">
             <img
               src={searchImg}
@@ -314,14 +333,20 @@ export default function () {
           </Button>
         </Link>
       </ToolbarButtonGroup>
-      <Hint id="searchHint">
-        Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
-        GRB'). <br />
-        Search for Circulars by [eventID](docs/circulars/archive) (e.g. 'GRB
-        123456A', 'GRB123456A', '123456A'). <br />
-        To navigate to a specific circular, enter the associated Circular ID
-        (e.g. 'gcn123', 'Circular 123', or '123').
-      </Hint>
+      {!isGroupView && (
+        <Hint id="searchHint">
+          Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
+          GRB'). <br />
+          To navigate to a specific circular, enter the associated Circular ID
+          (e.g. 'gcn123', 'Circular 123', or '123').
+        </Hint>
+      )}
+      {isGroupView && (
+        <Hint id="searchHint">
+          Search for Event Groups by eventID (e.g. 'GRB 123456A', 'GRB123456A',
+          '123456A'). <br />
+        </Hint>
+      )}
       {useFeature('CIRCULARS_LUCENE') && <LuceneAccordion />}
       {clean && (
         <>
