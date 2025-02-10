@@ -222,6 +222,7 @@ export default function () {
   const [inputQuery, setInputQuery] = useState(query)
   const viewState = isGroupView ? 'Index' : 'Group'
   const clean = inputQuery === query
+  const searchText = isGroupView ? 'Event Name' : 'Search'
 
   return (
     <>
@@ -261,39 +262,20 @@ export default function () {
             Search
           </Label>
           <input type="hidden" name="view" value={view} />
-          {isGroupView && (
-            <TextInput
-              autoFocus
-              className="minw-15"
-              id="query"
-              name="query"
-              type="search"
-              placeholder="Search eventID"
-              defaultValue={inputQuery}
-              aria-describedby="searchHint"
-              onChange={({ target: { form, value } }) => {
-                setInputQuery(value)
-                if (!value) submit(form, { preventScrollReset: true })
-              }}
-            />
-          )}
-          {!isGroupView && (
-            <TextInput
-              autoFocus
-              className="minw-15"
-              id="query"
-              name="query"
-              type="search"
-              placeholder="Search"
-              defaultValue={inputQuery}
-              aria-describedby="searchHint"
-              onChange={({ target: { form, value } }) => {
-                setInputQuery(value)
-                if (!value) submit(form, { preventScrollReset: true })
-              }}
-            />
-          )}
-
+          <TextInput
+            autoFocus
+            className="minw-15"
+            id="query"
+            name="query"
+            type="search"
+            placeholder={searchText}
+            defaultValue={inputQuery}
+            aria-describedby="searchHint"
+            onChange={({ target: { form, value } }) => {
+              setInputQuery(value)
+              if (!value) submit(form, { preventScrollReset: true })
+            }}
+          />
           <Button type="submit">
             <img
               src={searchImg}
