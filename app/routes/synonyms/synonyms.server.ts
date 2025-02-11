@@ -337,7 +337,10 @@ export async function groupMembersByEventId({
     const members = (await Promise.all(promises)).flat()
     return { ...group, members }
   })
-  const items = await Promise.all(groupedItems)
+  const items = (await Promise.all(groupedItems)).sort(
+    (a, b) => b.members[0].createdOn - a.members[0].createdOn
+  )
+
   return {
     items,
     totalItems: searchResults.totalItems,

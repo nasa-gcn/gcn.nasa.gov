@@ -28,30 +28,26 @@ export default function ({
         </h3>
       )}
 
-      {allItems
-        .sort((a, b) => b.members[0].createdOn - a.members[0].createdOn)
-        .map(({ synonymId, eventIds, slugs, members }) => (
-          <div key={synonymId}>
-            <details>
-              <summary>
-                <Link
-                  to={`/circulars/events/${slugs.sort()[0]}${searchString}`}
-                >
-                  {eventIds.join(', ')}
-                </Link>
-              </summary>
-              <ol className="margin-left-3">
-                {members.map(({ circularId, subject }) => {
-                  return (
-                    <li key={circularId} value={circularId}>
-                      <Link to={`/circulars/${circularId}`}>{subject}</Link>
-                    </li>
-                  )
-                })}
-              </ol>
-            </details>
-          </div>
-        ))}
+      {allItems.map(({ synonymId, eventIds, slugs, members }) => (
+        <div key={synonymId}>
+          <details>
+            <summary>
+              <Link to={`/circulars/events/${slugs.sort()[0]}${searchString}`}>
+                {eventIds.join(', ')}
+              </Link>
+            </summary>
+            <ol className="margin-left-3">
+              {members.map(({ circularId, subject }) => {
+                return (
+                  <li key={circularId} value={circularId}>
+                    <Link to={`/circulars/${circularId}`}>{subject}</Link>
+                  </li>
+                )
+              })}
+            </ol>
+          </details>
+        </div>
+      ))}
     </>
   )
 }
