@@ -72,6 +72,7 @@ describe('parseEventFromSubject', () => {
   const sgrEvent = 'SGR 1935+2154'
   const ztfEvent = 'ZTF23aabmzlp'
   const epEvent = 'EP241119a'
+  const frbEvent = 'FRB 20250206A'
 
   test('handles nonsense subject cases', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
@@ -570,6 +571,56 @@ describe('parseEventFromSubject', () => {
       const baksanSubjectWithHyphen =
         'Global Baksan Neutrino Observatory Alert-201228.36 MASTER-Net observations report'
       expect(parseEventFromSubject(baksanSubjectWithHyphen)).toBe(baksanEvent)
+    })
+  })
+
+  describe('FRB', () => {
+    test('handles FRB event names', () => {
+      const frbSubject =
+        'FRB 20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubject)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names in misc positions', () => {
+      const frbSubjectWithSpace =
+        'MASTER observations:FRB 20250206A and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithSpace)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names without space', () => {
+      const frbSubjectWithNoSpace =
+        'FRB20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithNoSpace)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names without spaces in misc positions', () => {
+      const frbSubjectWithSpace =
+        'MASTER observations: FRB20250206A and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithSpace)).toBe(frbEvent)
+    })
+
+    test('handles FRB event name with an underscore', () => {
+      const frbSubjectWithUnderscore =
+        'FRB_20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithUnderscore)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names with an underscore in misc positions', () => {
+      const frbSubjectWithUnderscore =
+        'MASTER observations and FRB_20250206A: possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithUnderscore)).toBe(frbEvent)
+    })
+
+    test('handles FRB event name with a hyphen', () => {
+      const frbSubjectWithHyphen =
+        'FRB-20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithHyphen)).toBe(frbEvent)
+    })
+
+    test('handles FRB event name with a hyphen in misc positions', () => {
+      const frbSubjectWithHyphen =
+        'MASTER observations: FRB-20250206A and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithHyphen)).toBe(frbEvent)
     })
   })
 })
