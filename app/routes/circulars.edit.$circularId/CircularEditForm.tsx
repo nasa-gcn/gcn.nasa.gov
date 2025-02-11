@@ -149,7 +149,11 @@ export function CircularEditForm({
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
   const sending = Boolean(useNavigation().formData)
   const valid =
-    subjectValid && bodyValid && dateTimeValid && submitterValid && eventIdValid
+    subjectValid &&
+    bodyValid &&
+    dateTimeValid &&
+    submitterValid &&
+    (!eventId || eventIdValid)
 
   let headerText, saveButtonText
 
@@ -278,12 +282,7 @@ export function CircularEditForm({
           <CircularsKeywords />
         </CollapsableInfo>
         {intent !== 'new' && (
-          <InputGroup
-            className={classnames('maxw-full', {
-              'usa-input--error': eventIdValid === false,
-              'usa-input--success': eventIdValid,
-            })}
-          >
+          <InputGroup className="maxw-full">
             <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
             <TextInput
               autoFocus
@@ -292,10 +291,9 @@ export function CircularEditForm({
               id="eventId"
               type="text"
               defaultValue={defaultEventId}
-              required
               onChange={({ target: { value } }) => {
                 setEventId(value)
-                setEventIdValid(eventIdIsValid(value))
+                setEventIdValid(!value || eventIdIsValid(value))
               }}
             />
           </InputGroup>
