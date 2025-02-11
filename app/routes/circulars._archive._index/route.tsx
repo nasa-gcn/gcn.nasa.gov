@@ -284,14 +284,6 @@ export default function () {
           </Button>
         </Form>
 
-        {!isGroupView && (
-          <DateSelector
-            form={formId}
-            defaultStartDate={startDate}
-            defaultEndDate={endDate}
-          />
-        )}
-
         {query && !isGroupView && (
           <SortSelector form={formId} defaultValue={sort} />
         )}
@@ -313,6 +305,14 @@ export default function () {
             <Icon.Edit role="presentation" /> New
           </Button>
         </Link>
+
+        {!isGroupView && (
+          <DateSelector
+            form={formId}
+            defaultStartDate={startDate}
+            defaultEndDate={endDate}
+          />
+        )}
       </ToolbarButtonGroup>
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
