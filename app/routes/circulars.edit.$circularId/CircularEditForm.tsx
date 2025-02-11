@@ -149,11 +149,7 @@ export function CircularEditForm({
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
   const sending = Boolean(useNavigation().formData)
   const valid =
-    subjectValid &&
-    bodyValid &&
-    dateTimeValid &&
-    submitterValid &&
-    (!eventId || eventIdValid)
+    subjectValid && bodyValid && dateTimeValid && submitterValid && eventIdValid
 
   let headerText, saveButtonText
 
