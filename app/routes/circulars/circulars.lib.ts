@@ -71,6 +71,7 @@ const subjectMatchers: SubjectMatcher[] = [
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
   ],
   [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id}`],
+  [/FRB[.\s_-]*(\d{8}[a-z])/i, ([, id]) => `FRB ${id}`.toUpperCase()],
 ]
 
 /** Format a Circular as plain text. */
