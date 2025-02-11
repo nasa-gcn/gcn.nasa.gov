@@ -46,9 +46,9 @@ export async function handleCredentialActions(
       const { client_id } = await machine.createClientCredential(name, scope)
       let redirectTarget = ''
       if (redirectSource == 'quickstart') {
-        redirectTarget = `/quickstart/alerts?clientId=${encodeURIComponent(
-          client_id
-        )}`
+        const params = new URL(request.url).searchParams
+        params.set('clientId', client_id)
+        redirectTarget = `/quickstart/alerts?${params.toString()}`
       } else if (redirectSource == 'user') {
         redirectTarget = '/user/credentials'
       }
