@@ -196,7 +196,7 @@ for message in consumer.consume(timeout=1):
     # Print the topic and message ID
     print(f"topic={message.topic()}, offset={message.offset()}")
 
-    # Kafka message value as a Base64-encoded string
+    # Kafka message value as a JSON dictionary encoded as a string or byte array
     value = message.value()
 ```
 
