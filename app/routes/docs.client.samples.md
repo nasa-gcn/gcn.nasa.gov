@@ -223,8 +223,14 @@ with open("skymap.fits", "wb") as fits_file:
 
 If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
 
-```python
-{
+data = {
+"type": "string",
+"contentEncoding": "base64",
+"contentMediaType": "image/fits"
+}
+
+```json
+"healpix_file": {
     type: 'string',
 	contentEncoding: 'base64',
 	contentMediaType: 'image/fits',
