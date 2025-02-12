@@ -232,6 +232,8 @@ If you want to include a FITS file in a Notice, you add a property to your schem
 }
 ```
 
+JSON Schema supports embedding non-JSON media within strings by leveraging the `contentMediaType` and `contentEncoding` keywords, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
+
 ## Encoding Embedded Data
 
 For producer data production pipelines, the following encoding steps convert an input file to a bytestring. This guide demonstrates how to encode a file (e.g., skymap.fits) into a `base64` encoded string and submit it to the GCN Kafka broker.
@@ -265,8 +267,6 @@ producer.produce(
 
 producer.flush()
 ```
-
-JSON Schema supports embedding non-JSON media within strings by leveraging the `contentMediaType` and `contentEncoding` keywords, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
 
 ## HEALPix Sky Maps
 
