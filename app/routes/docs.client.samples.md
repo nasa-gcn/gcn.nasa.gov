@@ -232,8 +232,9 @@ data = {
 ```json
 "healpix_file": {
     type: 'string',
-	contentEncoding: 'base64',
-	contentMediaType: 'image/fits',
+    contentEncoding: 'base64',
+    contentMediaType: 'image/fits',
+    "description": "Base 64 encoded content of a FITS file"
 }
 ```
 
