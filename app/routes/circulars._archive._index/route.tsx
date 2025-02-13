@@ -14,7 +14,14 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
-import { Alert, Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
+import {
+  Alert,
+  Button,
+  ButtonGroup,
+  Icon,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
@@ -220,8 +227,8 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const viewState = isGroupView ? 'Index' : 'Group'
   const clean = inputQuery === query
+  const searchText = isGroupView ? 'Event Name' : 'Search'
 
   return (
     <>
@@ -268,7 +275,7 @@ export default function () {
             name="query"
             type="search"
             defaultValue={inputQuery}
-            placeholder="Search"
+            placeholder={searchText}
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
               setInputQuery(value)
@@ -284,20 +291,37 @@ export default function () {
           </Button>
         </Form>
 
-        {query && !isGroupView && (
-          <SortSelector form={formId} defaultValue={sort} />
-        )}
-
         {synonymFlagIsOn && (
-          <Link
-            to={`/circulars?view=${viewState.toLowerCase()}&limit=${limit}`}
-            preventScrollReset
-          >
-            <Button
-              type="button"
-              className="padding-y-1"
-            >{`${viewState} View`}</Button>
-          </Link>
+          <ButtonGroup type="segmented">
+            <Link
+              to={`/circulars?view=index&limit=${limit}`}
+              style={{ textDecoration: 'none' }}
+              preventScrollReset
+            >
+              <Button
+                className="radius-left-md radius-right-sm padding-y-1"
+                type="button"
+                outline={view != 'index'}
+              >
+                <Icon.List role="presentation" />
+                Circulars
+              </Button>
+            </Link>
+            <Link
+              to={`/circulars?view=group&limit=${limit}`}
+              style={{ textDecoration: 'none' }}
+              preventScrollReset
+            >
+              <Button
+                className="radius-right-md radius-left-sm padding-y-1"
+                type="button"
+                outline={view != 'group'}
+              >
+                <Icon.ContentCopy role="presentation" />
+                Events
+              </Button>
+            </Link>
+          </ButtonGroup>
         )}
 
         <Link to={`/circulars/new${searchString}`}>
@@ -305,13 +329,16 @@ export default function () {
             <Icon.Edit role="presentation" /> New
           </Button>
         </Link>
-
         {!isGroupView && (
           <DateSelector
             form={formId}
             defaultStartDate={startDate}
             defaultEndDate={endDate}
           />
+        )}
+
+        {query && !isGroupView && (
+          <SortSelector form={formId} defaultValue={sort} />
         )}
       </ToolbarButtonGroup>
       <Hint id="searchHint">
