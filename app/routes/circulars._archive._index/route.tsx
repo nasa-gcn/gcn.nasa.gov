@@ -120,7 +120,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       const eventId = getFormDataString(data, 'eventId')
 
-      if (!createdOnDate || !createdOn || !eventId)
+      if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
 
       let zendeskTicketId: number | undefined
