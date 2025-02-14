@@ -136,7 +136,7 @@ export function CircularEditForm({
     subjectIsValid(defaultSubject)
   )
   const [eventIdValid, setEventIdValid] = useState(
-    eventIdIsValid(defaultEventId ?? '') || intent === 'new'
+    eventIdIsValid(defaultEventId ?? '') || defaultEventId === undefined
   )
   const [body, setBody] = useState(defaultBody)
   const [subject, setSubject] = useState(defaultSubject)
