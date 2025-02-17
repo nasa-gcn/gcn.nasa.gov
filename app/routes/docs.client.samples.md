@@ -169,9 +169,9 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 
 ## Parsing JSON
 
-GCN Notices are distributed through Kafka topics and for new missions are typically distributed in JSON format. This guide explains how to programmatically read the JSON schema.
+GCN Notices are distributed through Kafka topics and, for new missions, are typically provided in JSON format. This guide explains how to programmatically read the JSON schema.
 
-Start with subscribing to a Kafka topic and parsing the JSON data
+Start by subscribing to a Kafka topic and parsing the JSON data.
 
 ```python
 from gcn_kafka import Consumer
@@ -204,8 +204,8 @@ for message in consumer.consume(timeout=1):
 
 ## Decoding Embedded Data
 
-Some GCN notices contain HEALPix sky maps encoded as `base64`.
-The following code demonstrates how to extract, decode, and save the HEALPix FITS file from a received notice. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` method to simplify this task.
+Some GCN notices include HEALPix sky maps encoded in `base64`.
+The following code demonstrates how to extract, decode, and save the HEALPix data as a `.fits` file from a received notice. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` method to simplify the decoding process.
 
 ```python
 import base64
@@ -228,22 +228,22 @@ with fits.open("skymap.fits") as hdul:
 
 ## JSON Schema Example for Embedding a FITS File
 
-If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
+If you want to include a FITS file in a Notice, add a property to your schema definition in the following format:
 
 ```json
 "healpix_file": {
-    type: 'string',
-    contentEncoding: 'base64',
-    contentMediaType: 'image/fits',
+    "type": 'string',
+    "contentEncoding": 'base64',
+    "contentMediaType": 'image/fits',
     "description": "Base 64 encoded content of a FITS file"
 }
 ```
 
-JSON Schema supports embedding non-JSON media within strings using `contentMediaType` and `contentEncoding` keywords, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
+JSON Schema supports embedding non-JSON media within strings using the `contentMediaType` and `contentEncoding`, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
 
 ## Encoding Embedded Data
 
-For producer data production pipelines, the following encoding steps convert an input file to a bytestring. This guide demonstrates how to encode a file (e.g., skymap.fits) into a `base64` encoded string and submit it to the GCN Kafka broker.
+For producer data production pipelines, the following encoding steps convert an input file to a byte string. This guide demonstrates how to encode a file (e.g., skymap.fits) into a `base64` encoded string and submit it to the GCN Kafka broker.
 
 ```python
 from gcn_kafka import Producer
