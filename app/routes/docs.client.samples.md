@@ -169,7 +169,7 @@ for message in consumer.consume(end[0].offset - start[0].offset, timeout=1):
 
 ## Parsing JSON
 
-GCN Notices for new missions are typically distributed in JSON format. This guide explains how to programmatically read the JSON schema.
+GCN Notices are distributed through Kafka topics and for new missions are typically distributed in JSON format. This guide explains how to programmatically read the JSON schema.
 
 Start with subscribing to a Kafka topic and parsing the JSON data
 
@@ -177,10 +177,10 @@ Start with subscribing to a Kafka topic and parsing the JSON data
 from gcn_kafka import Consumer
 import json
 
-# Connect as a Kafka consumer
+# Kafka consumer configuration
 consumer = Consumer(
-    client_id='fill me in', # Replace with your client ID
-    client_secret='fill me in', # Replace with your client secret
+    client_id='fill me in',
+    client_secret='fill me in',
     config={"message.max.bytes": 204194304},
 )
 
@@ -196,30 +196,37 @@ for message in consumer.consume(timeout=1):
     # Print the topic and message ID
     print(f"topic={message.topic()}, offset={message.offset()}")
 
-    # Kafka message value as a JSON dictionary encoded as a string or byte array
+    # Decode message value
     value = message.value()
+    value_str = value.decode("utf-8")
+    alert_json = json.loads(value_str)
 ```
 
 ## Decoding Embedded Data
 
-The following code demonstrates how to process a Kafka message containing a `base64` encoded sky map, decode it, and save it as a `.fits` file. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` method to simplify this task. JSON serialization uses Unicode, and can handle a wide range of characters, enabling reliable handling of encoded data.
+Some GCN notices contain HEALPix sky maps encoded as `base64`.
+The following code demonstrates how to extract, decode, and save the HEALPix FITS file from a received notice. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` method to simplify this task.
 
 ```python
 import base64
+from astropy.io import fits
 
-# Convert the Kafka message value to a string
-value_str = value.decode("utf-8")
-
-alert_json = json.loads(value_str)
-
+# Extract the base64-encoded skymap
 skymap_string = alert_json["event"]["skymap"]
 
-# Decode the Base64 string
+# Decode the Base64 string to bytes
 decoded_bytes = base64.b64decode(skymap_string)
 
+# Write bytes to a FITS file
 with open("skymap.fits", "wb") as fits_file:
     fits_file.write(decoded_bytes)
+
+# Open and inspect the FITS file
+with fits.open("skymap.fits") as hdul:
+    hdul.info()
 ```
+
+## JSON Schema Example for Embedding a FITS File
 
 If you want to include a FITS file in a Notice, you add a property to your schema definition in the following format:
 
@@ -232,7 +239,7 @@ If you want to include a FITS file in a Notice, you add a property to your schem
 }
 ```
 
-JSON Schema supports embedding non-JSON media within strings by leveraging the `contentMediaType` and `contentEncoding` keywords, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
+JSON Schema supports embedding non-JSON media within strings using `contentMediaType` and `contentEncoding` keywords, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
 
 ## Encoding Embedded Data
 
@@ -241,25 +248,28 @@ For producer data production pipelines, the following encoding steps convert an 
 ```python
 from gcn_kafka import Producer
 import base64
+import json
+
+# Kafka Producer Configuration
+producer = Producer(client_id='fill me in',
+	client_secret='fill me in',
+	config={"message.max.bytes": 204194304},
 
 # Set Kafka Topic and Producer Configuration
 TOPIC = "igwn.gwalert"
-
-producer = Producer(client_id='fill me in', # Replace with your client ID
-	client_secret='fill me in',             # Replace with your client secret
-	config={"message.max.bytes": 204194304},
 
 data = {
     "event": {}
 }
 
-# Encode the file content in base64
+# Read and encode the FITS file
 with open("skymap.fits", "rb") as file:
 	data["event"]["skymap"] = base64.b64encode(file.read())
 
-# Convert the dictionary into JSON string
+# Convert dictionary to JSON
 json_data = json.dumps(data).encode("utf-8")
 
+# Publish the message
 producer.produce(
 	TOPIC,
 	json_data,
