@@ -232,9 +232,9 @@ If you want to include a FITS file in a Notice, add a property to your schema de
 
 ```json
 "healpix_file": {
-    "type": 'string',
-    "contentEncoding": 'base64',
-    "contentMediaType": 'image/fits',
+    "type": "string",
+    "contentEncoding": "base64",
+    "contentMediaType": "image/fits",
     "description": "Base 64 encoded content of a FITS file"
 }
 ```
