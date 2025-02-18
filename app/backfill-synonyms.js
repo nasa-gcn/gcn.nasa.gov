@@ -10,7 +10,7 @@ import { slug } from 'github-slugger'
 import chunk from 'lodash/chunk'
 
 async function getTableNameFromSSM(dynamoTableName) {
-  const ssmClient = new SSMClient()
+  const ssmClient = new SSMClient({ region: 'us-east-1' })
 
   try {
     const command = new GetParameterCommand({ Name: dynamoTableName })
