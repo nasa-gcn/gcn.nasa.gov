@@ -627,7 +627,7 @@ describe('parseEventFromSubject', () => {
 
 describe('emailIsAutoReply', () => {
   const invalidFwdSubject = 'FWD: Check this out'
-  test('detects valid subjectline', () => {
+  test('detects valid subject line', () => {
     expect(emailIsAutoReply(invalidFwdSubject)).toBe(true)
   })
 })

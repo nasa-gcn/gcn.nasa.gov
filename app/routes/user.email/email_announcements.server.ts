@@ -15,7 +15,7 @@ import { moderatorGroup } from '../circulars/circulars.server'
 import { announcementAppendedText } from './email_announcements'
 import { sendEmailBulk } from '~/lib/email.server'
 
-export async function createAnnouncementSubsciption(
+export async function createAnnouncementSubscription(
   sub: string,
   email: string
 ) {

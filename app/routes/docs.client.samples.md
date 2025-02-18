@@ -229,7 +229,7 @@ prob_density = skymap[match_index]['PROBDENSITY'].to_value(u.deg**-2)
 The estimation of a 90% probability region involves sorting the pixels, calculating the area of each pixel, and then summing the probability of each pixel until 90% is reached.
 
 ```python
-#Sort the pixels by decending probability density
+#Sort the pixels by descending probability density
 skymap.sort('PROBDENSITY', reverse=True)
 
 #Area of each pixel
@@ -239,10 +239,10 @@ pixel_area = ah.nside_to_pixel_area(ah.level_to_nside(level))
 #Pixel area times the probability
 prob = pixel_area * skymap['PROBDENSITY']
 
-#Cummulative sum of probability
+#Cumulative sum of probability
 cumprob = np.cumsum(prob)
 
-#Pixels for which cummulative is 0.9
+#Pixels for which cumulative is 0.9
 i = cumprob.searchsorted(0.9)
 
 #Sum of the areas of the pixels up to that one
@@ -339,4 +339,4 @@ For more information and resources on the analysis of pixelated data on a sphere
 
 - [MOCpy](https://cds-astro.github.io/mocpy/): Python library allowing easy creation, parsing and manipulation of Multi-Order Coverage maps.
 
-## Bibilography
+## Bibliography

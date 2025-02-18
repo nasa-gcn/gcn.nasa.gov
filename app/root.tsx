@@ -132,7 +132,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 }
 
-/** Don't reevaluate this route's loader due to client-side navigations. */
+/** Don't reevaluate this route's loader due to client-side navigation. */
 export function shouldRevalidate() {
   return false
 }

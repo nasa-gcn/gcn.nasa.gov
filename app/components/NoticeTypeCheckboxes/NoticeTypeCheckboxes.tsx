@@ -254,7 +254,7 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.KM3NET = '/missions/km3net'
   }
 
-  const counterfunction = (childRef: HTMLInputElement) => {
+  const counterFunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
     } else {
@@ -322,7 +322,7 @@ export function NoticeTypeCheckboxes({
               : false,
           })),
         }))}
-        childoncheckhandler={counterfunction}
+        childOnCheckHandler={counterFunction}
       />
       <div className="text-bold text-ink">
         {humanizedCount(selectedCounter, 'notice type')} selected for{' '}

@@ -2,7 +2,7 @@ import { Link } from '@remix-run/react'
 
 import { useModStatus } from '~/root'
 
-export function SendAnnouncmentButton() {
+export function SendAnnouncementButton() {
   const userIsMod = useModStatus()
   return (
     <>
