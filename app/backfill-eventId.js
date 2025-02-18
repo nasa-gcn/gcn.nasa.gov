@@ -44,7 +44,7 @@ export function parseEventFromSubject(value) {
 // END CUT AND PASTE OF APP CODE FROM /routes/circulars/circulars.lib.ts
 
 async function getTableNameFromSSM(dynamoTableName) {
-  const ssmClient = new SSMClient()
+  const ssmClient = new SSMClient({ region: 'us-east-1' })
 
   try {
     const command = new GetParameterCommand({ Name: dynamoTableName })
@@ -67,7 +67,7 @@ export async function backfillEventIds() {
   const writeLimit = 1000
   const dynamoTableName = '/RemixGcnProduction/tables/circulars'
   const TableName = await getTableNameFromSSM(dynamoTableName)
-  const client = new DynamoDBClient()
+  const client = new DynamoDBClient({ region: 'us-east-1' })
   const pages = paginateScan({ client }, { TableName })
   let totalWriteCount = 0
   let limitHit = false
