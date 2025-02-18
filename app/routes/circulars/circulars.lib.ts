@@ -195,6 +195,7 @@ export const validSubjectKeywords = [
   'SGR',
   'Super-Kamiokande',
   'Suzaku',
+  'SVOM',
   'Swift',
   'transient',
   'VLA',
