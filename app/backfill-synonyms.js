@@ -7,7 +7,7 @@ import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
 import { BatchWriteCommand } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { slug } from 'github-slugger'
-import chunk from 'lodash/chunk'
+import chunk from 'lodash/chunk.js'
 
 async function getTableNameFromSSM(dynamoTableName) {
   const ssmClient = new SSMClient({ region: 'us-east-1' })
