@@ -3,15 +3,10 @@ import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
 import { BatchWriteCommand } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { slug } from 'github-slugger'
-
-function* chunks(arr, n) {
-  for (let i = 0; i < arr.length; i += n) {
-    yield arr.slice(i, i + n)
-  }
-}
+import chunk from 'lodash/chunk'
 
 async function getTableNameFromSSM(dynamoTableName) {
-  const ssmClient = new SSMClient({ region: 'us-east-1' })
+  const ssmClient = new SSMClient()
 
   try {
     const command = new GetParameterCommand({ Name: dynamoTableName })
@@ -33,11 +28,11 @@ export async function backfillSlugsOnSynonyms() {
   console.log('Starting SYNONYM SLUG backfill... ', startTime)
   const dynamoTableName = '/RemixGcnProduction/tables/synonyms'
   const TableName = await getTableNameFromSSM(dynamoTableName)
-  const client = new DynamoDBClient({ region: 'us-east-1' })
+  const client = new DynamoDBClient()
   const pages = paginateScan({ client }, { TableName })
 
   for await (const page of pages) {
-    const chunked = [...chunks(page.Items || [], 25)]
+    const chunked = chunk(page.Items || [], 25)
     const synonymsToUpdate = []
     for (const chunk of chunked) {
       for (const record of chunk) {
