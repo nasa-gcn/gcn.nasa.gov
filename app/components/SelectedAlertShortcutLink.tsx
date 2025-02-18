@@ -4,7 +4,7 @@ import {
   JsonNoticeTypes,
   NoticeTypes,
 } from './NoticeTypeCheckboxes/NoticeTypeCheckboxes'
-import { WithCredentials } from '~/root'
+import { WithCredentials, useEmail } from '~/root'
 
 export default function SelectedAlertShortcutLink({
   alertKey,
@@ -17,6 +17,9 @@ export default function SelectedAlertShortcutLink({
   destination: 'quickstart' | 'email'
   otherAlerts?: string[] // Alerts specifically under the 'Other' tab, since they can't be generically selected as all
 }) {
+  const userCredentials = WithCredentials()
+  const userEmail = useEmail()
+
   const selectedAlerts =
     alertKey == 'Other'
       ? otherAlerts?.map((alert) => `&alerts=${alert}`).join('')
@@ -29,9 +32,21 @@ export default function SelectedAlertShortcutLink({
       ? `/quickstart/alerts?clientId=${WithCredentials()}&format=${format}${selectedAlerts}`
       : `/user/email/edit?format=${format}${selectedAlerts}`
 
-  return (
-    <Link to={`${baseUrl}&format=${format}${selectedAlerts}`}>
-      {destination === 'quickstart' ? 'Kafka Stream' : 'Email'}
-    </Link>
-  )
+  if (destination == 'email') {
+    return userEmail ? (
+      <Link to={`${baseUrl}&format=${format}${selectedAlerts}`}>Email</Link>
+    ) : (
+      'Login to subscribe'
+    )
+  } else {
+    return userCredentials ? (
+      <Link to={`${baseUrl}&format=${format}${selectedAlerts}`}>
+        Kafka Stream
+      </Link>
+    ) : userEmail ? (
+      <Link to="/user/credentials/edit">Generate Credentials</Link>
+    ) : (
+      'Login to stream'
+    )
+  }
 }
