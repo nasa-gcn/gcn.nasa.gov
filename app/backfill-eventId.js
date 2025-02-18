@@ -2,7 +2,7 @@ import { DynamoDBClient, paginateScan } from '@aws-sdk/client-dynamodb'
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
 import { BatchWriteCommand } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
-import chunk from 'lodash/chunk'
+import chunk from 'lodash/chunk.js'
 
 // THIS CODE IS CUT AND PASTED FROM THE APP CODE IN /routes/circulars/circulars.lib.ts
 // running as a node script it would not import the module from the file
