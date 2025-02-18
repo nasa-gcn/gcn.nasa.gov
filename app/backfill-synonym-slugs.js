@@ -6,7 +6,7 @@ import { slug } from 'github-slugger'
 import chunk from 'lodash/chunk'
 
 async function getTableNameFromSSM(dynamoTableName) {
-  const ssmClient = new SSMClient()
+  const ssmClient = new SSMClient({ region: 'us-east-1' })
 
   try {
     const command = new GetParameterCommand({ Name: dynamoTableName })
@@ -28,7 +28,7 @@ export async function backfillSlugsOnSynonyms() {
   console.log('Starting SYNONYM SLUG backfill... ', startTime)
   const dynamoTableName = '/RemixGcnProduction/tables/synonyms'
   const TableName = await getTableNameFromSSM(dynamoTableName)
-  const client = new DynamoDBClient()
+  const client = new DynamoDBClient({ region: 'us-east-1' })
   const pages = paginateScan({ client }, { TableName })
 
   for await (const page of pages) {
