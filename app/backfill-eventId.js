@@ -2,6 +2,7 @@ import { DynamoDBClient, paginateScan } from '@aws-sdk/client-dynamodb'
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
 import { BatchWriteCommand } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
+import chunk from 'lodash/chunk'
 
 // THIS CODE IS CUT AND PASTED FROM THE APP CODE IN /routes/circulars/circulars.lib.ts
 // running as a node script it would not import the module from the file
@@ -27,6 +28,7 @@ const subjectMatchers = [
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
   ],
   [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id}`],
+  [/FRB[.\s_-]*(\d{8}[a-z])/i, ([, id]) => `FRB ${id}`.toUpperCase()],
 ]
 
 export function parseEventFromSubject(value) {
@@ -41,14 +43,8 @@ export function parseEventFromSubject(value) {
 }
 // END CUT AND PASTE OF APP CODE FROM /routes/circulars/circulars.lib.ts
 
-function* chunks(arr, n) {
-  for (let i = 0; i < arr.length; i += n) {
-    yield arr.slice(i, i + n)
-  }
-}
-
 async function getTableNameFromSSM(dynamoTableName) {
-  const ssmClient = new SSMClient({ region: 'us-east-1' })
+  const ssmClient = new SSMClient()
 
   try {
     const command = new GetParameterCommand({ Name: dynamoTableName })
@@ -71,14 +67,14 @@ export async function backfillEventIds() {
   const writeLimit = 1000
   const dynamoTableName = '/RemixGcnProduction/tables/circulars'
   const TableName = await getTableNameFromSSM(dynamoTableName)
-  const client = new DynamoDBClient({ region: 'us-east-1' })
+  const client = new DynamoDBClient()
   const pages = paginateScan({ client }, { TableName })
   let totalWriteCount = 0
   let limitHit = false
 
   for await (const page of pages) {
     if (limitHit) break
-    const chunked = [...chunks(page.Items || [], 25)]
+    const chunked = chunk(page.Items || [], 25)
 
     for (const chunk of chunked) {
       if (limitHit) break
