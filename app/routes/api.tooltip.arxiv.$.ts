@@ -26,7 +26,7 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
     .parseFromString(text, 'text/xml')
     .getElementsByTagName('entry')[0]
 
-  // If arXiv does not find the article, then it still returns an entyr,
+  // If arXiv does not find the article, then it still returns an entry,
   // although the entry does not contain much. If the id field is missing, then
   // we report that it was not found.
   if (!entry.getElementsByTagName('id').length) {

@@ -12,14 +12,14 @@ import {
   Grid,
 } from '@trussworks/react-uswds'
 
-import { SendAnnouncmentButton } from '../news/components'
-import gcnteam from './AAS243_booth.jpg'
+import { SendAnnouncementButton } from '../news/components'
+import teamPhoto from './AAS243_booth.jpg'
 import { Anchor } from '~/components/Anchor'
 
 <Grid row>
   <h1 className="grid-col-fill">GCN News and Events</h1>
   <div className="grid-col-auto">
-    <SendAnnouncmentButton />
+    <SendAnnouncementButton />
   </div>
 </Grid>
 
@@ -48,7 +48,7 @@ import { Anchor } from '~/components/Anchor'
           </div>
           <div className="grid-col-auto">
             <img
-              src={gcnteam}
+              src={teamPhoto}
               alt="GCN Booth at AAS 243"
               width="180"
               height="220"
@@ -99,7 +99,7 @@ import { Anchor } from '~/components/Anchor'
         - Due to planned network maintenance at GSFC, the connections to GCN Classic will have intermittent loss of network connectivity on Friday, October 18 from 7 pm ET (23:00 UTC) until 11 pm ET (3:00 UTC October 19). This affects the following GCN services:
           - GCN Classic Notices distribution via socket, VOEvent, and email
           - GCN Classic Notices web site archive
-          - GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email, however JSON-format Notices distrbution via GCN Kafka will be unaffected
+          - GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email, however JSON-format Notices distribution via GCN Kafka will be unaffected
           - Forwarding of GCN Circulars submitted to gcncirc@capella2.gsfc.nasa.gov, however submission to circulars@gcn.nasa.gov and the [web form](/circulars) will be unaffected.
         - **Schema v4.2.0** includes the following update:
           - `id` property (from the Event core schema) added to [IceCube lvk_nu_track_search notices](https://gcn.nasa.gov/docs/schema/v4.2.0/gcn/notices/icecube/lvk_nu_track_search.schema.json).
@@ -198,7 +198,7 @@ import { Anchor } from '~/components/Anchor'
         [**Swift-BAT/GUANO:**](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) gcn.notices.swift.bat.guano
 
         - *Summary:* GUANO is a ground-based analysis of data from Swift BAT, significantly enhancing the sensitivity and sky area covered as compared to Swift's onboard triggering.
-        - *Occurence Rate:* The Swift/BAT-GUANO notices occur at a rate of 50 times per year.
+        - *Occurrence Rate:* The Swift/BAT-GUANO notices occur at a rate of 50 times per year.
         - *Time Delay:* The post-event processing and communication of alert is distributed to GCN within 10 minutes to 5 hours of detection, depending on data downlink method and space-to-ground communications resource availability.
         - *Notice Type:* The new [Swift/BAT-GUANO notice type](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) (gcn.notices.swift.bat.guano) provides timestamps, sky locations, durations, and other supplementary information on gamma-ray transients discovered through this system, to enable prompt follow-up by observers and other instruments.  The 'initial' notice distributed for any detection will not include localization information. In the majority of cases later 'update' notices will follow with a localization attached. ~1/4 of GUANO bursts will have arcminute-scale localizations, distributed in the form [RA, Dec, Error] the remainder will be more poorly localized and may be distributed as HEALPix maps.
 

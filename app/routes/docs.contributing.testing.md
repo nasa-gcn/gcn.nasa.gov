@@ -33,7 +33,7 @@ To start the recording browser, run the following command:
 npx playwright codegen localhost:3333
 ```
 
-See the [Playwright codegen intro](https://playwright.dev/docs/codegen-intro) for more infomation on codegen.
+See the [Playwright codegen intro](https://playwright.dev/docs/codegen-intro) for more information on codegen.
 
 ## Guidelines
 

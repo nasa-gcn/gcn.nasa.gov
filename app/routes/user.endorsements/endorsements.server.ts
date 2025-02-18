@@ -215,7 +215,7 @@ export class EndorsementsServer {
 
     const promiseArray: Promise<void>[] = []
 
-    let requestorMessage = `You are receiving this email because the status of your peer endorsment requested from ${this.#currentUserEmail} has been updated to ${status}.`
+    let requestorMessage = `You are receiving this email because the status of your peer endorsement requested from ${this.#currentUserEmail} has been updated to ${status}.`
 
     if (status === 'approved') {
       promiseArray.push(
