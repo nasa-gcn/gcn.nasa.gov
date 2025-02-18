@@ -7,15 +7,10 @@ import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
 import { BatchWriteCommand } from '@aws-sdk/lib-dynamodb'
 import { unmarshall } from '@aws-sdk/util-dynamodb'
 import { slug } from 'github-slugger'
-
-function* chunks(arr, n) {
-  for (let i = 0; i < arr.length; i += n) {
-    yield arr.slice(i, i + n)
-  }
-}
+import chunk from 'lodash/chunk'
 
 async function getTableNameFromSSM(dynamoTableName) {
-  const ssmClient = new SSMClient({ region: 'us-east-1' })
+  const ssmClient = new SSMClient()
 
   try {
     const command = new GetParameterCommand({ Name: dynamoTableName })
@@ -47,7 +42,7 @@ export async function backfillSynonyms() {
   for await (const page of pages) {
     pageCount += 1
     console.log(`Page ${pageCount} of ${pages.length}`)
-    const chunked = [...chunks(page.Items || [], 25)]
+    const chunked = chunk(page.Items || [], 25)
     for (const chunk of chunked) {
       const eventsToCheck = []
       const existingEventIds = []
