@@ -84,6 +84,7 @@
   "devDependencies": {
     "@architect/architect": "^11.1.0",
     "@architect/plugin-lambda-invoker": "^2.0.1",
+    "@architect/sandbox": "github:lpsinger/sandbox#nasa-gcn",
     "@architect/utils": "^4.0.6",
     "@aws-sdk/client-cognito-identity-provider": "3.632.0",
     "@aws-sdk/client-dynamodb": "3.632.0",
@@ -96,6 +97,7 @@
     "@babel/preset-env": "^7.26.0",
     "@babel/preset-typescript": "^7.26.0",
     "@gitlab/svgs": "^3.83.0",
+    "@nasa-gcn/architect-plugin-dynamodb-local": "^0.0.8",
     "@nasa-gcn/architect-plugin-search": "^1.5.0",
     "@nasa-gcn/eslint-config-gitignore": "^0.0.2",
     "@playwright/test": "^1.49.0",

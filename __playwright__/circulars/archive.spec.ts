@@ -66,6 +66,7 @@ test.describe('Circulars archive page', () => {
   }) => {
     // This highlights the search returns limited results because it is looking for exact matches to the string
     // This should return many more results and include strings like 230812B
+    test.slow()
     await page.goto('/circulars?query=230812')
     const orderedListLocator = page.locator('ol')
     const listItemLocator = orderedListLocator.locator('li')
