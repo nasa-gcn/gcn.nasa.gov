@@ -229,7 +229,8 @@ export function NoticeTypeCheckboxes({
   if (useFeature('SVOM_QUICKSTART')) {
     JsonNoticeTypes.SVOM = ['gcn.notices.svom']
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
-
+  }
+  if (useFeature('SVOM')) {
     if (selectedFormat == 'voevent') {
       NoticeTypes['SVOM'] = [
         'gcn.notices.svom.voevent.grm',
