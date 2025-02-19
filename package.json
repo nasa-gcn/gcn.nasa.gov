@@ -27,6 +27,7 @@
   "dependencies": {
     "@architect/functions": "^5.3.4",
     "@nasa-gcn/architect-functions-search": "^1.0.1",
+    "@nasa-gcn/architect-plugin-dynamodb-local": "^1.0.0",
     "@nasa-gcn/dynamodb-autoincrement": "^2.2.1",
     "@nasa-gcn/remark-rehype-astro": "^1.1.4",
     "@nasa-gcn/remix-seo": "^2.0.1",
@@ -39,6 +40,7 @@
     "@remix-run/react": "~2.15.3",
     "@trussworks/react-uswds": "github:lpsinger/react-uswds#gcn",
     "@xmldom/xmldom": "^0.9.7",
+    "architect-plugin-dynamodb-local-streams": "file:../architect-plugin-dynamodb-local-streams",
     "aws-lambda-ses-forwarder": "^6.0.0",
     "classnames": "^2.5.1",
     "color-convert": "^2.0.1",
