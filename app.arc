@@ -165,6 +165,9 @@ dedicatedMasterType t3.small.search
 autoSoftwareUpdateEnabled true
 offPeakWindowEnabled true
 
+@dynamodb-local
+seedFile seed.json
+
 @plugins
 plugin-remix
 sandbox-oidc-idp  # Sandbox identity provider
@@ -174,4 +177,4 @@ mission-cloud-platform  # Custom permissions for deployment on Mission Cloud Pla
 email-outgoing  # Grant the Lambda function permission to send email; add email templates.
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
-architect/plugin-lambda-invoker
+nasa-gcn/architect-plugin-dynamodb-local
