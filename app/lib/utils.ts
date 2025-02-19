@@ -11,7 +11,7 @@ export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
 ) {
-  return noticeFormat == 'json'
+  return noticeFormat == 'json' || noticeType.startsWith('gcn.notices')
     ? noticeType
     : `gcn.classic.${noticeFormat}.${noticeType}`
 }

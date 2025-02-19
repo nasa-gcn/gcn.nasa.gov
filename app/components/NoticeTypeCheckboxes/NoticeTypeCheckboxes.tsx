@@ -44,7 +44,7 @@ function humanizedRate(rate: number, singular: string, plural?: string) {
   return `${isUpperBound ? '< ' : ''}${humanizedCount(Math.round(rate), singular, plural)} per ${unit}`
 }
 
-const NoticeTypes = {
+const NoticeTypes: { [key: string]: string[] } = {
   AGILE: [
     'AGILE_GRB_GROUND',
     'AGILE_GRB_POS_TEST',
@@ -229,6 +229,14 @@ export function NoticeTypeCheckboxes({
   if (useFeature('SVOM_QUICKSTART')) {
     JsonNoticeTypes.SVOM = ['gcn.notices.svom']
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
+
+    if (selectedFormat == 'voevent') {
+      NoticeTypes['SVOM'] = [
+        'gcn.notices.svom.voevent.grm',
+        'gcn.notices.svom.voevent.eclairs',
+        'gcn.notices.svom.voevent.mxt',
+      ]
+    }
   }
 
   if (useFeature('FERMI_GBM_QUICKSTART')) {
