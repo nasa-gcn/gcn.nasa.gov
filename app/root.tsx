@@ -247,10 +247,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Planned Retirement of VOEvent Brokers. See{' '}
+          New SVOM Notices, Planned Retirement of VOEvent Brokers. See{' '}
           <Link
             className="usa-link"
-            to="/news#-planned-retirement-of-voevent-brokers-"
+            to="/news#new-svom-notices-retirement-of-voevent-brokers-"
           >
             news and announcements
           </Link>
