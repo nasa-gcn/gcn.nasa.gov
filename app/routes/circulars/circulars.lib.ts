@@ -72,6 +72,7 @@ const subjectMatchers: SubjectMatcher[] = [
   ],
   [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id}`],
   [/FRB[.\s_-]*(\d{8}[a-z])/i, ([, id]) => `FRB ${id}`.toUpperCase()],
+  [/sb[.\s_-]*(\d{8})/i, ([, id]) => `sb${id}`],
 ]
 
 /** Format a Circular as plain text. */
