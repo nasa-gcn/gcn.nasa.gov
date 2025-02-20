@@ -73,6 +73,7 @@ describe('parseEventFromSubject', () => {
   const ztfEvent = 'ZTF23aabmzlp'
   const epEvent = 'EP241119a'
   const frbEvent = 'FRB 20250206A'
+  const svomEvent = 'sb25021804'
 
   test('handles nonsense subject cases', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
@@ -621,6 +622,56 @@ describe('parseEventFromSubject', () => {
       const frbSubjectWithHyphen =
         'MASTER observations: FRB-20250206A and possible mother galaxy'
       expect(parseEventFromSubject(frbSubjectWithHyphen)).toBe(frbEvent)
+    })
+  })
+
+  describe('SVOM', () => {
+    test('handles SVOM event names', () => {
+      const svomSubject =
+        'SVOM/sb25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubject)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names in misc positions', () => {
+      const svomSubjectWithNoSpace =
+        'SVOM detection: SVOM/sb25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithNoSpace)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names with space', () => {
+      const svomSubjectWithSpace =
+        'SVOM/sb 25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithSpace)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names with spaces in misc positions', () => {
+      const svomSubjectWithSpace =
+        'SVOM detection: SVOM/sb25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithSpace)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event name with an underscore', () => {
+      const svomSubjectWithUnderscore =
+        'SVOM/sb_25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithUnderscore)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names with an underscore in misc positions', () => {
+      const svomSubjectWithUnderscore =
+        'SVOM detection: SVOM/sb25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithUnderscore)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event name with a hyphen', () => {
+      const svomSubjectWithHyphen =
+        'SVOM/sb-25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithHyphen)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event name with a hyphen in misc positions', () => {
+      const svomSubjectWithHyphen =
+        'SVOM detection: SVOM/sb-25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithHyphen)).toBe(svomEvent)
     })
   })
 })
