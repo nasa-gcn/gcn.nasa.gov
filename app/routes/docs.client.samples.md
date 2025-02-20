@@ -204,7 +204,7 @@ for message in consumer.consume(timeout=1):
 
 ## Decoding Embedded Data
 
-Some GCN notices include HEALPix sky maps encoded in `base64`.
+Some GCN notices include HEALPix sky maps encoded in base64.
 The following code demonstrates how to extract, decode, and save the HEALPix data as a `.fits` file from a received notice. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` method to simplify the decoding process.
 
 ```python
