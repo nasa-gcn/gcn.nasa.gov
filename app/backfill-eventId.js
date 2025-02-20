@@ -7,7 +7,7 @@ import chunk from 'lodash/chunk.js'
 // THIS CODE IS CUT AND PASTED FROM THE APP CODE IN /routes/circulars/circulars.lib.ts
 // running as a node script it would not import the module from the file
 const subjectMatchers = [
-  [/GRB[.\s_-]*(\d{6}[a-z|.]?\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [/GRB[.\s_-]*(\d{6}[a-z|.]?\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`], // THIS ONE IS INTENTIONALLY DIFFERENT THAN APP CODE!
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [
     /SGR[.\s_-]*Swift[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i,
