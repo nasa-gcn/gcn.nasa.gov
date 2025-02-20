@@ -54,7 +54,7 @@ async function getTableNameFromSSM(dynamoTableName) {
 export async function backfillEventIds() {
   const startTime = new Date()
   console.log('Starting EVENT ID backfill...', startTime)
-  const writeLimit = 10
+  const writeLimit = 10 // This is adjustable and depends on what Judy decides the limit should be.
   const dynamoTableName = '/RemixGcnProduction/tables/circulars'
   const TableName = await getTableNameFromSSM(dynamoTableName)
   const client = new DynamoDBClient({ region: 'us-east-1' })
@@ -118,6 +118,9 @@ export async function backfillEventIds() {
         })
 
         await client.send(command)
+        // update total write count once this chunk has written
+        // this allows us to keep track of the total number of writes
+        // so we can stay under the limit.
         totalWriteCount = writes.length + totalWriteCount
       }
     }
