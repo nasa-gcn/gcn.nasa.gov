@@ -82,11 +82,9 @@ export default function () {
               <NavLink key="sksn" to="sksn">
                 Super-Kamiokande
               </NavLink>,
-              useFeature('SVOM') && (
-                <NavLink key="svom" to="svom">
-                  SVOM
-                </NavLink>
-              ),
+              <NavLink key="svom" to="svom">
+                SVOM
+              </NavLink>,
             ]}
           />
         </div>

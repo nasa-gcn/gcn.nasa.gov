@@ -230,14 +230,12 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypes.SVOM = ['gcn.notices.svom']
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
   }
-  if (useFeature('SVOM')) {
-    if (selectedFormat == 'voevent') {
-      NoticeTypes['SVOM'] = [
-        'gcn.notices.svom.voevent.grm',
-        'gcn.notices.svom.voevent.eclairs',
-        'gcn.notices.svom.voevent.mxt',
-      ]
-    }
+  if (selectedFormat == 'voevent') {
+    NoticeTypes['SVOM'] = [
+      'gcn.notices.svom.voevent.grm',
+      'gcn.notices.svom.voevent.eclairs',
+      'gcn.notices.svom.voevent.mxt',
+    ]
   }
 
   if (useFeature('FERMI_GBM_QUICKSTART')) {
