@@ -239,7 +239,7 @@ If you want to include a FITS file in a Notice, add a property to your schema de
 }
 ```
 
-JSON Schema supports embedding non-JSON media within strings using the `contentMediaType` and `contentEncoding`, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
+JSON Schema supports embedding non-Unicode media within strings using the `contentMediaType` and `contentEncoding`, which enable the distribution of diverse data types. For further details, refer to [non-JSON data](https://json-schema.org/understanding-json-schema/reference/non_json_data.html).
 
 ## Encoding Embedded Data
 
