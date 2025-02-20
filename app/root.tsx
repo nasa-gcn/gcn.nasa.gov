@@ -247,10 +247,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          GCN at AAS 245, Legacy Circulars Address Retirement. See{' '}
+          Planned Retirement of VOEvent Brokers. See{' '}
           <Link
             className="usa-link"
-            to="/news#--gcn-at-aas-245-legacy-circulars-address-retirement"
+            to="/news#-planned-retirement-of-voevent-brokers-"
           >
             news and announcements
           </Link>
