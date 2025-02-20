@@ -230,14 +230,17 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypes.SVOM = ['gcn.notices.svom']
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
   }
-  if (useFeature('SVOM')) {
-    if (selectedFormat == 'voevent') {
-      NoticeTypes['SVOM'] = [
-        'gcn.notices.svom.voevent.grm',
-        'gcn.notices.svom.voevent.eclairs',
-        'gcn.notices.svom.voevent.mxt',
-      ]
-    }
+
+  const displayNoticeTypes: { [key: string]: string[] } = {
+    ...NoticeTypes,
+  }
+
+  if (selectedFormat == 'voevent') {
+    displayNoticeTypes['SVOM'] = [
+      'gcn.notices.svom.voevent.grm',
+      'gcn.notices.svom.voevent.eclairs',
+      'gcn.notices.svom.voevent.mxt',
+    ]
   }
 
   if (useFeature('FERMI_GBM_QUICKSTART')) {
@@ -294,7 +297,7 @@ export function NoticeTypeCheckboxes({
       <NestedCheckboxes
         key={selectedFormat}
         nodes={Object.entries(
-          selectedFormat == 'json' ? JsonNoticeTypes : NoticeTypes
+          selectedFormat == 'json' ? JsonNoticeTypes : displayNoticeTypes
         ).map(([mission, noticeTypes]) => ({
           id: mission,
           label: mission,
