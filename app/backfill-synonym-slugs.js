@@ -7,20 +7,9 @@ import chunk from 'lodash/chunk.js'
 
 async function getTableNameFromSSM(dynamoTableName) {
   const ssmClient = new SSMClient({ region: 'us-east-1' })
-
-  try {
-    const command = new GetParameterCommand({ Name: dynamoTableName })
-    const response = await ssmClient.send(command)
-
-    if (!response.Parameter?.Value) {
-      throw new Error('dynamoTableName not found in SSM')
-    }
-
-    return response.Parameter.Value
-  } catch (error) {
-    console.error('Error fetching table name from SSM:', error)
-    throw error
-  }
+  const command = new GetParameterCommand({ Name: dynamoTableName })
+  const response = await ssmClient.send(command)
+  return response.Parameter.Value
 }
 
 export async function backfillSlugsOnSynonyms() {
@@ -29,18 +18,28 @@ export async function backfillSlugsOnSynonyms() {
   const dynamoTableName = '/RemixGcnProduction/tables/synonyms'
   const TableName = await getTableNameFromSSM(dynamoTableName)
   const client = new DynamoDBClient({ region: 'us-east-1' })
-  const pages = paginateScan({ client }, { TableName })
 
+  // get synonyms without slugs
+  const pages = paginateScan(
+    { client },
+    { TableName, FilterExpression: 'attribute_not_exists(slug)' }
+  )
+
+  // results are async paginated, go through each page
   for await (const page of pages) {
     const chunked = chunk(page.Items || [], 25)
     const synonymsToUpdate = []
+    // batch write needs 25 or less items, loop through pages in chunks of 25
     for (const chunk of chunked) {
+      // each chunk has 25 records, loop through and process records
       for (const record of chunk) {
         const synonym = unmarshall(record)
+        // if there's not a slug, which there shouldn't be, add one and put it in the update queue
         if (!synonym.slug) {
           synonymsToUpdate.push(synonym)
         }
       }
+      // if there are any to update, update them. 25 item limit.
       if (synonymsToUpdate.length > 0) {
         const command = new BatchWriteCommand({
           RequestItems: {
