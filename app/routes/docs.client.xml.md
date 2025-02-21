@@ -3,7 +3,7 @@ handle:
   breadcrumb: XML
 ---
 
-## XML Data
+# XML Data
 
 Here is a collection of functions and example code that may be useful when working with XML Notices.
 This guide provides essential functions to parse XML alerts into dictionaries and structured data formats using Python.
