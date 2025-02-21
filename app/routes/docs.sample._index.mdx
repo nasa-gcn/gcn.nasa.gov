@@ -1,0 +1,30 @@
+---
+handle:
+  breadcrumb: Sample Code
+---
+
+# Apache Kafka and GCN Streaming
+
+[Apache Kafka](https://kafka.apache.org) is an open-source distributed event streaming platform used by GCN to stream Notices and Circulars in real time.
+
+
+## GCN Notices Formats and Distributions
+
+GCN Notices provide real-time machine readable alerts and are distributed in different formats:
+
+- New GCN Notices are provided in JSON format and are streamed via Kafka. Note that SVOM notices are only available via VOEvent over Kafka and email.
+- GCN Classic Notices are provided in text, binary and VOEvent XML, and are distributed both via Kafka and email.
+
+## Sample Code
+
+Here is a collection of functions and example code that may be useful
+when working with GCN Notices. This sample code demonstrates how to handle GCN Notices in both JSON and VOEvent XML formats, and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
+
+### The following sections provide guidance on handling different GCN Notices formats:
+
+- [Kafka Usage](sample/kafka) explains Kafka's functionality
+- [XML Data](sample/xml) guides users for working with XML Notices
+- [JSON Data](sample/json) provides sample code for handling JSON-based Notices
+- [HEALPix](sample/healpix) explains how to work with HEALPix sky maps
+
+To contribute your own sample code, make a GitHub pull request to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.sample._index.mdx), or [contact us](/contact).
