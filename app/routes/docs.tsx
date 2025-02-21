@@ -162,7 +162,16 @@ export default function () {
                       Java
                     </Link>,
                     <NavLink key="code-samples" to="client/samples">
-                      Sample Code
+                      Kafka Messages
+                    </NavLink>,
+                    <NavLink key="code-samples" to="client/xml">
+                      XML
+                    </NavLink>,
+                    <NavLink key="code-samples" to="client/json">
+                      JSON
+                    </NavLink>,
+                    <NavLink key="code-samples" to="client/healpix">
+                      HEALPix
                     </NavLink>,
                   ]}
                 />
