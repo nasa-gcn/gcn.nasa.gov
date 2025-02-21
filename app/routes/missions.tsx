@@ -8,7 +8,7 @@
 import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
-import { SideNav } from '~/components/SideNav'
+import { SideNav, SideNavSub } from '~/components/SideNav'
 import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -85,6 +85,22 @@ export default function () {
               <NavLink key="svom" to="svom">
                 SVOM
               </NavLink>,
+              <>
+                <NavLink key="archival" to="archival">
+                  Archival
+                </NavLink>
+                <SideNavSub
+                  base="archival"
+                  items={[
+                    <NavLink key="agile" to="archival/agile">
+                      AGILE
+                    </NavLink>,
+                    <NavLink key="burstcube" to="archival/burstcube">
+                      BurstCube
+                    </NavLink>,
+                  ]}
+                />
+              </>,
             ]}
           />
         </div>
