@@ -136,11 +136,11 @@ List of core schema to include fields from. [Browse the core schema](/docs/schem
 
 Mapping of custom, mission-specific fields. The first property, `'$schema: { type: "string", format: "uri" }'`, must be included when using `'unevaluatedProperties': false`, otherwise the inclusion of the `$schema` property in your example files will cause validation to fail. Field names should use [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each entry should at least have a description and a type. See the [list of available data types](https://json-schema.org/understanding-json-schema/reference/type.html).
 
-We encourage designing the new Notices schema with a minimal number of Kafka topics, preferably one schema per instrument; however, exceptions may be made when necessary. For cases where a single schema produces multiple types of notices, please include a `notice_type` field defined as an enumeration and design the enum list according to your requirements. For example, in space missions, the enum might include values such as ground and flight for distinct notice types.
+We recommend designing the new Notices schema with a minimal number of Kafka topics, preferably one schema per instrument; however, exceptions may be made when necessary. For cases where a single schema produces multiple types of notices, please include a `notice_type` field defined as an enumeration and design the enum list according to your requirements. For example, in space missions, the enum might include values such as ground and flight for distinct notice types.
 
 ## Extended Example
 
-We recommend exploring our [schema browser](/docs/schema/stable/gcn/notices) and [GitHub repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices) for more examples. Here is an extended example from Swift/BAT-GUANO:
+We encourage exploring our [schema browser](/docs/schema/stable/gcn/notices) and [GitHub repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices) for more examples. Here is an extended example from Swift/BAT-GUANO:
 
 <Tabs>
   <Tab label="guano.schema.json">
