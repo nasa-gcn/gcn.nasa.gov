@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: HEALPix Maps
+  breadcrumb: HEALPix
 ---
 
 ## HEALPix Sky Maps

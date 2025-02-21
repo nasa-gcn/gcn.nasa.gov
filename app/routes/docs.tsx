@@ -171,7 +171,7 @@ export default function () {
                       JSON
                     </NavLink>,
                     <NavLink key="code-samples" to="client/healpix">
-                      HEALPix Maps
+                      HEALPix
                     </NavLink>,
                   ]}
                 />
