@@ -170,9 +170,10 @@ export async function search({
   const queryObj = query
     ? feature('CIRCULARS_LUCENE')
       ? {
-          simple_query_string: {
+          query_string: {
             query,
             fields: ['submitter', 'subject', 'body'],
+            lenient: true,
           },
         }
       : {
