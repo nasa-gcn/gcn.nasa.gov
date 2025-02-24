@@ -35,7 +35,7 @@ export async function action({ request }: ActionFunctionArgs) {
             sub: x.Attributes?.find((x) => x.Name == 'sub')?.Value,
             email: x.Attributes?.find((x) => x.Name == 'email')?.Value ?? '',
             name: x.Attributes?.find((x) => x.Name == 'name')?.Value,
-            affiliation: x.Attributes?.find((x) => x.Name == 'affilitation')
+            affiliation: x.Attributes?.find((x) => x.Name == 'affiliation')
               ?.Value,
           }
         })
