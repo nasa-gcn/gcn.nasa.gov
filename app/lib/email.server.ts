@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { services } from '@architect/functions'
-// import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
 import type {
   BulkEmailEntry,
   SendBulkEmailCommandInput,
