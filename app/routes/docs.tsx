@@ -172,15 +172,15 @@ export default function () {
                   base="sample"
                   key="sample-sub"
                   items={[
-                    <Link key="xml" to="sample/xml">
+                    <NavLink key="xml" to="sample/xml">
                       XML
-                    </Link>,
-                    <Link key="json" to="sample/json">
+                    </NavLink>,
+                    <NavLink key="json" to="sample/json">
                       JSON
-                    </Link>,
-                    <Link key="healpix" to="sample/healpix">
+                    </NavLink>,
+                    <NavLink key="healpix" to="sample/healpix">
                       HEALPix
-                    </Link>,
+                    </NavLink>,
                   ]}
                 />
               </>,
