@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { services } from '@architect/functions'
-import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
+// import type { CognitoIdentityProviderServiceException } from '@aws-sdk/client-cognito-identity-provider'
 import type {
   BulkEmailEntry,
   SendBulkEmailCommandInput,
@@ -80,16 +80,13 @@ async function send(sendCommandInput: SendEmailCommandInput) {
   }
 }
 
-// Refactor Me, copied from COgnito server
 function maybeThrow(e: any, warning: string) {
   const errorsAllowedInDev = [
     'ExpiredTokenException',
     'NotAuthorizedException',
     'UnrecognizedClientException',
   ]
-  const { name } = e as
-    | CognitoIdentityProviderServiceException
-    | SESv2ServiceException
+  const { name } = e as SESv2ServiceException
 
   if (
     !errorsAllowedInDev.includes(name) ||
@@ -98,7 +95,7 @@ function maybeThrow(e: any, warning: string) {
     throw e
   } else {
     console.warn(
-      `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+      `SES threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
     )
   }
 }
@@ -147,7 +144,7 @@ export async function sendEmailBulk({
           new SendBulkEmailCommand({ BulkEmailEntries, ...message })
         )
       } catch (e) {
-        maybeThrow(e, 'Email pain dont commit me')
+        maybeThrow(e, 'email will not be sent')
       }
     })
   )
