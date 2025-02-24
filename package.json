@@ -108,7 +108,7 @@
     "@types/diff": "^6.0.0",
     "@types/grecaptcha": "^3.0.6",
     "@types/jest": "^29.5.14",
-    "@types/lodash": "^4.17.14",
+    "@types/lodash": "^4.17.15",
     "@types/lucene": "^2.1.7",
     "@types/mailparser": "^3.4.1",
     "@types/mdast": "^4.0.4",
