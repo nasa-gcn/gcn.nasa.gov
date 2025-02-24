@@ -178,4 +178,4 @@ email-outgoing  # Grant the Lambda function permission to send email; add email 
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-dynamodb-local
-architect-plugin-dynamodb-local-streams
+nasa-gcn/architect-plugin-dynamodb-local-streams
