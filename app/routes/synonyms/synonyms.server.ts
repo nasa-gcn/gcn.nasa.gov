@@ -10,6 +10,7 @@ import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
 import { slug } from 'github-slugger'
+import { orderBy } from 'lodash'
 
 import type { Circular } from '../circulars/circulars.lib'
 import type {
@@ -94,6 +95,13 @@ export async function searchSynonymsByEventId({
     size: limit,
     body: {
       query,
+      sort: [
+        {
+          initialDate: {
+            order: 'desc',
+          },
+        },
+      ],
     },
   })
 
@@ -103,7 +111,12 @@ export async function searchSynonymsByEventId({
       _source: body,
     }: {
       _source: SynonymGroup
-      fields: { eventIds: string[]; synonymId: string; slugs: string[] }
+      fields: {
+        eventIds: string[]
+        synonymId: string
+        slugs: string[]
+        initialDate: number
+      }
     }) => body
   )
   return {
@@ -112,19 +125,6 @@ export async function searchSynonymsByEventId({
     totalPages,
     page,
   }
-}
-
-async function validateEventIds({ eventIds }: { eventIds: string[] }) {
-  const promises = eventIds.map((eventId) => {
-    return getSynonymMembers(eventId)
-  })
-
-  const validityResponse = await Promise.all(promises)
-  const filteredResponses = validityResponse.filter((resp) => {
-    return resp.length
-  })
-
-  return filteredResponses.length === eventIds.length
 }
 
 /*
@@ -143,35 +143,43 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
-  const isValid = await validateEventIds({ eventIds: synonymousEventIds })
-  if (!isValid) throw new Response('eventId does not exist', { status: 400 })
+  const writePromises = synonymousEventIds.map(async (eventId) => ({
+    PutRequest: {
+      Item: {
+        synonymId: uuid,
+        eventId,
+        slug: slug(eventId),
+        initialDate: await getOldestDate(eventId),
+      },
+    },
+  }))
+  const writes = await Promise.all(writePromises)
 
   await client.batchWrite({
     RequestItems: {
-      [TableName]: synonymousEventIds.map((eventId) => ({
-        PutRequest: {
-          Item: { synonymId: uuid, eventId, slug: slug(eventId) },
-        },
-      })),
+      [TableName]: writes,
     },
   })
   return uuid
 }
 
-export async function tryInitSynonym(eventId: string) {
+export async function tryInitSynonym(eventId: string, createdOn: number) {
   const db = await tables()
 
   try {
     await db.synonyms.update({
       Key: { eventId },
-      UpdateExpression: 'set #synonymId = :synonymId, #slug = :slug',
+      UpdateExpression:
+        'set #synonymId = :synonymId, #slug = :slug, #initialDate = :initialDate',
       ExpressionAttributeNames: {
         '#synonymId': 'synonymId',
         '#slug': 'slug',
+        '#initialDate': 'initialDate',
       },
       ExpressionAttributeValues: {
         ':synonymId': crypto.randomUUID(),
         ':slug': slug(eventId),
+        ':initialDate': createdOn,
       },
       ConditionExpression: 'attribute_not_exists(eventId)',
     })
@@ -198,30 +206,38 @@ export async function putSynonyms({
   subtractions?: string[]
 }) {
   if (!subtractions?.length && !additions?.length) return
-  if (additions?.length) {
-    const isValid = await validateEventIds({ eventIds: additions })
-    if (!isValid) throw new Response('eventId does not exist', { status: 400 })
-  }
+
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
   const writes = []
   if (subtractions?.length) {
-    const subtraction_writes = subtractions.map((eventId) => ({
+    const subtractionPromises = subtractions.map(async (eventId) => ({
       PutRequest: {
-        Item: { synonymId: crypto.randomUUID(), eventId, slug: slug(eventId) },
+        Item: {
+          synonymId: crypto.randomUUID(),
+          eventId,
+          slug: slug(eventId),
+          initialDate: await getOldestDate(eventId),
+        },
       },
     }))
-
-    writes.push(...subtraction_writes)
+    const subtractionWrites = (await Promise.all(subtractionPromises)).flat()
+    writes.push(...subtractionWrites)
   }
   if (additions?.length) {
-    const addition_writes = additions.map((eventId) => ({
+    const additionPromises = additions.map(async (eventId) => ({
       PutRequest: {
-        Item: { synonymId, eventId, slug: slug(eventId) },
+        Item: {
+          synonymId,
+          eventId,
+          slug: slug(eventId),
+          initialDate: await getOldestDate(eventId),
+        },
       },
     }))
-    writes.push(...addition_writes)
+    const additionWrites = (await Promise.all(additionPromises)).flat()
+    writes.push(...additionWrites)
   }
   const params = {
     RequestItems: {
@@ -229,6 +245,11 @@ export async function putSynonyms({
     },
   }
   await client.batchWrite(params)
+}
+
+export async function getOldestDate(eventId: string) {
+  const circulars = await getSynonymMembers(eventId)
+  return orderBy(circulars, ['circularId'], ['asc'])[0].createdOn
 }
 
 /*
@@ -248,11 +269,17 @@ export async function deleteSynonyms(synonymId: string) {
     },
   })
 
-  const writes = results.Items.map(({ eventId }) => ({
+  const writePromises = results.Items.map(async ({ eventId }) => ({
     PutRequest: {
-      Item: { synonymId: crypto.randomUUID(), eventId },
+      Item: {
+        synonymId: crypto.randomUUID(),
+        eventId,
+        slug: slug(eventId),
+        initialDate: await getOldestDate(eventId),
+      },
     },
   }))
+  const writes = await Promise.all(writePromises)
   const params = {
     RequestItems: {
       [TableName]: writes,
@@ -334,7 +361,11 @@ export async function groupMembersByEventId({
   })
   const groupedItems = searchResults.items.map(async (group) => {
     const promises = group.eventIds.map((eventId) => getSynonymMembers(eventId))
-    const members = (await Promise.all(promises)).flat()
+    const members = orderBy(
+      (await Promise.all(promises)).flat(),
+      ['circularId'],
+      ['asc']
+    )
     return { ...group, members }
   })
   const items = await Promise.all(groupedItems)
@@ -345,7 +376,7 @@ export async function groupMembersByEventId({
   }
 }
 
-async function getSynonymMembers(eventId: string) {
+export async function getSynonymMembers(eventId: string) {
   const db = await tables()
   const { Items } = await db.circulars.query({
     IndexName: 'circularsByEventId',
@@ -359,6 +390,10 @@ async function getSynonymMembers(eventId: string) {
 
 export async function getAllSynonymMembers(eventIds: string[]) {
   const promises = eventIds.map(getSynonymMembers)
-  const results = (await Promise.all(promises)).flat()
+  const results = orderBy(
+    (await Promise.all(promises)).flat(),
+    ['circularId'],
+    ['asc']
+  )
   return results
 }
