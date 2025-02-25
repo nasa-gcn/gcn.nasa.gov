@@ -301,7 +301,6 @@ export default function () {
           <ButtonGroup type="segmented">
             <Link
               to={`/circulars?view=index&limit=${limit}`}
-              style={{ textDecoration: 'none' }}
               preventScrollReset
               className={getSelection('index')}
             >
@@ -310,7 +309,6 @@ export default function () {
             </Link>
             <Link
               to={`/circulars?view=group&limit=${limit}`}
-              style={{ textDecoration: 'none' }}
               preventScrollReset
               className={getSelection('group')}
             >
