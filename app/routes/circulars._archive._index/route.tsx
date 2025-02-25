@@ -230,6 +230,12 @@ export default function () {
   const clean = inputQuery === query
   const searchText = isGroupView ? 'Event Name' : 'Search'
 
+  function getSelection(selectionOption: string) {
+    return selectionOption === view
+      ? 'usa-button padding-y-1'
+      : 'usa-button usa-button--outline padding-y-1'
+  }
+
   return (
     <>
       {result?.intent === 'correction' && (
@@ -297,29 +303,19 @@ export default function () {
               to={`/circulars?view=index&limit=${limit}`}
               style={{ textDecoration: 'none' }}
               preventScrollReset
+              className={getSelection('index')}
             >
-              <Button
-                className="radius-left-md radius-right-sm padding-y-1"
-                type="button"
-                outline={view != 'index'}
-              >
-                <Icon.List role="presentation" />
-                Circulars
-              </Button>
+              <Icon.List role="presentation" />
+              Circulars
             </Link>
             <Link
               to={`/circulars?view=group&limit=${limit}`}
               style={{ textDecoration: 'none' }}
               preventScrollReset
+              className={getSelection('group')}
             >
-              <Button
-                className="radius-right-md radius-left-sm padding-y-1"
-                type="button"
-                outline={view != 'group'}
-              >
-                <Icon.ContentCopy role="presentation" />
-                Events
-              </Button>
+              <Icon.ContentCopy role="presentation" />
+              Events
             </Link>
           </ButtonGroup>
         )}
