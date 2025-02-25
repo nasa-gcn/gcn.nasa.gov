@@ -12,6 +12,7 @@ export interface Synonym {
   eventId: string
   synonymId: string
   slug: string
+  initialDate: number
 }
 
 /* Layout of materialized view in OpenSearch */
@@ -19,6 +20,7 @@ export interface SynonymGroup {
   synonymId: string
   eventIds: string[]
   slugs: string[]
+  initialDate: number
 }
 
 export interface SynonymGroupWithMembers extends SynonymGroup {

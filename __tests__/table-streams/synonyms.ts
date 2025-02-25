@@ -17,9 +17,11 @@ const eventId = 'GRB 123'
 const existingEventId = 'GRB 99999999'
 const additionalEventId = 'GRB 424242A'
 const previousSynonymId = crypto.randomUUID()
+const previousInitialDate = 1693161309200
 const existingEventSlug = existingEventId.replace(' ', '-').toLowerCase()
 const eventSlug = eventId.replace(' ', '-').toLowerCase()
 const additionalEventSlug = additionalEventId.replace(' ', '-').toLowerCase()
+const initialDatePlaceholder = 1693161309269
 
 const putData = {
   index: 'synonym-groups',
@@ -28,6 +30,7 @@ const putData = {
     synonymId,
     slugs: [] as string[],
     eventIds: [] as string[],
+    initialDate: initialDatePlaceholder,
   },
 }
 
@@ -55,6 +58,9 @@ const mockStreamEvent = {
           slug: {
             S: eventSlug,
           },
+          initialDate: {
+            S: initialDatePlaceholder.toString(),
+          },
         },
         NewImage: {
           synonymId: {
@@ -65,6 +71,9 @@ const mockStreamEvent = {
           },
           slug: {
             S: eventSlug,
+          },
+          initialDate: {
+            S: initialDatePlaceholder.toString(),
           },
         },
         SequenceNumber: '111',
@@ -96,6 +105,9 @@ const mockStreamEventWithOldRecord = {
           slug: {
             S: eventSlug,
           },
+          initialDate: {
+            S: initialDatePlaceholder.toString(),
+          },
         },
         NewImage: {
           synonymId: {
@@ -107,6 +119,9 @@ const mockStreamEventWithOldRecord = {
           slug: {
             S: eventSlug,
           },
+          initialDate: {
+            S: initialDatePlaceholder.toString(),
+          },
         },
         OldImage: {
           synonymId: {
@@ -117,6 +132,9 @@ const mockStreamEventWithOldRecord = {
           },
           slug: {
             S: eventSlug,
+          },
+          initialDate: {
+            S: initialDatePlaceholder.toString(),
           },
         },
         SequenceNumber: '111',
@@ -158,9 +176,17 @@ describe('testing synonymGroup table-stream', () => {
     putData.body.synonymId = synonymId
     putData.body.eventIds = [eventId]
     putData.body.slugs = [eventSlug]
+    putData.body.initialDate = initialDatePlaceholder
 
     mockQuery.mockResolvedValue({
-      Items: [{ synonymId, eventId, slug: eventSlug }],
+      Items: [
+        {
+          synonymId,
+          eventId,
+          slug: eventSlug,
+          initialDate: initialDatePlaceholder,
+        },
+      ],
     })
 
     const mockClient = {
@@ -188,10 +214,21 @@ describe('testing synonymGroup table-stream', () => {
     putData.body.synonymId = synonymId
     putData.body.eventIds = [existingEventId, eventId]
     putData.body.slugs = [existingEventSlug, eventSlug]
+    putData.body.initialDate = initialDatePlaceholder
 
     const mockItems = [
-      { synonymId, eventId: existingEventId, slug: existingEventSlug },
-      { synonymId, eventId, slug: eventSlug },
+      {
+        synonymId,
+        eventId: existingEventId,
+        slug: existingEventSlug,
+        initialDate: initialDatePlaceholder,
+      },
+      {
+        synonymId,
+        eventId,
+        slug: eventSlug,
+        initialDate: initialDatePlaceholder,
+      },
     ]
 
     const implementedMockQuery = mockQuery.mockImplementation((query) => {
@@ -228,8 +265,18 @@ describe('testing synonymGroup table-stream', () => {
 
   test('insert into existing synonym group with removal from old group with remaining members', async () => {
     const mockItems = [
-      { synonymId, eventId: existingEventId, slug: existingEventSlug },
-      { synonymId, eventId, slug: eventSlug },
+      {
+        synonymId,
+        eventId: existingEventId,
+        slug: existingEventSlug,
+        initialDate: initialDatePlaceholder,
+      },
+      {
+        synonymId,
+        eventId,
+        slug: eventSlug,
+        initialDate: initialDatePlaceholder,
+      },
     ]
 
     const mockPreviousItems = [
@@ -237,6 +284,7 @@ describe('testing synonymGroup table-stream', () => {
         synonymId: previousSynonymId,
         eventId: additionalEventId,
         slug: additionalEventSlug,
+        initialDate: initialDatePlaceholder,
       },
     ]
 
@@ -268,24 +316,34 @@ describe('testing synonymGroup table-stream', () => {
     putData.body.synonymId = synonymId
     putData.body.eventIds = [existingEventId, eventId]
     putData.body.slugs = [existingEventSlug, eventSlug]
+    putData.body.initialDate = initialDatePlaceholder
     expect(mockIndex).toHaveBeenCalledWith(putData)
     putData.id = previousSynonymId
     putData.body.synonymId = previousSynonymId
     putData.body.eventIds = [additionalEventId]
     putData.body.slugs = [additionalEventSlug]
+    putData.body.initialDate = initialDatePlaceholder
     expect(mockIndex).toHaveBeenCalledWith(putData)
     expect(mockIndex).toHaveBeenCalledTimes(2)
     expect(mockDelete).not.toHaveBeenCalled()
   })
 
   test('insert into new synonym group with removal from old group with remaining members', async () => {
-    const mockItems = [{ synonymId, eventId, slug: eventSlug }]
+    const mockItems = [
+      {
+        synonymId,
+        eventId,
+        slug: eventSlug,
+        initialDate: initialDatePlaceholder,
+      },
+    ]
 
     const mockPreviousItems = [
       {
         synonymId: previousSynonymId,
         eventId: additionalEventId,
         slug: additionalEventSlug,
+        initialDate: initialDatePlaceholder,
       },
     ]
 
@@ -317,11 +375,13 @@ describe('testing synonymGroup table-stream', () => {
     putData.body.synonymId = synonymId
     putData.body.eventIds = [eventId]
     putData.body.slugs = [eventSlug]
+    putData.body.initialDate = initialDatePlaceholder
     expect(mockIndex).toHaveBeenCalledWith(putData)
     putData.id = previousSynonymId
     putData.body.synonymId = previousSynonymId
     putData.body.eventIds = [additionalEventId]
     putData.body.slugs = [additionalEventSlug]
+    putData.body.initialDate = initialDatePlaceholder
     expect(mockIndex).toHaveBeenCalledWith(putData)
     expect(mockIndex).toHaveBeenCalledTimes(2)
     expect(mockDelete).not.toHaveBeenCalled()
@@ -332,8 +392,16 @@ describe('testing synonymGroup table-stream', () => {
     putData.body.synonymId = synonymId
     putData.body.eventIds = [eventId]
     putData.body.slugs = [eventSlug]
+    putData.body.initialDate = initialDatePlaceholder
 
-    const mockItems = [{ synonymId, eventId, slug: eventSlug }]
+    const mockItems = [
+      {
+        synonymId,
+        eventId,
+        slug: eventSlug,
+        initialDate: initialDatePlaceholder,
+      },
+    ]
 
     const implementedMockQuery = mockQuery.mockImplementation((query) => {
       if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
@@ -366,4 +434,75 @@ describe('testing synonymGroup table-stream', () => {
     expect(mockDelete).toHaveBeenCalledWith(deleteData)
     expect(mockDelete).toHaveBeenCalledTimes(1)
   })
+})
+
+test('initialDate is updated on both the old and new group record', async () => {
+  const mockItems = [
+    {
+      synonymId,
+      eventId,
+      slug: eventSlug,
+      initialDate: initialDatePlaceholder,
+    },
+    {
+      synonymId,
+      eventId: 'event2',
+      slug: 'event2',
+      initialDate: previousInitialDate,
+    },
+  ]
+
+  const mockPreviousItems = [
+    {
+      synonymId: previousSynonymId,
+      eventId: additionalEventId,
+      slug: additionalEventSlug,
+      initialDate: initialDatePlaceholder,
+    },
+    {
+      synonymId: previousSynonymId,
+      eventId: 'event3',
+      slug: 'event3',
+      initialDate: previousInitialDate,
+    },
+  ]
+
+  const implementedMockQuery = mockQuery.mockImplementation((query) => {
+    if (query.ExpressionAttributeValues[':synonymId'] == previousSynonymId) {
+      return { Items: mockPreviousItems }
+    } else {
+      return { Items: mockItems }
+    }
+  })
+
+  ;(search as unknown as jest.Mock).mockReturnValue({
+    index: mockIndex,
+    delete: mockDelete,
+  })
+
+  const mockClient = {
+    synonyms: {
+      query: implementedMockQuery,
+    },
+  }
+
+  ;(tables as unknown as jest.Mock).mockResolvedValue(mockClient)
+
+  await handler(mockStreamEventWithOldRecord)
+
+  expect(mockQuery).toHaveBeenCalledTimes(2)
+  putData.id = synonymId
+  putData.body.synonymId = synonymId
+  putData.body.eventIds = [eventId, 'event2']
+  putData.body.slugs = [eventSlug, 'event2']
+  putData.body.initialDate = previousInitialDate
+  expect(mockIndex).toHaveBeenCalledWith(putData)
+  putData.id = previousSynonymId
+  putData.body.synonymId = previousSynonymId
+  putData.body.eventIds = [additionalEventId, 'event3']
+  putData.body.slugs = [additionalEventSlug, 'event3']
+  putData.body.initialDate = previousInitialDate
+  expect(mockIndex).toHaveBeenCalledWith(putData)
+  expect(mockIndex).toHaveBeenCalledTimes(2)
+  expect(mockDelete).not.toHaveBeenCalled()
 })
