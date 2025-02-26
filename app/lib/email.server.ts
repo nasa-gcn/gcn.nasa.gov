@@ -79,6 +79,26 @@ async function send(sendCommandInput: SendEmailCommandInput) {
   }
 }
 
+function maybeThrow(e: any, warning: string) {
+  const errorsAllowedInDev = [
+    'ExpiredTokenException',
+    'NotAuthorizedException',
+    'UnrecognizedClientException',
+  ]
+  const { name } = e as SESv2ServiceException
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(
+      `SES threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+    )
+  }
+}
+
 /** Send an email to many recipients in parallel. */
 export async function sendEmailBulk({
   to,
@@ -98,7 +118,7 @@ export async function sendEmailBulk({
           subject,
           body: getBody(body),
         }),
-        TemplateName: s.email_outgoing.template,
+        TemplateName: s.email_outgoing?.template,
       },
     },
   }
@@ -118,9 +138,13 @@ export async function sendEmailBulk({
           },
         }))
       )
-      await client.send(
-        new SendBulkEmailCommand({ BulkEmailEntries, ...message })
-      )
+      try {
+        await client.send(
+          new SendBulkEmailCommand({ BulkEmailEntries, ...message })
+        )
+      } catch (e) {
+        maybeThrow(e, 'email will not be sent')
+      }
     })
   )
 }
