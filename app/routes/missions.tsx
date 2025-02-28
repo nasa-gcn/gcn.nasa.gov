@@ -53,9 +53,6 @@ export default function () {
               <NavLink key="icecube" to="icecube">
                 IceCube Neutrino Observatory
               </NavLink>,
-              <NavLink key="integral" to="integral">
-                INTEGRAL
-              </NavLink>,
               useFeature('KM3NET') && (
                 <NavLink key="km3net" to="km3net">
                   KM3NeT
@@ -97,6 +94,9 @@ export default function () {
                     </NavLink>,
                     <NavLink key="burstcube" to="archive/burstcube">
                       BurstCube
+                    </NavLink>,
+                    <NavLink key="integral" to="archive/integral">
+                      INTEGRAL
                     </NavLink>,
                   ]}
                 />
