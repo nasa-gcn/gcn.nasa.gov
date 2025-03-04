@@ -161,8 +161,25 @@ export default function () {
                     <Link key="java" to="client#java">
                       Java
                     </Link>,
-                    <NavLink key="code-samples" to="client/samples">
-                      Sample Code
+                  ]}
+                />
+              </>,
+              <>
+                <NavLink key="sample" to="sample">
+                  Sample Code
+                </NavLink>
+                <SideNavSub
+                  base="sample"
+                  key="sample-sub"
+                  items={[
+                    <NavLink key="xml" to="sample/xml">
+                      XML
+                    </NavLink>,
+                    <NavLink key="json" to="sample/json">
+                      JSON
+                    </NavLink>,
+                    <NavLink key="healpix" to="sample/healpix">
+                      HEALPix
                     </NavLink>,
                   ]}
                 />
