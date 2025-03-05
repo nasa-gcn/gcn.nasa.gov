@@ -184,14 +184,7 @@ export async function search({
         }
     : undefined
 
-  const {
-    body: {
-      hits: {
-        total: { value: totalItems },
-        hits,
-      },
-    },
-  } = await client.search({
+  const searchBody = {
     index: 'circulars',
     body: {
       query: {
@@ -214,7 +207,33 @@ export async function search({
       size: limit,
       track_total_hits: true,
     },
-  })
+  }
+
+  let searchResult
+  try {
+    searchResult = await client.search(searchBody)
+  } catch (error) {
+    console.error(
+      'Search with queryObj failed, falling back to multi_match',
+      error
+    )
+    searchBody.body.query.bool.must = {
+      multi_match: {
+        query: query ?? '',
+        fields: ['submitter', 'subject', 'body'],
+      },
+    }
+    searchResult = await client.search(searchBody)
+  }
+
+  const {
+    body: {
+      hits: {
+        total: { value: totalItems },
+        hits,
+      },
+    },
+  } = searchResult
 
   const items = hits.map(
     ({
