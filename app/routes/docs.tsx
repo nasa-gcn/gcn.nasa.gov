@@ -172,6 +172,9 @@ export default function () {
                   base="sample"
                   key="sample-sub"
                   items={[
+                    <NavLink key="kafka" to="sample/kafka">
+                      Kafka Usage
+                    </NavLink>,
                     <NavLink key="xml" to="sample/xml">
                       XML
                     </NavLink>,
