@@ -21,7 +21,7 @@ import {
   extractAttributeRequired,
   getCognitoUserFromSub,
   listUsersInGroup,
-  maybeThrow,
+  maybeThrowCognito,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { origin } from '~/lib/env.server'
@@ -373,7 +373,7 @@ async function getUsersInGroup(): Promise<EndorsementUser[]> {
   try {
     users = await listUsersInGroup(submitterGroup)
   } catch (error) {
-    maybeThrow(error, 'returning fake users')
+    maybeThrowCognito(error, 'returning fake users')
     return [
       {
         sub: crypto.randomUUID(),

@@ -77,3 +77,24 @@ export function throwForStatus(response: Response) {
     throw new Error('Request failed', { cause: response })
   }
 }
+
+interface ErrorType {
+  name: string
+}
+
+export function maybeThrow<Type extends ErrorType>(
+  e: Type,
+  warning: string,
+  errorsAllowedInDev: string[]
+) {
+  const { name } = e as Type
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(warning)
+  }
+}
