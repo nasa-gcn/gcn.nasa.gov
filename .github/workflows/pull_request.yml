@@ -8,6 +8,10 @@ on:
     branches:
       - main
 
+env:
+  ARC_TABLES_PORT: 8000
+  ARC_DB_EXTERNAL: true
+
 jobs:
   node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
