@@ -20,7 +20,7 @@ import {
 import chunk from 'lodash/chunk'
 
 import { hostname } from './env.server'
-import { getEnvBannerHeaderAndDescription } from './utils'
+import { getEnvBannerHeaderAndDescription, maybeThrow } from './utils'
 import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
 const client = new SESv2Client({})
@@ -79,24 +79,14 @@ async function send(sendCommandInput: SendEmailCommandInput) {
   }
 }
 
-function maybeThrow(e: any, warning: string) {
-  const errorsAllowedInDev = [
+function maybeThrowSES(e: any, warning: string) {
+  const formattedWarning = `SES threw ${(e as SESv2ServiceException).name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+
+  maybeThrow<SESv2ServiceException>(e, formattedWarning, [
     'ExpiredTokenException',
     'NotAuthorizedException',
     'UnrecognizedClientException',
-  ]
-  const { name } = e as SESv2ServiceException
-
-  if (
-    !errorsAllowedInDev.includes(name) ||
-    process.env.NODE_ENV === 'production'
-  ) {
-    throw e
-  } else {
-    console.warn(
-      `SES threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
-    )
-  }
+  ])
 }
 
 /** Send an email to many recipients in parallel. */
@@ -143,7 +133,7 @@ export async function sendEmailBulk({
           new SendBulkEmailCommand({ BulkEmailEntries, ...message })
         )
       } catch (e) {
-        maybeThrow(e, 'email will not be sent')
+        maybeThrowSES(e, 'email will not be sent')
       }
     })
   )
