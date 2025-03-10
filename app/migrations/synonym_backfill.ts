@@ -32,7 +32,7 @@ export async function backfillSynonyms() {
     for (const circular of circulars) {
       if (circular.eventId) {
         const members = await getSynonymMembers(circular.eventId)
-        const initialDate = await orderBy(members, ['circularId'], ['asc'])[0]
+        const initialDate = orderBy(members, ['circularId'], ['asc'])[0]
           .createdOn
         console.log(initialDate)
         writes.push({ eventId: circular.eventId, initialDate })
