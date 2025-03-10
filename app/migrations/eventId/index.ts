@@ -1,16 +1,23 @@
-import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
 import { BatchWriteCommand, paginateScan } from '@aws-sdk/lib-dynamodb'
 
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { parseEventFromSubject } from '~/routes/circulars/circulars.lib'
 
+async function getTableNameFromSSM(dynamoTableName: string) {
+  const ssmClient = new SSMClient({ region: 'us-east-1' })
+  const command = new GetParameterCommand({ Name: dynamoTableName })
+  const response = await ssmClient.send(command)
+  return response.Parameter?.Value
+}
+
 export async function backfillEventIds() {
   const startTime = new Date()
   console.log('Starting EVENT ID backfill...', startTime)
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('circulars')
+  const dynamoTableName = '/RemixGcnProduction/tables/circulars'
+  const TableName = await getTableNameFromSSM(dynamoTableName)
+  const client = new DynamoDBClient({ region: 'us-east-1' })
   const pages = paginateScan({ client }, { TableName }, { pageSize: 25 })
 
   for await (const page of pages) {
@@ -24,7 +31,7 @@ export async function backfillEventIds() {
         writes.push(circular)
       }
     }
-    if (writes.length > 0) {
+    if (writes.length > 0 && TableName) {
       const command = new BatchWriteCommand({
         RequestItems: {
           [TableName]: writes.map((circ) => ({
