@@ -7,7 +7,7 @@ import { basename, dirname, join } from 'path'
 const args = process.argv.slice(2)
 const dev = args.includes('--dev')
 const entryPoints = await glob(
-  './app/{email-incoming,scheduled,table-streams}/*/index.ts'
+  './app/{email-incoming,scheduled,table-streams,migrations}/*/index.ts'
 )
 
 /**
@@ -19,8 +19,9 @@ const options = {
   logLevel: 'info',
   outdir: 'build',
   outbase: 'app',
-  outExtension: { '.js': '.cjs' },
+  outExtension: { '.js': '.mjs' },
   external: ['@aws-sdk/*', 'aws-sdk'],
+  format: 'esm',
   platform: 'node',
   target: ['node20'],
   minify: !dev,
