@@ -189,6 +189,7 @@ export default function () {
     page,
     totalPages,
     totalItems,
+    queryFallback,
     requestedChangeCount,
     limit,
     isGroupView,
@@ -314,6 +315,12 @@ export default function () {
           />
         )}
       </ToolbarButtonGroup>
+      {queryFallback && (
+        <Hint id="searchFailedHint">
+          "{query}" does not adhere to lucene search syntax. Please refer to the
+          documentation and try again.
+        </Hint>
+      )}
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
         GRB'). <br />

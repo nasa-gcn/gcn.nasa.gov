@@ -153,8 +153,11 @@ export async function search({
   items: CircularMetadata[]
   totalPages: number
   totalItems: number
+  queryFallback: boolean
 }> {
   const client = await getSearch()
+
+  var queryFallback = false
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
@@ -224,6 +227,7 @@ export async function search({
       },
     }
     searchResult = await client.search(searchBody)
+    queryFallback = true
   }
 
   const {
@@ -252,7 +256,7 @@ export async function search({
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
 
-  return { items, totalPages, totalItems }
+  return { items, totalPages, totalItems, queryFallback }
 }
 
 /** Get a circular by ID. */
