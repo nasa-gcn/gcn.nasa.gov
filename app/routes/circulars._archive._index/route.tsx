@@ -251,6 +251,12 @@ export default function () {
           Synonym Moderation
         </Link>
       )}
+      {queryFallback && (
+        <Hint id="searchFailedHint" style={{ color: 'red' }}>
+          "{query}" does not adhere to lucene search syntax. Please refer to the
+          documentation and try again.
+        </Hint>
+      )}
       <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           preventScrollReset
@@ -315,12 +321,7 @@ export default function () {
           />
         )}
       </ToolbarButtonGroup>
-      {queryFallback && (
-        <Hint id="searchFailedHint">
-          "{query}" does not adhere to lucene search syntax. Please refer to the
-          documentation and try again.
-        </Hint>
-      )}
+
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
         GRB'). <br />
