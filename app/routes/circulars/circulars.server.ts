@@ -216,18 +216,22 @@ export async function search({
   try {
     searchResult = await client.search(searchBody)
   } catch (error) {
-    console.error(
-      'Search with queryObj failed, falling back to multi_match',
-      error
-    )
-    searchBody.body.query.bool.must = {
-      multi_match: {
-        query: query ?? '',
-        fields: ['submitter', 'subject', 'body'],
-      },
+    if ((error as typeof Error).toString().includes('Failed to parse query')) {
+      console.error(
+        'Search with queryObj failed, falling back to multi_match',
+        error
+      )
+      searchBody.body.query.bool.must = {
+        multi_match: {
+          query: query ?? '',
+          fields: ['submitter', 'subject', 'body'],
+        },
+      }
+      searchResult = await client.search(searchBody)
+      queryFallback = true
+    } else {
+      throw error
     }
-    searchResult = await client.search(searchBody)
-    queryFallback = true
   }
 
   const {
