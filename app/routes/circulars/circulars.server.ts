@@ -217,10 +217,6 @@ export async function search({
     searchResult = await client.search(searchBody)
   } catch (error) {
     if ((error as typeof Error).toString().includes('Failed to parse query')) {
-      console.error(
-        'Search with queryObj failed, falling back to multi_match',
-        error
-      )
       searchBody.body.query.bool.must = {
         multi_match: {
           query: query ?? '',
