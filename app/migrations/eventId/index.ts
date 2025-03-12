@@ -1,6 +1,10 @@
 import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
-import { BatchWriteCommand, paginateScan } from '@aws-sdk/lib-dynamodb'
+import {
+  BatchWriteCommand,
+  DynamoDBDocumentClient,
+  paginateScan,
+} from '@aws-sdk/lib-dynamodb'
 
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { parseEventFromSubject } from '~/routes/circulars/circulars.lib'
@@ -18,7 +22,8 @@ export async function backfillEventIds() {
   const dynamoTableName = '/RemixGcnProduction/tables/circulars'
   const TableName = await getTableNameFromSSM(dynamoTableName)
   const client = new DynamoDBClient({ region: 'us-east-1' })
-  const pages = paginateScan({ client }, { TableName }, { pageSize: 25 })
+  const docClient = DynamoDBDocumentClient.from(client)
+  const pages = paginateScan({ client: docClient }, { TableName, Limit: 25 })
 
   for await (const page of pages) {
     const writes = []
@@ -26,12 +31,14 @@ export async function backfillEventIds() {
     for (const circular of circulars) {
       const parsedEventId = parseEventFromSubject(circular.subject)
 
-      if (!circular.eventId && parsedEventId) {
+      if (parsedEventId) {
         circular.eventId = parsedEventId
         writes.push(circular)
       }
     }
+
     if (writes.length > 0 && TableName) {
+      console.log(`Writing ${writes.length} records`)
       const command = new BatchWriteCommand({
         RequestItems: {
           [TableName]: writes.map((circ) => ({
