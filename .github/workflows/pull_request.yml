@@ -33,7 +33,6 @@ jobs:
           echo -e "[default]\naws_access_key_id=fakeTestString\naws_secret_access_key=fakeTestString\naws_session_token=fakeTestString" > $HOME/.aws/credentials
       - name: Run Playwright tests
         env:
-          CI: true
           ARC_TABLES_PORT: 8000
           ARC_DB_EXTERNAL: true
         run: npx playwright test
