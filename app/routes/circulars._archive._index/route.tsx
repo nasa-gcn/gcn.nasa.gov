@@ -326,7 +326,6 @@ export default function () {
           />
         )}
       </ToolbarButtonGroup>
-
       <Hint id="searchHint">
         Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
         GRB'). <br />
