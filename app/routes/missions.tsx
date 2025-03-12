@@ -24,12 +24,6 @@ export default function () {
               <NavLink key="." to="." end>
                 Missions, Instruments, and Facilities
               </NavLink>,
-              <NavLink key="agile" to="agile">
-                AGILE
-              </NavLink>,
-              <NavLink key="burstcube" to="burstcube">
-                BurstCube
-              </NavLink>,
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
