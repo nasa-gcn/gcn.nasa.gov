@@ -19,9 +19,7 @@ export function createTriggerHandler<T>(
   recordHandler: (record: T) => Promise<void>
 ) {
   return async (event: { Records: T[] }) => {
-    if (process.env.CI) {
-      return
-    } else await allSettledOrRaise(event.Records.map(recordHandler))
+    await allSettledOrRaise(event.Records.map(recordHandler))
   }
 }
 
