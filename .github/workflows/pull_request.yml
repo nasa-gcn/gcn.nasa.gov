@@ -8,16 +8,17 @@ on:
     branches:
       - main
 
+env:
+  CI: true
+  ARC_TABLES_PORT: 8000
+  ARC_DB_EXTERNAL: true
+
 jobs:
   node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   playwright:
-    env:
-      CI: true
-      ARC_TABLES_PORT: 8000
-      ARC_DB_EXTERNAL: true
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
