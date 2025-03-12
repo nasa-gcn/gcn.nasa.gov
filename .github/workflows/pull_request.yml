@@ -8,11 +8,6 @@ on:
     branches:
       - main
 
-env:
-  CI: true
-  ARC_TABLES_PORT: 8000
-  ARC_DB_EXTERNAL: true
-
 jobs:
   node:
     uses: nasa-gcn/.github/.github/workflows/node.yml@main
@@ -37,6 +32,10 @@ jobs:
           mkdir $HOME/.aws
           echo -e "[default]\naws_access_key_id=fakeTestString\naws_secret_access_key=fakeTestString\naws_session_token=fakeTestString" > $HOME/.aws/credentials
       - name: Run Playwright tests
+        env:
+          CI: true
+          ARC_TABLES_PORT: 8000
+          ARC_DB_EXTERNAL: true
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
