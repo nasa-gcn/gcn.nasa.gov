@@ -42,11 +42,7 @@ export let send: (topic: string, value: string) => Promise<void>
 // when the runtime is gracefully shutting down. However, until the above issue
 // is fixed in @architect/sandbox, we need a separate code path for local
 // testing.
-if (process.env.CI) {
-  send = async () => {
-    console.log('Kafka send function called, but not delivering on CI tests')
-  }
-} else if (process.env.ARC_SANDBOX) {
+if (process.env.ARC_SANDBOX) {
   send = async (topic, value) => {
     setOidcHttpOptions()
     const producer = kafka.producer()
