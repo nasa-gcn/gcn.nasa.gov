@@ -27,14 +27,12 @@ jobs:
         run: npx playwright install --with-deps
       - name: Pull Latest docker image
         run: docker pull amazon/dynamodb-local:latest
-      - name: Create test credentials
-        run: |
-          mkdir $HOME/.aws
-          echo -e "[default]\naws_access_key_id=fakeTestString\naws_secret_access_key=fakeTestString\naws_session_token=fakeTestString" > $HOME/.aws/credentials
       - name: Run Playwright tests
         env:
           ARC_TABLES_PORT: 8000
           ARC_DB_EXTERNAL: true
+          AWS_ACCESS_KEY_ID: fakeTestString
+          AWS_SECRET_ACCESS_KEY: fakeTestString
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
