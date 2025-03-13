@@ -13,11 +13,13 @@ import { domain, getEnvOrDieInProduction } from './env.server'
 
 const client_id = getEnvOrDieInProduction('KAFKA_CLIENT_ID') ?? ''
 const client_secret = getEnvOrDieInProduction('KAFKA_CLIENT_SECRET')
-const kafka = new Kafka({
-  client_id,
-  client_secret,
-  domain,
-})
+const kafka = process.env.CI
+  ? undefined
+  : new Kafka({
+      client_id,
+      client_secret,
+      domain,
+    })
 
 function setOidcHttpOptions() {
   // Increase the timeout used for OpenID Connect requests.
@@ -42,38 +44,46 @@ export let send: (topic: string, value: string) => Promise<void>
 // when the runtime is gracefully shutting down. However, until the above issue
 // is fixed in @architect/sandbox, we need a separate code path for local
 // testing.
-if (process.env.ARC_SANDBOX) {
+if (process.env.CI) {
+  send = async () => {
+    console.log('Kafka send function called, but not delivering on CI tests')
+  }
+} else if (process.env.ARC_SANDBOX) {
   send = async (topic, value) => {
-    setOidcHttpOptions()
-    const producer = kafka.producer()
-    await producer.connect()
-    try {
-      await producer.send({ topic, messages: [{ value }] })
-    } finally {
-      await producer.disconnect()
+    if (kafka) {
+      setOidcHttpOptions()
+      const producer = kafka.producer()
+      await producer.connect()
+      try {
+        await producer.send({ topic, messages: [{ value }] })
+      } finally {
+        await producer.disconnect()
+      }
     }
   }
 } else {
   // FIXME: remove memoizee and use top-level await once we switch to ESM builds.
-  const getProducer = memoizee(
-    async () => {
-      setOidcHttpOptions()
-      const producer = kafka.producer()
-      await producer.connect()
-      ;['SIGINT', 'SIGTERM'].forEach((event) =>
-        process.once(event, async () => {
-          console.log('Disconnecting from Kafka')
-          await producer.disconnect()
-          console.log('Disconnected from Kafka')
-        })
-      )
-      return producer
-    },
-    { promise: true }
-  )
+  if (kafka) {
+    const getProducer = memoizee(
+      async () => {
+        setOidcHttpOptions()
+        const producer = kafka.producer()
+        await producer.connect()
+        ;['SIGINT', 'SIGTERM'].forEach((event) =>
+          process.once(event, async () => {
+            console.log('Disconnecting from Kafka')
+            await producer.disconnect()
+            console.log('Disconnected from Kafka')
+          })
+        )
+        return producer
+      },
+      { promise: true }
+    )
 
-  send = async (topic, value) => {
-    const producer = await getProducer()
-    await producer.send({ topic, messages: [{ value }] })
+    send = async (topic, value) => {
+      const producer = await getProducer()
+      await producer.send({ topic, messages: [{ value }] })
+    }
   }
 }
