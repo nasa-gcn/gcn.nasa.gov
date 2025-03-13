@@ -157,7 +157,7 @@ export async function search({
 }> {
   const client = await getSearch()
 
-  var queryFallback = false
+  let queryFallback = false
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
