@@ -20,7 +20,7 @@ import {
 import chunk from 'lodash/chunk'
 
 import { hostname } from './env.server'
-import { getEnvBannerHeaderAndDescription } from './utils'
+import { getEnvBannerHeaderAndDescription, maybeThrow } from './utils'
 import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
 const client = new SESv2Client({})
@@ -79,6 +79,16 @@ async function send(sendCommandInput: SendEmailCommandInput) {
   }
 }
 
+function maybeThrowSES(e: any, warning: string) {
+  const formattedWarning = `SES threw ${(e as SESv2ServiceException).name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+
+  maybeThrow<SESv2ServiceException>(e, formattedWarning, [
+    'ExpiredTokenException',
+    'NotAuthorizedException',
+    'UnrecognizedClientException',
+  ])
+}
+
 /** Send an email to many recipients in parallel. */
 export async function sendEmailBulk({
   to,
@@ -98,7 +108,7 @@ export async function sendEmailBulk({
           subject,
           body: getBody(body),
         }),
-        TemplateName: s.email_outgoing.template,
+        TemplateName: s.email_outgoing?.template,
       },
     },
   }
@@ -118,9 +128,13 @@ export async function sendEmailBulk({
           },
         }))
       )
-      await client.send(
-        new SendBulkEmailCommand({ BulkEmailEntries, ...message })
-      )
+      try {
+        await client.send(
+          new SendBulkEmailCommand({ BulkEmailEntries, ...message })
+        )
+      } catch (e) {
+        maybeThrowSES(e, 'email will not be sent')
+      }
     })
   )
 }
