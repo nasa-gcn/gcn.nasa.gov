@@ -138,6 +138,13 @@ Mapping of custom, mission-specific fields. The first property, `'$schema: { typ
 
 We recommend designing the new Notices schema with a minimal number of Kafka topics, preferably one schema per instrument; however, exceptions may be made when necessary. For cases where a single schema produces multiple types of notices, please include a `notice_type` field defined as an enumeration and design the enum list according to your requirements, and an example of each usage if parameters differ. For example, in space missions, the enum might include values such as ground and flight for distinct notice types.
 
+```json
+"notice_type": {
+  "enum":["type_1", "type_2", "type_3"]
+  "description": "Defines the category or type of notice and serves as its title. It is recommended when a single schema is used to produce multiple notice types."
+}
+```
+
 ## Extended Example
 
 We encourage exploring our [schema browser](/docs/schema/stable/gcn/notices) and [GitHub repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices) for more examples. Here is an extended example from Swift/BAT-GUANO:
