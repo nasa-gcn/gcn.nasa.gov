@@ -153,8 +153,11 @@ export async function search({
   items: CircularMetadata[]
   totalPages: number
   totalItems: number
+  queryFallback: boolean
 }> {
   const client = await getSearch()
+
+  let queryFallback = false
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
@@ -170,9 +173,10 @@ export async function search({
   const queryObj = query
     ? feature('CIRCULARS_LUCENE')
       ? {
-          simple_query_string: {
+          query_string: {
             query,
             fields: ['submitter', 'subject', 'body'],
+            lenient: true,
           },
         }
       : {
@@ -183,14 +187,7 @@ export async function search({
         }
     : undefined
 
-  const {
-    body: {
-      hits: {
-        total: { value: totalItems },
-        hits,
-      },
-    },
-  } = await client.search({
+  const searchBody = {
     index: 'circulars',
     body: {
       query: {
@@ -213,7 +210,34 @@ export async function search({
       size: limit,
       track_total_hits: true,
     },
-  })
+  }
+
+  let searchResult
+  try {
+    searchResult = await client.search(searchBody)
+  } catch (error) {
+    if ((error as typeof Error).toString().includes('Failed to parse query')) {
+      searchBody.body.query.bool.must = {
+        multi_match: {
+          query: query ?? '',
+          fields: ['submitter', 'subject', 'body'],
+        },
+      }
+      searchResult = await client.search(searchBody)
+      queryFallback = true
+    } else {
+      throw error
+    }
+  }
+
+  const {
+    body: {
+      hits: {
+        total: { value: totalItems },
+        hits,
+      },
+    },
+  } = searchResult
 
   const items = hits.map(
     ({
@@ -232,7 +256,7 @@ export async function search({
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
 
-  return { items, totalPages, totalItems }
+  return { items, totalPages, totalItems, queryFallback }
 }
 
 /** Get a circular by ID. */
