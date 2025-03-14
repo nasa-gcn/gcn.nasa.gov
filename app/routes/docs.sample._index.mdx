@@ -6,8 +6,20 @@ handle:
 # Sample Code
 
 Here is a collection of functions and example code that may be useful
-when working with GCN Notices. These include conversions from
-text and VOEvent alert formats to JSON and XML (for VOEvent alerts), how to save alerts,
-and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
+when working with GCN Notices. The sample code here demonstrates how to handle GCN Notices in both JSON and XML formats, and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
+
+## GCN Notices Formats and Distributions
+
+GCN Notices provide real-time machine readable alerts and are distributed in different formats:
+
+- New GCN Notices are provided in JSON format and are streamed via Kafka.
+- Classic GCN Notices are formatted in XML as well, are distributed both via Kafka and email.
+
+### The following sections provide guidance on handling different GCN Notice formats:
+
+- [Kafka](sample/kafka) explains Kafka's functionality
+- [xml](sample/xml) guides users for working with XML Notices
+- [json](sample/json) provides sample code for handling JSON-based Notices
+- [healpix](sample/healpix) explains how to work with HEALPix sky maps
 
 To contribute your own ideas, make a GitHub pull request to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.client.samples.md), or [contact us](/contact).
