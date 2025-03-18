@@ -26,7 +26,7 @@ By default, a query that does not contain lucene syntax will attempt to match th
 
 These separate field queries can be combined using additional keywords to form compound queries. The following boolean keywords are supported:
 
-- `AND`/`&&`: The `AND`/`||` operator requires that both conditions are met. For example, `subject:"Swift" AND body:"GRB"` will match circulars where the subject contains 'Swift' and the body contains 'GRB'.
+- `AND`/`&&`: The `AND`/`&&` operator requires that both conditions are met. For example, `subject:"Swift" AND body:"GRB"` will match circulars where the subject contains 'Swift' and the body contains 'GRB'.
 - `OR`/`||`: The `OR`/`||` operator requires that at least one condition is met. For example, `subject:"Swift" OR body:"GRB"` will match circulars where the subject contains 'Swift' or the body contains 'GRB'.
 - `NOT`/`!`: The `NOT`/`!` operator requires that the condition is not met and is commonly used with the `AND`/`&&` operator. For example, `subject:"LIGO" AND NOT body:"GRB"` will match circulars where the subject contains 'LIGO' and the body does not contain 'GRB'.
 
