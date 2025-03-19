@@ -25,7 +25,7 @@ async function getTableNameFromSSM(dynamoTableName: string) {
 export async function backfillSynonyms() {
   const startTime = new Date()
   console.log('Starting SYNONYM backfill...', startTime)
-
+  const eventsRun = new Set()
   const dynamoCircularsTableName = '/RemixGcnProduction/tables/circulars'
   const circularTableName = await getTableNameFromSSM(dynamoCircularsTableName)
   const dynamoSynonymsTableName = '/RemixGcnProduction/tables/synonyms'
@@ -42,7 +42,7 @@ export async function backfillSynonyms() {
     const circulars = page.Items as Circular[]
 
     for (const circular of circulars) {
-      if (circular.eventId) {
+      if (circular.eventId && !eventsRun.has(circular.eventId)) {
         const command = new QueryCommand({
           TableName: circularTableName,
           IndexName: 'circularsByEventId',
@@ -91,6 +91,7 @@ export async function backfillSynonyms() {
       })
 
       await client.send(command)
+      dedupedWrites.map(({ eventId }) => eventsRun.add(eventId))
     }
   }
   const endTime = new Date()
