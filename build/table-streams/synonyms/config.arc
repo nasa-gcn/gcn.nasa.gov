@@ -1,0 +1,2 @@
+@aws
+concurrency 1
