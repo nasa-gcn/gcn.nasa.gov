@@ -13,13 +13,16 @@ import { domain, getEnvOrDieInProduction } from './env.server'
 
 const client_id = getEnvOrDieInProduction('KAFKA_CLIENT_ID') ?? ''
 const client_secret = getEnvOrDieInProduction('KAFKA_CLIENT_SECRET')
-const kafka = process.env.CI
-  ? undefined
-  : new Kafka({
-      client_id,
-      client_secret,
-      domain,
-    })
+let kafka: Kafka | undefined = undefined
+try {
+  kafka = new Kafka({
+    client_id,
+    client_secret,
+    domain,
+  })
+} catch (e) {
+  console.warn('Failed to initialize Kafka: ', e)
+}
 
 function setOidcHttpOptions() {
   // Increase the timeout used for OpenID Connect requests.
