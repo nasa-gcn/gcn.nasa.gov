@@ -3,10 +3,13 @@ handle:
   breadcrumb: Sample Code
 ---
 
-# Sample Code
+# Apache Kafka and GCN Streaming
 
-Here is a collection of functions and example code that may be useful
-when working with GCN Notices. The sample code here demonstrates how to handle GCN Notices in both JSON and XML formats, and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
+[Apache Kafka](https://kafka.apache.org) is an open-source distributed event streaming platform used by thousands of companies for high-performance data pipelines, streaming analytics, data integration, and mission-critical applications.
+
+NASA leverages Kafka extensively, with notable implementations including the General Coordinates Network (GCN) at the Goddard Space Flight Center, the Complex Event Processor for Deep Space Network at Jet Propulsion Laboratory, and other federal agencies. These organizations use self-managed Kafka brokers, either Apache Kafka or the Confluent Platform, to support their data-intensive operations. GCN is sponsoring [FedRAMP](https://www.fedramp.gov) authorization for [Confluent Cloud](https://www.confluent.io/confluent-cloud/) to make it easy for NASA and other federal agencies to deploy Kafka software-as-a-service.
+
+GCN’s Kafka cluster is simple yet flexible, it operates on a standard three-broker Kafka cluster, without any custom authentication extensions or vendor lock-in. It uses Confluent Platform but can easily switch to open-source Kafka or managed solutions like Confluent Cloud. With [OpenID Connect (OIDC)](https://openid.net/developers/how-connect-works/) for single sign-on, utilizing [Amazon Cognito](https://aws.amazon.com/cognito/) for authentication, GCN ensures consistency across its web services and Kafka broker, making the system adaptable and secure.
 
 ## GCN Notices Formats and Distributions
 
@@ -14,6 +17,11 @@ GCN Notices provide real-time machine readable alerts and are distributed in dif
 
 - New GCN Notices are provided in JSON format and are streamed via Kafka.
 - Classic GCN Notices are formatted in XML as well, are distributed both via Kafka and email.
+
+## Sample Code
+
+Here is a collection of functions and example code that may be useful
+when working with GCN Notices. The sample code here demonstrates how to handle GCN Notices in both JSON and XML formats, and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
 
 ### The following sections provide guidance on handling different GCN Notice formats:
 
