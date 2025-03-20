@@ -84,7 +84,7 @@
   "devDependencies": {
     "@architect/architect": "^11.1.0",
     "@architect/plugin-lambda-invoker": "^2.0.1",
-    "@architect/sandbox": "github:lpsinger/sandbox#access-key-chars",
+    "@architect/sandbox": "github:lpsinger/sandbox#nasa-gcn",
     "@architect/utils": "^4.0.6",
     "@aws-sdk/client-cognito-identity-provider": "3.632.0",
     "@aws-sdk/client-dynamodb": "3.632.0",
