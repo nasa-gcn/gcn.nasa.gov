@@ -13,16 +13,11 @@ import { domain, getEnvOrDieInProduction } from './env.server'
 
 const client_id = getEnvOrDieInProduction('KAFKA_CLIENT_ID') ?? ''
 const client_secret = getEnvOrDieInProduction('KAFKA_CLIENT_SECRET')
-let kafka: Kafka | undefined = undefined
-try {
-  kafka = new Kafka({
-    client_id,
-    client_secret,
-    domain,
-  })
-} catch (e) {
-  console.warn('Failed to initialize Kafka: ', e)
-}
+const kafka: Kafka | undefined = new Kafka({
+  client_id,
+  client_secret,
+  domain,
+})
 
 function setOidcHttpOptions() {
   // Increase the timeout used for OpenID Connect requests.
@@ -62,7 +57,7 @@ if (process.env.ARC_SANDBOX) {
   }
 } else {
   // FIXME: remove memoizee and use top-level await once we switch to ESM builds.
-  if (kafka) {
+  try {
     const getProducer = memoizee(
       async () => {
         setOidcHttpOptions()
@@ -84,7 +79,8 @@ if (process.env.ARC_SANDBOX) {
       const producer = await getProducer()
       await producer.send({ topic, messages: [{ value }] })
     }
-  } else {
+  } catch (error) {
+    console.warn('Failed to send kafka message: ', error)
     send = async () => {
       console.warn(
         'Kafka send function called, but Kafka is not defined. This is a known issue in CI'

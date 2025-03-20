@@ -27,8 +27,6 @@ jobs:
         run: npx playwright install --with-deps
       - name: Run Playwright tests
         env:
-          ARC_TABLES_PORT: 8000
-          ARC_DB_EXTERNAL: true
           AWS_ACCESS_KEY_ID: fakeTestString
           AWS_SECRET_ACCESS_KEY: fakeTestString
         run: npx playwright test
