@@ -25,8 +25,6 @@ jobs:
         run: npm ci
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
-      - name: Pull Latest docker image
-        run: docker pull amazon/dynamodb-local:latest
       - name: Run Playwright tests
         env:
           ARC_TABLES_PORT: 8000
