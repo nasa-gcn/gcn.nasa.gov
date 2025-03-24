@@ -1,12 +1,13 @@
 import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
+import type { QueryCommandInput } from '@aws-sdk/lib-dynamodb'
 import {
   BatchWriteCommand,
   DynamoDBDocumentClient,
   paginateScan,
 } from '@aws-sdk/lib-dynamodb'
 import { slug } from 'github-slugger'
-import { orderBy, uniqBy } from 'lodash'
+import { minBy } from 'lodash'
 
 import type { Circular } from '~/routes/circulars/circulars.lib'
 
@@ -43,23 +44,27 @@ export async function backfillSynonyms() {
 
     for (const circular of circulars) {
       if (circular.eventId && !eventsRun.has(circular.eventId)) {
-        const command = new QueryCommand({
+        const params: QueryCommandInput = {
           TableName: circularTableName,
           IndexName: 'circularsByEventId',
           KeyConditionExpression: 'eventId = :eventId',
           ExpressionAttributeValues: {
-            ':eventId': { S: circular.eventId },
+            ':eventId': circular.eventId,
           },
-        })
-
-        const response = await client.send(command)
-        const items = (response.Items || []).map((item) => ({
-          circularId: item.circularId?.S,
-          eventId: item.eventId?.S,
-          createdOn: item.createdOn?.N,
+        }
+        const command = new QueryCommand(params)
+        const response = await docClient.send(command)
+        const items = response.Items?.map((item) => ({
+          circularId: item.circularId.N,
+          eventId: item.eventId.S,
+          createdOn: item.createdOn.N,
         }))
 
-        const initialDate = orderBy(items, ['circularId'], ['asc'])[0].createdOn
+        const initialDateObj = minBy(items, 'createdOn')
+        if (!initialDateObj?.createdOn) {
+          throw Error
+        }
+        const initialDate = initialDateObj.createdOn
 
         if (!initialDate) {
           throw Error
@@ -71,13 +76,11 @@ export async function backfillSynonyms() {
       }
     }
     if (writes.length > 0 && TableName) {
-      const dedupedWrites = uniqBy(writes, 'eventId')
-
-      console.log(`Writing ${dedupedWrites.length} records`)
+      console.log(`Writing ${writes.length} records`)
 
       const command = new BatchWriteCommand({
         RequestItems: {
-          [TableName]: dedupedWrites.map(({ eventId, initialDate }) => ({
+          [TableName]: writes.map(({ eventId, initialDate }) => ({
             PutRequest: {
               Item: {
                 synonymId: crypto.randomUUID(),
@@ -91,7 +94,7 @@ export async function backfillSynonyms() {
       })
 
       await client.send(command)
-      dedupedWrites.map(({ eventId }) => eventsRun.add(eventId))
+      writes.map(({ eventId }) => eventsRun.add(eventId))
     }
   }
   const endTime = new Date()
