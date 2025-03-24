@@ -55,11 +55,13 @@ export async function backfillSynonyms() {
         }
         const command = new QueryCommand(params)
         const response = await docClient.send(command)
-        const items = response.Items?.map((item) => ({
-          circularId: item.circularId,
-          eventId: item.eventId,
-          createdOn: item.createdOn,
-        }))
+        const items = response.Items?.map(
+          ({ circularId, eventId, createdOn }) => ({
+            circularId,
+            eventId,
+            createdOn,
+          })
+        )
 
         const initialDateObj = minBy(items, 'createdOn')
         if (!initialDateObj?.createdOn) {
