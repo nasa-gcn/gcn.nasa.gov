@@ -1,9 +1,10 @@
-import { DynamoDBClient, QueryCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient } from '@aws-sdk/client-dynamodb'
 import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm'
 import type { QueryCommandInput } from '@aws-sdk/lib-dynamodb'
 import {
   BatchWriteCommand,
   DynamoDBDocumentClient,
+  QueryCommand,
   paginateScan,
 } from '@aws-sdk/lib-dynamodb'
 import { slug } from 'github-slugger'
@@ -55,9 +56,9 @@ export async function backfillSynonyms() {
         const command = new QueryCommand(params)
         const response = await docClient.send(command)
         const items = response.Items?.map((item) => ({
-          circularId: item.circularId.N,
-          eventId: item.eventId.S,
-          createdOn: item.createdOn.N,
+          circularId: item.circularId,
+          eventId: item.eventId,
+          createdOn: item.createdOn,
         }))
 
         const initialDateObj = minBy(items, 'createdOn')
