@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { useSearchParams } from '@remix-run/react'
+import invariant from 'tiny-invariant'
 
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
@@ -96,5 +97,20 @@ export function maybeThrow<Type extends ErrorType>(
     throw e
   } else {
     console.warn(warning)
+  }
+}
+
+export function joinListWithOxfordComma(
+  list: string[],
+  conjunction: string = 'and'
+) {
+  invariant(list.length >= 1)
+  if (list.length == 1) {
+    return list[0]
+  } else if (list.length == 2) {
+    return list.join(` ${conjunction} `)
+  } else {
+    const last = list.pop()
+    return `${list.join(', ')}, ${conjunction} ${last}`
   }
 }
