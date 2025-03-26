@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { joinListWithOxfordComma } from '~/lib/utils'
 import { stripTags } from '~/lib/utils.server'
 
 describe('stripTags', () => {
@@ -20,5 +21,24 @@ describe('stripTags', () => {
   })
   test('handles partial html tags', () => {
     expect(stripTags(partialTag)).toBe('')
+  })
+})
+
+describe('joinListWithOxfordComma', () => {
+  test('works with 1 item', () => {
+    expect(joinListWithOxfordComma(['foo'])).toBe('foo')
+  })
+  test('works with 2 items', () => {
+    expect(joinListWithOxfordComma(['foo', 'bar'])).toBe('foo and bar')
+  })
+  test('works with 3 items', () => {
+    expect(joinListWithOxfordComma(['foo', 'bar', 'bat'])).toBe(
+      'foo, bar, and bat'
+    )
+  })
+  test('works with 4 items', () => {
+    expect(joinListWithOxfordComma(['foo', 'bar', 'bat', 'baz'])).toBe(
+      'foo, bar, bat, and baz'
+    )
   })
 })
