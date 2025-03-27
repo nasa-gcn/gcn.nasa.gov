@@ -26,6 +26,9 @@ jobs:
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
       - name: Run Playwright tests
+        env:
+          AWS_ACCESS_KEY_ID: fakeTestString
+          AWS_SECRET_ACCESS_KEY: fakeTestString
         run: npx playwright test
       - uses: actions/upload-artifact@v4
         if: always()
