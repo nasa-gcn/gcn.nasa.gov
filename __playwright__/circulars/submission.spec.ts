@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test'
 
+test.beforeEach(async ({ page }) => {
+  await page.goto('/circulars')
+  await page.waitForSelector('#query')
+})
+
 test.describe('Circulars submission page', () => {
   test('posts a submission successfully ', async ({ page }) => {
     test.slow()
