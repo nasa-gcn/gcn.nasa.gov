@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test'
 
+test.beforeEach(async ({ page }) => {
+  await page.goto('/circulars')
+  await page.waitForSelector('#query')
+})
+
 test.describe('Circulars archive page', () => {
   test('responds to changes in the number of results per page', async ({
     page,

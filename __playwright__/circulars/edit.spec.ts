@@ -25,6 +25,11 @@ const editTestsCircular = {
   eventId: 'ZTF23aaoohpy',
 }
 
+test.beforeEach(async ({ page }) => {
+  await page.goto('/circulars')
+  await page.waitForSelector('#query')
+})
+
 test.describe('Circulars edit page', () => {
   test('populates all fields on load', async ({ page }) => {
     test.slow()
