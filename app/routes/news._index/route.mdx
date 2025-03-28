@@ -30,6 +30,27 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
+        <CollectionCalendarDate datetime={'March 31, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Circulars over Kafka Event Name Backfill</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+          In preparation for new search and sort features in the GCN Circulars archive, the GCN team will be backfilling the automatically assigned event name (e.g. `"eventId": "GRB 250331C"`) derived from each GCN Circular subject. Event names have been included in all JSON versions of Circulars starting with [GCN Circular 37912](/circulars/37912).  The backfill of all prior Circulars will result in the following behavior that may impact some users:
+          - The entire archive of ~40k Circulars will be distributed over Kafka with the new event names.
+          - Revised Circulars will _not_ be redistributed over email.
+
+        The event name backfill will be executed on April 7, 2025.
+
+      </CollectionDescription>
+    </CollectionItem>
+
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
         <CollectionCalendarDate datetime={'March 3, 2025'} />
       }
     >
