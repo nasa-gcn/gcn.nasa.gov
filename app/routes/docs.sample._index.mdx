@@ -7,9 +7,6 @@ handle:
 
 [Apache Kafka](https://kafka.apache.org) is an open-source distributed event streaming platform used by GCN to stream Notices and Circulars in real time.
 
-NASA leverages Kafka extensively, with notable implementations including the General Coordinates Network (GCN) at the Goddard Space Flight Center, the Complex Event Processor for Deep Space Network at Jet Propulsion Laboratory, and other federal agencies. These organizations use self-managed Kafka brokers, either Apache Kafka or the Confluent Platform, to support their data-intensive operations. GCN is sponsoring [FedRAMP](https://www.fedramp.gov) authorization for [Confluent Cloud](https://www.confluent.io/confluent-cloud/) to make it easy for NASA and other federal agencies to deploy Kafka software-as-a-service.
-
-GCN’s Kafka cluster is simple yet flexible, it operates on a standard three-broker Kafka cluster, without any custom authentication extensions or vendor lock-in. It uses Confluent Platform but can easily switch to open-source Kafka or managed solutions like Confluent Cloud. With [OpenID Connect (OIDC)](https://openid.net/developers/how-connect-works/) for single sign-on, utilizing [Amazon Cognito](https://aws.amazon.com/cognito/) for authentication, GCN ensures consistency across its web services and Kafka broker, making the system adaptable and secure.
 
 ## GCN Notices Formats and Distributions
 
