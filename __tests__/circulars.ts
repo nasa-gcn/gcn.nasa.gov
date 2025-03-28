@@ -66,12 +66,15 @@ describe('parseEventFromSubject', () => {
   const antaresEvent = 'ANTARES 200407A'
   const baksanEvent = 'Baksan Neutrino Observatory Alert 201228.36'
   const grbEvent = 'GRB 230228A'
+  const grbEventLetterless = 'GRB 230228'
   const hawcEvent = 'HAWC-221123A'
   const iceEvent = 'IceCube-221223A'
   const lvkEvent = 'LIGO/Virgo S200224ca'
   const sgrEvent = 'SGR 1935+2154'
   const ztfEvent = 'ZTF23aabmzlp'
   const epEvent = 'EP241119a'
+  const frbEvent = 'FRB 20250206A'
+  const svomEvent = 'sb25021804'
 
   test('handles nonsense subject cases', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
@@ -127,6 +130,70 @@ describe('parseEventFromSubject', () => {
       const grbSubjectWithHyphen =
         'Swift GRB-230228A detection of a possibly short burst'
       expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(grbEvent)
+    })
+
+    test('handles GRB event names without a letter', () => {
+      const grbSubjectWithSpace =
+        'GRB 230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names in misc positions without letter', () => {
+      const grbSubjectWithSpace =
+        'Swift detection of a possibly short burst for GRB 230228'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names without space without a letter', () => {
+      const grbSubjectWithNoSpace =
+        'GRB230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithNoSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names without spaces in misc positions without a letter', () => {
+      const grbSubjectWithSpace =
+        'Swift detection of a possibly short burst for GRB230228'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event name with an underscore without a letter', () => {
+      const grbSubjectWithUnderscore =
+        'GRB_230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithUnderscore)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names with an underscore in misc positions without a letter', () => {
+      const grbSubjectWithUnderscore =
+        'Swift detection of GRB_230228 a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithUnderscore)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event name with a hyphen without a letter', () => {
+      const grbSubjectWithHyphen =
+        'GRB-230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event name with a hyphen in misc positions without a letter', () => {
+      const grbSubjectWithHyphen =
+        'Swift GRB-230228 detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(
+        grbEventLetterless
+      )
     })
   })
 
@@ -572,11 +639,111 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(baksanSubjectWithHyphen)).toBe(baksanEvent)
     })
   })
+
+  describe('FRB', () => {
+    test('handles FRB event names', () => {
+      const frbSubject =
+        'FRB 20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubject)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names in misc positions', () => {
+      const frbSubjectWithSpace =
+        'MASTER observations:FRB 20250206A and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithSpace)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names without space', () => {
+      const frbSubjectWithNoSpace =
+        'FRB20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithNoSpace)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names without spaces in misc positions', () => {
+      const frbSubjectWithSpace =
+        'MASTER observations: FRB20250206A and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithSpace)).toBe(frbEvent)
+    })
+
+    test('handles FRB event name with an underscore', () => {
+      const frbSubjectWithUnderscore =
+        'FRB_20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithUnderscore)).toBe(frbEvent)
+    })
+
+    test('handles FRB event names with an underscore in misc positions', () => {
+      const frbSubjectWithUnderscore =
+        'MASTER observations and FRB_20250206A: possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithUnderscore)).toBe(frbEvent)
+    })
+
+    test('handles FRB event name with a hyphen', () => {
+      const frbSubjectWithHyphen =
+        'FRB-20250206A: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithHyphen)).toBe(frbEvent)
+    })
+
+    test('handles FRB event name with a hyphen in misc positions', () => {
+      const frbSubjectWithHyphen =
+        'MASTER observations: FRB-20250206A and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubjectWithHyphen)).toBe(frbEvent)
+    })
+  })
+
+  describe('SVOM', () => {
+    test('handles SVOM event names', () => {
+      const svomSubject =
+        'SVOM/sb25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubject)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names in misc positions', () => {
+      const svomSubjectWithNoSpace =
+        'SVOM detection: SVOM/sb25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithNoSpace)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names with space', () => {
+      const svomSubjectWithSpace =
+        'SVOM/sb 25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithSpace)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names with spaces in misc positions', () => {
+      const svomSubjectWithSpace =
+        'SVOM detection: SVOM/sb25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithSpace)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event name with an underscore', () => {
+      const svomSubjectWithUnderscore =
+        'SVOM/sb_25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithUnderscore)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event names with an underscore in misc positions', () => {
+      const svomSubjectWithUnderscore =
+        'SVOM detection: SVOM/sb25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithUnderscore)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event name with a hyphen', () => {
+      const svomSubjectWithHyphen =
+        'SVOM/sb-25021804: SVOM detection of a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithHyphen)).toBe(svomEvent)
+    })
+
+    test('handles SVOM event name with a hyphen in misc positions', () => {
+      const svomSubjectWithHyphen =
+        'SVOM detection: SVOM/sb-25021804 a long X-ray transient'
+      expect(parseEventFromSubject(svomSubjectWithHyphen)).toBe(svomEvent)
+    })
+  })
 })
 
 describe('emailIsAutoReply', () => {
   const invalidFwdSubject = 'FWD: Check this out'
-  test('detects valid subjectline', () => {
+  test('detects valid subject line', () => {
     expect(emailIsAutoReply(invalidFwdSubject)).toBe(true)
   })
 })

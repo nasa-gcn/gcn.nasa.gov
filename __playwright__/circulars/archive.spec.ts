@@ -1,5 +1,10 @@
 import { expect, test } from '@playwright/test'
 
+test.beforeEach(async ({ page }) => {
+  await page.goto('/circulars')
+  await page.waitForSelector('#query')
+})
+
 test.describe('Circulars archive page', () => {
   test('responds to changes in the number of results per page', async ({
     page,
@@ -48,7 +53,7 @@ test.describe('Circulars archive page', () => {
   })
 
   test('search finds no results for query with typo', async ({ page }) => {
-    // this highlights this search behaviour does not capture cases where there is a minor typo
+    // this highlights this search behavior does not capture cases where there is a minor typo
     await page.goto('/circulars?query=230812C')
     await page.waitForLoadState()
     await expect(

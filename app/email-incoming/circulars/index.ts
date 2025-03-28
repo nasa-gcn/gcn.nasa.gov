@@ -99,8 +99,8 @@ export const handler = createEmailIncomingMessageHandler(
 
     // Removes sub as a property if it is undefined from the legacy users
     if (!circular.sub) delete circular.sub
-    const { circularId } = await putRaw(circular)
-    if (eventId) await tryInitSynonym(eventId)
+    const { circularId, createdOn } = await putRaw(circular)
+    if (eventId) await tryInitSynonym(eventId, createdOn)
 
     // Send a success email
     await sendSuccessEmail({

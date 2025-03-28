@@ -14,7 +14,7 @@ import { useRecaptchaSiteKey } from '~/root'
 
 // Something really weird is going on with default imports here.
 // On the server side, BaseReCAPTCHA is the module itself.
-// On the client side, BaseReCAPTCAH is the module's default import.
+// On the client side, BaseReCAPTCHA is the module's default import.
 const BaseRECAPTCHAComponent =
   'ReCAPTCHA' in BaseReCAPTCHA
     ? (BaseReCAPTCHA.ReCAPTCHA as typeof BaseReCAPTCHA)

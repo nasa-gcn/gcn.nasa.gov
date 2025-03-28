@@ -27,27 +27,30 @@ export default function ({
           {totalItems} result{totalItems != 1 && 's'} found.
         </h3>
       )}
-
-      {allItems.map(({ synonymId, eventIds, slugs, members }) => (
-        <div key={synonymId}>
-          <details>
-            <summary>
-              <Link to={`/circulars/events/${slugs.sort()[0]}${searchString}`}>
-                {eventIds.join(', ')}
-              </Link>
-            </summary>
-            <ol className="margin-left-3">
-              {members.map(({ circularId, subject }) => {
-                return (
-                  <li key={circularId} value={circularId}>
-                    <Link to={`/circulars/${circularId}`}>{subject}</Link>
-                  </li>
-                )
-              })}
-            </ol>
-          </details>
-        </div>
-      ))}
+      <div className="margin-top-2">
+        {allItems.map(({ synonymId, eventIds, slugs, members }) => (
+          <div key={synonymId}>
+            <details>
+              <summary>
+                <Link
+                  to={`/circulars/events/${slugs.sort()[0]}${searchString}`}
+                >
+                  {eventIds.join(', ')}
+                </Link>
+              </summary>
+              <ol className="margin-left-3">
+                {members.map(({ circularId, subject }) => {
+                  return (
+                    <li key={circularId} value={circularId}>
+                      <Link to={`/circulars/${circularId}`}>{subject}</Link>
+                    </li>
+                  )
+                })}
+              </ol>
+            </details>
+          </div>
+        ))}
+      </div>
     </>
   )
 }

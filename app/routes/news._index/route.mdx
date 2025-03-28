@@ -12,20 +12,71 @@ import {
   Grid,
 } from '@trussworks/react-uswds'
 
-import { SendAnnouncmentButton } from '../news/components'
-import gcnteam from './AAS243_booth.jpg'
+import { SendAnnouncementButton } from '../news/components'
+import teamPhoto from './AAS243_booth.jpg'
 import { Anchor } from '~/components/Anchor'
 
 <Grid row>
   <h1 className="grid-col-fill">GCN News and Events</h1>
   <div className="grid-col-auto">
-    <SendAnnouncmentButton />
+    <SendAnnouncementButton />
   </div>
 </Grid>
 
 <Collection>
 
 ## 2025
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+        <CollectionCalendarDate datetime={'March 3, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>End of INTEGRAL Operations</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+        Beginning March 4, 2025 at 12:08:04 UT, data from the INTErnational Gamma-Ray Astrophysics Laboratory (INTEGRAL) will no longer be transmitted to the INTEGRAL Science Data Centre (ISDC), due to the end of scientific operations, more than 22 years after its launch. As a consequence, the INTEGRAL Burst Alert System (IBAS) will be discontinued and GCN Notices will no longer be distributed.  The full archive of INTEGRAL GCN Notices is available at https://gcn.gsfc.nasa.gov/integral.html.
+
+        The IBAS team thank the scientific community for the continuous support.  The GCN team thank INTEGRAL for being an important contributor to GCN over the last 22 years.
+
+        The mission pages for GCN Notice producers that are no longer operational have been moved to a submenu for [archived missions](https://gcn.nasa.gov/missions/archive), including AGILE, BurstCube, and INTEGRAL.
+
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+        <CollectionCalendarDate datetime={'February 20, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>New SVOM Notices, Retirement of VOEvent Brokers </Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+        #### SVOM VOEvent Notices Available Over Kafka
+          The SVOM Team and the GCN team are pleased to announce the availability of SVOM notice types via the [new GCN](https://gcn.nasa.gov) in VOEvent format.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).  They are not available via GCN Classic. The SVOM Team plans to add JSON format notices at a later date.
+
+          SVOM Mission Summary: The [Space-based multi-band astronomical Variable Objects Monitor (SVOM)](https://www.svom.eu/en/the-svom-mission/) is a French-Chinese mission, result of a collaboration between the two national space agencies, [China National Space Administration (CNSA)](https://www.cnsa.gov.cn/english/index.html) and [Centre national d'études spatiales (CNES)](https://cnes.fr/en/projects/svom). SVOM mission is dedicated to the study of the most powerful transient phenomena, with a particular emphasis on gamma-ray bursts (GRBs). The SVOM spacecraft carries four multi-wavelength instruments: ECLAIRs, Gamma Ray burst Monitor (GRM), Microchannel X-ray Telescope (MXT) and Visible Telescope (VT).
+
+          Notice topics: new SVOM notices provide GRB detection and follow-up observation details. Each of the four instruments has its own dedicated topic to stream notices with their related information, see table below:
+          - `gcn.notices.svom.voevent.grm`
+          - `gcn.notices.svom.voevent.eclairs`
+          - `gcn.notices.svom.voevent.mxt`
+          - `gcn.notices.svom.voevent.vt`
+
+          A more extensive description of the information provided in these new notices is available at https://gcn.nasa.gov/missions/svom.
+
+      #### Planned Retirement of GCN Classic VOEvent Brokers
+        The result of the November 2024 user survey of those utilizing the GCN VOEvent Brokers to receive VOEvent-format Notices with the VOEvent Transport Protocol is overwhelmingly in favor of retiring the brokers and users migrating to receive VOEvent Notices over Kafka.  This service is already available for all GCN Classic Notice types with self-subscription via the [Start Streaming Notices Guide](/quickstart).  The [GCN Classic VOEvent brokers](https://gcn.gsfc.nasa.gov/voevent.html) will be retired shortly after the conclusion of the O4 gravitational wave network observing run, [currently scheduled for October 7, 2025](https://observing.docs.ligo.org/plan/). We recommend the following actions for users currently utilizing VOEvent via GCN Classic.
+          - Sign up to receive VOEvent format Notices via [Kafka or email](/docs/notices/consuming)
+          - [Let the GCN Team know](/contact) when you're ready to unsubscribe from receiving them via the GCN Classic brokers.  All GCN Classic VOEvent subscribers will be unsubscribed after the end of O4 and the brokers will be taken offline.
+      </CollectionDescription>
+    </CollectionItem>
 
     <CollectionItem
       className="maxw-none grid-container"
@@ -48,7 +99,7 @@ import { Anchor } from '~/components/Anchor'
           </div>
           <div className="grid-col-auto">
             <img
-              src={gcnteam}
+              src={teamPhoto}
               alt="GCN Booth at AAS 243"
               width="180"
               height="220"
@@ -99,7 +150,7 @@ import { Anchor } from '~/components/Anchor'
         - Due to planned network maintenance at GSFC, the connections to GCN Classic will have intermittent loss of network connectivity on Friday, October 18 from 7 pm ET (23:00 UTC) until 11 pm ET (3:00 UTC October 19). This affects the following GCN services:
           - GCN Classic Notices distribution via socket, VOEvent, and email
           - GCN Classic Notices web site archive
-          - GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email, however JSON-format Notices distrbution via GCN Kafka will be unaffected
+          - GCN Classic-to-Kafka connection and distribution of Notices via Kafka and email, however JSON-format Notices distribution via GCN Kafka will be unaffected
           - Forwarding of GCN Circulars submitted to gcncirc@capella2.gsfc.nasa.gov, however submission to circulars@gcn.nasa.gov and the [web form](/circulars) will be unaffected.
         - **Schema v4.2.0** includes the following update:
           - `id` property (from the Event core schema) added to [IceCube lvk_nu_track_search notices](https://gcn.nasa.gov/docs/schema/v4.2.0/gcn/notices/icecube/lvk_nu_track_search.schema.json).
@@ -198,7 +249,7 @@ import { Anchor } from '~/components/Anchor'
         [**Swift-BAT/GUANO:**](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) gcn.notices.swift.bat.guano
 
         - *Summary:* GUANO is a ground-based analysis of data from Swift BAT, significantly enhancing the sensitivity and sky area covered as compared to Swift's onboard triggering.
-        - *Occurence Rate:* The Swift/BAT-GUANO notices occur at a rate of 50 times per year.
+        - *Occurrence Rate:* The Swift/BAT-GUANO notices occur at a rate of 50 times per year.
         - *Time Delay:* The post-event processing and communication of alert is distributed to GCN within 10 minutes to 5 hours of detection, depending on data downlink method and space-to-ground communications resource availability.
         - *Notice Type:* The new [Swift/BAT-GUANO notice type](/missions/swift#json-serialized-gcn-notice-types-in-gcn-kafka) (gcn.notices.swift.bat.guano) provides timestamps, sky locations, durations, and other supplementary information on gamma-ray transients discovered through this system, to enable prompt follow-up by observers and other instruments.  The 'initial' notice distributed for any detection will not include localization information. In the majority of cases later 'update' notices will follow with a localization attached. ~1/4 of GUANO bursts will have arcminute-scale localizations, distributed in the form [RA, Dec, Error] the remainder will be more poorly localized and may be distributed as HEALPix maps.
 
