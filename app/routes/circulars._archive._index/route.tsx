@@ -318,7 +318,7 @@ export default function () {
       <Hint id="searchHint">
         {isGroupView ?
           <>
-            Search for Event Groups by eventID (e.g. 'GRB 123456A', 'GRB123456A',
+            Search for Event Groups by event name (e.g. 'GRB 123456A', 'GRB123456A',
             '123456A'). <br />
           </> : <>
             Search for Circulars by submitter, subject, or body text (e.g. 'Fermi
