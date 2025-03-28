@@ -247,8 +247,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          End of INTEGRAL Operations. See{' '}
-          <Link className="usa-link" to="/news#end-of-integral-operations">
+          Circulars over Kafka EventID Backfill. See{' '}
+          <Link
+            className="usa-link"
+            to="/news#circulars-over-kafka-eventid-backfill"
+          >
             news and announcements
           </Link>
         </NewsBanner>
