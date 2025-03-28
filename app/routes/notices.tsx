@@ -453,6 +453,14 @@ export default function () {
         >
           Status of the CGRO spacecraft.
         </NoticeCard>
+        <NoticeCard
+          name="SVOM"
+          href="https://fsc.svom.org/home"
+          tags={['gamma', 'x-ray', 'optical']}
+          selectedTags={tagNames}
+        >
+          GRBs and other X-ray transients detected by SVOM.
+        </NoticeCard>
       </CardGroup>
     </GridContainer>
   )
