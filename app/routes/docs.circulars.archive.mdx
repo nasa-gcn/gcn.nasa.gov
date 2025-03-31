@@ -26,23 +26,23 @@ You can also type in a specific Circular ID (e.g. 12345) and it will list that C
 <WithFeature SYNONYMS>
 ## Event View
 
-The Circulars archive provides an Event View that allows users to view all Circulars associated with a particular astronomical event. This is enabled by the eventID and Synonym Groups features.
+The Circulars archive provides an Event View that allows users to view all Circulars associated with a particular astronomical event.
 
 Each Circular is automatically assigned an event name derived from the subject (e.g. GRB 250109A, EP250109a). This assignment is done by matching against a regular expressions list.
 
-The `eventID` is listed in the JSON format version of Circulars. The first eventID used in the subject is associated automatically, and all Circulars with the same eventID are in a Synonym Group. GCN moderators can associate multiple eventIDs to Synonym Groups, such that all Circulars with these eventIDs will be listed in the same group.
+The event name is listed in the JSON format version of Circulars. The first event name used in the subject is associated automatically, and all Circulars with the same event name are grouped. GCN moderators can associate multiple event names to groups, such that all Circulars with these event names will be listed in the same event group.
 
-### Adding events to the same synonym group
+### Adding events to the same group
 
-GCN Team moderators can create or modify synonym groups. If you would like to suggest the creation or modification of a synonym group, submit a ticket via [the contact form](/support).
+GCN Team moderators can create or modify groups. If you would like to suggest the creation or modification of an event group, submit a ticket via [the contact form](/support).
 
-### Searching by eventID
+### Searching by event name
 
-In the Event View search bar, enter in an eventID and it will take you to the associated Synonym Group. It will recognize regular expressions associated with the `eventID` (e.g. GRB 123456A, GRB123456A, 123456A).
+In the Event View search bar, enter in an event name and it will take you to the associated event group. It will recognize regular expressions associated with the event name (e.g. GRB 123456A, GRB123456A, 123456A).
 
-### Linking to an eventID or Synonym Group
+### Linking to an event name or event group
 
-To save a direct link to all Circulars assocaited with a particular `eventID` or Synonym Group, you can point to any `eventID` in that group, e.g. `https://gcn.nasa.gov/circulars/group/[eventID]'.
+To save a direct link to all Circulars assocaited with a particular event name or event group, you can point to any event name in that group, e.g. `https://gcn.nasa.gov/circulars/group/[event_name]'.
 
 </WithFeature>
 
