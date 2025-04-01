@@ -13,7 +13,7 @@ import { domain, getEnvOrDieInProduction } from './env.server'
 
 const client_id = getEnvOrDieInProduction('KAFKA_CLIENT_ID') ?? ''
 const client_secret = getEnvOrDieInProduction('KAFKA_CLIENT_SECRET')
-const kafka: Kafka | undefined = new Kafka({
+const kafka = new Kafka({
   client_id,
   client_secret,
   domain,
@@ -44,47 +44,36 @@ export let send: (topic: string, value: string) => Promise<void>
 // testing.
 if (process.env.ARC_SANDBOX) {
   send = async (topic, value) => {
-    if (kafka) {
-      setOidcHttpOptions()
-      const producer = kafka.producer()
-      await producer.connect()
-      try {
-        await producer.send({ topic, messages: [{ value }] })
-      } finally {
-        await producer.disconnect()
-      }
+    setOidcHttpOptions()
+    const producer = kafka.producer()
+    await producer.connect()
+    try {
+      await producer.send({ topic, messages: [{ value }] })
+    } finally {
+      await producer.disconnect()
     }
   }
 } else {
   // FIXME: remove memoizee and use top-level await once we switch to ESM builds.
-  try {
-    const getProducer = memoizee(
-      async () => {
-        setOidcHttpOptions()
-        const producer = kafka.producer()
-        await producer.connect()
-        ;['SIGINT', 'SIGTERM'].forEach((event) =>
-          process.once(event, async () => {
-            console.log('Disconnecting from Kafka')
-            await producer.disconnect()
-            console.log('Disconnected from Kafka')
-          })
-        )
-        return producer
-      },
-      { promise: true }
-    )
-
-    send = async (topic, value) => {
-      const producer = await getProducer()
-      await producer.send({ topic, messages: [{ value }] })
-    }
-  } catch (error) {
-    console.warn('Failed to send kafka message: ', error)
-    send = async () => {
-      console.warn(
-        'Kafka send function called, but Kafka is not defined. This is a known issue in CI'
+  const getProducer = memoizee(
+    async () => {
+      setOidcHttpOptions()
+      const producer = kafka.producer()
+      await producer.connect()
+      ;['SIGINT', 'SIGTERM'].forEach((event) =>
+        process.once(event, async () => {
+          console.log('Disconnecting from Kafka')
+          await producer.disconnect()
+          console.log('Disconnected from Kafka')
+        })
       )
-    }
+      return producer
+    },
+    { promise: true }
+  )
+
+  send = async (topic, value) => {
+    const producer = await getProducer()
+    await producer.send({ topic, messages: [{ value }] })
   }
 }
