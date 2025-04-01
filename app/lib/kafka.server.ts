@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Kafka } from 'gcn-kafka'
+import { Kafka, KafkaJSNonRetriableError } from 'gcn-kafka'
 import memoizee from 'memoizee'
 import { custom } from 'openid-client'
 
@@ -44,13 +44,23 @@ export let send: (topic: string, value: string) => Promise<void>
 // testing.
 if (process.env.ARC_SANDBOX) {
   send = async (topic, value) => {
-    setOidcHttpOptions()
-    const producer = kafka.producer()
-    await producer.connect()
     try {
-      await producer.send({ topic, messages: [{ value }] })
-    } finally {
-      await producer.disconnect()
+      setOidcHttpOptions()
+      const producer = kafka.producer()
+      await producer.connect()
+      try {
+        await producer.send({ topic, messages: [{ value }] })
+      } finally {
+        await producer.disconnect()
+      }
+    } catch (e) {
+      if (e instanceof KafkaJSNonRetriableError) {
+        console.log(
+          'Kafka is not correctly configured. This would be an error on Production, but continuing on dev'
+        )
+      } else {
+        throw e
+      }
     }
   }
 } else {
