@@ -8,6 +8,7 @@
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import { errors } from '@opensearch-project/opensearch'
 import type { DynamoDBRecord } from 'aws-lambda'
+import { orderBy } from 'lodash'
 
 import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
@@ -46,11 +47,16 @@ export const handler = createTriggerHandler(
         .map(async (image) => {
           const { synonymId } = unmarshallTrigger(image) as Synonym
           const synonyms = await getSynonymsByUuid(synonymId)
+
           if (synonyms.length > 0) {
+            const oldestDate = orderBy(synonyms, ['initialDate'], ['asc'])[0]
+              .initialDate
+
             await putIndex({
               synonymId,
               eventIds: synonyms.map((synonym) => synonym.eventId),
               slugs: synonyms.map((synonym) => synonym.slug),
+              initialDate: oldestDate,
             })
           } else {
             await removeIndex(synonymId)

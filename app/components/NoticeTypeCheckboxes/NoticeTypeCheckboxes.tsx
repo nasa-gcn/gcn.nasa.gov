@@ -98,6 +98,18 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.SVOM = '/missions/svom'
   }
 
+  const displayNoticeTypes: { [key: string]: string[] } = {
+    ...NoticeTypes,
+  }
+
+  if (selectedFormat == 'voevent') {
+    displayNoticeTypes['SVOM'] = [
+      'gcn.notices.svom.voevent.grm',
+      'gcn.notices.svom.voevent.eclairs',
+      'gcn.notices.svom.voevent.mxt',
+    ]
+  }
+
   if (useFeature('FERMI_GBM_QUICKSTART')) {
     JsonNoticeTypes.Fermi = ['gcn.notices.fermi.gbm']
     JsonNoticeTypeLinks.Fermi = '/missions/fermi'
@@ -121,7 +133,7 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.KM3NET = '/missions/km3net'
   }
 
-  const counterfunction = (childRef: HTMLInputElement) => {
+  const counterFunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
     } else {
@@ -152,7 +164,7 @@ export function NoticeTypeCheckboxes({
       <NestedCheckboxes
         key={selectedFormat}
         nodes={Object.entries(
-          selectedFormat == 'json' ? JsonNoticeTypes : NoticeTypes
+          selectedFormat == 'json' ? JsonNoticeTypes : displayNoticeTypes
         ).map(([mission, noticeTypes]) => ({
           id: mission,
           label: mission,
@@ -189,7 +201,7 @@ export function NoticeTypeCheckboxes({
               : false,
           })),
         }))}
-        childoncheckhandler={counterfunction}
+        childOnCheckHandler={counterFunction}
       />
       <div className="text-bold text-ink">
         {humanizedCount(selectedCounter, 'notice type')} selected for{' '}

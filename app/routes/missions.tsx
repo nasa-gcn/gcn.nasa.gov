@@ -47,9 +47,6 @@ export default function () {
               <NavLink key="icecube" to="icecube">
                 IceCube Neutrino Observatory
               </NavLink>,
-              <NavLink key="integral" to="integral">
-                INTEGRAL
-              </NavLink>,
               useFeature('KM3NET') && (
                 <NavLink key="km3net" to="km3net">
                   KM3NeT
@@ -76,23 +73,24 @@ export default function () {
               <NavLink key="sksn" to="sksn">
                 Super-Kamiokande
               </NavLink>,
-              useFeature('SVOM') && (
-                <NavLink key="svom" to="svom">
-                  SVOM
-                </NavLink>
-              ),
+              <NavLink key="svom" to="svom">
+                SVOM
+              </NavLink>,
               <>
-                <NavLink key="archival" to="archival">
-                  Archival
+                <NavLink key="archive" to="archive">
+                  Archive
                 </NavLink>
                 <SideNavSub
-                  base="archival"
+                  base="archive"
                   items={[
-                    <NavLink key="agile" to="agile">
+                    <NavLink key="agile" to="archive/agile">
                       AGILE
                     </NavLink>,
-                    <NavLink key="burstcube" to="burstcube">
+                    <NavLink key="burstcube" to="archive/burstcube">
                       BurstCube
+                    </NavLink>,
+                    <NavLink key="integral" to="archive/integral">
+                      INTEGRAL
                     </NavLink>,
                   ]}
                 />

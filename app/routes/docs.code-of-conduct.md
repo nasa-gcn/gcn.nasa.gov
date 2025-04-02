@@ -19,7 +19,7 @@ Circulars authors can request edits to their own archived Circulars to correct i
 
 ## Reproducing GCN Notices or Circulars in External Archives
 
-The GCN team welcomes cross-compatibility between community astronomical resources. GCN Circulars are scholarly publications and that and the expectations of scientific conduct for citing and reproducing them apply. If GCN Notices, Circulars, or their data are used in other systems, please link back to the original source materal at https://gcn.nasa.gov or https://gcn.gsfc.nasa.gov.
+The GCN team welcomes cross-compatibility between community astronomical resources. GCN Circulars are scholarly publications and that and the expectations of scientific conduct for citing and reproducing them apply. If GCN Notices, Circulars, or their data are used in other systems, please link back to the original source material at https://gcn.nasa.gov or https://gcn.gsfc.nasa.gov.
 
 ## Enforcement
 

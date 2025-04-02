@@ -132,7 +132,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   }
 }
 
-/** Don't reevaluate this route's loader due to client-side navigations. */
+/** Don't reevaluate this route's loader due to client-side navigation. */
 export function shouldRevalidate() {
   return false
 }
@@ -247,10 +247,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          GCN at AAS 245, Legacy Circulars Address Retirement. See{' '}
+          Circulars over Kafka event name backfill. See{' '}
           <Link
             className="usa-link"
-            to="/news#--gcn-at-aas-245-legacy-circulars-address-retirement"
+            to="/news#circulars-over-kafka-event-name-backfill"
           >
             news and announcements
           </Link>

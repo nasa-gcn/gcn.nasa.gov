@@ -4866,627 +4866,752 @@
     {
       "synonymId": "8a62ee0a-e90a-4f02-84f9-83a28bab1d08",
       "eventId": "SGR 1935+21542",
-      "slug": "sgr-193521542"
+      "slug": "sgr-193521542",
+      "initialDate": 1666389578000
     },
     {
       "synonymId": "8a62ee0a-e90a-4f02-84f9-83a28bab1d08",
       "eventId": "LIGO/Virgo/KAGRA S240630t",
-      "slug": "ligovirgokagra-s240630t"
+      "slug": "ligovirgokagra-s240630t",
+      "initialDate": 1719767201026
     },
     {
       "synonymId": "8a62ee0a-e90a-4f02-84f9-83a28bab1d08",
       "eventId": "GRB 230911C",
-      "slug": "grb-230911c"
+      "slug": "grb-230911c",
+      "initialDate": 1694423470716
     },
     {
       "synonymId": "e2ee0f28-620e-4904-8eeb-8c7befaa20c7",
       "eventId": "LIGO/Virgo/KAGRA S230927l",
-      "slug": "ligovirgokagra-s230927l"
+      "slug": "ligovirgokagra-s230927l",
+      "initialDate": 1695793728871
     },
     {
       "synonymId": "fa535a97-f536-4834-abf8-cf18cde29745",
       "eventId": "GRB 230728A",
-      "slug": "grb-230728a"
+      "slug": "grb-230728a",
+      "initialDate": 1690513623681
     },
     {
       "synonymId": "25176094-364a-4029-aec2-bf84def16adf",
       "eventId": "GRB 230919A",
-      "slug": "grb-230919a"
+      "slug": "grb-230919a",
+      "initialDate": 1695143182347
     },
     {
       "synonymId": "f4958e39-28cb-410f-a521-f146a68212a7",
       "eventId": "GRB 230904A",
-      "slug": "grb-230904a"
+      "slug": "grb-230904a",
+      "initialDate": 1693816214078
     },
     {
       "synonymId": "efcbddac-dd34-4863-bcbd-2e59c27f7e26",
       "eventId": "GRB 230824A",
-      "slug": "grb-230824a"
+      "slug": "grb-230824a",
+      "initialDate": 1692886366147
     },
     {
       "synonymId": "9c3cb51b-1f9f-4b24-9ef6-019237cdbb3c",
       "eventId": "IceCube-230914A",
-      "slug": "icecube-230914a"
+      "slug": "icecube-230914a",
+      "initialDate": 1694695298136
     },
     {
       "synonymId": "4c69eaf9-b9c1-45f1-a37e-5314245f7783",
       "eventId": "GRB 230805B",
-      "slug": "grb-230805b"
+      "slug": "grb-230805b",
+      "initialDate": 1691236148767
     },
     {
       "synonymId": "81da7e3f-aabd-4da0-a428-40a176af1b68",
       "eventId": "GRB 230827.256",
-      "slug": "grb-230827256"
+      "slug": "grb-230827256",
+      "initialDate": 1693161309269
     },
     {
       "synonymId": "83444371-8271-4b6c-bd14-72b8440b1931",
       "eventId": "GRB 230803A",
-      "slug": "grb-230803a"
+      "slug": "grb-230803a",
+      "initialDate": 1691026667050
     },
     {
       "synonymId": "809eb439-c428-4db6-9d22-208b7499820f",
       "eventId": "GRB 230918A",
-      "slug": "grb-230918a"
+      "slug": "grb-230918a",
+      "initialDate": 1695031389854
     },
     {
       "synonymId": "4a62992e-4c35-451e-8771-950d8151882e",
       "eventId": "GRB 230818A",
-      "slug": "grb-230818a"
+      "slug": "grb-230818a",
+      "initialDate": 1692401882315
     },
     {
       "synonymId": "34435f0f-37d2-4e2d-b096-ed1661c4015a",
       "eventId": "LIGO/Virgo/KAGRA S230805x",
-      "slug": "ligovirgokagra-s230805x"
+      "slug": "ligovirgokagra-s230805x",
+      "initialDate": 1691210429787
     },
     {
       "synonymId": "5d995f9a-db28-45f5-b360-43ae1cd030a8",
       "eventId": "LIGO/Virgo/KAGRA S230807f",
-      "slug": "ligovirgokagra-s230807f"
+      "slug": "ligovirgokagra-s230807f",
+      "initialDate": 1691444800072
     },
     {
       "synonymId": "c70c6e8c-9e13-44f7-aa19-d1d8f3bb2334",
       "eventId": "GRB 230816A",
-      "slug": "grb-230816a"
+      "slug": "grb-230816a",
+      "initialDate": 1692203081569
     },
     {
       "synonymId": "828422b5-a6a7-4f3f-93be-a69d92b2a87c",
       "eventId": "GRB 230916B",
-      "slug": "grb-230916b"
+      "slug": "grb-230916b",
+      "initialDate": 1695075591622
     },
     {
       "synonymId": "a9929d11-7d8b-4e15-bf22-67f06daec198",
       "eventId": "GRB 230812B",
-      "slug": "grb-230812b"
+      "slug": "grb-230812b",
+      "initialDate": 1691867325790
     },
     {
       "synonymId": "1aa5892d-4cea-4391-9750-e5cf681bdfd4",
       "eventId": "GRB 230727A",
-      "slug": "grb-230727a"
+      "slug": "grb-230727a",
+      "initialDate": 1690506325629
     },
     {
       "synonymId": "44e826ab-091d-40b0-9b83-464545d428e6",
       "eventId": "GRB 230913A",
-      "slug": "grb-230913a"
+      "slug": "grb-230913a",
+      "initialDate": 1694592394493
     },
     {
       "synonymId": "46f19ade-7cb1-4200-9761-d6b3e8a52546",
       "eventId": "GRB 230913.70",
-      "slug": "grb-23091370"
+      "slug": "grb-23091370",
+      "initialDate": 1694623984555
     },
     {
       "synonymId": "67e8593b-e1c1-46d4-b48c-5023753b64b5",
       "eventId": "LIGO/Virgo/KAGRA S230927be",
-      "slug": "ligovirgokagra-s230927be"
+      "slug": "ligovirgokagra-s230927be",
+      "initialDate": 1695831527426
     },
     {
       "synonymId": "c922e9df-f52d-4933-b17b-c562845e8acc",
       "eventId": "LIGO/Virgo/KAGRA S230822bm",
-      "slug": "ligovirgokagra-s230822bm"
+      "slug": "ligovirgokagra-s230822bm",
+      "initialDate": 1692748200595
     },
     {
       "synonymId": "17bedb5b-d4e4-492e-be03-ab19980b5b12",
       "eventId": "GRB 230918B",
-      "slug": "grb-230918b"
+      "slug": "grb-230918b",
+      "initialDate": 1695081951626
     },
     {
       "synonymId": "386ca2ee-2dc2-4e35-8ad4-b594ed79bbac",
       "eventId": "LIGO/Virgo/KAGRA S230904n",
-      "slug": "ligovirgokagra-s230904n"
+      "slug": "ligovirgokagra-s230904n",
+      "initialDate": 1693807322967
     },
     {
       "synonymId": "7542b666-c210-49f1-acec-a3ce9b4160d9",
       "eventId": "LIGO/Virgo/KAGRA S230911ae",
-      "slug": "ligovirgokagra-s230911ae"
+      "slug": "ligovirgokagra-s230911ae",
+      "initialDate": 1694465719008
     },
     {
       "synonymId": "d56f3dce-c2dc-4de5-9479-52a867f0b8fd",
       "eventId": "GRB 230906A",
-      "slug": "grb-230906a"
+      "slug": "grb-230906a",
+      "initialDate": 1694012822012
     },
     {
       "synonymId": "732a34a8-8035-4783-b968-91e3ccc84b74",
       "eventId": "LIGO/Virgo/KAGRA S230806ak",
-      "slug": "ligovirgokagra-s230806ak"
+      "slug": "ligovirgokagra-s230806ak",
+      "initialDate": 1691357277306
     },
     {
       "synonymId": "676e2a3b-a582-42f1-986f-7605fab5f3e7",
       "eventId": "GRB 230804A",
-      "slug": "grb-230804a"
+      "slug": "grb-230804a",
+      "initialDate": 1691131763815
     },
     {
       "synonymId": "3fd0fe28-d8a7-4dae-936b-ecc793cf1de8",
       "eventId": "IceCube-230727A",
-      "slug": "icecube-230727a"
+      "slug": "icecube-230727a",
+      "initialDate": 1690604682152
     },
     {
       "synonymId": "8b3b5e00-accd-41bf-8f8c-59e4b1812363",
       "eventId": "GRB 230805A",
-      "slug": "grb-230805a"
+      "slug": "grb-230805a",
+      "initialDate": 1691220413132
     },
     {
       "synonymId": "fe70c24a-0b80-4d26-a303-9147e6e36e2a",
       "eventId": "LIGO/Virgo/KAGRA S230917af",
-      "slug": "ligovirgokagra-s230917af"
+      "slug": "ligovirgokagra-s230917af",
+      "initialDate": 1695005222635
     },
     {
       "synonymId": "4ec7786d-ba0d-442d-bafd-a650225061cb",
       "eventId": "LIGO/Virgo/KAGRA S230824r",
-      "slug": "ligovirgokagra-s230824r"
+      "slug": "ligovirgokagra-s230824r",
+      "initialDate": 1692851955127
     },
     {
       "synonymId": "94606093-bed0-4d6b-af0c-2f86bb69a16e",
       "eventId": "GRB 230908A",
-      "slug": "grb-230908a"
+      "slug": "grb-230908a",
+      "initialDate": 1694287777788
     },
     {
       "synonymId": "5848a2ec-8f35-403f-8e8d-b7795757d423",
       "eventId": "GRB 230903A",
-      "slug": "grb-230903a"
+      "slug": "grb-230903a",
+      "initialDate": 1693762412231
     },
     {
       "synonymId": "f73d5200-29dd-44bb-afd2-23f26a483745",
       "eventId": "IceCube-230823A",
-      "slug": "icecube-230823a"
+      "slug": "icecube-230823a",
+      "initialDate": 1692798738661
     },
     {
       "synonymId": "3d507add-b83b-43bc-bffc-a5070398f83c",
       "eventId": "GRB 230728.12",
-      "slug": "grb-23072812"
+      "slug": "grb-23072812",
+      "initialDate": 1690513003120
     },
     {
       "synonymId": "89a07b8a-f5a5-4bd2-8841-aca65909313f",
       "eventId": "GRB 230911D",
-      "slug": "grb-230911d"
+      "slug": "grb-230911d",
+      "initialDate": 1694424937650
     },
     {
       "synonymId": "2b09e414-28db-484b-b443-ced41f77e934",
       "eventId": "GRB 230824.72",
-      "slug": "grb-23082472"
+      "slug": "grb-23082472",
+      "initialDate": 1692898709243
     },
     {
       "synonymId": "a947bd36-ae02-46fd-acc7-1c7752618709",
       "eventId": "LIGO/Virgo/KAGRA S230922g",
-      "slug": "ligovirgokagra-s230922g"
+      "slug": "ligovirgokagra-s230922g",
+      "initialDate": 1695372015902
     },
     {
       "synonymId": "72317cce-644f-4e23-adc2-ba99fb7954a6",
       "eventId": "GRB 230904B",
-      "slug": "grb-230904b"
+      "slug": "grb-230904b",
+      "initialDate": 1693836107326
     },
     {
       "synonymId": "c5b094e1-6d5a-40c2-8433-f43a9ca57b37",
       "eventId": "GRB 230917A",
-      "slug": "grb-230917a"
+      "slug": "grb-230917a",
+      "initialDate": 1695014376335
     },
     {
       "synonymId": "8d82dd9d-fdb1-4638-9f01-127ad4a69a54",
       "eventId": "GRB 230815A",
-      "slug": "grb-230815a"
+      "slug": "grb-230815a",
+      "initialDate": 1692098759842
     },
     {
       "synonymId": "39209f1c-d4dc-4347-a357-8224bf5363a2",
       "eventId": "LIGO/Virgo/KAGRA S230802aq",
-      "slug": "ligovirgokagra-s230802aq"
+      "slug": "ligovirgokagra-s230802aq",
+      "initialDate": 1690980834192
     },
     {
       "synonymId": "d8fce8a1-059f-4750-b07e-dc73f8b604b7",
       "eventId": "GRB 230902.00",
-      "slug": "grb-23090200"
+      "slug": "grb-23090200",
+      "initialDate": 1693617578079
     },
     {
       "synonymId": "1f86ef33-0672-40ae-b58a-3b8d2aeb5743",
       "eventId": "GRB 230915A",
-      "slug": "grb-230915a"
+      "slug": "grb-230915a",
+      "initialDate": 1694892086683
     },
     {
       "synonymId": "242fd086-679e-42b0-89a0-b1e1f439752c",
       "eventId": "GRB 230911A",
-      "slug": "grb-230911a"
+      "slug": "grb-230911a",
+      "initialDate": 1694402404516
     },
     {
       "synonymId": "fbeac8c9-5da4-4c8b-b946-75f80bb9dee5",
       "eventId": "GRB 230802A",
-      "slug": "grb-230802a"
+      "slug": "grb-230802a",
+      "initialDate": 1690960119379
     },
     {
       "synonymId": "f321ed21-ed35-4623-8037-8891c0bf7981",
       "eventId": "LIGO/Virgo/KAGRA S230731an",
-      "slug": "ligovirgokagra-s230731an"
+      "slug": "ligovirgokagra-s230731an",
+      "initialDate": 1690842145366
     },
     {
       "synonymId": "f336d015-1d8c-40cb-9c3c-bca8a7a9ab09",
       "eventId": "GRB 230806A",
-      "slug": "grb-230806a"
+      "slug": "grb-230806a",
+      "initialDate": 1691368593445
     },
     {
       "synonymId": "a0fc2044-d9b3-44a7-9760-a399dd19eca0",
       "eventId": "LIGO/Virgo/KAGRA S230814ah",
-      "slug": "ligovirgokagra-s230814ah"
+      "slug": "ligovirgokagra-s230814ah",
+      "initialDate": 1692057856011
     },
     {
       "synonymId": "937257f5-098e-4270-84a7-a69db2691b8c",
       "eventId": "GRB 230905B",
-      "slug": "grb-230905b"
+      "slug": "grb-230905b",
+      "initialDate": 1694007831826
     },
     {
       "synonymId": "6af1eda7-a9ff-4a74-8df2-2242806ae3ce",
       "eventId": "GRB 230826A",
-      "slug": "grb-230826a"
+      "slug": "grb-230826a",
+      "initialDate": 1693078997548
     },
     {
       "synonymId": "2ab4e9b0-e062-4d5a-8003-917f1beb0250",
       "eventId": "GRB 230904C",
-      "slug": "grb-230904c"
+      "slug": "grb-230904c",
+      "initialDate": 1693870343242
     },
     {
       "synonymId": "ac88d8da-c701-4fb9-9f72-6a0b69d84ca0",
       "eventId": "GRB 230921A",
-      "slug": "grb-230921a"
+      "slug": "grb-230921a",
+      "initialDate": 1695264715293
     },
     {
       "synonymId": "dee0e9d6-d8b3-4f73-acc6-146cdfdd1b59",
       "eventId": "LIGO/Virgo/KAGRA S230914ak",
-      "slug": "ligovirgokagra-s230914ak"
+      "slug": "ligovirgokagra-s230914ak",
+      "initialDate": 1694693000494
     },
     {
       "synonymId": "bfa4af3e-a172-41dd-8b4e-cc2211681607",
       "eventId": "GRB 230827B",
-      "slug": "grb-230827b"
+      "slug": "grb-230827b",
+      "initialDate": 1693230768716
     },
     {
       "synonymId": "58757812-5ca0-4e1c-bc8d-acfd70780542",
       "eventId": "GRB 230723A",
-      "slug": "grb-230723a"
+      "slug": "grb-230723a",
+      "initialDate": 1690832410480
     },
     {
       "synonymId": "a0674772-ad26-4012-b21a-17f00d763e4a",
       "eventId": "GRB 230814A",
-      "slug": "grb-230814a"
+      "slug": "grb-230814a",
+      "initialDate": 1692039927077
     },
     {
       "synonymId": "6a08cfc4-e40f-49b1-91cb-c4db5cda77a7",
       "eventId": "GRB 230818B",
-      "slug": "grb-230818b"
+      "slug": "grb-230818b",
+      "initialDate": 1692779435149
     },
     {
       "synonymId": "3f800d36-993d-4b7c-8863-fa1472b63d70",
       "eventId": "GRB 230911B",
-      "slug": "grb-230911b"
+      "slug": "grb-230911b",
+      "initialDate": 1694407035033
     },
     {
       "synonymId": "fa2e49d0-573f-440d-8e58-2516f749b03e",
       "eventId": "GRB 230812.79",
-      "slug": "grb-23081279"
+      "slug": "grb-23081279",
+      "initialDate": 1691888433665
     },
     {
       "synonymId": "c85de67d-3eac-4753-b295-d572ffe1f820",
       "eventId": "GRB 230802B",
-      "slug": "grb-230802b"
+      "slug": "grb-230802b",
+      "initialDate": 1691025955319
     },
     {
       "synonymId": "d46f5537-0824-4e7d-88a3-7db0723198b6",
       "eventId": "GRB 230807A",
-      "slug": "grb-230807a"
+      "slug": "grb-230807a",
+      "initialDate": 1691447736618
     },
     {
       "synonymId": "c5b35b93-213d-4d19-911a-a2917e4680a1",
       "eventId": "LIGO/Virgo/KAGRA S230908b",
-      "slug": "ligovirgokagra-s230908b"
+      "slug": "ligovirgokagra-s230908b",
+      "initialDate": 1694290690908
     },
     {
       "synonymId": "244ba6e3-843c-4e0d-9507-b0d561f5e8b5",
       "eventId": "IceCube-230707A",
-      "slug": "icecube-230707a"
+      "slug": "icecube-230707a",
+      "initialDate": 1690951453928
     },
     {
       "synonymId": "18d5d078-788c-4e34-afc3-50987b9b9634",
       "eventId": "LIGO/Virgo/KAGRA S230830b",
-      "slug": "ligovirgokagra-s230830b"
+      "slug": "ligovirgokagra-s230830b",
+      "initialDate": 1693374160828
     },
     {
       "synonymId": "9ac71c1e-6414-4455-a3ed-dab529f9e724",
       "eventId": "GRB 230824.10",
-      "slug": "grb-23082410"
+      "slug": "grb-23082410",
+      "initialDate": 1692845429763
     },
     {
       "synonymId": "88f25f4c-c93d-4fad-933f-69a1ce0a9014",
       "eventId": "IceCube-230724A",
-      "slug": "icecube-230724a"
+      "slug": "icecube-230724a",
+      "initialDate": 1690502908596
     },
     {
       "synonymId": "b4cfc758-e272-4a63-8b47-02082c66c8d4",
       "eventId": "LIGO/Virgo/KAGRA S230825k",
-      "slug": "ligovirgokagra-s230825k"
+      "slug": "ligovirgokagra-s230825k",
+      "initialDate": 1692945749194
     },
     {
       "synonymId": "6a9cc7b2-f62e-4b05-9c68-b53924e978fd",
       "eventId": "LIGO/Virgo/KAGRA S230819ax",
-      "slug": "ligovirgokagra-s230819ax"
+      "slug": "ligovirgokagra-s230819ax",
+      "initialDate": 1692467728297
     },
     {
       "synonymId": "e786286e-0b50-4c37-b114-5d8db22d09cb",
       "eventId": "LIGO/Virgo/KAGRA S230919bj",
-      "slug": "ligovirgokagra-s230919bj"
+      "slug": "ligovirgokagra-s230919bj",
+      "initialDate": 1695162568877
     },
     {
       "synonymId": "1d0c00fd-25b9-47de-8096-d9c4e2537475",
       "eventId": "GRB 230828A",
-      "slug": "grb-230828a"
+      "slug": "grb-230828a",
+      "initialDate": 1693307683811
     },
     {
       "synonymId": "134030f9-ea2e-4b0b-bb36-bb167402350d",
       "eventId": "IceCube-230725A",
-      "slug": "icecube-230725a"
+      "slug": "icecube-230725a",
+      "initialDate": 1690503105938
     },
     {
       "synonymId": "bfda930e-befa-4958-b7ed-12d5d5ec9bbd",
       "eventId": "GRB 230827A",
-      "slug": "grb-230827a"
+      "slug": "grb-230827a",
+      "initialDate": 1693160899592
     },
     {
       "synonymId": "0f145949-8c27-4579-9755-423f1697fe16",
       "eventId": "GRB 230820.80",
-      "slug": "grb-23082080"
+      "slug": "grb-23082080",
+      "initialDate": 1692610116584
     },
     {
       "synonymId": "cc8ecaeb-64b3-41ed-9434-db75a2782cba",
       "eventId": "LIGO/Virgo/KAGRA S230922q",
-      "slug": "ligovirgokagra-s230922q"
+      "slug": "ligovirgokagra-s230922q",
+      "initialDate": 1695358209866
     },
     {
       "synonymId": "306099aa-9990-435b-b01d-12bc99b489fe",
       "eventId": "GRB 230808A",
-      "slug": "grb-230808a"
+      "slug": "grb-230808a",
+      "initialDate": 1691492385373
     },
     {
       "synonymId": "1dc1f0c0-3b42-493f-b3a6-17faf8589e33",
       "eventId": "GRB 230916.18",
-      "slug": "grb-23091618"
+      "slug": "grb-23091618",
+      "initialDate": 1694838278277
     },
     {
       "synonymId": "87471a5c-3aed-42b8-907e-6aec43b8e2d7",
       "eventId": "GRB 230817A",
-      "slug": "grb-230817a"
+      "slug": "grb-230817a",
+      "initialDate": 1692274344617
     },
     {
       "synonymId": "31987033-ce98-4271-8327-7d2dcc568b83",
       "eventId": "GRB 230916.19",
-      "slug": "grb-23091619"
+      "slug": "grb-23091619",
+      "initialDate": 1694839465821
     },
     {
       "synonymId": "b34af179-fcf8-4ab2-b74d-cacab2da3d50",
       "eventId": "GRB 230820.82",
-      "slug": "grb-23082082"
+      "slug": "grb-23082082",
+      "initialDate": 1692561053583
     },
     {
       "synonymId": "35364cec-a8df-4dfc-adbe-c21ca5f08757",
       "eventId": "LIGO/Virgo/KAGRA S230924an",
-      "slug": "ligovirgokagra-s230924an"
+      "slug": "ligovirgokagra-s230924an",
+      "initialDate": 1695562446708
     },
     {
       "synonymId": "3a5a5269-60d4-43b7-9fcc-8fbaf17af018",
       "eventId": "GRB 230910A",
-      "slug": "grb-230910a"
+      "slug": "grb-230910a",
+      "initialDate": 1694315488115
     },
     {
       "synonymId": "0dccd2e6-d922-49f7-8e1b-7cc7847f5743",
       "eventId": "GRB 230816.67",
-      "slug": "grb-23081667"
+      "slug": "grb-23081667",
+      "initialDate": 1692206444889
     },
     {
       "synonymId": "262a060a-6c05-44ab-9d7c-e5ac87711082",
       "eventId": "GRB 230820.81",
-      "slug": "grb-23082081"
+      "slug": "grb-23082081",
+      "initialDate": 1692612176020
     },
     {
       "synonymId": "c48b2969-2293-41f0-ac43-2fac7247979c",
       "eventId": "GRB 230808B",
-      "slug": "grb-230808b"
+      "slug": "grb-230808b",
+      "initialDate": 1691520646299
     },
     {
       "synonymId": "0d644d2b-c1ce-45b3-8792-d03a5b37795d",
       "eventId": "LIGO/Virgo/KAGRA S230812aj",
-      "slug": "ligovirgokagra-s230812aj"
+      "slug": "ligovirgokagra-s230812aj",
+      "initialDate": 1691972968540
     },
     {
       "synonymId": "c7cd444b-73ee-4258-9f0b-9d856eba5cd6",
       "eventId": "ZTF23aaoohpy",
-      "slug": "ztf23aaoohpy"
+      "slug": "ztf23aaoohpy",
+      "initialDate": 1691509870285
     },
     {
       "synonymId": "9d2991aa-daf2-4b34-93d7-9816701e1b29",
       "eventId": "LIGO/Virgo/KAGRA S230814r",
-      "slug": "ligovirgokagra-s230814r"
+      "slug": "ligovirgokagra-s230814r",
+      "initialDate": 1691999390267
     },
     {
       "synonymId": "f3cfda7e-4b9d-4810-af3a-fbb6ba9fcdfb",
       "eventId": "LIGO/Virgo/KAGRA S230729z",
-      "slug": "ligovirgokagra-s230729z"
+      "slug": "ligovirgokagra-s230729z",
+      "initialDate": 1690629438885
     },
     {
       "synonymId": "ff4c5bb7-5446-4d16-9570-6d8c024b4747",
       "eventId": "GRB 230731A",
-      "slug": "grb-230731a"
+      "slug": "grb-230731a",
+      "initialDate": 1690847386067
     },
     {
       "synonymId": "7aa2935c-a3e7-4094-94a1-006b97b2624e",
       "eventId": "LIGO/Virgo/KAGRA S230831e",
-      "slug": "ligovirgokagra-s230831e"
+      "slug": "ligovirgokagra-s230831e",
+      "initialDate": 1693450794343
     },
     {
       "synonymId": "f57d79d4-acec-4051-ba89-ad478bd738b5",
       "eventId": "GRB 230815B",
-      "slug": "grb-230815b"
+      "slug": "grb-230815b",
+      "initialDate": 1692194763619
     },
     {
       "synonymId": "5a480d2f-7739-4a6b-bcfb-5df0860cd50b",
       "eventId": "GRB 230915B",
-      "slug": "grb-230915b"
+      "slug": "grb-230915b",
+      "initialDate": 1694996263058
     },
     {
       "synonymId": "642647f9-bc6b-4d55-8bd6-0c25002cabd9",
       "eventId": "LIGO/Virgo/KAGRA S230820bq",
-      "slug": "ligovirgokagra-s230820bq"
+      "slug": "ligovirgokagra-s230820bq",
+      "initialDate": 1692568165895
     },
     {
       "synonymId": "dda93a7a-4164-414b-a032-dd7f89338c3a",
       "eventId": "LIGO/Virgo/KAGRA S230920al",
-      "slug": "ligovirgokagra-s230920al"
+      "slug": "ligovirgokagra-s230920al",
+      "initialDate": 1695206340228
     },
     {
       "synonymId": "f6968978-4495-45ec-b832-011da0cc1565",
       "eventId": "GRB 230818.98",
-      "slug": "grb-23081898"
+      "slug": "grb-23081898",
+      "initialDate": 1692401532464
     },
     {
       "synonymId": "f4733b0d-11a5-476e-967f-71ee25b53e80",
       "eventId": "GRB 230916.13",
-      "slug": "grb-23091613"
+      "slug": "grb-23091613",
+      "initialDate": 1694834800115
     },
     {
       "synonymId": "46ff0878-952e-4441-8294-9839863b23fa",
       "eventId": "GRB 230816.80",
-      "slug": "grb-23081680"
+      "slug": "grb-23081680",
+      "initialDate": 1692213518896
     },
     {
       "synonymId": "865989cd-cc7b-4f45-a112-09f2f32d9997",
       "eventId": "GRB 230822A",
-      "slug": "grb-230822a"
+      "slug": "grb-230822a",
+      "initialDate": 1692748773686
     },
     {
       "synonymId": "20678441-9792-4d68-8506-2979818b3d59",
       "eventId": "GRB 230825.85",
-      "slug": "grb-23082585"
+      "slug": "grb-23082585",
+      "initialDate": 1693017279159
     },
     {
       "synonymId": "ae5e1c96-b50a-4ff7-a2f6-6d80a3a01b52",
       "eventId": "GRB 230820A",
-      "slug": "grb-230820a"
+      "slug": "grb-230820a",
+      "initialDate": 1692605832873
     },
     {
       "synonymId": "16ceb6d5-8077-40d7-9450-6d6a8c138b3e",
       "eventId": "LIGO/Virgo/KAGRA S230715bw",
-      "slug": "ligovirgokagra-s230715bw"
+      "slug": "ligovirgokagra-s230715bw",
+      "initialDate": 1693375761332
     },
     {
       "synonymId": "0d22aca9-29c4-4252-b39e-2345da562401",
       "eventId": "LIGO/Virgo/KAGRA S230808i",
-      "slug": "ligovirgokagra-s230808i"
+      "slug": "ligovirgokagra-s230808i",
+      "initialDate": 1691471936294
     },
     {
       "synonymId": "33c89d8a-f52b-4436-b009-e118e51f3017",
       "eventId": "GRB 230821.64",
-      "slug": "grb-23082164"
+      "slug": "grb-23082164",
+      "initialDate": 1692663066686
     },
     {
       "synonymId": "cddd6fcb-bcb7-4f3d-89be-c64855f2ae11",
       "eventId": "GRB 230824B",
-      "slug": "grb-230824b"
+      "slug": "grb-230824b",
+      "initialDate": 1692897718962
     },
     {
       "synonymId": "b0efb61f-50b5-4bab-986d-b155b6937898",
       "eventId": "GRB 230205A",
-      "slug": "grb-230205a"
+      "slug": "grb-230205a",
+      "initialDate": 1694162401603
     },
     {
       "synonymId": "c62c6bf9-24b9-4995-a92e-ed25169681fd",
       "eventId": "LIGO/Virgo/KAGRA S230810af",
-      "slug": "ligovirgokagra-s230810af"
+      "slug": "ligovirgokagra-s230810af",
+      "initialDate": 1691666389094
     },
     {
       "synonymId": "14869654-cdfb-4aab-a410-883658de10f0",
       "eventId": "LIGO/Virgo S230917af",
-      "slug": "ligovirgo-s230917af"
+      "slug": "ligovirgo-s230917af",
+      "initialDate": 1695136946783
     },
     {
       "synonymId": "b24a1fbb-14af-48d5-90f3-669014f24465",
       "eventId": "LIGO/Virgo/KAGRA S230918aq",
-      "slug": "ligovirgokagra-s230918aq"
+      "slug": "ligovirgokagra-s230918aq",
+      "initialDate": 1695038987887
     },
     {
       "synonymId": "bf429513-e58e-4027-bf9a-c655aa9b3e59",
       "eventId": "GRB 230825.75",
-      "slug": "grb-23082575"
+      "slug": "grb-23082575",
+      "initialDate": 1692994005108
     },
     {
       "synonymId": "156deda0-8405-4658-81ce-eaba35f4034f",
       "eventId": "GRB 230916.12",
-      "slug": "grb-23091612"
+      "slug": "grb-23091612",
+      "initialDate": 1694833361496
     },
     {
       "synonymId": "c1681da8-70c0-401f-ab4f-48dc0077d634",
       "eventId": "GRB 230723B",
-      "slug": "grb-230723b"
+      "slug": "grb-230723b",
+      "initialDate": 1690707290441
     },
     {
       "synonymId": "a9223828-0d9d-4d1d-8ba6-4d4b5f74ae4f",
       "eventId": "GRB 230824.58",
-      "slug": "grb-23082458"
+      "slug": "grb-23082458",
+      "initialDate": 1692886232810
     },
     {
       "synonymId": "8c6bca31-6c69-4f18-83fd-d75c5725a7c2",
       "eventId": "LIGO/Virgo/KAGRA S230811n",
-      "slug": "ligovirgokagra-s230811n"
+      "slug": "ligovirgokagra-s230811n",
+      "initialDate": 1691726847630
     },
     {
       "synonymId": "1acfe4a4-b85c-4333-bfd5-0fa0c9f17d14",
       "eventId": "GRB 230916.11",
-      "slug": "grb-23091611"
+      "slug": "grb-23091611",
+      "initialDate": 1694832888310
     },
     {
       "synonymId": "8637bb18-c5f7-48e5-8f8b-5d83f867728a",
       "eventId": "GRB 230903.72",
-      "slug": "grb-23090372"
+      "slug": "grb-23090372",
+      "initialDate": 1693762605957
     },
     {
       "synonymId": "1c3b6acb-e0a5-4bcf-96c1-4d7458d0b872",
       "eventId": "GRB 230811D",
-      "slug": "grb-230811d"
+      "slug": "grb-230811d",
+      "initialDate": 1694447898753
     },
     {
       "synonymId": "ebeba8ad-f1f6-4b70-9d73-494a071d3ae0",
       "eventId": "GRB 230916A",
-      "slug": "grb-230916a"
+      "slug": "grb-230916a",
+      "initialDate": 1694972374257
     },
     {
       "synonymId": "038b6bb1-ca3f-4a65-a742-ba4edb93c214",
       "eventId": "GRB 230905A",
-      "slug": "grb-230905a"
+      "slug": "grb-230905a",
+      "initialDate": 1693929323881
     },
     {
       "synonymId": "b8ba92e2-5492-4ef0-91aa-9a725ca896c5",
       "eventId": "LIGO/Virgo S230802aq",
-      "slug": "ligovirgo-s230802aq"
+      "slug": "ligovirgo-s230802aq",
+      "initialDate": 1690988406688
     },
     {
       "synonymId": "a13362d5-1cea-4d85-8f9b-057d96b9ae89",
       "eventId": "GRB 230826.81",
-      "slug": "grb-23082681"
+      "slug": "grb-23082681",
+      "initialDate": 1693078843228
     },
     {
       "synonymId": "d0ef15f2-a346-4b2c-ac9d-f7287198696d",
       "eventId": "GRB 230812A",
-      "slug": "grb-230812a"
+      "slug": "grb-230812a",
+      "initialDate": 1691833142979
     }
   ],
   "auto_increment_metadata": [

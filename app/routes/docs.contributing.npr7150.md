@@ -7,9 +7,9 @@ import { Table } from '@trussworks/react-uswds'
 
 # NPR 7150
 
-NASA-funded sofware projects must comply with software engineering requirements specified by the [NASA Procedural Requirements (NPR) 7150.2D](https://nodis3.gsfc.nasa.gov/displayDir.cfm?t=NPR&c=7150&s=2D) document.
+NASA-funded software projects must comply with software engineering requirements specified by the [NASA Procedural Requirements (NPR) 7150.2D](https://nodis3.gsfc.nasa.gov/displayDir.cfm?t=NPR&c=7150&s=2D) document.
 
-The software classification determines which of NPR 7150.2D's requirements are in force. GCN is classified as [Class D software for non-safety-criticial applications](https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixD). GCN is fully compliant with the requirements for that classifiation. One of the requirements is that there must be a [requirements matrix](https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC), which is satisfied by the table below.
+The software classification determines which of NPR 7150.2D's requirements are in force. GCN is classified as [Class D software for non-safety-critical applications](https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixD). GCN is fully compliant with the requirements for that classification. One of the requirements is that there must be a [requirements matrix](https://nodis3.gsfc.nasa.gov/displayDir.cfm?Internal_ID=N_PR_7150_002D_&page_name=AppendixC), which is satisfied by the table below.
 
  <Table bordered>
   <thead>
@@ -334,7 +334,7 @@ The software classification determines which of NPR 7150.2D's requirements are i
     <tr>
       <td>4.5.12</td>
       <td>The project manager shall verify through test the software requirements that trace to a hazardous event, cause, or mitigation technique.</td>
-      <td>As a criterion in reivew of pull requests</td>
+      <td>As a criterion in review of pull requests</td>
     </tr>
     <tr><td colSpan="3">Software Operations, Maintenance, and Retirement</td></tr>
     <tr>
