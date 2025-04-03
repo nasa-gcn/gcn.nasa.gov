@@ -30,6 +30,57 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
+        <CollectionCalendarDate datetime='May 27, 2025' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Browse Circulars by Event, Advanced Search, Sample Codes, Schema Release</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+        The GCN Team is pleased to announce new features, documentation, and a schema release.
+        - [Browse Circulars by Event](/news#browse-circulars-by-event)
+        - [Circulars Advanced Search](/news#circulars-advanced-search)
+        - [Mission Notices Table](/news#mission-notices-table)
+        - [Notices Sample Code](/news#notices-sample-code)
+        - [Apache Spark Kafka Client](/news#apache-spark-kafka-client)
+        - [Schema v4.4.1](/news#schema-v441)
+
+        ### Browse Circulars by Event
+        By popular demand, you can now view Circulars grouped by astronomical event. In the [Circulars archive](/circulars), you can now toggle between two view modes:
+
+          **Circulars View**
+          - View Circulars sorted inversely by Circular ID.
+          - Use the search bar to search for text strings (e.g. [250101A](/circulars?view=index&query=250101A&startDate=&endDate=)), Circulars numbers (e.g. [12345](/circulars?view=index&query=12345)), or use [Advanced Search](/news#circulars-advanced-search).
+
+          **Events View**
+          - View a list of astronomical events (e.g. [GRB 250101A](/circulars?view=group&query=GRB+250101A), [LIGO/Virgo/KAGRA S250331o](/circulars?view=group&query=LIGO%2FVirgo%2FKAGRA+S250331o), [EP250101a](/circulars?view=group&query=EP250101a)), expand to show all Circulars associated with that event, or tap the event name to see all related Circulars in sequence (similar to the GCN Classic Circulars archive).
+          - Use the search bar to search by event name (e.g. GRB 250404A).
+          - The GCN Team manually associates events with multiple names (e.g. [GRB 250404A, EP250404a](/circulars/events/grb-250404a)) into event groups. You can view all Circulars associated with any member of an event group by selecting that event in the event view.  You can also search for an event by any event name that group.  If you would like to suggest additional event names that should be in the same event group, please [contact the GCN Team](/support).
+
+        See [additional documentation](/docs/circulars/archive) on event view, event names, and event groups.
+
+        ### Circulars Advanced Search
+        The [Circulars archive](/circulars) now allows users to search for keywords by Subject, Body, and Submitter. Select "Advanced Search" to view and copy example syntax. See [documentation](/docs/circulars/archive#advanced-search) for more details, examples, and compound query logic.
+
+        ### Mission Notices Table
+        The [Missions page](/missions) now contains a table listing the status of all current, past, and upcoming Notices producers.  You can learn about the formats and distribution mechanisms that are available for every Notice type, including the transitions to GCN Kafka. The table provides mission-specific links to signup for Notices over email and the Kafka start streaming guide.
+
+        ### Notices Sample Code
+        [Sample code](/docs/sample) serves as a starting point for consumers of GCN Notices for functions including consuming Kafka messages, parsing plain text, VOEvent XML, and JSON format notices, and interacting with HEALPix maps.  We have also included producer sample code for encoding embedded data (e.g. HEALPix maps).  The GCN Team welcomes contributions of additional sample code that might be of use to our community.
+
+        ### Apache Spark Kafka client
+        We added [Kafka client sample code for Apache Spark](/docs/client#pyspark). [Apache Spark](https://spark.apache.org) is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
+
+        ### Schema v4.4.1
+        GCN Schema v4.4.1 is available with recent changes including the generic high-energy neutrino and fast radio burst schema ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v4.4.1)).
+
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
         <CollectionCalendarDate datetime={'March 31, 2025'} />
       }
     >
@@ -65,7 +116,7 @@ import { Anchor } from '~/components/Anchor'
 
         The mission pages for GCN Notice producers that are no longer operational have been moved to a submenu for [archived missions](https://gcn.nasa.gov/missions/archive), including AGILE, BurstCube, and INTEGRAL.
 
-      </CollectionDescription>
+     </CollectionDescription>
     </CollectionItem>
 
     <CollectionItem
