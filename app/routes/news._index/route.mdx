@@ -30,6 +30,28 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
+        <CollectionCalendarDate datetime={'April 14, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Circulars Archive Viewable by Event </Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        The Circulars archive now provides two options for viewing and searching:
+          - Circulars View
+            - Standard view of Circulars sorted inversely by Circular ID.
+            - Search bar searches for text strings (e.g. 250101A) or Circulars numbers (e.g. 12345).
+          - Events View
+            - Lists astronomical events (e.g. GRB250101A, S250101, EP250101a) with toggle to show all Circulars associated with that event and a link to a page that lists all Circulars in sequence similar to the GCN Classic Circulars Archive.
+            - Search by eventID (e.g. GRB 250101A)
+            - Astronomically-associated events with multiple names (e.g. GRB 250101A, EP250101a) will be manually associated into event groups by the GCN Team.  All Circulars associated with any member of the event group will be listed in that Event View and can be searched by any member of that group.  If you would like to suggest event names that should be in the same event group, please [contact the GCN Team](/support).
+        See [additional documentation](/docs/circulars/archive) on event view, event names, and event groups.
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
         <CollectionCalendarDate datetime={'March 31, 2025'} />
       }
     >
@@ -65,7 +87,7 @@ import { Anchor } from '~/components/Anchor'
 
         The mission pages for GCN Notice producers that are no longer operational have been moved to a submenu for [archived missions](https://gcn.nasa.gov/missions/archive), including AGILE, BurstCube, and INTEGRAL.
 
-      </CollectionDescription>
+     </CollectionDescription>
     </CollectionItem>
 
     <CollectionItem
