@@ -247,11 +247,8 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Circulars over Kafka event name backfill. See{' '}
-          <Link
-            className="usa-link"
-            to="/news#circulars-over-kafka-event-name-backfill"
-          >
+          New! Browse Circulars by Event. See{' '}
+          <Link className="usa-link" to="/news#new-browse-circulars-by-event">
             news and announcements
           </Link>
         </NewsBanner>
