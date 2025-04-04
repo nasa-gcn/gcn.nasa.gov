@@ -196,6 +196,7 @@ export default function () {
     page,
     totalPages,
     totalItems,
+    queryFallback,
     requestedChangeCount,
     limit,
     isGroupView,
@@ -262,6 +263,17 @@ export default function () {
         <Link to="/synonyms" className="usa-button usa-button--outline">
           Synonym Moderation
         </Link>
+      )}
+      {queryFallback && (
+        <Hint id="searchFailedHint" style={{ color: 'red' }}>
+          "{query}" does not adhere to advanced search syntax. Please refer to
+          the
+          <Link className="usa-link" to="/docs/circulars/advanced-search">
+            {' '}
+            documentation{' '}
+          </Link>
+          and try again.
+        </Hint>
       )}
       <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
