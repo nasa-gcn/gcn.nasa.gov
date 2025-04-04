@@ -17,6 +17,7 @@ import {
   DynamoDBAutoIncrement,
   DynamoDBHistoryAutoIncrement,
 } from '@nasa-gcn/dynamodb-autoincrement'
+import type { errors } from '@opensearch-project/opensearch'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
@@ -216,7 +217,11 @@ export async function search({
   try {
     searchResult = await client.search(searchBody)
   } catch (error) {
-    if ((error as typeof Error).toString().includes('Failed to parse query')) {
+    if (
+      (error as errors.ResponseError).body.error.root_cause[0].reason.includes(
+        'Failed to parse query'
+      )
+    ) {
       searchBody.body.query.bool.must = {
         multi_match: {
           query: query ?? '',
