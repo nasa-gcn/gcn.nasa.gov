@@ -291,7 +291,8 @@ input.react-tags__combobox-input:focus {
   background-image: none;
 
   @include at-media('tablet-lg') {
-    background-image: url('~/routes/_index/hero/center.jpg'),
+    background-image:
+      url('~/routes/_index/hero/center.jpg'),
       url('~/routes/_index/hero/left.jpg');
     background-repeat: no-repeat, repeat-x;
     background-size: auto 100%;
