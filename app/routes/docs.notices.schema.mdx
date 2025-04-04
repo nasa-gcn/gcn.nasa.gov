@@ -136,7 +136,9 @@ List of core schema to include fields from. [Browse the core schema](/docs/schem
 
 Mapping of custom, mission-specific fields. The first property, `'$schema: { type: "string", format: "uri" }'`, must be included when using `'unevaluatedProperties': false`, otherwise the inclusion of the `$schema` property in your example files will cause validation to fail. Field names should use [snake_case](https://en.wikipedia.org/wiki/Snake_case). Each entry should at least have a description and a type. See the [list of available data types](https://json-schema.org/understanding-json-schema/reference/type.html).
 
-We suggest including a `subtype` property for situations where a single schema is used to produce multiple variations of this notice. This property should be customizable to fit the specific mission and should be designed as an enumerated list. For example, in space missions, the enum might include values such as ground and flight for distinct notice types.
+#### `subtype`
+
+A property optionally included when a single schema is used to produce multiple variations of this notice. This property should be customizable to fit the specific mission and should be designed as an enumerated list. For example, in space missions, the enum might include values such as ground and flight for distinct notice types.
 
 ```json
 "subtype": {
