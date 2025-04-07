@@ -60,24 +60,33 @@ export async function searchSynonymsByEventId({
   page: number
 }> {
   const client = await getSearchClient()
-  const query: any = {
-    bool: {
-      should: [
-        {
-          match_all: {},
-        },
-      ],
-      minimum_should_match: 1,
+  const body: any = {
+    query: {
+      bool: {
+        should: [
+          {
+            match_all: {},
+          },
+        ],
+        minimum_should_match: 1,
+      },
     },
+    sort: [],
   }
 
   if (eventId) {
-    query.bool.should.push({
+    body.query.bool.should.push({
       match: {
         eventIds: {
           query: eventId,
           fuzziness: '1',
         },
+      },
+    })
+  } else {
+    body.sort.push({
+      initialDate: {
+        order: 'desc',
       },
     })
   }
@@ -93,16 +102,7 @@ export async function searchSynonymsByEventId({
     index: 'synonym-groups',
     from: page * limit,
     size: limit,
-    body: {
-      query,
-      sort: [
-        {
-          initialDate: {
-            order: 'desc',
-          },
-        },
-      ],
-    },
+    body,
   })
 
   const totalPages: number = Math.ceil(totalItems / limit)
