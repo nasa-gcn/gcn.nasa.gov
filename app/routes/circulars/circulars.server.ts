@@ -218,7 +218,7 @@ export async function search({
     searchResult = await client.search(searchBody)
   } catch (error) {
     if (
-      (error as errors.ResponseError).body.error.root_cause[0].reason.includes(
+      error instanceof errors.ResponseError && error.message.includes(
         'Failed to parse query'
       )
     ) {
