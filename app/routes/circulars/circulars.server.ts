@@ -218,9 +218,8 @@ export async function search({
     searchResult = await client.search(searchBody)
   } catch (error) {
     if (
-      error instanceof errors.ResponseError && error.message.includes(
-        'Failed to parse query'
-      )
+      error instanceof errors.ResponseError &&
+      error.message.includes('Failed to parse query')
     ) {
       searchBody.body.query.bool.must = {
         multi_match: {
