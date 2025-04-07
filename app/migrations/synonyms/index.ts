@@ -76,6 +76,7 @@ export async function backfillSynonyms() {
           eventId: circular.eventId,
           initialDate: parseInt(initialDate),
         })
+        eventsRun.add(circular.eventId)
       }
     }
     if (writes.length > 0 && TableName) {
@@ -97,7 +98,6 @@ export async function backfillSynonyms() {
       })
 
       await client.send(command)
-      writes.map(({ eventId }) => eventsRun.add(eventId))
     }
   }
   const endTime = new Date()
