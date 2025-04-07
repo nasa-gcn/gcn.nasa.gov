@@ -17,7 +17,7 @@ import {
   DynamoDBAutoIncrement,
   DynamoDBHistoryAutoIncrement,
 } from '@nasa-gcn/dynamodb-autoincrement'
-import type { errors } from '@opensearch-project/opensearch'
+import { errors } from '@opensearch-project/opensearch'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
