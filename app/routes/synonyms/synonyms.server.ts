@@ -61,7 +61,45 @@ export async function searchSynonymsByEventId({
 }> {
   const client = await getSearchClient()
   const body: any = {
-    query: {
+    query: {},
+  }
+
+  if (eventId) {
+    body.query = {
+      function_score: {
+        query: {
+          bool: {
+            should: [
+              {
+                wildcard: {
+                  'eventIds.keyword': {
+                    value: `*${eventId}*`,
+                  },
+                },
+              },
+            ],
+            minimum_should_match: 1,
+          },
+        },
+        functions: [
+          {
+            script_score: {
+              script: {
+                source: `
+                  int idx = doc['eventIds.keyword'].value.indexOf(params.query);
+                  if (idx == -1) return 0;
+                  return 1.0 / (1 + idx);
+                `,
+                params: { query: eventId },
+              },
+            },
+          },
+        ],
+        boost_mode: 'replace',
+      },
+    }
+  } else {
+    body.query = {
       bool: {
         should: [
           {
@@ -70,25 +108,16 @@ export async function searchSynonymsByEventId({
         ],
         minimum_should_match: 1,
       },
-    },
-    sort: [],
-  }
-
-  if (eventId) {
-    body.query.bool.should.push({
-      match: {
-        eventIds: {
-          query: eventId,
-          fuzziness: '1',
+    }
+    body.sort = [
+      {
+        initialDate: {
+          order: 'desc',
+          missing: '_last',
+          unmapped_type: 'long',
         },
       },
-    })
-  } else {
-    body.sort.push({
-      initialDate: {
-        order: 'desc',
-      },
-    })
+    ]
   }
 
   const {
@@ -119,6 +148,7 @@ export async function searchSynonymsByEventId({
       }
     }) => body
   )
+
   return {
     items: results,
     totalItems,
