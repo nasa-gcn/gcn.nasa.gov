@@ -27,7 +27,7 @@ export default function ({
           {totalItems} result{totalItems != 1 && 's'} found.
         </h3>
       )}
-      <div className="margin-top-2">
+      <div className="margin-y-2">
         {allItems.map(({ synonymId, eventIds, slugs, members }) => (
           <div key={synonymId}>
             <details>
