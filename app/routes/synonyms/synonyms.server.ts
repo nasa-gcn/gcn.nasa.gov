@@ -84,6 +84,9 @@ export async function searchSynonymsByEventId({
       },
     ]
     body.query.bool.minimum_should_match = 1
+    // While initialDate is always present, because of caching and sharding, OpenSearch doesn't promise
+    // exact ordering. Adding the missing and unmapped_types fields help give it direction and make the
+    // sort more explicit so it behaves more precisely.
     body.sort = [
       {
         initialDate: {
