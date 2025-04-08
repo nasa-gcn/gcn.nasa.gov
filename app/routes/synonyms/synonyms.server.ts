@@ -60,26 +60,42 @@ export async function searchSynonymsByEventId({
   page: number
 }> {
   const client = await getSearchClient()
-  const query: any = {
-    bool: {
-      should: [
-        {
-          match_all: {},
-        },
-      ],
-      minimum_should_match: 1,
+  const body: any = {
+    query: {
+      bool: {},
     },
   }
 
   if (eventId) {
-    query.bool.should.push({
-      match: {
-        eventIds: {
-          query: eventId,
-          fuzziness: '1',
+    body.query.bool.filter = [
+      {
+        regexp: {
+          'eventIds.keyword': {
+            value: `.*${eventId}.*`,
+            case_insensitive: true,
+          },
         },
       },
-    })
+    ]
+  } else {
+    body.query.bool.should = [
+      {
+        match_all: {},
+      },
+    ]
+    body.query.bool.minimum_should_match = 1
+    // While initialDate is always present, because of caching and sharding, OpenSearch doesn't promise
+    // exact ordering. Adding the missing and unmapped_types fields helps give it direction and makes the
+    // sort more explicit so it behaves more precisely.
+    body.sort = [
+      {
+        initialDate: {
+          order: 'desc',
+          missing: '_last',
+          unmapped_type: 'long',
+        },
+      },
+    ]
   }
 
   const {
@@ -93,16 +109,7 @@ export async function searchSynonymsByEventId({
     index: 'synonym-groups',
     from: page * limit,
     size: limit,
-    body: {
-      query,
-      sort: [
-        {
-          initialDate: {
-            order: 'desc',
-          },
-        },
-      ],
-    },
+    body,
   })
 
   const totalPages: number = Math.ceil(totalItems / limit)
@@ -119,6 +126,7 @@ export async function searchSynonymsByEventId({
       }
     }) => body
   )
+
   return {
     items: results,
     totalItems,
