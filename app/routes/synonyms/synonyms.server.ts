@@ -314,12 +314,13 @@ export async function autoCompleteEventIds({
     body: {
       query: {
         bool: {
-          must: [
+          filter: [
             {
-              query_string: {
-                query: `*${cleanedQuery}*`,
-                fields: ['eventId'],
-                fuzziness: 'AUTO',
+              regexp: {
+                'eventId.keyword': {
+                  value: `.*${cleanedQuery}.*`,
+                  case_insensitive: true,
+                },
               },
             },
           ],
