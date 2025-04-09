@@ -9,7 +9,6 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
-import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
