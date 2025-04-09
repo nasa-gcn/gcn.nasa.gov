@@ -339,9 +339,7 @@ export default function () {
         )}
       </ToolbarButtonGroup>
       {queryFallback && (
-        <>
-          <Label srOnly htmlFor="query" children={undefined}></Label>
-          <ErrorMessage id="searchFailedHint">
+          <ErrorMessage>
             "{query}" does not adhere to advanced search syntax. Please refer to
             the{' '}
             <Link
@@ -352,7 +350,6 @@ export default function () {
             </Link>{' '}
             and try again.
           </ErrorMessage>
-        </>
       )}
       <Hint id="searchHint">
         {isGroupView ? (
