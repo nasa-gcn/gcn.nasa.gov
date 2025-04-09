@@ -14,7 +14,14 @@ import {
   useSearchParams,
   useSubmit,
 } from '@remix-run/react'
-import { Alert, Button, Icon, Label, TextInput } from '@trussworks/react-uswds'
+import {
+  Alert,
+  Button,
+  ErrorMessage,
+  Icon,
+  Label,
+  TextInput,
+} from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
@@ -251,16 +258,21 @@ export default function () {
           Synonym Moderation
         </Link>
       )}
+
       {queryFallback && (
-        <Hint id="searchFailedHint" style={{ color: 'red' }}>
-          "{query}" does not adhere to advanced search syntax. Please refer to
-          the
-          <Link className="usa-link" to="/docs/circulars/advanced-search">
-            {' '}
-            documentation{' '}
-          </Link>
-          and try again.
-        </Hint>
+        <>
+          <Label srOnly htmlFor="query">
+            Advanced Search Failure Warning
+          </Label>
+          <ErrorMessage id="searchFailedHint">
+            "{query}" does not adhere to advanced search syntax. Please refer to
+            the{' '}
+            <Link className="usa-link" to="/docs/circulars/advanced-search">
+              documentation
+            </Link>{' '}
+            and try again.
+          </ErrorMessage>
+        </>
       )}
       <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
