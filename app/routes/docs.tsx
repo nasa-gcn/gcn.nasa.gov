@@ -9,7 +9,6 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
-import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
@@ -54,14 +53,6 @@ export default function () {
                     <NavLink key="markdown" to="circulars/markdown">
                       Markdown
                     </NavLink>,
-                    useFeature('CIRCULARS_LUCENE') && (
-                      <NavLink
-                        key="advanced-search"
-                        to="circulars/advanced-search"
-                      >
-                        Advanced Search
-                      </NavLink>
-                    ),
                   ]}
                 />
               </>,
