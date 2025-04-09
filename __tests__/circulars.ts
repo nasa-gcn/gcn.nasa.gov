@@ -515,6 +515,24 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
     })
 
+    test('handles ligo/virgo normalization', () => {
+      const ligoVirgo =
+        'ligo/virgo S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles ligo/virgo flag normalization', () => {
+      const ligoVirgo =
+        'ligo/virgo s231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles ligo/virgo id normalization', () => {
+      const ligoVirgo =
+        'ligo/virgo S231127CG: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
     test('handles LIGO alert', () => {
       const ligoVirgoKagra =
         'LIGO S231127cg: Identification of a GW compact binary merger candidate'

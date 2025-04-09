@@ -65,7 +65,9 @@ const subjectMatchers: SubjectMatcher[] = [
   [
     /((?:LIGO|Virgo|KAGRA)(?:[/-](?:LIGO|Virgo|KAGRA))*)[-_ \s]?(S|G|GW)(\d{5,}[a-z]*)/i,
     ([, instrument, flag, id]) => {
-      const normalizedInstrument = instrument.replace('VIRGO', 'Virgo')
+      const normalizedInstrument = instrument
+        .toUpperCase()
+        .replace('VIRGO', 'Virgo')
       return `${normalizedInstrument} ${flag.toUpperCase()}${id.toLowerCase()}`
     },
   ],
