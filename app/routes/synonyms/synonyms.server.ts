@@ -360,6 +360,7 @@ export async function groupMembersByEventId({
   items: SynonymGroupWithMembers[]
   totalItems: number
   totalPages: number
+  queryFallback: boolean
 }> {
   const searchTerm = eventId || query
   const searchResults = await searchSynonymsByEventId({
@@ -381,6 +382,7 @@ export async function groupMembersByEventId({
     items,
     totalItems: searchResults.totalItems,
     totalPages: searchResults.totalPages,
+    queryFallback: false,
   }
 }
 

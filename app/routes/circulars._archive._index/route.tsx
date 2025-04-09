@@ -18,6 +18,7 @@ import {
   Alert,
   Button,
   ButtonGroup,
+  ErrorMessage,
   Icon,
   Label,
   TextInput,
@@ -196,6 +197,7 @@ export default function () {
     page,
     totalPages,
     totalItems,
+    queryFallback,
     requestedChangeCount,
     limit,
     isGroupView,
@@ -263,6 +265,7 @@ export default function () {
           Synonym Moderation
         </Link>
       )}
+
       <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           preventScrollReset
@@ -335,6 +338,19 @@ export default function () {
           <SortSelector form={formId} defaultValue={sort} />
         )}
       </ToolbarButtonGroup>
+      {queryFallback && (
+        <ErrorMessage>
+          "{query}" does not adhere to advanced search syntax. Please refer to
+          the{' '}
+          <Link
+            className="usa-link"
+            to="/docs/circulars/archive#advanced-search"
+          >
+            documentation
+          </Link>{' '}
+          and try again.
+        </ErrorMessage>
+      )}
       <Hint id="searchHint">
         {isGroupView ? (
           <>
@@ -351,6 +367,7 @@ export default function () {
         )}
       </Hint>
       {useFeature('CIRCULARS_LUCENE') && <LuceneAccordion />}
+
       {clean && (
         <>
           {isGroupView ? (
