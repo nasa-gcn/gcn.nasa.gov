@@ -338,6 +338,16 @@ export default function () {
           <SortSelector form={formId} defaultValue={sort} />
         )}
       </ToolbarButtonGroup>
+      {queryFallback && (
+        <ErrorMessage id="searchFailedHint">
+          "{query}" does not adhere to advanced search syntax. Please refer to
+          the{' '}
+          <Link className="usa-link" to="/docs/circulars/advanced-search">
+            documentation
+          </Link>{' '}
+          and try again.
+        </ErrorMessage>
+      )}
       <Hint id="searchHint">
         {isGroupView ? (
           <>
@@ -354,16 +364,7 @@ export default function () {
         )}
       </Hint>
       {useFeature('CIRCULARS_LUCENE') && <LuceneAccordion />}
-      {queryFallback && (
-        <ErrorMessage id="searchFailedHint">
-          "{query}" does not adhere to advanced search syntax. Please refer to
-          the{' '}
-          <Link className="usa-link" to="/docs/circulars/advanced-search">
-            documentation
-          </Link>{' '}
-          and try again.
-        </ErrorMessage>
-      )}
+
       {clean && (
         <>
           {isGroupView ? (
