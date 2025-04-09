@@ -247,10 +247,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New SVOM Notices, Planned Retirement of VOEvent Brokers. See{' '}
+          Circulars over Kafka event name backfill. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-svom-notices-retirement-of-voevent-brokers-"
+            to="/news#circulars-over-kafka-event-name-backfill"
           >
             news and announcements
           </Link>

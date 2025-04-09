@@ -66,6 +66,7 @@ describe('parseEventFromSubject', () => {
   const antaresEvent = 'ANTARES 200407A'
   const baksanEvent = 'Baksan Neutrino Observatory Alert 201228.36'
   const grbEvent = 'GRB 230228A'
+  const grbEventLetterless = 'GRB 230228'
   const hawcEvent = 'HAWC-221123A'
   const iceEvent = 'IceCube-221223A'
   const lvkEvent = 'LIGO/Virgo S200224ca'
@@ -129,6 +130,70 @@ describe('parseEventFromSubject', () => {
       const grbSubjectWithHyphen =
         'Swift GRB-230228A detection of a possibly short burst'
       expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(grbEvent)
+    })
+
+    test('handles GRB event names without a letter', () => {
+      const grbSubjectWithSpace =
+        'GRB 230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names in misc positions without letter', () => {
+      const grbSubjectWithSpace =
+        'Swift detection of a possibly short burst for GRB 230228'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names without space without a letter', () => {
+      const grbSubjectWithNoSpace =
+        'GRB230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithNoSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names without spaces in misc positions without a letter', () => {
+      const grbSubjectWithSpace =
+        'Swift detection of a possibly short burst for GRB230228'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event name with an underscore without a letter', () => {
+      const grbSubjectWithUnderscore =
+        'GRB_230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithUnderscore)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event names with an underscore in misc positions without a letter', () => {
+      const grbSubjectWithUnderscore =
+        'Swift detection of GRB_230228 a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithUnderscore)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event name with a hyphen without a letter', () => {
+      const grbSubjectWithHyphen =
+        'GRB-230228: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(
+        grbEventLetterless
+      )
+    })
+
+    test('handles GRB event name with a hyphen in misc positions without a letter', () => {
+      const grbSubjectWithHyphen =
+        'Swift GRB-230228 detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithHyphen)).toBe(
+        grbEventLetterless
+      )
     })
   })
 

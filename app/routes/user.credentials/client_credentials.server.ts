@@ -14,7 +14,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import { generators } from 'openid-client'
 
-import { cognito, maybeThrow } from '~/lib/cognito.server'
+import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
 import { getUser } from '~/routes/_auth/user.server'
 
 export interface RedactedClientCredential {
@@ -155,7 +155,7 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'creating fake client credentials')
+      maybeThrowCognito(e, 'creating fake client credentials')
       const client_id = generators.random(26)
       const client_secret = generators.random(51)
       return { client_id, client_secret }
@@ -178,7 +178,7 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'creating fake client secret')
+      maybeThrowCognito(e, 'creating fake client secret')
       const client_secret = generators.random(51)
       return client_secret
     }
@@ -197,7 +197,7 @@ export class ClientCredentialVendingMachine {
     try {
       await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'deleting fake client credentials')
+      maybeThrowCognito(e, 'deleting fake client credentials')
     }
   }
 
@@ -215,7 +215,7 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'not getting group descriptions')
+      maybeThrowCognito(e, 'not getting group descriptions')
     }
 
     const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(

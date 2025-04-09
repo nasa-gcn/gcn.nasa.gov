@@ -343,7 +343,7 @@ export async function put(
   const eventId = parseEventFromSubject(item.subject)
   if (eventId) circular.eventId = eventId
   const result = await putRaw(circular)
-  if (eventId) await tryInitSynonym(eventId)
+  if (eventId) await tryInitSynonym(eventId, result.createdOn)
   return result
 }
 

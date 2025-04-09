@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { useSearchParams } from '@remix-run/react'
+import invariant from 'tiny-invariant'
 
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
@@ -75,5 +76,41 @@ export function useSearchString() {
 export function throwForStatus(response: Response) {
   if (!response.ok) {
     throw new Error('Request failed', { cause: response })
+  }
+}
+
+interface ErrorType {
+  name: string
+}
+
+export function maybeThrow<Type extends ErrorType>(
+  e: Type,
+  warning: string,
+  errorsAllowedInDev: string[]
+) {
+  const { name } = e as Type
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(warning)
+  }
+}
+
+export function joinListWithOxfordComma(
+  list: string[],
+  conjunction: string = 'and'
+) {
+  invariant(list.length >= 1)
+  if (list.length == 1) {
+    return list[0]
+  } else if (list.length == 2) {
+    return list.join(` ${conjunction} `)
+  } else {
+    const last = list.pop()
+    return `${list.join(', ')}, ${conjunction} ${last}`
   }
 }

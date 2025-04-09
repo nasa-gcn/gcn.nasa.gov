@@ -30,6 +30,47 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
+        <CollectionCalendarDate datetime={'March 31, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Circulars over Kafka Event Name Backfill</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+          In preparation for new search and sort features in the GCN Circulars archive, the GCN team will be backfilling the automatically assigned event name (e.g. `"eventId": "GRB 250331C"`) derived from each GCN Circular subject. Event names have been included in all JSON versions of Circulars starting with [GCN Circular 37912](/circulars/37912).  The backfill of all prior Circulars will result in the following behavior that may impact some users:
+          - The entire archive of ~40k Circulars will be distributed over Kafka with the new event names.
+          - Revised Circulars will _not_ be redistributed over email.
+
+        The event name backfill will be executed on April 7, 2025.
+
+      </CollectionDescription>
+    </CollectionItem>
+
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+        <CollectionCalendarDate datetime={'March 3, 2025'} />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>End of INTEGRAL Operations</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+        Beginning March 4, 2025 at 12:08:04 UT, data from the INTErnational Gamma-Ray Astrophysics Laboratory (INTEGRAL) will no longer be transmitted to the INTEGRAL Science Data Centre (ISDC), due to the end of scientific operations, more than 22 years after its launch. As a consequence, the INTEGRAL Burst Alert System (IBAS) will be discontinued and GCN Notices will no longer be distributed.  The full archive of INTEGRAL GCN Notices is available at https://gcn.gsfc.nasa.gov/integral.html.
+
+        The IBAS team thank the scientific community for the continuous support.  The GCN team thank INTEGRAL for being an important contributor to GCN over the last 22 years.
+
+        The mission pages for GCN Notice producers that are no longer operational have been moved to a submenu for [archived missions](https://gcn.nasa.gov/missions/archive), including AGILE, BurstCube, and INTEGRAL.
+
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
         <CollectionCalendarDate datetime={'February 20, 2025'} />
       }
     >

@@ -50,7 +50,10 @@ export interface CircularChangeRequestKeys {
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
-  [/GRB[.\s_-]*(\d{6}[a-z|.]\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [
+    /GRB[.\s_-]*(\d{6}(?:[A-Za-z]|\.[0-9]+)?)/i,
+    ([, id]) => `GRB ${id.toUpperCase()}`,
+  ],
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [
     /SGR[.\s_-]*Swift[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i,

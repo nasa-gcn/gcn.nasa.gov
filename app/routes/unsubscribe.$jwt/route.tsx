@@ -29,17 +29,12 @@ import { unsubscribeActions } from './actions.server'
 import { maxTokenAge } from './jwt.lib'
 import { decodeFromURLParams } from './jwt.server'
 import Hint from '~/components/Hint'
+import { joinListWithOxfordComma } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Unsubscribe',
   getSitemapEntries: () => null,
-}
-
-function joinListWithOxfordComma(list: string[], conjunction: string = 'and') {
-  const last = list.pop()
-  const butLast = list.join(', ')
-  return butLast ? `${butLast} ${conjunction} ${last}` : last
 }
 
 export async function loader({ params }: LoaderFunctionArgs) {
