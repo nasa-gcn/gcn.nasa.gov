@@ -54,14 +54,6 @@ export default function () {
                     <NavLink key="markdown" to="circulars/markdown">
                       Markdown
                     </NavLink>,
-                    useFeature('CIRCULARS_LUCENE') && (
-                      <NavLink
-                        key="advanced-search"
-                        to="circulars/advanced-search"
-                      >
-                        Advanced Search
-                      </NavLink>
-                    ),
                   ]}
                 />
               </>,
