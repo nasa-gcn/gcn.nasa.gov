@@ -69,9 +69,9 @@ export async function searchSynonymsByEventId({
   if (eventId) {
     body.query.bool.filter = [
       {
-        regexp: {
+        wildcard: {
           'eventIds.keyword': {
-            value: `.*${eventId}.*`,
+            value: `*${eventId.replace('-', ' ')}*`,
             case_insensitive: true,
           },
         },
@@ -316,9 +316,9 @@ export async function autoCompleteEventIds({
         bool: {
           filter: [
             {
-              regexp: {
+              wildcard: {
                 'eventId.keyword': {
-                  value: `.*${cleanedQuery}.*`,
+                  value: `*${cleanedQuery}*`,
                   case_insensitive: true,
                 },
               },
