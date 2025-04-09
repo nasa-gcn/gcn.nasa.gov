@@ -344,7 +344,10 @@ export default function () {
           <ErrorMessage id="searchFailedHint">
             "{query}" does not adhere to advanced search syntax. Please refer to
             the{' '}
-            <Link className="usa-link" to="/docs/circulars/advanced-search">
+            <Link
+              className="usa-link"
+              to="/docs/circulars/archive#advanced-search"
+            >
               documentation
             </Link>{' '}
             and try again.
