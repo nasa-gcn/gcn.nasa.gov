@@ -17,6 +17,7 @@ import {
 import {
   Alert,
   Button,
+  ButtonGroup,
   ErrorMessage,
   Icon,
   Label,
@@ -265,21 +266,6 @@ export default function () {
         </Link>
       )}
 
-      {queryFallback && (
-        <>
-          <Label srOnly htmlFor="query">
-            Advanced Search Failure Warning
-          </Label>
-          <ErrorMessage id="searchFailedHint">
-            "{query}" does not adhere to advanced search syntax. Please refer to
-            the{' '}
-            <Link className="usa-link" to="/docs/circulars/advanced-search">
-              documentation
-            </Link>{' '}
-            and try again.
-          </ErrorMessage>
-        </>
-      )}
       <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
         <Form
           preventScrollReset
@@ -368,6 +354,16 @@ export default function () {
         )}
       </Hint>
       {useFeature('CIRCULARS_LUCENE') && <LuceneAccordion />}
+      {queryFallback && (
+        <ErrorMessage id="searchFailedHint">
+          "{query}" does not adhere to advanced search syntax. Please refer to
+          the{' '}
+          <Link className="usa-link" to="/docs/circulars/advanced-search">
+            documentation
+          </Link>{' '}
+          and try again.
+        </ErrorMessage>
+      )}
       {clean && (
         <>
           {isGroupView ? (
