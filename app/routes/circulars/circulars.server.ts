@@ -172,20 +172,13 @@ export async function search({
         }
 
   const queryObj = query
-    ? queryFallback
-      ? {
-          multi_match: {
-            query,
-            fields: ['submitter', 'subject', 'body'],
-          },
-        }
-      : {
-          query_string: {
-            query,
-            fields: ['submitter', 'subject', 'body'],
-            lenient: true,
-          },
-        }
+    ? {
+        [queryFallback ? 'multi_match' : 'query_string']: {
+          query,
+          fields: ['submitter', 'subject', 'body'],
+          ...(queryFallback ? {} : { lenient: true }),
+        },
+      }
     : undefined
 
   const searchBody = {
