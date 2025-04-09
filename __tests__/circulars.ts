@@ -533,6 +533,62 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
     })
 
+    test('handles LIGO/Virgo instrument odd casing', () => {
+      const ligoVirgo =
+        'LiGo/viRgo s231127Cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles Ligo/Virgo instrument odd casing', () => {
+      const ligoVirgo =
+        'Ligo/Virgo S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles Ligo/Virgo flag casing', () => {
+      const ligoVirgo =
+        'LIGO/Virgo s231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles Ligo/Virgo id casing', () => {
+      const ligoVirgo =
+        'LIGO/Virgo S231127CG: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles ligo/VIRGO id casing', () => {
+      const ligoVirgo =
+        'ligo/VIRGO S231127CG: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe('LIGO/Virgo S231127cg')
+    })
+
+    test('handles ligo/VIRGO/kAgRa odd kagra casing', () => {
+      const ligoVirgo =
+        'ligo/VIRGo/kAgRa S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligoVirgo)).toBe(
+        'LIGO/Virgo/KAGRA S231127cg'
+      )
+    })
+
+    test('handles LIGO odd casing', () => {
+      const ligo =
+        'lIgO S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligo)).toBe('LIGO S231127cg')
+    })
+
+    test('handles KAGRA odd casing', () => {
+      const ligo =
+        'kAgRa S231127cg: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligo)).toBe('KAGRA S231127cg')
+    })
+
+    test('handles full ligo/virgo/kagra inconsistent casing', () => {
+      const ligo =
+        'LiGo/ViRGo/kAgRa s231127cG: Identification of a GW compact binary merger candidate'
+      expect(parseEventFromSubject(ligo)).toBe('LIGO/Virgo/KAGRA S231127cg')
+    })
+
     test('handles LIGO alert', () => {
       const ligoVirgoKagra =
         'LIGO S231127cg: Identification of a GW compact binary merger candidate'
