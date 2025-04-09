@@ -339,17 +339,17 @@ export default function () {
         )}
       </ToolbarButtonGroup>
       {queryFallback && (
-          <ErrorMessage>
-            "{query}" does not adhere to advanced search syntax. Please refer to
-            the{' '}
-            <Link
-              className="usa-link"
-              to="/docs/circulars/archive#advanced-search"
-            >
-              documentation
-            </Link>{' '}
-            and try again.
-          </ErrorMessage>
+        <ErrorMessage>
+          "{query}" does not adhere to advanced search syntax. Please refer to
+          the{' '}
+          <Link
+            className="usa-link"
+            to="/docs/circulars/archive#advanced-search"
+          >
+            documentation
+          </Link>{' '}
+          and try again.
+        </ErrorMessage>
       )}
       <Hint id="searchHint">
         {isGroupView ? (
