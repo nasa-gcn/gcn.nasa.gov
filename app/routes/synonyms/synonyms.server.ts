@@ -69,9 +69,9 @@ export async function searchSynonymsByEventId({
   if (eventId) {
     body.query.bool.filter = [
       {
-        regexp: {
+        wildcard: {
           'eventIds.keyword': {
-            value: `.*${eventId}.*`,
+            value: `*${eventId}*`,
             case_insensitive: true,
           },
         },
@@ -303,7 +303,6 @@ export async function autoCompleteEventIds({
 }): Promise<{
   options: string[]
 }> {
-  const cleanedQuery = query.replace('-', ' ')
   const client = await getSearchClient()
   const {
     body: {
@@ -314,12 +313,13 @@ export async function autoCompleteEventIds({
     body: {
       query: {
         bool: {
-          must: [
+          filter: [
             {
-              query_string: {
-                query: `*${cleanedQuery}*`,
-                fields: ['eventId'],
-                fuzziness: 'AUTO',
+              wildcard: {
+                'eventId.keyword': {
+                  value: `*${query}*`,
+                  case_insensitive: true,
+                },
               },
             },
           ],
