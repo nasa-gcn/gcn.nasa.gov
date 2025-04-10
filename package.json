@@ -45,7 +45,7 @@
     "cross-env": "^7.0.3",
     "dayjs": "^1.11.10",
     "diff": "^7.0.0",
-    "downshift": "^9.0.8",
+    "downshift": "^9.0.9",
     "email-validator": "^2.0.4",
     "gcn-kafka": "^0.3.0",
     "github-slugger": "^2.0.0",
