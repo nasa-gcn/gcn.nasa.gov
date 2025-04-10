@@ -366,7 +366,7 @@ export default function () {
           </>
         )}
       </Hint>
-      {useFeature('CIRCULARS_LUCENE') && <LuceneAccordion />}
+      <LuceneAccordion />
 
       {clean && (
         <>
