@@ -70,12 +70,13 @@ also happy to work with the mission teams to help construct your alerts.
       topic = 'gcn.notices.mission'
       # JSON data converted to byte string format
       data = json.dumps({
-          '$schema': 'https://gcn.nasa.gov/schema/main/gcn/notices/mission/SchemaName.schema.json',
+          '$schema': 'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/mission/SchemaName.schema.json',
           'key': 'value'
       }).encode()
       producer.produce(topic, data)
       producer.flush()
       ```
+      Please make sure to indicate the version of the schema they have validated against.
 
    </ProcessListItem>
    <ProcessListItem>
