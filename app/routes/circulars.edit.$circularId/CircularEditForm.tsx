@@ -30,6 +30,7 @@ import {
 import { RichEditor } from './RichEditor'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import CollapsableInfo from '~/components/CollapsableInfo'
+import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { AstroDataContext } from '~/components/circularDisplay/AstroDataContext'
 import { MarkdownBody } from '~/components/circularDisplay/Body'
@@ -144,8 +145,7 @@ export function CircularEditForm({
   const bodyValid = bodyIsValid(body)
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
   const sending = Boolean(useNavigation().formData)
-  const valid =
-    subjectValid && bodyValid && dateTimeValid && submitterValid && eventIdValid
+  const valid = subjectValid && bodyValid && dateTimeValid && submitterValid
 
   let headerText, saveButtonText
 
@@ -273,20 +273,32 @@ export function CircularEditForm({
           <CircularsKeywords />
         </CollapsableInfo>
         {intent !== 'new' && (
-          <InputGroup className="maxw-full">
-            <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
-            <TextInput
-              autoFocus
-              className="maxw-full"
-              name="eventId"
-              id="eventId"
-              type="text"
-              defaultValue={defaultEventId}
-              onChange={({ target: { value } }) => {
-                setEventId(value)
-              }}
-            />
-          </InputGroup>
+          <>
+            <InputGroup
+              className={classnames('maxw-full', {
+                'usa-input--error': eventIdValid === false,
+                'usa-input--success': eventIdValid,
+              })}
+            >
+              <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
+              <TextInput
+                autoFocus
+                className="maxw-full"
+                name="eventId"
+                id="eventId"
+                type="text"
+                defaultValue={defaultEventId}
+                onChange={({ target: { value } }) => {
+                  setEventId(value)
+                }}
+              />
+            </InputGroup>
+            <Hint className="text-secondary">
+              {eventIdValid
+                ? '\u00A0'
+                : 'EventId does not match any existing subject matchers!'}
+            </Hint>
+          </>
         )}
         <label hidden htmlFor="body">
           Body
