@@ -82,7 +82,7 @@
     "usehooks-ts": "^3.0.2"
   },
   "devDependencies": {
-    "@architect/architect": "^11.1.0",
+    "@architect/architect": "^11.2.2",
     "@architect/plugin-lambda-invoker": "^2.0.1",
     "@architect/utils": "^4.0.6",
     "@aws-sdk/client-cognito-identity-provider": "3.632.0",
