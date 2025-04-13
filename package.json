@@ -152,6 +152,7 @@
   },
   "overrides": {
     "@architect/deploy": "github:DocLM/deploy#d3116f41d5fda00337ebfda543a69d3b3d4546be",
+    "@architect/inventory": "github:lpsinger/inventory#allow-set-env-plugin-to-return-empty-object",
     "@architect/sandbox": "github:architect/sandbox"
   },
   "engines": {
