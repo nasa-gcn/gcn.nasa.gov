@@ -5,10 +5,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { BreadcrumbHandle } from '~/root/Title'
+import { redirect } from '@remix-run/node'
+import type { LoaderFunction } from '@remix-run/node'
 
-export { Outlet as default } from '@remix-run/react'
-
-export const handle: BreadcrumbHandle = {
-  breadcrumb: 'Sample Code',
+export const loader: LoaderFunction = async () => {
+  return redirect(
+    'https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.sample._index.mdx',
+    {}
+  )
 }
