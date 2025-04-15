@@ -69,12 +69,15 @@ describe('parseEventFromSubject', () => {
   const grbEventLetterless = 'GRB 230228'
   const hawcEvent = 'HAWC-221123A'
   const iceEvent = 'IceCube-221223A'
+  const iceCasEvent = 'IceCube-Cascade 221223A'
   const lvkEvent = 'LIGO/Virgo S200224ca'
   const sgrEvent = 'SGR 1935+2154'
   const ztfEvent = 'ZTF23aabmzlp'
   const epEvent = 'EP241119a'
   const frbEvent = 'FRB 20250206A'
   const svomEvent = 'sb25021804'
+  const gwEvent = 'GW250206'
+  const snEvent = 'SN2002ap'
 
   test('handles nonsense subject cases', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
@@ -298,9 +301,80 @@ describe('parseEventFromSubject', () => {
     })
   })
 
+  describe('IceCube-Cascade', () => {
+    test('handles IceCube-Cascade event names', () => {
+      const iceCascadeSubject =
+        'IceCube-Cascade 221223A - IceCube observation of a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubject)).toBe(iceCasEvent)
+    })
+
+    test('handles IceCube-Cascade event names in misc positions', () => {
+      const iceCascadeSubjectWithSpace =
+        'IceCube observation of IceCube-Cascade 221223A a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubjectWithSpace)).toBe(
+        iceCasEvent
+      )
+    })
+
+    test('handles IceCube-Cascade event names without space', () => {
+      const iceCascadeSubjectWithNoSpace =
+        'IceCube-Cascade221223A - IceCube observation of a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubjectWithNoSpace)).toBe(
+        iceCasEvent
+      )
+    })
+
+    test('handles IceCube-Cascade event names without spaces in misc positions', () => {
+      const iceCascadeSubjectWithSpace =
+        'IceCube observation IceCubeCascade221223A of a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubjectWithSpace)).toBe(
+        iceCasEvent
+      )
+    })
+
+    test('handles IceCube event name with an underscore', () => {
+      const iceCascadeSubjectWithUnderscore =
+        'IceCube_Cascade_221223A - IceCube observation of a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubjectWithUnderscore)).toBe(
+        iceCasEvent
+      )
+    })
+
+    test('handles IceCube event names with an underscore in misc positions', () => {
+      const iceCascadeSubjectWithUnderscore =
+        'IceCube observation of a high-energy neutrino IceCube_Cascade_221223A candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubjectWithUnderscore)).toBe(
+        iceCasEvent
+      )
+    })
+
+    test('handles IceCube event name with a hyphen', () => {
+      const iceSubjectWithHyphen =
+        'IceCube-Cascade-221223A - IceCube observation of a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceSubjectWithHyphen)).toBe(iceCasEvent)
+    })
+
+    test('handles IceCube event name with a hyphen in misc positions', () => {
+      const iceSubjectWithHyphen =
+        'IceCube observation of a high-energy IceCube-Cascade-221223A neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceSubjectWithHyphen)).toBe(iceCasEvent)
+    })
+
+    test('handles IceCube event name with lower case', () => {
+      const iceCasLower =
+        'IceCube observation of a high-energy icecube-cascade-221223a neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCasLower)).toBe(iceCasEvent)
+    })
+  })
+
   describe('EP', () => {
     test('handles EP event names with space', () => {
       const epSubject = 'EP 241119a: Global MASTER-Net observations report'
+      expect(parseEventFromSubject(epSubject)).toBe(epEvent)
+    })
+
+    test('handles EP event names with incorrect casing', () => {
+      const epSubject = 'ep 241119A: Global MASTER-Net observations report'
       expect(parseEventFromSubject(epSubject)).toBe(epEvent)
     })
 
@@ -735,6 +809,24 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(frbSubject)).toBe(frbEvent)
     })
 
+    test('handles FRB event names with incorrect casing', () => {
+      const frbSubject =
+        'frb 20250206a: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubject)).toBe(frbEvent)
+    })
+
+    test('handles outdated FRB event naming convention without letter', () => {
+      const frbSubject =
+        'frb 250206: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubject)).toBe('FRB 250206')
+    })
+
+    test('handles outdated FRB event naming convention with letter', () => {
+      const frbSubject =
+        'frb 250206a: MASTER observations and possible mother galaxy'
+      expect(parseEventFromSubject(frbSubject)).toBe('FRB 250206A')
+    })
+
     test('handles FRB event names in misc positions', () => {
       const frbSubjectWithSpace =
         'MASTER observations:FRB 20250206A and possible mother galaxy'
@@ -825,6 +917,112 @@ describe('parseEventFromSubject', () => {
       const svomSubjectWithHyphen =
         'SVOM detection: SVOM/sb-25021804 a long X-ray transient'
       expect(parseEventFromSubject(svomSubjectWithHyphen)).toBe(svomEvent)
+    })
+  })
+
+  describe('GW', () => {
+    test('handles GW event names', () => {
+      const gwSubject = 'GW250206: Swift UVOT follow-up'
+      expect(parseEventFromSubject(gwSubject)).toBe(gwEvent)
+    })
+
+    test('handles GW event names with incorrect casing', () => {
+      const gwSubject = 'gw250206: Swift UVOT follow-up'
+      expect(parseEventFromSubject(gwSubject)).toBe(gwEvent)
+    })
+
+    test('handles GW event names in misc positions', () => {
+      const gwSubjectWithSpace = 'Swift UVOT:GW250206 follow-up'
+      expect(parseEventFromSubject(gwSubjectWithSpace)).toBe(gwEvent)
+    })
+
+    test('handles GW event names without space', () => {
+      const gwSubjectWithNoSpace = 'GW250206: Swift UVOT follow-up'
+      expect(parseEventFromSubject(gwSubjectWithNoSpace)).toBe(gwEvent)
+    })
+
+    test('handles GW event names without spaces in misc positions', () => {
+      const gwSubjectWithSpace = 'Swift UVOT: GW250206 follow-up'
+      expect(parseEventFromSubject(gwSubjectWithSpace)).toBe(gwEvent)
+    })
+
+    test('handles GW event name with an underscore', () => {
+      const gwSubjectWithUnderscore = 'GW_250206: Swift UVOT follow-up'
+      expect(parseEventFromSubject(gwSubjectWithUnderscore)).toBe(gwEvent)
+    })
+
+    test('handles GW event names with an underscore in misc positions', () => {
+      const gwSubjectWithUnderscore = 'Swift UVOT GW_250206: follow-up'
+      expect(parseEventFromSubject(gwSubjectWithUnderscore)).toBe(gwEvent)
+    })
+
+    test('handles GW event name with a hyphen', () => {
+      const gwSubjectWithHyphen = 'GW-250206: Swift UVOT follow-up'
+      expect(parseEventFromSubject(gwSubjectWithHyphen)).toBe(gwEvent)
+    })
+
+    test('handles GW event name with a hyphen in misc positions', () => {
+      const gwSubjectWithHyphen = 'Swift UVOT: GW-250206 follow-up'
+      expect(parseEventFromSubject(gwSubjectWithHyphen)).toBe(gwEvent)
+    })
+  })
+
+  describe('SN', () => {
+    test('handles SN event names', () => {
+      const snSubject = 'SN2002ap (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe(snEvent)
+    })
+
+    test('handles SN event names with one letter', () => {
+      const snSubject = 'SN2002a (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe('SN2002a')
+    })
+
+    test('handles SN event names with incorrect casing', () => {
+      const snSubject = 'sn2002AP (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe(snEvent)
+    })
+
+    test('handles SN event names in misc positions', () => {
+      const snSubjectWithSpace =
+        '(SN/GRB?): SN 2002ap  optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithSpace)).toBe(snEvent)
+    })
+
+    test('handles SN event names with space', () => {
+      const snSubjectWithNoSpace =
+        'SN 2002ap (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithNoSpace)).toBe(snEvent)
+    })
+
+    test('handles SN event names with spaces in misc positions', () => {
+      const snSubjectWithSpace =
+        '(SN/GRB?): SN 2002ap  optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithSpace)).toBe(snEvent)
+    })
+
+    test('handles SN event name with an underscore', () => {
+      const snSubjectWithUnderscore =
+        'SN_2002ap (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithUnderscore)).toBe(snEvent)
+    })
+
+    test('handles SN event names with an underscore in misc positions', () => {
+      const snSubjectWithUnderscore =
+        '(SN/GRB?): SN_2002ap optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithUnderscore)).toBe(snEvent)
+    })
+
+    test('handles SN event name with a hyphen', () => {
+      const snSubjectWithHyphen =
+        'SN-2002ap (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithHyphen)).toBe(snEvent)
+    })
+
+    test('handles SN event name with a hyphen in misc positions', () => {
+      const snSubjectWithHyphen =
+        '(SN/GRB?): SN-2002ap optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithHyphen)).toBe(snEvent)
     })
   })
 })

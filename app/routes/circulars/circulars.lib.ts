@@ -60,6 +60,10 @@ const subjectMatchers: SubjectMatcher[] = [
     ([, id]) => `SGR Swift ${id.toUpperCase()}`,
   ],
   [/IceCube[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `IceCube-${id.toUpperCase()}`],
+  [
+    /IceCube[.\s_-]*Cascade[.\s_-]*(\d{6}[a-z])/i,
+    ([, id]) => `IceCube-Cascade ${id.toUpperCase()}`,
+  ],
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
@@ -76,8 +80,11 @@ const subjectMatchers: SubjectMatcher[] = [
     /Baksan\sNeutrino\sObservatory\sAlert[.\s_-]*(\d{6}.\d{2})/i,
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
   ],
-  [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id}`],
-  [/FRB[.\s_-]*(\d{8}[a-z])/i, ([, id]) => `FRB ${id}`.toUpperCase()],
+  [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id.toLowerCase()}`],
+  [/SN[.\s_-]*(\d{4}[a-zA-Z]*)/i, ([, id]) => `SN${id.toLowerCase()}`],
+  [/GW[.\s_-]*(\d{6})/i, ([, id]) => `GW${id}`],
+  [/FRB[.\s_-]*(\d{8}[a-zA-Z])/i, ([, id]) => `FRB ${id}`.toUpperCase()],
+  [/FRB[.\s_-]*(\d{6}[a-zA-Z]?)/i, ([, id]) => `FRB ${id}`.toUpperCase()],
   [/sb[.\s_-]*(\d{8})/i, ([, id]) => `sb${id}`],
 ]
 
