@@ -78,6 +78,9 @@ describe('parseEventFromSubject', () => {
   const svomEvent = 'sb25021804'
   const gwEvent = 'GW250206'
   const snEvent = 'SN2002ap'
+  const xrfEvent = 'XRF 050509C'
+  const xrfEventLetterless = 'XRF 050509'
+  const atEvent = 'AT 2023lcr'
 
   test('handles nonsense subject cases', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
@@ -1023,6 +1026,164 @@ describe('parseEventFromSubject', () => {
       const snSubjectWithHyphen =
         '(SN/GRB?): SN-2002ap optical spectrographic observations'
       expect(parseEventFromSubject(snSubjectWithHyphen)).toBe(snEvent)
+    })
+  })
+
+  describe('XRF', () => {
+    test('handles XRF event names', () => {
+      const xrfSubjectWithSpace = 'XRF 050509C: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event names in misc positions', () => {
+      const xrfSubjectWithSpace =
+        'Chandra Afterglow Detection XRF 050509C follow up'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event names without space', () => {
+      const xrfSubjectWithNoSpace = 'XRF050509C: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithNoSpace)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event names without spaces in misc positions', () => {
+      const xrfSubjectWithSpace = 'Chandra Afterglow Detection XRF050509C'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event name with an underscore', () => {
+      const xrfSubjectWithUnderscore =
+        'XRF_050509C: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithUnderscore)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event names with an underscore in misc positions', () => {
+      const xrfSubjectWithUnderscore =
+        'Chandra Afterglow Detection XRF_050509C follow up'
+      expect(parseEventFromSubject(xrfSubjectWithUnderscore)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event name with a hyphen', () => {
+      const xrfSubjectWithHyphen = 'XRF-050509C: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithHyphen)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event name with a hyphen in misc positions', () => {
+      const xrfSubjectWithHyphen =
+        'Chandra Afterglow Detection XRF-050509C follow-up'
+      expect(parseEventFromSubject(xrfSubjectWithHyphen)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event names without a letter', () => {
+      const xrfSubjectWithSpace = 'XRF 050509: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(
+        xrfEventLetterless
+      )
+    })
+
+    test('handles XRF event names in misc positions without letter', () => {
+      const xrfSubjectWithSpace =
+        'Chandra Afterglow Detection XRF 050509 follow-up'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(
+        xrfEventLetterless
+      )
+    })
+
+    test('handles XRF event names without space without a letter', () => {
+      const xrfSubjectWithNoSpace = 'XRF050509: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithNoSpace)).toBe(
+        xrfEventLetterless
+      )
+    })
+
+    test('handles XRF event names without spaces in misc positions without a letter', () => {
+      const xrfSubjectWithSpace =
+        'Chandra Afterglow Detection XRF050509 follow-up'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(
+        xrfEventLetterless
+      )
+    })
+
+    test('handles XRF event name with an underscore without a letter', () => {
+      const xrfSubjectWithUnderscore = 'XRF_050509: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithUnderscore)).toBe(
+        xrfEventLetterless
+      )
+    })
+
+    test('handles XRF event names with an underscore in misc positions without a letter', () => {
+      const xrfSubjectWithUnderscore =
+        'Chandra Afterglow Detection XRF_050509 follow-up'
+      expect(parseEventFromSubject(xrfSubjectWithUnderscore)).toBe(
+        xrfEventLetterless
+      )
+    })
+
+    test('handles XRF event name with a hyphen without a letter', () => {
+      const xrfSubjectWithHyphen = 'XRF-050509: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithHyphen)).toBe(
+        xrfEventLetterless
+      )
+    })
+
+    test('handles XRF event name with a hyphen in misc positions without a letter', () => {
+      const xrfSubjectWithHyphen =
+        'Chandra Afterglow Detection XRF-050509 follow-up'
+      expect(parseEventFromSubject(xrfSubjectWithHyphen)).toBe(
+        xrfEventLetterless
+      )
+    })
+  })
+
+  describe('AT', () => {
+    test('handles AT event names', () => {
+      const atSubject = 'AT 2023lcr: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe(atEvent)
+    })
+
+    test('handles AT event names with one letter', () => {
+      const atSubject = 'AT 2023lc: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lc')
+    })
+
+    test('handles AT event names with four letters', () => {
+      const atSubject = 'AT 2023lcrsj: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lcrsj')
+    })
+
+    test('handles AT event names with incorrect casing', () => {
+      const atSubject = 'at 2023LCR: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe(atEvent)
+    })
+
+    test('handles AT event names in misc positions', () => {
+      const atSubjectWithSpace = 'VLA radio detection AT 2023lcr follow-up'
+      expect(parseEventFromSubject(atSubjectWithSpace)).toBe(atEvent)
+    })
+
+    test('handles AT event names with spaces in misc positions', () => {
+      const atSubjectWithSpace = 'VLA radio detection AT 2023lcr follow-up'
+      expect(parseEventFromSubject(atSubjectWithSpace)).toBe(atEvent)
+    })
+
+    test('handles AT event name with an underscore', () => {
+      const atSubjectWithUnderscore = 'AT_2023lcr: VLA radio detection'
+      expect(parseEventFromSubject(atSubjectWithUnderscore)).toBe(atEvent)
+    })
+
+    test('handles AT event names with an underscore in misc positions', () => {
+      const atSubjectWithUnderscore = 'VLA radio detection AT_2023lcr follow-up'
+      expect(parseEventFromSubject(atSubjectWithUnderscore)).toBe(atEvent)
+    })
+
+    test('handles AT event name with a hyphen', () => {
+      const atSubjectWithHyphen = 'AT-2023lcr: VLA radio detection'
+      expect(parseEventFromSubject(atSubjectWithHyphen)).toBe(atEvent)
+    })
+
+    test('handles AT event name with a hyphen in misc positions', () => {
+      const atSubjectWithHyphen = 'VLA radio detection AT-2023lcr follow-up'
+      expect(parseEventFromSubject(atSubjectWithHyphen)).toBe(atEvent)
     })
   })
 })
