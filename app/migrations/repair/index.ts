@@ -27,13 +27,10 @@ async function getTableNameFromSSM(dynamoTableName: string) {
   return response.Parameter?.Value
 }
 
-export async function dataRepair(letter: string) {
-  const logInstrument = letter === 'L' ? 'LIGO' : 'EP'
+export async function dataRepair() {
   const startTime = new Date()
-  console.log(`Starting ${logInstrument} backfill...`, startTime)
+  console.log(`Starting missing eventId backfill...`, startTime)
 
-  // Keeps track of all the synonyms we've deleted this run
-  const synonymsDeleted = new Set()
   // Keeps track of all the synonyms we will create this run
   const synonymsToCreate = new Set()
   // synonymWrites are top level so they are only created once per run
@@ -46,45 +43,29 @@ export async function dataRepair(letter: string) {
   const client = new DynamoDBClient({ region: 'us-east-1' })
   const docClient = DynamoDBDocumentClient.from(client)
 
-  // LVK records are the only eventIds that start with L
-  // EP records are the only eventIds that start with E
-  // neither has any records in the archive that begin with a lowercase letter
+  // Get only circulars that have a missing eventId
   const pages = paginateScan(
     { client: docClient },
     {
       TableName: circularTableName,
       Limit: 25,
       IndexName: 'circularsByEventId',
-      FilterExpression: 'begins_with(eventId, :val)',
-      ExpressionAttributeValues: { ':val': letter },
+      FilterExpression: 'attribute_not_exists(eventId)',
     }
   )
 
   for await (const page of pages) {
     const circularWrites = [] as Circular[]
-    const synonymDeletes = []
-
     const circulars = page.Items as Circular[]
 
     for (const circular of circulars) {
-      const ogEventId = circular.eventId
       const parsedEventId = parseEventFromSubject(circular.subject)
 
-      // only do more if we have to change the eventId
-      if (parsedEventId != ogEventId) {
+      // only do more if there is a parsed event name and we have to add the eventId
+      if (parsedEventId) {
         circular.eventId = parsedEventId
-        // If the parsed eventId and the OG eventId do not match,
         // add the updated circular to the write array
         circularWrites.push(circular)
-
-        // If the OG eventId has not been deleted, add it to the delete array.
-        // Record the delete in the synonymsDeleted so it isn't duplicated.
-        // Primary keys are immutable and can not be updated, so they must be
-        // deleted and re-created.
-        if (!synonymsDeleted.has(ogEventId)) {
-          synonymDeletes.push(ogEventId)
-          synonymsDeleted.add(ogEventId)
-        }
 
         // only add a synonym to create to the set once to prevent duplicates
         if (!synonymsToCreate.has(parsedEventId))
@@ -109,29 +90,8 @@ export async function dataRepair(letter: string) {
 
       await client.send(command)
     }
-
-    // Batch write synonym deletes only, Combining all 3 writes may go over 25 item limit
-    if (synonymDeletes.length > 0 && TableName) {
-      // ensure that the writes are unique, they should be due to the check before adding them to
-      // the write array, but just to be absolutely confident uniq the writes
-      const uniqueSynonymDeletes = uniq(synonymDeletes)
-      console.log(`Deleting ${uniqueSynonymDeletes.length} synonym records`)
-
-      const command = new BatchWriteCommand({
-        RequestItems: {
-          [TableName]: uniqueSynonymDeletes.map((eventId) => ({
-            DeleteRequest: { Key: { eventId } },
-          })),
-        },
-      })
-
-      await client.send(command)
-    }
   }
 
-  // If we haven't already created a synonym this run
-  // gather data necessary to create new synonym, and
-  // add it to the synonyms to be written.
   // This is only done once per run so that if there are multiple updates
   // to the same event, it only pulls the circulars for the event once.
   // The synonymsToCreate variable is a set, so it will be unique
@@ -171,6 +131,8 @@ export async function dataRepair(letter: string) {
     })
   }
 
+  console.log(`Total synonyms to create: ${synonymWrites.length}`)
+
   // So we don't go over the 25 item write limit for the batch write,
   // we are chunking the writes into arrays of 25
   for (const synonymChunk of chunk(synonymWrites, 25)) {
@@ -200,16 +162,7 @@ export async function dataRepair(letter: string) {
   }
 
   const endTime = new Date()
-  console.log(`... End ${logInstrument} backfill... `, endTime)
+  console.log(`... End missing eventId backfill... `, endTime)
 }
 
-// Unfortunately a table scan can't be done with two begins_with conditions,
-// so we must run the table scan twice
-
-// ALL LIGO records have eventIds that begin with a capital L.
-// This is the run to repair LVK events
-dataRepair('L')
-
-// ALL EP records have eventIds that begin with a capital E
-// This is the run to repair EP events
-dataRepair('E')
+dataRepair()
