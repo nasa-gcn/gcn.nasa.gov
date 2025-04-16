@@ -81,7 +81,10 @@ const subjectMatchers: SubjectMatcher[] = [
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
   ],
   [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id.toLowerCase()}`],
-  [/SN[.\s_-]*(\d{4}[a-zA-Z]*)/i, ([, id]) => `SN${id.toLowerCase()}`],
+  [
+    /SN[.\s_-]*(\d{4}(?:[a-z]{2,}|[A-Z]))/i,
+    ([, id]) => `SN ${id.length == 5 ? id.toUpperCase() : id.toLowerCase()}`,
+  ],
   [/GW[.\s_-]*(\d{6})/i, ([, id]) => `GW${id}`],
   [/FRB[.\s_-]*(\d{8}[a-zA-Z])/i, ([, id]) => `FRB ${id}`.toUpperCase()],
   [/FRB[.\s_-]*(\d{6}[a-zA-Z]?)/i, ([, id]) => `FRB ${id}`.toUpperCase()],

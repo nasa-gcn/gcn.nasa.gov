@@ -77,7 +77,8 @@ describe('parseEventFromSubject', () => {
   const frbEvent = 'FRB 20250206A'
   const svomEvent = 'sb25021804'
   const gwEvent = 'GW250206'
-  const snEvent = 'SN2002ap'
+  const snEvent = 'SN 2002A'
+  const snEventDoubleLetters = 'SN 2002ap'
   const xrfEvent = 'XRF 050509C'
   const xrfEventLetterless = 'XRF 050509'
   const atEvent = 'AT 2023lcr'
@@ -971,61 +972,107 @@ describe('parseEventFromSubject', () => {
   })
 
   describe('SN', () => {
-    test('handles SN event names', () => {
-      const snSubject = 'SN2002ap (SN/GRB?) optical spectrographic observations'
+    test('handles first 26 SN event names', () => {
+      const snSubject = 'SN 2002A (SN/GRB?) optical spectrographic observations'
       expect(parseEventFromSubject(snSubject)).toBe(snEvent)
     })
 
-    test('handles SN event names with one letter', () => {
-      const snSubject = 'SN2002a (SN/GRB?) optical spectrographic observations'
-      expect(parseEventFromSubject(snSubject)).toBe('SN2002a')
+    test('handles double letter SN event names', () => {
+      const snSubject =
+        'SN 2002ap (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe(snEventDoubleLetters)
     })
 
-    test('handles SN event names with incorrect casing', () => {
+    test('handles triple letter SN event names', () => {
+      const snSubject =
+        'SN 2002abc (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe('SN 2002abc')
+    })
+
+    test('handles 5 letter SN event names', () => {
+      const snSubject =
+        'SN 2002abcde (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe('SN 2002abcde')
+    })
+
+    test('handles SN event names with incorrect casing with two letters', () => {
       const snSubject = 'sn2002AP (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe(snEventDoubleLetters)
+    })
+
+    test('handles SN event names with incorrect casing with many letters', () => {
+      const snSubject =
+        'sn 2002abcde (SN/GRB?) optical spectrographic observations'
+      expect(parseEventFromSubject(snSubject)).toBe('SN 2002abcde')
+    })
+
+    test('handles SN event names with incorrect casing with one letter', () => {
+      const snSubject = 'sn2002a (SN/GRB?) optical spectrographic observations'
       expect(parseEventFromSubject(snSubject)).toBe(snEvent)
     })
 
     test('handles SN event names in misc positions', () => {
       const snSubjectWithSpace =
-        '(SN/GRB?): SN 2002ap  optical spectrographic observations'
+        '(SN/GRB?): SN 2002A  optical spectrographic observations'
       expect(parseEventFromSubject(snSubjectWithSpace)).toBe(snEvent)
     })
 
     test('handles SN event names with space', () => {
       const snSubjectWithNoSpace =
-        'SN 2002ap (SN/GRB?) optical spectrographic observations'
+        'SN 2002A (SN/GRB?) optical spectrographic observations'
       expect(parseEventFromSubject(snSubjectWithNoSpace)).toBe(snEvent)
     })
 
-    test('handles SN event names with spaces in misc positions', () => {
+    test('handles SN event names with double letters and spaces in misc positions', () => {
       const snSubjectWithSpace =
         '(SN/GRB?): SN 2002ap  optical spectrographic observations'
-      expect(parseEventFromSubject(snSubjectWithSpace)).toBe(snEvent)
+      expect(parseEventFromSubject(snSubjectWithSpace)).toBe(
+        snEventDoubleLetters
+      )
     })
 
     test('handles SN event name with an underscore', () => {
       const snSubjectWithUnderscore =
         'SN_2002ap (SN/GRB?) optical spectrographic observations'
-      expect(parseEventFromSubject(snSubjectWithUnderscore)).toBe(snEvent)
+      expect(parseEventFromSubject(snSubjectWithUnderscore)).toBe(
+        snEventDoubleLetters
+      )
     })
 
     test('handles SN event names with an underscore in misc positions', () => {
       const snSubjectWithUnderscore =
-        '(SN/GRB?): SN_2002ap optical spectrographic observations'
+        '(SN/GRB?): SN_2002A optical spectrographic observations'
       expect(parseEventFromSubject(snSubjectWithUnderscore)).toBe(snEvent)
+    })
+
+    test('handles SN event names with an underscore and double letters in misc positions', () => {
+      const snSubjectWithUnderscore =
+        '(SN/GRB?): SN_2002ap optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithUnderscore)).toBe(
+        snEventDoubleLetters
+      )
     })
 
     test('handles SN event name with a hyphen', () => {
       const snSubjectWithHyphen =
         'SN-2002ap (SN/GRB?) optical spectrographic observations'
-      expect(parseEventFromSubject(snSubjectWithHyphen)).toBe(snEvent)
+      expect(parseEventFromSubject(snSubjectWithHyphen)).toBe(
+        snEventDoubleLetters
+      )
     })
 
     test('handles SN event name with a hyphen in misc positions', () => {
       const snSubjectWithHyphen =
-        '(SN/GRB?): SN-2002ap optical spectrographic observations'
+        '(SN/GRB?): SN-2002A optical spectrographic observations'
       expect(parseEventFromSubject(snSubjectWithHyphen)).toBe(snEvent)
+    })
+
+    test('handles SN event name with a hyphen and double letters in misc positions', () => {
+      const snSubjectWithHyphen =
+        '(SN/GRB?): SN-2002ap optical spectrographic observations'
+      expect(parseEventFromSubject(snSubjectWithHyphen)).toBe(
+        snEventDoubleLetters
+      )
     })
   })
 
@@ -1141,14 +1188,14 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(atSubject)).toBe(atEvent)
     })
 
-    test('handles AT event names with one letter', () => {
-      const atSubject = 'AT 2023lc: VLA radio detection'
-      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lc')
+    test('handles AT event names with two letters', () => {
+      const atSubject = 'AT 2023lcd: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lcd')
     })
 
-    test('handles AT event names with four letters', () => {
-      const atSubject = 'AT 2023lcrsj: VLA radio detection'
-      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lcrsj')
+    test('handles AT event names with five letters', () => {
+      const atSubject = 'AT 2023lcrsjq: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lcrsjq')
     })
 
     test('handles AT event names with incorrect casing', () => {
