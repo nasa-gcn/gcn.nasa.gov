@@ -49,6 +49,12 @@ export interface CircularChangeRequestKeys {
 
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
+// CAUTION:
+// If you use a wildcard or optional letter match, you MUST use [a-zA-Z]
+// even though we are using the case insensitive /i flag.
+// With wildcard and optional matchers, it will not be able to determine
+// the best match so it will default to the laziest match which will cut the
+// letters not matching the specified case off.
 const subjectMatchers: SubjectMatcher[] = [
   [
     /GRB[.\s_-]*(\d{6}(?:[a-z]|\.[0-9]+)?)/i,
