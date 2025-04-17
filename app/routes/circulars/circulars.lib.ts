@@ -51,7 +51,7 @@ type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
   [
-    /GRB[.\s_-]*(\d{6}(?:[A-Za-z]|\.[0-9]+)?)/i,
+    /GRB[.\s_-]*(\d{6}(?:[a-z]|\.[0-9]+)?)/i,
     ([, id]) => `GRB ${id.toUpperCase()}`,
   ],
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
@@ -63,7 +63,7 @@ const subjectMatchers: SubjectMatcher[] = [
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
-    /((?:LIGO|Virgo|KAGRA)(?:[/-](?:LIGO|Virgo|KAGRA))*)[-_ \s]?(S|G|GW)(\d{5,}[a-zA-Z]*)/i,
+    /((?:LIGO|Virgo|KAGRA)(?:[/-](?:LIGO|Virgo|KAGRA))*)[-_ \s]?(S|G|GW)(\d{5,}[a-z]*)/i,
     ([, instrument, flag, id]) => {
       const normalizedInstrument = instrument
         .toUpperCase()
@@ -262,7 +262,9 @@ export function formatAuthor({
 
 export function parseEventFromSubject(value: string) {
   for (const [regexp, normalize] of subjectMatchers) {
-    const startsWithMatch = RegExp(`^${regexp.source}`).exec(value)
+    const startsWithMatch = RegExp(`^${regexp.source}`, regexp.flags).exec(
+      value
+    )
     if (startsWithMatch) return normalize(startsWithMatch)
   }
   for (const [regexp, normalize] of subjectMatchers) {
