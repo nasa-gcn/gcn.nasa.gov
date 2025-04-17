@@ -81,7 +81,7 @@ describe('parseEventFromSubject', () => {
   const snEventDoubleLetters = 'SN 2002ap'
   const xrfEvent = 'XRF 050509C'
   const xrfEventLetterless = 'XRF 050509'
-  const atEvent = 'AT 2023lcr'
+  const atEvent = 'AT2023lcr'
 
   test('handles nonsense subject cases', () => {
     expect(parseEventFromSubject('zawxdrcftvgbhnjm')).toBe(undefined)
@@ -97,9 +97,21 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(grbEvent)
     })
 
+    test('handles GRB event names with incorrect casing', () => {
+      const grbSubjectWithSpace =
+        'GRB 230228a: Swift detection of a possibly short burst'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(grbEvent)
+    })
+
     test('handles GRB event names in misc positions', () => {
       const grbSubjectWithSpace =
         'Swift detection of a possibly short burst for GRB 230228A'
+      expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(grbEvent)
+    })
+
+    test('handles GRB event names with incorrect casing in misc positions', () => {
+      const grbSubjectWithSpace =
+        'Swift detection of a possibly short burst for GRB 230228a'
       expect(parseEventFromSubject(grbSubjectWithSpace)).toBe(grbEvent)
     })
 
@@ -268,6 +280,18 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(iceSubjectWithSpace)).toBe(iceEvent)
     })
 
+    test('handles IceCube event names with incorrect casing', () => {
+      const iceSubject =
+        'IceCube 221223a - IceCube observation of a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceSubject)).toBe(iceEvent)
+    })
+
+    test('handles IceCube event names with incorrect casing in misc positions', () => {
+      const iceSubjectWithSpace =
+        'IceCube observation of IceCube 221223a a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceSubjectWithSpace)).toBe(iceEvent)
+    })
+
     test('handles IceCube event names without space', () => {
       const iceSubjectWithNoSpace =
         'IceCube221223A - IceCube observation of a high-energy neutrino candidate track-like event'
@@ -315,6 +339,20 @@ describe('parseEventFromSubject', () => {
     test('handles IceCube-Cascade event names in misc positions', () => {
       const iceCascadeSubjectWithSpace =
         'IceCube observation of IceCube-Cascade 221223A a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubjectWithSpace)).toBe(
+        iceCasEvent
+      )
+    })
+
+    test('handles IceCube-Cascade event names with incorrect casing', () => {
+      const iceCascadeSubject =
+        'IceCube-Cascade 221223a - IceCube observation of a high-energy neutrino candidate track-like event'
+      expect(parseEventFromSubject(iceCascadeSubject)).toBe(iceCasEvent)
+    })
+
+    test('handles IceCube-Cascade event names with incorrect casing in misc positions', () => {
+      const iceCascadeSubjectWithSpace =
+        'IceCube observation of IceCube-Cascade 221223a a high-energy neutrino candidate track-like event'
       expect(parseEventFromSubject(iceCascadeSubjectWithSpace)).toBe(
         iceCasEvent
       )
@@ -388,6 +426,12 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(epSubjectWithSpace)).toBe(epEvent)
     })
 
+    test('handles EP event names with incorrect casing in misc positions', () => {
+      const epSubjectWithSpace =
+        'Global MASTER-Net EP 241119A observations report'
+      expect(parseEventFromSubject(epSubjectWithSpace)).toBe(epEvent)
+    })
+
     test('handles EP event names without space', () => {
       const epSubjectWithNoSpace = 'EP241119a EP detection'
       expect(parseEventFromSubject(epSubjectWithNoSpace)).toBe(epEvent)
@@ -433,6 +477,18 @@ describe('parseEventFromSubject', () => {
     test('handles ZTF event names with space in misc positions', () => {
       const ztfSubjectWithSpace =
         'Zwicky Transient Facility discovery of ZTF 23aabmzlp/AT2023azs a fast optical transient'
+      expect(parseEventFromSubject(ztfSubjectWithSpace)).toBe(ztfEvent)
+    })
+
+    test('handles ZTF event names with space and incorrect casing', () => {
+      const ztfSubject =
+        'ZTF 23aabmzlp/AT2023AZS: Zwicky Transient Facility discovery of a fast optical transient'
+      expect(parseEventFromSubject(ztfSubject)).toBe(ztfEvent)
+    })
+
+    test('handles ZTF event names with space and incorrect casing in misc positions', () => {
+      const ztfSubjectWithSpace =
+        'Zwicky Transient Facility discovery of ZTF 23aabmzlp/AT2023AZS a fast optical transient'
       expect(parseEventFromSubject(ztfSubjectWithSpace)).toBe(ztfEvent)
     })
 
@@ -718,6 +774,16 @@ describe('parseEventFromSubject', () => {
 
     test('handles ANTARES event names in misc positions', () => {
       const antSubjectWithSpace = 'Coincidence Fermi-LAT-ANTARES 200407a'
+      expect(parseEventFromSubject(antSubjectWithSpace)).toBe(antaresEvent)
+    })
+
+    test('handles ANTARES event names with incorrect casing', () => {
+      const antSubject = 'Fermi-LAT-ANTARES 200407A Coincidence'
+      expect(parseEventFromSubject(antSubject)).toBe(antaresEvent)
+    })
+
+    test('handles ANTARES event names with incorrect casing in misc positions', () => {
+      const antSubjectWithSpace = 'Coincidence Fermi-LAT-ANTARES 200407A'
       expect(parseEventFromSubject(antSubjectWithSpace)).toBe(antaresEvent)
     })
 
@@ -1088,6 +1154,17 @@ describe('parseEventFromSubject', () => {
       expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(xrfEvent)
     })
 
+    test('handles XRF event names with incorrect casing', () => {
+      const xrfSubjectWithSpace = 'XRF 050509c: Chandra Afterglow Detection'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(xrfEvent)
+    })
+
+    test('handles XRF event names with incorrect casing in misc positions', () => {
+      const xrfSubjectWithSpace =
+        'Chandra Afterglow Detection XRF 050509c follow up'
+      expect(parseEventFromSubject(xrfSubjectWithSpace)).toBe(xrfEvent)
+    })
+
     test('handles XRF event names without space', () => {
       const xrfSubjectWithNoSpace = 'XRF050509C: Chandra Afterglow Detection'
       expect(parseEventFromSubject(xrfSubjectWithNoSpace)).toBe(xrfEvent)
@@ -1189,13 +1266,23 @@ describe('parseEventFromSubject', () => {
     })
 
     test('handles AT event names with two letters', () => {
-      const atSubject = 'AT 2023lcd: VLA radio detection'
-      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lcd')
+      const atSubject = 'AT 2023lc: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe('AT2023lc')
     })
 
     test('handles AT event names with five letters', () => {
       const atSubject = 'AT 2023lcrsjq: VLA radio detection'
-      expect(parseEventFromSubject(atSubject)).toBe('AT 2023lcrsjq')
+      expect(parseEventFromSubject(atSubject)).toBe('AT2023lcrsjq')
+    })
+
+    test('handles AT event names with two letters and incorrect casing', () => {
+      const atSubject = 'AT 2023LC: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe('AT2023lc')
+    })
+
+    test('handles AT event names with five letters and incorrect casing', () => {
+      const atSubject = 'AT 2023LCRSJQ: VLA radio detection'
+      expect(parseEventFromSubject(atSubject)).toBe('AT2023lcrsjq')
     })
 
     test('handles AT event names with incorrect casing', () => {

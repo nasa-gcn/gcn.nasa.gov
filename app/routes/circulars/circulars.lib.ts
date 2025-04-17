@@ -82,15 +82,17 @@ const subjectMatchers: SubjectMatcher[] = [
   ],
   [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id.toLowerCase()}`],
   [
-    /SN[.\s_-]*(\d{4}[a-zA-Z]*)/i,
+    /SN[.\s_-]*(\d{4}[a-z]*)/i,
     ([, id]) => `SN ${id.length == 5 ? id.toUpperCase() : id.toLowerCase()}`,
   ],
   [/GW[.\s_-]*(\d{6})/i, ([, id]) => `GW${id}`],
-  [/FRB[.\s_-]*(\d{8}[a-zA-Z])/i, ([, id]) => `FRB ${id}`.toUpperCase()],
-  [/FRB[.\s_-]*(\d{6}[a-zA-Z]?)/i, ([, id]) => `FRB ${id}`.toUpperCase()],
+  [
+    /FRB[.\s_-]*(\d{8}[a-z]|\d{6}[a-z]?)/i,
+    ([, id]) => `FRB ${id}`.toUpperCase(),
+  ],
   [/sb[.\s_-]*(\d{8})/i, ([, id]) => `sb${id}`],
-  [/XRF[.\s_-]*(\d{6}(?:[A-Za-z])?)/i, ([, id]) => `XRF ${id.toUpperCase()}`],
-  [/AT[.\s_-]*(\d{4}[a-zA-Z]*)/i, ([, id]) => `AT ${id.toLowerCase()}`],
+  [/XRF[.\s_-]*(\d{6}[a-z]?)/i, ([, id]) => `XRF ${id.toUpperCase()}`],
+  [/AT[.\s_-]*(\d{4}[a-z]*)/i, ([, id]) => `AT${id.toLowerCase()}`],
 ]
 
 /** Format a Circular as plain text. */
