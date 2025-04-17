@@ -4,6 +4,7 @@ handle:
 ---
 
 import {
+  Alert,
   ProcessList,
   ProcessListHeading,
   ProcessListItem,
@@ -70,12 +71,18 @@ also happy to work with the mission teams to help construct your alerts.
       topic = 'gcn.notices.mission'
       # JSON data converted to byte string format
       data = json.dumps({
-          '$schema': 'https://gcn.nasa.gov/schema/main/gcn/notices/mission/SchemaName.schema.json',
+          '$schema': 'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/mission/SchemaName.schema.json',
           'key': 'value'
       }).encode()
       producer.produce(topic, data)
       producer.flush()
       ```
+
+<Alert type="info" heading="Schema Version" headingLevel="h4">
+
+Please indicate the latest schema version (i.e., `vX.Y.Z`) against which the mission schema has been validated, rather than referring to the main branch.
+
+</Alert>
 
    </ProcessListItem>
    <ProcessListItem>
