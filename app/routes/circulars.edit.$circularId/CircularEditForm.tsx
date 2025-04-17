@@ -132,18 +132,14 @@ export function CircularEditForm({
     formSearchString = `${formSearchString}&${searchString}`
     searchString = `?${searchString}`
   }
-  const [subjectValid, setSubjectValid] = useState(
-    subjectIsValid(defaultSubject)
-  )
-  const [eventIdValid, setEventIdValid] = useState(
-    defaultEventId === undefined || eventIdIsValid(defaultEventId)
-  )
   const [body, setBody] = useState(defaultBody)
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
   const [dateTime, setDateTime] = useState(defaultCreatedOnDateTime ?? '')
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const [eventId, setEventId] = useState(defaultEventId)
+  const subjectValid = subjectIsValid(subject)
+  const eventIdValid = eventId ? eventIdIsValid(eventId) : true
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
@@ -266,7 +262,6 @@ export function CircularEditForm({
             required
             onChange={({ target: { value } }) => {
               setSubject(value)
-              setSubjectValid(subjectIsValid(value))
             }}
           />
         </InputGroup>
@@ -289,7 +284,6 @@ export function CircularEditForm({
               defaultValue={defaultEventId}
               onChange={({ target: { value } }) => {
                 setEventId(value)
-                setEventIdValid(!value || eventIdIsValid(value))
               }}
             />
           </InputGroup>
