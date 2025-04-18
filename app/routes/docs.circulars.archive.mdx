@@ -70,13 +70,6 @@ It is also possible to combine these operator keywords to form more complex quer
 
 Using one of these operators without an additional field query will result in an error. For example, `subject:"Swift" AND` will raise an error. For queries that do not adhere to the Lucene query syntax, GCN will fall back onto a more basic search method that matches the query against all fields with a warning message.
 
-### Wildcards
-
-Wildcards can be used to match a patterned search term to a field, such as searching for all Circulars related to GRBs detected in a given year by using the query `subject:"GRB21*"`. The following wildcards are supported:
-
-- `*`: Matches any number of characters.
-- `?`: Matches a single character.
-
 ### Reserved Characters
 
 there are a number of reserved characters that have special meaning in the Lucene query syntax. These characters must be escaped using a backslash (`\`) to be treated as a literal character. Including these characters in a query without escaping them will raise an error.The reserved characters are: `+`, `-`, `=`, `&&`, `||`, `>`, `<`, `!`, `(`, `)`, `{`, `}`, `[`, `]`, `^`, `"`, `~`, `*`, `?`, `:`, `/`, `\`.
@@ -90,8 +83,6 @@ there are a number of reserved characters that have special meaning in the Lucen
 - `subject:"Swift" OR body:"GRB"`: Matches circulars where the subject contains 'Swift' or the body contains 'GRB'.
 - `subject:"Swift" AND (body:"GRB" OR body:"Gamma-ray burst")`: Matches circulars where the subject contains 'Swift' and the body contains either 'GRB' or 'Gamma-ray burst'.
 - `subject:"LIGO" AND NOT body:"GRB"`: Matches circulars where the subject contains 'LIGO' and the body does not contain 'GRB'.
-- `subject:"GRB21*"`: Matches circulars where the subject contains 'GRB21' followed by any number of characters.
-- `subject:"GRB21?"`: Matches circulars where the subject contains 'GRB21' followed by a single character.
 
 ## Citing GCN Circulars
 
