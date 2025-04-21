@@ -173,6 +173,7 @@ export function CircularEditForm({
     eventId?.trim() !== defaultEventId
 
   const userIsModerator = useModStatus()
+  const nonBreakingSpace = '\u00A0'
 
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
@@ -295,7 +296,7 @@ export function CircularEditForm({
             </InputGroup>
             <Hint className="text-secondary">
               {eventIdValid
-                ? '\u00A0'
+                ? nonBreakingSpace
                 : 'EventId does not match any existing subject matchers!'}
             </Hint>
           </>
