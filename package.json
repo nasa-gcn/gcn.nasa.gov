@@ -70,7 +70,7 @@
     "rehype-class-names": "^1.0.13",
     "rehype-react": "^7.0.0",
     "remark-gfm": "^3.0.1",
-    "remark-rehype": "^10.1.0",
+    "remark-rehype": "^11.1.2",
     "source-map-support": "^0.5.21",
     "spin-delay": "^2.0.1",
     "string-strip-html": "8.5.0",
