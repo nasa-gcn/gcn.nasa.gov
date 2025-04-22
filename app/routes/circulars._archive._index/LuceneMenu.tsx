@@ -32,7 +32,7 @@ export function LuceneAccordion() {
         <Highlight language="sh" code='body:"GRB"' className="grid-col-4" />
         <Highlight
           language="sh"
-          code='submitter:"Tomas Ahumada Mena"'
+          code='submitter:"Judith Racusin"'
           className="grid-col-4"
         />
       </div>
