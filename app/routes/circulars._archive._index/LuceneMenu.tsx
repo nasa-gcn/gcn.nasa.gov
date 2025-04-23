@@ -14,9 +14,9 @@ export function LuceneAccordion() {
     <details>
       <summary>Advanced Search</summary>
       <p className="usa-paragraph">
-        To narrow the search results, use advanced search syntax. This allows for
-        specifying which circular field to search (submitter, subject, and/or
-        body). For additional information, refer to{' '}
+        To narrow the search results, use advanced search syntax. This allows
+        for specifying which circular field to search (submitter, subject,
+        and/or body). For additional information, refer to{' '}
         <Link className="usa-link" to="/docs/circulars/archive#advanced-search">
           the advanced search documentation
         </Link>
