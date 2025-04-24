@@ -55,6 +55,7 @@ import {
   type CircularFormat,
   type CircularMetadata,
   circularFormats,
+  parseEventFromSubject,
 } from '~/routes/circulars/circulars.lib'
 import type { SynonymGroup } from '~/routes/synonyms/synonyms.lib'
 import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
@@ -101,6 +102,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const data = await request.formData()
   const body = getFormDataString(data, 'body')
   const subject = getFormDataString(data, 'subject')
+  const eventId = getFormDataString(data, 'eventId') || undefined
   const intent = getFormDataString(data, 'intent')
   const format = getFormDataString(data, 'format') as CircularFormat | undefined
   const eventId = getFormDataString(data, 'eventId') || undefined
@@ -171,6 +173,9 @@ export async function action({ request }: ActionFunctionArgs) {
         throw new Response('circularId is required', { status: 400 })
       if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
+      if (!props.eventId) {
+        props.eventId = parseEventFromSubject(props.subject)
+      }
       await putVersion(
         {
           circularId: parseFloat(circularId),

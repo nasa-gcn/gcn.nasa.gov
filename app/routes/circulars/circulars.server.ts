@@ -312,10 +312,7 @@ export async function putRaw(
  */
 export async function put(
   item: Require<
-    Omit<
-      Circular,
-      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId'
-    >,
+    Omit<Circular, 'sub' | 'submitter' | 'createdOn' | 'circularId'>,
     'submittedHow'
   >,
   user?: User
@@ -333,7 +330,9 @@ export async function put(
     ...item,
   }
 
-  const eventId = parseEventFromSubject(item.subject)
+  const eventId = item.eventId
+    ? item.eventId
+    : parseEventFromSubject(item.subject)
   if (eventId) circular.eventId = eventId
   const result = await putRaw(circular)
   if (eventId) await tryInitSynonym(eventId, result.createdOn)
@@ -397,6 +396,35 @@ export async function getVersions(circularId: number): Promise<number[]> {
 }
 
 /**
+ * Determines the preferred eventId.
+ * @param circular
+ * @param item - the correction being submitted
+ * @returns the eventId based on data passed in. The eventId should be the one sent from the
+ * correction being submitted unless both the circular.eventId and the item.eventId are null
+ * and there is a parsed event, or if the circular.eventId and the item.eventId are the same
+ * but do not match the eventId parsed from the subject.
+ */
+function resolveEventId(
+  circular: { eventId?: string },
+  item: { eventId?: string; subject: string }
+) {
+  const parsedEventId = parseEventFromSubject(item.subject)
+  if (circular.eventId === parsedEventId && item.eventId !== circular.eventId) {
+    return item.eventId
+  }
+  if (!circular.eventId && item.eventId !== parsedEventId) {
+    return item.eventId
+  }
+  if (!circular.eventId && !item.eventId) {
+    return parsedEventId
+  }
+  if (circular.eventId === item.eventId && item.eventId !== parsedEventId) {
+    return parsedEventId
+  }
+  return item.eventId
+}
+
+/**
  * Creates a set of changes in circulars_change_requests for users
  * who do not have moderator permissions
  *
@@ -408,6 +436,7 @@ export async function getVersions(circularId: number): Promise<number[]> {
  * @param circularId
  * @param body
  * @param subject
+ * @param eventId
  * @param request
  */
 export async function createChangeRequest(
@@ -421,7 +450,12 @@ export async function createChangeRequest(
     | 'editedOn'
     | 'submitter'
     | 'createdOn'
-  > & { submitter?: string; createdOn?: number; zendeskTicketId: number },
+  > & {
+    submitter?: string
+    createdOn?: number
+    eventId?: string
+    zendeskTicketId: number
+  },
   user?: User
 ) {
   validateCircular(item)
@@ -434,11 +468,14 @@ export async function createChangeRequest(
   const circular = (await db.circulars.get({
     circularId: item.circularId,
   })) as Circular
+  const eventId = resolveEventId(circular, item)
+
   await db.circulars_change_requests.put({
     ...item,
     requestorSub: user.sub,
     requestorEmail: user.email,
     requestor,
+    eventId,
     createdOn: item.createdOn ?? circular.createdOn,
     submitter: item.submitter ?? circular.submitter,
   })
