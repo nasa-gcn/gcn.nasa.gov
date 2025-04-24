@@ -286,3 +286,33 @@ export function parseEventFromSubject(value: string) {
     if (match) return normalize(match)
   }
 }
+
+/**
+ * Determines the preferred eventId.
+ * @param circular
+ * @param item - the correction being submitted
+ * @returns the eventId based on data passed in. The eventId should be the one sent from the
+ * correction being submitted unless both the circular.eventId and the item.eventId are null
+ * and there is a parsed event, or if the circular.eventId and the item.eventId are the same
+ * but do not match the eventId parsed from the subject.
+ */
+export function resolveEventId(
+  circular: { eventId?: string },
+  item: { eventId?: string; subject: string }
+) {
+  const parsedEventId = parseEventFromSubject(item.subject)
+
+  if (circular.eventId === parsedEventId && item.eventId !== circular.eventId) {
+    return item.eventId
+  }
+  if (!circular.eventId && !item.eventId) {
+    return parsedEventId
+  }
+  if (!circular.eventId && item.eventId !== parsedEventId) {
+    return item.eventId
+  }
+  if (circular.eventId === item.eventId && item.eventId !== parsedEventId) {
+    return parsedEventId
+  }
+  return item.eventId
+}

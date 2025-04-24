@@ -13,6 +13,7 @@ import {
   formatAuthor,
   formatCircularText,
   parseEventFromSubject,
+  resolveEventId,
   subjectIsValid,
 } from '../app/routes/circulars/circulars.lib'
 
@@ -37,6 +38,116 @@ describe('formatAuthor', () => {
     expect(formatAuthor({ email, name, affiliation })).toBe(
       `${name} at ${affiliation} <${email}>`
     )
+  })
+})
+
+describe('resolveEventId', () => {
+  const grbA = 'GRB 123456A'
+  const grbB = 'GRB 123456B'
+  const uniqueId = 'GRB 123456Q'
+  const nonMatchingId = 'Han Solo'
+
+  const itemNoEventIdWithSubjectMatch = {
+    eventId: undefined,
+    subject: `${grbA} is real`,
+  }
+
+  const itemNoEventIdNoSubjectMatch = {
+    eventId: undefined,
+    subject: 'this is not a valid event',
+  }
+
+  const itemWithEventIdNoSubjectMatch = {
+    eventId: grbA,
+    subject: 'this is not a valid event',
+  }
+
+  const itemWithDifferentEventIdAndSubj = {
+    eventId: grbB,
+    subject: `${grbB} is real`,
+  }
+
+  const itemWithDifferentEventIdNoSubjChange = {
+    eventId: grbB,
+    subject: `${grbA} is real`,
+  }
+
+  const itemWithNoSubjMatchNonMatchId = {
+    eventId: nonMatchingId,
+    subject: 'this is not a valid event',
+  }
+
+  const itemWithSubjMatchNonMatchId = {
+    eventId: nonMatchingId,
+    subject: `${grbA} is real`,
+  }
+
+  const itemWithEventIdSpecifiedNotMatchingSubject = {
+    eventId: uniqueId,
+    subject: 'this is not a valid event',
+  }
+  const circularNoEventId = {
+    eventId: undefined,
+  }
+  const circularWithEventId = {
+    eventId: grbA,
+  }
+
+  test('if the submitted eventId and subject are different than the original eventId', () => {
+    expect(
+      resolveEventId(circularWithEventId, itemWithDifferentEventIdAndSubj)
+    ).toBe(grbB)
+  })
+
+  test('if there is not a submitted eventId or original eventId but a valid subject match', () => {
+    expect(
+      resolveEventId(circularNoEventId, itemNoEventIdWithSubjectMatch)
+    ).toBe(grbA)
+  })
+
+  test('if there is eventId passed in with valid subject match', () => {
+    expect(
+      resolveEventId(circularNoEventId, itemNoEventIdWithSubjectMatch)
+    ).toBe(grbA)
+  })
+
+  test('if there is no valid subject matcher or eventId passed in with no subject match', () => {
+    expect(resolveEventId(circularNoEventId, itemNoEventIdNoSubjectMatch)).toBe(
+      undefined
+    )
+  })
+
+  test('if there is an eventId passed in but no valid subject match', () => {
+    expect(
+      resolveEventId(circularNoEventId, itemWithEventIdNoSubjectMatch)
+    ).toBe(grbA)
+  })
+
+  test('if there is an eventId passed that does NOT match the subject eventId', () => {
+    expect(
+      resolveEventId(
+        circularNoEventId,
+        itemWithEventIdSpecifiedNotMatchingSubject
+      )
+    ).toBe(uniqueId)
+  })
+
+  test('if there is an eventId passed that does NOT match the subject eventId or existing eventID', () => {
+    expect(
+      resolveEventId(circularWithEventId, itemWithDifferentEventIdNoSubjChange)
+    ).toBe(grbB)
+  })
+
+  test('if there is an eventId passed that does NOT match the subject matcher with non matching subject', () => {
+    expect(
+      resolveEventId(circularWithEventId, itemWithNoSubjMatchNonMatchId)
+    ).toBe(nonMatchingId)
+  })
+
+  test('if there is an eventId passed that does NOT match the subject matcher with valid subject', () => {
+    expect(
+      resolveEventId(circularWithEventId, itemWithSubjMatchNonMatchId)
+    ).toBe(nonMatchingId)
   })
 })
 
