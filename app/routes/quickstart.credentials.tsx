@@ -15,7 +15,9 @@ import {
   handleCredentialActions,
   handleCredentialLoader,
 } from '~/components/NewCredentialForm'
+import RefreshTokenCard from '~/components/RefreshTokenCard'
 import SegmentedCards from '~/components/SegmentedCards'
+import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
@@ -30,9 +32,16 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function () {
-  const { client_credentials } = useLoaderData<typeof loader>()
+  const { client_credentials, tokens } = useLoaderData<typeof loader>()
 
-  const explanation = (
+  const tokenAuth = useFeature('TOKEN_AUTH')
+
+  const explanation = tokenAuth ? (
+    <>
+      Our GCN-Kafka clients now use [Refresh Tokens]('link') to authenticate
+      your consumers and producers with our brokers.
+    </>
+  ) : (
     <>
       Client credentials allow your scripts to interact with GCN on your behalf.
     </>
@@ -40,6 +49,15 @@ export default function () {
 
   return (
     <>
+      {tokens.length > 0 && (
+        <>
+          <SegmentedCards>
+            {tokens.map((token, index) => (
+              <RefreshTokenCard key={index} token={token} />
+            ))}
+          </SegmentedCards>
+        </>
+      )}
       {client_credentials.length > 0 ? (
         <>
           <p className="usa-paragraph">
