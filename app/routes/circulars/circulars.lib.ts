@@ -308,6 +308,9 @@ export function resolveEventId(
   if (!circular.eventId && !item.eventId) {
     return parsedEventId
   }
+  if (circular.eventId && !item.eventId && parsedEventId) {
+    return parsedEventId
+  }
   if (!circular.eventId && item.eventId !== parsedEventId) {
     return item.eventId
   }

@@ -82,6 +82,11 @@ describe('resolveEventId', () => {
     subject: `${grbA} is real`,
   }
 
+  const itemWithNoEventIdAndSubj = {
+    eventId: undefined,
+    subject: `${grbB} is real`,
+  }
+
   const itemWithEventIdSpecifiedNotMatchingSubject = {
     eventId: uniqueId,
     subject: 'this is not a valid event',
@@ -109,6 +114,12 @@ describe('resolveEventId', () => {
     expect(
       resolveEventId(circularNoEventId, itemNoEventIdWithSubjectMatch)
     ).toBe(grbA)
+  })
+
+  test('if there is existing eventId, no eventId passed in with valid subject match', () => {
+    expect(resolveEventId(circularWithEventId, itemWithNoEventIdAndSubj)).toBe(
+      grbB
+    )
   })
 
   test('if there is no valid subject matcher or eventId passed in with no subject match', () => {
