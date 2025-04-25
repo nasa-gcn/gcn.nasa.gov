@@ -1,0 +1,48 @@
+---
+handle:
+  breadcrumb: KM3Net
+---
+
+import { feature } from '~/lib/env.server'
+
+export async function loader() {
+  if (!feature('KM3NET')) throw new Response(null, { status: 404 })
+  return null
+}
+
+import logo from './logo.png'
+
+# KM3NeT
+
+<img
+  src={logo}
+  alt="KM3NeT logo"
+  align="right"
+  width="200"
+  height="150"
+  className="height-auto"
+/>
+
+**Construction Completion Date:** 2025 (ORCA), 2027 (ARCA)
+
+**End of Operations:** No specific requirement
+
+[KM3NeT](https://www.km3net.org) is a research infrastructure housing the next generation neutrino telescopes. Once completed, the telescopes will have detector volumes between megaton and several cubic kilometres of clear sea water. Located in the deepest seas of the Mediterranean, KM3NeT will open a new window on our Universe, but also contribute to the research of the properties of the elusive neutrino particles. With the ARCA telescope, KM3NeT scientists will search for neutrinos from distant astrophysical sources such as supernovae, gamma ray bursters or colliding stars. The ORCA telescope is the instrument for KM3NeT scientists studying neutrino properties exploiting neutrinos generated in the Earth's atmosphere. Arrays of thousands of optical sensors will detect the faint light in the deep sea from charged particles originating from collisions of the neutrinos and the Earth. The facility will also house instrumentation for Earth and Sea sciences for long-term and on-line monitoring of the deep sea environment and the sea bottom at depth of several kilometers.
+
+## GCN Notice Types in GCN Over Kafka
+
+**_KM3NeT Alert_**\
+**topic = gcn.notices.km3net.alert**
+
+add info on pipelines, alert types
+
+## Yearly Alert Rates
+
+<div className="overflow-table">
+
+| Type           | Rate | Radius |
+| -------------- | ---- | ------ |
+| `Single Event` |      |        |
+| `Multiplet`    |      |        |
+
+</div>
