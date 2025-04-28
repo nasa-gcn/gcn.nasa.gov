@@ -11,7 +11,7 @@ import { JsonNoticeTypes } from './NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { NoticeTypes } from './NoticeTypeCheckboxes/Notices'
 import { useEmail } from '~/root'
 
-function BuildSearchParams(
+function buildSearchParams(
   alertKey: string,
   format: string,
   otherAlerts: string[] | undefined
@@ -41,7 +41,7 @@ export function SelectedAlertEmailLink({
   otherAlerts?: string[] // Alerts specifically under the 'Other' tab, since they can't be generically selected as all
 }) {
   const userEmail = useEmail()
-  const searchParams = BuildSearchParams(alertKey, format, otherAlerts)
+  const searchParams = buildSearchParams(alertKey, format, otherAlerts)
 
   return userEmail ? (
     <Link to={`/user/email/edit?${searchParams.toString()}`}>Email</Link>
@@ -60,7 +60,7 @@ export function SelectedAlertQuickstartLink({
   otherAlerts?: string[] // Alerts specifically under the 'Other' tab, since they can't be generically selected as all
 }) {
   const userEmail = useEmail()
-  const searchParams = BuildSearchParams(alertKey, format, otherAlerts)
+  const searchParams = buildSearchParams(alertKey, format, otherAlerts)
 
   return userEmail ? (
     <Link to={`/quickstart/credentials?${searchParams.toString()}`}>

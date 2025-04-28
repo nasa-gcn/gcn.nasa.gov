@@ -72,14 +72,13 @@ export default function CredentialCard({
             </ModalToggleButton>
             <Link
               to={`/quickstart/alerts?clientId=${client_id}&${searchParams.toString()}`}
+              className="usa-button"
             >
-              <Button disabled={disabled} type="submit">
-                Select
-                <Icon.ArrowForward
-                  role="presentation"
-                  className="bottom-aligned margin-left-05"
-                />
-              </Button>
+              Select
+              <Icon.ArrowForward
+                role="presentation"
+                className="bottom-aligned margin-left-05"
+              />
             </Link>
           </ToolbarButtonGroup>
         </div>
