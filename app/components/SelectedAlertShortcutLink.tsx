@@ -27,7 +27,7 @@ function buildSearchParams(
   alerts?.forEach((alert) => {
     searchParams.append('alerts', alert)
   })
-  searchParams.set('format', format)
+  searchParams.set('noticeFormat', format)
   return searchParams
 }
 
