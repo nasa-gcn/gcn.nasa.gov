@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Grid } from '@trussworks/react-uswds'
+import { Grid, Link } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 
 import TimeAgo from '~/components/TimeAgo'
@@ -68,7 +68,11 @@ export function FrontMatter({
           </small>
         </FrontMatterItem>
       )}
-      <FrontMatterItem label="From">{submitter}</FrontMatterItem>
+      <FrontMatterItem label="From">
+        <Link href={`/circulars?query=submitter:"${submitter}"`}>
+          {submitter}
+        </Link>
+      </FrontMatterItem>
       {editedBy && (
         <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
       )}
