@@ -27,7 +27,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java'
+  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark'
 }) {
   const domain = useDomain()
 
@@ -606,6 +606,90 @@ export function ClientSampleCode({
               domain ?? 'gcn.nasa.gov'
             }:9092 --consumer.config example.properties --topic ${topics[0]}`}
           />
+        </>
+      )
+    case 'pyspark':
+      return (
+        <>
+          <p className="usa-paragraph">
+            Open a terminal and run this command to install with{' '}
+            <Link
+              className="usa-link"
+              rel="external noopener"
+              target="_blank"
+              href="https://pip.pypa.io/"
+            >
+              pip
+            </Link>
+            :
+          </p>
+          <Highlight language="sh" code="pip install pyspark" />
+          <p className="usa-paragraph">
+            or this command to install with with{' '}
+            <Link
+              className="usa-link"
+              rel="external noopener"
+              target="_blank"
+              href="https://docs.conda.io/"
+            >
+              conda
+            </Link>
+            :
+          </p>
+          <Highlight
+            language="sh"
+            code="conda install -c conda-forge pyspark"
+          />
+          <p className="usa-paragraph">
+            Save the Python code below to a file called <code>example.py</code>:
+          </p>
+          <Highlight
+            language="py"
+            filename={`example.${language}`}
+            code={dedent(`
+            from pyspark.sql import SparkSession
+
+            spark = SparkSession.builder.config(
+                "spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5"
+            ).appName(
+                "example"
+            ).getOrCreate()
+
+            kafka = spark.readStream.format(
+                "kafka"
+            ).option(
+                "kafka.bootstrap.servers", "kafka.${domain ?? 'gcn.nasa.gov'}:9092"
+            ).option(
+                "kafka.security.protocol", "SASL_SSL"
+            ).option(
+                "kafka.sasl.jaas.config",
+                "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required "
+                # Connect as a consumer${
+                  clientName ? ` (client "${clientName}")` : ''
+                }
+                # Warning: don't share the client secret with others.
+                'clientId="${clientId}" '
+                'clientSecret="${clientSecret}";',
+            ).option(
+                "kafka.sasl.login.callback.handler.class",
+                "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler",
+            ).option(
+                "kafka.sasl.mechanism", "OAUTHBEARER"
+            ).option(
+                "kafka.sasl.oauthbearer.token.endpoint.url",
+                "https://auth.${domain ?? 'gcn.nasa.gov'}/oauth2/token",
+            ).option(
+                "subscribe", "${topics.join(',')}"
+            ).load()
+
+            query = kafka.writeStream.format("console").start()
+            query.awaitTermination()
+            `)}
+          />
+          <p className="usa-paragraph">
+            Run the code by typing this command in the terminal:
+          </p>
+          <Highlight language="sh" code="python example.py" />
         </>
       )
   }

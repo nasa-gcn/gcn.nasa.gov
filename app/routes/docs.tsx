@@ -152,6 +152,9 @@ export default function () {
                     <Link key="java" to="client#java">
                       Java
                     </Link>,
+                    <Link key="java" to="client#pyspark">
+                      PySpark
+                    </Link>,
                     <NavLink key="code-samples" to="client/samples">
                       Sample Code
                     </NavLink>,
