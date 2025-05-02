@@ -645,7 +645,7 @@ export function ClientSampleCode({
           </p>
           <Highlight
             language="py"
-            filename={`example.${language}`}
+            filename="example.py"
             code={dedent(`
             from pyspark.sql import SparkSession
 
