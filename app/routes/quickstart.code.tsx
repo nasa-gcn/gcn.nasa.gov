@@ -89,6 +89,12 @@ export default function () {
             language="java"
           />
         </Tab>
+        <Tab label="PySpark">
+          <ClientSampleCode
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
+            language="pyspark"
+          />
+        </Tab>
       </Tabs>
       <Form method="GET" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
