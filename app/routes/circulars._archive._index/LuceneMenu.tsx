@@ -22,7 +22,7 @@ export function LuceneAccordion() {
         </Link>
         {'. '}
       </p>
-      <h4>Lucene Examples (click to copy):</h4>
+      <h4>Advanced Search Examples (click to copy):</h4>
       <div>
         <Highlight
           language="sh"
