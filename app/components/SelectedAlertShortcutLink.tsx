@@ -9,7 +9,6 @@ import { Link } from '@remix-run/react'
 
 import { JsonNoticeTypes } from './NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { NoticeTypes } from './NoticeTypeCheckboxes/Notices'
-import { useEmail } from '~/root'
 
 function buildSearchParams(
   alertKey: string,
@@ -40,14 +39,9 @@ export function SelectedAlertEmailLink({
   format: 'json' | 'text'
   otherAlerts?: string[] // Alerts specifically under the 'Other' tab, since they can't be generically selected as all
 }) {
-  const userEmail = useEmail()
   const searchParams = buildSearchParams(alertKey, format, otherAlerts)
 
-  return userEmail ? (
-    <Link to={`/user/email/edit?${searchParams.toString()}`}>Email</Link>
-  ) : (
-    'Login to subscribe'
-  )
+  return <Link to={`/user/email/edit?${searchParams.toString()}`}>Email</Link>
 }
 
 export function SelectedAlertQuickstartLink({
@@ -59,14 +53,11 @@ export function SelectedAlertQuickstartLink({
   format: 'json' | 'text'
   otherAlerts?: string[] // Alerts specifically under the 'Other' tab, since they can't be generically selected as all
 }) {
-  const userEmail = useEmail()
   const searchParams = buildSearchParams(alertKey, format, otherAlerts)
 
-  return userEmail ? (
+  return (
     <Link to={`/quickstart/credentials?${searchParams.toString()}`}>
       Kafka Stream
     </Link>
-  ) : (
-    'Login to Stream'
   )
 }
