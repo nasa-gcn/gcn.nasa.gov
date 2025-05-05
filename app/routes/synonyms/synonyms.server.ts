@@ -175,7 +175,7 @@ export async function checkDeleteSynonym(eventId: string) {
   }
 }
 
-export async function manageVersionUpdates(
+export async function manageSynonymVersionUpdates(
   newEventId: string,
   oldEventId?: string,
   createdOn?: number
@@ -280,7 +280,7 @@ export async function putSynonyms({
 
 export async function getOldestDate(eventId: string) {
   const circulars = await getSynonymMembers(eventId)
-  return circulars[0]
+  return circulars.length > 0
     ? orderBy(circulars, ['circularId'], ['asc'])[0].createdOn
     : undefined
 }
