@@ -167,6 +167,30 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   return uuid
 }
 
+export async function checkDeleteSynonym(eventId: string) {
+  const db = await tables()
+  const circulars = await getSynonymMembers(eventId)
+
+  if (circulars.length === 0) {
+    await db.synonyms.delete({ eventId })
+  }
+}
+
+export async function manageVersionUpdates(
+  newEventId: string,
+  oldEventId?: string
+) {
+  if (newEventId === oldEventId) return
+
+  const oldestDate = await getOldestDate(newEventId)
+
+  await tryInitSynonym(newEventId, oldestDate)
+
+  if (oldEventId && oldEventId != newEventId) {
+    await checkDeleteSynonym(oldEventId)
+  }
+}
+
 export async function tryInitSynonym(eventId: string, createdOn: number) {
   const db = await tables()
 
