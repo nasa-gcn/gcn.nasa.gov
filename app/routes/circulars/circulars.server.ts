@@ -24,7 +24,7 @@ import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_auth/user.server'
 import {
-  manageVersionUpdates,
+  manageSynonymVersionUpdates,
   tryInitSynonym,
 } from '../synonyms/synonyms.server'
 import {
@@ -391,7 +391,7 @@ export async function putVersion(
 
   if (newCircularVersion.eventId) {
     promises.push(
-      manageVersionUpdates(
+      manageSynonymVersionUpdates(
         newCircularVersion.eventId,
         oldCircular.eventId,
         newCircularVersion.createdOn
@@ -399,9 +399,9 @@ export async function putVersion(
     )
   }
 
-  const result = await Promise.all(promises)
+  const results = await Promise.all(promises)
 
-  return result[0]
+  return results[0]
 }
 
 /**
@@ -609,7 +609,7 @@ export async function approveChangeRequest(
   if (redistribute) promises.push(send(newVersion))
   if (newVersion.eventId)
     promises.push(
-      manageVersionUpdates(
+      manageSynonymVersionUpdates(
         newVersion.eventId,
         circular.eventId,
         newVersion.createdOn
