@@ -176,7 +176,7 @@ export async function checkDeleteSynonym(eventId: string) {
   }
 }
 
-export async function manageVersionUpdates(
+export async function manageSynonymVersionUpdates(
   newEventId: string,
   oldEventId?: string,
   createdOn?: number
