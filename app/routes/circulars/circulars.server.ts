@@ -385,13 +385,23 @@ export async function putVersion(
 
   validateCircular(newCircularVersion)
 
-  const newVersion = await circularVersionsAutoIncrement.put(newCircularVersion)
+  const promises = [
+    circularVersionsAutoIncrement.put(newCircularVersion),
+  ] as any[]
 
   if (newCircularVersion.eventId) {
-    await manageVersionUpdates(newCircularVersion.eventId, oldCircular.eventId)
+    promises.push(
+      manageVersionUpdates(
+        newCircularVersion.eventId,
+        oldCircular.eventId,
+        newCircularVersion.createdOn
+      )
+    )
   }
 
-  return newVersion
+  const result = await Promise.all(promises)
+
+  return result[0]
 }
 
 /**
@@ -598,7 +608,13 @@ export async function approveChangeRequest(
 
   if (redistribute) promises.push(send(newVersion))
   if (newVersion.eventId)
-    promises.push(manageVersionUpdates(newVersion.eventId, circular.eventId))
+    promises.push(
+      manageVersionUpdates(
+        newVersion.eventId,
+        circular.eventId,
+        newVersion.createdOn
+      )
+    )
 
   if (changeRequest.zendeskTicketId)
     promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))
