@@ -178,17 +178,21 @@ export async function checkDeleteSynonym(eventId: string) {
 
 export async function manageVersionUpdates(
   newEventId: string,
-  oldEventId?: string
+  oldEventId?: string,
+  createdOn?: number
 ) {
   if (newEventId === oldEventId) return
 
   const oldestDate = await getOldestDate(newEventId)
-
-  await tryInitSynonym(newEventId, oldestDate)
+  const dataParam = oldestDate ? oldestDate : createdOn
+  if (!dataParam) throw Error
+  const promises = [tryInitSynonym(newEventId, dataParam)]
 
   if (oldEventId && oldEventId != newEventId) {
-    await checkDeleteSynonym(oldEventId)
+    promises.push(checkDeleteSynonym(oldEventId))
   }
+
+  await Promise.all(promises)
 }
 
 export async function tryInitSynonym(eventId: string, createdOn: number) {
@@ -277,7 +281,10 @@ export async function putSynonyms({
 
 export async function getOldestDate(eventId: string) {
   const circulars = await getSynonymMembers(eventId)
-  return min(circulars.map(({ createdOn }) => createdOn))
+
+  return circulars[0]
+    ? orderBy(circulars, ['circularId'], ['asc'])[0].createdOn
+    : undefined
 }
 
 /*
