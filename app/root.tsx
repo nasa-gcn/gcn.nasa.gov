@@ -247,8 +247,12 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Browse Circulars by Event. See{' '}
-          <Link className="usa-link" to="/news#new-browse-circulars-by-event">
+          New! Browse Circulars by Event, Advanced Search, Sample Codes, Schema
+          Release. See{' '}
+          <Link
+            className="usa-link"
+            to="/news#browse-circulars-by-event-advanced-search-sample-codes-schema-release"
+          >
             news and announcements
           </Link>
         </NewsBanner>
