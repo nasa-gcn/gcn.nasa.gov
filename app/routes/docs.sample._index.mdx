@@ -3,23 +3,23 @@ handle:
   breadcrumb: Sample Code
 ---
 
-# Sample code for GCN Notices
+# Sample Code for GCN Notices
 
 GCN utilizes [Apache Kafka](https://kafka.apache.org), an open-source distributed event streaming platform, to stream Notices and Circulars in real time.
 
 [GCN Notices](https://gcn.nasa.gov/docs/notices) provide real-time machine readable alerts and are distributed in different formats:
 
-- New GCN Notices are provided in JSON format and are streamed via Kafka. Note that SVOM notices are only available via VOEvent over Kafka and email.
-- GCN Classic Notices are provided in text, binary and VOEvent XML, and are distributed both via Kafka and email.
+- New GCN Notices are provided in JSON format and are streamed via Kafka, with the exception of SVOM notices which are only available via VOEvent over Kafka and email.
+- GCN Classic Notices are provided in text, binary, and VOEvent XML formats, and are distributed both via Kafka and email.
 
 This sample code demonstrates how to handle GCN Notices in both JSON and VOEvent XML formats, and some samples from the FAQs section of the [gcn-kafka-python](https://github.com/nasa-gcn/gcn-kafka-python) repository.
 
-## Working with different GCN Notice Formats:
+## Working with different GCN Notice Formats
 
 - [Consuming Kafka Messages](sample/kafka) demonstrates how to consume and manage GCN messages using Kafka clients.
 - [Plain Text Notices & Circulars](sample/text) demonstrates how to parse emailed plain text format GCN messages.
 - [VOEvent XML Notices](sample/xml) provides guidance for interpreting and extracting data from VOEvent XML formatted GCN Notices.
-- [JSON Notices](sample/json) presents sample code for processing GCN Notices encoded in JSON format.
-- [HEALPix Sky Map](sample/healpix) explains how to interpret and utilize HEALPix format sky maps included in GCN Notices, and instructions for Producers on how to encode FITS files in JSON format Notices.
+- [JSON Notices](sample/json) presents sample code for processing GCN Notices encoded in JSON format, and instructions for Producers on how to encode FITS files in JSON format Notices.
+- [HEALPix Sky Maps](sample/healpix) explains how to interpret and utilize HEALPix format sky maps included in GCN Notices.
 
-To contribute your own sample code, make a [GitHub pull request](https://gcn.nasa.gov/docs/contributing/github) to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.sample._index.mdx), or [contact us](/contact).
+To contribute your own sample code, make a [GitHub pull request](/docs/contributing/github) to add it to [the Markdown source for this document](https://github.com/nasa-gcn/gcn.nasa.gov/blob/CodeSamples/app/routes/docs.sample._index.mdx), or [contact us](/contact).

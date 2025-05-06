@@ -9,7 +9,7 @@ These examples focus on Kafka's functionality, such as message consumption and o
 
 ## Saving Alert Data
 
-Use the following to save the raw alert message data to a local file:
+Use the following to save the alert message data to a local file:
 
 ```python
 def save_alert(message):

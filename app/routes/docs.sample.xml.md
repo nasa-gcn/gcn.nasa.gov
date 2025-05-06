@@ -3,9 +3,9 @@ handle:
   breadcrumb: VOEvent XML
 ---
 
-# VOEvent XML Data
+# VOEvent XML Format
 
-Here is a collection of functions and example code that may be useful when working with [VOEvent XML](https://wiki.ivoa.net/internal/IVOA/IvoaVOEvent/voevent_v2.html) and Multipurpose Internet Mail Extensions (MIME) formats.
+Here is a collection of functions and example code that may be useful when working with [VOEvent XML](https://wiki.ivoa.net/internal/IVOA/IvoaVOEvent/voevent_v2.html).
 This guide provides essential functions to parse XML alerts into dictionaries and structured data formats using Python.
 
 Within your consumer loop, use the following functions to convert the
