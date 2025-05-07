@@ -5,10 +5,11 @@ import '@testing-library/jest-dom'
 import { render } from '@testing-library/react'
 
 import { ClientSampleCode } from '~/components/ClientSampleCode'
-import { useDomain } from '~/root'
+import { useDomain, useFeature } from '~/root'
 
 jest.mock('~/root', () => ({
   useDomain: jest.fn(),
+  useFeature: jest.fn(),
 }))
 
 describe('ClientSampleCode', () => {
@@ -48,6 +49,7 @@ describe('ClientSampleCode', () => {
     const domain = 'test.gcn.nasa.gov'
 
     ;(useDomain as jest.Mock).mockReturnValueOnce(domain)
+    ;(useFeature as jest.Mock).mockReturnValueOnce(false)
 
     const { container } = render(
       <ClientSampleCode
