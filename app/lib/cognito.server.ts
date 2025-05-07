@@ -28,7 +28,7 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 
 import { maybeThrow } from './utils'
-import { type User } from '~/routes/_auth/user.server'
+import type { User } from '~/routes/_auth/user.server'
 
 export const gcnGroupPrefix = 'gcn.nasa.gov/'
 export const cognito = new CognitoIdentityProviderClient({})
@@ -145,6 +145,7 @@ export async function listUsersInGroup(GroupName: string) {
 
 export function maybeThrowCognito(e: any, warning: string) {
   const formattedWarning = `Cognito threw ${(e as CognitoIdentityProviderServiceException).name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+
   maybeThrow<CognitoIdentityProviderServiceException>(e, formattedWarning, [
     'ExpiredTokenException',
     'NotAuthorizedException',

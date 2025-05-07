@@ -147,16 +147,14 @@ export async function scopedLogin(
   })
   oidcSession.set('tokenName', name)
   const cookie = await storage.commitSession(oidcSession)
-  client.metadata['requested_scope'] = scope
   const authUrl = client.authorizationUrl({
     redirect_uri: `${origin}/quickstart/credentials`,
-    scope: `${scope}`, // add openid to get id_token
+    scope: `${scope}`,
     response_type: 'code',
     code_challenge_method: 'S256',
     nonce,
     state,
     code_challenge,
-    prompt: 'login',
   })
 
   return { authUrl, cookie }

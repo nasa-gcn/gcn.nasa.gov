@@ -110,13 +110,9 @@ export async function getScopedOpenIDClient(scope: string) {
 
   issuer.metadata['requested_scope'] = scope
 
-  return new issuer.Client(
-    {
-      client_id: getEnvOrDie('PUBLIC_CLIENT_ID'),
-      token_endpoint_auth_method: 'none',
-      response_types: ['code'],
-    },
-    undefined,
-    {}
-  )
+  return new issuer.Client({
+    client_id: getEnvOrDie('PUBLIC_CLIENT_ID'),
+    token_endpoint_auth_method: 'none',
+    response_types: ['code'],
+  })
 }
