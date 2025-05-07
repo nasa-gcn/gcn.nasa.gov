@@ -5,11 +5,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Link } from '@trussworks/react-uswds';
-import { dedent } from 'ts-dedent';
+import { Link } from '@trussworks/react-uswds'
+import { dedent } from 'ts-dedent'
 
-import { Highlight } from './Highlight';
-import { useDomain, useFeature } from '~/root';
+import { Highlight } from './Highlight'
+import { useDomain, useFeature } from '~/root'
 
 export function ClientSampleCode({
   clientName,
@@ -23,17 +23,17 @@ export function ClientSampleCode({
   language,
   scope,
 }: {
-  clientName?: string | null;
-  clientId?: string | null;
-  clientSecret?: string | null;
-  listTopics?: boolean;
-  topics?: string[];
-  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark';
-  scope?: string;
+  clientName?: string | null
+  clientId?: string | null
+  clientSecret?: string | null
+  listTopics?: boolean
+  topics?: string[]
+  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark'
+  scope?: string
 }) {
-  const domain = useDomain();
+  const domain = useDomain()
 
-  const tokenAuth = useFeature('TOKEN_AUTH');
+  const tokenAuth = useFeature('TOKEN_AUTH')
 
   switch (language) {
     case 'py':
@@ -120,7 +120,7 @@ export function ClientSampleCode({
           </p>
           <Highlight language="sh" code="python example.py" />
         </>
-      );
+      )
     case 'mjs':
       return (
         <>
@@ -204,7 +204,7 @@ export function ClientSampleCode({
           </p>
           <Highlight language="sh" code="node example.mjs" />
         </>
-      );
+      )
     case 'cjs':
       return (
         <>
@@ -290,7 +290,7 @@ export function ClientSampleCode({
           </p>
           <Highlight language="sh" code="node example.cjs" />
         </>
-      );
+      )
     case 'c':
       return (
         <>
@@ -465,7 +465,7 @@ export function ClientSampleCode({
           </p>
           <Highlight language="sh" code="./a.out" />
         </>
-      );
+      )
     case 'cs':
       return (
         <>
@@ -545,7 +545,7 @@ export function ClientSampleCode({
             project.
           </p>
         </>
-      );
+      )
     case 'java':
       return (
         <>
@@ -615,7 +615,7 @@ export function ClientSampleCode({
             }:9092 --consumer.config example.properties --topic ${topics[0]}`}
           />
         </>
-      );
+      )
     case 'pyspark':
       return (
         <>
@@ -699,6 +699,6 @@ export function ClientSampleCode({
           </p>
           <Highlight language="sh" code="python example.py" />
         </>
-      );
+      )
   }
 }
