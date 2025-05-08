@@ -5,12 +5,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { getEnvOrDieInProduction, origin } from '~/lib/env.server'
+import { getPublicClientId } from '~/lib/cognito.server'
+import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 
-const client_id = getEnvOrDieInProduction('PUBLIC_CLIENT_ID')
-
 export async function loader() {
+  const client_id = await getPublicClientId()
   return new Response(JSON.stringify({ client_id }), {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
