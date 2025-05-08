@@ -3,7 +3,7 @@ handle:
   breadcrumb: Kafka Messages
 ---
 
-# Consuming Kafka Messages
+# Kafka Messages
 
 These examples focus on Kafka's functionality, such as message consumption and offset management.
 

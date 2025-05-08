@@ -1,9 +1,9 @@
 ---
 handle:
-  breadcrumb: JSON
+  breadcrumb: JSON Format
 ---
 
-# JSON Data
+# JSON Format
 
 Here is a collection of functions and example code that may be useful when working with JSON Notices. This includes how to subscribe to Kafka topics, parse JSON data, and handle embedded data such as HEALPix sky maps.
 

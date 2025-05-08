@@ -173,13 +173,13 @@ export default function () {
                       Kafka Messages
                     </NavLink>,
                     <NavLink key="text" to="sample/text">
-                      Plain Text
+                      Plain Text Emails
                     </NavLink>,
                     <NavLink key="xml" to="sample/xml">
                       VOEvent XML
                     </NavLink>,
                     <NavLink key="json" to="sample/json">
-                      JSON
+                      JSON Format
                     </NavLink>,
                     <NavLink key="healpix" to="sample/healpix">
                       HEALPix Maps

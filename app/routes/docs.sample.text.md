@@ -1,9 +1,9 @@
 ---
 handle:
-  breadcrumb: Plain Text
+  breadcrumb: Plain Text Emails
 ---
 
-# Reading Plain Text Format Emails
+# Plain Text Emails
 
 GCN Classic Notices are also distributed as email messages. To extract header information, one can use Python's built-in [`email`](https://docs.python.org/3/library/email.html) library.
 

@@ -3,7 +3,7 @@ handle:
   breadcrumb: VOEvent XML
 ---
 
-# VOEvent XML Format
+# VOEvent XML
 
 Here is a collection of functions and example code that may be useful when working with [VOEvent XML](https://wiki.ivoa.net/internal/IVOA/IvoaVOEvent/voevent_v2.html).
 This guide provides essential functions to parse XML alerts into dictionaries and structured data formats using Python.
