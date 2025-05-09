@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Link, useFetcher } from '@remix-run/react'
-import type { action } from 'app/routes/synonyms/route'
+import type { loader } from 'app/routes/synonym.circulars'
 import { useEffect, useState } from 'react'
 
 import type { Circular } from '../circulars/circulars.lib'
@@ -23,8 +23,11 @@ function CircularsBelongingToASynonymGroup({
   searchString: string
 }) {
   const [items, setItems] = useState<Circular[]>([])
-  const fetcher = useFetcher<typeof action>()
+  const fetcher = useFetcher<typeof loader>()
   const data = new FormData()
+  const params = new URLSearchParams()
+  eventIds.forEach((eventId) => params.append('eventIds', eventId))
+
   data.set('eventIds', eventIds.join(','))
 
   useEffect(() => {
@@ -35,7 +38,7 @@ function CircularsBelongingToASynonymGroup({
     <div>
       <details
         onClick={() => {
-          fetcher.submit(data, { method: 'POST', action: '/synonyms' })
+          fetcher.load(`/synonym/circulars?${params}`)
         }}
       >
         <summary>
@@ -44,7 +47,7 @@ function CircularsBelongingToASynonymGroup({
           </Link>
         </summary>
         <ol className="margin-left-3">
-          {fetcher.state === 'submitting' && items.length === 0 && (
+          {fetcher.state === 'loading' && items.length === 0 && (
             <span className="text-middle">
               <Spinner />
             </span>
