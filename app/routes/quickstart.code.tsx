@@ -14,6 +14,7 @@ import { ClientCredentialVendingMachine } from './user.credentials/client_creden
 import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/tabs'
+import { getPublicClientId } from '~/lib/cognito.server'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
@@ -32,7 +33,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const clientCredentialProps = clientId
     ? await machine.getClientCredential(clientId)
     : {
-        client_id: null,
+        client_id: await getPublicClientId(),
         client_secret: null,
         name: null,
       }

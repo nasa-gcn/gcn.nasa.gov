@@ -93,7 +93,7 @@ export async function handleCredentialLoader({ request }: LoaderFunctionArgs) {
     const currentToken = oidcSession.get('tokenName')
     const { code_verifier, state, scope } =
       oidcSession.get('tokenSets')[currentToken]
-    const client = await getScopedOpenIDClient(scope)
+    const client = await getScopedOpenIDClient()
     const params = client.callbackParams(parsedUrl.search)
     parsedUrl.search = ''
 

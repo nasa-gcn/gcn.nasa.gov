@@ -131,7 +131,7 @@ export async function scopedLogin(
   scope: string,
   name: string
 ) {
-  const client = await getScopedOpenIDClient(scope)
+  const client = await getScopedOpenIDClient()
 
   const oidcSessionPromise = storage.getSession(request.headers.get('Cookie'))
   const nonce = generators.nonce()

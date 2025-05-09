@@ -83,7 +83,9 @@ export function ClientSampleCode({
             # Warning: don't share the client secret with others.
             ${
               tokenAuth
-                ? `consumer = Consumer(${scope}${domain ? `, domain='${domain}'` : ''})`
+                ? `consumer = Consumer("${scope}",
+                                client_id='${clientId}',
+                                ${domain ? `domain='${domain}'` : ''})`
                 : `consumer = Consumer(client_id='${clientId}',
                                 client_secret='${clientSecret}'${
                                   domain

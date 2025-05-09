@@ -91,7 +91,7 @@ export const getOpenIDClient = memoizee(
  *
  * This client can only grant Kafka consumer and producer scope
  */
-export async function getScopedOpenIDClient(scope: string) {
+export async function getScopedOpenIDClient() {
   const user_pool_id = process.env.COGNITO_USER_POOL_ID
   if (!user_pool_id) throw new Response(null, { status: 400 })
   const providerUrl = `https://cognito-idp.${
@@ -107,8 +107,6 @@ export async function getScopedOpenIDClient(scope: string) {
     issuer.revocation_endpoint = issuer.metadata.revocation_endpoint =
       issuer.metadata.token_endpoint?.replace('/oauth2/token', '/oauth2/revoke')
   }
-
-  issuer.metadata['requested_scope'] = scope
 
   return new issuer.Client({
     client_id: getEnvOrDie('PUBLIC_CLIENT_ID'),
