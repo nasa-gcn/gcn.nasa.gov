@@ -13,7 +13,7 @@ import type { Circular } from '../circulars/circulars.lib'
 import type { SynonymGroup } from '../synonyms/synonyms.lib'
 import Spinner from '~/components/Spinner'
 
-function SynonymList({
+function CircularsBelongingToASynonymGroup({
   eventIds,
   slugs,
   searchString,
@@ -49,13 +49,11 @@ function SynonymList({
               <Spinner />
             </span>
           )}
-          {items.map(({ circularId, subject }) => {
-            return (
-              <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}`}>{subject}</Link>
-              </li>
-            )
-          })}
+          {items.map(({ circularId, subject }) => (
+            <li key={circularId} value={circularId}>
+              <Link to={`/circulars/${circularId}`}>{subject}</Link>
+            </li>
+          ))}
         </ol>
       </details>
     </div>
@@ -82,7 +80,7 @@ export default function ({
       )}
       <div className="margin-y-2">
         {allItems.map(({ synonymId, eventIds, slugs }) => (
-          <SynonymList
+          <CircularsBelongingToASynonymGroup
             eventIds={eventIds}
             slugs={slugs}
             searchString={searchString}
