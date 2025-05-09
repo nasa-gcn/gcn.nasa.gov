@@ -13,6 +13,7 @@ import { useState } from 'react'
 import type { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
+import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
@@ -24,6 +25,9 @@ export default function () {
   const [params] = useSearchParams()
   const [alertsValid, setAlertsValid] = useState(false)
   const clientId = params.get('clientId') || undefined
+  const tokenAuth = useFeature('TOKEN_AUTH')
+  const token = (tokenAuth && params.get('token')) || undefined
+  const scope = (tokenAuth && params.get('scope')) || undefined
   const [format, setFormat] = useState<NoticeFormat>('text')
 
   return (
@@ -49,7 +53,14 @@ export default function () {
         selectedFormat={format}
         validationFunction={setAlertsValid}
       />
-      <input type="hidden" name="clientId" value={clientId} />
+      {token ? (
+        <>
+          <input type="hidden" name="token" value={token} />
+          <input type="hidden" name="scope" value={scope} />
+        </>
+      ) : (
+        <input type="hidden" name="clientId" value={clientId} />
+      )}
       <FormGroup>
         <ButtonGroup>
           <Link
