@@ -7,9 +7,7 @@
  */
 import { Link, useFetcher } from '@remix-run/react'
 import type { loader } from 'app/routes/synonym.circulars'
-import { useEffect, useState } from 'react'
 
-import type { Circular } from '../circulars/circulars.lib'
 import type { SynonymGroup } from '../synonyms/synonyms.lib'
 import Spinner from '~/components/Spinner'
 
@@ -22,17 +20,9 @@ function CircularsBelongingToASynonymGroup({
   slugs: string[]
   searchString: string
 }) {
-  const [items, setItems] = useState<Circular[]>([])
   const fetcher = useFetcher<typeof loader>()
-  const data = new FormData()
   const params = new URLSearchParams()
   eventIds.forEach((eventId) => params.append('eventIds', eventId))
-
-  data.set('eventIds', eventIds.join(','))
-
-  useEffect(() => {
-    setItems(fetcher.data ?? [])
-  }, [fetcher.data])
 
   return (
     <div>
@@ -47,16 +37,19 @@ function CircularsBelongingToASynonymGroup({
           </Link>
         </summary>
         <ol className="margin-left-3">
-          {fetcher.state === 'loading' && items.length === 0 && (
-            <span className="text-middle">
-              <Spinner />
-            </span>
-          )}
-          {items.map(({ circularId, subject }) => (
-            <li key={circularId} value={circularId}>
-              <Link to={`/circulars/${circularId}`}>{subject}</Link>
-            </li>
-          ))}
+          {fetcher.state === 'loading' &&
+            fetcher.data &&
+            fetcher.data.length === 0 && (
+              <span className="text-middle">
+                <Spinner />
+              </span>
+            )}
+          {fetcher.data &&
+            fetcher.data.map(({ circularId, subject }) => (
+              <li key={circularId} value={circularId}>
+                <Link to={`/circulars/${circularId}`}>{subject}</Link>
+              </li>
+            ))}
         </ol>
       </details>
     </div>
