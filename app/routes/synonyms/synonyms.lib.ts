@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { Circular } from '~/routes/circulars/circulars.lib'
 
 /* Data structure in DynamoDB */
 export interface Synonym {
@@ -21,8 +20,4 @@ export interface SynonymGroup {
   eventIds: string[]
   slugs: string[]
   initialDate: number
-}
-
-export interface SynonymGroupWithMembers extends SynonymGroup {
-  members: Circular[]
 }
