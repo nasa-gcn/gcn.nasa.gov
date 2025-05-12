@@ -173,7 +173,7 @@ export default function () {
                       Kafka Messages
                     </NavLink>,
                     <NavLink key="text" to="sample/text">
-                      Plain Text Emails
+                      Plain Text
                     </NavLink>,
                     <NavLink key="xml" to="sample/xml">
                       VOEvent XML
