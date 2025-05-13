@@ -24,6 +24,7 @@ import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_auth/user.server'
 import {
+  deleteIfGroupIsEmpty,
   manageSynonymVersionUpdates,
   tryInitSynonym,
 } from '../synonyms/synonyms.server'
@@ -401,6 +402,10 @@ export async function putVersion(
 
   const results = await Promise.all(promises)
 
+  if (!newCircularVersion.eventId && oldCircular.eventId) {
+    await deleteIfGroupIsEmpty(oldCircular.eventId)
+  }
+
   return results[0]
 }
 
@@ -620,6 +625,10 @@ export async function approveChangeRequest(
     promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))
 
   await Promise.all(promises)
+
+  if (!newVersion.eventId && circular.eventId) {
+    await deleteIfGroupIsEmpty(circular.eventId)
+  }
 }
 
 /**
