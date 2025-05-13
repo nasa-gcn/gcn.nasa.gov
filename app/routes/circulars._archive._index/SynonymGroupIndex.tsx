@@ -21,8 +21,9 @@ function CircularsBelongingToASynonymGroup({
   searchString: string
 }) {
   const fetcher = useFetcher<typeof loader>()
-  const params = new URLSearchParams()
-  eventIds.forEach((eventId) => params.append('eventIds', eventId))
+  const params = new URLSearchParams(
+    eventIds.map((eventId) => ['eventIds', eventId])
+  )
 
   return (
     <div>
@@ -37,19 +38,16 @@ function CircularsBelongingToASynonymGroup({
           </Link>
         </summary>
         <ol className="margin-left-3">
-          {fetcher.state === 'loading' &&
-            fetcher.data &&
-            fetcher.data.length === 0 && (
-              <span className="text-middle">
-                <Spinner />
-              </span>
-            )}
-          {fetcher.data &&
-            fetcher.data.map(({ circularId, subject }) => (
-              <li key={circularId} value={circularId}>
-                <Link to={`/circulars/${circularId}`}>{subject}</Link>
-              </li>
-            ))}
+          {fetcher.state === 'loading' && !fetcher.data?.length && (
+            <span className="text-middle">
+              <Spinner />
+            </span>
+          )}
+          {fetcher.data?.map(({ circularId, subject }) => (
+            <li key={circularId} value={circularId}>
+              <Link to={`/circulars/${circularId}`}>{subject}</Link>
+            </li>
+          ))}
         </ol>
       </details>
     </div>

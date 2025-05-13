@@ -367,7 +367,8 @@ export default function () {
           </>
         )}
       </Hint>
-      <LuceneAccordion />
+
+      {!isGroupView && <LuceneAccordion />}
 
       {clean && (
         <>
