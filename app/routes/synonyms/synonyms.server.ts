@@ -197,8 +197,10 @@ export async function manageSynonymVersionUpdates(
 }
 
 export async function updateInitialDate(eventId: string) {
-  const db = await tables()
   const oldestDate = await getOldestDate(eventId)
+  if (!oldestDate) return
+
+  const db = await tables()
   await db.synonyms.update({
     Key: { eventId },
     UpdateExpression: 'set #initialDate = :initialDate',
