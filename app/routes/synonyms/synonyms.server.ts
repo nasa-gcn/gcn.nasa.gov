@@ -167,7 +167,7 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   return uuid
 }
 
-export async function checkDeleteSynonym(eventId: string) {
+export async function deleteIfGroupIsEmpty(eventId: string) {
   const db = await tables()
   const circulars = await getSynonymMembers(eventId)
 
@@ -189,10 +189,26 @@ export async function manageSynonymVersionUpdates(
   const promises = [tryInitSynonym(newEventId, dateParam)]
 
   if (oldEventId && oldEventId != newEventId) {
-    promises.push(checkDeleteSynonym(oldEventId))
+    promises.push(deleteIfGroupIsEmpty(oldEventId))
+    promises.push(updateInitialDate(oldEventId))
   }
 
   await Promise.all(promises)
+}
+
+export async function updateInitialDate(eventId: string) {
+  const db = await tables()
+  const oldestDate = await getOldestDate(eventId)
+  await db.synonyms.update({
+    Key: { eventId },
+    UpdateExpression: 'set #initialDate = :initialDate',
+    ExpressionAttributeNames: {
+      '#initialDate': 'initialDate',
+    },
+    ExpressionAttributeValues: {
+      ':initialDate': oldestDate,
+    },
+  })
 }
 
 export async function tryInitSynonym(eventId: string, createdOn: number) {

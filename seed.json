@@ -4852,7 +4852,7 @@
       "subject": "GRB 230824Q Testing change request approval synonym with remaining member of old synonym group",
       "submittedHow": "email-legacy",
       "bibcode": "2023GCN.34562....1Q",
-      "createdOn": 1693037110788,
+      "createdOn": 1693037110787,
       "circularId": 43,
       "submitter": "Example User at Example <example@example.com>",
       "body": "GRB 230824Q should remain even after one circular has eventId changed.",
