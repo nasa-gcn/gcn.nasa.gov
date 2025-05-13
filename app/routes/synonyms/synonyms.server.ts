@@ -186,8 +186,11 @@ export async function manageSynonymVersionUpdates(
   const oldestDate = await getOldestDate(newEventId)
   const dateParam = oldestDate ? oldestDate : createdOn
   if (!dateParam) throw Error
-  const promises = [tryInitSynonym(newEventId, dateParam)]
 
+  const promises = []
+  if (newEventId) {
+    promises.push(tryInitSynonym(newEventId, dateParam))
+  }
   if (oldEventId && oldEventId != newEventId) {
     promises.push(deleteIfGroupIsEmpty(oldEventId))
     promises.push(updateInitialDate(oldEventId))

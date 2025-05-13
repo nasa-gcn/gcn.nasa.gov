@@ -4877,6 +4877,16 @@
       "submitter": "Example User at Example <example@example.com>",
       "body": "The old synonym should be cleaned up but no new one created.",
       "eventId": "GRB 230824R"
+    },
+    {
+      "subject": "GRB 230824X Testing change request approval with removal of old group",
+      "submittedHow": "email-legacy",
+      "bibcode": "2023GCN.34562....1Q",
+      "createdOn": 1693037110788,
+      "circularId": 46,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up but no new one created.",
+      "eventId": "GRB 230824X"
     }
   ],
   "circulars_history": [
@@ -5726,6 +5736,13 @@
       "submitter": "Example User at Example <example@example.com>",
       "body": "The old synonym should be cleaned up but no new one created.",
       "eventId": "GRB 230824A"
+    },
+    {
+      "subject": "GRB 230824Z Testing change request approval with removal of old group",
+      "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
+      "circularId": 46,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up but no new one created."
     }
   ],
   "client_credentials": [
