@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Link, useFetcher } from '@remix-run/react'
-import type { loader } from 'app/routes/synonym.circulars'
 
 import type { SynonymGroup } from '../synonyms/synonyms.lib'
 import Spinner from '~/components/Spinner'
+import type { loader } from '~/routes/api.synonym.circulars'
 
 function CircularsBelongingToASynonymGroup({
   eventIds,
@@ -29,7 +29,7 @@ function CircularsBelongingToASynonymGroup({
     <div>
       <details
         onClick={() => {
-          fetcher.load(`/synonym/circulars?${params}`)
+          fetcher.load(`/api/synonym/circulars?${params}`)
         }}
       >
         <summary>
