@@ -99,7 +99,7 @@
     "@nasa-gcn/architect-plugin-dynamodb-local": "^0.1.2",
     "@nasa-gcn/architect-plugin-search": "^1.8.0",
     "@nasa-gcn/eslint-config-gitignore": "^0.0.2",
-    "@playwright/test": "^1.49.0",
+    "@playwright/test": "^1.52.0",
     "@remix-run/dev": "~2.16.6",
     "@remix-run/eslint-config": "~2.16.6",
     "@testing-library/jest-dom": "^6.6.3",
