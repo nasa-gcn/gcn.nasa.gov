@@ -56,8 +56,8 @@ import {
   type CircularMetadata,
   circularFormats,
 } from '~/routes/circulars/circulars.lib'
-import type { SynonymGroupWithMembers } from '~/routes/synonyms/synonyms.lib'
-import { groupMembersByEventId } from '~/routes/synonyms/synonyms.server'
+import type { SynonymGroup } from '~/routes/synonyms/synonyms.lib'
+import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -77,7 +77,7 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const page = parseInt(searchParams.get('page') || '1')
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
   const sort = searchParams.get('sort') || 'circularId'
-  const searchFunction = view != 'group' ? search : groupMembersByEventId
+  const searchFunction = view != 'group' ? search : searchSynonymsByEventId
   const results = await searchFunction({
     query,
     page: page - 1,
@@ -367,13 +367,14 @@ export default function () {
           </>
         )}
       </Hint>
-      <LuceneAccordion />
+
+      {!isGroupView && <LuceneAccordion />}
 
       {clean && (
         <>
           {isGroupView ? (
             <SynonymGroupIndex
-              allItems={items as SynonymGroupWithMembers[]}
+              allItems={items as SynonymGroup[]}
               searchString={searchString}
               totalItems={totalItems}
               query={query}
