@@ -15,7 +15,11 @@ import invariant from 'tiny-invariant'
 
 import { getOpenIDClient } from './_auth/auth.server'
 import { type User, parseGroups, parseIdp } from './_auth/user.server'
-import { put, submitterGroup } from './circulars/circulars.server'
+import {
+  moderatorGroup,
+  put,
+  submitterGroup,
+} from './circulars/circulars.server'
 import {
   cognito,
   extractAttribute,
@@ -127,7 +131,7 @@ async function getUserAttributes(Username: string) {
  *    application does the following:
  *
  *    a. Do the [authorization code flow] to sign the user in with GCN's IdP.
- *       When requesting the authorization endpoint, be sure to reuqest
+ *       When requesting the authorization endpoint, be sure to request
  *       scope="openid profile gcn.nasa.gov/circular-submitter". (Note: the
  *       name of the last scope may change in the future.)
  *
@@ -154,7 +158,8 @@ async function getUserAttributes(Username: string) {
  * [authorization code flow]: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow
  */
 export async function action({ request }: ActionFunctionArgs) {
-  if (request.method !== 'POST') throw new Response(null, { status: 405 })
+  if (!['PUT', 'POST'].includes(request.method))
+    throw new Response(null, { status: 405 })
 
   const bearer = getBearer(request)
   if (!bearer) throw new Response('Bearer missing', { status: 403 })
@@ -166,8 +171,15 @@ export async function action({ request }: ActionFunctionArgs) {
   } = await parseAccessToken(bearer)
 
   // Make sure that the access token contains the required scope for this API
-  if (!scope.split(' ').includes(submitterGroup))
-    throw new Response('Invalid scope', { status: 403 })
+  switch (request.method) {
+    case 'POST':
+      if (!scope.split(' ').includes(submitterGroup))
+        throw new Response('Invalid scope', { status: 403 })
+
+    case 'PUT':
+      if (!scope.split(' ').includes(moderatorGroup))
+        throw new Response('Invalid scope', { status: 403 })
+  }
 
   const [{ existingIdp, ...attrs }, groups] = await Promise.all([
     getUserAttributes(cognitoUserName),
@@ -182,7 +194,7 @@ export async function action({ request }: ActionFunctionArgs) {
     ...attrs,
   }
 
-  const { subject, body, format } = await request.json()
+  const { subject, body, format, eventId } = await request.json()
   if (
     !(
       typeof subject === 'string' &&
@@ -196,6 +208,7 @@ export async function action({ request }: ActionFunctionArgs) {
     submittedHow: 'api',
     subject,
     body,
+    eventId,
     ...(format ? { format } : {}),
   } as const
 
