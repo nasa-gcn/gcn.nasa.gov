@@ -55,9 +55,5 @@ export function SelectedAlertQuickstartLink({
 }) {
   const searchParams = buildSearchParams(alertKey, format, otherAlerts)
 
-  return (
-    <Link to={`/quickstart/credentials?${searchParams.toString()}`}>
-      Kafka Stream
-    </Link>
-  )
+  return <Link to={`/quickstart?${searchParams.toString()}`}>Kafka Stream</Link>
 }
