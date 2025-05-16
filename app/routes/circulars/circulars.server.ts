@@ -683,5 +683,7 @@ export async function send(circular: Circular) {
       circular.circularId
     }.`,
     topic: 'circulars',
+    circularId: circular.circularId,
+    origin,
   })
 }
