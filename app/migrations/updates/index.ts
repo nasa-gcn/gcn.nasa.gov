@@ -7,6 +7,9 @@
  * 4. Run `npm run build`
  * 5. Run `node build/migrations/updates/index.mjs`
  * 6. Your file with circulars that need to be updated will be at the top level directory.
+ *
+ * If you are using visual studio code, you can open the `event_id_updates.json` and make it more readable
+ * by pushing command + shift + P and typing `Format Document`.
  */
 import * as fs from 'fs'
 import * as path from 'path'
