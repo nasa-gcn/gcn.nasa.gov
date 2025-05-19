@@ -155,8 +155,34 @@ export default function () {
                     <Link key="java" to="client#pyspark">
                       PySpark
                     </Link>,
-                    <NavLink key="code-samples" to="client/samples">
-                      Sample Code
+                    <Link key="java" to="client#pyspark">
+                      PySpark
+                    </Link>,
+                  ]}
+                />
+              </>,
+              <>
+                <NavLink key="sample" to="sample">
+                  Sample Code
+                </NavLink>
+                <SideNavSub
+                  base="sample"
+                  key="sample-sub"
+                  items={[
+                    <NavLink key="kafka" to="sample/kafka">
+                      Kafka Messages
+                    </NavLink>,
+                    <NavLink key="text" to="sample/text">
+                      Plain Text
+                    </NavLink>,
+                    <NavLink key="xml" to="sample/xml">
+                      VOEvent XML
+                    </NavLink>,
+                    <NavLink key="json" to="sample/json">
+                      JSON Format
+                    </NavLink>,
+                    <NavLink key="healpix" to="sample/healpix">
+                      HEALPix Maps
                     </NavLink>,
                   ]}
                 />
