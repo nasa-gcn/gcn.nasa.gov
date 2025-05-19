@@ -35,3 +35,6 @@ auth.json
 
 # Draw.io auto-save files
 *.bkp
+
+/app/archive.json
+/event_id_updates.json
