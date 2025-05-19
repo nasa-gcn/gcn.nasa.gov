@@ -38,11 +38,13 @@ function processFiles() {
       const eventId = parseEventFromSubject(circular.subject)
       const previousEventId = circular.eventId ? circular.eventId : undefined
       if (eventId && eventId != previousEventId) {
-        results.push({
-          circularId: circular.circularId,
-          eventId,
-          oldEventId: previousEventId,
-        })
+        if (!previousEventId || previousEventId.split(' ')[0] != 'GRB') {
+          results.push({
+            circularId: circular.circularId,
+            eventId,
+            oldEventId: previousEventId,
+          })
+        }
       }
     })
     const updates = { updates: results }
