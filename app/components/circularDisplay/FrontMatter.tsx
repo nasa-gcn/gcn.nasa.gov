@@ -55,10 +55,7 @@ export function FrontMatter({
     ? submitter.split(' at ')[0]
     : submitter
   const params = new URLSearchParams({ query: `submitter: "${authorName}"` })
-  const submitterUrl = new URL(
-    `/circulars?${params.toString()}`,
-    window.location.origin
-  )
+  const submitterUrl = `/circulars?${params}`
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
