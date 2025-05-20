@@ -77,7 +77,7 @@ export function FrontMatter({
         </FrontMatterItem>
       )}
       <FrontMatterItem label="From">
-        <Link href={submitterUrl.toString()}>{submitter}</Link>
+        <Link href={submitterUrl}>{submitter}</Link>
       </FrontMatterItem>
       {editedBy && (
         <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
