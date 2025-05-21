@@ -39,7 +39,7 @@ import type {
   CircularMetadata,
 } from './circulars.lib'
 import { sendEmail, sendEmailBulk } from '~/lib/email.server'
-import { feature, origin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
 import { closeZendeskTicket } from '~/lib/zendesk.server'
 
 // A type with certain keys required.
@@ -172,20 +172,13 @@ export async function search({
         }
 
   const queryObj = query
-    ? feature('CIRCULARS_LUCENE')
-      ? {
-          query_string: {
-            query,
-            fields: ['submitter', 'subject', 'body'],
-            lenient: true,
-          },
-        }
-      : {
-          multi_match: {
-            query,
-            fields: ['submitter', 'subject', 'body'],
-          },
-        }
+    ? {
+        [queryFallback ? 'multi_match' : 'query_string']: {
+          query,
+          fields: ['submitter', 'subject', 'body'],
+          ...(queryFallback ? {} : { lenient: true }),
+        },
+      }
     : undefined
 
   const searchBody = {
@@ -577,7 +570,7 @@ export async function approveChangeRequest(
     format: changeRequest.format,
     submitter: changeRequest.submitter,
     createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
-    eventId: changeRequest.eventId,
+    eventId: changeRequest.eventId || undefined,
   }
 
   const promises = [
@@ -622,7 +615,7 @@ export async function getChangeRequest(
   return changeRequest
 }
 
-function validateCircular({
+export function validateCircular({
   body,
   subject,
   format,

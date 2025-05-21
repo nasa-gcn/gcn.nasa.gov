@@ -112,6 +112,40 @@ Push your commits out to your remote fork:
 git push
 ```
 
+## Commit Message Style guide
+
+Please follow these guidelines when writing your commit message. These guidelines are drawn from the [Git project itself](https://git-scm.com/docs/SubmittingPatches), a [GitLab blog post on Git best practices](https://about.gitlab.com/topics/version-control/version-control-best-practices/), and [GitKraken's documentation on writing good commit messages](https://www.gitkraken.com/learn/git/best-practices/git-commit-message).
+
+- Your commit message should consist of a one-line **summary** followed by an optional **long description**.
+
+- The **summary** should be 50 characters or less in length. (Why 50 characters? So that long lines are not truncated when listing commits in the [`--pretty=oneline` format](https://git-scm.com/docs/git-log#_pretty_formats) on a standard 80-character wide console.)
+
+- The **summary** should be an [imperative sentence](https://dictionary.cambridge.org/us/dictionary/english/imperative-sentence), in the present tense, but without ending puncutation.
+
+- If you include the optional **long description**, it should be separated from the **summary** by a blank line.
+
+- The long description should consist of complete sentences.
+
+- The **long description** should be word-wrapped so that lines are at most 72 characters in length. (Why 72 characters? So that long lines are not truncated when viewing the output of `git log` on a standard 80-character wide console.)
+
+- Explain what the change does in the simplest and clearest way possible. Ask yourself: would you understand your commit message if you read it a year later? Would someone else understand your commit message without you there to explain it to them?
+
+- Check your description for spelling or grammatical errors.
+
+- You may use any [GitHub supported MarkDown syntax](https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax) to enrich your commit messages with styled text.
+
+Here is an example of a well-formatted commit message:
+
+```text
+Increase size of GCN Circulars detail arrows
+
+With the browser's default size for arrows in HTML
+`<details>`/`<summary>` elements, the buttons are difficult to activate
+on touch-based mobile devices, especially on the GCN Circulars page
+which has many of these elements in a list. Add custom CSS to increase
+their sizes for better usability.
+```
+
 ## Submitting Pull Requests
 
 Once you have completed your changes on your branch, create a [pull request](https://github.com/nasa-gcn/gcn.nasa.gov/pulls).

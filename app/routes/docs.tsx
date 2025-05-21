@@ -88,9 +88,6 @@ export default function () {
                     <NavLink key="deployment" to="contributing/deployment">
                       Deployment
                     </NavLink>,
-                    <NavLink key="email" to="contributing/email">
-                      Email Data Flow
-                    </NavLink>,
                     <NavLink key="project" to="contributing/project">
                       GitHub Project Board
                     </NavLink>,
@@ -152,8 +149,34 @@ export default function () {
                     <Link key="java" to="client#java">
                       Java
                     </Link>,
-                    <NavLink key="code-samples" to="client/samples">
-                      Sample Code
+                    <Link key="pyspark" to="client#pyspark">
+                      PySpark
+                    </Link>,
+                  ]}
+                />
+              </>,
+              <>
+                <NavLink key="sample" to="sample">
+                  Sample Code
+                </NavLink>
+                <SideNavSub
+                  base="sample"
+                  key="sample-sub"
+                  items={[
+                    <NavLink key="kafka" to="sample/kafka">
+                      Kafka Messages
+                    </NavLink>,
+                    <NavLink key="text" to="sample/text">
+                      Plain Text
+                    </NavLink>,
+                    <NavLink key="xml" to="sample/xml">
+                      VOEvent XML
+                    </NavLink>,
+                    <NavLink key="json" to="sample/json">
+                      JSON Format
+                    </NavLink>,
+                    <NavLink key="healpix" to="sample/healpix">
+                      HEALPix Maps
                     </NavLink>,
                   ]}
                 />
@@ -189,9 +212,26 @@ export default function () {
               <NavLink key="vtp" to="vtp">
                 VOEvent Transport Protocol Migration
               </NavLink>,
-              <NavLink key="admin" to="admin">
-                Administration
-              </NavLink>,
+              <>
+                <NavLink key="internal" to="internal">
+                  Internal
+                </NavLink>
+                <SideNavSub
+                  base="internal"
+                  key="internal-sub"
+                  items={[
+                    <NavLink key="admin" to="internal/admin">
+                      Administration
+                    </NavLink>,
+                    <NavLink key="auth" to="internal/auth">
+                      Auth
+                    </NavLink>,
+                    <NavLink key="email" to="internal/email">
+                      Email Data Flow
+                    </NavLink>,
+                  ]}
+                />
+              </>,
             ]}
           />
         </div>

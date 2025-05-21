@@ -89,9 +89,19 @@ export default function () {
             language="java"
           />
         </Tab>
+        <Tab label="PySpark">
+          <ClientSampleCode
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
+            language="pyspark"
+          />
+        </Tab>
       </Tabs>
       <Form method="GET" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
+        <input type="hidden" name="noticeFormat" value={noticeFormat} />
+        {noticeTypes.map((notice) => (
+          <input key={notice} type="hidden" name="alerts" value={notice} />
+        ))}
         <FormGroup>
           <ButtonGroup>
             <Button type="submit" className="usa-button--outline">

@@ -5,9 +5,54 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Link } from '@remix-run/react'
+import { Link, useFetcher } from '@remix-run/react'
 
-import type { SynonymGroupWithMembers } from '../synonyms/synonyms.lib'
+import type { SynonymGroup } from '../synonyms/synonyms.lib'
+import Spinner from '~/components/Spinner'
+import type { loader } from '~/routes/api.synonym.circulars'
+
+function CircularsBelongingToASynonymGroup({
+  eventIds,
+  slugs,
+  searchString,
+}: {
+  eventIds: string[]
+  slugs: string[]
+  searchString: string
+}) {
+  const fetcher = useFetcher<typeof loader>()
+  const params = new URLSearchParams(
+    eventIds.map((eventId) => ['eventIds', eventId])
+  )
+
+  return (
+    <div>
+      <details
+        onClick={() => {
+          fetcher.load(`/api/synonym/circulars?${params}`)
+        }}
+      >
+        <summary>
+          <Link to={`/circulars/events/${slugs.sort()[0]}${searchString}`}>
+            {eventIds.join(', ')}
+          </Link>
+        </summary>
+        <ol className="margin-left-3">
+          {fetcher.state === 'loading' && !fetcher.data?.length && (
+            <span className="text-middle">
+              <Spinner />
+            </span>
+          )}
+          {fetcher.data?.map(({ circularId, subject }) => (
+            <li key={circularId} value={circularId}>
+              <Link to={`/circulars/${circularId}`}>{subject}</Link>
+            </li>
+          ))}
+        </ol>
+      </details>
+    </div>
+  )
+}
 
 export default function ({
   allItems,
@@ -15,7 +60,7 @@ export default function ({
   searchString,
   query,
 }: {
-  allItems: SynonymGroupWithMembers[]
+  allItems: SynonymGroup[]
   totalItems: number
   searchString: string
   query?: string
@@ -28,27 +73,13 @@ export default function ({
         </h3>
       )}
       <div className="margin-y-2">
-        {allItems.map(({ synonymId, eventIds, slugs, members }) => (
-          <div key={synonymId}>
-            <details>
-              <summary>
-                <Link
-                  to={`/circulars/events/${slugs.sort()[0]}${searchString}`}
-                >
-                  {eventIds.join(', ')}
-                </Link>
-              </summary>
-              <ol className="margin-left-3">
-                {members.map(({ circularId, subject }) => {
-                  return (
-                    <li key={circularId} value={circularId}>
-                      <Link to={`/circulars/${circularId}`}>{subject}</Link>
-                    </li>
-                  )
-                })}
-              </ol>
-            </details>
-          </div>
+        {allItems.map(({ synonymId, eventIds, slugs }) => (
+          <CircularsBelongingToASynonymGroup
+            eventIds={eventIds}
+            slugs={slugs}
+            searchString={searchString}
+            key={synonymId}
+          />
         ))}
       </div>
     </>
