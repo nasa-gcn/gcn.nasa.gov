@@ -3,7 +3,7 @@ handle:
   breadcrumb: Super-Kamiokande
 ---
 
-import logo from './logo.png'
+import logo from './logo.svg'
 
 # Super-Kamioka Neutrino Detection Experiment (Super-Kamiokande)
 
@@ -21,9 +21,9 @@ import logo from './logo.png'
 **Upgrade:** 2028 to Hyper-Kamiokande
 
 **Data Archives:**
-[University of Tokyo](https://www-sk.icrr.u-tokyo.ac.jp/sk/publications/result-e.html)
+[University of Tokyo](https://www-sk.icrr.u-tokyo.ac.jp/en/sk/for-reseacher/)
 
-[Super-Kamiokande](https://www-sk.icrr.u-tokyo.ac.jp/sk/index-e.html), also known as Super-K or SK, is a neutrino observatory built by the Japanese Ministry of Education, Science, Sports and Culture with a contribution from the US Department of Energy. Designed to understand the nature of neutrinos, Super-K is a leading detector in the search for MeV neutrino detections of core-collapse supernovae.
+[Super-Kamiokande](https://www-sk.icrr.u-tokyo.ac.jp/en/sk/), also known as Super-K or SK, is a neutrino observatory built by the Japanese Ministry of Education, Science, Sports and Culture with a contribution from the US Department of Energy. Designed to understand the nature of neutrinos, Super-K is a leading detector in the search for MeV neutrino detections of core-collapse supernovae.
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/sk_sn.html)
@@ -32,6 +32,42 @@ import logo from './logo.png'
 | ------- | ---------------------------- | ----------- |
 | `SK_SN` | REAL or TEST supernova alert | &leq;1 hour |
 
+**GCN Notice Types in GCN Over Kafka
+
+The notice published in GCN Over Kafka is largely compatible with those in GCN Classic and GCN Classic Over Kafka. However, it includes some additional information: the number of detected inverse beta decay (IBD) events, the analysis pipeline used (`snwatch` or `wit`), and the type of processed sample (`full` or `partial`) used for event detection.
+
+The alert latency in GCN Over Kafka is slightly shorter than that in GCN Classic. 
+
+Special variables for this supernova alert:
+
+- `alert_datetime` and `rate_duration`:  
+  `alert_datetime` corresponds to the date and time of the first neutrino detection in the burst of detected neutrino events. `rate_duration` is defined as the time interval between the first and last neutrino events.
+
+- `pipeline`:  
+  The analysis pipeline used to generate this alert; either `"snwatch"` or `"wit"`.
+
+- `processed_sample`:  
+  Indicates the size of the processed event sample used for this alert; either `"full"` or `"partial"`.  
+  If the supernova explosion occurs near Earth, a large number of events may be detected by SK. In such cases, an alert may be issued before processing of the full sample is completed, and it will be updated once full processing is finished.
+
+- `n_events`:  
+  The total number of detected neutrino events.
+
+- `n_ibd_events`:  
+  The number of IBD events in the sample, identified by the coincidence of neutron capture signals.
+
+- `luminosity_distance` and `luminosity_distance_error`:  
+  The estimated distance to the source and its uncertainty, based on the assumption of an SN1987A-like neutrino flux.
+
+ <div className="overflow-table">
+
+| Kafka topic                        | Comments                                                            |
+| ---------------------------------- | ------------------------------------------------------------------- |
+| `gcn.notice.superk.sn_alert.real`  | For a real supernova alert                                          |
+| `gcn.notice.superk.sn_alert.test`  | For a test alert (generate once per month)                          |
+
+
+ </div>
 **Yearly Event Rates:**
 
 <div className="overflow-table">
