@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Form, useFetcher } from '@remix-run/react'
+import { Form, useFetcher, useSearchParams } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
@@ -30,7 +30,9 @@ export default function CredentialCard({
 }: RedactedClientCredential) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
+  const [searchParams] = useSearchParams()
   const disabled = fetcher.state !== 'idle'
+  const alerts = searchParams.getAll('alerts')
   return (
     <>
       <Grid row style={disabled ? { opacity: '50%' } : undefined}>
@@ -69,12 +71,11 @@ export default function CredentialCard({
               />
               Delete
             </ModalToggleButton>
-            <Form
-              method="GET"
-              action="/quickstart/alerts"
-              className="display-inline"
-            >
+            <Form method="GET" action="/quickstart/alerts">
               <input type="hidden" name="clientId" value={client_id} />
+              {alerts.map((alert) => (
+                <input key={alert} type="hidden" name="alerts" value={alert} />
+              ))}
               <Button disabled={disabled} type="submit">
                 Select
                 <Icon.ArrowForward
