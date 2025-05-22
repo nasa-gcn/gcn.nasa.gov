@@ -18,8 +18,9 @@ import {
   SendEmailCommand,
 } from '@aws-sdk/client-sesv2'
 import chunk from 'lodash/chunk'
+import truncate from 'truncate-utf8-bytes'
 
-import { hostname } from './env.server'
+import { hostname, origin } from './env.server'
 import { getEnvBannerHeaderAndDescription, maybeThrow } from './utils'
 import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
@@ -101,20 +102,15 @@ function maybeThrowSES(e: any, warning: string) {
 export function truncateEmailBodyIfNecessary({
   body,
   circularId,
-  origin,
 }: {
   body: string
   circularId?: number
-  origin?: string
 }) {
   const textBody = getBody(body)
-  const inputBytes = Buffer.byteLength(textBody, 'utf-8')
 
-  if (inputBytes <= 262144) return textBody
+  if (Buffer.byteLength(textBody, 'utf-8') <= 262144) return textBody
 
-  const buffer = Buffer.from(textBody, 'utf-8')
-  const truncatedBuffer = buffer.subarray(0, 261900)
-  const truncatedBody = truncatedBuffer.toString('utf-8')
+  const truncatedBody = truncate(textBody, 261900)
   const truncationWarning =
     circularId && origin
       ? `...\n\n\n This message has been truncated. The full text is available on the website.\n\n\nView this GCN Circular online at ${origin}/circulars/${
@@ -137,7 +133,7 @@ export async function sendEmailBulk({
   origin,
 }: BulkMessageProps) {
   const s = await services()
-  const emailBody = truncateEmailBodyIfNecessary({ body, circularId, origin })
+  const emailBody = truncateEmailBodyIfNecessary({ body, circularId })
   const message: Omit<SendBulkEmailCommandInput, 'BulkEmailEntries'> = {
     FromEmailAddress: getFrom(fromName),
     ReplyToAddresses: replyTo,
