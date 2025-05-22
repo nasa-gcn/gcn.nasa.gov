@@ -71,7 +71,7 @@ export default function CredentialCard({
               Delete
             </ModalToggleButton>
             <Link
-              to={`/quickstart/alerts?clientId=${client_id}&${searchParams.toString()}`}
+              to={`/quickstart/alerts?clientId=${client_id}&${searchParams}`}
               className="usa-button"
             >
               Select
