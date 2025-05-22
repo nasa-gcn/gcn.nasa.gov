@@ -45,7 +45,6 @@ interface BulkMessageProps extends MessageProps {
   /** The topic key (for unsubscribing). */
   topic: string
   circularId?: number
-  origin?: string
 }
 
 function getBody(body: string) {
@@ -130,7 +129,6 @@ export async function sendEmailBulk({
   body,
   topic,
   circularId,
-  origin,
 }: BulkMessageProps) {
   const s = await services()
   const emailBody = truncateEmailBodyIfNecessary({ body, circularId })
