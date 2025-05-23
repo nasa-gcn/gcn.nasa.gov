@@ -40,11 +40,12 @@ The alert latency in GCN Over Kafka is slightly shorter than that in GCN Classic
 
 Special variables for this supernova alert:
 
-- `alert_datetime` and `rate_duration`:  
-  `alert_datetime` corresponds to the date and time of the first neutrino detection in the burst of detected neutrino events. `rate_duration` is defined as the time interval between the first and last neutrino events.
+- `alert_datetime`:  The date and time of the first neutrino detection in the burst of detected neutrino events. 
+
+- `detection_interval`: the time interval between the first and last neutrino events.
 
 - `pipeline`:  
-  The analysis pipeline used to generate this alert; either `"snwatch"` or `"wit"`.
+  The analysis pipeline used to generate this alert; either `"snwatch"` or `"wit"`. Both the Supernova watch (SNwatch) and Wide-band Intelligent Trigger (WIT) are online analysis system. The energy thresholds are 2.5 MeV for SNwatch and 2.5 MeV for WIT, respectively.
 
 - `processed_sample`:  
   Indicates the size of the processed event sample used for this alert; either `"full"` or `"partial"`.  
@@ -54,10 +55,10 @@ Special variables for this supernova alert:
   The total number of detected neutrino events.
 
 - `n_ibd_events`:  
-  The number of IBD events in the sample, identified by the coincidence of neutron capture signals.
+  The number of inverse beta decay (IBD) events in the sample, identified by the coincidence of neutron capture signals.
 
 - `luminosity_distance` and `luminosity_distance_error`:  
-  The estimated distance to the source and its uncertainty, based on the assumption of an SN1987A-like neutrino flux.
+  The estimated distance to the source and its uncertainty, assuming a SN1987A-like neutrino flux.
 
  <div className="overflow-table">
 
@@ -68,13 +69,4 @@ Special variables for this supernova alert:
 
 
  </div>
-**Yearly Event Rates:**
 
-<div className="overflow-table">
-
-| Instrument | Type                    | Rates | Localization |
-| ---------- | ----------------------- | ----- | ------------ |
-| Super-K    | Core-collapse supernova | 0.03  | 5–10°        |
-|            | Test alert              | 12    | 5–10°        |
-
-</div>
