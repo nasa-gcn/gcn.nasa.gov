@@ -53,7 +53,6 @@ export async function searchSynonymsByEventId({
   items: SynonymGroup[]
   totalItems: number
   totalPages: number
-  page: number
   queryFallback: boolean
 }> {
   const client = await getSearchClient()
@@ -128,7 +127,6 @@ export async function searchSynonymsByEventId({
     items: results,
     totalItems,
     totalPages,
-    page,
     queryFallback: false,
   }
 }
