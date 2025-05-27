@@ -15,12 +15,12 @@ import invariant from 'tiny-invariant'
 
 import { getOpenIDClient } from './_auth/auth.server'
 import { type User, parseGroups, parseIdp } from './_auth/user.server'
-import type { Circular } from './circulars/circulars.lib'
 import {
   moderatorGroup,
   put,
   putVersion,
   submitterGroup,
+  validateCircular,
 } from './circulars/circulars.server'
 import {
   cognito,
@@ -145,6 +145,7 @@ async function getUserAttributes(Username: string) {
  *
  *    c. Save the resulting refresh token and auth token on the server side in
  *       a record associated with the user's account.
+ *
  *    e. The application is responsible for renewing the access token as needed
  *       using the refreshing token.
  *
@@ -214,7 +215,7 @@ export async function action({ request }: ActionFunctionArgs) {
       (format === undefined || typeof format === 'string')
     )
   )
-    throw new Response(null, { status: 400 })
+    throw new Response('missing required parameter', { status: 400 })
 
   switch (request.method) {
     case 'POST':
@@ -234,8 +235,13 @@ export async function action({ request }: ActionFunctionArgs) {
         subject,
         body,
         eventId,
-      } as Circular
+      }
+
+      validateCircular(circularVersion)
 
       return await putVersion(circularVersion, user)
+
+    default:
+      throw new Response('unknown intent', { status: 400 })
   }
 }

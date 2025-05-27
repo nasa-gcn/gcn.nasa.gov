@@ -615,7 +615,7 @@ export async function getChangeRequest(
   return changeRequest
 }
 
-function validateCircular({
+export function validateCircular({
   body,
   subject,
   format,
