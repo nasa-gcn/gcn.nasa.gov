@@ -152,10 +152,7 @@ export default function () {
                     <Link key="java" to="client#java">
                       Java
                     </Link>,
-                    <Link key="java" to="client#pyspark">
-                      PySpark
-                    </Link>,
-                    <Link key="java" to="client#pyspark">
+                    <Link key="pyspark" to="client#pyspark">
                       PySpark
                     </Link>,
                   ]}
