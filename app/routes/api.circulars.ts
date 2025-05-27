@@ -172,7 +172,7 @@ async function getUserAttributes(Username: string) {
  */
 export async function action({ request }: ActionFunctionArgs) {
   if (!['PUT', 'POST'].includes(request.method))
-    throw new Response(null, { status: 405 })
+    throw new Response('unsupported method', { status: 405 })
 
   const bearer = getBearer(request)
   if (!bearer) throw new Response('Bearer missing', { status: 403 })
