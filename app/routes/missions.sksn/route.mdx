@@ -42,7 +42,7 @@ Special variables for this supernova alert:
 
 - `alert_datetime`:  The date and time of the first neutrino detection in the burst of detected neutrino events. 
 
-- `detection_interval`: the time interval between the first and last neutrino events.
+- `detection_interval`: The time interval between the first and last neutrino events [s]
 
 - `pipeline`:  
   The analysis pipeline used to generate this alert; either `"snwatch"` or `"wit"`. Both the Supernova watch (SNwatch) and Wide-band Intelligent Trigger (WIT) are online analysis system. The energy thresholds are 2.5 MeV for SNwatch and 2.5 MeV for WIT, respectively.
@@ -58,7 +58,11 @@ Special variables for this supernova alert:
   The number of inverse beta decay (IBD) events in the sample, identified by the coincidence of neutron capture signals.
 
 - `luminosity_distance` and `luminosity_distance_error`:  
-  The estimated distance to the source and its uncertainty, assuming a SN1987A-like neutrino flux.
+  The estimated distance to the source and its uncertainty [kpc], assuming a SN1987A-like neutrino flux.
+
+- `ra_dec_error` : The statistical uncertainty of the location [deg]. Its containmaint probalitiy is given as `containment_probability` (default: 0.68).
+
+- `trigger_number`: Event ID used in GCN Classic. 
 
  <div className="overflow-table">
 
