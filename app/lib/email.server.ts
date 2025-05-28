@@ -18,8 +18,9 @@ import {
   SendEmailCommand,
 } from '@aws-sdk/client-sesv2'
 import chunk from 'lodash/chunk'
+import truncate from 'truncate-utf8-bytes'
 
-import { hostname } from './env.server'
+import { hostname, origin } from './env.server'
 import { getEnvBannerHeaderAndDescription, maybeThrow } from './utils'
 import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
@@ -43,6 +44,7 @@ interface MessageProps {
 interface BulkMessageProps extends MessageProps {
   /** The topic key (for unsubscribing). */
   topic: string
+  circularId?: number
 }
 
 function getBody(body: string) {
@@ -89,6 +91,35 @@ function maybeThrowSES(e: any, warning: string) {
   ])
 }
 
+/**
+ * Amazon SES has a byte limit of 262144 for TemplateData arguments.
+ * If the circular body is over this size limit, the message will be truncated.
+ * If the body is truncated, the circular website link will be removed.
+ * A warning that the email has been truncated is added and the circular website link is added back in.
+ * An additional buffer is allowed for for variation in url length and truncation warning.
+ */
+export function truncateEmailBodyIfNecessary({
+  body,
+  circularId,
+}: {
+  body: string
+  circularId?: number
+}) {
+  const textBody = getBody(body)
+
+  if (Buffer.byteLength(textBody, 'utf-8') <= 262144) return textBody
+
+  const truncatedBody = truncate(textBody, 261900)
+  const truncationWarning =
+    circularId && origin
+      ? `...\n\n\n This message has been truncated. The full text is available on the website.\n\n\nView this GCN Circular online at ${origin}/circulars/${
+          circularId
+        }.`
+      : '...\n\n\n This message has been truncated. The full text is available on the website.'
+
+  return truncatedBody + truncationWarning
+}
+
 /** Send an email to many recipients in parallel. */
 export async function sendEmailBulk({
   to,
@@ -97,8 +128,10 @@ export async function sendEmailBulk({
   subject,
   body,
   topic,
+  circularId,
 }: BulkMessageProps) {
   const s = await services()
+  const emailBody = truncateEmailBodyIfNecessary({ body, circularId })
   const message: Omit<SendBulkEmailCommandInput, 'BulkEmailEntries'> = {
     FromEmailAddress: getFrom(fromName),
     ReplyToAddresses: replyTo,
@@ -106,7 +139,7 @@ export async function sendEmailBulk({
       Template: {
         TemplateData: JSON.stringify({
           subject,
-          body: getBody(body),
+          body: emailBody,
         }),
         TemplateName: s.email_outgoing?.template,
       },
