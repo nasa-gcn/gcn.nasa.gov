@@ -13,11 +13,7 @@ import { slug } from 'github-slugger'
 import { orderBy } from 'lodash'
 
 import type { Circular } from '../circulars/circulars.lib'
-import type {
-  Synonym,
-  SynonymGroup,
-  SynonymGroupWithMembers,
-} from './synonyms.lib'
+import type { Synonym, SynonymGroup } from './synonyms.lib'
 
 export async function getSynonymsByUuid(synonymId: string) {
   const db = await tables()
@@ -57,7 +53,7 @@ export async function searchSynonymsByEventId({
   items: SynonymGroup[]
   totalItems: number
   totalPages: number
-  page: number
+  queryFallback: boolean
 }> {
   const client = await getSearchClient()
   const body: any = {
@@ -131,7 +127,7 @@ export async function searchSynonymsByEventId({
     items: results,
     totalItems,
     totalPages,
-    page,
+    queryFallback: false,
   }
 }
 
@@ -344,46 +340,6 @@ export async function autoCompleteEventIds({
   )
 
   return { options }
-}
-
-export async function groupMembersByEventId({
-  limit = 10,
-  page,
-  eventId,
-  query,
-}: {
-  limit?: number
-  page: number
-  eventId?: string
-  query?: string
-}): Promise<{
-  items: SynonymGroupWithMembers[]
-  totalItems: number
-  totalPages: number
-  queryFallback: boolean
-}> {
-  const searchTerm = eventId || query
-  const searchResults = await searchSynonymsByEventId({
-    limit,
-    page,
-    eventId: searchTerm,
-  })
-  const groupedItems = searchResults.items.map(async (group) => {
-    const promises = group.eventIds.map((eventId) => getSynonymMembers(eventId))
-    const members = orderBy(
-      (await Promise.all(promises)).flat(),
-      ['circularId'],
-      ['asc']
-    )
-    return { ...group, members }
-  })
-  const items = await Promise.all(groupedItems)
-  return {
-    items,
-    totalItems: searchResults.totalItems,
-    totalPages: searchResults.totalPages,
-    queryFallback: false,
-  }
 }
 
 export async function getSynonymMembers(eventId: string) {

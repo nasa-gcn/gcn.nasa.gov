@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
 import { FormGroup } from '@trussworks/react-uswds'
 
 import { useUrl } from '~/root'
@@ -25,6 +25,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function () {
   const { email, idp } = useLoaderData<typeof loader>()
   const url = useUrl()
+  const [searchParams] = useSearchParams()
   return (
     <>
       <div className="maxw-tablet">
@@ -50,7 +51,11 @@ export default function () {
 
       <FormGroup>
         {email ? (
-          <Link type="button" className="usa-button" to="credentials">
+          <Link
+            type="button"
+            className="usa-button"
+            to={`credentials${searchParams ? `?${searchParams.toString()}` : ''}`}
+          >
             Next
           </Link>
         ) : (

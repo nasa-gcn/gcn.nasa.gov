@@ -44,7 +44,6 @@ To save a direct link to all Circulars assocaited with a particular event name o
 
 </WithFeature>
 
-<WithFeature CIRCULARS_LUCENE>
 ## Advanced Search
 
 The advanced search feature allows for searching keywords in a specific field of the circular. The search feature uses the [Lucene query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html) to specify the field and search term.
@@ -55,7 +54,7 @@ Searches can be performed by specifying the field and search term. The syntax fo
 
 The following fields are supported: `subject`, `body`, and `submitter`.
 
-By default, a query that does not contain lucene syntax will attempt to match the query against all 3 fields. For example, the query `Swift` will match any circular that contains the word 'Swift' in the subject, body, or submitter fields, whereas the query `subject:"Swift"` will only match circulars where the subject contains the word 'Swift'.
+By default, a query that does not contain the advanced search syntax will attempt to match the query against all 3 fields. For example, the query `Swift` will match any circular that contains the word 'Swift' in the subject, body, or submitter fields, whereas the query `subject:"Swift"` will only match circulars where the subject contains the word 'Swift'.
 
 ### Compound Queries
 
@@ -69,18 +68,11 @@ By default, the AND operator is used if no operator is specified. For example, `
 
 It is also possible to combine these operator keywords to form more complex queries. For example, `subject:"Swift" AND (body:"GRB" OR body:"Gamma-ray burst")` will match circulars where the subject contains 'Swift' and the body contains either 'GRB' or 'Gamma-ray burst'.
 
-Using one of these operators without an additional field query will result in an error. For example, `subject:"Swift" AND` will raise an error. For queries that do not adhere to the Lucene query syntax, GCN will fall back onto a more basic search method that matches the query against all fields with a warning message.
-
-### Wildcards
-
-Wildcards can be used to match a patterned search term to a field, such as searching for all Circulars related to GRBs detected in a given year by using the query `subject:"GRB21*"`. The following wildcards are supported:
-
-- `*`: Matches any number of characters.
-- `?`: Matches a single character.
+Using one of these operators without an additional field query will result in an error. For example, `subject:"Swift" AND` will raise an error. For queries that do not adhere to the advanced search syntax, GCN will fall back onto a more basic search method that matches the query against all fields with a warning message.
 
 ### Reserved Characters
 
-there are a number of reserved characters that have special meaning in the Lucene query syntax. These characters must be escaped using a backslash (`\`) to be treated as a literal character. Including these characters in a query without escaping them will raise an error.The reserved characters are: `+`, `-`, `=`, `&&`, `||`, `>`, `<`, `!`, `(`, `)`, `{`, `}`, `[`, `]`, `^`, `"`, `~`, `*`, `?`, `:`, `/`, `\`.
+There are a number of reserved characters that have special meaning in the advanced search syntax. These characters must be escaped using a backslash (`\`) to be treated as a literal character. Including these characters in a query without escaping them will raise an error.The reserved characters are: `+`, `-`, `=`, `&&`, `||`, `>`, `<`, `!`, `(`, `)`, `{`, `}`, `[`, `]`, `^`, `"`, `~`, `*`, `?`, `:`, `/`, `\`.
 
 ### Examples
 
@@ -91,10 +83,6 @@ there are a number of reserved characters that have special meaning in the Lucen
 - `subject:"Swift" OR body:"GRB"`: Matches circulars where the subject contains 'Swift' or the body contains 'GRB'.
 - `subject:"Swift" AND (body:"GRB" OR body:"Gamma-ray burst")`: Matches circulars where the subject contains 'Swift' and the body contains either 'GRB' or 'Gamma-ray burst'.
 - `subject:"LIGO" AND NOT body:"GRB"`: Matches circulars where the subject contains 'LIGO' and the body does not contain 'GRB'.
-- `subject:"GRB21*"`: Matches circulars where the subject contains 'GRB21' followed by any number of characters.
-- `subject:"GRB21?"`: Matches circulars where the subject contains 'GRB21' followed by a single character.
-
-</WithFeature>
 
 ## Citing GCN Circulars
 

@@ -92,6 +92,12 @@ producer = Producer(
 
 See GitHub issue [confluentinc/librdkafka#3125](https://github.com/confluentinc/librdkafka/issues/3125).
 
+### After an hour, my Python Kafka producer script starts printing the error message `%3|1746446717.457|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://kafka3.test.gcn.nasa.gov:9092/3]: sasl_ssl://kafka3.test.gcn.nasa.gov:9092/3: SASL authentication error: {"status":"invalid_token"} (after 419ms in state AUTH_REQ, 3 identical error(s) suppressed)`.
+
+This is a [known issue](https://github.com/nasa-gcn/gcn-kafka-python/issues/49) related to the Kafka client library's background thread that periodically renews access tokens. It will not affect your ability to produce Kafka messages because the access token will be automatically renewed the instant that your script produces a message. You can safely ignore it.
+
+Suppressing the error message entirely requires an [upstream patch for confluent-kafka-python](https://github.com/confluentinc/librdkafka/pull/4923).
+
 ### How do I receive GCN Notices via email from GCN Classic over Kafka?
 
 To get started, [sign in or sign up](https://gcn.nasa.gov/login) and then select 'Email Notifications' from account dropdown menu. See also [GCN Circular 32517](/circulars/32517).
@@ -120,6 +126,10 @@ We publish a record to the `gcn.circulars` topic whenever a Circular is created 
 ### How do I sign in as a legacy GCN Classic Circulars user?
 
 If you had a GCN Circulars account prior to April 17, 2023, your account was migrated to the new GCN. Your receiving preferences, submitting permission, name and affiliation will be associated with your account as soon as you sign in for the first time. If you choose to sign in via email address and password, tap "Sign up" not "Forgot your password?".
+
+### What do I do if my email address changes?
+
+GCN accounts are linked to your email address, so it is not currently possible to update the email address on your GCN account. Instead, we recommend you make a new account with your new email address. If you can still login to your old GCN account, select ["Email Notifications"](/user/email) from the user pulldown menu and unsubscribe from Circulars and Announcements, and delete any Notices subscriptions. Then setup the same preferences in your new account. If your old account is an approved Circulars submitter, you can authorize your new account by requesting a [peer endorsement](/docs/circulars/submitting#to-request-a-peer-endorsement) from your new account to your old account. If you can no longer login to your old account, seek a new peer endorsement from a colleague or [contact the GCN team](/contact).
 
 ## Operations
 
