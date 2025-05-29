@@ -127,7 +127,6 @@ export async function action({ request }: ActionFunctionArgs) {
         submitter = getFormDataString(data, 'submitter')
         if (!submitter) throw new Response(null, { status: 400 })
       }
-      const eventId = getFormDataString(data, 'eventId')
 
       if (!createdOnDate || !createdOn)
         throw new Response(null, { status: 400 })
