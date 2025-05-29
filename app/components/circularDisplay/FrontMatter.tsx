@@ -51,11 +51,20 @@ export function FrontMatter({
   | 'editedBy'
   | 'editedOn'
 >) {
-  const authorName = submitter.includes(' at ')
-    ? submitter.split(' at ')[0]
-    : submitter
-  const params = new URLSearchParams({ query: `submitter: "${authorName}"` })
-  const submitterUrl = `/circulars?${params}`
+  const escapeQuery = (str: string) =>
+    str.replace(/[+\-=&|><!(){}[\]^"~*?:/\\]/g, '\\$&')
+
+  const safeSubmitter = submitter ?? ''
+  const authorName = safeSubmitter.includes(' at ')
+    ? safeSubmitter.split(' at ')[0]
+    : safeSubmitter
+  const authorEmail = safeSubmitter.match(/<([^>]+)>/)?.[1] ?? ''
+  const authorSearchParams = new URLSearchParams({
+    query: `submitter:"${escapeQuery(authorName)}"${
+      authorEmail ? ` OR submitter:"${escapeQuery(authorEmail)}"` : ''
+    }`,
+  })
+  const submitterUrl = `/circulars?${authorSearchParams}`
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
