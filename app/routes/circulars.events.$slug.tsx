@@ -18,7 +18,6 @@ import {
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { PlainTextBody } from '~/components/circularDisplay/Body'
 import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
-import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
@@ -26,7 +25,6 @@ export const handle: BreadcrumbHandle = {
 }
 
 export async function loader({ params: { slug } }: LoaderFunctionArgs) {
-  if (!feature('SYNONYMS')) throw new Response(null, { status: 404 })
   invariant(slug)
 
   const synonyms = await getSynonymsBySlug(slug)
