@@ -573,7 +573,7 @@ export async function approveChangeRequest(
     eventId: changeRequest.eventId,
   }
 
-  const newVersionNumber = await autoincrementVersion.put(newVersion)
+  await autoincrementVersion.put(newVersion)
   const promises = [
     deleteChangeRequestRaw(circularId, requestorSub),
     sendEmail({
@@ -591,9 +591,7 @@ export async function approveChangeRequest(
   if (changeRequest.zendeskTicketId)
     promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))
 
-  if (newVersionNumber) {
-    await Promise.all(promises)
-  }
+  await Promise.all(promises)
 }
 
 /**
