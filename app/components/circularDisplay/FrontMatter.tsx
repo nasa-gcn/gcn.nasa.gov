@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Grid, Link } from '@trussworks/react-uswds'
+import { term } from 'lucene'
 import type { ReactNode } from 'react'
 
 import TimeAgo from '~/components/TimeAgo'
@@ -51,17 +52,14 @@ export function FrontMatter({
   | 'editedBy'
   | 'editedOn'
 >) {
-  const escapeQuery = (str: string) =>
-    str.replace(/[+\-=&|><!(){}[\]^"~*?:/\\]/g, '\\$&')
-
   const safeSubmitter = submitter ?? ''
   const authorName = safeSubmitter.includes(' at ')
     ? safeSubmitter.split(' at ')[0]
     : safeSubmitter
   const authorEmail = safeSubmitter.match(/<([^>]+)>/)?.[1] ?? ''
   const authorSearchParams = new URLSearchParams({
-    query: `submitter:"${escapeQuery(authorName)}"${
-      authorEmail ? ` OR submitter:"${escapeQuery(authorEmail)}"` : ''
+    query: `submitter:"${term.escape(authorName)}"${
+      authorEmail ? ` OR submitter:"${term.escape(authorEmail)}"` : ''
     }`,
   })
   const submitterUrl = `/circulars?${authorSearchParams}`
