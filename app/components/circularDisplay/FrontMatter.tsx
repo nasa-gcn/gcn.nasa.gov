@@ -5,7 +5,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Grid } from '@trussworks/react-uswds'
+import { Grid, Link } from '@trussworks/react-uswds'
+import { term } from 'lucene'
 import type { ReactNode } from 'react'
 
 import TimeAgo from '~/components/TimeAgo'
@@ -51,6 +52,17 @@ export function FrontMatter({
   | 'editedBy'
   | 'editedOn'
 >) {
+  const safeSubmitter = submitter ?? ''
+  const authorName = safeSubmitter.includes(' at ')
+    ? safeSubmitter.split(' at ')[0]
+    : safeSubmitter
+  const authorEmail = safeSubmitter.match(/<([^>]+)>/)?.[1] ?? ''
+  const authorSearchParams = new URLSearchParams({
+    query: `submitter:"${term.escape(authorName)}"${
+      authorEmail ? ` OR submitter:"${term.escape(authorEmail)}"` : ''
+    }`,
+  })
+  const submitterUrl = `/circulars?${authorSearchParams}`
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
@@ -68,7 +80,9 @@ export function FrontMatter({
           </small>
         </FrontMatterItem>
       )}
-      <FrontMatterItem label="From">{submitter}</FrontMatterItem>
+      <FrontMatterItem label="From">
+        <Link href={submitterUrl}>{submitter}</Link>
+      </FrontMatterItem>
       {editedBy && (
         <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
       )}
