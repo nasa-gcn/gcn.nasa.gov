@@ -105,7 +105,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const eventId = getFormDataString(data, 'eventId') || undefined
   const intent = getFormDataString(data, 'intent')
   const format = getFormDataString(data, 'format') as CircularFormat | undefined
-  const eventId = getFormDataString(data, 'eventId') || undefined
+
   if (format && !circularFormats.includes(format)) {
     throw new Response('Invalid format', { status: 400 })
   }
