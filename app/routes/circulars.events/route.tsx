@@ -8,16 +8,10 @@
 import { Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
-import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
   breadcrumb: 'Circular Group',
-}
-
-export function loader() {
-  if (!feature('SYNONYMS')) throw new Response(null, { status: 404 })
-  return null
 }
 
 export default function () {
