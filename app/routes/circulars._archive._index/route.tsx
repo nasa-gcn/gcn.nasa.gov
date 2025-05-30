@@ -46,10 +46,10 @@ import SynonymGroupIndex from './SynonymGroupIndex'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
-import { feature, origin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { useFeature, useModStatus } from '~/root'
+import { useModStatus } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 import {
   type CircularFormat,
@@ -62,10 +62,9 @@ import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ request: { url } }: LoaderFunctionArgs) {
-  const synonymFlagIsOn = feature('SYNONYMS')
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
-  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
+  const view = searchParams.get('view') || 'index'
   const isGroupView = view === 'group'
 
   if (query && view === 'index') {
@@ -213,7 +212,6 @@ export default function () {
   const submit = useSubmit()
   const [searchParams] = useSearchParams()
   const userIsModerator = useModStatus()
-  const synonymFlagIsOn = useFeature('SYNONYMS')
 
   // Strip off the ?index param if we navigated here from a form.
   // See https://remix.run/docs/en/main/guides/index-query-param.
@@ -223,7 +221,7 @@ export default function () {
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
-  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
+  const view = searchParams.get('view') || 'index'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -300,26 +298,24 @@ export default function () {
           </Button>
         </Form>
 
-        {synonymFlagIsOn && (
-          <ButtonGroup type="segmented">
-            <Link
-              to={`/circulars?view=index&limit=${limit}`}
-              preventScrollReset
-              className={getSelection('index')}
-            >
-              <Icon.List role="presentation" />
-              Circulars
-            </Link>
-            <Link
-              to={`/circulars?view=group&limit=${limit}`}
-              preventScrollReset
-              className={getSelection('group')}
-            >
-              <Icon.ContentCopy role="presentation" />
-              Events
-            </Link>
-          </ButtonGroup>
-        )}
+        <ButtonGroup type="segmented">
+          <Link
+            to={`/circulars?view=index&limit=${limit}`}
+            preventScrollReset
+            className={getSelection('index')}
+          >
+            <Icon.List role="presentation" />
+            Circulars
+          </Link>
+          <Link
+            to={`/circulars?view=group&limit=${limit}`}
+            preventScrollReset
+            className={getSelection('group')}
+          >
+            <Icon.ContentCopy role="presentation" />
+            Events
+          </Link>
+        </ButtonGroup>
 
         <Link to={`/circulars/new${searchString}`}>
           <Button type="button" className="padding-y-1">
