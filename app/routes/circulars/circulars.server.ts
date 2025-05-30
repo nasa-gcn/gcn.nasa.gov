@@ -573,8 +573,8 @@ export async function approveChangeRequest(
     eventId: changeRequest.eventId || undefined,
   }
 
+  await autoincrementVersion.put(newVersion)
   const promises = [
-    autoincrementVersion.put(newVersion),
     deleteChangeRequestRaw(circularId, requestorSub),
     sendEmail({
       to: [changeRequest.requestorEmail],
