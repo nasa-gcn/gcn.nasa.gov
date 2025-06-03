@@ -166,6 +166,55 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   return uuid
 }
 
+export async function deleteIfGroupIsEmpty(eventId: string) {
+  const db = await tables()
+  const circulars = await getSynonymMembers(eventId)
+
+  if (circulars.length === 0) {
+    await db.synonyms.delete({ eventId })
+  }
+}
+
+export async function manageSynonymVersionUpdates(
+  newEventId: string,
+  oldEventId?: string,
+  createdOn?: number
+) {
+  if (newEventId === oldEventId) return
+
+  const oldestDate = await getOldestDate(newEventId)
+  const dateParam = oldestDate ? oldestDate : createdOn
+  if (!dateParam) throw Error
+
+  const promises = []
+  if (newEventId) {
+    promises.push(tryInitSynonym(newEventId, dateParam))
+  }
+  if (oldEventId && oldEventId != newEventId) {
+    promises.push(deleteIfGroupIsEmpty(oldEventId))
+    promises.push(updateInitialDate(oldEventId))
+  }
+
+  await Promise.all(promises)
+}
+
+export async function updateInitialDate(eventId: string) {
+  const oldestDate = await getOldestDate(eventId)
+  if (!oldestDate) return
+
+  const db = await tables()
+  await db.synonyms.update({
+    Key: { eventId },
+    UpdateExpression: 'set #initialDate = :initialDate',
+    ExpressionAttributeNames: {
+      '#initialDate': 'initialDate',
+    },
+    ExpressionAttributeValues: {
+      ':initialDate': oldestDate,
+    },
+  })
+}
+
 export async function tryInitSynonym(eventId: string, createdOn: number) {
   const db = await tables()
 
@@ -252,7 +301,9 @@ export async function putSynonyms({
 
 export async function getOldestDate(eventId: string) {
   const circulars = await getSynonymMembers(eventId)
-  return orderBy(circulars, ['circularId'], ['asc'])[0].createdOn
+  return circulars.length > 0
+    ? orderBy(circulars, ['circularId'], ['asc'])[0].createdOn
+    : undefined
 }
 
 /*
