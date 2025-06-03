@@ -188,10 +188,15 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'POST':
       if (!scope.split(' ').includes(submitterGroup))
         throw new Response('Invalid scope', { status: 403 })
+      break
 
     case 'PUT':
       if (!scope.split(' ').includes(moderatorGroup))
         throw new Response('Invalid scope', { status: 403 })
+      break
+
+    default:
+      throw new Response(null, { status: 405 })
   }
 
   const [{ existingIdp, ...attrs }, groups] = await Promise.all([
