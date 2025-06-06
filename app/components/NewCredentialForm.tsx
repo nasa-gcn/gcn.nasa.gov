@@ -43,7 +43,6 @@ export async function handleCredentialActions(
       const scope = getFormDataString(data, 'scope')
       const recaptchaResponse = getFormDataString(data, 'g-recaptcha-response')
       await verifyRecaptcha(recaptchaResponse)
-
       const { client_id } = await machine.createClientCredential(name, scope)
       let redirectTarget = ''
       if (redirectSource == 'quickstart') {
@@ -55,6 +54,7 @@ export async function handleCredentialActions(
       }
 
       return redirect(redirectTarget)
+
     case 'delete':
       const clientId = getFormDataString(data, 'clientId')
       if (!clientId) {
@@ -85,7 +85,7 @@ export function NewCredentialForm({
     <Form method="POST">
       <input type="hidden" name="intent" value="create" />
       <p className="usa-paragraph">
-        Choose a name for your new client credential.{' '}
+        Choose a name for your new client credential.
       </p>
       <p className="usa-paragraph text-base">
         The name should help you remember what you use the client credential

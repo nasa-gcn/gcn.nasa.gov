@@ -77,7 +77,7 @@ export function ClientSampleCode({
               clientName ? ` (client "${clientName}")` : ''
             }
             # Warning: don't share the client secret with others.
-consumer = Consumer(client_id='${clientId}',
+            consumer = Consumer(client_id='${clientId}',
                                 client_secret='${clientSecret}'${
                                   domain
                                     ? `,
@@ -146,7 +146,7 @@ consumer = Consumer(client_id='${clientId}',
               client_secret: '${clientSecret}',${
                 domain
                   ? `
-                    domain: '${domain}',`
+              domain: '${domain}',`
                   : ''
               }
             })
@@ -231,7 +231,7 @@ consumer = Consumer(client_id='${clientId}',
                 client_secret: '${clientSecret}',${
                   domain
                     ? `
-                 domain: '${domain}',`
+                domain: '${domain}',`
                     : ''
                 }
               })
