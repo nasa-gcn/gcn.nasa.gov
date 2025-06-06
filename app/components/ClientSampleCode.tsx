@@ -9,7 +9,7 @@ import { Link } from '@trussworks/react-uswds'
 import { dedent } from 'ts-dedent'
 
 import { Highlight } from './Highlight'
-import { useDomain, useFeature } from '~/root'
+import { useDomain } from '~/root'
 
 export function ClientSampleCode({
   clientName,
@@ -21,19 +21,15 @@ export function ClientSampleCode({
     'gcn.classic.text.LVC_INITIAL',
   ],
   language,
-  scope,
 }: {
-  clientName?: string | null
-  clientId?: string | null
-  clientSecret?: string | null
+  clientName?: string
+  clientId?: string
+  clientSecret?: string
   listTopics?: boolean
   topics?: string[]
   language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark'
-  scope?: string
 }) {
   const domain = useDomain()
-
-  const tokenAuth = useFeature('TOKEN_AUTH')
 
   switch (language) {
     case 'py':
@@ -81,19 +77,13 @@ export function ClientSampleCode({
               clientName ? ` (client "${clientName}")` : ''
             }
             # Warning: don't share the client secret with others.
-            ${
-              tokenAuth
-                ? `consumer = Consumer("${scope}",
-                                client_id='${clientId}',
-                                ${domain ? `domain='${domain}'` : ''})`
-                : `consumer = Consumer(client_id='${clientId}',
+consumer = Consumer(client_id='${clientId}',
                                 client_secret='${clientSecret}'${
                                   domain
                                     ? `,
                                 domain='${domain}'`
                                     : ''
-                                })`
-            }
+                                })
             ${
               listTopics
                 ? `
@@ -152,16 +142,11 @@ export function ClientSampleCode({
             // Create a client.
             // Warning: don't share the client secret with others.
             const kafka = new Kafka({
-              client_id: '${clientId}', ${
-                tokenAuth
-                  ? `
-              scope: '${scope}'`
-                  : `
-              client_secret: '${clientSecret}'`
-              }${
+              client_id: '${clientId}',
+              client_secret: '${clientSecret}',${
                 domain
-                  ? `,
-              domain: '${domain}'`
+                  ? `
+                    domain: '${domain}',`
                   : ''
               }
             })
@@ -242,29 +227,24 @@ export function ClientSampleCode({
               // Create a client.
               // Warning: don't share the client secret with others.
               const kafka = new Kafka({
-                client_id: '${clientId}', ${
-                  tokenAuth
-                    ? `
-                scope: '${scope}'`
-                    : `
-                client_secret: '${clientSecret}'`
-                }${
+                client_id: '${clientId}',
+                client_secret: '${clientSecret}',${
                   domain
-                    ? `,
-                domain: '${domain}'`
+                    ? `
+                 domain: '${domain}',`
                     : ''
                 }
               })
-              ${
-                listTopics
-                  ? `
+            ${
+              listTopics
+                ? `
               // List topics
               const admin = kafka.admin()
               const topics = await admin.listTopics()
               console.log(topics)
               `
-                  : ''
-              }
+                : ''
+            }
               // Subscribe to topics and receive alerts
               const consumer = kafka.consumer()
               try {
