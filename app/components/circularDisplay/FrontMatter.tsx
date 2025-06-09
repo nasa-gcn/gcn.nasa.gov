@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Grid } from '@trussworks/react-uswds'
+import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
 
 import TimeAgo from '~/components/TimeAgo'
@@ -38,6 +39,7 @@ function FrontMatterItem({
 export function FrontMatter({
   subject,
   createdOn,
+  eventId,
   submitter,
   submittedHow,
   editedBy,
@@ -46,14 +48,24 @@ export function FrontMatter({
   Circular,
   | 'subject'
   | 'createdOn'
+  | 'eventId'
   | 'submitter'
   | 'submittedHow'
   | 'editedBy'
   | 'editedOn'
 >) {
+  const eventSlug = slug(eventId || '')
+  const eventIdLink = eventId ? (
+    <a href={`/circulars/events/${eventSlug}`}>{eventId}</a>
+  ) : (
+    ''
+  )
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
+      {eventId && (
+        <FrontMatterItem label="Event">{eventIdLink}</FrontMatterItem>
+      )}
       <FrontMatterItem label="Date">
         {formatDateISO(createdOn)}{' '}
         <small className="text-base-light">
