@@ -196,7 +196,7 @@ export async function action({ request }: ActionFunctionArgs) {
       break
 
     default:
-      throw new Response(null, { status: 405 })
+      throw new Error('this code should not be reached')
   }
 
   const [{ existingIdp, ...attrs }, groups] = await Promise.all([
