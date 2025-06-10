@@ -180,17 +180,14 @@ export async function deleteIfGroupIsEmpty(eventId: string) {
 }
 
 export async function manageSynonymVersionUpdates(
+  createdOn: number,
   newEventId?: string,
-  oldEventId?: string,
-  createdOn?: number
+  oldEventId?: string
 ) {
   if (newEventId === oldEventId) return
   if (newEventId) {
-    const oldestDate = await getOldestDate(newEventId)
-    const dateParam = oldestDate || createdOn
-    if (!dateParam) throw Error
-    const newSynonym = await tryInitSynonym(newEventId, dateParam)
-    if (!newSynonym) updateInitialDate(newEventId)
+    const newSynonymCreated = await tryInitSynonym(newEventId, createdOn)
+    if (!newSynonymCreated) updateInitialDate(newEventId)
   }
 
   if (oldEventId && oldEventId != newEventId) {

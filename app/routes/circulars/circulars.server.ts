@@ -422,9 +422,9 @@ export async function putVersion(
     await circularVersionsAutoIncrement.put(newCircularVersion)
 
   await manageSynonymVersionUpdates(
+    newCircularVersion.createdOn,
     newCircularVersion.eventId,
-    oldCircular.eventId,
-    newCircularVersion.createdOn
+    oldCircular.eventId
   )
 
   return newVersionNumber
@@ -630,11 +630,6 @@ export async function approveChangeRequest(
 
     View the Circular at ${origin}/circulars/${changeRequest.circularId}`,
     }),
-    manageSynonymVersionUpdates(
-      newVersion.eventId,
-      circular.eventId,
-      newVersion.createdOn
-    ),
   ]
 
   if (redistribute) promises.push(send(newVersion))
@@ -643,6 +638,12 @@ export async function approveChangeRequest(
     promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))
 
   await Promise.all(promises)
+
+  await manageSynonymVersionUpdates(
+    newVersion.createdOn,
+    newVersion.eventId,
+    circular.eventId
+  )
 }
 
 /**
