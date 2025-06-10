@@ -96,20 +96,27 @@ function maybeThrowSES(e: any, warning: string) {
  * If the circular body is over this size limit, the message will be truncated.
  * If the body is truncated, the circular website link will be removed.
  * A warning that the email has been truncated is added and the circular website link is added back in.
- * An additional buffer is allowed for for variation in url length and truncation warning.
+ * If truncated, the email body is aggressively truncated so there are over 60,000 bytes left for additonal
+ * escape characters added when converted to json.
  */
 export function truncateEmailBodyIfNecessary({
   body,
+  subject,
   circularId,
 }: {
   body: string
+  subject: string
   circularId?: number
 }) {
   const textBody = getBody(body)
+  const jsonTemplateData = JSON.stringify({
+    subject,
+    body: textBody,
+  })
 
-  if (Buffer.byteLength(textBody, 'utf-8') <= 262144) return textBody
+  if (Buffer.byteLength(jsonTemplateData, 'utf-8') <= 262144) return textBody
 
-  const truncatedBody = truncate(textBody, 261900)
+  const truncatedBody = truncate(textBody, 200000)
   const truncationWarning =
     circularId && origin
       ? `...\n\n\n This message has been truncated. The full text is available on the website.\n\n\nView this GCN Circular online at ${origin}/circulars/${
@@ -131,7 +138,7 @@ export async function sendEmailBulk({
   circularId,
 }: BulkMessageProps) {
   const s = await services()
-  const emailBody = truncateEmailBodyIfNecessary({ body, circularId })
+  const emailBody = truncateEmailBodyIfNecessary({ body, circularId, subject })
   const message: Omit<SendBulkEmailCommandInput, 'BulkEmailEntries'> = {
     FromEmailAddress: getFrom(fromName),
     ReplyToAddresses: replyTo,
