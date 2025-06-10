@@ -173,30 +173,30 @@ export async function deleteIfGroupIsEmpty(eventId: string) {
 
   if (circulars.length === 0) {
     await db.synonyms.delete({ eventId })
+    return true
+  } else {
+    return false
   }
 }
 
 export async function manageSynonymVersionUpdates(
-  newEventId: string,
+  newEventId?: string,
   oldEventId?: string,
   createdOn?: number
 ) {
   if (newEventId === oldEventId) return
-
-  const oldestDate = await getOldestDate(newEventId)
-  const dateParam = oldestDate ? oldestDate : createdOn
-  if (!dateParam) throw Error
-
-  const promises = []
   if (newEventId) {
-    promises.push(tryInitSynonym(newEventId, dateParam))
-  }
-  if (oldEventId && oldEventId != newEventId) {
-    promises.push(deleteIfGroupIsEmpty(oldEventId))
-    promises.push(updateInitialDate(oldEventId))
+    const oldestDate = await getOldestDate(newEventId)
+    const dateParam = oldestDate || createdOn
+    if (!dateParam) throw Error
+    const newSynonym = await tryInitSynonym(newEventId, dateParam)
+    if (!newSynonym) updateInitialDate(newEventId)
   }
 
-  await Promise.all(promises)
+  if (oldEventId && oldEventId != newEventId) {
+    const isDeleted = await deleteIfGroupIsEmpty(oldEventId)
+    if (!isDeleted) await updateInitialDate(oldEventId)
+  }
 }
 
 export async function updateInitialDate(eventId: string) {
@@ -220,7 +220,7 @@ export async function tryInitSynonym(eventId: string, createdOn: number) {
   const db = await tables()
 
   try {
-    await db.synonyms.update({
+    const synonym = await db.synonyms.update({
       Key: { eventId },
       UpdateExpression:
         'set #synonymId = :synonymId, #slug = :slug, #initialDate = :initialDate',
@@ -236,6 +236,8 @@ export async function tryInitSynonym(eventId: string, createdOn: number) {
       },
       ConditionExpression: 'attribute_not_exists(eventId)',
     })
+
+    return synonym
   } catch (error) {
     if ((error as Error).name !== 'ConditionalCheckFailedException') throw error
   }
