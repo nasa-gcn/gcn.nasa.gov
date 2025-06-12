@@ -247,11 +247,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Browse Circulars by Event, Advanced Search, Sample Codes, Schema
-          Release. See{' '}
+          New! CHIME FRB Notices. See{' '}
           <Link
             className="usa-link"
-            to="/news#browse-circulars-by-event-advanced-search-sample-codes-schema-release"
+            to="/news#new-chime-fast-radio-burst-notices"
           >
             news and announcements
           </Link>
