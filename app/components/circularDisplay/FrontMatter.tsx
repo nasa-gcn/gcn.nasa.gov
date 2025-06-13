@@ -8,6 +8,7 @@
 import { Grid } from '@trussworks/react-uswds'
 import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
+import { Link } from 'react-router-dom'
 
 import TimeAgo from '~/components/TimeAgo'
 import { type Circular, formatDateISO } from '~/routes/circulars/circulars.lib'
@@ -58,7 +59,9 @@ export function FrontMatter({
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
       {eventId && (
-        <FrontMatterItem label="Event"><Link to={`/circulars/events/${slug(eventId)}`}>{eventId}</Link></FrontMatterItem>
+        <FrontMatterItem label="Event">
+          <Link to={`/circulars/events/${slug(eventId)}`}>{eventId}</Link>
+        </FrontMatterItem>
       )}
       <FrontMatterItem label="Date">
         {formatDateISO(createdOn)}{' '}
