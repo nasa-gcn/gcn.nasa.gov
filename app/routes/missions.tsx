@@ -27,11 +27,9 @@ export default function () {
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
-              useFeature('CHIME') && (
-                <NavLink key="chime" to="chime">
-                  CHIME
-                </NavLink>
-              ),
+              <NavLink key="chime" to="chime">
+                CHIME
+              </NavLink>,
               <NavLink key="einstein-probe" to="einstein-probe">
                 Einstein Probe
               </NavLink>,
