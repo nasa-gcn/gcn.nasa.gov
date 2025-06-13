@@ -248,7 +248,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <Header />
         <NewsBanner>
           New! CHIME FRB Notices. See{' '}
-          <Link className="usa-link" to="/news#new-chime-frb-notices">
+          <Link
+            className="usa-link"
+            to="/news#new-chime-fast-radio-burst-notices"
+          >
             news and announcements
           </Link>
         </NewsBanner>
