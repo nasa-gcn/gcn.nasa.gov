@@ -67,6 +67,7 @@ export const JsonNoticeTypes: { [key: string]: string[] } = {
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
   'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
+  CHIME: ['gcn.notices.chime.frb'],
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
@@ -76,6 +77,7 @@ const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   Swift: '/missions/swift',
   'Einstein Probe': '/missions/einstein-probe',
+  CHIME: '/missions/chime',
 }
 
 interface NoticeTypeCheckboxProps {
@@ -121,11 +123,6 @@ export function NoticeTypeCheckboxes({
       'gcn.notices.superk.sn_alert.test',
     ]
     JsonNoticeTypeLinks['Super Kamiokande'] = '/missions/sksn'
-  }
-
-  if (useFeature('CHIME')) {
-    JsonNoticeTypes.Chime = ['gcn.notices.chime.alert']
-    JsonNoticeTypeLinks.Chime = '/missions/chime'
   }
 
   if (useFeature('KM3NET')) {
