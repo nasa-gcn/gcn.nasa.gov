@@ -54,17 +54,11 @@ export function FrontMatter({
   | 'editedBy'
   | 'editedOn'
 >) {
-  const eventSlug = slug(eventId || '')
-  const eventIdLink = eventId ? (
-    <a href={`/circulars/events/${eventSlug}`}>{eventId}</a>
-  ) : (
-    ''
-  )
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
       {eventId && (
-        <FrontMatterItem label="Event">{eventIdLink}</FrontMatterItem>
+        <FrontMatterItem label="Event"><Link to={`/circulars/events/${slug(eventId)}`}>{eventId}</Link></FrontMatterItem>
       )}
       <FrontMatterItem label="Date">
         {formatDateISO(createdOn)}{' '}
