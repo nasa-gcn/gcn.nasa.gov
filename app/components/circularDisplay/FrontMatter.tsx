@@ -8,7 +8,7 @@
 import { Grid } from '@trussworks/react-uswds'
 import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from '@remix-run/react'
 
 import TimeAgo from '~/components/TimeAgo'
 import { type Circular, formatDateISO } from '~/routes/circulars/circulars.lib'
