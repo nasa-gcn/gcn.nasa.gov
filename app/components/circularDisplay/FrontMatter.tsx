@@ -5,10 +5,10 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { Link } from '@remix-run/react'
 import { Grid } from '@trussworks/react-uswds'
 import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
-import { Link } from '@remix-run/react'
 
 import TimeAgo from '~/components/TimeAgo'
 import { type Circular, formatDateISO } from '~/routes/circulars/circulars.lib'
