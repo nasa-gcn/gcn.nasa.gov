@@ -7,11 +7,14 @@
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { Link, redirect, useLoaderData } from '@remix-run/react'
 
+import { getUser, loadTokens } from './_auth/user.server'
 import { ClientCredentialVendingMachine } from './user.credentials/client_credentials.server'
 import CredentialCard from '~/components/CredentialCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
+import { tokenCreationCallback } from '~/components/NewCredentialForm'
+import RefreshTokenCard from '~/components/RefreshTokenCard'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 
@@ -20,7 +23,18 @@ export const handle: SEOHandle = { getSitemapEntries: () => null }
 export async function loader({ request }: LoaderFunctionArgs) {
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
-  return { client_credentials }
+
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+
+  const parsedUrl = new URL(request.url)
+  if (parsedUrl.searchParams.get('code')) {
+    await tokenCreationCallback(request, parsedUrl, user.sub)
+    // Redirect back to ensure the code and state values do not cause issues
+    return redirect('/user/credentials')
+  }
+  const tokens = await loadTokens(user.sub)
+  return { client_credentials, tokens }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -44,7 +58,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function () {
-  const { client_credentials } = useLoaderData<typeof loader>()
+  const { client_credentials, tokens } = useLoaderData<typeof loader>()
 
   return (
     <>
@@ -65,6 +79,11 @@ export default function () {
         </Link>
         .
       </p>
+      <SegmentedCards>
+        {tokens.map((token) => (
+          <RefreshTokenCard key={token.uuid} token={token} />
+        ))}
+      </SegmentedCards>
       <SegmentedCards>
         {client_credentials.map((credential) => (
           <CredentialCard key={credential.client_id} {...credential} />
