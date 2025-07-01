@@ -167,19 +167,23 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   return uuid
 }
 
-export async function deleteIfGroupIsEmpty(eventId: string) {
-  const db = await tables()
-  const circulars = await getSynonymMembers(eventId)
-
-  if (circulars.length === 0) {
-    await db.synonyms.delete({ eventId })
-    return true
-  } else {
-    return false
-  }
-}
-
-export async function manageSynonymVersionUpdates(
+/**
+ * Manages Synonyms upon Circular version update
+ *
+ * If there is a newEventId:
+ *   - It attempts to create a new synonym for it. If one is not created that is because
+ *     one already exists for that eventId.
+ *   - If a new synonym was not created, it updates the initialDate on the existing synonym.
+ *
+ * If there is an oldEventId:
+ *   - It deletes the old eventId synonym if it's empty.
+ *   - If it's not empty, it updates the initialDate on the remaining synonym.
+ *
+ * @param createdOn - the Circular createdOn timestamp
+ * @param newEventId - the updated eventId
+ * @param oldEventId - the original eventId
+ */
+export async function manageSynonymOnVersionUpdates(
   createdOn: number,
   newEventId?: string,
   oldEventId?: string
@@ -190,7 +194,7 @@ export async function manageSynonymVersionUpdates(
     if (!newSynonymCreated) updateInitialDate(newEventId)
   }
 
-  if (oldEventId && oldEventId != newEventId) {
+  if (oldEventId) {
     const isDeleted = await deleteIfGroupIsEmpty(oldEventId)
     if (!isDeleted) await updateInitialDate(oldEventId)
   }
@@ -211,6 +215,18 @@ export async function updateInitialDate(eventId: string) {
       ':initialDate': oldestDate,
     },
   })
+}
+
+export async function deleteIfGroupIsEmpty(eventId: string) {
+  const db = await tables()
+  const circulars = await getSynonymMembers(eventId)
+
+  if (circulars.length === 0) {
+    await db.synonyms.delete({ eventId })
+    return true
+  } else {
+    return false
+  }
 }
 
 export async function tryInitSynonym(eventId: string, createdOn: number) {
