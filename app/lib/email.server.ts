@@ -94,12 +94,8 @@ function maybeThrowSES(e: any, warning: string) {
 /**
  * Amazon SES has a byte limit of 262144 for TemplateData arguments.
  * If the circular body is over this size limit, the message will be truncated.
- * If the body is truncated, the circular website link will be removed.
- * A warning that the email has been truncated is added and the circular website link is added back in.
- * If truncated, the email body is aggressively truncated so there are over 60,000 bytes left for additonal
- * escape characters added when converted to json.
  */
-export function truncateEmailBodyIfNecessary({
+function getTemplateData({
   body,
   subject,
   circularId,
@@ -109,22 +105,70 @@ export function truncateEmailBodyIfNecessary({
   circularId?: number
 }) {
   const textBody = getBody(body)
-  const jsonTemplateData = JSON.stringify({
+  const templateData = {
     subject,
     body: textBody,
-  })
+  }
+  const jsonTemplateData = JSON.stringify(templateData)
+  const awsSESByteLimit = 262144
 
-  if (Buffer.byteLength(jsonTemplateData, 'utf-8') <= 262144) return textBody
+  if (Buffer.byteLength(jsonTemplateData, 'utf-8') <= awsSESByteLimit)
+    return templateData
 
-  const truncatedBody = truncate(textBody, 200000)
-  const truncationWarning =
-    circularId && origin
-      ? `...\n\n\n This message has been truncated. The full text is available on the website.\n\n\nView this GCN Circular online at ${origin}/circulars/${
-          circularId
-        }.`
-      : '...\n\n\n This message has been truncated. The full text is available on the website.'
+  return resizeTemplateData({ templateData, circularId })
+}
 
-  return truncatedBody + truncationWarning
+/**
+ * Resizes bulk email TemplateData so that it is below the Amazon SES has a byte limit of 262144.
+ *
+ * @param templateData
+ *   @param body - main content of the Circular
+ *   @param subject - the title/subject line of the Circular
+ * @param circularId - the circularId for the circular being resized in email.
+ */
+function resizeTemplateData({
+  templateData,
+  circularId,
+}: {
+  templateData: {
+    body: string
+    subject: string
+  }
+  circularId?: number
+}) {
+  const subjectByteLimit = 200
+  const bodyByteLimit = 200000
+  let adjustedBodyByteLimit = bodyByteLimit
+  let resizedSubject = templateData.subject
+
+  if (Buffer.byteLength(templateData.subject, 'utf-8') >= subjectByteLimit) {
+    resizedSubject = truncate(templateData.subject, subjectByteLimit) + '...'
+  }
+
+  const resizedTemplateData = {
+    subject: resizedSubject,
+    body: templateData.body,
+  }
+
+  const truncationWarning = circularId
+    ? `...\n\n\n This message has been truncated. The full text is available on the website.\n\n\nView this GCN Circular online at ${origin}/circulars/${
+        circularId
+      }.`
+    : '...\n\n\n This message has been truncated. The full text is available on the website.'
+
+  while (
+    Buffer.byteLength(JSON.stringify(resizedTemplateData), 'utf-8') >=
+    bodyByteLimit
+  ) {
+    const limitedBody = truncate(
+      resizedTemplateData.body,
+      adjustedBodyByteLimit
+    )
+    resizedTemplateData.body = limitedBody + truncationWarning
+    adjustedBodyByteLimit = adjustedBodyByteLimit - 10000
+  }
+
+  return resizedTemplateData
 }
 
 /** Send an email to many recipients in parallel. */
@@ -138,16 +182,14 @@ export async function sendEmailBulk({
   circularId,
 }: BulkMessageProps) {
   const s = await services()
-  const emailBody = truncateEmailBodyIfNecessary({ body, circularId, subject })
   const message: Omit<SendBulkEmailCommandInput, 'BulkEmailEntries'> = {
     FromEmailAddress: getFrom(fromName),
     ReplyToAddresses: replyTo,
     DefaultContent: {
       Template: {
-        TemplateData: JSON.stringify({
-          subject,
-          body: emailBody,
-        }),
+        TemplateData: JSON.stringify(
+          getTemplateData({ body, circularId, subject })
+        ),
         TemplateName: s.email_outgoing?.template,
       },
     },
