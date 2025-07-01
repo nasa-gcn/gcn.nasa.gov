@@ -119,7 +119,7 @@ function getTemplateData({
 }
 
 /**
- * Resizes bulk email TemplateData so that it is below the Amazon SES has a byte limit of 262144.
+ * Resizes bulk email TemplateData so that it is below the Amazon SES byte limit of 262144.
  *
  * @param templateData
  *   @param body - main content of the Circular
