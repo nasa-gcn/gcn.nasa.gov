@@ -20,9 +20,11 @@ import {
   DeleteGroupCommand,
   GetGroupCommand,
   ListUsersCommand,
+  RevokeTokenCommand,
   UpdateGroupCommand,
   paginateAdminListGroupsForUser,
   paginateListGroups,
+  paginateListUserPoolClients,
   paginateListUsers,
   paginateListUsersInGroup,
 } from '@aws-sdk/client-cognito-identity-provider'
@@ -257,4 +259,38 @@ export async function removeUserFromGroup(sub: string, GroupName: string) {
     GroupName,
   })
   await cognito.send(command)
+}
+
+export async function getPublicClientId() {
+  let clientId
+  try {
+    const clientPages = paginateListUserPoolClients(
+      { client: cognito },
+      { UserPoolId }
+    )
+
+    const clients = []
+
+    for await (const page of clientPages) {
+      const nextClients = page.UserPoolClients
+      if (nextClients) clients.push(...nextClients)
+    }
+    clientId = clients.find(
+      (x) => x.ClientName == 'Public Kafka Client'
+    )?.ClientId
+  } catch (error) {
+    maybeThrowCognito(error, 'returning fake-clientId')
+    clientId = 'fake-clientId'
+  }
+
+  return clientId
+}
+
+export async function revokeRefreshToken(Token: string) {
+  await cognito.send(
+    new RevokeTokenCommand({
+      Token,
+      ClientId: await getPublicClientId(),
+    })
+  )
 }
