@@ -30,6 +30,7 @@ import {
   formatCircularText,
   formatIsValid,
   parseEventFromSubject,
+  resolveEventId,
   subjectIsValid,
 } from './circulars.lib'
 import type {
@@ -312,10 +313,7 @@ export async function putRaw(
  */
 export async function put(
   item: Require<
-    Omit<
-      Circular,
-      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId'
-    >,
+    Omit<Circular, 'sub' | 'submitter' | 'createdOn' | 'circularId'>,
     'submittedHow'
   >,
   user?: User
@@ -333,7 +331,9 @@ export async function put(
     ...item,
   }
 
-  const eventId = parseEventFromSubject(item.subject)
+  const eventId = item.eventId
+    ? item.eventId
+    : parseEventFromSubject(item.subject)
   if (eventId) circular.eventId = eventId
   const result = await putRaw(circular)
   if (eventId) await tryInitSynonym(eventId, result.createdOn)
@@ -408,6 +408,7 @@ export async function getVersions(circularId: number): Promise<number[]> {
  * @param circularId
  * @param body
  * @param subject
+ * @param eventId
  * @param request
  */
 export async function createChangeRequest(
@@ -421,7 +422,12 @@ export async function createChangeRequest(
     | 'editedOn'
     | 'submitter'
     | 'createdOn'
-  > & { submitter?: string; createdOn?: number; zendeskTicketId: number },
+  > & {
+    submitter?: string
+    createdOn?: number
+    eventId?: string
+    zendeskTicketId: number
+  },
   user?: User
 ) {
   validateCircular(item)
@@ -434,11 +440,14 @@ export async function createChangeRequest(
   const circular = (await db.circulars.get({
     circularId: item.circularId,
   })) as Circular
+  const eventId = resolveEventId(circular, item)
+
   await db.circulars_change_requests.put({
     ...item,
     requestorSub: user.sub,
     requestorEmail: user.email,
     requestor,
+    eventId,
     createdOn: item.createdOn ?? circular.createdOn,
     submitter: item.submitter ?? circular.submitter,
   })
