@@ -5,6 +5,7 @@ import rehypeCitation from 'rehype-citation'
 import rehypeClassNames from 'rehype-class-names'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeMermaid from 'rehype-mermaid'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 
@@ -59,6 +60,7 @@ const neverBundledModules = [
 export default {
   mdx: {
     rehypePlugins: [
+      rehypeMermaid,
       (options) => rehypeHighlight({ ...common, properties }),
       rehypeSlug,
       (options) =>
