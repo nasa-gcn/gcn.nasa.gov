@@ -283,7 +283,6 @@ export function CircularEditForm({
             >
               <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
               <TextInput
-                autoFocus
                 className="maxw-full"
                 name="eventId"
                 id="eventId"
