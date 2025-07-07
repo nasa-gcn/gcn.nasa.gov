@@ -223,6 +223,9 @@ export default function () {
                     <NavLink key="admin" to="internal/admin">
                       Administration
                     </NavLink>,
+                    <NavLink key="auth" to="internal/auth">
+                      Auth
+                    </NavLink>,
                     <NavLink key="email" to="internal/email">
                       Email Data Flow
                     </NavLink>,
