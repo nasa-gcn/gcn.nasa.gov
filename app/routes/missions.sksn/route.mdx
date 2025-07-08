@@ -3,8 +3,11 @@ handle:
   breadcrumb: Super-Kamiokande
 ---
 
+import { useFeature } from '~/root'
+
 import logo from './logo.svg'
 
+<WithFeature SK_JSON>
 # Super-Kamioka Neutrino Detection Experiment (Super-Kamiokande)
 
 <img
@@ -32,15 +35,15 @@ import logo from './logo.svg'
 | ------- | ---------------------------- | ----------- |
 | `SK_SN` | REAL or TEST supernova alert | &leq;1 hour |
 
-**GCN Notice Types in GCN Over Kafka**
+**GCN Notice Types in GCN Kafka**
 
-The notice published in GCN Over Kafka is largely compatible with those in GCN Classic and GCN Classic Over Kafka. However, it includes some additional information: the number of detected inverse beta decay (IBD) events, the analysis pipeline used (`snwatch` or `wit`), and the type of processed sample (`full` or `partial`) used for event detection.
+The information included in the notice published in GCN Kafka are largely overlapping with those in GCN Classic and GCN Classic over Kafka. However, some additional information are also included: the number of detected inverse beta decay (IBD) events, the analysis pipeline used (snwatchorwit), and the type of processed sample (fullorpartial) used for event detection.
 
-The alert latency in GCN Over Kafka is slightly shorter than that in GCN Classic. 
+The alert latency in GCN Kafka is slightly shorter than that in GCN Classic.
 
-Special variables for this supernova alert:
+Super-Kamiokande specific variables:
 
-- `alert_datetime`:  The date and time of the first neutrino detection in the burst of detected neutrino events. 
+- `alert_datetime`: The date and time of the first neutrino detection in the burst of detected neutrino events.
 
 - `detection_interval`: The time interval between the first and last neutrino events [s].
 
@@ -62,15 +65,15 @@ Special variables for this supernova alert:
 
 - `ra_dec_error` : The statistical uncertainty of the location [deg]. Its containmaint probalitiy is given as `containment_probability` (default: 0.68).
 
-- `trigger_number`: Event ID used in GCN Classic. 
+- `trigger_number`: Event ID used in GCN Classic.
 
  <div className="overflow-table">
 
-| Kafka topic                        | Comments                                                            |
-| ---------------------------------- | ------------------------------------------------------------------- |
-| `gcn.notice.superk.sn_alert.real`  | For a real supernova alert                                          |
-| `gcn.notice.superk.sn_alert.test`  | For a test alert (generate once per month)                          |
-
+| Kafka topic                       | Comments                                   |
+| --------------------------------- | ------------------------------------------ |
+| `gcn.notice.superk.sn_alert.real` | For a real supernova alert                 |
+| `gcn.notice.superk.sn_alert.test` | For a test alert (generate once per month) |
 
  </div>
 
+</WithFeature>
