@@ -84,7 +84,7 @@
     "usehooks-ts": "^3.0.2"
   },
   "devDependencies": {
-    "@architect/architect": "^11.2.2",
+    "@architect/architect": "^11.3.0",
     "@architect/plugin-lambda-invoker": "^2.0.2",
     "@architect/utils": "^4.0.6",
     "@aws-sdk/client-cognito-identity-provider": "3.632.0",
@@ -156,8 +156,7 @@
   },
   "overrides": {
     "@architect/deploy": "github:DocLM/deploy#d3116f41d5fda00337ebfda543a69d3b3d4546be",
-    "@architect/inventory": "github:lpsinger/inventory#allow-set-env-plugin-to-return-empty-object",
-    "@architect/sandbox": "github:architect/sandbox"
+    "@architect/inventory": "github:lpsinger/inventory#allow-set-env-plugin-to-return-empty-object"
   },
   "engines": {
     "node": ">=22"
