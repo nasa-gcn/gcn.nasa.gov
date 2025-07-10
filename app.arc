@@ -13,6 +13,13 @@ circulars
 support
   src build/email-incoming/support
 
+@cloudtrail-bridge
+app_clients
+  src build/cloudtrail-bridge/app-clients
+  source aws.cognito-idp
+  detailType 'AWS Service Event via CloudTrail'
+  eventName Token_POST
+
 @scheduled
 ads
   cron 0 8 ? * MON *
@@ -147,6 +154,10 @@ synonyms
   slug *String
   name synonymsBySlug
 
+client_credentials
+  client_id *String
+  name credentialsByClientId
+
 @aws
 runtime nodejs22.x
 region us-east-1
@@ -178,3 +189,4 @@ email-outgoing  # Grant the Lambda function permission to send email; add email 
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-dynamodb-local
+cloudtrail-bridge # Enable sending CloudTrail Events to lambdas

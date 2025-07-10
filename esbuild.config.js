@@ -7,7 +7,7 @@ import { basename, dirname, join } from 'path'
 const args = process.argv.slice(2)
 const dev = args.includes('--dev')
 const entryPoints = await glob(
-  './app/{email-incoming,scheduled,table-streams}/*/index.ts'
+  './app/{cloudtrail-bridge,email-incoming,scheduled,table-streams}/*/index.ts'
 )
 
 /**
