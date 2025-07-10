@@ -27,6 +27,7 @@ export default function CredentialCard({
   client_id,
   created,
   scope,
+  lastAccessed,
 }: RedactedClientCredential) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
@@ -53,6 +54,12 @@ export default function CredentialCard({
           <div>
             <small>
               client ID: <code>{client_id}</code>
+            </small>
+          </div>
+          <div>
+            <small>
+              Last Accessed:{' '}
+              {lastAccessed ? <TimeAgo time={lastAccessed} /> : 'Never'}
             </small>
           </div>
         </div>

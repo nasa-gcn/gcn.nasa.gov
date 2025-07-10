@@ -22,6 +22,7 @@ export interface RedactedClientCredential {
   client_id: string
   scope: string
   created: number
+  lastAccessed?: number
 }
 
 export interface ClientCredential extends RedactedClientCredential {
@@ -68,7 +69,7 @@ export class ClientCredentialVendingMachine {
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression: 'client_id, #name, #scope, created',
+      ProjectionExpression: 'client_id, #name, #scope, created, lastAccessed',
     })
     const credentials = results.Items as RedactedClientCredential[]
     credentials.sort((a, b) => a.created - b.created)
@@ -136,6 +137,7 @@ export class ClientCredentialVendingMachine {
       client_id,
       scope,
       sub: this.#sub,
+      lastAccessed: Date.now(),
     })
 
     return { name, created, client_id, client_secret, scope }

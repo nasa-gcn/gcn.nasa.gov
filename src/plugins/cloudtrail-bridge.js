@@ -5,31 +5,56 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { toLogicalID } from '@architect/utils'
+
+function getLambdaName(key) {
+  return `${key}-cloudtrail-bridge`
+}
+
+export const set = {
+  events({ arc: { 'cloudtrail-bridge': cloudtrailBridge } }) {
+    return cloudtrailBridge.map((item) => {
+      const [[key, { src }]] = Object.entries(item)
+      return {
+        name: getLambdaName(key),
+        src,
+      }
+    })
+  },
+}
 
 export const deploy = {
-  start({ cloudformation, arc }) {
-    cloudformation.Resources.CloudTrailEventRule = {
-      Type: 'AWS::Events::Rule',
-      Properties: {
-        Name: 'CloudtrailEventRule',
-        EventPattern: {
-          source: ['aws.cognito-idp'],
-          'detail-type': ['AWS Service Event via CloudTrail'],
-          detail: {
-            eventName: ['Token_POST'],
+  start({ cloudformation, arc: { 'cloudtrail-bridge': cloudtrailBridge } }) {
+    cloudtrailBridge.forEach((item) => {
+      const [key] = Object.keys(item)
+      const logicalID = toLogicalID(getLambdaName(key))
+
+      cloudformation.Resources[`${logicalID}EventRule`] = {
+        Type: 'AWS::Events::Rule',
+        Properties: {
+          EventPattern: {
+            source: [item[key].source],
+            'detail-type': item[key].detailType
+              ? [item[key].detailType]
+              : undefined,
+            detail: item[key].eventName
+              ? {
+                  eventName: [item[key].eventName],
+                }
+              : undefined,
           },
-        },
-        State: 'ENABLED',
-        EventBusName: 'default',
-        Targets: [
-          {
-            Id: 'CloudTrailEventTarget',
-            Arn: {
-              'Fn::Sub': `arn:\${AWS::Partition}:lambda:\${AWS::Region}:\${AWS::AccountId}:function:{function name}`,
+          State: 'ENABLED',
+          EventBusName: 'default',
+          Targets: [
+            {
+              Id: `${logicalID}EventTarget`,
+              Arn: {
+                Ref: `${logicalID}EventLambda`,
+              },
             },
-          },
-        ],
-      },
-    }
+          ],
+        },
+      }
+    })
   },
 }
