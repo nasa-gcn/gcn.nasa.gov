@@ -16,25 +16,19 @@
  * by pushing command + shift + P and typing `Format Document`.
  */
 import * as fs from 'fs'
+import { appendFile } from 'node:fs/promises'
 import * as path from 'path'
 
 import { parseEventFromSubject } from '~/routes/circulars/circulars.lib'
 
-interface UpdateData {
-  circularId: number
-  eventId: string
-  oldEventId: string
-}
-
-function processFiles() {
+async function processFiles() {
   const folderPath = './app/archive.json'
-  const results = [] as UpdateData[]
   fs.readdir(folderPath, (err, files) => {
     if (err) {
       console.error('Error reading directory:', err)
       return
     }
-    files.forEach((file) => {
+    files.forEach(async (file) => {
       const filePath = path.join(folderPath, file)
       const fileContent = fs.readFileSync(filePath, 'utf-8')
 
@@ -44,21 +38,11 @@ function processFiles() {
       if (eventId && eventId != previousEventId) {
         // if it already has a GRB eventId, don't worry about updating it
         if (!previousEventId || previousEventId.split(' ')[0] != 'GRB') {
-          results.push({
-            circularId: circular.circularId,
-            eventId,
-            oldEventId: previousEventId,
-          })
+          await appendFile(
+            './event_id_updates.csv',
+            `${circular.circularId},${eventId},${previousEventId}\n`
+          )
         }
-      }
-    })
-    const updates = { updates: results }
-
-    fs.writeFile('./event_id_updates.json', JSON.stringify(updates), (err) => {
-      if (err) {
-        console.log('Error writing file:', err)
-      } else {
-        console.log('Successfully wrote file')
       }
     })
   })
