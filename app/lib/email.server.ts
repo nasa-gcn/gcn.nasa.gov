@@ -105,49 +105,18 @@ function getTemplateData({
   circularId?: number
 }) {
   const textBody = getBody(body)
-  const templateData = {
-    subject,
-    body: textBody,
-  }
-  const jsonTemplateData = JSON.stringify(templateData)
-  const awsSESByteLimit = 262144
-
-  if (Buffer.byteLength(jsonTemplateData, 'utf-8') <= awsSESByteLimit)
-    return templateData
-
-  return resizeTemplateData({ templateData, circularId })
-}
-
-/**
- * Resizes bulk email TemplateData so that it is below the Amazon SES byte limit of 262144.
- *
- * @param templateData
- *   @param body - main content of the Circular
- *   @param subject - the title/subject line of the Circular
- * @param circularId - the circularId for the circular being resized in email.
- */
-function resizeTemplateData({
-  templateData,
-  circularId,
-}: {
-  templateData: {
-    body: string
-    subject: string
-  }
-  circularId?: number
-}) {
   const subjectByteLimit = 200
   const bodyByteLimit = 200000
   let adjustedBodyByteLimit = bodyByteLimit
-  let resizedSubject = templateData.subject
+  let resizedSubject = subject
 
-  if (Buffer.byteLength(templateData.subject, 'utf-8') >= subjectByteLimit) {
-    resizedSubject = truncate(templateData.subject, subjectByteLimit) + '...'
+  if (Buffer.byteLength(subject, 'utf-8') >= subjectByteLimit) {
+    resizedSubject = truncate(subject, subjectByteLimit) + '...'
   }
 
   const resizedTemplateData = {
     subject: resizedSubject,
-    body: templateData.body,
+    body: textBody,
   }
 
   const truncationWarning = circularId
