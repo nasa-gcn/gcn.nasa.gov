@@ -18,8 +18,9 @@ import {
   SendEmailCommand,
 } from '@aws-sdk/client-sesv2'
 import chunk from 'lodash/chunk'
+import truncate from 'truncate-utf8-bytes'
 
-import { hostname } from './env.server'
+import { hostname, origin } from './env.server'
 import { getEnvBannerHeaderAndDescription, maybeThrow } from './utils'
 import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
 
@@ -43,6 +44,7 @@ interface MessageProps {
 interface BulkMessageProps extends MessageProps {
   /** The topic key (for unsubscribing). */
   topic: string
+  circularId?: number
 }
 
 function getBody(body: string) {
@@ -89,6 +91,55 @@ function maybeThrowSES(e: any, warning: string) {
   ])
 }
 
+/**
+ * Amazon SES has a byte limit of 262144 for TemplateData arguments.
+ * If the circular body is over this size limit, the message will be truncated.
+ */
+function getTemplateData({
+  body,
+  subject,
+  circularId,
+}: {
+  body: string
+  subject: string
+  circularId?: number
+}) {
+  const textBody = getBody(body)
+  const subjectByteLimit = 200
+  const bodyByteLimit = 200000
+  let adjustedBodyByteLimit = bodyByteLimit
+  let resizedSubject = subject
+
+  if (Buffer.byteLength(subject, 'utf-8') >= subjectByteLimit) {
+    resizedSubject = truncate(subject, subjectByteLimit) + '...'
+  }
+
+  const resizedTemplateData = {
+    subject: resizedSubject,
+    body: textBody,
+  }
+
+  const truncationWarning = circularId
+    ? `...\n\n\n This message has been truncated. The full text is available on the website.\n\n\nView this GCN Circular online at ${origin}/circulars/${
+        circularId
+      }.`
+    : '...\n\n\n This message has been truncated. The full text is available on the website.'
+
+  while (
+    Buffer.byteLength(JSON.stringify(resizedTemplateData), 'utf-8') >=
+    bodyByteLimit
+  ) {
+    const limitedBody = truncate(
+      resizedTemplateData.body,
+      adjustedBodyByteLimit
+    )
+    resizedTemplateData.body = limitedBody + truncationWarning
+    adjustedBodyByteLimit = adjustedBodyByteLimit - 10000
+  }
+
+  return resizedTemplateData
+}
+
 /** Send an email to many recipients in parallel. */
 export async function sendEmailBulk({
   to,
@@ -97,6 +148,7 @@ export async function sendEmailBulk({
   subject,
   body,
   topic,
+  circularId,
 }: BulkMessageProps) {
   const s = await services()
   const message: Omit<SendBulkEmailCommandInput, 'BulkEmailEntries'> = {
@@ -104,10 +156,9 @@ export async function sendEmailBulk({
     ReplyToAddresses: replyTo,
     DefaultContent: {
       Template: {
-        TemplateData: JSON.stringify({
-          subject,
-          body: getBody(body),
-        }),
+        TemplateData: JSON.stringify(
+          getTemplateData({ body, circularId, subject })
+        ),
         TemplateName: s.email_outgoing?.template,
       },
     },
