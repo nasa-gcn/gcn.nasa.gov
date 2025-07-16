@@ -8,12 +8,12 @@
 import { toLogicalID } from '@architect/utils'
 
 function getLambdaName(key) {
-  return `${key}-cloudtrail-bridge`
+  return `${key}-eventbridge`
 }
 
 export const set = {
-  events({ arc: { 'cloudtrail-bridge': cloudtrailBridge } }) {
-    return cloudtrailBridge.map((item) => {
+  events({ arc: { eventbridge } }) {
+    return eventbridge.map((item) => {
       const [[key, { src }]] = Object.entries(item)
       return {
         name: getLambdaName(key),
@@ -24,8 +24,8 @@ export const set = {
 }
 
 export const deploy = {
-  start({ cloudformation, arc: { 'cloudtrail-bridge': cloudtrailBridge } }) {
-    cloudtrailBridge.forEach((item) => {
+  start({ cloudformation, arc: { eventbridge } }) {
+    eventbridge.forEach((item) => {
       const [key] = Object.keys(item)
       const logicalID = toLogicalID(getLambdaName(key))
 

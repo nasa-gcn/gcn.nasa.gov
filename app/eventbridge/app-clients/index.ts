@@ -65,8 +65,6 @@ export async function handler(
   event: EventBridgeEvent<'AWS Service Event via CloudTrail', EventDetail>
 ) {
   const db = await tables()
-  const eventName = event.detail.eventName
-  if (eventName !== 'Token_POST') return
   const client_id = event.detail.additionalEventData.clientId
   if (!client_id) throw new Error('client_id is not present')
   const { Items } = await db.client_credentials.query({
@@ -79,12 +77,12 @@ export async function handler(
   const credential = Items[0]
   await db.client_credentials.update({
     Key: { sub: credential.sub, client_id },
-    UpdateExpression: 'set #lastAccessed = :lastAccessed',
+    UpdateExpression: 'set #lastUsed = :lastUsed',
     ExpressionAttributeNames: {
-      '#lastAccessed': 'lastAccessed',
+      '#lastUsed': 'lastUsed',
     },
     ExpressionAttributeValues: {
-      ':lastAccessed': event.detail.eventTime,
+      ':lastUsed': event.detail.eventTime,
     },
   })
 }
