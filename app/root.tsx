@@ -165,8 +165,7 @@ export function useSubmitterStatus() {
 }
 
 export function useAdminStatus() {
-  const { userIsAdmin } = useLoaderDataRoot()
-  return userIsAdmin
+  return useLoaderDataRoot()?.userIsAdmin
 }
 
 export function useRecaptchaSiteKey() {

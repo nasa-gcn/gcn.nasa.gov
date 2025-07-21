@@ -7,21 +7,24 @@
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
-import { Button, Label, Table, TextInput } from '@trussworks/react-uswds'
+import type { ModalRef } from '@trussworks/react-uswds'
+import {
+  Button,
+  Icon,
+  Modal,
+  ModalFooter,
+  ModalHeading,
+  ModalToggleButton,
+  Table,
+} from '@trussworks/react-uswds'
 import { groupBy, sortBy } from 'lodash'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { getUser } from './_auth/user.server'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
-import TimeAgo from '~/components/TimeAgo'
 import type { KafkaACL } from '~/lib/kafka.server'
-import {
-  adminGroup,
-  getKafkaACLsFromDynamoDB,
-  getLastSyncDate,
-  updateDbFromBrokers,
-} from '~/lib/kafka.server'
+import { adminGroup, getAclsFromBrokers } from '~/lib/kafka.server'
 import { getFormDataString } from '~/lib/utils'
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -29,15 +32,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!user || !user.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
   const { aclFilter } = Object.fromEntries(new URL(request.url).searchParams)
-  const dynamoDbAclData = groupBy(
-    sortBy(await getKafkaACLsFromDynamoDB(user, aclFilter), [
-      'resourceName',
-      'principal',
-    ]),
+
+  const acls = await getAclsFromBrokers(user, aclFilter)
+
+  const aclData = groupBy(
+    sortBy(acls, ['resourceName', 'principal']),
     'resourceName'
   )
-  const latestSync = await getLastSyncDate()
-  return { dynamoDbAclData, latestSync }
+  const differentlySortedAclData = groupBy(
+    sortBy(acls, ['principal', 'resourceName']),
+    'principal'
+  )
+  return {
+    aclData,
+    differentlySortedAclData,
+  }
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -46,23 +55,20 @@ export async function action({ request }: ActionFunctionArgs) {
     throw new Response(null, { status: 403 })
   const data = await request.formData()
   const intent = getFormDataString(data, 'intent')
+  console.log(intent)
 
-  if (intent === 'migrateFromBroker') {
-    await updateDbFromBrokers(user)
-  }
   return null
 }
 
 export default function Index() {
-  const { dynamoDbAclData, latestSync } = useLoaderData<typeof loader>()
-  const [aclData, setAclData] = useState(dynamoDbAclData)
-  const updateFetcher = useFetcher<typeof action>()
+  const { aclData, differentlySortedAclData } = useLoaderData<typeof loader>()
+  const [acls, setAcls] = useState(aclData)
   const aclFetcher = useFetcher<typeof loader>()
   const brokerFromDbFetcher = useFetcher()
 
   useEffect(() => {
-    setAclData(aclFetcher.data?.dynamoDbAclData ?? aclData)
-  }, [aclFetcher.data, aclData])
+    setAcls(aclFetcher.data?.aclData ?? acls)
+  }, [aclFetcher.data, acls])
 
   return (
     <>
@@ -77,85 +83,93 @@ export default function Index() {
         data from topics, create or delete topics, manage consumer groups, and
         perform administrative tasks.
       </p>
-      <updateFetcher.Form method="POST" action="/admin/kafka">
-        <Button
-          type="submit"
-          name="intent"
-          value="migrateFromBroker"
-          disabled={
-            updateFetcher.state !== 'idle' ||
-            brokerFromDbFetcher.state !== 'idle'
-          }
-        >
-          Pull ACLs from Broker
-        </Button>
-        {updateFetcher.state !== 'idle' && (
-          <span className="text-middle">
-            <Spinner /> Updating...
-          </span>
-        )}
-      </updateFetcher.Form>
-      {latestSync ? (
-        <p>
-          Last synced by {latestSync.syncedBy}{' '}
-          <TimeAgo time={latestSync.syncedOn} />
-        </p>
-      ) : (
-        <br />
-      )}
       {brokerFromDbFetcher.state !== 'idle' && (
         <span className="text-middle">
           <Spinner /> Updating...
         </span>
       )}
-      {aclData && (
+      {differentlySortedAclData && (
         <>
-          <aclFetcher.Form method="GET">
-            <Label htmlFor="aclFilter">
-              Filter ({Object.keys(aclData).length} results)
-            </Label>
-            <TextInput id="aclFilter" name="aclFilter" type="text" />
-            <Button
-              type="submit"
-              className="margin-y-1"
-              disabled={aclFetcher.state !== 'idle'}
-            >
-              Search
-            </Button>
-            {aclFetcher.state !== 'idle' && (
-              <span className="text-middle">
-                <Spinner /> Loading...
-              </span>
-            )}
-          </aclFetcher.Form>
           <SegmentedCards>
-            {Object.keys(aclData)
+            {Object.keys(differentlySortedAclData)
               .sort((a, b) => a.localeCompare(b))
               .flatMap((key) => (
-                <span key={key}>
-                  <div className="position-sticky top-0 bg-white z-100 padding-y-2">
-                    <h3 className="margin-y-0">Resource: {key}</h3>
-                  </div>
-                  <Table>
-                    <thead>
-                      <tr>
-                        <th>Type</th>
-                        <th>Group</th>
-                        <th>Permission</th>
-                        <th>Operation</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {aclData[key].map((acl, index) => (
-                        <KafkaAclCard key={`${key}-${index}`} acl={acl} />
-                      ))}
-                    </tbody>
-                  </Table>
-                </span>
+                <UserAclTable
+                  key={key}
+                  aclKey={key}
+                  acls={differentlySortedAclData[key]}
+                />
               ))}
           </SegmentedCards>
         </>
       )}
+    </>
+  )
+}
+
+function UserAclTable({ aclKey, acls }: { aclKey: string; acls: KafkaACL[] }) {
+  const ref = useRef<ModalRef>(null)
+  const fetcher = useFetcher()
+  return (
+    <>
+      <span key={aclKey}>
+        <div className="position-sticky top-0 bg-white z-100 padding-y-2 display-flex">
+          <h3 className="padding-y-1 margin-y-0 margin-right-auto">
+            User Group: {aclKey.replace('User:', '')}{' '}
+            {aclKey.endsWith('.') ? '(Prefix)' : ''}
+          </h3>
+          <ModalToggleButton
+            opener
+            modalRef={ref}
+            type="button"
+            className="pull-right"
+            outline
+          >
+            <Icon.Add className="bottom-aligned margin-right-05" />
+            Add
+          </ModalToggleButton>
+        </div>
+        <Table fullWidth>
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Resource</th>
+              <th>Permission</th>
+              <th>Operation</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {acls.map((acl, index) => (
+              <KafkaAclCard key={`${aclKey}-${index}`} acl={acl} />
+            ))}
+          </tbody>
+        </Table>
+      </span>
+      <Modal
+        id="modal-add"
+        ref={ref}
+        aria-labelledby="modal-add-heading"
+        aria-describedby="modal-add-description"
+        renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
+      >
+        <fetcher.Form method="POST">
+          <input type="hidden" name="intent" value="add" />
+          {/* <input type="hidden" name="clientId" value={client_id} /> */}
+          <ModalHeading id="modal-deaddlete-heading">
+            Add ACL Rule(s)
+          </ModalHeading>
+          <p id="modal-add-description">Add ACL rules for: {aclKey}</p>
+          <ModalFooter>
+            <ModalToggleButton modalRef={ref} closer outline>
+              Cancel
+            </ModalToggleButton>
+            <Button data-close-modal type="submit">
+              Add
+            </Button>
+          </ModalFooter>
+        </fetcher.Form>
+      </Modal>
     </>
   )
 }
@@ -165,6 +179,8 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
   // just inverting the enum from kafka, but importing them
   // directly here causes some errors. Same for mapping them to
   // dropdowns
+
+  const fetcher = useFetcher()
   const permissionMap: { [key: number]: string } = {
     2: 'Deny',
     3: 'Allow',
@@ -198,10 +214,21 @@ function KafkaAclCard({ acl }: { acl: KafkaACL }) {
 
   return (
     <tr className="tablet:grid-col flex-fill margin-y-1">
-      <td>{resourceTypeMap[acl.resourceType]}</td>
-      <td>{acl.principal}</td>
+      <td>
+        {resourceTypeMap[acl.resourceType]}
+        {acl.resourceName.endsWith('.') && <small> (Prefix)</small>}
+      </td>
+      <td>{acl.resourceName}</td>
       <td>{permissionMap[acl.permissionType]}</td>
       <td>{operationMap[acl.operation]}</td>
+      <td>
+        <fetcher.Form method="POST">
+          <input type="hidden" name="intent" value="delete" />
+          <Button type="submit" unstyled>
+            Delete
+          </Button>
+        </fetcher.Form>
+      </td>
     </tr>
   )
 }

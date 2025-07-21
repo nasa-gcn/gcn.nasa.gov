@@ -94,15 +94,6 @@ legacy_users
   email *String
   PointInTimeRecovery true
 
-kafka_acls
-  aclId *String
-  PointInTimeRecovery true
-
-kafka_acl_log
-  partitionKey *Number
-  syncedOn **Number
-  PointInTimeRecovery ture
-
 @tables-indexes
 email_notification_subscription
   topic *String
@@ -155,10 +146,6 @@ synonyms
 synonyms
   slug *String
   name synonymsBySlug
-
-kafka_acls
-  resourceName *String
-  name aclsByResourceName
 
 @aws
 runtime nodejs22.x

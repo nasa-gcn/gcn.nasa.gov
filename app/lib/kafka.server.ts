@@ -5,10 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { tables } from '@architect/functions'
-import { paginateScan } from '@aws-sdk/lib-dynamodb'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import crypto from 'crypto'
+// import { tables } from '@architect/functions'
 import { Kafka, KafkaJSError } from 'gcn-kafka'
 import type { AclEntry } from 'kafkajs'
 import {
@@ -129,35 +126,8 @@ function validateUser(user: User) {
     throw new Response(null, { status: 403 })
 }
 
-export async function getKafkaACLsFromDynamoDB(user: User, filter?: string) {
+export async function getAclsFromBrokers(user: User, filter?: string) {
   validateUser(user)
-  const db = await tables()
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('kafka_acls')
-  const pages = paginateScan(
-    { client },
-    {
-      TableName,
-      FilterExpression: filter
-        ? 'contains(resourceName, :filter) OR contains(cognitoGroup, :filter)'
-        : undefined,
-      ExpressionAttributeValues: filter
-        ? {
-            ':filter': filter,
-          }
-        : undefined,
-    }
-  )
-
-  const acls: KafkaACL[] = []
-  for await (const page of pages) {
-    const newACL = page.Items as KafkaACL[]
-    if (newACL) acls.push(...newACL)
-  }
-  return acls
-}
-
-export async function getAclsFromBrokers() {
   const adminClient = adminKafka.admin()
   await adminClient.connect()
   const acls = await adminClient.describeAcls({
@@ -168,7 +138,6 @@ export async function getAclsFromBrokers() {
     resourcePatternType: ResourcePatternTypes.ANY,
   })
   await adminClient.disconnect()
-
   const results: KafkaACL[] = []
   for (const item of acls.resources) {
     results.push(
@@ -184,37 +153,4 @@ export async function getAclsFromBrokers() {
   }
 
   return results
-}
-
-export async function updateDbFromBrokers(user: User) {
-  const kafkaDefinedAcls = await getAclsFromBrokers()
-  const db = await tables()
-  await Promise.all([
-    ...kafkaDefinedAcls.map((acl) =>
-      db.kafka_acls.put({ ...acl, aclId: crypto.randomUUID() })
-    ),
-    db.kafka_acl_log.put({
-      partitionKey: 1,
-      syncedOn: Date.now(),
-      syncedBy: user.email,
-    }),
-  ])
-}
-
-type KafkaAclSyncLog = {
-  partitionKey: number
-  syncedOn: number
-  syncedBy: string
-}
-
-export async function getLastSyncDate(): Promise<KafkaAclSyncLog> {
-  const db = await tables()
-  return (
-    await db.kafka_acl_log.query({
-      KeyConditionExpression: 'partitionKey = :1',
-      ExpressionAttributeValues: { ':1': 1 },
-      ScanIndexForward: false,
-      Limit: 1,
-    })
-  ).Items.pop() as KafkaAclSyncLog
 }
