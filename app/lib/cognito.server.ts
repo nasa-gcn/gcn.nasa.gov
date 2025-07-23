@@ -18,8 +18,11 @@ import {
   CognitoIdentityProviderClient,
   CreateGroupCommand,
   DeleteGroupCommand,
+  DeleteUserPoolClientCommand,
+  DescribeUserPoolClientCommand,
   GetGroupCommand,
   ListUsersCommand,
+  ResourceNotFoundException,
   UpdateGroupCommand,
   paginateAdminListGroupsForUser,
   paginateListGroups,
@@ -257,4 +260,26 @@ export async function removeUserFromGroup(sub: string, GroupName: string) {
     GroupName,
   })
   await cognito.send(command)
+}
+
+export async function deleteAppClient(client_id: string) {
+  await cognito.send(
+    new DeleteUserPoolClientCommand({
+      UserPoolId,
+      ClientId: client_id,
+    })
+  )
+}
+
+export async function checkAppClientExists(client_id: string) {
+  try {
+    await cognito.send(
+      new DescribeUserPoolClientCommand({ ClientId: client_id, UserPoolId })
+    )
+  } catch (error) {
+    if (error instanceof ResourceNotFoundException) {
+      return false
+    }
+  }
+  return true
 }

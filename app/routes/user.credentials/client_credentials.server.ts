@@ -14,7 +14,11 @@ import {
 } from '@aws-sdk/client-cognito-identity-provider'
 import { generators } from 'openid-client'
 
-import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
+import {
+  checkAppClientExists,
+  cognito,
+  maybeThrowCognito,
+} from '~/lib/cognito.server'
 import { getUser } from '~/routes/_auth/user.server'
 
 export interface RedactedClientCredential {
@@ -23,6 +27,7 @@ export interface RedactedClientCredential {
   scope: string
   created: number
   lastUsed?: number
+  expired?: number
 }
 
 export interface ClientCredential extends RedactedClientCredential {
@@ -69,7 +74,8 @@ export class ClientCredentialVendingMachine {
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression: 'client_id, #name, #scope, created, lastUsed',
+      ProjectionExpression:
+        'client_id, #name, #scope, created, lastUsed, expired',
     })
     const credentials = results.Items as RedactedClientCredential[]
     credentials.sort((a, b) => a.created - b.created)
@@ -190,15 +196,17 @@ export class ClientCredentialVendingMachine {
   }
 
   async #deleteClientCredentialInternal(client_id: string) {
-    const command = new DeleteUserPoolClientCommand({
-      ClientId: client_id,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
+    if (await checkAppClientExists(client_id)) {
+      const command = new DeleteUserPoolClientCommand({
+        ClientId: client_id,
+        UserPoolId: process.env.COGNITO_USER_POOL_ID,
+      })
 
-    try {
-      await cognito.send(command)
-    } catch (e) {
-      maybeThrowCognito(e, 'deleting fake client credentials')
+      try {
+        await cognito.send(command)
+      } catch (e) {
+        maybeThrowCognito(e, 'deleting fake client credentials')
+      }
     }
   }
 
