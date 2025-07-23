@@ -11,6 +11,7 @@ import {
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
   ListGroupsCommand,
+  ResourceNotFoundException,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { generators } from 'openid-client'
 
@@ -23,6 +24,7 @@ export interface RedactedClientCredential {
   scope: string
   created: number
   lastUsed?: number
+  expired?: number
 }
 
 export interface ClientCredential extends RedactedClientCredential {
@@ -69,7 +71,8 @@ export class ClientCredentialVendingMachine {
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression: 'client_id, #name, #scope, created, lastUsed',
+      ProjectionExpression:
+        'client_id, #name, #scope, created, lastUsed, expired',
     })
     const credentials = results.Items as RedactedClientCredential[]
     credentials.sort((a, b) => a.created - b.created)
@@ -198,6 +201,12 @@ export class ClientCredentialVendingMachine {
     try {
       await cognito.send(command)
     } catch (e) {
+      // Suppress error if Resource not found, which will throw when the
+      // DeleteUserPoolClientCommand is called after a credential has
+      // expired and the App Client is already deleted
+      if (e instanceof ResourceNotFoundException) {
+        return
+      }
       maybeThrowCognito(e, 'deleting fake client credentials')
     }
   }

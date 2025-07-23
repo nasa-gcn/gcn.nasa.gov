@@ -18,6 +18,7 @@ import {
   CognitoIdentityProviderClient,
   CreateGroupCommand,
   DeleteGroupCommand,
+  DeleteUserPoolClientCommand,
   GetGroupCommand,
   ListUsersCommand,
   UpdateGroupCommand,
@@ -257,4 +258,13 @@ export async function removeUserFromGroup(sub: string, GroupName: string) {
     GroupName,
   })
   await cognito.send(command)
+}
+
+export async function deleteAppClient(client_id: string) {
+  await cognito.send(
+    new DeleteUserPoolClientCommand({
+      UserPoolId,
+      ClientId: client_id,
+    })
+  )
 }
