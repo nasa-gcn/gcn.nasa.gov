@@ -20,6 +20,12 @@ ads
 circulars
   rate 1 day
   src build/scheduled/circulars
+app_client_warning
+  cron 1 0 20 * ? *
+  src build/scheduled/app-client-warning
+app_client_deletion
+  cron 1 0 27 * ? *
+  src build/scheduled/app-client-deletion
 
 @tables-streams
 circulars
