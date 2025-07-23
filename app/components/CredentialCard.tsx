@@ -29,11 +29,12 @@ export default function CredentialCard({
   scope,
   scopeDescription,
   lastUsed,
+  expired,
 }: RedactedClientCredential & { scopeDescription?: string }) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
   const [searchParams] = useSearchParams()
-  const disabled = fetcher.state !== 'idle'
+  const disabled = expired !== undefined || fetcher.state !== 'idle'
   const alerts = searchParams.getAll('alerts')
   return (
     <>
@@ -59,7 +60,16 @@ export default function CredentialCard({
           </div>
           <div>
             <small>
-              Last Accessed: {lastUsed ? <TimeAgo time={lastUsed} /> : 'Never'}
+              {expired ? (
+                <>
+                  Expired: <TimeAgo time={expired} />
+                </>
+              ) : (
+                <>
+                  Last Accessed:{' '}
+                  {lastUsed ? <TimeAgo time={lastUsed} /> : 'Never'}
+                </>
+              )}
             </small>
           </div>
         </div>

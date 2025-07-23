@@ -23,6 +23,7 @@ export interface RedactedClientCredential {
   scope: string
   created: number
   lastUsed?: number
+  expired?: number
 }
 
 export interface ClientCredential extends RedactedClientCredential {
