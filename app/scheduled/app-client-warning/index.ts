@@ -45,9 +45,12 @@ export async function handler() {
     to: emails,
     subject: 'Client Credential Expiration Notice',
     body: dedent`
-    You are receiving this email because one or more of your existing client credentials will expire from disuse on the 27th of this month. 
+    You are receiving this email because one or more of your existing client credentials for connecting to our Kafka brokers will expire from disuse on the 27th of this month. 
     
-    Expired credentials will be deleted as part of our updated security practices on the 27th. For more information on this policy, see our documentation at ${origin}/docs/internal/auth.
+    Expired credentials will be deleted as part of our updated security practices on the 27th. We will periodically delete credentials that have not connected to our brokers in a month.
+    For more information on this policy, see our documentation at ${origin}/docs/internal/auth.
+    
+    This will NOT delete or disable your account, and you can sign on to create new credentials in the future, should you need them.
     
     No actions are needed on your end, however, if you would like to review your credentials you can do so at ${origin}/user/credentials.
     `,

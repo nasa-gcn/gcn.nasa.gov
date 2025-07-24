@@ -54,7 +54,7 @@ export async function handler() {
       to: [usersMap[cred.name]],
       fromName: 'GCN Kafka Service',
       subject: 'Client Credential Deletion',
-      body: `Your client credential "${cred.name}" has been deleted. For more information about our credential deletion policy, please visit ${origin}/docs/internal/auth.`,
+      body: `Your Kafka client credential "${cred.name}" has been deleted. For more information about our credential deletion policy, please visit ${origin}/docs/internal/auth.`,
     })
   )
 
