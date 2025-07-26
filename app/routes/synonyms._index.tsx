@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const page = parseInt(searchParams.get('page') || '1')
   const synonyms = await searchSynonymsByEventId({
     page: page - 1,
-    eventId: query,
+    query,
     limit,
   })
 
