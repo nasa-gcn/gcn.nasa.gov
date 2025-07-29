@@ -27,8 +27,9 @@ export default function CredentialCard({
   client_id,
   created,
   scope,
+  scopeDescription,
   lastUsed,
-}: RedactedClientCredential) {
+}: RedactedClientCredential & { scopeDescription?: string }) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
   const [searchParams] = useSearchParams()
@@ -48,7 +49,7 @@ export default function CredentialCard({
           </div>
           <div>
             <small>
-              scope: <code>{scope}</code>
+              scope: <code title={scopeDescription}>{scope}</code>
             </small>
           </div>
           <div>
