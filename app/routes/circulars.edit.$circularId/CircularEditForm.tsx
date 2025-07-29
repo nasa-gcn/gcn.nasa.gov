@@ -280,13 +280,15 @@ export function CircularEditForm({
           <>
             <InputGroup
               className={classnames('maxw-full', {
-                'usa-input--success': eventIdValid,
+                'usa-input--success': eventIdValid && !linkEventId,
                 'border-05 border-gold': eventIdValid === false,
               })}
             >
               <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
               <TextInput
-                className="maxw-full"
+                className={classnames('maxw-full', {
+                  'bg-base-lightest': linkEventId,
+                })}
                 name="eventId"
                 id="eventId"
                 type="text"
@@ -312,7 +314,7 @@ export function CircularEditForm({
               id="autofill-eventId"
               name="autofill-eventId"
               className="margin-bottom-2"
-              label="Autofill eventId from subject"
+              label="Autofill event ID from subject"
               checked={linkEventId}
               onChange={() => {
                 linkEventId
