@@ -6,22 +6,19 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
 import { ClientCredentialVendingMachine } from './user.credentials/client_credentials.server'
 import CredentialCard from '~/components/CredentialCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
+import { handleCredentialLoader } from '~/components/NewCredentialForm'
 import SegmentedCards from '~/components/SegmentedCards'
 import { getFormDataString } from '~/lib/utils'
 
 export const handle: SEOHandle = { getSitemapEntries: () => null }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const machine = await ClientCredentialVendingMachine.create(request)
-  const client_credentials = await machine.getClientCredentials()
-  return { client_credentials }
-}
+export const loader = handleCredentialLoader
 
 export async function action({ request }: ActionFunctionArgs) {
   const [data, machine] = await Promise.all([
@@ -44,7 +41,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function () {
-  const { client_credentials } = useLoaderData<typeof loader>()
+  const { client_credentials, groups } = useLoaderData<typeof loader>()
+  const groupDescriptions = Object.fromEntries(groups)
 
   return (
     <>
@@ -67,7 +65,11 @@ export default function () {
       </p>
       <SegmentedCards>
         {client_credentials.map((credential) => (
-          <CredentialCard key={credential.client_id} {...credential} />
+          <CredentialCard
+            key={credential.client_id}
+            scopeDescription={groupDescriptions[credential.scope]}
+            {...credential}
+          />
         ))}
       </SegmentedCards>
     </>

@@ -216,7 +216,13 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognito.send(command)
     } catch (e) {
-      maybeThrowCognito(e, 'not getting group descriptions')
+      maybeThrowCognito(e, 'returning fake group descriptions')
+      return [
+        [
+          'gcn.nasa.gov/kafka-public-consumer',
+          'Consume any public Kafka topic',
+        ],
+      ]
     }
 
     const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(

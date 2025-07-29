@@ -30,7 +30,8 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function () {
-  const { client_credentials } = useLoaderData<typeof loader>()
+  const { client_credentials, groups } = useLoaderData<typeof loader>()
+  const groupDescriptions = Object.fromEntries(groups)
 
   const explanation = (
     <>
@@ -48,7 +49,11 @@ export default function () {
           </p>
           <SegmentedCards>
             {client_credentials.map((credential) => (
-              <CredentialCard key={credential.client_id} {...credential} />
+              <CredentialCard
+                key={credential.client_id}
+                scopeDescription={groupDescriptions[credential.scope]}
+                {...credential}
+              />
             ))}
           </SegmentedCards>
           <div className="padding-2" key="new">
