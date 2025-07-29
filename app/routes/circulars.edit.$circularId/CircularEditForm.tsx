@@ -23,7 +23,7 @@ import {
   type CircularFormat,
   bodyIsValid,
   dateTimeIsValid,
-  eventIdIsValid,
+  parseEventFromSubject,
   subjectIsValid,
   submitterIsValid,
 } from '../circulars/circulars.lib'
@@ -140,7 +140,8 @@ export function CircularEditForm({
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const [eventId, setEventId] = useState(defaultEventId)
   const subjectValid = subjectIsValid(subject)
-  const eventIdValid = eventId ? eventIdIsValid(eventId) : true
+  const derivedEventId = parseEventFromSubject(subject)
+  const eventIdValid = eventId ? derivedEventId === eventId : true
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
@@ -277,13 +278,14 @@ export function CircularEditForm({
           <>
             <InputGroup
               className={classnames('maxw-full', {
-                'usa-input--error': eventIdValid === false,
                 'usa-input--success': eventIdValid,
               })}
             >
               <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
               <TextInput
-                className="maxw-full"
+                className={classnames('maxw-full', {
+                  'usa-alert--warning': eventIdValid === false,
+                })}
                 name="eventId"
                 id="eventId"
                 type="text"
@@ -293,10 +295,10 @@ export function CircularEditForm({
                 }}
               />
             </InputGroup>
-            <Hint className="text-secondary">
+            <Hint>
               {eventIdValid
                 ? nonBreakingSpace
-                : 'EventId does not match any existing subject matchers!'}
+                : 'EventId does not match subject!'}
             </Hint>
           </>
         )}
