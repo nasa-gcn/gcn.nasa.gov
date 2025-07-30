@@ -94,9 +94,7 @@ See GitHub issue [confluentinc/librdkafka#3125](https://github.com/confluentinc/
 
 ### After an hour, my Python Kafka producer script starts printing the error message `%3|1746446717.457|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://kafka3.test.gcn.nasa.gov:9092/3]: sasl_ssl://kafka3.test.gcn.nasa.gov:9092/3: SASL authentication error: {"status":"invalid_token"} (after 419ms in state AUTH_REQ, 3 identical error(s) suppressed)`.
 
-This is a [known issue](https://github.com/nasa-gcn/gcn-kafka-python/issues/49) related to the Kafka client library's background thread that periodically renews access tokens. It will not affect your ability to produce Kafka messages because the access token will be automatically renewed the instant that your script produces a message. You can safely ignore it.
-
-Suppressing the error message entirely requires an [upstream patch for confluent-kafka-python](https://github.com/confluentinc/librdkafka/pull/4923).
+This was a [known issue](https://github.com/nasa-gcn/gcn-kafka-python/issues/49) in the Python client library that has been fixed. Please update to the latest version of the Python client, and make sure that you are using [version 0.3.4](https://github.com/nasa-gcn/gcn-kafka-python/releases/tag/v0.3.4) or newer.
 
 ### How do I receive GCN Notices via email from GCN Classic over Kafka?
 
