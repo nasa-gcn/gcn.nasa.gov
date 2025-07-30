@@ -23,7 +23,10 @@ import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_auth/user.server'
-import { tryInitSynonym } from '../synonyms/synonyms.server'
+import {
+  manageSynonymOnVersionUpdates,
+  tryInitSynonym,
+} from '../synonyms/synonyms.server'
 import {
   bodyIsValid,
   formatAuthor,
@@ -379,9 +382,19 @@ export async function putVersion(
     editedBy: formatAuthor(user),
     editedOn: Date.now(),
   }
+
   validateCircular(newCircularVersion)
 
-  return await circularVersionsAutoIncrement.put(newCircularVersion)
+  const newVersionNumber =
+    await circularVersionsAutoIncrement.put(newCircularVersion)
+
+  await manageSynonymOnVersionUpdates(
+    newCircularVersion.createdOn,
+    newCircularVersion.eventId,
+    oldCircular.eventId
+  )
+
+  return newVersionNumber
 }
 
 /**
@@ -592,6 +605,12 @@ export async function approveChangeRequest(
     promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))
 
   await Promise.all(promises)
+
+  await manageSynonymOnVersionUpdates(
+    newVersion.createdOn,
+    newVersion.eventId,
+    circular.eventId
+  )
 }
 
 /**
