@@ -11,6 +11,7 @@ import type { Session } from '@remix-run/node'
 import { TokenSet } from 'openid-client'
 
 import { getOpenIDClient, storage } from './auth.server'
+import { revokeRefreshToken } from '~/lib/cognito.server'
 
 export interface User {
   sub: string
@@ -169,4 +170,49 @@ export async function refreshUser(refreshToken: string, session: Session) {
   const parsedTokenSet = parseTokenSet(tokenSet)
   await updateSession(parsedTokenSet, session)
   return parsedTokenSet.user
+}
+
+//  Maybe make the token stuff its own file
+export type ScopedRefreshToken = {
+  sub: string
+  uuid: string
+  scope: string
+  name: string
+  token: string
+  createdOn: number
+}
+
+export async function saveToken(scopedRefreshToken: ScopedRefreshToken) {
+  const db = await tables()
+  await db.refreshTokens.put(scopedRefreshToken)
+}
+
+export async function loadTokens(sub: string): Promise<ScopedRefreshToken[]> {
+  const db = await tables()
+  const { Items } = await db.refreshTokens.query({
+    KeyConditionExpression: '#sub = :sub',
+    ExpressionAttributeNames: {
+      '#sub': 'sub',
+      '#uuid': 'uuid',
+      '#scope': 'scope',
+      '#name': 'name',
+    },
+    ExpressionAttributeValues: {
+      ':sub': sub,
+    },
+    ProjectionExpression: '#uuid, #scope, #name, createdOn',
+  })
+  return Items
+}
+
+export async function getRefreshToken(sub: string, uuid: string) {
+  const db = await tables()
+  return await db.refreshTokens.get({ sub, uuid })
+}
+
+export async function deleteToken(sub: string, uuid: string) {
+  const db = await tables()
+  const { token } = await db.refreshTokens.get({ sub, uuid })
+  await db.refreshTokens.delete({ sub, uuid })
+  await revokeRefreshToken(token)
 }
