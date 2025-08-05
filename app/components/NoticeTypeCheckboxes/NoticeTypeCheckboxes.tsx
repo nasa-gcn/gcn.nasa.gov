@@ -116,11 +116,8 @@ export function NoticeTypeCheckboxes({
   }
 
   if (useFeature('SUPER_K_QUICKSTART')) {
-    JsonNoticeTypes['Super Kamiokande'] = [
-      'gcn.notices.superk.sn_alert',
-      'gcn.notices.superk.sn_alert.test',
-    ]
-    JsonNoticeTypeLinks['Super Kamiokande'] = '/missions/sksn'
+    JsonNoticeTypes['Super-Kamiokande'] = ['gcn.notices.superk.sn_alert']
+    JsonNoticeTypeLinks['Super-Kamiokande'] = '/missions/sksn'
   }
 
   if (useFeature('CHIME')) {
