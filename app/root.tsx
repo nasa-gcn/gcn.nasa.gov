@@ -40,7 +40,8 @@ import {
   GovBanner,
   GridContainer,
 } from '@trussworks/react-uswds'
-import type { ReactNode } from 'react'
+import type { ReactElement, ReactNode } from 'react'
+import { Children, isValidElement } from 'react'
 import TopBarProgress from 'react-topbar-progress-indicator'
 import { useSpinDelay } from 'spin-delay'
 import invariant from 'tiny-invariant'
@@ -178,14 +179,40 @@ export function useFeature(feature: string) {
   return useLoaderDataRoot()?.features.includes(featureUppercase)
 }
 
-export function WithFeature({
-  children,
-  ...features
-}: {
+type WithFeatureProps = {
   children: ReactNode
-} & Record<string, boolean>) {
-  return <>{useFeature(Object.keys(features)[0]) && children}</>
+} & Record<string, boolean>
+
+export function WithFeature({ children, ...features }: WithFeatureProps) {
+  const featureKey = Object.keys(features)[0]
+  const isOn = useFeature(featureKey)
+
+  const allChildren = Children.toArray(children) as ReactElement[]
+
+  const onChild = allChildren.find(
+    (child) => isValidElement(child) && child.type === WithFeatureOn
+  )
+  const offChild = allChildren.find(
+    (child) => isValidElement(child) && child.type === WithFeatureOff
+  )
+
+  if (onChild || offChild) {
+    return <>{isOn ? onChild : offChild}</>
+  }
+
+  return <>{isOn ? children : null}</>
 }
+
+export function WithFeatureOn({ children }: { children: ReactNode }) {
+  return <>{children}</>
+}
+
+export function WithFeatureOff({ children }: { children: ReactNode }) {
+  return <>{children}</>
+}
+
+WithFeature.On = WithFeatureOn
+WithFeature.Off = WithFeatureOff
 
 export function useOrigin() {
   return useLoaderDataRoot()?.origin
