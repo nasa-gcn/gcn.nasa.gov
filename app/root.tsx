@@ -256,10 +256,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Updated Client Credential Expiration Policy. See{' '}
+          New! Super-Kamiokande JSON Notices and Schema v4.5.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#client-credential-expiration-policy"
+            to="/news#new-super-kamiokande-json-notices"
           >
             news and announcements
           </Link>
