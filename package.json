@@ -44,7 +44,7 @@
     "aws-lambda-ses-forwarder": "^6.0.0",
     "classnames": "^2.5.1",
     "color-convert": "^2.0.1",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "dayjs": "^1.11.10",
     "diff": "^7.0.0",
     "downshift": "^9.0.8",
