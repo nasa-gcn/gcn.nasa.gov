@@ -247,7 +247,7 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Super-Kamiokande JSON Notices. See{' '}
+          New! Super-Kamiokande JSON Notices and Schema v4.5.0. See{' '}
           <Link
             className="usa-link"
             to="/news#new-super-kamiokande-json-notices"
