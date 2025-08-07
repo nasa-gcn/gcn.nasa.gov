@@ -187,6 +187,15 @@ export function WithFeature({
   return <>{useFeature(Object.keys(features)[0]) && children}</>
 }
 
+export function WithoutFeature({
+  children,
+  ...features
+}: {
+  children: ReactNode
+} & Record<string, boolean>) {
+  return <>{useFeature(Object.keys(features)[0]) || children}</>
+}
+
 export function useOrigin() {
   return useLoaderDataRoot()?.origin
 }
