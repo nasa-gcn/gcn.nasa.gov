@@ -61,6 +61,11 @@ export default function () {
         <Link className="usa-link" to="/docs/client">
           client documentation
         </Link>
+        . For more information on Client Credential creation and expiration, see
+        the{' '}
+        <Link className="usa-link" to="/docs/internal/auth">
+          authorization and authentication documentation
+        </Link>
         .
       </p>
       <SegmentedCards>
