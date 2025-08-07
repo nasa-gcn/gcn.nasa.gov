@@ -19,6 +19,10 @@ OpenID Connect supports several different authorization flows for different use 
 
 A user that is signed in to the GCN web site can navigate to the [client credentials page](/user/credentials) to create, manage, or delete client credentials that are assigned to them. When the user requests a new client credential, the web application calls the Cognito API to create a new [app client](https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html#user-pool-settings-client-apps.title). The web application store a record in its database to keep track of the ownership of that client ID by that user.
 
+## Client Credential Expiration
+
+Once a user [obtains a client credential](#obtaining-client-credentials), the [client credentials page](/user/credentials) will list the date that the credential was last used to connect to the GCN Kafka broker. Client credentials expire after 1 month of disuse and will be deleted automatically. Users with client credentials set to expire will receive an automated email on the 20th of the month warning that the client credential is scheduled to be deleted on the 27th of that month. Connecting that client credential to the GCN Kafka broker after the warning email will cancel the planned deletion.
+
 ## Kafka Client Operation
 
 Once the user has a client ID and client secret, they can configure any of the [supported Kafka client libraries](/docs/client) to connect to GCN's Kafka broker. When the Kafka client starts up, it first sends the client ID and client secret to Cognito's OpenID Connect token endpoint over HTTPS. Cognito responds to the client with an access token which is valid for 1 hour. The Kafka client sends the access token to the Kafka broker. Finally, the Kafka broker makes an authorization decision based on the token. If successful, the Kafka session is now authorized. The client repeats the process shortly before the access token expires.
