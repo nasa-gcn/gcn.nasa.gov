@@ -21,7 +21,7 @@ A user that is signed in to the GCN web site can navigate to the [client credent
 
 ## Client Credential Expiration
 
-Once a user [obtains a client credential](#obtaining-client-credentials), the [client credentials page](/user/credentials) will list the date that the credential was last used to connect to the GCN Kafka broker. Client credentials expire after 1 month of disuse and will be deleted automatically. Users with client credentials set to expire will receive an automated email on the 20th of the month warning that the client credential is scheduled to be deleted on the 27th of that month. Connecting that client credential to the GCN Kafka broker after the warning email will cancel the planned deletion.
+Once a user obtains a client credential, the [client credentials page](/user/credentials) will list the date that the credential was last used to connect to the GCN Kafka broker. Client credentials expire after 1 month of disuse and will be deleted automatically. Users with client credentials set to expire will receive an automated email on the 20th of the month warning that the client credential is scheduled to be disabled on the 27th of that month. Connecting that client credential to the GCN Kafka broker after the warning email will update the last used date and postpone the expiration. Users may delete expired client credentials and generate new client credentials at any time in the [client credential management interface](/user/credentials).
 
 ## Kafka Client Operation
 
