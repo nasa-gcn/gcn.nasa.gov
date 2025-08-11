@@ -30,6 +30,20 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
+        <CollectionCalendarDate datetime='Aug 12, 2025' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Client Credential Expiration Policy</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        [Client Credentials](docs/internal/auth) allow your scripts to interact with GCN on your behalf, e.g. Kafka consumers. GCN is instituting a new policy of client credentials expiration after 1 month of disuse.  The last used date is now listed on the [client credentials page](/user/credentials). If applicable, users will receive warning emails 1 week prior to their credential being revoked.  If you have a Kafka consumer running regularly, there will no impact.  If you created a client credential through the [Start streaming GCN Notices interface](/quickstart) or the [client credentials page](/user/credentials) and have not used it in the last month, it will expire.  User can create new client credentials at any time through either of these interfaces.
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
         <CollectionCalendarDate datetime='May 27, 2025' />
       }
     >
