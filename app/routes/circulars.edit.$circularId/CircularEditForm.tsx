@@ -147,7 +147,6 @@ export function CircularEditForm({
     originalEventId || derivedEventId
   )
   const [eventId, setEventId] = useState(defaultEventId)
-  const eventIdValid = Boolean(eventId)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
@@ -290,11 +289,7 @@ export function CircularEditForm({
                 <input type="hidden" name="eventId" value={eventId} />
               </InputGroup>
             ) : (
-              <InputGroup
-                className={classnames('maxw-full', {
-                  'usa-input--success': eventIdValid,
-                })}
-              >
+              <InputGroup className="maxw-full">
                 <InputPrefix className="wide-input-prefix">
                   Event ID
                 </InputPrefix>
