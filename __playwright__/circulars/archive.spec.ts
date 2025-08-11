@@ -9,6 +9,7 @@ test.describe('Circulars archive page', () => {
   test('responds to changes in the number of results per page', async ({
     page,
   }) => {
+    test.slow()
     await page.goto('/circulars')
     for (const expectedResultsPerPage of [10, 20]) {
       const locator = page.getByTestId('Select')
@@ -25,18 +26,21 @@ test.describe('Circulars archive page', () => {
   })
 
   test('search is functional via mouse click', async ({ page }) => {
+    test.slow()
     await page.goto('/circulars')
     await page.locator('#query').fill('GRB')
     await page.getByRole('button', { name: 'Search' }).click()
   })
 
   test('search is functional via keyboard input', async ({ page }) => {
+    test.slow()
     await page.goto('/circulars')
     await page.locator('#query').fill('GRB')
     await page.getByTestId('textInput').press('Enter')
   })
 
   test('search finds query string in body of circular', async ({ page }) => {
+    test.slow()
     await page.goto('/circulars?query=ATLAS23srq')
     await expect(
       page.locator('a[href="/circulars/34730?query=ATLAS23srq"]')
@@ -46,6 +50,7 @@ test.describe('Circulars archive page', () => {
   test('search finds all results related to a specific object', async ({
     page,
   }) => {
+    test.slow()
     await page.goto('/circulars?query=230812B')
     await page.waitForLoadState()
     await expect(page.locator('ol', { has: page.locator('li') })).toBeVisible()
@@ -54,6 +59,7 @@ test.describe('Circulars archive page', () => {
 
   test('search finds no results for query with typo', async ({ page }) => {
     // this highlights this search behavior does not capture cases where there is a minor typo
+    test.slow()
     await page.goto('/circulars?query=230812C')
     await page.waitForLoadState()
     await expect(
