@@ -17,7 +17,8 @@ support
 app_clients
   src build/eventbridge/app-clients
   source aws.cognito-idp
-  detailType 'AWS Service Event via Eventbridge'
+  detailType 'AWS Service Event via CloudTrail'
+  eventName Token_POST
 
 @scheduled
 ads

@@ -12,7 +12,7 @@ function getLambdaName(key) {
 }
 
 export const set = {
-  events({ arc: { eventbridge } }) {
+  customLambdas({ arc: { eventbridge } }) {
     return eventbridge.map((item) => {
       const [[key, { src }]] = Object.entries(item)
       return {
@@ -26,33 +26,43 @@ export const set = {
 export const deploy = {
   start({ cloudformation, arc: { eventbridge } }) {
     eventbridge.forEach((item) => {
-      const [key] = Object.keys(item)
+      const [[key, { source, detailType, eventName }]] = Object.entries(item)
       const logicalID = toLogicalID(getLambdaName(key))
 
       cloudformation.Resources[`${logicalID}EventRule`] = {
         Type: 'AWS::Events::Rule',
         Properties: {
           EventPattern: {
-            source: [item[key].source],
-            'detail-type': item[key].detailType
-              ? [item[key].detailType]
-              : undefined,
-            detail: item[key].eventName
-              ? {
-                  eventName: [item[key].eventName],
-                }
-              : undefined,
+            source: source && [source],
+            'detail-type': detailType && [detailType],
+            detail: eventName && {
+              eventName: [eventName],
+            },
           },
           State: 'ENABLED',
           EventBusName: 'default',
           Targets: [
             {
-              Id: `${logicalID}EventTarget`,
+              Id: logicalID,
               Arn: {
-                Ref: `${logicalID}EventLambda`,
+                'Fn::GetAtt': `${logicalID}CustomLambda.Arn`,
               },
             },
           ],
+        },
+      }
+
+      cloudformation.Resources[`${logicalID}Permission`] = {
+        Type: 'AWS::Lambda::Permission',
+        Properties: {
+          Action: 'lambda:InvokeFunction',
+          FunctionName: {
+            Ref: `${logicalID}CustomLambda`,
+          },
+          Principal: 'events.amazonaws.com',
+          SourceArn: {
+            'Fn::GetAtt': `${logicalID}EventRule.Arn`,
+          },
         },
       }
     })
