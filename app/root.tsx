@@ -256,11 +256,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Browse Circulars by Event, Advanced Search, Sample Codes, Schema
-          Release. See{' '}
+          Updated Client Credential Expiration Policy. See{' '}
           <Link
             className="usa-link"
-            to="/news#browse-circulars-by-event-advanced-search-sample-codes-schema-release"
+            to="/news#client-credential-expiration-policy"
           >
             news and announcements
           </Link>
