@@ -82,7 +82,7 @@ export async function handler(
       '#lastUsed': 'lastUsed',
     },
     ExpressionAttributeValues: {
-      ':lastUsed': event.detail.eventTime,
+      ':lastUsed': Date.parse(event.detail.eventTime),
     },
   })
 }
