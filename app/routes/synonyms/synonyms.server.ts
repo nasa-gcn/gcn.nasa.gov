@@ -195,14 +195,12 @@ export async function manageSynonymOnVersionUpdates(
   }
 
   if (oldEventId) {
-    const isDeleted = await deleteIfGroupIsEmpty(oldEventId)
-    if (!isDeleted) await updateInitialDate(oldEventId)
+    await updateInitialDate(oldEventId)
   }
 }
 
 export async function updateInitialDate(eventId: string) {
   const oldestDate = await getOldestDate(eventId)
-  if (!oldestDate) return
 
   const db = await tables()
   await db.synonyms.update({
@@ -215,18 +213,6 @@ export async function updateInitialDate(eventId: string) {
       ':initialDate': oldestDate,
     },
   })
-}
-
-export async function deleteIfGroupIsEmpty(eventId: string) {
-  const db = await tables()
-  const circulars = await getSynonymMembers(eventId)
-
-  if (circulars.length === 0) {
-    await db.synonyms.delete({ eventId })
-    return true
-  } else {
-    return false
-  }
 }
 
 export async function tryInitSynonym(eventId: string, createdOn: number) {
@@ -319,8 +305,8 @@ export async function getOldestDate(eventId: string) {
   const circulars = await getSynonymMembers(eventId)
 
   return circulars[0]
-    ? orderBy(circulars, ['circularId'], ['asc'])[0].createdOn
-    : undefined
+    ? orderBy(circulars, ['createdOn'], ['asc'])[0].createdOn
+    : 18000
 }
 
 /*
