@@ -13,7 +13,6 @@ import {
   Icon,
   InputGroup,
   InputPrefix,
-  InputSuffix,
   Table,
   TextInput,
 } from '@trussworks/react-uswds'
@@ -281,14 +280,12 @@ export function CircularEditForm({
             <InputGroup
               className={classnames('maxw-full', {
                 'usa-input--success': eventIdValid && !linkEventId,
-                'border-05 border-gold': eventIdValid === false,
+                'border-0': linkEventId,
               })}
             >
               <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
               <TextInput
-                className={classnames('maxw-full', {
-                  'bg-base-lightest': linkEventId,
-                })}
+                className="maxw-full"
                 name="eventId"
                 id="eventId"
                 type="text"
@@ -298,16 +295,6 @@ export function CircularEditForm({
                   setEventId(value)
                 }}
               />
-              {!eventIdValid && (
-                <InputSuffix className="text-orange">
-                  Event ID does not match subject!
-                </InputSuffix>
-              )}
-              {linkEventId && (
-                <InputSuffix>
-                  <Icon.Link />
-                </InputSuffix>
-              )}
             </InputGroup>
 
             <Checkbox
