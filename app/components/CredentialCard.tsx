@@ -43,7 +43,15 @@ export default function CredentialCard({
             <small>
               <strong>{name}</strong>{' '}
               <span>
-                (created <TimeAgo time={created} />)
+                (created <TimeAgo time={created} />,{' '}
+                {lastUsed ? (
+                  <>
+                    last used <TimeAgo time={lastUsed} />
+                  </>
+                ) : (
+                  <>never used</>
+                )}
+                )
               </span>
             </small>
           </div>
@@ -55,11 +63,6 @@ export default function CredentialCard({
           <div>
             <small>
               client ID: <code>{client_id}</code>
-            </small>
-          </div>
-          <div>
-            <small>
-              Last Accessed: {lastUsed ? <TimeAgo time={lastUsed} /> : 'Never'}
             </small>
           </div>
         </div>
