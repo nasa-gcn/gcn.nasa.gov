@@ -134,6 +134,14 @@ a[rel~='external'] {
 }
 
 /*
+ * Outlines for input groups that do not contain input elements
+ */
+.usa-input---not-editable {
+  border: 0;
+  padding: units($theme-input-state-border-width);
+}
+
+/*
  * Styles for notice cards
  */
 

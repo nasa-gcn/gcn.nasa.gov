@@ -211,7 +211,7 @@ export function CircularEditForm({
             </InputGroup>
           </>
         )}
-        <InputGroup className="border-0 maxw-full">
+        <InputGroup className="maxw-full usa-input---not-editable">
           <InputPrefix className="wide-input-prefix">
             {circularId === undefined ? 'From' : 'Editor'}
           </InputPrefix>
