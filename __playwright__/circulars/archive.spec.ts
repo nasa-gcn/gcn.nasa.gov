@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-test.beforeAll(async ({ page }) => {
+test.beforeEach(async ({ page }) => {
   await page.goto('/circulars')
   await page.waitForSelector('#query')
 })
