@@ -36,7 +36,7 @@ export const handle: BreadcrumbHandle<typeof loader> = {
 }
 
 export async function loader({
-  params: { circularId, version, next, previous },
+  params: { circularId, version },
 }: LoaderFunctionArgs) {
   invariant(circularId)
   const result = await get(
