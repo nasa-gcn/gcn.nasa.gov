@@ -164,7 +164,7 @@ export default function () {
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
       <div className="margin-top-4 display-flex flex-justify-center gap-2">
-        {previousCircular ? (
+        {Number.isFinite(previousCircular) ? (
           <Link
             to={`/circulars/${previousCircular}${searchString}`}
             className="usa-button flex-align-stretch"
@@ -193,7 +193,7 @@ export default function () {
             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previous Circular
           </Button>
         )}
-        {nextCircular ? (
+        {Number.isFinite(nextCircular) ? (
           <Link
             to={`/circulars/${nextCircular}${searchString}`}
             className="usa-button flex-align-stretch"
