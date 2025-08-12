@@ -114,7 +114,7 @@ export function CircularEditForm({
   defaultSubject,
   searchString,
   defaultCreatedOnDateTime,
-  defaultEventId,
+  defaultEventId: originalEventId,
   intent,
 }: {
   formattedContributor: string
@@ -140,11 +140,13 @@ export function CircularEditForm({
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const subjectValid = subjectIsValid(subject)
   const derivedEventId = parseEventFromSubject(subject)
-  const mismatched = defaultEventId != derivedEventId
-  const [linkEventId, setLinkEventId] = useState(mismatched ? false : true)
-  const placeholderEvent = linkEventId ? derivedEventId : defaultEventId
-  const [eventId, setEventId] = useState(placeholderEvent)
-  const eventIdValid = eventId ? derivedEventId === eventId : true
+  const [linkEventId, setLinkEventId] = useState(
+    originalEventId === derivedEventId
+  )
+  const [defaultEventId, setDefaultEventId] = useState(
+    originalEventId || derivedEventId
+  )
+  const [eventId, setEventId] = useState(defaultEventId)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
@@ -173,7 +175,7 @@ export function CircularEditForm({
     format !== defaultFormat ||
     submitter?.trim() !== defaultSubmitter ||
     dateTime !== defaultCreatedOnDateTime ||
-    eventId?.trim() !== defaultEventId
+    eventId?.trim() !== originalEventId
 
   const userIsModerator = useModStatus()
 
@@ -265,6 +267,7 @@ export function CircularEditForm({
             required
             onChange={({ target: { value } }) => {
               setSubject(value)
+              setDefaultEventId(parseEventFromSubject(value))
             }}
           />
         </InputGroup>
@@ -277,37 +280,47 @@ export function CircularEditForm({
         </CollapsableInfo>
         {intent !== 'new' && (
           <>
-            <InputGroup
-              className={classnames('maxw-full', {
-                'usa-input--success': eventIdValid && !linkEventId,
-                'border-0': linkEventId,
-              })}
-            >
-              <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
-              <TextInput
-                className="maxw-full"
-                name="eventId"
-                id="eventId"
-                type="text"
-                readOnly={linkEventId}
-                value={eventId}
-                onChange={({ target: { value } }) => {
-                  setEventId(value)
-                }}
-              />
-            </InputGroup>
-
+            {linkEventId ? (
+              <InputGroup className="maxw-full usa-input---not-editable">
+                <InputPrefix className="wide-input-prefix">
+                  Event ID
+                </InputPrefix>
+                <span className="padding-1">{derivedEventId}</span>
+                <input type="hidden" name="eventId" value={eventId} />
+              </InputGroup>
+            ) : (
+              <InputGroup className="maxw-full">
+                <InputPrefix className="wide-input-prefix">
+                  Event ID
+                </InputPrefix>
+                <TextInput
+                  className="maxw-full"
+                  defaultValue={defaultEventId}
+                  name="eventId"
+                  id="eventId"
+                  type="text"
+                  onChange={({ target: { value } }) => {
+                    setEventId(value)
+                  }}
+                />
+              </InputGroup>
+            )}
             <Checkbox
               id="autofill-eventId"
               name="autofill-eventId"
               className="margin-bottom-2"
-              label="Autofill event ID from subject"
+              label={
+                <>
+                  Automatically fill event ID from subject
+                  {eventId !== derivedEventId &&
+                    '. The event ID does not match.'}
+                </>
+              }
               checked={linkEventId}
-              onChange={() => {
-                linkEventId
-                  ? setEventId(defaultEventId)
-                  : setEventId(derivedEventId)
-                setLinkEventId(!linkEventId)
+              onChange={({ target: { checked } }) => {
+                setLinkEventId(checked)
+                setDefaultEventId(derivedEventId)
+                setEventId(derivedEventId)
               }}
             />
           </>
