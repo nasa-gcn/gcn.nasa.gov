@@ -273,12 +273,9 @@ export async function get(
 }
 
 /** Check if a Circular exists by ID. */
-export async function exists(
-  circularId: number,
-  version?: number
-): Promise<boolean> {
+export async function exists(circularId: number): Promise<boolean> {
   const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
-  const result = await circularVersions.get(version)
+  const result = await circularVersions.get()
   return Boolean(result)
 }
 
