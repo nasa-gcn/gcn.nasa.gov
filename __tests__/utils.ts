@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { joinListWithOxfordComma } from '~/lib/utils'
+import { joinListWithOxfordComma, truncateJsonMaxBytes } from '~/lib/utils'
 import { stripTags } from '~/lib/utils.server'
 
 describe('stripTags', () => {
@@ -40,5 +40,28 @@ describe('joinListWithOxfordComma', () => {
     expect(joinListWithOxfordComma(['foo', 'bar', 'bat', 'baz'])).toBe(
       'foo, bar, bat, and baz'
     )
+  })
+})
+
+describe('truncateJsonMaxBytes', () => {
+  test('handles strings with no escsaped characters', () => {
+    const text = 'The quick brown fox jumped over the lazy dog.'
+    expect(truncateJsonMaxBytes(text, 100)).toEqual({ text, truncated: false })
+    expect(truncateJsonMaxBytes(text, 30)).toEqual({
+      text: 'The quick brown fox ju',
+      truncated: true,
+    })
+  })
+  test('truncates pathological text with escape sequences', () => {
+    const letters = 'a'.repeat(50)
+    expect(truncateJsonMaxBytes(letters, 52)).toEqual({
+      text: letters,
+      truncated: false,
+    })
+    const backslashes = '\\'.repeat(50)
+    expect(truncateJsonMaxBytes(backslashes, 52)).toEqual({
+      text: '\\'.repeat(25),
+      truncated: true,
+    })
   })
 })

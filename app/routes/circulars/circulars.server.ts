@@ -40,6 +40,7 @@ import type {
 } from './circulars.lib'
 import { sendEmail, sendEmailBulk } from '~/lib/email.server'
 import { origin } from '~/lib/env.server'
+import { truncateJsonMaxBytes } from '~/lib/utils'
 import { closeZendeskTicket } from '~/lib/zendesk.server'
 
 // A type with certain keys required.
@@ -705,13 +706,19 @@ export async function send(circular: Circular) {
     getLegacyEmails(),
   ])
   const to = [...emails, ...legacyEmails]
+
+  // There is a limit of 262144 bytes for the Amazon SES API's TemplateData argument.
+  // See https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_Template.html#SES-Type-Template-TemplateData
+  const { text, truncated } = truncateJsonMaxBytes(
+    formatCircularText(circular),
+    200_000
+  )
+
   await sendEmailBulk({
     fromName,
     to,
     subject: circular.subject,
-    body: `${formatCircularText(
-      circular
-    )}\n\n\nView this GCN Circular online at ${origin}/circulars/${
+    body: `${text}${truncated ? '...\n\n\nThis message was truncated. View the full' : '\n\n\nView this'} GCN Circular online at ${origin}/circulars/${
       circular.circularId
     }.`,
     topic: 'circulars',
