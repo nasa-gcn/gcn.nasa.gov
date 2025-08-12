@@ -309,11 +309,18 @@ export function CircularEditForm({
               id="autofill-eventId"
               name="autofill-eventId"
               className="margin-bottom-2"
-              label="Automatically fill event ID from subject"
+              label={
+                <>
+                  Automatically fill event ID from subject
+                  {eventId !== derivedEventId &&
+                    '. The event ID does not match.'}
+                </>
+              }
               checked={linkEventId}
               onChange={({ target: { checked } }) => {
                 setLinkEventId(checked)
-                if (checked) setEventId(defaultEventId)
+                setDefaultEventId(derivedEventId)
+                setEventId(derivedEventId)
               }}
             />
           </>
