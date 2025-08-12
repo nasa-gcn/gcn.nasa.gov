@@ -43,14 +43,10 @@ export async function loader({
     parseFloat(circularId),
     version ? parseFloat(version) : undefined
   )
-  const nextCircular = await findAdjacentCircular(
-    parseFloat(circularId),
-    'next'
-  )
-  const previousCircular = await findAdjacentCircular(
-    parseFloat(circularId),
-    'previous'
-  )
+  const [nextCircular, previousCircular] = await Promise.all([
+    findAdjacentCircular(parseFloat(circularId), 'next'),
+    findAdjacentCircular(parseFloat(circularId), 'previous'),
+  ])
 
   return json(
     { ...result, nextCircular, previousCircular },
