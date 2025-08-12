@@ -274,9 +274,14 @@ export async function get(
 
 /** Check if a Circular exists by ID. */
 export async function exists(circularId: number): Promise<boolean> {
-  const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
-  const result = await circularVersions.get()
-  return Boolean(result)
+  const db = await tables()
+  const doc = db._doc as unknown as DynamoDBDocument
+  const result = await doc.get({
+    TableName: db.name('circulars'),
+    Key: { circularId },
+    ProjectionExpression: 'circularId',
+  })
+  return Boolean(result.Item)
 }
 
 /** Find the next or previous circular by ID.
