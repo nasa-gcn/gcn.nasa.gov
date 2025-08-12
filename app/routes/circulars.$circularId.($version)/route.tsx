@@ -14,7 +14,7 @@ import invariant from 'tiny-invariant'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../circulars.$circularId/route'
-import { get } from '../circulars/circulars.server'
+import { findAdjacentCircular, get } from '../circulars/circulars.server'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
@@ -43,12 +43,19 @@ export async function loader({
     parseFloat(circularId),
     version ? parseFloat(version) : undefined
   )
+  const [nextCircular, previousCircular] = await Promise.all([
+    findAdjacentCircular(parseFloat(circularId), 'next'),
+    findAdjacentCircular(parseFloat(circularId), 'previous'),
+  ])
 
-  return json(result, {
-    headers: {
-      ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
-    },
-  })
+  return json(
+    { ...result, nextCircular, previousCircular },
+    {
+      headers: {
+        ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
+      },
+    }
+  )
 }
 
 export function shouldRevalidate() {
@@ -59,11 +66,18 @@ export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
-  const { circularId, body, bibcode, version, format, ...frontMatter } =
-    useLoaderData<typeof loader>()
+  const {
+    circularId,
+    body,
+    bibcode,
+    version,
+    format,
+    nextCircular,
+    previousCircular,
+    ...frontMatter
+  } = useLoaderData<typeof loader>()
   const searchString = useSearchString()
   const Body = format === 'text/markdown' ? MarkdownBody : PlainTextBody
-
   const result = useRouteLoaderData<typeof parentLoader>(
     'routes/circulars.$circularId'
   )
@@ -72,6 +86,7 @@ export default function () {
   const linkString = `/circulars/${circularId}${
     !latest && version ? `/${version}` : ''
   }`
+
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
@@ -144,6 +159,68 @@ export default function () {
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
+      <div className="margin-top-4 display-flex flex-justify-center gap-2">
+        {Number.isFinite(previousCircular) ? (
+          <Link
+            to={`/circulars/${previousCircular}${searchString}`}
+            className="usa-button flex-align-stretch"
+          >
+            <div className="position-relative">
+              <Icon.ArrowBack
+                role="presentation"
+                className="position-absolute top-0 left-0"
+              />
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previous Circular
+          </Link>
+        ) : (
+          <Button
+            type="button"
+            className="usa-button flex-align-stretch"
+            disabled
+            aria-disabled
+          >
+            <div className="position-relative">
+              <Icon.ArrowBack
+                role="presentation"
+                className="position-absolute top-0 left-0"
+              />
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previous Circular
+          </Button>
+        )}
+        {Number.isFinite(nextCircular) ? (
+          <Link
+            to={`/circulars/${nextCircular}${searchString}`}
+            className="usa-button flex-align-stretch"
+          >
+            Next Circular
+            <div className="position-relative">
+              <Icon.ArrowForward
+                role="presentation"
+                className="position-absolute top-0 left-0"
+              />
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </Link>
+        ) : (
+          <Button
+            type="button"
+            className="usa-button flex-align-stretch"
+            disabled
+            aria-disabled
+          >
+            Next Circular
+            <div className="position-relative">
+              <Icon.ArrowForward
+                role="presentation"
+                className="position-absolute top-0 left-0"
+              />
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </Button>
+        )}
+      </div>
     </>
   )
 }

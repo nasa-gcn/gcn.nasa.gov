@@ -272,6 +272,38 @@ export async function get(
   return result as Circular
 }
 
+/** Check if a Circular exists by ID. */
+export async function exists(circularId: number): Promise<boolean> {
+  const db = await tables()
+  const doc = db._doc as unknown as DynamoDBDocument
+  const result = await doc.get({
+    TableName: db.name('circulars'),
+    Key: { circularId },
+    ProjectionExpression: 'circularId',
+  })
+  return Boolean(result.Item)
+}
+
+/** Find the next or previous circular by ID.
+ * Returns false if no circular is found.
+ * Checks for 10 circulars in the given direction.
+ * Iterates by 0.5 to account for non-integer circular IDs.
+ */
+export async function findAdjacentCircular(
+  circularId: number,
+  direction: 'next' | 'previous'
+): Promise<number | false> {
+  const increment = direction === 'next' ? 0.5 : -0.5
+  let nextCircular = circularId + increment
+  for (let i = 0; i < 10; i++) {
+    if (await exists(nextCircular)) {
+      return nextCircular
+    }
+    nextCircular += increment
+  }
+  return false
+}
+
 /** Delete a circular by ID.
  * Throws an HTTP error if:
  *  - The current user is not signed in
