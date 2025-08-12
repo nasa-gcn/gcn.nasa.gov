@@ -295,7 +295,6 @@ export async function findAdjacentCircular(
   let nextCircular = circularId + increment
   for (let i = 0; i < 10; i++) {
     if (await exists(nextCircular)) {
-      console.log(`Found ${direction} circular: ${nextCircular}`)
       return nextCircular
     }
     nextCircular += increment
