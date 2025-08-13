@@ -305,7 +305,7 @@ export async function getOldestDate(eventId: string) {
 
   return circulars.length > 0
     ? orderBy(circulars, ['createdOn'], ['asc'])[0].createdOn
-    : 18000
+    : -1
 }
 
 /*
