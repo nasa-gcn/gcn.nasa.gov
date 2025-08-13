@@ -48,13 +48,9 @@ export function NoticeFormatsAd() {
           </a>
         </CardFooter>
       </Card>
-      <Card
-        className="card-accent-cool"
-        gridLayout={{ tablet: { col: 4 } }}
-        headerFirst
-      >
-        <CardHeader>
-          <p className="margin-0">Recommended</p>
+      <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
+        <CardHeader className="bg-base-lighter">
+          <p className="margin-0">For older missions</p>
           <h4 className="usa-card__heading">GCN Classic over Kafka</h4>
         </CardHeader>
         <CardMedia imageClass="bg-white padding-2">
@@ -71,14 +67,18 @@ export function NoticeFormatsAd() {
           <p>Three formats, one protocol.</p>
         </CardBody>
         <CardFooter>
-          <Link className="usa-button" to="/quickstart">
+          <Link className="usa-button usa-button--base" to="/quickstart">
             Get Started
           </Link>
         </CardFooter>
       </Card>
-      <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
-        <CardHeader className="bg-base-lighter">
-          <p className="margin-0 text-base-dark">Coming soon</p>
+      <Card
+        className="card-accent-cool"
+        gridLayout={{ tablet: { col: 4 } }}
+        headerFirst
+      >
+        <CardHeader>
+          <p className="margin-0">Recommended</p>
           <h4 className="usa-card__heading">GCN Kafka</h4>
         </CardHeader>
         <CardMedia imageClass="bg-white padding-2">
@@ -93,6 +93,11 @@ export function NoticeFormatsAd() {
         <CardBody>
           <p>One format, one protocol.</p>
         </CardBody>
+        <CardFooter>
+          <Link className="usa-button" to="/quickstart?noticeFormat=json">
+            Get Started
+          </Link>
+        </CardFooter>
       </Card>
     </CardGroup>
   )
