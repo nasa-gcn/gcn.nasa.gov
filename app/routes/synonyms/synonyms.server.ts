@@ -10,7 +10,8 @@ import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
 import { slug } from 'github-slugger'
-import { orderBy } from 'lodash'
+import min from 'lodash/min.js'
+import orderBy from 'lodash/orderBy.js'
 
 import type { Circular } from '../circulars/circulars.lib'
 import type { Synonym, SynonymGroup } from './synonyms.lib'
@@ -252,7 +253,7 @@ export async function putSynonyms({
 
 export async function getOldestDate(eventId: string) {
   const circulars = await getSynonymMembers(eventId)
-  return orderBy(circulars, ['circularId'], ['asc'])[0].createdOn
+  return min(circulars.map(({ createdOn }) => createdOn))
 }
 
 /*
