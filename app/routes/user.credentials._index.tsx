@@ -61,6 +61,13 @@ export default function () {
         <Link className="usa-link" to="/docs/client">
           client documentation
         </Link>
+        . For more information on Client Credential expiration, see the{' '}
+        <Link
+          className="usa-link"
+          to="/docs/faq#why-are-my-kafka-client-credentials-expiring"
+        >
+          documentation
+        </Link>
         .
       </p>
       <SegmentedCards>

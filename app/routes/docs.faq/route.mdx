@@ -100,6 +100,10 @@ This was a [known issue](https://github.com/nasa-gcn/gcn-kafka-python/issues/49)
 
 To get started, [sign in or sign up](https://gcn.nasa.gov/login) and then select 'Email Notifications' from account dropdown menu. See also [GCN Circular 32517](/circulars/32517).
 
+### Why are my Kafka client credentials expiring?
+
+GCN has updated our security practices to disable disused Kafka client credentials that have not connected to one of our Kafka brokers within the last month. The [client credentials page](/user/credentials) lists the date that the credential was last used to connect to one of the GCN Kafka brokers. Users will receive an email warning in advance of the expiration date. Connecting that client credential to one of the GCN Kafka brokers after the warning email will update the last used date and postpone the expiration. Users may delete expired client credentials and generate new client credentials at any time in the [client credential page](/user/credentials).
+
 ## Circulars
 
 ### Why do GCN Circulars that I submit by email appear to be double spaced?
