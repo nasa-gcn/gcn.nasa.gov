@@ -9,6 +9,7 @@ import { Form, Link, useNavigation } from '@remix-run/react'
 import {
   Button,
   ButtonGroup,
+  Checkbox,
   Icon,
   InputGroup,
   InputPrefix,
@@ -23,14 +24,13 @@ import {
   type CircularFormat,
   bodyIsValid,
   dateTimeIsValid,
-  eventIdIsValid,
+  parseEventFromSubject,
   subjectIsValid,
   submitterIsValid,
 } from '../circulars/circulars.lib'
 import { RichEditor } from './RichEditor'
 import { CircularsKeywords } from '~/components/CircularsKeywords'
 import CollapsableInfo from '~/components/CollapsableInfo'
-import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { AstroDataContext } from '~/components/circularDisplay/AstroDataContext'
 import { MarkdownBody } from '~/components/circularDisplay/Body'
@@ -114,7 +114,7 @@ export function CircularEditForm({
   defaultSubject,
   searchString,
   defaultCreatedOnDateTime,
-  defaultEventId,
+  defaultEventId: originalEventId,
   intent,
 }: {
   formattedContributor: string
@@ -138,15 +138,20 @@ export function CircularEditForm({
   const [format, setFormat] = useState(defaultFormat)
   const [dateTime, setDateTime] = useState(defaultCreatedOnDateTime ?? '')
   const [submitter, setSubmitter] = useState(defaultSubmitter)
-  const [eventId, setEventId] = useState(defaultEventId)
   const subjectValid = subjectIsValid(subject)
-  const eventIdValid = eventId ? eventIdIsValid(eventId) : true
+  const derivedEventId = parseEventFromSubject(subject)
+  const [linkEventId, setLinkEventId] = useState(
+    originalEventId === derivedEventId
+  )
+  const [defaultEventId, setDefaultEventId] = useState(
+    originalEventId || derivedEventId
+  )
+  const [eventId, setEventId] = useState(defaultEventId)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid && dateTimeValid && submitterValid
-
   let headerText, saveButtonText
 
   switch (intent) {
@@ -170,10 +175,9 @@ export function CircularEditForm({
     format !== defaultFormat ||
     submitter?.trim() !== defaultSubmitter ||
     dateTime !== defaultCreatedOnDateTime ||
-    eventId?.trim() !== defaultEventId
+    eventId?.trim() !== originalEventId
 
   const userIsModerator = useModStatus()
-  const nonBreakingSpace = '\u00A0'
 
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
@@ -263,6 +267,7 @@ export function CircularEditForm({
             required
             onChange={({ target: { value } }) => {
               setSubject(value)
+              setDefaultEventId(parseEventFromSubject(value))
             }}
           />
         </InputGroup>
@@ -275,29 +280,49 @@ export function CircularEditForm({
         </CollapsableInfo>
         {intent !== 'new' && (
           <>
-            <InputGroup
-              className={classnames('maxw-full', {
-                'usa-input--error': eventIdValid === false,
-                'usa-input--success': eventIdValid,
-              })}
-            >
-              <InputPrefix className="wide-input-prefix">Event ID</InputPrefix>
-              <TextInput
-                className="maxw-full"
-                name="eventId"
-                id="eventId"
-                type="text"
-                defaultValue={defaultEventId}
-                onChange={({ target: { value } }) => {
-                  setEventId(value)
-                }}
-              />
-            </InputGroup>
-            <Hint className="text-secondary">
-              {eventIdValid
-                ? nonBreakingSpace
-                : 'EventId does not match any existing subject matchers!'}
-            </Hint>
+            {linkEventId ? (
+              <InputGroup className="maxw-full usa-input---not-editable">
+                <InputPrefix className="wide-input-prefix">
+                  Event ID
+                </InputPrefix>
+                <span className="padding-1">{derivedEventId}</span>
+                <input type="hidden" name="eventId" value={eventId} />
+              </InputGroup>
+            ) : (
+              <InputGroup className="maxw-full">
+                <InputPrefix className="wide-input-prefix">
+                  Event ID
+                </InputPrefix>
+                <TextInput
+                  className="maxw-full"
+                  defaultValue={defaultEventId}
+                  name="eventId"
+                  id="eventId"
+                  type="text"
+                  onChange={({ target: { value } }) => {
+                    setEventId(value)
+                  }}
+                />
+              </InputGroup>
+            )}
+            <Checkbox
+              id="autofill-eventId"
+              name="autofill-eventId"
+              className="margin-bottom-2"
+              label={
+                <>
+                  Automatically fill event ID from subject
+                  {eventId !== derivedEventId &&
+                    '. The event ID does not match.'}
+                </>
+              }
+              checked={linkEventId}
+              onChange={({ target: { checked } }) => {
+                setLinkEventId(checked)
+                setDefaultEventId(derivedEventId)
+                setEventId(derivedEventId)
+              }}
+            />
           </>
         )}
         <label hidden htmlFor="body">
