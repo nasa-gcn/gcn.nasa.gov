@@ -61,12 +61,15 @@ export default function () {
         <Link className="usa-link" to="/docs/client">
           client documentation
         </Link>
-        . For more information on Client Credential expiration, see the{' '}
+        .
+      </p>
+      <p>
+        Unused client credentials{' '}
         <Link
           className="usa-link"
           to="/docs/faq#why-are-my-kafka-client-credentials-expiring"
         >
-          documentation
+          expire after 30 days
         </Link>
         .
       </p>
