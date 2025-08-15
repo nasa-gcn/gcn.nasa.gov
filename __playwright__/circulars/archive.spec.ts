@@ -1,11 +1,8 @@
-import _arcFunctions from '@architect/functions'
-import type { DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { ListTablesCommand } from '@aws-sdk/client-dynamodb'
+import { DynamoDBClient, ListTablesCommand } from '@aws-sdk/client-dynamodb'
 import { sleep } from '@nasa-gcn/architect-plugin-utils'
 import { expect, test } from '@playwright/test'
 
 async function waitForConnection(client: DynamoDBClient) {
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     try {
       const { TableNames } = await client.send(new ListTablesCommand({}))
@@ -18,14 +15,18 @@ async function waitForConnection(client: DynamoDBClient) {
 }
 
 test.beforeAll(async () => {
-  const db = await _arcFunctions.tables()
-  const client = db._doc as unknown as DynamoDBClient
-  await waitForConnection(client)
-})
+  test.setTimeout(60000)
 
-test.beforeEach(async ({ page }, testInfo) => {
-  await page.goto('/circulars')
-  await page.waitForSelector('#query')
+  await waitForConnection(
+    new DynamoDBClient({
+      region: 'us-east-1',
+      endpoint: 'http://localhost:8000',
+      credentials: {
+        accessKeyId: 'localDb',
+        secretAccessKey: 'randomAnyString',
+      },
+    })
+  )
 })
 
 test.describe('Circulars archive page', () => {
