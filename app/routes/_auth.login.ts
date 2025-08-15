@@ -10,7 +10,12 @@ import { redirect } from '@remix-run/node'
 import { generators } from 'openid-client'
 import invariant from 'tiny-invariant'
 
-import { getOpenIDClient, oidcStorage, storage } from './_auth/auth.server'
+import {
+  getOpenIDClient,
+  getScopedOpenIDClient,
+  oidcStorage,
+  storage,
+} from './_auth/auth.server'
 import { parseTokenSet, updateSession } from './_auth/user.server'
 import { origin } from '~/lib/env.server'
 
@@ -119,4 +124,39 @@ export const loader: LoaderFunction = async ({ request: { headers, url } }) => {
       headers: { 'Set-Cookie': cookie },
     })
   }
+}
+
+export async function scopedLogin(
+  request: Request,
+  scope: string,
+  name: string
+) {
+  const client = await getScopedOpenIDClient()
+
+  const oidcSessionPromise = storage.getSession(request.headers.get('Cookie'))
+  const redirect_uri = `${origin}${new URL(request.url).pathname.replace('/edit', '')}`
+  const nonce = generators.nonce()
+  const state = generators.state()
+  const code_verifier = generators.codeVerifier()
+  const code_challenge = generators.codeChallenge(code_verifier)
+  const oidcSession = await oidcSessionPromise
+
+  const current = oidcSession.get('tokenSets') || {}
+  oidcSession.set('tokenSets', {
+    ...current,
+    [name]: { code_verifier, nonce, state, scope },
+  })
+  oidcSession.set('tokenName', name)
+  const cookie = await storage.commitSession(oidcSession)
+  const authUrl = client.authorizationUrl({
+    redirect_uri,
+    scope: `${scope}`,
+    response_type: 'code',
+    code_challenge_method: 'S256',
+    nonce,
+    state,
+    code_challenge,
+  })
+
+  return { authUrl, cookie }
 }
