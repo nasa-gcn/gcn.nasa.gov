@@ -1,7 +1,29 @@
+import _arcFunctions from '@architect/functions'
+import type { DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { ListTablesCommand } from '@aws-sdk/client-dynamodb'
+import { sleep } from '@nasa-gcn/architect-plugin-utils'
 import { expect, test } from '@playwright/test'
 
+async function waitForConnection(client: DynamoDBClient) {
+  // eslint-disable-next-line no-constant-condition
+  while (true) {
+    try {
+      const { TableNames } = await client.send(new ListTablesCommand({}))
+      if (TableNames) return
+    } catch {
+      /* empty */
+    }
+    await sleep(1000)
+  }
+}
+
+test.beforeAll(async () => {
+  const db = await _arcFunctions.tables()
+  const client = db._doc as unknown as DynamoDBClient
+  await waitForConnection(client)
+})
+
 test.beforeEach(async ({ page }, testInfo) => {
-  testInfo.setTimeout(testInfo.timeout + 60_000)
   await page.goto('/circulars')
   await page.waitForSelector('#query')
 })
