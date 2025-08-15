@@ -7,7 +7,7 @@
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData } from '@remix-run/react'
+import { useLoaderData } from '@remix-run/react'
 
 import CredentialCard from '~/components/CredentialCard'
 import {
@@ -45,15 +45,7 @@ export default function () {
         <>
           <p className="usa-paragraph">
             {explanation} Select one of your existing client credentials, or
-            create a new one. For more information about Client Credential
-            expiration see the{' '}
-            <Link
-              className="usa-link"
-              to="/docs/faq#why-are-my-kafka-client-credentials-expiring"
-            >
-              documentation
-            </Link>
-            .
+            create a new one.
           </p>
           <SegmentedCards>
             {client_credentials.map((credential) => (
