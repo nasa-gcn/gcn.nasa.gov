@@ -19,6 +19,7 @@ import {
 import { useRef } from 'react'
 
 import TimeAgo from './TimeAgo'
+import TimeUntil from './TimeUntil'
 import { ToolbarButtonGroup } from './ToolbarButtonGroup'
 import type { RedactedClientCredential } from '~/routes/user.credentials/client_credentials.server'
 
@@ -77,9 +78,17 @@ export default function CredentialCard({
           {showExpirationWarning && (
             <small className="text-error">
               This credential will expire
-              {lastUsed
-                ? ` on ${new Date(lastUsed + EXPIRATION_DAYS).toDateString()} `
-                : ' today '}
+              {lastUsed ? (
+                <>
+                  {' '}
+                  <TimeUntil
+                    time={lastUsed}
+                    timeDifference={EXPIRATION_DAYS}
+                  />{' '}
+                </>
+              ) : (
+                ' today '
+              )}
               if not used to connect to our Kafka brokers.
             </small>
           )}
