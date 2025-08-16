@@ -27,6 +27,9 @@ ads
 circulars
   rate 1 day
   src build/scheduled/circulars
+app-client-expire
+  rate 3 days
+  src build/scheduled/app-client-expire
 
 @tables-streams
 circulars

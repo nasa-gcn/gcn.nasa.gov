@@ -9,13 +9,12 @@ import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
-import CredentialCard from '~/components/CredentialCard'
 import {
   NewCredentialForm,
   handleCredentialActions,
   handleCredentialLoader,
 } from '~/components/NewCredentialForm'
-import SegmentedCards from '~/components/SegmentedCards'
+import { UserCredentials } from '~/components/UserCredentials'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
@@ -31,8 +30,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function () {
   const { client_credentials, groups } = useLoaderData<typeof loader>()
-  const groupDescriptions = Object.fromEntries(groups)
-
   const explanation = (
     <>
       Client credentials allow your scripts to interact with GCN on your behalf.
@@ -47,15 +44,10 @@ export default function () {
             {explanation} Select one of your existing client credentials, or
             create a new one.
           </p>
-          <SegmentedCards>
-            {client_credentials.map((credential) => (
-              <CredentialCard
-                key={credential.client_id}
-                scopeDescription={groupDescriptions[credential.scope]}
-                {...credential}
-              />
-            ))}
-          </SegmentedCards>
+          <UserCredentials
+            client_credentials={client_credentials}
+            groups={groups}
+          />
           <div className="padding-2" key="new">
             <strong>New client credentials....</strong>
             <NewCredentialForm />

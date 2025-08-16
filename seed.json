@@ -5645,5 +5645,39 @@
       "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
       "eventId": ""
     }
+  ],
+  "client_credentials": [
+    {
+      "sub": "default",
+      "client_id": "abcdefg12345678gfedcba",
+      "created": 1755024628845,
+      "name": "Valid Credential",
+      "scope": "example.test.scope",
+      "lastUsed": 1755024328845
+    },
+    {
+      "sub": "default",
+      "client_id": "abcdefg12345678gfedcbb",
+      "created": 1755024628845,
+      "name": "Warning Credential",
+      "scope": "example.test.scope",
+      "lastUsed": 1753379811737
+    },
+    {
+      "sub": "default",
+      "client_id": "abcdefg12345678gfedcbc",
+      "created": 1755024628845,
+      "name": "Never Used Credential",
+      "scope": "example.test.scope"
+    },
+    {
+      "sub": "default",
+      "client_id": "abcdefg12345678gfedcbd",
+      "created": 1755024628845,
+      "name": "Expired Credential",
+      "scope": "example.test.scope",
+      "expired": 1755024628845,
+      "lastUsed": 1745014628845
+    }
   ]
 }
