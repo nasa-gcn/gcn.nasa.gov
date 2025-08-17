@@ -24,5 +24,7 @@ export async function loader({
   const parsedUrl = new URL(url)
   const eventIds = parsedUrl.searchParams.getAll('eventIds')
 
-  return eventIds?.length ? await getAllSynonymMembers(eventIds) : []
+  return eventIds?.length
+    ? (await getAllSynonymMembers(eventIds)).reverse()
+    : []
 }
