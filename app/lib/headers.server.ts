@@ -54,3 +54,16 @@ export function pickHeaders(headers: Headers, keys: string[]) {
   }
   return result
 }
+
+/**
+ * Throw 404 Not Found if request headers indicate that the request is from
+ * a browser. Intended for use in routes that are only intended to be used as
+ * API endpoints.
+ */
+export function notFoundIfBrowserRequest(headers: Headers) {
+  const acceptHeader = headers.get('accept') || ''
+  const isHtmlRequest = acceptHeader.includes('text/html')
+  if (isHtmlRequest) {
+    throw new Response(null, { status: 404 })
+  }
+}

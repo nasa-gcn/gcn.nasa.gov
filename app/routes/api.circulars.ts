@@ -29,6 +29,7 @@ import {
   getUserGroupStrings,
 } from '~/lib/cognito.server'
 import { getEnvOrDie } from '~/lib/env.server'
+import { notFoundIfBrowserRequest } from '~/lib/headers.server'
 
 // FIXME: BaseClient.validateJWT is non-private but undocumented.
 // openid-client doesn't provide a type for it.
@@ -171,6 +172,7 @@ async function getUserAttributes(Username: string) {
  * A new circular version will be created.
  */
 export async function action({ request }: ActionFunctionArgs) {
+  notFoundIfBrowserRequest(request.headers)
   if (!['PUT', 'POST'].includes(request.method))
     throw new Response(null, { status: 405 })
 
