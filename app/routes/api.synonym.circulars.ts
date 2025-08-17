@@ -8,19 +8,12 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 
 import { getAllSynonymMembers } from './synonyms/synonyms.server'
+import { notFoundIfBrowserRequest } from '~/lib/headers.server'
 
 export async function loader({
   request: { headers, url },
 }: LoaderFunctionArgs) {
-  // This route exists only to fetch data. If the route is accessed via
-  // the browser, throw a 404.
-  const acceptHeader = headers.get('accept') || ''
-  const isHtmlRequest = acceptHeader.includes('text/html')
-
-  if (isHtmlRequest) {
-    throw new Response('Not Found', { status: 404 })
-  }
-
+  notFoundIfBrowserRequest(headers)
   const parsedUrl = new URL(url)
   const eventIds = parsedUrl.searchParams.getAll('eventIds')
 

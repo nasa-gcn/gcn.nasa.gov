@@ -9,9 +9,16 @@ import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 
 import { get } from './circulars/circulars.server'
-import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import {
+  notFoundIfBrowserRequest,
+  publicStaticShortTermCacheControlHeaders,
+} from '~/lib/headers.server'
 
-export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
+export async function loader({
+  request: { headers },
+  params: { '*': value },
+}: LoaderFunctionArgs) {
+  notFoundIfBrowserRequest(headers)
   invariant(value)
   const { subject, submitter } = await get(parseFloat(value))
   return json(
