@@ -24,4 +24,8 @@ To begin receiving GCN notices via Kafka, users have two options for setting up 
 
 ## History
 
-Learn about how and why GCN was created, and how it became an essential component of multimessenger astrophysics in the [History of GCN](/docs/history).
+Learn about how and why GCN was created, and how it became an essential component of multimessenger astrophysics in the [History of GCN](/docs/about/history).
+
+## Team
+
+See who is behind the new GCN and what [our team](/docs/about/team) is working on.
