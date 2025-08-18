@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import { Form } from '@remix-run/react'
@@ -15,6 +16,12 @@ import { getUser } from './_auth/user.server'
 import { adminGroup } from './admin'
 import { UserLookupComboBox } from '~/components/UserLookup'
 import { getFormDataString } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Users',
+  getSitemapEntries: () => null,
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)

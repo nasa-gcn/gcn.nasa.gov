@@ -5,13 +5,20 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer, SideNav } from '@trussworks/react-uswds'
 
 import { getUser } from './_auth/user.server'
+import type { BreadcrumbHandle } from '~/root/Title'
 
 export const adminGroup = 'gcn.nasa.gov/gcn-admin'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Admin',
+  getSitemapEntries: () => null,
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
