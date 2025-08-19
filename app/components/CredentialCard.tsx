@@ -20,10 +20,8 @@ import { useRef } from 'react'
 
 import TimeAgo from './TimeAgo'
 import { ToolbarButtonGroup } from './ToolbarButtonGroup'
+import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
 import type { RedactedClientCredential } from '~/routes/user.credentials/client_credentials.server'
-
-export const WARNING_MILLIS = 21 * 24 * 60 * 60 * 1000 // 21 days in milliseconds
-export const EXPIRATION_MILLIS = 30 * 24 * 60 * 60 * 1000
 
 export default function CredentialCard({
   name,

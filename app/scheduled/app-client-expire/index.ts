@@ -10,7 +10,7 @@ import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateQuery } from '@aws-sdk/lib-dynamodb'
 import dedent from 'ts-dedent'
 
-import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/components/CredentialCard'
+import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
 import {
   deleteAppClient,
   extractAttributeRequired,
