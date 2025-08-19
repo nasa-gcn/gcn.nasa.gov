@@ -20,6 +20,7 @@ import { useRef } from 'react'
 
 import TimeAgo from './TimeAgo'
 import { ToolbarButtonGroup } from './ToolbarButtonGroup'
+import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
 import type { RedactedClientCredential } from '~/routes/user.credentials/client_credentials.server'
 
 export default function CredentialCard({
@@ -29,32 +30,60 @@ export default function CredentialCard({
   scope,
   scopeDescription,
   lastUsed,
+  expired,
 }: RedactedClientCredential & { scopeDescription?: string }) {
   const ref = useRef<ModalRef>(null)
   const fetcher = useFetcher()
   const [searchParams] = useSearchParams()
   const disabled = fetcher.state !== 'idle'
   const alerts = searchParams.getAll('alerts')
+  const showExpirationWarning = !(
+    expired || Date.now() - (lastUsed ?? 0) <= WARNING_MILLIS
+  )
+
   return (
     <>
       <Grid row style={disabled ? { opacity: '50%' } : undefined}>
-        <div className="tablet:grid-col flex-fill">
+        <div
+          className="tablet:grid-col flex-fill"
+          style={expired ? { opacity: '50%' } : undefined}
+        >
           <div>
             <small>
               <strong>{name}</strong>{' '}
               <span>
                 (created <TimeAgo time={created} />,{' '}
-                {lastUsed ? (
+                {expired ? (
                   <>
-                    last used <TimeAgo time={lastUsed} />
+                    expired <TimeAgo time={expired} />
                   </>
                 ) : (
-                  <>never used</>
+                  <>
+                    {lastUsed ? (
+                      <>
+                        last used <TimeAgo time={lastUsed} />
+                      </>
+                    ) : (
+                      <>never used</>
+                    )}
+                  </>
                 )}
                 )
               </span>
             </small>
           </div>
+          {showExpirationWarning && (
+            <small className="text-error">
+              This credential will expire{' '}
+              {lastUsed ? (
+                <TimeAgo time={lastUsed + EXPIRATION_MILLIS} />
+              ) : (
+                'today'
+              )}{' '}
+              if not used to connect to our Kafka brokers.
+            </small>
+          )}
+
           <div>
             <small>
               scope: <code title={scopeDescription}>{scope}</code>
@@ -86,7 +115,7 @@ export default function CredentialCard({
               {alerts.map((alert) => (
                 <input key={alert} type="hidden" name="alerts" value={alert} />
               ))}
-              <Button disabled={disabled} type="submit">
+              <Button disabled={disabled || Boolean(expired)} type="submit">
                 Select
                 <Icon.ArrowForward
                   role="presentation"

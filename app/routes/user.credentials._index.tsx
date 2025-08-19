@@ -10,10 +10,9 @@ import type { ActionFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
 import { ClientCredentialVendingMachine } from './user.credentials/client_credentials.server'
-import CredentialCard from '~/components/CredentialCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import { handleCredentialLoader } from '~/components/NewCredentialForm'
-import SegmentedCards from '~/components/SegmentedCards'
+import { UserCredentials } from '~/components/UserCredentials'
 import { getFormDataString } from '~/lib/utils'
 
 export const handle: SEOHandle = { getSitemapEntries: () => null }
@@ -42,7 +41,6 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function () {
   const { client_credentials, groups } = useLoaderData<typeof loader>()
-  const groupDescriptions = Object.fromEntries(groups)
 
   return (
     <>
@@ -73,15 +71,10 @@ export default function () {
         </Link>
         .
       </p>
-      <SegmentedCards>
-        {client_credentials.map((credential) => (
-          <CredentialCard
-            key={credential.client_id}
-            scopeDescription={groupDescriptions[credential.scope]}
-            {...credential}
-          />
-        ))}
-      </SegmentedCards>
+      <UserCredentials
+        client_credentials={client_credentials}
+        groups={groups}
+      />
     </>
   )
 }
