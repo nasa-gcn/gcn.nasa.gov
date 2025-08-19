@@ -50,6 +50,12 @@ sessions
   _idx *String
   _ttl TTL
 
+refreshTokens
+  sub *String
+  uuid **String
+  encrypt true
+  PointInTimeRecovery true
+
 announcement_subscriptions
   email *String
   sub **String

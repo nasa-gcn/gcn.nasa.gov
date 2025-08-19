@@ -65,7 +65,6 @@ export const getOpenIDClient = memoizee(
         'Environment variable COGNITO_USER_POOL_ID must be defined in production'
       )
     }
-
     const issuer = await Issuer.discover(providerUrl)
     // FIXME: Cognito supports RFC 7009 "Token Revocation", but it does not
     // advertise the token endpoint in its autodiscovery response.
@@ -86,3 +85,32 @@ export const getOpenIDClient = memoizee(
   },
   { promise: true }
 )
+
+/**
+ * Returns an OpenID client that authorizes against the Public app client
+ *
+ * This client can only grant Kafka consumer and producer scope
+ */
+export async function getScopedOpenIDClient() {
+  const user_pool_id = process.env.COGNITO_USER_POOL_ID
+  if (!user_pool_id) throw new Response(null, { status: 400 })
+  const providerUrl = `https://cognito-idp.${
+    user_pool_id.split('_')[0]
+  }.amazonaws.com/${user_pool_id}/`
+
+  const issuer = await Issuer.discover(providerUrl)
+
+  // FIXME: Cognito supports RFC 7009 "Token Revocation", but it does not
+  // advertise the token endpoint in its autodiscovery response.
+  // Fill it in by hand.
+  if (!issuer.metadata.revocation_endpoint) {
+    issuer.revocation_endpoint = issuer.metadata.revocation_endpoint =
+      issuer.metadata.token_endpoint?.replace('/oauth2/token', '/oauth2/revoke')
+  }
+
+  return new issuer.Client({
+    client_id: getEnvOrDie('PUBLIC_CLIENT_ID'),
+    token_endpoint_auth_method: 'none',
+    response_types: ['code'],
+  })
+}
