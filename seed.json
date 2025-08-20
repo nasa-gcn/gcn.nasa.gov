@@ -5726,7 +5726,7 @@
       "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
       "circularId": 44,
       "submitter": "Example User at Example <example@example.com>",
-      "body": "The old synonym should be cleaned up when the last member is edited in change request. Check that group GRB 230824M has been deleted. Check that group GRB 230824F has been created.",
+      "body": "The old synonym should be cleaned up when the last member is edited in change request. Check that group GRB 230824M has a timestamp of -1. Check that group GRB 230824F has been created.",
       "eventId": "GRB 230824F"
     },
     {
@@ -5742,7 +5742,7 @@
       "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
       "circularId": 46,
       "submitter": "Example User at Example <example@example.com>",
-      "body": "The old synonym should be cleaned up but no new one created. Check that the group for GRB 230824X has been deleted."
+      "body": "The old synonym should be cleaned up but no new one created. Check that the synonym for GRB 230824X has a timestamp of -1."
     }
   ],
   "client_credentials": [
