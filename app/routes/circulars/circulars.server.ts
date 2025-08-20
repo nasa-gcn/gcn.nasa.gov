@@ -423,6 +423,7 @@ export async function putVersion(
 
   await manageSynonymOnVersionUpdates(
     newCircularVersion.createdOn,
+    oldCircular.createdOn,
     newCircularVersion.eventId,
     oldCircular.eventId
   )
@@ -641,6 +642,7 @@ export async function approveChangeRequest(
 
   await manageSynonymOnVersionUpdates(
     newVersion.createdOn,
+    circular.createdOn,
     newVersion.eventId,
     circular.eventId
   )

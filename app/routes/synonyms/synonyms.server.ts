@@ -10,7 +10,6 @@ import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
 import { slug } from 'github-slugger'
-import min from 'lodash/min.js'
 import orderBy from 'lodash/orderBy.js'
 
 import type { Circular } from '../circulars/circulars.lib'
@@ -179,18 +178,28 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
  *   - It deletes the old eventId synonym if it's empty.
  *   - If it's not empty, it updates the initialDate on the remaining synonym.
  *
- * @param createdOn - the Circular createdOn timestamp
+ * @param newCreatedOn - the Circular createdOn timestamp for the new circular version
+ * @param oldCreatedOn - the Circular createdOn timestamp for the old circular
  * @param newEventId - the updated eventId
  * @param oldEventId - the original eventId
  */
 export async function manageSynonymOnVersionUpdates(
-  createdOn: number,
+  newCreatedOn: number,
+  oldCreatedOn: number,
   newEventId?: string,
   oldEventId?: string
 ) {
-  if (newEventId === oldEventId) return
+  if (newEventId === oldEventId && newCreatedOn === oldCreatedOn) return
+
+  if (newCreatedOn != oldCreatedOn && newEventId === oldEventId) {
+    if (oldEventId) await updateInitialDate(oldEventId)
+    if (newEventId) await updateInitialDate(newEventId)
+
+    return
+  }
+
   if (newEventId) {
-    const newSynonymCreated = await tryInitSynonym(newEventId, createdOn)
+    const newSynonymCreated = await tryInitSynonym(newEventId, newCreatedOn)
     if (!newSynonymCreated) updateInitialDate(newEventId)
   }
 
