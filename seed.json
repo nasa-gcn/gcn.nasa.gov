@@ -5680,6 +5680,12 @@
       "eventId": "GRB 230824R",
       "slug": "grb-230824r",
       "initialDate": 1693037110788
+    },
+    {
+      "synonymId": "d0ef15f2-a346-4b2c-ac9d-f7287194444",
+      "eventId": "GRB 230824X",
+      "slug": "grb-230824x",
+      "initialDate": 1693037110782
     }
   ],
   "auto_increment_metadata": [
