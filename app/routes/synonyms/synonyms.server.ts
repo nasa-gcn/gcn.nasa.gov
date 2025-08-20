@@ -313,8 +313,8 @@ export async function putSynonyms({
 
 export async function getOldestDate(eventId: string) {
   const circulars = await getSynonymMembers(eventId)
-
-  return min(circulars.map(({ createdOn }) => createdOn)) || -1
+  const oldest = min(circulars.map(({ createdOn }) => createdOn))
+  return oldest ? oldest : -1
 }
 
 /*

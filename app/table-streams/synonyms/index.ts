@@ -52,12 +52,13 @@ export const handler = createTriggerHandler(
             const oldestDate = min(
               synonyms.map(({ initialDate }) => initialDate)
             )!
+            const initialDate = oldestDate ? oldestDate : -1
 
             await putIndex({
               synonymId,
               eventIds: synonyms.map((synonym) => synonym.eventId),
               slugs: synonyms.map((synonym) => synonym.slug),
-              initialDate: oldestDate,
+              initialDate,
             })
           } else {
             await removeIndex(synonymId)
