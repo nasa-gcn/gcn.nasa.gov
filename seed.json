@@ -2505,7 +2505,7 @@
       "subject": "GRB 230824A: Swift detection of a burst",
       "submittedHow": "email",
       "bibcode": "2023GCN.34537....1P",
-      "createdOn": 1692886366147,
+      "createdOn": 1693037110789,
       "circularId": 34537,
       "submitter": "K.L. Page at U Leicester <klp5@leicester.ac.uk>",
       "body": "\nK. L. Page (U Leicester), S. Dichiara (PSU), J.D. Gropp (PSU),\nH. A. Krimm (NSF), T. M. Parsotan (GSFC/UMBC/CRESSTII) and\nM. A. Williams (PSU) report on behalf of the Neil Gehrels Swift\nObservatory Team:\n\nAt 13:59:44 UT, the Swift Burst Alert Telescope (BAT) triggered and\nlocated GRB 230824A (trigger=1186959).  \nThe BAT on-board calculated location is \nRA, Dec 261.941, -16.215 which is \n   RA(J2000) = 17h 27m 46s\n   Dec(J2000) = -16d 12' 53\"\nwith an uncertainty of 3 arcmin (radius, 90% containment, including \nsystematic uncertainty).  As is common for image triggers, the BAT \nlight curve does not show significant structure.  The duration \nappears to be about 20 sec.  The peak count rate was ~1400 \ncounts/sec (15-350 keV), at ~6 sec after the trigger. \n\nDue to a Moon observing constraint, Swift cannot slew to the BAT\nposition until 09:35 UT on 2023 August 27. There will thus be no XRT or\nUVOT data for this trigger before this time. \n\nBurst Advocate for this burst is K. L. Page (klp5 AT leicester.ac.uk). \nPlease contact the BA by email if you require additional information\nregarding Swift followup of this burst. In extremely urgent cases, after\ntrying the Burst Advocate, you can contact the Swift PI by phone (see\nSwift TOO web site for information: http://www.swift.psu.edu/)\n\n",
@@ -4832,11 +4832,61 @@
       "subject": "Swift J1727.8-1613 (GRB 230824A): Bassano Bresciano Observatory optical observations",
       "submittedHow": "email-legacy",
       "bibcode": "2023GCN.34562....1Q",
-      "createdOn": 1693037110788,
+      "createdOn": 1693037110786,
       "circularId": 21,
       "submitter": "Ulisse Quadri at Bassano Bresciano Obs <oabb@ulisse.bs.it>",
       "body": "U.Quadri, P.Madurini and L.Strabla (Bassano Bresciano Astronomical Observatory),\n\nMember of: \nAAVSO - American Association of Variable Star Observers.\nUAI/SSV - Unione Astrofili Italiani/sezione stelle variabili.\nGAC - Gruppo Astrofili Cremonesi.\n\nin a large collaboration with:\nM.G. Dainotti (National Astronomical Observatory of Japan), \nY. Niino (Tokyo University, Institute of Astronomy), \nK. Kalinowski (Aarhus University, Department of Physics and Astronomy),\nB. De Simone (Universita' degli Studi Di Salerno)\nreport: \n\nWe imaged the field of Swift J1727.8-1613(GRB 230824A) \n(Page et al., GCN 34537; Navaneeth et al., GCN 34538, Odeh et al., GCN 34543)\nwith the following telescopes:\n\n0.25-m f/4.8 Newton reflector at Bassano Bresciano Observatory, Italy - MPC Code 565. \n0.32-m f/8.0 (iTelescope) reflector at AstroCamp at Nerpio, Spain - MPC Code I89.\n0.51-m f/6.8 (iTelescope) Dall-Kirkham at Rio Hurtado Valley, Chile - MPC Code X07. \n \n\nWe clearly detected a bright object, in the same location as M.Odeh et al., GCN 34543, within \nthe uncertainty radius of the Swift localization, at:\n\nR.A. (J2000): 17:27:43.32\nDec. (J2000): -16:12:18.8\n\n\nThe results of our photometry are:\n\n------------------------------------------------------    \n    Date UT       Exp Time   R-mag    Err  IAU STATION\n------------------------------------------------------\n  \n2023-08-24.7967    18x20s    13.25   0.057    565\n2023-08-24.8018    18x20s    13.25   0.049    565  \n2023-08-24.8071    12x30s    13.24   0.048    565 \n2023-08-24.8124    12x30s    13.24   0.043    565 \n2023-08-24.8185    12x30s    13.24   0.042    565 \n2023-08-24.9030    10x60s    13.05     -      I89\n2023-08-25.1470    10x60s    12.80     -      X07\n------------------------------------------------------\n\nMagnitudes were estimated with the pan-STARRS cat. \nand are converted using Lupton (2005) equations.\n\nNot corrected for galactic dust extinction.\n\nFurther observations are planned.\n\nReference:\nhttp://www.osservatoriobassano.org/GRB.asp\n\nThe message may be cited.\n\n\n",
       "eventId": "GRB 230824A"
+    },
+    {
+      "subject": "GRB 230824Q Testing change request approval synonym with remaining member of old synonym group",
+      "submittedHow": "email-legacy",
+      "bibcode": "2023GCN.34562....1Q",
+      "createdOn": 1693037110785,
+      "circularId": 42,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "GRB 230824Q should remain even after one circular has eventId changed.",
+      "eventId": "GRB 230824Q"
+    },
+    {
+      "subject": "GRB 230824Q Testing change request approval synonym with remaining member of old synonym group",
+      "submittedHow": "email-legacy",
+      "bibcode": "2023GCN.34562....1Q",
+      "createdOn": 1693037110787,
+      "circularId": 43,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "GRB 230824Q should remain even after one circular has eventId changed.",
+      "eventId": "GRB 230824Q"
+    },
+    {
+      "subject": "GRB 230824M Testing removal of old synonym when no circulars remain with that eventId",
+      "submittedHow": "email-legacy",
+      "bibcode": "2023GCN.34562....1Q",
+      "createdOn": 1693037110784,
+      "circularId": 44,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up when the last member is edited in change request.",
+      "eventId": "GRB 230824M"
+    },
+    {
+      "subject": "GRB 230824R Testing change request approval with changing to existing event group",
+      "submittedHow": "email-legacy",
+      "bibcode": "2023GCN.34562....1Q",
+      "createdOn": 1692903430034,
+      "circularId": 45,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up but no new one created.",
+      "eventId": "GRB 230824R"
+    },
+    {
+      "subject": "GRB 230824X Testing change request approval with removal of old group",
+      "submittedHow": "email-legacy",
+      "bibcode": "2023GCN.34562....1Q",
+      "createdOn": 1693037110782,
+      "circularId": 46,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up but no new one created.",
+      "eventId": "GRB 230824X"
     }
   ],
   "circulars_history": [
@@ -4909,7 +4959,7 @@
       "synonymId": "efcbddac-dd34-4863-bcbd-2e59c27f7e26",
       "eventId": "GRB 230824A",
       "slug": "grb-230824a",
-      "initialDate": 1692886366147
+      "initialDate": 1693037110789
     },
     {
       "synonymId": "9c3cb51b-1f9f-4b24-9ef6-019237cdbb3c",
@@ -5612,6 +5662,30 @@
       "eventId": "GRB 230812A",
       "slug": "grb-230812a",
       "initialDate": 1691833142979
+    },
+    {
+      "synonymId": "d0ef15f2-a346-4b2c-ac9d-f72871955555",
+      "eventId": "GRB 230824Q",
+      "slug": "grb-230824q",
+      "initialDate": 1693037110788
+    },
+    {
+      "synonymId": "d0ef15f2-a346-4b2c-ac9d-f728719000000",
+      "eventId": "GRB 230824M",
+      "slug": "grb-230824m",
+      "initialDate": 1693037110788
+    },
+    {
+      "synonymId": "d0ef15f2-a346-4b2c-ac9d-f72871942424",
+      "eventId": "GRB 230824R",
+      "slug": "grb-230824r",
+      "initialDate": 1693037110788
+    },
+    {
+      "synonymId": "d0ef15f2-a346-4b2c-ac9d-f7287194444",
+      "eventId": "GRB 230824X",
+      "slug": "grb-230824x",
+      "initialDate": 1693037110782
     }
   ],
   "auto_increment_metadata": [
@@ -5644,6 +5718,37 @@
       "requestorEmail": "example@example.com",
       "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
       "eventId": ""
+    },
+    {
+      "subject": "GRB 230824P Testing change request approval synonym with remaining member of old synonym group",
+      "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
+      "circularId": 42,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "GRB 230824Q should remain even after one circular has eventId changed. Check that the date on group GRB 230824Q is now 1693037110787. Check that group GRB 230824P has been created.",
+      "eventId": "GRB 230824P"
+    },
+    {
+      "subject": "GRB 230824F Testing removal of old synonym when no circulars remain with that eventId",
+      "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
+      "circularId": 44,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up when the last member is edited in change request. Check that group GRB 230824M has a timestamp of -1. Check that group GRB 230824F has been created.",
+      "eventId": "GRB 230824F"
+    },
+    {
+      "subject": "GRB 230824A Testing change request approval with changing to existing event group",
+      "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
+      "circularId": 45,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up but no new one created. Check that the date on the synonym group for GRB 230824A is 1692903430034.",
+      "eventId": "GRB 230824A"
+    },
+    {
+      "subject": "GRB 230824Z Testing change request approval with removal of old group",
+      "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
+      "circularId": 46,
+      "submitter": "Example User at Example <example@example.com>",
+      "body": "The old synonym should be cleaned up but no new one created. Check that the synonym for GRB 230824X has a timestamp of -1."
     }
   ],
   "client_credentials": [
