@@ -20,8 +20,8 @@ import { PlainTextBody } from '~/components/circularDisplay/Body'
 import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
 import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle: BreadcrumbHandle = {
-  breadcrumb: 'Circular Event Group',
+export const handle: BreadcrumbHandle<Awaited<ReturnType<typeof loader>>> = {
+  breadcrumb: ({ data: { eventIds } }) => eventIds.join(', '),
 }
 
 export async function loader({ params: { slug } }: LoaderFunctionArgs) {
