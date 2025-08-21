@@ -15,6 +15,7 @@ import {
   getAllSynonymMembers,
   getSynonymsBySlug,
 } from './synonyms/synonyms.server'
+import { Anchor } from '~/components/Anchor'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { PlainTextBody } from '~/components/circularDisplay/Body'
 import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
@@ -61,7 +62,9 @@ export default function Group() {
       <h1>{eventIds.join(', ')}</h1>
       {members.map((circular) => (
         <div key={circular.circularId}>
-          <h2 className="margin-2">{`GCN Circular ${circular.circularId}`}</h2>
+          <h2 className="margin-2">
+            <Anchor>{`GCN Circular ${circular.circularId}`}</Anchor>
+          </h2>
           <div className="margin-2">
             <FrontMatter
               createdOn={circular.createdOn}
