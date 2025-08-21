@@ -55,7 +55,7 @@ export async function loader({
     ra?: string
     dec?: string
     internal_names?: string
-  } = (await response.json()).data.reply
+  } = (await response.json()).data
 
   if (!(ra && dec)) throw new Response(null, { status: 404 })
 
