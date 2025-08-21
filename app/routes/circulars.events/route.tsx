@@ -5,19 +5,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Outlet } from '@remix-run/react'
-import { GridContainer } from '@trussworks/react-uswds'
-
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
   breadcrumb: 'Events',
-}
-
-export default function () {
-  return (
-    <GridContainer className="usa-section">
-      <Outlet />
-    </GridContainer>
-  )
 }
