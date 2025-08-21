@@ -11,7 +11,7 @@ import { GridContainer } from '@trussworks/react-uswds'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
-  breadcrumb: 'Circular Group',
+  breadcrumb: 'Events',
 }
 
 export default function () {
