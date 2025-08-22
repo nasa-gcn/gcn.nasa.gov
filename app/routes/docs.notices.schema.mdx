@@ -147,76 +147,153 @@ A property optionally included when a single schema is used to produce multiple 
 }
 ```
 
-## Extended Example
+## Recommended Schema and Examples
 
-We recommend exploring our [schema browser](/docs/schema/stable/gcn/notices) and [GitHub repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices) for more examples. Here is an extended example from Swift/BAT-GUANO:
+We recommend exploring our [schema browser](/docs/schema/stable/gcn/notices) and [GitHub repository](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices) for more examples.
+
+Here is an example of the minimum recommended schema for a transient discovery instrument:
 
 <Tabs>
-  <Tab label="guano.schema.json">
+  <Tab label="discovery.schema.json">
     <Highlight
       language="json"
       code={JSON.stringify(
         {
-          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano.schema.json',
+          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/LISA/discovery.schema.json',
           $schema: 'https://json-schema.org/draft/2020-12/schema',
-          title: 'Swift/BAT-GUANO Alert',
+          title: 'Recommended schema for discovery instruments',
           description:
-            'Candidate gamma-ray transient reported from the BAT-GUANO targeted search',
+            'This is a basic transient discovery instrument schema template.',
           type: 'object',
           allOf: [
-            { $ref: '../../core/Alert.schema.json' },
-            { $ref: '../../core/Event.schema.json' },
-            { $ref: '../../core/DateTime.schema.json' },
-            { $ref: '../../core/Localization.schema.json' },
-            { $ref: '../../core/Statistics.schema.json' },
-            { $ref: '../../core/Reporter.schema.json' },
-            { $ref: '../../core/AdditionalInfo.schema.json' },
-          ],
-          properties: {
-            $schema: { type: 'string', format: 'uri' },
-            follow_up_event: {
-              type: 'string',
-              description:
-                'Name or trigger time of the external trigger that launched the search.',
+            {
+              $ref: '../core/Alert.schema.json',
             },
-            follow_up_type: {
-              type: 'string',
+            {
+              $ref: '../core/DateTime.schema.json',
+            },
+            {
+              $ref: '../core/Event.schema.json',
+            },
+            {
+              $ref: '../core/Reporter.schema.json',
+            },
+            {
+              $ref: '../core/Localization.schema.json',
+            },
+          ],
+          required: ['alert_datetime', 'mission'],
+          properties: {
+            subtype: {
+              enum: ['type_1', 'type_2', 'type_3'],
               description:
-                'Type of external trigger that launched the search, eg GW, neutrino, etc.',
+                'Subtype is required when a single schema is used to produce multiple variations of a notice.',
             },
           },
-          unevaluatedProperties: false,
         },
         null,
         2
       )}
     />
   </Tab>
-  <Tab label="guano.example.json">
+  <Tab label="discovery.example.json">
     <Highlight
       language="json"
       code={JSON.stringify(
         {
           $schema:
-            'https://gcn.nasa.gov/schema/main/gcn/notices/swift/bat/guano.schema.json',
-          mission: 'Swift',
-          instrument: 'BAT-GUANO',
-          messenger: 'EM',
-          record_number: 1,
-          alert_datetime: '2023-01-01T03:24:36.0Z',
-          alert_tense: 'current',
+            'https://gcn.nasa.gov/schema/main/gcn/notices/LISA/discovery.schema.json',
+          mission: 'LISA',
+          instrument: 'LISA Instrument',
+          messenger: 'GW',
+          alert_datetime: '2040-02-29T00:00:00Z',
           alert_type: 'initial',
-          trigger_time: '2022-12-31T21:46:05.13Z',
-          rate_snr: 15.8,
-          rate_duration: 0.256,
-          rate_energy_range: [15, 350],
-          classification: { GRB: 1 },
-          far: 0.00001,
-          follow_up_event: 'Fermi 694215970',
-          follow_up_type: 'GRB',
-          data_archive_page:
-            'https://guano.swift.psu.edu/trigger_report?id=694215995',
-          id: ['694215995'],
+          event_name: 'GW400228',
+          id: '0123456',
+          trigger_time: '2040-02-28T12:00:00Z',
+          ra: 60.0,
+          dec: 42.0,
+          ra_dec_error: 0.02,
+          record_number: 1,
+          subtype: 'type_1',
+        },
+        null,
+        2
+      )}
+    />
+  </Tab>
+</Tabs>
+
+This template serves as a starting point, such that all essential properties are included.
+
+For drafting the follow-up notices of discovery instrument, below is the recommended minimum schema with an example:
+
+<Tabs>
+  <Tab label="follow_up.schema.json">
+    <Highlight
+      language="json"
+      code={JSON.stringify(
+        {
+          $id: 'https://gcn.nasa.gov/schema/main/gcn/notices/LISA/follow_up.schema.json',
+          $schema: 'https://json-schema.org/draft/2020-12/schema',
+          title: 'Recommended Schema for follow-up observations',
+          description: 'This is basic follow-up instrument schema template.',
+          type: 'object',
+          allOf: [
+            {
+              $ref: '../core/FollowUp.schema.json',
+            },
+            {
+              $ref: '../core/Alert.schema.json',
+            },
+            {
+              $ref: '../core/DateTime.schema.json',
+            },
+            {
+              $ref: '../core/Event.schema.json',
+            },
+            {
+              $ref: '../core/Reporter.schema.json',
+            },
+            {
+              $ref: '../core/Localization.schema.json',
+            },
+          ],
+          required: ['mission', 'ref_instrument'],
+          properties: {
+            subtype: {
+              enum: ['type_1', 'type_2', 'type_3'],
+              description:
+                'Subtype is required when a single schema is used to produce multiple variations of a notice.',
+            },
+          },
+        },
+        null,
+        2
+      )}
+    />
+  </Tab>
+  <Tab label="follow_up.example.json">
+    <Highlight
+      language="json"
+      code={JSON.stringify(
+        {
+          $schema:
+            'https://gcn.nasa.gov/schema/main/gcn/notices/LISA/follow_up.schema.json',
+          mission: 'TMT',
+          instrument: 'WFOS',
+          messenger: 'EM',
+          alert_datetime: '2040-05-04T12:00:00Z',
+          alert_type: 'initial',
+          event_name: 'GW400228',
+          ref_type: 'GW',
+          ref_instrument: 'LISA',
+          ref_ID: '0123456',
+          ra: 60.0,
+          dec: 42.0,
+          ra_dec_error: 0.02,
+          record_number: 1,
+          subtype: 'type_1',
         },
         null,
         2
