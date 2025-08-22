@@ -90,22 +90,88 @@ export default function () {
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link
-          to={`/circulars${searchString}`}
-          className="usa-button flex-align-stretch"
-        >
-          <div className="position-relative">
-            <Icon.ArrowBack
-              role="presentation"
-              className="position-absolute top-0 left-0"
-            />
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
-        </Link>
+        <ButtonGroup type="segmented">
+          <Link
+            to={`/circulars${searchString}`}
+            className="usa-button flex-align-stretch"
+            title="Go back to index of GCN Circulars"
+          >
+            <div className="position-relative">
+              <Icon.ArrowBack
+                role="presentation"
+                className="margin-bottom-neg-05 margin-top-neg-05"
+              />
+            </div>
+            Back
+          </Link>
+          {Number.isFinite(previousCircular) ? (
+            <Link
+              to={`/circulars/${previousCircular}${searchString}`}
+              className="usa-button flex-align-stretch"
+              title="Go to previous GCN Circular"
+            >
+              <div className="position-relative">
+                <Icon.NavigateBefore
+                  role="presentation"
+                  className="margin-bottom-neg-05 margin-top-neg-05"
+                />
+              </div>
+              Previous
+            </Link>
+          ) : (
+            <Button
+              type="button"
+              className="usa-button flex-align-stretch"
+              title="Go to previous GCN Circular"
+              disabled
+              aria-disabled
+            >
+              <div className="position-relative">
+                <Icon.NavigateBefore
+                  role="presentation"
+                  className="margin-bottom-neg-05 margin-top-neg-05"
+                />
+              </div>
+              Previous
+            </Button>
+          )}
+          {Number.isFinite(nextCircular) ? (
+            <Link
+              to={`/circulars/${nextCircular}${searchString}`}
+              className="usa-button flex-align-stretch"
+              title="Go to next GCN Circular"
+            >
+              Next
+              <div className="position-relative">
+                <Icon.NavigateNext
+                  role="presentation"
+                  className="margin-bottom-neg-05 margin-top-neg-05"
+                />
+              </div>
+            </Link>
+          ) : (
+            <Button
+              type="button"
+              className="usa-button flex-align-stretch"
+              title="Go to next GCN Circular"
+              disabled
+              aria-disabled
+            >
+              Next
+              <div className="position-relative">
+                <Icon.NavigateNext
+                  role="presentation"
+                  className="margin-bottom-neg-05 margin-top-neg-05"
+                />
+              </div>
+            </Button>
+          )}
+        </ButtonGroup>
         <ButtonGroup type="segmented">
           <Link
             to={`${linkString}.txt`}
             className="usa-button usa-button--outline"
+            title="View this GCN Circular in plain text format"
             reloadDocument
           >
             Text
@@ -113,6 +179,7 @@ export default function () {
           <Link
             to={`${linkString}.json`}
             className="usa-button usa-button--outline"
+            title="View this GCN Circular in machine-readable JSON format"
             reloadDocument
           >
             JSON
@@ -136,91 +203,31 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        {useSubmitterStatus() && (
-          <Link
-            className="usa-button usa-button--outline"
-            to={`/circulars/correction/${circularId}`}
-          >
-            Request Correction
-          </Link>
-        )}
-        {result?.history && result.history.length > 0 && (
-          <CircularsHistory circular={circularId} history={result?.history} />
-        )}
-        {useModStatus() && (
-          <Link
-            to={`/circulars/edit/${circularId}`}
-            className="usa-button usa-button--outline"
-          >
-            Edit
-          </Link>
-        )}
+        <ButtonGroup type="segmented">
+          {useSubmitterStatus() && (
+            <Link
+              className="usa-button usa-button--outline"
+              to={`/circulars/correction/${circularId}`}
+              title="Suggest a correction to this GCN Circular"
+            >
+              Correct
+            </Link>
+          )}
+          {useModStatus() && (
+            <Link
+              to={`/circulars/edit/${circularId}`}
+              className="usa-button usa-button--outline"
+              title="Edit this GCN Circular"
+            >
+              Edit
+            </Link>
+          )}
+        </ButtonGroup>
+        <CircularsHistory circular={circularId} history={result?.history} />
       </ToolbarButtonGroup>
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
-      <div className="margin-top-4 display-flex flex-justify-center gap-2">
-        {Number.isFinite(previousCircular) ? (
-          <Link
-            to={`/circulars/${previousCircular}${searchString}`}
-            className="usa-button flex-align-stretch"
-          >
-            <div className="position-relative">
-              <Icon.ArrowBack
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previous Circular
-          </Link>
-        ) : (
-          <Button
-            type="button"
-            className="usa-button flex-align-stretch"
-            disabled
-            aria-disabled
-          >
-            <div className="position-relative">
-              <Icon.ArrowBack
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previous Circular
-          </Button>
-        )}
-        {Number.isFinite(nextCircular) ? (
-          <Link
-            to={`/circulars/${nextCircular}${searchString}`}
-            className="usa-button flex-align-stretch"
-          >
-            Next Circular
-            <div className="position-relative">
-              <Icon.ArrowForward
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </Link>
-        ) : (
-          <Button
-            type="button"
-            className="usa-button flex-align-stretch"
-            disabled
-            aria-disabled
-          >
-            Next Circular
-            <div className="position-relative">
-              <Icon.ArrowForward
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-          </Button>
-        )}
-      </div>
     </>
   )
 }
@@ -232,6 +239,7 @@ function CircularsHistory({
   circular: number
   history?: number[]
 }) {
+  const disabled = !history?.length
   const ref = useRef<HTMLDivElement>(null)
   const [showContent, setShowContent] = useState(false)
   const searchString = useSearchString()
@@ -242,6 +250,13 @@ function CircularsHistory({
     <div ref={ref}>
       <DetailsDropdownButton
         outline
+        disabled={disabled}
+        aria-disabled={disabled}
+        title={
+          disabled
+            ? 'There are no other versions of this GCN Circular'
+            : 'View a different version of this GCN Circular'
+        }
         onClick={() => {
           setShowContent((shown) => !shown)
         }}
