@@ -11,6 +11,7 @@ import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
 
 import TimeAgo from '~/components/TimeAgo'
+import { useSearchString } from '~/lib/utils'
 import { type Circular, formatDateISO } from '~/routes/circulars/circulars.lib'
 
 const submittedHowMap = {
@@ -55,12 +56,15 @@ export function FrontMatter({
   | 'editedBy'
   | 'editedOn'
 >) {
+  const searchString = useSearchString()
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
       {eventId && (
         <FrontMatterItem label="Event">
-          <Link to={`/circulars/events/${slug(eventId)}`}>{eventId}</Link>
+          <Link to={`/circulars/events/${slug(eventId)}${searchString}`}>
+            {eventId}
+          </Link>
         </FrontMatterItem>
       )}
       <FrontMatterItem label="Date">
