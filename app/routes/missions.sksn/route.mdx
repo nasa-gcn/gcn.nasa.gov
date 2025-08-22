@@ -3,8 +3,6 @@ handle:
   breadcrumb: Super-Kamiokande
 ---
 
-import { WithFeature } from '~/root'
-
 import logo from './logo.png'
 
 # Super-Kamioka Neutrino Detection Experiment (Super-Kamiokande)
@@ -33,7 +31,6 @@ The Hyper-Kamiokande experiment will be the successor of SK. It is expected to s
 | ------- | ---------------------------- | ------- |
 | `SK_SN` | REAL or TEST supernova alert | ~1 min  |
 
-<WithFeature SK_JSON>
 **JSON-Serialized GCN Notices Types in GCN Kafka**
 
 Super-Kamiokande [GCN schema](/schema/stable/gcn/notices/superk/sn_alert.schema.json) and example [JSON message](/schema/stable/gcn/notices/superk/sn_alert.real.example.json) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/superk/sn_alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of SK Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/superk).
@@ -71,8 +68,6 @@ Super-Kamiokande specific variables:
 | `gcn.notice.superk.sn_alert` | For a real or test supernova alert |
 
  </div>
- 
-</WithFeature>
 
 **Expected Yearly Event Rates:**
 
