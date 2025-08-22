@@ -420,7 +420,7 @@ export async function getAllSynonymMembers(eventIds: string[]) {
   const results = orderBy(
     (await Promise.all(promises)).flat(),
     ['circularId'],
-    ['asc']
+    ['desc']
   )
   return results
 }
