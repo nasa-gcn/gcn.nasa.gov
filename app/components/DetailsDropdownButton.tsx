@@ -19,7 +19,7 @@ export default function DetailsDropdownButton({
       {children}
       <Icon.ExpandMore
         role="presentation"
-        className="margin-top-neg-1 bottom-aligned"
+        className="margin-bottom-neg-05 margin-top-neg-05"
       />
     </Button>
   )
