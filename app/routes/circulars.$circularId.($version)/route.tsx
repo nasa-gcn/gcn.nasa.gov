@@ -136,24 +136,28 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        {useSubmitterStatus() && (
-          <Link
-            className="usa-button usa-button--outline"
-            to={`/circulars/correction/${circularId}`}
-          >
-            Request Correction
-          </Link>
-        )}
+        <ButtonGroup type="segmented">
+          {useSubmitterStatus() && (
+            <Link
+              className="usa-button usa-button--outline"
+              to={`/circulars/correction/${circularId}`}
+              title="Suggest a correction to this GCN Circular."
+            >
+              Correct
+            </Link>
+          )}
+          {useModStatus() && (
+            <Link
+              to={`/circulars/edit/${circularId}`}
+              className="usa-button usa-button--outline"
+              title="Edit this GCN Circular, creating a new version."
+            >
+              Edit
+            </Link>
+          )}
+        </ButtonGroup>
         {result?.history && result.history.length > 0 && (
           <CircularsHistory circular={circularId} history={result?.history} />
-        )}
-        {useModStatus() && (
-          <Link
-            to={`/circulars/edit/${circularId}`}
-            className="usa-button usa-button--outline"
-          >
-            Edit
-          </Link>
         )}
       </ToolbarButtonGroup>
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
