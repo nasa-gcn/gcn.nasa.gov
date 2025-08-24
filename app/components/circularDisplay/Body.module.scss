@@ -1,0 +1,22 @@
+.MarkdownBody,
+.PlainTextBody {
+  /* Circulars frequently contain long URLs that may overflow on small screens.
+   * If line breaking on word boundaries fails, then permit line breaking in
+   * URLs. */
+  word-break: break-word;
+}
+
+.PlainTextBody {
+  &,
+  & pre,
+  & code {
+    font-size: 0.95rem;
+    white-space: pre-wrap;
+    background: none;
+  }
+
+  & pre,
+  & code {
+    margin: 0;
+  }
+}
