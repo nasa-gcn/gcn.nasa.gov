@@ -17,7 +17,7 @@ import {
 } from './synonyms/synonyms.server'
 import { Anchor } from '~/components/Anchor'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
-import { PlainTextBody } from '~/components/circularDisplay/Body'
+import { MarkdownBody, PlainTextBody } from '~/components/circularDisplay/Body'
 import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -60,25 +60,40 @@ export default function Group() {
       </ToolbarButtonGroup>
 
       <h1>{eventIds.join(', ')}</h1>
-      {members.map((circular) => (
-        <div key={circular.circularId}>
-          <h2 className="margin-2">
-            <Anchor>{`GCN Circular ${circular.circularId}`}</Anchor>
-          </h2>
-          <div className="margin-2">
-            <FrontMatter
-              createdOn={circular.createdOn}
-              submitter={circular.submitter}
-              subject={circular.subject}
-              submittedHow={circular.submittedHow}
-              editedBy={circular.editedBy}
-              editedOn={circular.editedOn}
-            />
-          </div>
-          <PlainTextBody className="margin-2" children={circular.body} />
-          <hr />
-        </div>
-      ))}
+      {members.map(
+        ({
+          circularId,
+          createdOn,
+          submitter,
+          subject,
+          submittedHow,
+          editedBy,
+          editedOn,
+          body,
+          format,
+        }) => {
+          const Body = format === 'text/markdown' ? MarkdownBody : PlainTextBody
+          return (
+            <div key={circularId}>
+              <h2 className="margin-2">
+                <Anchor>{`GCN Circular ${circularId}`}</Anchor>
+              </h2>
+              <div className="margin-2">
+                <FrontMatter
+                  createdOn={createdOn}
+                  submitter={submitter}
+                  subject={subject}
+                  submittedHow={submittedHow}
+                  editedBy={editedBy}
+                  editedOn={editedOn}
+                />
+              </div>
+              <Body className="margin-2" children={body} />
+              <hr />
+            </div>
+          )
+        }
+      )}
     </>
   )
 }
