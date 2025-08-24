@@ -90,17 +90,9 @@ export default function () {
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link
-          to={`/circulars${searchString}`}
-          className="usa-button flex-align-stretch"
-        >
-          <div className="position-relative">
-            <Icon.ArrowBack
-              role="presentation"
-              className="position-absolute top-0 left-0"
-            />
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+        <Link to={`/circulars${searchString}`} className="usa-button">
+          <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+          Back
         </Link>
         <ButtonGroup type="segmented">
           <Link
@@ -167,61 +159,35 @@ export default function () {
         {Number.isFinite(previousCircular) ? (
           <Link
             to={`/circulars/${previousCircular}${searchString}`}
-            className="usa-button flex-align-stretch"
+            className="usa-button"
           >
-            <div className="position-relative">
-              <Icon.ArrowBack
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previous Circular
+            <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+            Previous Circular
           </Link>
         ) : (
-          <Button
-            type="button"
-            className="usa-button flex-align-stretch"
-            disabled
-            aria-disabled
-          >
-            <div className="position-relative">
-              <Icon.ArrowBack
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Previous Circular
+          <Button type="button" className="usa-button" disabled aria-disabled>
+            <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+            Previous Circular
           </Button>
         )}
         {Number.isFinite(nextCircular) ? (
           <Link
             to={`/circulars/${nextCircular}${searchString}`}
-            className="usa-button flex-align-stretch"
+            className="usa-button"
           >
             Next Circular
-            <div className="position-relative">
-              <Icon.ArrowForward
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <Icon.ArrowForward
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
           </Link>
         ) : (
-          <Button
-            type="button"
-            className="usa-button flex-align-stretch"
-            disabled
-            aria-disabled
-          >
+          <Button type="button" className="usa-button" disabled aria-disabled>
             Next Circular
-            <div className="position-relative">
-              <Icon.ArrowForward
-                role="presentation"
-                className="position-absolute top-0 left-0"
-              />
-            </div>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <Icon.ArrowForward
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
           </Button>
         )}
       </div>

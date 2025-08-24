@@ -49,13 +49,8 @@ export default function Group() {
           to={`/circulars?${searchString}`}
           className="usa-button flex-align-stretch"
         >
-          <div className="position-relative">
-            <Icon.ArrowBack
-              role="presentation"
-              className="position-absolute top-0 left-0"
-            />
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+          <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+          Back
         </Link>
       </ToolbarButtonGroup>
 
