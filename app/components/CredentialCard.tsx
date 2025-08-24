@@ -104,10 +104,7 @@ export default function CredentialCard({
               type="button"
               className="usa-button--secondary"
             >
-              <Icon.Delete
-                role="presentation"
-                className="bottom-aligned margin-right-05"
-              />
+              <Icon.Delete role="presentation" className="margin-y-neg-2px" />
               Delete
             </ModalToggleButton>
             <Form method="GET" action="/quickstart/alerts">
@@ -119,7 +116,7 @@ export default function CredentialCard({
                 Select
                 <Icon.ArrowForward
                   role="presentation"
-                  className="bottom-aligned margin-left-05"
+                  className="margin-y-neg-2px"
                 />
               </Button>
             </Form>

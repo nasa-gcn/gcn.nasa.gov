@@ -73,17 +73,13 @@ export default function EmailNotificationCard({
                 disabled={disabled || testFetcher.state !== 'idle'}
                 modalRef={testConfirmRef}
                 type="button"
-                className="bottom-aligned margin-right-05"
               >
                 Test Message
               </ModalToggleButton>
               <Form method="GET" action="edit">
                 <input type="hidden" name="uuid" value={uuid} />
                 <Button type="submit" outline disabled={disabled}>
-                  <Icon.Edit
-                    role="presentation"
-                    className="bottom-aligned margin-right-05"
-                  />
+                  <Icon.Edit role="presentation" className="margin-y-neg-2px" />
                   Edit
                 </Button>
               </Form>
@@ -92,12 +88,9 @@ export default function EmailNotificationCard({
                 disabled={disabled}
                 modalRef={deleteModalRef}
                 type="button"
-                className="usa-button--secondary margin-right-0"
+                className="usa-button--secondary"
               >
-                <Icon.Delete
-                  role="presentation"
-                  className="bottom-aligned margin-right-05"
-                />
+                <Icon.Delete role="presentation" className="margin-y-neg-2px" />
                 Delete
               </ModalToggleButton>
             </ToolbarButtonGroup>
@@ -193,7 +186,10 @@ export default function EmailNotificationCard({
                 data-close-modal
                 disabled={!(recaptchaValid && testFetcher.state === 'idle')}
               >
-                <Icon.MailOutline role="presentation" />
+                <Icon.MailOutline
+                  role="presentation"
+                  className="margin-y-neg-2px"
+                />
                 Send
               </Button>
             </ButtonGroup>
