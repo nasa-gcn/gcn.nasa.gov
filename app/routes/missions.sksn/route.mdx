@@ -3,7 +3,7 @@ handle:
   breadcrumb: Super-Kamiokande
 ---
 
-import { WithFeature } from '~/root'
+import { WithFeature, WithoutFeature } from '~/root'
 
 import logo from './logo.png'
 
@@ -48,7 +48,7 @@ Super-Kamiokande specific variables:
 
 - `detection_interval`: The time interval between the first and last neutrino events [s].
 
-- `pipeline`: The analysis pipeline used to generate this alert; either `"snwatch"` or `"wit"`. Both the Supernova watch (SNwatch) [^1] [^2] and Wide-band Intelligent Trigger (WIT) [^3] [^4] are online analysis systems. The energy thresholds are 6 MeV for SNwatch and 2.5 MeV for WIT, respectively.
+- `pipeline`: The analysis pipeline used to generate this alert; either `"snwatch"` or `"wit"`. Both the Supernova watch (SNwatch) [@2016APh....81...39A] [@2024ApJ...970...93K] and Wide-band Intelligent Trigger (WIT) [@2015PhPro..61..666C] [@2017JPhCS.888a2189E] are online analysis systems. The energy thresholds are 6 MeV for SNwatch and 2.5 MeV for WIT, respectively.
 
 - `processed_sample`: Indicates the size of the processed event sample used for this alert; either `"full"` or `"partial"`.  
   If the supernova explosion occurs near Earth, a large number of events may be detected by SK. In such cases, an alert may be issued before processing of the full sample is completed, and it will be updated once full processing is finished.
@@ -85,10 +85,4 @@ Super-Kamiokande specific variables:
 
 </div>
 
-[^1]: K. Abe et al. (2016) Astropart. Phys., 81, 39-48 ([10.1016/j.astropartphys.2016.04.003](https://doi.org/10.1016/j.astropartphys.2016.04.003))
-
-[^2]: Y. Kashiwagi et al. (2024) ApJ 970 93 ([10.3847/1538-4357/ad4d8e](http://dx.doi.org/10.3847/1538-4357/ad4d8e))
-
-[^3]: G. Carminati for the Super-Kamiokande Collaboration (2015) Phys. Procedia, 61, 666-672 ([10.1016/j.phpro.2014.12.068](https://doi.org/10.1016/j.phpro.2014.12.068))
-
-[^4]: M. Elnimr and for the Super-Kamiokande Collaboration (2017) J. Phys.: Conf. Ser. 888 012189 ([10.1088/1742-6596/888/1/012189](https://dx.doi.org/10.1088/1742-6596/888/1/012189))
+## Bibliography
