@@ -83,6 +83,7 @@ export default {
         rehypeCitation({
           bibliography: 'references.bib',
           linkCitations: true,
+          csl: 'chicago',
           ...options,
         }),
     ],

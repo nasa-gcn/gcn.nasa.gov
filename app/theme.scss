@@ -409,3 +409,15 @@ figure {
 figure.bordered {
   @include u-border-left(2px, 'base');
 }
+
+/*
+ * Styling for rehype-citation bibliographies
+ */
+
+.csl-bib-body {
+  @extend .usa-list;
+}
+
+.csl-entry {
+  display: list-item;
+}
