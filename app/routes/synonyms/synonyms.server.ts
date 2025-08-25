@@ -176,7 +176,7 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
  *   - If a new synonym was not created, it updates the initialDate on the existing synonym.
  *
  * If there is an oldEventId:
- *   - It deletes the old eventId synonym if it's empty.
+ *   - It sets the old synonym initialDate to -1 if no circulars have that eventId.
  *   - If it's not empty, it updates the initialDate on the remaining synonym.
  *
  * @param newCreatedOn - the Circular createdOn timestamp for the new circular version
@@ -334,16 +334,29 @@ export async function deleteSynonyms(synonymId: string) {
     },
   })
 
-  const writePromises = results.Items.map(async ({ eventId }) => ({
-    PutRequest: {
-      Item: {
-        synonymId: crypto.randomUUID(),
-        eventId,
-        slug: slug(eventId),
-        initialDate: await getOldestDate(eventId),
-      },
-    },
-  }))
+  const writePromises = results.Items.map(async ({ eventId }) => {
+    const initialDate = await getOldestDate(eventId)
+    if (initialDate >= 0) {
+      return {
+        PutRequest: {
+          Item: {
+            synonymId: crypto.randomUUID(),
+            eventId,
+            slug: slug(eventId),
+            initialDate,
+          },
+        },
+      }
+    } else {
+      return {
+        DeleteRequest: {
+          Key: {
+            eventId,
+          },
+        },
+      }
+    }
+  })
   const writes = await Promise.all(writePromises)
   const params = {
     RequestItems: {
