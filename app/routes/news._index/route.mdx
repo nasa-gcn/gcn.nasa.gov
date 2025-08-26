@@ -30,6 +30,31 @@ import { Anchor } from '~/components/Anchor'
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
+
+        <CollectionCalendarDate datetime='August 26, 2025' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Super-Kamiokande JSON Notices and Schema v4.5.0</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+          #### New Super-Kamiokande JSON Notices
+
+          The Super-Kamiokande Team and the GCN team are pleased to announce the availability of Super-Kamiokande notice types via the [new GCN](/) in JSON format.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).  [SK_SN](https://gcn.gsfc.nasa.gov/sk_sn.html) notices remain available via GCN Classic and GCN Classic over Kafka.  The information included in the JSON-format Notices largely overlaps with that in GCN Classic with some additional parameters: the number of detected inverse beta decay (IBD) events, the analysis pipeline used (`snwatch` or `wit`), and the type of processed sample (full or partial) used for event detection.
+
+          Super-Kamiokande Summary: Also known as Super-K or SK, [Super-Kamiokande experiment](https://www-sk.icrr.u-tokyo.ac.jp/en/sk/) was built and has been operated with funding from the Japanese Ministry of Education, Science, Sports and Culture, and the U.S. Department of Energy. Designed to understand the nature of neutrinos, Super-K is a leading detector in the search for MeV neutrino detections of core-collapse supernovae.
+
+          Notice topic: new Super-Kamiokande notices provide core-collapse supernova detection and localization as well regular monthly test alerts distributed on the topic `gcn.notice.superk.sn_alert`.
+
+          See the [SKSN mission page](/missions/sksn) for a more extensive description of the information provided in these new notices.
+
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
         <CollectionCalendarDate datetime='Aug 18, 2025' />
       }
     >
@@ -38,6 +63,7 @@ import { Anchor } from '~/components/Anchor'
       </CollectionHeading>
       <CollectionDescription>
         For security purposes, we will [disable client credentials](/docs/faq#why-are-my-kafka-client-credentials-expiring) that you have not used to connect to a Kafka broker for the past 30 days. We will email you reminders 9 days before client credentials will expire. Once disabled, a client credential cannot be used again. To prevent a credential from expiring and being disabled, simply use it to connect to a Kafka broker. You may create new client credentials at any time. To review, create, delete, and manage your client credentials, see your account [client credential settings](/user/credentials).
+
       </CollectionDescription>
     </CollectionItem>
 
