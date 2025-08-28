@@ -206,6 +206,9 @@ export default function () {
                   ]}
                 />
               </>,
+              <NavLink key="team" to="team">
+                Team
+              </NavLink>,
               <NavLink key="schema" to="schema">
                 Schema Browser
               </NavLink>,
