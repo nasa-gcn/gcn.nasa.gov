@@ -135,7 +135,7 @@ export default function () {
               to={`/circulars/correction/${circularId}`}
               title="Suggest a correction to this GCN Circular."
             >
-              Correct
+              Request Correction
             </Link>
           )}
           {useModStatus() && (
