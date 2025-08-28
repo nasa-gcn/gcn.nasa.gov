@@ -95,6 +95,48 @@ export default function () {
           Back
         </Link>
         <ButtonGroup type="segmented">
+          {Number.isFinite(previousCircular) ? (
+            <Link
+              to={`/circulars/${previousCircular}${searchString}`}
+              className="usa-button"
+            >
+              <Icon.NavigateBefore
+                role="presentation"
+                className="margin-y-neg-2px"
+              />
+              Previous
+            </Link>
+          ) : (
+            <Button type="button" className="usa-button" disabled aria-disabled>
+              <Icon.NavigateBefore
+                role="presentation"
+                className="margin-y-neg-2px"
+              />
+              Previous
+            </Button>
+          )}
+          {Number.isFinite(nextCircular) ? (
+            <Link
+              to={`/circulars/${nextCircular}${searchString}`}
+              className="usa-button"
+            >
+              Next
+              <Icon.NavigateNext
+                role="presentation"
+                className="margin-y-neg-2px"
+              />
+            </Link>
+          ) : (
+            <Button type="button" className="usa-button" disabled aria-disabled>
+              Next
+              <Icon.NavigateNext
+                role="presentation"
+                className="margin-y-neg-2px"
+              />
+            </Button>
+          )}
+        </ButtonGroup>
+        <ButtonGroup type="segmented">
           <Link
             to={`${linkString}.txt`}
             className="usa-button usa-button--outline"
@@ -155,42 +197,6 @@ export default function () {
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
-      <div className="margin-top-4 display-flex flex-justify-center gap-2">
-        {Number.isFinite(previousCircular) ? (
-          <Link
-            to={`/circulars/${previousCircular}${searchString}`}
-            className="usa-button"
-          >
-            <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
-            Previous Circular
-          </Link>
-        ) : (
-          <Button type="button" className="usa-button" disabled aria-disabled>
-            <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
-            Previous Circular
-          </Button>
-        )}
-        {Number.isFinite(nextCircular) ? (
-          <Link
-            to={`/circulars/${nextCircular}${searchString}`}
-            className="usa-button"
-          >
-            Next Circular
-            <Icon.ArrowForward
-              role="presentation"
-              className="margin-y-neg-2px"
-            />
-          </Link>
-        ) : (
-          <Button type="button" className="usa-button" disabled aria-disabled>
-            Next Circular
-            <Icon.ArrowForward
-              role="presentation"
-              className="margin-y-neg-2px"
-            />
-          </Button>
-        )}
-      </div>
     </>
   )
 }
