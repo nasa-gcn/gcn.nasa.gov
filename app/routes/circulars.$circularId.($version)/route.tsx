@@ -155,18 +155,24 @@ export default function () {
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
-      <div className="margin-top-4 display-flex flex-justify-center gap-2">
+      <ButtonGroup type="segmented">
         {Number.isFinite(previousCircular) ? (
           <Link
             to={`/circulars/${previousCircular}${searchString}`}
             className="usa-button"
           >
-            <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+            <Icon.NavigateBefore
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
             Previous Circular
           </Link>
         ) : (
           <Button type="button" className="usa-button" disabled aria-disabled>
-            <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+            <Icon.NavigateBefore
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
             Previous Circular
           </Button>
         )}
@@ -176,7 +182,7 @@ export default function () {
             className="usa-button"
           >
             Next Circular
-            <Icon.ArrowForward
+            <Icon.NavigateNext
               role="presentation"
               className="margin-y-neg-2px"
             />
@@ -184,13 +190,13 @@ export default function () {
         ) : (
           <Button type="button" className="usa-button" disabled aria-disabled>
             Next Circular
-            <Icon.ArrowForward
+            <Icon.NavigateNext
               role="presentation"
               className="margin-y-neg-2px"
             />
           </Button>
         )}
-      </div>
+      </ButtonGroup>
     </>
   )
 }
