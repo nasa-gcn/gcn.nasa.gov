@@ -38,7 +38,7 @@ export default function CredentialCard({
   const disabled = fetcher.state !== 'idle'
   const alerts = searchParams.getAll('alerts')
   const showExpirationWarning = !(
-    expired || Date.now() - (lastUsed ?? 0) <= WARNING_MILLIS
+    expired || Date.now() - (lastUsed ?? created) <= WARNING_MILLIS
   )
 
   return (

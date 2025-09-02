@@ -8,6 +8,7 @@
 import { tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { paginateQuery } from '@aws-sdk/lib-dynamodb'
+import partition from 'lodash/partition'
 import dedent from 'ts-dedent'
 
 import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
@@ -23,6 +24,7 @@ type CredentialInfo = {
   sub: string
   name: string
   client_id: string
+  created: number
   lastUsed?: number
 }
 
@@ -42,7 +44,7 @@ export async function handler() {
     },
     {
       FilterExpression:
-        'lastUsed < :warningCutoff and attribute_not_exists(expired)',
+        'attribute_not_exists(expired) and (lastUsed < :warningCutoff or (attribute_not_exists(lastUsed) and created < :warningCutoff))',
       TableName,
       ExpressionAttributeValues: {
         ':warningCutoff': warningCutoff,
@@ -50,27 +52,22 @@ export async function handler() {
       ExpressionAttributeNames: {
         '#sub': 'sub',
       },
-      ProjectionExpression: '#sub, name, client_id, lastUsed',
     }
   )
 
   const expiredCreds: CredentialInfo[] = []
   const warningCreds: CredentialInfo[] = []
   const subs = []
-  for await (const page of expiredAndWarningCredentials) {
-    const items = page.Items as CredentialInfo[]
-    if (items) {
-      expiredCreds.push(
-        ...items.filter(
-          (cred) => !cred.lastUsed || cred.lastUsed <= deletionCutoff
-        )
+  for await (const { Items } of expiredAndWarningCredentials) {
+    if (Items) {
+      const creds = Items as CredentialInfo[]
+      const [moreExpiredCreds, moreWarningCreds] = partition(
+        creds,
+        (cred) => (cred.lastUsed ?? cred.created) < deletionCutoff
       )
-      warningCreds.push(
-        ...items.filter(
-          (cred) => cred.lastUsed && cred.lastUsed <= warningCutoff
-        )
-      )
-      subs.push(...items.map((cred) => cred.sub))
+      expiredCreds.push(...moreExpiredCreds)
+      warningCreds.push(...moreWarningCreds)
+      subs.push(...creds.map((cred) => cred.sub))
     }
   }
   const uniqueSubs = [...new Set(subs)]
