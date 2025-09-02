@@ -29,7 +29,6 @@ type CredentialInfo = {
 }
 
 export async function handler() {
-  if (!feature('APP_CLIENT_TRACKING')) return
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('client_credentials')
