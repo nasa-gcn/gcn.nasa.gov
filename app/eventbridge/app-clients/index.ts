@@ -7,6 +7,7 @@
  */
 import { tables } from '@architect/functions'
 import type { EventBridgeEvent } from 'aws-lambda'
+import invariant from 'tiny-invariant'
 
 type UserIdentity = {
   type: string
@@ -66,17 +67,18 @@ export async function handler(
 ) {
   const db = await tables()
   const client_id = event.detail.additionalEventData.clientId
-  if (!client_id) throw new Error('client_id is not present')
-  const { Items } = await db.client_credentials.query({
+  invariant(client_id)
+  const {
+    Items: [{ sub }],
+  } = await db.client_credentials.query({
     IndexName: 'credentialsByClientId',
     KeyConditionExpression: 'client_id = :client_id',
     ExpressionAttributeValues: {
       ':client_id': client_id,
     },
   })
-  const credential = Items[0]
   await db.client_credentials.update({
-    Key: { sub: credential.sub, client_id },
+    Key: { sub, client_id },
     UpdateExpression: 'set #lastUsed = :lastUsed',
     ExpressionAttributeNames: {
       '#lastUsed': 'lastUsed',
