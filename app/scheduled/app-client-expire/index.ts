@@ -64,9 +64,13 @@ export async function handler() {
         creds,
         (cred) => (cred.lastUsed ?? cred.created) < deletionCutoff
       )
-      if (feature('APP_CLIENT_TRACKING')) expiredCreds.push(...moreExpiredCreds)
-      // Put both expired and warning together for the first few iterations of the scheduled task
-      warningCreds.push(...moreWarningCreds, ...moreExpiredCreds)
+      if (feature('APP_CLIENT_TRACKING'))  {
+        expiredCreds.push(...moreExpiredCreds)
+        warningCreds.push(...moreWarningCreds)
+      } else {
+        // Put both expired and warning together for the first few iterations of the scheduled task
+        warningCreds.push(...moreWarningCreds, ...moreExpiredCreds)
+      }
       subs.push(...creds.map((cred) => cred.sub))
     }
   }
