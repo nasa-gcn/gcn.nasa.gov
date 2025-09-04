@@ -1,6 +1,6 @@
 ---
 handle:
-  breadcrumb: About GCN
+  breadcrumb: About
 ---
 
 # What is GCN?

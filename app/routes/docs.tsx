@@ -22,9 +22,20 @@ export default function () {
         <div className="desktop:grid-col-3">
           <SideNav
             items={[
-              <NavLink key="." to="." end>
-                About GCN
-              </NavLink>,
+              <>
+                <NavLink key="about" to="about">
+                  About GCN
+                </NavLink>{' '}
+                <SideNavSub
+                  base="about"
+                  key="about-sub"
+                  items={[
+                    <NavLink key="history" to="about/history">
+                      History
+                    </NavLink>,
+                  ]}
+                />
+              </>,
               <>
                 <NavLink key="circulars" to="circulars">
                   Circulars
@@ -123,9 +134,6 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="history" to="history">
-                History
-              </NavLink>,
               <>
                 <NavLink key="client" to="client">
                   Kafka Client Setup

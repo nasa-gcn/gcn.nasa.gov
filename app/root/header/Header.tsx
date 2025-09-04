@@ -139,7 +139,11 @@ export function Header() {
               >
                 Circulars
               </NavLink>,
-              <NavLink className="usa-nav__link" to="/docs" key="/docs">
+              <NavLink
+                className="usa-nav__link"
+                to="/docs/about"
+                key="/docs/about"
+              >
                 Documentation
               </NavLink>,
               email ? (
