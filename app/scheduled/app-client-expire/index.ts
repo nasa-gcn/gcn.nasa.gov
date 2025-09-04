@@ -64,7 +64,7 @@ export async function handler() {
         creds,
         (cred) => (cred.lastUsed ?? cred.created) < deletionCutoff
       )
-      if (feature('APP_CLIENT_TRACKING'))  {
+      if (feature('APP_CLIENT_TRACKING')) {
         expiredCreds.push(...moreExpiredCreds)
         warningCreds.push(...moreWarningCreds)
       } else {
