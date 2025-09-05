@@ -94,7 +94,7 @@ export default function () {
                     <NavLink key="integral" to="archive/integral">
                       INTEGRAL
                     </NavLink>,
-                    <NavLink key="moa" to="moa">
+                    <NavLink key="moa" to="archive/moa">
                       MOA
                     </NavLink>,
                   ]}
