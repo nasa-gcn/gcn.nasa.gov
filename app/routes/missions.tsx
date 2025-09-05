@@ -66,9 +66,6 @@ export default function () {
               <NavLink key="maxi" to="maxi">
                 MAXI
               </NavLink>,
-              <NavLink key="moa" to="moa">
-                MOA
-              </NavLink>,
               <NavLink key="swift" to="swift">
                 Neil Gehrels Swift Observatory
               </NavLink>,
@@ -96,6 +93,9 @@ export default function () {
                     </NavLink>,
                     <NavLink key="integral" to="archive/integral">
                       INTEGRAL
+                    </NavLink>,
+                    <NavLink key="moa" to="archive/moa">
+                      MOA
                     </NavLink>,
                   ]}
                 />
