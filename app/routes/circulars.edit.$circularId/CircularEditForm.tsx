@@ -23,7 +23,6 @@ import { dedent } from 'ts-dedent'
 import {
   type CircularFormat,
   bodyIsValid,
-  dateTimeIsValid,
   parseEventFromSubject,
   subjectIsValid,
   submitterIsValid,
@@ -136,7 +135,6 @@ export function CircularEditForm({
   const [body, setBody] = useState(defaultBody)
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
-  const [dateTime, setDateTime] = useState(defaultCreatedOnDateTime ?? '')
   const [submitter, setSubmitter] = useState(defaultSubmitter)
   const subjectValid = subjectIsValid(subject)
   const derivedEventId = parseEventFromSubject(subject)
@@ -149,9 +147,8 @@ export function CircularEditForm({
   const [eventId, setEventId] = useState(defaultEventId)
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
-  const dateTimeValid = circularId ? dateTimeIsValid(dateTime) : true
   const sending = Boolean(useNavigation().formData)
-  const valid = subjectValid && bodyValid && dateTimeValid && submitterValid
+  const valid = subjectValid && bodyValid && submitterValid
   let headerText, saveButtonText
 
   switch (intent) {
@@ -174,7 +171,6 @@ export function CircularEditForm({
     subject.trim() !== defaultSubject.trim() ||
     format !== defaultFormat ||
     submitter?.trim() !== defaultSubmitter ||
-    dateTime !== defaultCreatedOnDateTime ||
     eventId?.trim() !== originalEventId
 
   const userIsModerator = useModStatus()
@@ -229,25 +225,6 @@ export function CircularEditForm({
             </Button>
           </Link>
         </InputGroup>
-        {circularId !== undefined && (
-          <InputGroup
-            className={classnames('maxw-full', {
-              'usa-input--error': !dateTime || !Date.parse(dateTime),
-              'usa-input--success': dateTime && Date.parse(dateTime),
-            })}
-          >
-            <InputPrefix className="wide-input-prefix">Date</InputPrefix>
-            <input
-              defaultValue={defaultCreatedOnDateTime}
-              onInput={({ currentTarget: { value } }) => {
-                setDateTime(value)
-              }}
-              name="createdOn"
-              id="createdOn"
-              className="maxw-full"
-            />
-          </InputGroup>
-        )}
         <InputGroup
           className={classnames('maxw-full', {
             'usa-input--error': subjectValid === false,

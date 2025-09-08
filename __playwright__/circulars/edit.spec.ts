@@ -33,7 +33,7 @@ const loadingTestsCircular = {
   subject: 'LIGO/Virgo/KAGRA S240630t: Updated Sky localization',
   eventId: 'LIGO/Virgo/KAGRA S240630t',
   submittedHow: 'web',
-  createdOn: 1719767201026,
+  // createdOn: 1719767201026,
   circularId: 36796,
   submitter:
     'Christopher P L Berry at LVK Collaboration <christopher.berry@ligo.org>',
@@ -46,7 +46,7 @@ const editTestsCircular = {
     'ZTF23aaoohpy/AT2023lcr: JWST observations consistent with the presence of a supernova',
   submittedHow: 'web',
   bibcode: '2023GCN.34370....1M',
-  createdOn: '2024-09-18 06:00',
+  // createdOn: '2024-09-18 06:00',
   circularId: 34370,
   submitter:
     'Antonio Martin-Carrillo at UCD,Space Science Group <antonio.martin-carrillo@ucd.ie>',
@@ -66,8 +66,6 @@ test.describe('Circulars edit page', () => {
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
     )
-    const testDateTime = new Date(loadingTestsCircular.createdOn).toISOString()
-    await expect(page.locator('#createdOn')).toHaveValue(testDateTime)
     await expect(page.locator('#subject')).toHaveValue(
       loadingTestsCircular.subject
     )
@@ -81,7 +79,6 @@ test.describe('Circulars edit page', () => {
     const testSubject = `${editTestsCircular.subject} - ${browserName}`
     await page.goto(`/circulars/edit/${editTestsCircular.circularId}`)
     await page.locator('#submitter').fill(editTestsCircular.submitter)
-    await page.locator('#createdOn').fill(editTestsCircular.createdOn)
     await page.locator('#subject').fill(testSubject)
     await page.getByTestId('textarea').fill(editTestsCircular.body)
     await page.getByRole('button', { name: 'Update' }).click({ timeout: 10000 })

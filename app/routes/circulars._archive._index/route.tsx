@@ -110,9 +110,6 @@ export async function action({ request }: ActionFunctionArgs) {
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
-  const createdOnDate =
-    getFormDataString(data, 'createdOn') || Date.now().toString()
-  const createdOn = Date.parse(createdOnDate)
   let newCircular
   const props = { body, subject, eventId, ...(format ? { format } : {}) }
   switch (intent) {
@@ -126,9 +123,6 @@ export async function action({ request }: ActionFunctionArgs) {
         submitter = getFormDataString(data, 'submitter')
         if (!submitter) throw new Response(null, { status: 400 })
       }
-
-      if (!createdOnDate || !createdOn)
-        throw new Response(null, { status: 400 })
 
       let zendeskTicketId: number | undefined
 
@@ -157,7 +151,6 @@ export async function action({ request }: ActionFunctionArgs) {
           circularId: parseFloat(circularId),
           ...props,
           submitter,
-          createdOn,
           zendeskTicketId,
           eventId,
         },
@@ -168,13 +161,11 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'edit':
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
-      if (!createdOnDate || !createdOn)
-        throw new Response(null, { status: 400 })
+
       await putVersion(
         {
           circularId: parseFloat(circularId),
           ...props,
-          createdOn,
         },
         user
       )
