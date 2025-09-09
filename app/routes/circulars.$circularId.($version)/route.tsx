@@ -208,6 +208,7 @@ function CircularsHistory({
     <div ref={ref}>
       <DetailsDropdownButton
         outline
+        expanded={showContent}
         onClick={() => {
           setShowContent((shown) => !shown)
         }}
