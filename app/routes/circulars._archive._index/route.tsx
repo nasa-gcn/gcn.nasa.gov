@@ -117,7 +117,8 @@ export async function action({ request }: ActionFunctionArgs) {
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
 
-      if (!user?.name || !user.email) throw new Response(null, { status: 403 })
+      if (!user?.email) throw new Response(null, { status: 403 })
+      const name = user.name ?? user.email
       let submitter
       if (user.groups.includes(moderatorGroup)) {
         submitter = getFormDataString(data, 'submitter')
@@ -136,10 +137,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
       if (!zendeskTicketId) {
         zendeskTicketId = await postZendeskRequest({
-          requester: { name: user.name, email: user.email },
+          requester: { name, email: user.email },
           subject: `Change Request for Circular ${circularId}`,
           comment: {
-            body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
+            body: `${name} has requested an edit. Review at ${origin}/circulars`,
           },
         })
       }
