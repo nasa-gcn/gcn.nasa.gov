@@ -49,7 +49,6 @@ export async function loader({
   circular ??= await get(parseFloat(circularId))
 
   const formattedContributor = formatAuthor(user)
-  const defaultDateTime = new Date(circular.createdOn ?? 0).toISOString()
 
   return {
     formattedContributor,
@@ -58,7 +57,6 @@ export async function loader({
     defaultFormat: circular.format,
     circularId: circular.circularId,
     defaultSubmitter: circular.submitter,
-    defaultCreatedOnDateTime: defaultDateTime,
     defaultEventId: circular.eventId,
     searchString: '',
   }
