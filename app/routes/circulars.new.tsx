@@ -75,7 +75,8 @@ export default function () {
 
   return (
     <>
-      <CircularEditForm {...formDefaults} intent="new" />
+      <h1>New GCN Circular</h1>
+      <CircularEditForm {...formDefaults} />
       {isAuthorized || <ModalUnauthorized isAuthenticated={isAuthenticated} />}
     </>
   )
