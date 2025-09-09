@@ -112,7 +112,6 @@ export function CircularEditForm({
   defaultBody,
   defaultSubject,
   searchString,
-  defaultCreatedOnDateTime,
   defaultEventId: originalEventId,
 }: {
   formattedContributor: string
@@ -122,7 +121,6 @@ export function CircularEditForm({
   defaultBody: string
   defaultSubject: string
   searchString: string
-  defaultCreatedOnDateTime?: string
   defaultEventId?: string
 }) {
   let formSearchString = '?index'
