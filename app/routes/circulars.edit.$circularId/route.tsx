@@ -7,16 +7,21 @@
  */
 import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { useLoaderData } from '@remix-run/react'
+import { Link, useLoaderData } from '@remix-run/react'
 
 import { getUser } from '../_auth/user.server'
 import { formatAuthor } from '../circulars/circulars.lib'
-import { get, moderatorGroup } from '../circulars/circulars.server'
+import {
+  get,
+  getChangeRequest,
+  moderatorGroup,
+  submitterGroup,
+} from '../circulars/circulars.server'
 import { CircularEditForm } from './CircularEditForm'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
-  breadcrumb: 'Edit',
+  breadcrumb: ({ params: { circularId } }) => `Edit - ${circularId}`,
   getSitemapEntries: () => null,
 }
 
@@ -25,11 +30,25 @@ export async function loader({
   request,
 }: LoaderFunctionArgs) {
   if (!circularId) throw new Response(null, { status: 404 })
+
   const user = await getUser(request)
-  if (!user?.groups.includes(moderatorGroup))
+  if (
+    !(
+      user?.groups.includes(moderatorGroup) ||
+      user?.groups.includes(submitterGroup)
+    )
+  )
     throw new Response(null, { status: 403 })
+
+  let circular
+  try {
+    circular = await getChangeRequest(parseFloat(circularId), user.sub)
+  } catch (err) {
+    if (!(err instanceof Response && err.status === 404)) throw err
+  }
+  circular ??= await get(parseFloat(circularId))
+
   const formattedContributor = formatAuthor(user)
-  const circular = await get(parseFloat(circularId))
   const defaultDateTime = new Date(circular.createdOn ?? 0).toISOString()
 
   return {
@@ -47,5 +66,17 @@ export async function loader({
 
 export default function () {
   const data = useLoaderData<typeof loader>()
-  return <CircularEditForm {...data} intent="edit" />
+  return (
+    <>
+      <h1>Edit GCN Circular</h1>
+      <p className="usa-paragraph">
+        See{' '}
+        <Link to="/docs/circulars/corrections">
+          documentation on Circulars moderation
+        </Link>{' '}
+        for more information on corrections.
+      </p>
+      <CircularEditForm {...data} />
+    </>
+  )
 }

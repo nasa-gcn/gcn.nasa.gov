@@ -128,26 +128,16 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        <ButtonGroup type="segmented">
-          {useSubmitterStatus() && (
-            <Link
-              className="usa-button usa-button--outline"
-              to={`/circulars/correction/${circularId}`}
-              title="Suggest a correction to this GCN Circular."
-            >
-              Request Correction
-            </Link>
-          )}
-          {useModStatus() && (
-            <Link
-              to={`/circulars/edit/${circularId}`}
-              className="usa-button usa-button--outline"
-              title="Edit this GCN Circular, creating a new version."
-            >
-              Edit
-            </Link>
-          )}
-        </ButtonGroup>
+        {(useSubmitterStatus() || useModStatus()) && (
+          <Link
+            to={`/circulars/edit/${circularId}`}
+            className="usa-button usa-button--outline"
+            title="Submit a correction to this GCN Circular."
+          >
+            <Icon.Edit role="presentation" className="margin-y-neg-2px" />
+            Edit
+          </Link>
+        )}
         {result?.history && result.history.length > 0 && (
           <CircularsHistory circular={circularId} history={result?.history} />
         )}

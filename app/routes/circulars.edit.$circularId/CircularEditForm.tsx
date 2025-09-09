@@ -114,7 +114,6 @@ export function CircularEditForm({
   searchString,
   defaultCreatedOnDateTime,
   defaultEventId: originalEventId,
-  intent,
 }: {
   formattedContributor: string
   circularId?: number
@@ -125,7 +124,6 @@ export function CircularEditForm({
   searchString: string
   defaultCreatedOnDateTime?: string
   defaultEventId?: string
-  intent: 'correction' | 'edit' | 'new'
 }) {
   let formSearchString = '?index'
   if (searchString) {
@@ -149,22 +147,7 @@ export function CircularEditForm({
   const bodyValid = bodyIsValid(body)
   const sending = Boolean(useNavigation().formData)
   const valid = subjectValid && bodyValid && submitterValid
-  let headerText, saveButtonText
 
-  switch (intent) {
-    case 'correction':
-      headerText = 'Correct'
-      saveButtonText = 'Submit'
-      break
-    case 'edit':
-      headerText = 'Edit'
-      saveButtonText = 'Update'
-      break
-    case 'new':
-      headerText = 'New'
-      saveButtonText = 'Send'
-      break
-  }
   const bodyPlaceholder = useBodyPlaceholder()
   const changesHaveBeenMade =
     body.trim() !== defaultBody.trim() ||
@@ -175,20 +158,11 @@ export function CircularEditForm({
 
   const userIsModerator = useModStatus()
 
+  const submitDisabled = sending || !valid || !changesHaveBeenMade
+
   return (
     <AstroDataContext.Provider value={{ rel: 'noopener', target: '_blank' }}>
-      <h1>{headerText} GCN Circular</h1>
-      {intent === 'correction' && (
-        <p className="usa-paragraph">
-          See{' '}
-          <Link to="/docs/circulars/corrections">
-            documentation on Circulars moderation
-          </Link>{' '}
-          for more information on corrections.
-        </p>
-      )}
       <Form method="POST" action={`/circulars${formSearchString}`}>
-        <input type="hidden" name="intent" value={intent} />
         <input type="hidden" name="circularId" value={circularId} />
         {circularId !== undefined && userIsModerator && (
           <>
@@ -255,7 +229,7 @@ export function CircularEditForm({
         >
           <CircularsKeywords />
         </CollapsableInfo>
-        {intent !== 'new' && (
+        {circularId !== undefined && (
           <>
             {linkEventId ? (
               <InputGroup className="maxw-full usa-input---not-editable">
@@ -338,13 +312,36 @@ export function CircularEditForm({
           >
             Back
           </Link>
-          <Button
-            disabled={sending || !valid || !changesHaveBeenMade}
-            type="submit"
-            value="save"
-          >
-            {saveButtonText}
-          </Button>
+          {circularId === undefined ? (
+            <Button
+              disabled={submitDisabled}
+              type="submit"
+              name="intent"
+              value="new"
+            >
+              New
+            </Button>
+          ) : (
+            <Button
+              disabled={submitDisabled}
+              type="submit"
+              name="intent"
+              value="correction"
+            >
+              Request Correction
+            </Button>
+          )}
+          {circularId !== undefined && userIsModerator && (
+            <Button
+              secondary
+              disabled={submitDisabled}
+              type="submit"
+              name="intent"
+              value="edit"
+            >
+              Save as New Version
+            </Button>
+          )}
           {sending && (
             <div className="padding-top-1 padding-bottom-1">
               <Spinner /> Sending...
