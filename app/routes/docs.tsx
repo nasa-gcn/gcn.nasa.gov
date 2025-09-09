@@ -30,6 +30,12 @@ export default function () {
                   base="about"
                   key="about-sub"
                   items={[
+                    <NavLink
+                      key="conferences-awards"
+                      to="about/conferences-awards"
+                    >
+                      Conferences & Awards
+                    </NavLink>,
                     <NavLink key="history" to="about/history">
                       History
                     </NavLink>,
