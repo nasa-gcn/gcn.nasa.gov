@@ -10,14 +10,20 @@ import type { ReactNode } from 'react'
 
 export default function DetailsDropdownButton({
   children,
+  expanded,
   ...props
 }: {
   children: ReactNode
+  expanded?: boolean
 } & Omit<Parameters<typeof Button>[0], 'type'>) {
   return (
     <Button type="button" {...props}>
       {children}
-      <Icon.ExpandMore role="presentation" className="margin-y-neg-2px" />
+      {expanded ? (
+        <Icon.ExpandLess role="presentation" className="margin-y-neg-2px" />
+      ) : (
+        <Icon.ExpandMore role="presentation" className="margin-y-neg-2px" />
+      )}
     </Button>
   )
 }
