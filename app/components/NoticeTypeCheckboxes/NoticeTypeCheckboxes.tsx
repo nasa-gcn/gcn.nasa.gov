@@ -127,6 +127,11 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.KM3NET = '/missions/km3net'
   }
 
+  if (useFeature('DSA110')) {
+    JsonNoticeTypes['DSA-110'] = ['gcn.notices.dsa110.frb']
+    JsonNoticeTypeLinks['DSA-110'] = '/missions/dsa110'
+  }
+
   const counterFunction = (childRef: HTMLInputElement) => {
     if (childRef.checked) {
       userSelected.add(childRef.name)
