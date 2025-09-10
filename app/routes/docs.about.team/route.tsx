@@ -14,6 +14,7 @@ import {
   CardMedia,
   Grid,
   GridContainer,
+  Icon,
 } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
 
@@ -37,13 +38,13 @@ function TeamCard({
   name,
   affiliation,
   photo,
-  href,
+  github,
 }: {
   children: ReactNode
   name: string
   affiliation: string
   photo: string
-  href: string
+  github: string
 }) {
   return (
     <Card className="grid-col-fill">
@@ -56,11 +57,10 @@ function TeamCard({
         />
       </CardMedia>
       <CardHeader>
-        <h4 style={{ marginBottom: '0px' }}>
-          <a className="usa-link" href={href}>
-            <>{name}</>
-          </a>
-        </h4>
+        <Link className="usa-link" to={`https://github.com/${github}`}>
+          {name}
+          <Icon.Github role="presentation" size={3} color="black" />
+        </Link>{' '}
         <p style={{ marginTop: '0px', fontSize: '12px' }}>{affiliation}</p>
       </CardHeader>
       <CardBody style={{ fontSize: '14px' }}>{children}</CardBody>
@@ -121,7 +121,7 @@ export default function () {
               name="Judy Racusin"
               affiliation="NASA/GSFC"
               photo={judy}
-              href="https://github.com/jracusin"
+              github="jracusin"
             >
               Principal Investigator
             </TeamCard>
@@ -130,7 +130,7 @@ export default function () {
               name="Leo Singer"
               affiliation="NASA/GSFC"
               photo={leo}
-              href="https://github.com/lpsinger"
+              github="lpsinger"
             >
               Lead Developer
             </TeamCard>
@@ -138,7 +138,7 @@ export default function () {
               name="Dakota Dutko"
               affiliation="NASA/GSFC/ADNET"
               photo={dakota}
-              href="https://github.com/dakota002"
+              github="dakota002"
             >
               Full-Stack Developer
             </TeamCard>
@@ -151,7 +151,7 @@ export default function () {
               name="Courey Elliott"
               affiliation="LSU/NextSource"
               photo={courey}
-              href="https://github.com/courey"
+              github="courey"
             >
               Full-Stack Developer
             </TeamCard>
@@ -159,7 +159,7 @@ export default function () {
               name="Vidushi Sharma"
               affiliation="NASA/GSFC/UMBC"
               photo={vidushi}
-              href="https://github.com/vidushi-github"
+              github="vidushi-github"
             >
               Postdoc
             </TeamCard>
@@ -168,7 +168,7 @@ export default function () {
               name="Tyler Barna"
               affiliation="UMN"
               photo={tyler}
-              href="https://github.com/tylerbarna"
+              github="tylerbarna"
             >
               Ph.D. Student
             </TeamCard>
@@ -181,7 +181,7 @@ export default function () {
               name="Eric Burns"
               affiliation="LSU"
               photo={eric}
-              href="https://github.com/eburnsastro"
+              github="eburnsastro"
             >
               Collaborator
             </TeamCard>
@@ -190,7 +190,7 @@ export default function () {
               name="Michael Coughlin"
               affiliation="UMN"
               photo={michael}
-              href="https://github.com/mcoughlin"
+              github="mcoughlin"
             >
               Collaborator
             </TeamCard>
