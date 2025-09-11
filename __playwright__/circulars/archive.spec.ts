@@ -1,33 +1,4 @@
-import { DynamoDBClient, ListTablesCommand } from '@aws-sdk/client-dynamodb'
-import { sleep } from '@nasa-gcn/architect-plugin-utils'
 import { expect, test } from '@playwright/test'
-
-async function waitForConnection(client: DynamoDBClient) {
-  while (true) {
-    try {
-      const { TableNames } = await client.send(new ListTablesCommand({}))
-      if (TableNames) return
-    } catch {
-      /* empty */
-    }
-    await sleep(1000)
-  }
-}
-
-test.beforeAll(async () => {
-  test.setTimeout(60000)
-
-  await waitForConnection(
-    new DynamoDBClient({
-      region: 'us-east-1',
-      endpoint: 'http://localhost:8000',
-      credentials: {
-        accessKeyId: 'localDb',
-        secretAccessKey: 'randomAnyString',
-      },
-    })
-  )
-})
 
 test.describe('Circulars archive page', () => {
   test('responds to changes in the number of results per page', async ({
