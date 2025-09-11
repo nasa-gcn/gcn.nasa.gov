@@ -45,10 +45,10 @@ test.beforeEach(async ({ page }) => {
   await page.waitForSelector('#query')
 })
 
-test.describe('Circulars correction page', () => {
+test.describe('Circulars edit page', () => {
   test('populates all fields on load', async ({ page }) => {
     test.slow()
-    await page.goto(`/circulars/correction/${loadingTestsCircular.circularId}`)
+    await page.goto(`/circulars/edit/${loadingTestsCircular.circularId}`)
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
     )

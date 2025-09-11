@@ -317,7 +317,7 @@ export function CircularEditForm({
               name="intent"
               value="new"
             >
-              New
+              Send
             </Button>
           ) : (
             <Button

@@ -81,7 +81,9 @@ test.describe('Circulars edit page', () => {
     await page.locator('#submitter').fill(editTestsCircular.submitter)
     await page.locator('#subject').fill(testSubject)
     await page.getByTestId('textarea').fill(editTestsCircular.body)
-    await page.getByRole('button', { name: 'Update' }).click({ timeout: 10000 })
+    await page
+      .getByRole('button', { name: 'Save as New Version' })
+      .click({ timeout: 10000 })
     await page.waitForURL('/circulars?index')
     await expect(
       page.getByRole('link', {
