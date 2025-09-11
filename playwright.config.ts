@@ -28,7 +28,7 @@ const circularsTests = deviceList.map((device) => {
       storageState: '__playwright__/.auth/user.json',
     },
     testMatch: 'circulars/*',
-    dependencies: ['setup'],
+    dependencies: ['authSetup'],
   }
 })
 
@@ -58,15 +58,24 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: 'setup', testMatch: 'auth.setup.ts' },
-    { name: 'adminSetup', testMatch: 'admin.setup.ts' },
+    { name: 'serverSetup', testMatch: 'server.setup.ts' },
+    {
+      name: 'authSetup',
+      dependencies: ['serverSetup'],
+      testMatch: 'auth.setup.ts',
+    },
+    {
+      name: 'adminSetup',
+      dependencies: ['serverSetup'],
+      testMatch: 'admin.setup.ts',
+    },
     ...adminTests,
     ...circularsTests,
   ],
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run dev && npx wait-on http://localhost:3333',
+    command: 'npm run dev',
     url: 'http://localhost:3333',
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
