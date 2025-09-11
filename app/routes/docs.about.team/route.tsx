@@ -12,8 +12,6 @@ import {
   CardGroup,
   CardHeader,
   CardMedia,
-  Grid,
-  GridContainer,
   Icon,
 } from '@trussworks/react-uswds'
 import type { ReactNode } from 'react'
@@ -44,58 +42,33 @@ function TeamCard({
   name: string
   affiliation: string
   photo: string
-  github: string
+  github?: string
 }) {
   return (
-    <Card className="grid-col-fill">
-      <CardMedia imageClass="bg-white">
-        <img
-          src={photo}
-          width="50"
-          height="50"
-          alt="Photograph of GCN team member"
-        />
+    <Card gridLayout={{ tablet: { col: 4 } }}>
+      <CardMedia>
+        <img src={photo} width="50" height="50" alt={`Photograph of ${name}`} />
       </CardMedia>
       <CardHeader>
-        <Link className="usa-link" to={`https://github.com/${github}`}>
-          {name}
-          <Icon.Github role="presentation" size={3} color="black" />
-        </Link>{' '}
-        <p style={{ marginTop: '0px', fontSize: '12px' }}>{affiliation}</p>
+        <h3 className="margin-bottom-0">{name}</h3>
+        <small>{affiliation}</small>
       </CardHeader>
-      <CardBody style={{ fontSize: '14px' }}>{children}</CardBody>
-    </Card>
-  )
-}
-
-function TeamCardNoLink({
-  children,
-  name,
-  affiliation,
-  photo,
-}: {
-  children: ReactNode
-  name: string
-  affiliation: string
-  photo: string
-}) {
-  return (
-    <Card className="grid-col-fill">
-      <CardMedia imageClass="bg-white">
-        <img
-          src={photo}
-          width="50"
-          height="50"
-          alt="Photograph of GCN team member"
-        />
-      </CardMedia>
-      <CardHeader>
-        <h4 style={{ marginBottom: '0px' }}>
-          <>{name}</>
-        </h4>
-        <p style={{ marginTop: '0px', fontSize: '12px' }}>{affiliation}</p>
-      </CardHeader>
-      <CardBody style={{ fontSize: '14px' }}>{children}</CardBody>
+      <CardBody>
+        {children}
+        {github && (
+          <>
+            <br />
+            <Link
+              className="usa-link"
+              to={`https://github.com/${github}`}
+              title={`Link to ${name}'s GitHub profile`}
+            >
+              <Icon.Github role="presentation" className="margin-y-neg-2px" />{' '}
+              {github}
+            </Link>
+          </>
+        )}
+      </CardBody>
     </Card>
   )
 }
@@ -105,120 +78,106 @@ export default function () {
     <>
       <h1>GCN Team</h1>
       <p className="usa-paragraph">
-        The current and past contributors to GCN. For questions, please contact
-        us via the{' '}
+        These are the current and past contributors to GCN. For questions,
+        please{' '}
         <Link className="usa-link" to="/contact">
-          GCN Helpdesk
-        </Link>{' '}
+          contact our help desk
+        </Link>
         .
       </p>
-      <h2>Current Team</h2>
+      <h2>Current Team Members</h2>
 
-      <GridContainer>
-        <Grid row>
-          <CardGroup>
-            <TeamCard
-              name="Judy Racusin"
-              affiliation="NASA/GSFC"
-              photo={judy}
-              github="jracusin"
-            >
-              Principal Investigator
-            </TeamCard>
+      <CardGroup>
+        <TeamCard
+          name="Judy Racusin"
+          affiliation="NASA/GSFC"
+          photo={judy}
+          github="jracusin"
+        >
+          Principal Investigator
+        </TeamCard>
 
-            <TeamCard
-              name="Leo Singer"
-              affiliation="NASA/GSFC"
-              photo={leo}
-              github="lpsinger"
-            >
-              Lead Developer
-            </TeamCard>
-            <TeamCard
-              name="Dakota Dutko"
-              affiliation="NASA/GSFC/ADNET"
-              photo={dakota}
-              github="dakota002"
-            >
-              Full-Stack Developer
-            </TeamCard>
-          </CardGroup>
-        </Grid>
+        <TeamCard
+          name="Leo Singer"
+          affiliation="NASA/GSFC"
+          photo={leo}
+          github="lpsinger"
+        >
+          Lead Developer
+        </TeamCard>
+        <TeamCard
+          name="Dakota Dutko"
+          affiliation="NASA/GSFC/ADNET"
+          photo={dakota}
+          github="dakota002"
+        >
+          Full-Stack Developer
+        </TeamCard>
 
-        <Grid row>
-          <CardGroup>
-            <TeamCard
-              name="Courey Elliott"
-              affiliation="LSU/NextSource"
-              photo={courey}
-              github="courey"
-            >
-              Full-Stack Developer
-            </TeamCard>
-            <TeamCard
-              name="Vidushi Sharma"
-              affiliation="NASA/GSFC/UMBC"
-              photo={vidushi}
-              github="vidushi-github"
-            >
-              Postdoc
-            </TeamCard>
+        <TeamCard
+          name="Courey Elliott"
+          affiliation="LSU/NextSource"
+          photo={courey}
+          github="courey"
+        >
+          Full-Stack Developer
+        </TeamCard>
+        <TeamCard
+          name="Vidushi Sharma"
+          affiliation="NASA/GSFC/UMBC"
+          photo={vidushi}
+          github="vidushi-github"
+        >
+          Postdoc
+        </TeamCard>
 
-            <TeamCard
-              name="Tyler Barna"
-              affiliation="UMN"
-              photo={tyler}
-              github="tylerbarna"
-            >
-              Ph.D. Student
-            </TeamCard>
-          </CardGroup>
-        </Grid>
+        <TeamCard
+          name="Tyler Barna"
+          affiliation="University of Minnesota"
+          photo={tyler}
+          github="tylerbarna"
+        >
+          Ph.D. Student
+        </TeamCard>
 
-        <Grid row className="grid-col-8">
-          <CardGroup>
-            <TeamCard
-              name="Eric Burns"
-              affiliation="LSU"
-              photo={eric}
-              github="eburnsastro"
-            >
-              Collaborator
-            </TeamCard>
+        <TeamCard
+          name="Eric Burns"
+          affiliation="Louisiana State University"
+          photo={eric}
+          github="eburnsastro"
+        >
+          Collaborator
+        </TeamCard>
 
-            <TeamCard
-              name="Michael Coughlin"
-              affiliation="UMN"
-              photo={michael}
-              github="mcoughlin"
-            >
-              Collaborator
-            </TeamCard>
-          </CardGroup>
-        </Grid>
+        <TeamCard
+          name="Michael Coughlin"
+          affiliation="University of Minnesota"
+          photo={michael}
+          github="mcoughlin"
+        >
+          Collaborator
+        </TeamCard>
+      </CardGroup>
 
-        <h2>Past Team</h2>
+      <h2>Past Team Members</h2>
 
-        <Grid row className="grid-col-8">
-          <CardGroup>
-            <TeamCardNoLink
-              name="Scott Barthelmy"
-              affiliation="NASA/GSFC (retired)"
-              photo={scott}
-            >
-              GCN Classic Founder
-            </TeamCardNoLink>
+      <CardGroup>
+        <TeamCard
+          name="Scott Barthelmy"
+          affiliation="NASA/GSFC (retired)"
+          photo={scott}
+        >
+          Founder
+        </TeamCard>
 
-            <TeamCardNoLink
-              name="Teresa Sheets"
-              affiliation="NASA/GSFC (retired)"
-              photo={headshot}
-            >
-              GCN Classic Developer
-            </TeamCardNoLink>
-          </CardGroup>
-        </Grid>
-      </GridContainer>
+        <TeamCard
+          name="Teresa Sheets"
+          affiliation="NASA/GSFC (retired)"
+          photo={headshot}
+        >
+          Scientific Programmer
+        </TeamCard>
+      </CardGroup>
     </>
   )
 }
