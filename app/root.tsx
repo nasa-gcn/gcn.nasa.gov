@@ -117,8 +117,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const name = user?.name
   const idp = user?.idp
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
-  const userIsMod = user?.groups.includes(moderatorGroup)
-  const userIsVerifiedSubmitter = user?.groups.includes(submitterGroup)
+  const userIsModerator = user?.groups.includes(moderatorGroup)
+  const userIsSubmitter = user?.groups.includes(submitterGroup)
 
   return {
     origin,
@@ -127,8 +127,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     features,
     recaptchaSiteKey,
     idp,
-    userIsMod,
-    userIsVerifiedSubmitter,
+    userIsModerator,
+    userIsSubmitter,
   }
 }
 
@@ -153,12 +153,12 @@ export function useName() {
   return useLoaderDataRoot()?.name
 }
 
-export function useModStatus() {
-  return useLoaderDataRoot()?.userIsMod
+export function usePermissionModerator() {
+  return useLoaderDataRoot()?.userIsModerator
 }
 
-export function useSubmitterStatus() {
-  return useLoaderDataRoot()?.userIsVerifiedSubmitter
+export function usePermissionSubmitter() {
+  return useLoaderDataRoot()?.userIsSubmitter
 }
 
 export function useRecaptchaSiteKey() {

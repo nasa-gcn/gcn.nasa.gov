@@ -49,7 +49,7 @@ import PaginationSelectionFooter from '~/components/pagination/PaginationSelecti
 import { origin } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { useModStatus } from '~/root'
+import { usePermissionModerator } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 import {
   type CircularFormat,
@@ -203,7 +203,7 @@ export default function () {
   const formId = useId()
   const submit = useSubmit()
   const [searchParams] = useSearchParams()
-  const userIsModerator = useModStatus()
+  const userIsModerator = usePermissionModerator()
 
   // Strip off the ?index param if we navigated here from a form.
   // See https://remix.run/docs/en/main/guides/index-query-param.

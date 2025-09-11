@@ -33,7 +33,7 @@ import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
 import { AstroDataContext } from '~/components/circularDisplay/AstroDataContext'
 import { MarkdownBody } from '~/components/circularDisplay/Body'
-import { useModStatus } from '~/root'
+import { usePermissionModerator } from '~/root'
 
 function SyntaxExample({
   label,
@@ -154,7 +154,7 @@ export function CircularEditForm({
     submitter?.trim() !== defaultSubmitter ||
     eventId?.trim() !== originalEventId
 
-  const userIsModerator = useModStatus()
+  const userIsModerator = usePermissionModerator()
 
   const submitDisabled = sending || !valid || !changesHaveBeenMade
 
