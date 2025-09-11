@@ -33,7 +33,7 @@ test.beforeEach(async ({ page }) => {
 test.describe('Circulars edit page', () => {
   test('populates all fields on load', async ({ page }) => {
     test.slow()
-    await page.goto(`/circulars/edit/${loadingTestsCircular.circularId}`)
+    await page.goto(`/circulars/new/${loadingTestsCircular.circularId}`)
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
     )
@@ -48,7 +48,7 @@ test.describe('Circulars edit page', () => {
   test('submits expected values', async ({ page, browserName }) => {
     test.slow()
     const testSubject = `${editTestsCircular.subject} - ${browserName}`
-    await page.goto(`/circulars/edit/${editTestsCircular.circularId}`)
+    await page.goto(`/circulars/new/${editTestsCircular.circularId}`)
     await page.locator('#submitter').fill(editTestsCircular.submitter)
     await page.locator('#subject').fill(testSubject)
     await page.getByTestId('textarea').fill(editTestsCircular.body)
