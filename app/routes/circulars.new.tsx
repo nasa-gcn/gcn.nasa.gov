@@ -5,9 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
-import { json } from '@remix-run/node'
-import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
+import { Link, Outlet } from '@remix-run/react'
 import {
   Button,
   Modal,
@@ -15,69 +13,18 @@ import {
   ModalHeading,
 } from '@trussworks/react-uswds'
 
-import { getUser } from './_auth/user.server'
-import { CircularEditForm } from './circulars.edit.$circularId/CircularEditForm'
-import { formatAuthor } from './circulars/circulars.lib'
-import { submitterGroup } from './circulars/circulars.server'
-import { origin } from '~/lib/env.server'
-import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
-import { useUrl } from '~/root'
-import type { BreadcrumbHandle } from '~/root/Title'
+import { useEmail, usePermissionModerator, useUrl } from '~/root'
 
-export const handle: BreadcrumbHandle = {
-  breadcrumb: 'New',
+function useAuthenticated() {
+  return Boolean(useEmail())
 }
-
-export async function loader({ request }: LoaderFunctionArgs) {
-  const user = await getUser(request)
-  let isAuthenticated, isAuthorized, formattedAuthor
-  if (user) {
-    isAuthenticated = true
-    if (user.groups.includes(submitterGroup)) isAuthorized = true
-    formattedAuthor = formatAuthor(user)
-  }
-  return json(
-    { isAuthenticated, isAuthorized, formattedAuthor },
-    { headers: getCanonicalUrlHeaders(new URL(`/circulars/new`, origin)) }
-  )
-}
-
-export const headers: HeadersFunction = ({ loaderHeaders }) =>
-  pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
-  const { isAuthenticated, isAuthorized, formattedAuthor } =
-    useLoaderData<typeof loader>()
-
-  // Get default subject from search params, then strip out
-  let [searchParams] = useSearchParams()
-  const defaultBody = searchParams.get('body') || ''
-  const defaultSubject = searchParams.get('subject') || ''
-  const defaultFormat =
-    searchParams.get('format') === 'text/markdown'
-      ? ('text/markdown' as const)
-      : undefined
-
-  searchParams = new URLSearchParams(searchParams)
-  searchParams.delete('subject')
-  searchParams.delete('body')
-  searchParams.delete('format')
-  const searchString = searchParams.toString()
-  const formDefaults = {
-    formattedContributor: formattedAuthor ?? '',
-    defaultBody,
-    defaultSubject,
-    defaultFormat,
-    searchString,
-    isAuthorized: Boolean(isAuthorized),
-  }
-
   return (
     <>
-      <h1>New GCN Circular</h1>
-      <CircularEditForm {...formDefaults} />
-      {isAuthorized || <ModalUnauthorized isAuthenticated={isAuthenticated} />}
+      <Outlet />
+      {usePermissionModerator() || <ModalUnauthorized />}
     </>
   )
 }
@@ -99,8 +46,9 @@ function SignInButton() {
   )
 }
 
-function ModalUnauthorized({ isAuthenticated }: { isAuthenticated?: boolean }) {
+function ModalUnauthorized() {
   const searchString = useSearchString()
+  const isAuthenticated = useAuthenticated()
 
   return (
     <Modal

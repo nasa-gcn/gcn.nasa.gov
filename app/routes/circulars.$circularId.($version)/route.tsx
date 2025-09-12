@@ -23,7 +23,6 @@ import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
-import { usePermissionModerator, usePermissionSubmitter } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> = {
@@ -128,16 +127,14 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        {(usePermissionSubmitter() || usePermissionModerator()) && (
-          <Link
-            to={`/circulars/edit/${circularId}`}
-            className="usa-button usa-button--outline"
-            title="Submit a correction to this GCN Circular."
-          >
-            <Icon.Edit role="presentation" className="margin-y-neg-2px" />
-            Edit
-          </Link>
-        )}
+        <Link
+          to={`/circulars/new/${circularId}`}
+          className="usa-button usa-button--outline"
+          title="Submit a correction to this GCN Circular."
+        >
+          <Icon.Edit role="presentation" className="margin-y-neg-2px" />
+          Edit
+        </Link>
         {result?.history && result.history.length > 0 && (
           <CircularsHistory circular={circularId} history={result?.history} />
         )}

@@ -11,12 +11,7 @@ import { Link, useLoaderData } from '@remix-run/react'
 
 import { getUser } from '../_auth/user.server'
 import { formatAuthor } from '../circulars/circulars.lib'
-import {
-  get,
-  getChangeRequest,
-  moderatorGroup,
-  submitterGroup,
-} from '../circulars/circulars.server'
+import { get, getChangeRequest } from '../circulars/circulars.server'
 import { CircularEditForm } from './CircularEditForm'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -32,26 +27,20 @@ export async function loader({
   if (!circularId) throw new Response(null, { status: 404 })
 
   const user = await getUser(request)
-  if (
-    !(
-      user?.groups.includes(moderatorGroup) ||
-      user?.groups.includes(submitterGroup)
-    )
-  )
-    throw new Response(null, { status: 403 })
 
-  let circular
-  try {
-    circular = await getChangeRequest(parseFloat(circularId), user.sub)
-  } catch (err) {
-    if (!(err instanceof Response && err.status === 404)) throw err
+  let circular, formattedContributor
+  if (user) {
+    try {
+      circular = await getChangeRequest(parseFloat(circularId), user.sub)
+    } catch (err) {
+      if (!(err instanceof Response && err.status === 404)) throw err
+    }
+    formattedContributor = formatAuthor(user)
   }
   circular ??= await get(parseFloat(circularId))
 
-  const formattedContributor = formatAuthor(user)
-
   return {
-    formattedContributor,
+    formattedContributor: formattedContributor ?? '',
     defaultBody: circular.body,
     defaultSubject: circular.subject,
     defaultFormat: circular.format,
