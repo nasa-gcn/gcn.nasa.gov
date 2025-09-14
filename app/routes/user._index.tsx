@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import {
@@ -26,10 +25,11 @@ import Spinner from '~/components/Spinner'
 import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Profile',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

@@ -30,6 +30,7 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   useLocation,
+  useMatches,
   useNavigation,
   useRouteError,
   useRouteLoaderData,
@@ -51,6 +52,7 @@ import { Footer } from './root/Footer'
 import NewsBanner from './root/NewsBanner'
 import { type BreadcrumbHandle, Title } from './root/Title'
 import { Header } from './root/header/Header'
+import type { SEOHandle } from './root/seo'
 import { getUser } from './routes/_auth/user.server'
 import {
   moderatorGroup,
@@ -235,14 +237,17 @@ function Progress() {
 }
 
 export function Layout({ children }: { children?: ReactNode }) {
-  const noIndex = useHostname() !== 'gcn.nasa.gov'
+  const notProduction = useHostname() !== 'gcn.nasa.gov'
+  const noIndex = useMatches().some(
+    ({ handle }) => (handle as SEOHandle | undefined)?.noIndex
+  )
 
   return (
     <html lang="en-US">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        {noIndex && <meta name="robots" content="noindex" />}
+        {(notProduction || noIndex) && <meta name="robots" content="noindex" />}
         <Meta />
         <Links />
         <Title />

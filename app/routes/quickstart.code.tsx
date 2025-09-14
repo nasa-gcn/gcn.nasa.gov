@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, FormGroup } from '@trussworks/react-uswds'
@@ -15,10 +14,11 @@ import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Tab, Tabs } from '~/components/tabs'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Get Sample Code',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

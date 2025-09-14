@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
@@ -34,10 +33,11 @@ import {
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'New',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function action({ request }: ActionFunctionArgs) {

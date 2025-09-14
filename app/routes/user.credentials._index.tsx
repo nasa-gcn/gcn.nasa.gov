@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
@@ -14,8 +13,9 @@ import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import { handleCredentialLoader } from '~/components/NewCredentialForm'
 import { UserCredentials } from '~/components/UserCredentials'
 import { getFormDataString } from '~/lib/utils'
+import type { SEOHandle } from '~/root/seo'
 
-export const handle: SEOHandle = { getSitemapEntries: () => null }
+export const handle: SEOHandle = { noIndex: true }
 
 export const loader = handleCredentialLoader
 

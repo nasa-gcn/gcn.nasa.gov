@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
@@ -19,10 +18,11 @@ import {
 } from '../circulars/circulars.server'
 import { CircularEditForm } from './CircularEditForm'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: ({ params: { circularId } }) => `Edit - ${circularId}`,
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({

@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import {
   type ActionFunctionArgs,
   type LoaderFunctionArgs,
@@ -37,11 +36,12 @@ import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import { useFeature, useRecaptchaSiteKey } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 import { getUser } from '~/routes/_auth/user.server'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Edit',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function action({ request }: ActionFunctionArgs) {
