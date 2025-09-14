@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, Checkbox } from '@trussworks/react-uswds'
@@ -21,6 +20,7 @@ import {
   removeUserFromGroup,
 } from '~/lib/cognito.server'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 interface GroupSelectionItem {
   groupName: string
@@ -30,7 +30,7 @@ interface GroupSelectionItem {
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: ({ params: { userId } }) => userId,
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({

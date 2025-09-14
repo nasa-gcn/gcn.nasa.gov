@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { useLoaderData } from '@remix-run/react'
 
@@ -16,10 +15,11 @@ import {
 } from '~/components/NewCredentialForm'
 import { UserCredentials } from '~/components/UserCredentials'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Select Credentials',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export const loader = handleCredentialLoader

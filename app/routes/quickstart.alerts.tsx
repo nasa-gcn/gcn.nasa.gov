@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import { Form, Link, useSearchParams } from '@remix-run/react'
 import { Button, ButtonGroup, FormGroup, Label } from '@trussworks/react-uswds'
 import { useState } from 'react'
@@ -14,10 +13,11 @@ import type { NoticeFormat } from '~/components/NoticeFormat'
 import { NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'GCN - Start Streaming GCN Notices - Customize Alerts',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export default function () {
