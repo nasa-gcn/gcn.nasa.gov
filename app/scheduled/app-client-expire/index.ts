@@ -48,9 +48,6 @@ export async function handler() {
       ExpressionAttributeValues: {
         ':warningCutoff': warningCutoff,
       },
-      ExpressionAttributeNames: {
-        '#sub': 'sub',
-      },
     }
   )
 
