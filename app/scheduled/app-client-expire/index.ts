@@ -6,8 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { paginateQuery } from '@aws-sdk/lib-dynamodb'
+import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import partition from 'lodash/partition'
 import dedent from 'ts-dedent'
 
@@ -37,7 +36,7 @@ export async function handler() {
   const deletionCutoff = expirationDate - EXPIRATION_MILLIS
   const warningCutoff = expirationDate - WARNING_MILLIS
 
-  const expiredAndWarningCredentials = paginateQuery(
+  const expiredAndWarningCredentials = paginateScan(
     {
       client,
     },
@@ -46,7 +45,7 @@ export async function handler() {
         'attribute_not_exists(expired) and (lastUsed < :warningCutoff or (attribute_not_exists(lastUsed) and created < :warningCutoff))',
       TableName,
       ExpressionAttributeValues: {
-        ':warningCutoff': warningCutoff,
+        ':warningCutoff': { N: warningCutoff.toString() },
       },
     }
   )
