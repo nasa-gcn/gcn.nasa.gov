@@ -14,7 +14,12 @@ import {
 } from '@trussworks/react-uswds'
 
 import { useSearchString } from '~/lib/utils'
-import { useEmail, usePermissionModerator, useUrl } from '~/root'
+import {
+  useEmail,
+  usePermissionModerator,
+  usePermissionSubmitter,
+  useUrl,
+} from '~/root'
 
 function useAuthenticated() {
   return Boolean(useEmail())
@@ -24,7 +29,9 @@ export default function () {
   return (
     <>
       <Outlet />
-      {usePermissionModerator() || <ModalUnauthorized />}
+      {usePermissionModerator() || usePermissionSubmitter() || (
+        <ModalUnauthorized />
+      )}
     </>
   )
 }
