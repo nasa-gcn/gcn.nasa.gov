@@ -45,7 +45,7 @@ export async function handler() {
         'attribute_not_exists(expired) and (lastUsed < :warningCutoff or (attribute_not_exists(lastUsed) and created < :warningCutoff))',
       TableName,
       ExpressionAttributeValues: {
-        ':warningCutoff': { N: warningCutoff.toString() },
+        ':warningCutoff': warningCutoff,
       },
     }
   )
