@@ -9,5 +9,5 @@ import { redirect } from '@remix-run/node'
 import type { LoaderFunction } from '@remix-run/node'
 
 export const loader: LoaderFunction = async () => {
-  return redirect('/docs/about/history', { status: 301 })
+  return redirect('/docs/about', { status: 301 })
 }
