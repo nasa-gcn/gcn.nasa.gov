@@ -8,7 +8,7 @@
 import { tables } from '@architect/functions'
 import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import partition from 'lodash/partition'
-import dedent from 'ts-dedent'
+import { dedent } from 'ts-dedent'
 
 import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
 import {
@@ -71,33 +71,37 @@ export async function handler() {
     }
   }
   const uniqueSubs = [...new Set(subs)]
-  const userEmailMap: { [key: string]: string } = Object.fromEntries(
-    await Promise.all(
-      uniqueSubs.map(async (sub) => [
-        sub,
-        extractAttributeRequired(
-          (await getCognitoUserFromSub(sub)).Attributes,
-          'email'
-        ),
-      ])
+  const entries = []
+  for (const sub of uniqueSubs) {
+    try {
+      const attributes = (await getCognitoUserFromSub(sub)).Attributes
+      entries.push([sub, extractAttributeRequired(attributes, 'email')])
+    } catch (e) {
+      console.log('Error, user may not exist: ', sub)
+      console.log(e)
+    }
+  }
+
+  const userEmailMap: { [key: string]: string } = Object.fromEntries(entries)
+  const expirationEmailPromises = expiredCreds
+    .filter((cred) => userEmailMap[cred.sub] !== undefined)
+    .map((cred) =>
+      sendEmail({
+        to: [userEmailMap[cred.sub]],
+        fromName: 'GCN Kafka Service',
+        subject: 'Client Credential Deleted',
+        body: `Your Kafka client credential "${cred.name}" has expired. For more information about our credential expiration policy, please visit ${origin}/docs/internal/auth or ${origin}/contact for support.`,
+      })
     )
-  )
 
-  const expirationEmailPromises = expiredCreds.map((cred) =>
-    sendEmail({
-      to: [userEmailMap[cred.sub]],
-      fromName: 'GCN Kafka Service',
-      subject: 'Client Credential Deleted',
-      body: `Your Kafka client credential "${cred.name}" has expired. For more information about our credential expiration policy, please visit ${origin}/docs/internal/auth or ${origin}/contact for support.`,
-    })
-  )
-
-  const warningEmailPromises = warningCreds.map((cred) =>
-    sendEmail({
-      to: [userEmailMap[cred.sub]],
-      fromName: 'GCN Kafka Service',
-      subject: 'GCN Kafka Client Credentials Expiring Soon',
-      body: dedent`
+  const warningEmailPromises = warningCreds
+    .filter((cred) => userEmailMap[cred.sub] !== undefined)
+    .map((cred) =>
+      sendEmail({
+        to: [userEmailMap[cred.sub]],
+        fromName: 'GCN Kafka Service',
+        subject: 'GCN Kafka Client Credentials Expiring Soon',
+        body: dedent`
       GCN has updated our security practices to disable disused Kafka client credentials.
       
       Your client credentials, "${cred.name}", for connecting to the GCN Kafka brokers has not been used recently and is set to expire within the next few days. For more information on this policy, see our documentation at ${origin}/docs/faq#why-are-my-kafka-client-credentials-expiring.
@@ -108,8 +112,8 @@ export async function handler() {
 
       For support, please visit ${origin}/contact.
       `,
-    })
-  )
+      })
+    )
 
   await Promise.all([
     // Mark as expired in DynamoDB
