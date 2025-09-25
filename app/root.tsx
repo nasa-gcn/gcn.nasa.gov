@@ -54,6 +54,7 @@ import { type BreadcrumbHandle, Title } from './root/Title'
 import { Header } from './root/header/Header'
 import type { SEOHandle } from './root/seo'
 import { getUser } from './routes/_auth/user.server'
+import { adminGroup } from './routes/admin'
 import {
   moderatorGroup,
   submitterGroup,
@@ -121,6 +122,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
   const userIsModerator = user?.groups.includes(moderatorGroup)
   const userIsSubmitter = user?.groups.includes(submitterGroup)
+  const userIsAdmin = user?.groups.includes(adminGroup)
 
   return {
     origin,
@@ -131,6 +133,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     idp,
     userIsModerator,
     userIsSubmitter,
+    userIsAdmin,
   }
 }
 
@@ -161,6 +164,10 @@ export function usePermissionModerator() {
 
 export function usePermissionSubmitter() {
   return useLoaderDataRoot()?.userIsSubmitter
+}
+
+export function usePermissionAdmin() {
+  return useLoaderDataRoot()?.userIsAdmin
 }
 
 export function useRecaptchaSiteKey() {
