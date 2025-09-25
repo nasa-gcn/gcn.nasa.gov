@@ -98,15 +98,11 @@ export async function handler() {
       fromName: 'GCN Kafka Service',
       subject: 'GCN Kafka Client Credentials Expiring Soon',
       body: dedent`
-      GCN has updated our security practices to disable disused Kafka client credentials.
-      
-      Your client credentials, "${cred.name}", for connecting to the GCN Kafka brokers has not been used recently and is set to expire within the next few days. For more information on this policy, see our documentation at ${origin}/docs/faq#why-are-my-kafka-client-credentials-expiring.
-      
-      This will NOT delete or disable your account, and you can sign on to create new credentials in the future, should you need them.
-      
-      No actions are needed on your end. You can review your client credentials at ${origin}/user/credentials.
+      Your GCN client credential named "${cred.name}" has not been used recently and will expire in the next few days.
 
-      For support, please visit ${origin}/contact.
+      For security purposes, we disable client credentials that you have not used to connect to a Kafka broker for the past 30 days. Once disabled, a client credential cannot be used again. To prevent a credential from expiring and being disabled, simply use it to connect to a Kafka broker. You may create new client credentials at any time. For more information on this policy, see our documentation at ${origin}/docs/faq#why-are-my-kafka-client-credentials-expiring.
+
+      No actions are needed on your end. You can review your client credentials at ${origin}/user/credentials or visit ${origin}/contact for questions and support.
       `,
     })
   )
