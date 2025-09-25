@@ -9,6 +9,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
+  json,
   useActionData,
   useLoaderData,
   useSearchParams,
@@ -47,6 +48,7 @@ import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { origin } from '~/lib/env.server'
+import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
 import { usePermissionModerator } from '~/root'
@@ -87,13 +89,16 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   })
   const requestedChangeCount = (await getChangeRequests()).length
 
-  return {
-    page,
-    ...results,
-    requestedChangeCount,
-    limit,
-    isGroupView,
-  }
+  return json(
+    {
+      page,
+      ...results,
+      requestedChangeCount,
+      limit,
+      isGroupView,
+    },
+    { headers: getCanonicalUrlHeaders(new URL(`/circulars`, origin)) }
+  )
 }
 
 export async function action({ request }: ActionFunctionArgs) {
