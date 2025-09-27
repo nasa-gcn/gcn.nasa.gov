@@ -25,7 +25,7 @@ consumer = Consumer(
 )
 
 # Subscribe to Kafka topic
-consumer.subscribe(['igwn.gwalert'])
+consumer.subscribe(['gcn.notices.mission'])
 
 # Continuously consume and parse JSON data
 for message in consumer.consume(timeout=1):
@@ -44,7 +44,7 @@ for message in consumer.consume(timeout=1):
 
 ## Decoding Embedded Data
 
-Some GCN notices include HEALPix sky maps encoded in [base64](https://datatracker.ietf.org/doc/html/rfc4648.html), a way of encoding binary data into text.
+Some GCN notices include HEALPix sky maps encoded in [Base 64](https://datatracker.ietf.org/doc/html/rfc4648.html), a way of encoding binary data into text.
 The following code demonstrates how to extract, decode, and save the HEALPix data as a `.fits` file from a received notice. Python's built-in [`base64`](https://docs.python.org/3/library/base64.html#base64.b64encode) module provides the `b64decode` method to simplify the decoding process.
 
 ```python
@@ -52,7 +52,7 @@ import base64
 from astropy.io import fits
 
 # Extract the base64-encoded skymap
-skymap_string = alert_json["event"]["skymap"]
+skymap_string = alert_json["healpix_file"]
 
 # Decode the Base64 string to bytes
 decoded_bytes = base64.b64decode(skymap_string)
@@ -68,14 +68,20 @@ with fits.open("skymap.fits") as hdul:
 
 ## JSON Schema Example for Embedding a FITS File
 
-If you want to include a FITS file in a Notice, add a property to your schema definition in the following format:
+Use the `"healpix_file"` property of te the Core Localization 
+schema to embed the FITS file of a HEALPix localization map
+(see also the next example.)
+If you want to be able to include a second HEALPix or other
+binary data, you need to declare your own property.
+For example, if your notice carries a PDF contour plot,
+the new property can look like the following.
 
 ```json
-"healpix_file": {
+"contours_file": {
     "type": "string",
     "contentEncoding": "base64",
-    "contentMediaType": "image/fits",
-    "description": "Base 64 encoded content of a FITS file"
+    "contentMediaType": "image/pdf",
+    "description": "Localization likelihood contours plot (Base 64 encoded PDF file)"
 }
 ```
 
@@ -96,7 +102,7 @@ producer = Producer(client_id='fill me in',
 	config={"message.max.bytes": 204194304},
 
 # Set Kafka Topic and Producer Configuration
-TOPIC = "igwn.gwalert"
+TOPIC = "gcn.notices.mission"
 
 data = {
     "event": {}
@@ -104,7 +110,7 @@ data = {
 
 # Read and encode the FITS file
 with open("skymap.fits", "rb") as file:
-	data["event"]["skymap"] = base64.b64encode(file.read())
+   data["healpix_file"] = base64.b64encode(file.read())
 
 # Convert dictionary to JSON
 json_data = json.dumps(data).encode("utf-8")
