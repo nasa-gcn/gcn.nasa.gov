@@ -68,14 +68,13 @@ with fits.open("skymap.fits") as hdul:
 
 ## JSON Schema Example for Embedding a FITS File
 
-If you want your notices to be able to include a FITS file with 
-a HEALPix localization map, just `"$ref"` the Core Localization 
-schema from your schema and then embed the FITS file in the
-`"healpix_file"` property (see also the next example.)  If you
-want to be able to include a second HEALPix or other binary
-data, you need to declare your own property.  For example, if
-your notice carries a PDF contour plot, the new property can
-look like the following.
+Use the `"healpix_file"` property of te the Core Localization 
+schema to embed the FITS file of a HEALPix localization map
+(see also the next example.)
+If you want to be able to include a second HEALPix or other
+binary data, you need to declare your own property.
+For example, if your notice carries a PDF contour plot,
+the new property can look like the following.
 
 ```json
 "contours_file": {
