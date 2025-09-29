@@ -31,6 +31,31 @@ import { Anchor } from '~/components/Anchor'
       className="maxw-none grid-container"
       variantComponent={
 
+        <CollectionCalendarDate datetime='September 29, 2025' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>GCN Classic Outage and Potential U.S. Government Shutdown Impact</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        #### GCN Classic Outage
+        Due to planned network maintenance at NASA Goddard, GCN Classic will lose network connectivity on Thursday, October 2 from 6 pm ET (22:00 UTC) until 10 pm ET (2:00 UTC October 3). This affects the following GCN services:
+          - GCN Classic Notices distribution via socket, VOEvent, Kafka, and email
+          - GCN Classic Notices archive web site
+          - JSON-format GCN Notices and SVOM VOEvent Notices distribution via GCN Kafka will be unaffected
+        #### Potential U.S. Government Shutdown Impact
+        [During a U.S. federal government shutdown, all GCN services (GCN Circulars, GCN Notices, Kafka cluster, the web site) remain fully operational.](/docs/faq#does-gcn-keep-working-during-a-us-federal-government-shutdown) However, there may be the following minor impacts to GCN users:
+          - Responses to questions and requests through the GCN help desk may be delayed.
+          - Review of [correction requests](/docs/circulars/corrections) for Circulars may be delayed.
+          - Issues and pull requests on https://github.com/nasa-gcn repositories may not be promptly reviewed.
+          - There will be no redeployments of the GCN web site except to address emergencies.
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+
         <CollectionCalendarDate datetime='August 26, 2025' />
       }
     >
