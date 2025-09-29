@@ -268,10 +268,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Super-Kamiokande JSON Notices and Schema v4.5.0. See{' '}
+          GCN Classic Outage and Potential U.S. Government Shutdown Impact. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-super-kamiokande-json-notices"
+            to="/news#gcn-classic-outage-and-potential-us-government-shutdown-impact"
           >
             news and announcements
           </Link>
