@@ -13,7 +13,7 @@ import { dedent } from 'ts-dedent'
 import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
 import {
   deleteAppClient,
-  extractAttributeRequired,
+  extractAttribute,
   getCognitoUserFromSub,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
@@ -85,13 +85,7 @@ export async function handler() {
             throw e
           }
         }
-        if (user) {
-          const attributes = user.Attributes
-          const email = extractAttributeRequired(attributes, 'email')
-          return [sub, email]
-        } else {
-          return [sub, undefined]
-        }
+        return [sub, extractAttribute(user?.Attributes, 'email')]
       })
     )
   )
