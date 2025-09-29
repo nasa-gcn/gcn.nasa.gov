@@ -75,23 +75,27 @@ export async function handler() {
   const userEmailMap: { [key: string]: string } = Object.fromEntries(
     await Promise.all(
       uniqueSubs.map(async (sub) => {
-        let email
+        let user
         try {
-          const attributes = (await getCognitoUserFromSub(sub)).Attributes
-          email = extractAttributeRequired(attributes, 'email')
+          user = await getCognitoUserFromSub(sub)
         } catch (e) {
-          if (e instanceof Error && e.message == '[object Response]') {
+          if (e instanceof Response) {
             console.log('Error, user may not exist: ', sub)
           } else {
             throw e
           }
         }
-        return [sub, email]
+        if (user) {
+          const attributes = user.Attributes
+          const email = extractAttributeRequired(attributes, 'email')
+          return [sub, email]
+        } else {
+          return [sub, undefined]
+        }
       })
     )
   )
 
-  // const userEmailMap: { [key: string]: string } = Object.fromEntries(entries)
   const expirationEmailPromises = expiredCreds
     .filter((cred) => userEmailMap[cred.sub] !== undefined)
     .map((cred) =>
