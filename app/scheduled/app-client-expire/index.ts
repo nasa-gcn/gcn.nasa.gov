@@ -80,7 +80,7 @@ export async function handler() {
           user = await getCognitoUserFromSub(sub)
         } catch (e) {
           if (e instanceof Response) {
-            console.log('Error, user may not exist: ', sub)
+            console.error('user does not exist: ', sub)
           } else {
             throw e
           }
