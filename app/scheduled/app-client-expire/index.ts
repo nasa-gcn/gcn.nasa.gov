@@ -70,19 +70,28 @@ export async function handler() {
       subs.push(...creds.map((cred) => cred.sub))
     }
   }
-  const uniqueSubs = [...new Set(subs)]
-  const entries = []
-  for (const sub of uniqueSubs) {
-    try {
-      const attributes = (await getCognitoUserFromSub(sub)).Attributes
-      entries.push([sub, extractAttributeRequired(attributes, 'email')])
-    } catch (e) {
-      console.log('Error, user may not exist: ', sub)
-      console.log(e)
-    }
-  }
 
-  const userEmailMap: { [key: string]: string } = Object.fromEntries(entries)
+  const uniqueSubs = [...new Set(subs)]
+  const userEmailMap: { [key: string]: string } = Object.fromEntries(
+    await Promise.all(
+      uniqueSubs.map(async (sub) => {
+        let email
+        try {
+          const attributes = (await getCognitoUserFromSub(sub)).Attributes
+          email = extractAttributeRequired(attributes, 'email')
+        } catch (e) {
+          if (e instanceof Error && e.message == '[object Response]') {
+            console.log('Error, user may not exist: ', sub)
+          } else {
+            throw e
+          }
+        }
+        return [sub, email]
+      })
+    )
+  )
+
+  // const userEmailMap: { [key: string]: string } = Object.fromEntries(entries)
   const expirationEmailPromises = expiredCreds
     .filter((cred) => userEmailMap[cred.sub] !== undefined)
     .map((cred) =>
