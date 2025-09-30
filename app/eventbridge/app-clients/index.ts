@@ -79,12 +79,16 @@ export async function handler(
   })
   await db.client_credentials.update({
     Key: { sub, client_id },
-    UpdateExpression: 'set #lastUsed = :lastUsed',
+    UpdateExpression:
+      'set #lastUsed = :lastUsed, #countUsed = if_not_exists(#countUsed, :countUsedDefault) + :countUsedIncrement',
     ExpressionAttributeNames: {
       '#lastUsed': 'lastUsed',
+      '#countUsed': 'countUsed',
     },
     ExpressionAttributeValues: {
       ':lastUsed': Date.parse(event.detail.eventTime),
+      ':countUsedIncrement': 1,
+      ':countUsedDefault': 0,
     },
   })
 }
