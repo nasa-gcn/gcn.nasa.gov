@@ -5758,7 +5758,8 @@
       "created": 1755024628845,
       "name": "Valid Credential",
       "scope": "example.test.scope",
-      "lastUsed": 1755024328845
+      "lastUsed": 1755024328845,
+      "countUsed": 2345
     },
     {
       "sub": "default",
@@ -5766,7 +5767,8 @@
       "created": 1755024628845,
       "name": "Warning Credential",
       "scope": "example.test.scope",
-      "lastUsed": 1753379811737
+      "lastUsed": 1753379811737,
+      "countUsed": 123456
     },
     {
       "sub": "default",
@@ -5782,7 +5784,8 @@
       "name": "Expired Credential",
       "scope": "example.test.scope",
       "expired": 1755024628845,
-      "lastUsed": 1745014628845
+      "lastUsed": 1745014628845,
+      "countUsed": 1
     }
   ]
 }

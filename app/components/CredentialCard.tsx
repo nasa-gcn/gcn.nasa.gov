@@ -18,6 +18,7 @@ import {
 } from '@trussworks/react-uswds'
 import { useRef } from 'react'
 
+import HumanNumber from './HumanNumber'
 import TimeAgo from './TimeAgo'
 import { ToolbarButtonGroup } from './ToolbarButtonGroup'
 import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
@@ -30,6 +31,7 @@ export default function CredentialCard({
   scope,
   scopeDescription,
   lastUsed,
+  countUsed,
   expired,
 }: RedactedClientCredential & { scopeDescription?: string }) {
   const ref = useRef<ModalRef>(null)
@@ -59,6 +61,11 @@ export default function CredentialCard({
                   </>
                 ) : (
                   <>
+                    {countUsed && (
+                      <>
+                        used <HumanNumber n={countUsed} /> times,{' '}
+                      </>
+                    )}
                     {lastUsed ? (
                       <>
                         last used <TimeAgo time={lastUsed} />
