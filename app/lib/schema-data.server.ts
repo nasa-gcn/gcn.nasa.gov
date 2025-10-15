@@ -140,7 +140,10 @@ export const loadSchemaExamples = memoizee(
     return await Promise.all(
       exampleFiles.map(async ({ name }) => ({
         name: normalizeExampleName(name, schemaName),
-        content: await loadContentFromGithub(join(dirPath, name), ref),
+        content: await loadContentFromGithub(
+          join(dirPath, name).replaceAll('\\', '/'),
+          ref
+        ),
       }))
     )
   },
