@@ -8,8 +8,8 @@
 import { RequestError } from '@octokit/request-error'
 import { Octokit } from '@octokit/rest'
 import memoizee from 'memoizee'
-import { basename, dirname, extname, join } from 'path'
-import { relative } from 'path/posix'
+import { basename, dirname, extname } from 'path'
+import { join, relative } from 'path/posix'
 
 import { getEnvOrDieInProduction } from './env.server'
 import { exampleSuffix, schemaSuffix } from './schema-data'
@@ -140,10 +140,7 @@ export const loadSchemaExamples = memoizee(
     return await Promise.all(
       exampleFiles.map(async ({ name }) => ({
         name: normalizeExampleName(name, schemaName),
-        content: await loadContentFromGithub(
-          join(dirPath, name).replaceAll('\\', '/'),
-          ref
-        ),
+        content: await loadContentFromGithub(join(dirPath, name), ref),
       }))
     )
   },
