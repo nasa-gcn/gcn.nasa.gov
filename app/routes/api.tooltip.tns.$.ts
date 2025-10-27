@@ -9,11 +9,19 @@ import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 
 import { getEnvOrDie } from '~/lib/env.server'
-import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import {
+  notFoundIfBrowserRequest,
+  publicStaticShortTermCacheControlHeaders,
+} from '~/lib/headers.server'
+import { throwForStatus } from '~/lib/utils'
 
 const splitter = /[:.]/
 
-export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
+export async function loader({
+  request: { headers },
+  params: { '*': value },
+}: LoaderFunctionArgs) {
+  notFoundIfBrowserRequest(headers)
   invariant(value)
 
   const tnsBotName = getEnvOrDie('TNS_BOT_NAME')
@@ -33,22 +41,23 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
     body: formData,
   })
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error('TNS request failed')
-  }
+  throwForStatus(response)
 
   const {
+    objname,
+    name_prefix,
     ra,
     dec,
     internal_names: names,
   }: {
+    objname: string
+    name_prefix: string
     ra?: string
     dec?: string
     internal_names?: string
-  } = (await response.json()).data.reply
+  } = (await response.json()).data
 
-  if (!(ra && dec && names)) throw new Response(null, { status: 404 })
+  if (!(ra && dec)) throw new Response(null, { status: 404 })
 
   return json(
     {
@@ -56,7 +65,9 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
       dec: dec.split(splitter),
       // Some TNS events have values of `internal_names` that have an orphaned
       // leading or trailing comma, such as `', PS24brk'`. Strip them out.
-      names: names.split(/\s*,\s*/).filter(Boolean),
+      names: (names || `${name_prefix}${objname}`)
+        .split(/\s*,\s*/)
+        .filter(Boolean),
     },
     { headers: publicStaticShortTermCacheControlHeaders }
   )

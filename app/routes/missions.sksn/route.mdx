@@ -18,27 +18,66 @@ import logo from './logo.png'
 
 **Start:** 1996
 
-**Upgrade:** 2028 to Hyper-Kamiokande
-
 **Data Archives:**
-[University of Tokyo](https://www-sk.icrr.u-tokyo.ac.jp/sk/publications/result-e.html)
+[University of Tokyo](https://www-sk.icrr.u-tokyo.ac.jp/en/sk/for-reseacher/)
 
-[Super-Kamiokande](https://www-sk.icrr.u-tokyo.ac.jp/sk/index-e.html), also known as Super-K or SK, is a neutrino observatory built by the Japanese Ministry of Education, Science, Sports and Culture with a contribution from the US Department of Energy. Designed to understand the nature of neutrinos, Super-K is a leading detector in the search for MeV neutrino detections of core-collapse supernovae.
+The [Super-Kamiokande experiment](https://www-sk.icrr.u-tokyo.ac.jp/en/sk/), also known as Super-K or SK, was built and is operated with funding from the Japanese Ministry of Education, Science, Sports and Culture, and the U.S. Department of Energy.
+The Hyper-Kamiokande experiment will be the successor of SK. It is expected to start operation around 2028.
 
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/sk_sn.html)
 
-| Type    | Contents                     | Latency     |
-| ------- | ---------------------------- | ----------- |
-| `SK_SN` | REAL or TEST supernova alert | &leq;1 hour |
+| Type    | Contents                     | Latency |
+| ------- | ---------------------------- | ------- |
+| `SK_SN` | REAL or TEST supernova alert | ~1 min  |
 
-**Yearly Event Rates:**
+**JSON-Serialized GCN Notices Types in GCN Kafka**
+
+Super-Kamiokande [GCN schema](/schema/stable/gcn/notices/superk/sn_alert.schema.json) and example [JSON message](/schema/stable/gcn/notices/superk/sn_alert.real.example.json) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/superk/sn_alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of SK Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/superk).
+
+The information included in the notice published in GCN Kafka are largely overlapping with those in GCN Classic and GCN Classic over Kafka. However, some additional information are also included: the number of detected inverse beta decay (IBD) events, the analysis pipeline used (`"snwatch"` or `"wit"`), and the type of processed sample (`"full"` or `"partial"`) used for event detection.
+
+The alert latency in GCN Kafka is slightly shorter than that in GCN Classic.
+
+Super-Kamiokande specific variables:
+
+- `alert_datetime`: The date and time of the first neutrino detection in the burst of detected neutrino events.
+
+- `detection_interval`: The time interval between the first and last neutrino events [s].
+
+- `pipeline`: The analysis pipeline used to generate this alert; either `"snwatch"` or `"wit"`. Both the Supernova watch (SNwatch) [@2016APh....81...39A] [@2024ApJ...970...93K] and Wide-band Intelligent Trigger (WIT) [@2015PhPro..61..666C] [@2017JPhCS.888a2189E] are online analysis systems. The energy thresholds are 6 MeV for SNwatch and 2.5 MeV for WIT, respectively.
+
+- `processed_sample`: Indicates the size of the processed event sample used for this alert; either `"full"` or `"partial"`.  
+  If the supernova explosion occurs near Earth, a large number of events may be detected by SK. In such cases, an alert may be issued before processing of the full sample is completed, and it will be updated once full processing is finished.
+
+- `n_events`: The total number of detected neutrino events.
+
+- `n_ibd_events`: The number of inverse beta decay (IBD) events in the sample, identified by the coincidence of neutron capture signals.
+
+- `luminosity_distance` and `luminosity_distance_error`:  
+  The estimated distance to the source and its uncertainty [kpc], assuming a SN1987A-like neutrino flux.
+
+- `ra_dec_error` : The statistical uncertainty of the location [deg]. Its containmaint probalitiy is given as `containment_probability` (default: 0.68).
+
+- `trigger_number`: Event ID used in GCN Classic.
 
 <div className="overflow-table">
 
-| Instrument | Type                    | Rates | Localization |
-| ---------- | ----------------------- | ----- | ------------ |
-| Super-K    | Core-collapse supernova | 0.03  | 5–10°        |
-|            | Test alert              | 12    | 5–10°        |
+| Kafka topic                  | Comments                           |
+| ---------------------------- | ---------------------------------- |
+| `gcn.notice.superk.sn_alert` | For a real or test supernova alert |
+
+ </div>
+
+**Expected Yearly Event Rates:**
+
+<div className="overflow-table">
+
+| Type                    | Rates        | Localization | Latency |
+| ----------------------- | ------------ | ------------ | ------- |
+| Core-collapse supernova | 0.03         | 5–10°        | ~1 min  |
+| Test alert              | 12 (monthly) | 5–10°        | N/A     |
 
 </div>
+
+## Bibliography

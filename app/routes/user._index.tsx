@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { UpdateUserAttributesCommand } from '@aws-sdk/client-cognito-identity-provider'
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import {
@@ -23,13 +22,14 @@ import { getUser, updateSession } from './_auth/user.server'
 import { formatAuthor } from './circulars/circulars.lib'
 import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
-import { cognito, maybeThrow } from '~/lib/cognito.server'
+import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Profile',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -68,7 +68,7 @@ export async function action({ request }: ActionFunctionArgs) {
   try {
     await cognito.send(command)
   } catch (e) {
-    maybeThrow(e, 'not saving name and affiliation permanently')
+    maybeThrowCognito(e, 'not saving name and affiliation permanently')
   }
 
   user.name = name

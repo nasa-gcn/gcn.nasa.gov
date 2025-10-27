@@ -34,6 +34,8 @@ Here are some more specific ways that _you_ can help.
 
   In general, written content should follow the [American Astronomical Society style guide](https://journals.aas.org/manuscript-preparation/#style) and use SI unit abbreviations.
 
+  You can also add BibTeX entries for automatical journal citations; see the file [references.bib](https://github.com/nasa-gcn/gcn.nasa.gov/blob/main/references.bib) for instructions.
+
 - **Improve design and accessibility.**
   We are constantly seeking to improve the GCN user experience. Look for issues in GitHub that are marked <GitHubLabel owner="nasa-gcn" repo="gcn.nasa.gov" name="frontend"/>.
 
@@ -62,6 +64,18 @@ Here are instructions for getting the GCN site set up and running on your own co
     -   Download and run [the Node.js installer for your operating system](https://nodejs.org/en/download/).
     -   Install and use the [Node Version Manager, nvm](https://github.com/nvm-sh/nvm).
     -   Install using a [package manager](https://nodejs.org/en/download/package-manager/).
+
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Set up Docker on your computer
+    </ProcessListHeading>
+
+    We use Docker containers to realistically simulate certain AWS services. There are several options to install a Docker container runtime on your computer:
+
+    -   [Podman](https://podman.io) is easy to install on Linux, macOS, or Windows. It is free. This is the best option for most contributors.
+    -   [Docker Desktop](https://www.docker.com/products/docker-desktop/) is just as easy to install, but it is not free.
+    -   [Docker Engine](https://docs.docker.com/engine/) is free, and on most Linux distributions you can install it easily and directly from your favorite package manager. On macOS or Windows it requires signficant setup.
 
   </ProcessListItem>
   <ProcessListItem>

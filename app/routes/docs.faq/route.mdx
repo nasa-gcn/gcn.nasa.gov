@@ -92,9 +92,17 @@ producer = Producer(
 
 See GitHub issue [confluentinc/librdkafka#3125](https://github.com/confluentinc/librdkafka/issues/3125).
 
+### After an hour, my Python Kafka producer script starts printing the error message `%3|1746446717.457|FAIL|rdkafka#producer-2| [thrd:sasl_ssl://kafka3.test.gcn.nasa.gov:9092/3]: sasl_ssl://kafka3.test.gcn.nasa.gov:9092/3: SASL authentication error: {"status":"invalid_token"} (after 419ms in state AUTH_REQ, 3 identical error(s) suppressed)`.
+
+This was a [known issue](https://github.com/nasa-gcn/gcn-kafka-python/issues/49) in the Python client library that has been fixed. Please update to the latest version of the Python client, and make sure that you are using [version 0.3.4](https://github.com/nasa-gcn/gcn-kafka-python/releases/tag/v0.3.4) or newer.
+
 ### How do I receive GCN Notices via email from GCN Classic over Kafka?
 
 To get started, [sign in or sign up](https://gcn.nasa.gov/login) and then select 'Email Notifications' from account dropdown menu. See also [GCN Circular 32517](/circulars/32517).
+
+### Why are my Kafka client credentials expiring?
+
+For security purposes, we will disable client credentials that you have not used to connect to a Kafka broker for the past 30 days. We will email you reminders 9 days before client credentials will expire. Once disabled, a client credential cannot be used again. To prevent a credential from expiring and being disabled, simply use it to connect to a Kafka broker. You may create new client credentials at any time. To review, create, delete, and manage your client credentials, see your account [client credential settings](https://gcn.nasa.gov/user/credentials).
 
 ## Circulars
 
@@ -113,13 +121,17 @@ Note that it used to be common practice for Circulars submitters to add line bre
 We publish a record to the `gcn.circulars` topic whenever a Circular is created _or modified_. A Circular can be modified in one of two situations:
 
 - when a [correction](/docs/circulars/corrections) is made to an existing Circular, resulting a new version of it, or
-- when bibilographic data is added to a Circular from the [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu/). GCN [syncronizes with ADS every Monday at 08:00 UTC](/docs/circulars/archive#citing-gcn-circulars), resulting in a bulk update of many of the GCN Circulars from the preceding one-week period.
+- when bibliographic data is added to a Circular from the [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu/). GCN [synchronizes with ADS every Monday at 08:00 UTC](/docs/circulars/archive#citing-gcn-circulars), resulting in a bulk update of many of the GCN Circulars from the preceding one-week period.
 
 ## Accounts
 
 ### How do I sign in as a legacy GCN Classic Circulars user?
 
 If you had a GCN Circulars account prior to April 17, 2023, your account was migrated to the new GCN. Your receiving preferences, submitting permission, name and affiliation will be associated with your account as soon as you sign in for the first time. If you choose to sign in via email address and password, tap "Sign up" not "Forgot your password?".
+
+### What do I do if my email address changes?
+
+GCN accounts are linked to your email address, so it is not currently possible to update the email address on your GCN account. Instead, we recommend you make a new account with your new email address. If you can still login to your old GCN account, select ["Email Notifications"](/user/email) from the user pulldown menu and unsubscribe from Circulars and Announcements, and delete any Notices subscriptions. Then setup the same preferences in your new account. If your old account is an approved Circulars submitter, you can authorize your new account by requesting a [peer endorsement](/docs/circulars/submitting#to-request-a-peer-endorsement) from your new account to your old account. If you can no longer login to your old account, seek a new peer endorsement from a colleague or [contact the GCN team](/contact).
 
 ## Operations
 
@@ -128,6 +140,7 @@ If you had a GCN Circulars account prior to April 17, 2023, your account was mig
 **Yes.** During a U.S. federal government shutdown, all GCN services (GCN Circulars, GCN Notices, Kafka cluster, the web site) remain fully operational. However, there may be the following minor impacts to GCN users:
 
 - Responses to questions and requests through the [GCN help desk](/contact) may be delayed.
+- Review of [correction requests](/docs/circulars/corrections) for Circulars may be delayed.
 - Issues and pull requests on https://github.com/nasa-gcn repositories may not be promptly reviewed.
 - There will be no [redeployments](/docs/contributing/deployment) of the GCN web site except to address emergencies.
 

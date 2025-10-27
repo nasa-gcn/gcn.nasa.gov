@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, redirect, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Checkbox } from '@trussworks/react-uswds'
@@ -22,6 +21,7 @@ import {
 import { dateTimeFormat } from '~/components/TimeAgo'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle<typeof loader> & SEOHandle = {
   breadcrumb({ data }) {
@@ -29,7 +29,7 @@ export const handle: BreadcrumbHandle<typeof loader> & SEOHandle = {
       return `${data.circular.circularId}`
     }
   },
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function action({
@@ -104,6 +104,12 @@ export default function () {
         oldString={circular.subject}
         newString={correction.subject}
       />
+      <h3>Event ID</h3>
+      <DiffedContent
+        oldString={circular.eventId ?? ''}
+        newString={correction.eventId ?? ''}
+        method="lines"
+      />
       <h3>Format</h3>
       <DiffedContent
         oldString={circular.format ?? 'text/plain'}
@@ -132,11 +138,6 @@ export default function () {
   )
 }
 
-const methodMap = {
-  words: diffWords,
-  lines: diffLines,
-}
-
 function DiffedContent({
   oldString,
   newString,
@@ -146,10 +147,10 @@ function DiffedContent({
   newString: string
   method?: 'words' | 'lines'
 }) {
-  const diff = methodMap[method && newString ? method : 'lines'](
-    oldString ?? '',
-    newString ?? ''
-  )
+  const diff =
+    method == 'words'
+      ? diffWords(oldString, newString)
+      : diffLines(oldString, newString)
 
   return (
     <div>

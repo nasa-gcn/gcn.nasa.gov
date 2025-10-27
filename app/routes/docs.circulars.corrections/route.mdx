@@ -3,12 +3,12 @@ handle:
   breadcrumb: Corrections
 ---
 
-import requestbuttonscreenshot from './request_correction_button.png'
-import versionbuttonscreenshot from './version_button.png'
+import editButtonScreenshot from './edit-button-screenshot.svg'
+import versionButtonScreenshot from './version-button-screenshot.svg'
 
 # Corrections
 
-Circulars authors can request changes to archived Circulars to correct inaccurate information, especially when the correction is important for the follow-up community's activities. These may include author lists, subject corrections, typos, and incorrect citations. Do not use the corrections feature to add details of new observations or analyses. In such cases, submit a new Circular with an appropriate subject (e.g. "refined analysis" or "additional observations").
+Circulars authors can request changes to archived Circulars to correct inaccurate information, especially when the correction is important for the follow-up community's activities. These may include author lists, subject corrections, event name additions or corrections, typos, and incorrect citations. Do not use the corrections feature to add details of new observations or analyses. In such cases, submit a new Circular with an appropriate subject (e.g. "refined analysis" or "additional observations").
 
 ## Who can request corrections?
 
@@ -17,18 +17,18 @@ Anyone with a [peer endorsement](/docs/circulars/submitting#to-request-a-peer-en
 ## How to request corrections?
 
 1. [Sign in to your GCN account](/login).
-2. Go to the [GCN Circulars archive](/circulars) and navigate to the circular that you wish to corret.
-3. Select "Request Correction".
+2. Go to the [GCN Circulars archive](/circulars) and navigate to the circular that you wish to correct.
+3. Select "Edit".
 
    <img
-     src={requestbuttonscreenshot}
+     src={editButtonScreenshot}
      alt="Screen shot of Circulars archive menu showing how to request corrections."
-     width="530"
-     height="49"
-     className="height-auto"
+     width="424.5"
+     height="29.2"
+     className="height-auto padding-1 border-05 shadow-5"
    />
 
-4. Edit the Circular as needed and then select "Submit".
+4. Edit the Circular as needed and then select "Request Correction".
 5. The GCN Team moderators will review the requested correction, and may contact the submitter for their concurrence.
 
 ## Request approval workflow
@@ -47,13 +47,13 @@ Our Kafka producer will always produce a new message whenever a change is made t
 A version history for revised Circulars is publicly viewable in the archive with the "Versions" dropdown. Information about the revision are added to the Circular header including when it was edited, who requested the edit, and which GCN moderator implemented the edits. The path `https://gcn.nasa.gov/circulars/{circularID}` will always point to the latest version of the Circular.
 
 <img
-  src={versionbuttonscreenshot}
+  src={versionButtonScreenshot}
   alt="Screen shot of Circulars archive menu for an entry with a version history."
-  width="496"
-  height="77"
-  className="height-auto"
+  width="353.2"
+  height="29.2"
+  className="height-auto padding-1 border-05 shadow-5"
 />
 
 ## Moderators
 
-Several members of the GCN Team serve as moderators for revision requests. Moderators will see requests in the Circulars archive and be notified via the GCN help desk ticketing system. Any moderator can self-assign the ticket, review the revisions, and either accept, reject, or follow up with the submitter via the helpdesk. Once the revision has been either accepted or rejected, the moderator will close the associated ticket.
+Several members of the GCN Team serve as moderators for revision requests. Moderators will see requests in the Circulars archive and be notified via the GCN help desk ticketing system. Any moderator can self-assign the ticket, review the revisions, and either accept, reject, or follow up with the submitter via the help desk. Once the revision has been either accepted or rejected, the moderator will close the associated ticket.

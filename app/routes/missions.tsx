@@ -8,7 +8,7 @@
 import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
-import { SideNav } from '~/components/SideNav'
+import { SideNav, SideNavSub } from '~/components/SideNav'
 import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -24,18 +24,17 @@ export default function () {
               <NavLink key="." to="." end>
                 Missions, Instruments, and Facilities
               </NavLink>,
-              <NavLink key="agile" to="agile">
-                AGILE
-              </NavLink>,
-              <NavLink key="burstcube" to="burstcube">
-                BurstCube
-              </NavLink>,
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
               useFeature('CHIME') && (
                 <NavLink key="chime" to="chime">
                   CHIME
+                </NavLink>
+              ),
+              useFeature('DSA110') && (
+                <NavLink key="dsa110" to="dsa110">
+                  DSA-110
                 </NavLink>
               ),
               <NavLink key="einstein-probe" to="einstein-probe">
@@ -53,9 +52,11 @@ export default function () {
               <NavLink key="icecube" to="icecube">
                 IceCube Neutrino Observatory
               </NavLink>,
-              <NavLink key="integral" to="integral">
-                INTEGRAL
-              </NavLink>,
+              useFeature('KM3NET') && (
+                <NavLink key="km3net" to="km3net">
+                  KM3NeT
+                </NavLink>
+              ),
               <NavLink key="konus" to="konus">
                 Konus-Wind
               </NavLink>,
@@ -64,9 +65,6 @@ export default function () {
               </NavLink>,
               <NavLink key="maxi" to="maxi">
                 MAXI
-              </NavLink>,
-              <NavLink key="moa" to="moa">
-                MOA
               </NavLink>,
               <NavLink key="swift" to="swift">
                 Neil Gehrels Swift Observatory
@@ -77,6 +75,31 @@ export default function () {
               <NavLink key="sksn" to="sksn">
                 Super-Kamiokande
               </NavLink>,
+              <NavLink key="svom" to="svom">
+                SVOM
+              </NavLink>,
+              <>
+                <NavLink key="archive" to="archive">
+                  Archive
+                </NavLink>
+                <SideNavSub
+                  base="archive"
+                  items={[
+                    <NavLink key="agile" to="archive/agile">
+                      AGILE
+                    </NavLink>,
+                    <NavLink key="burstcube" to="archive/burstcube">
+                      BurstCube
+                    </NavLink>,
+                    <NavLink key="integral" to="archive/integral">
+                      INTEGRAL
+                    </NavLink>,
+                    <NavLink key="moa" to="archive/moa">
+                      MOA
+                    </NavLink>,
+                  ]}
+                />
+              </>,
             ]}
           />
         </div>

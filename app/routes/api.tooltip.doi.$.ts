@@ -10,12 +10,20 @@ import { term } from 'lucene'
 import invariant from 'tiny-invariant'
 
 import { getEnvOrDieInProduction } from '~/lib/env.server'
-import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
-import { stripTags } from '~/lib/utils'
+import {
+  notFoundIfBrowserRequest,
+  publicStaticShortTermCacheControlHeaders,
+} from '~/lib/headers.server'
+import { throwForStatus } from '~/lib/utils'
+import { stripTags } from '~/lib/utils.server'
 
 const adsTokenTooltip = getEnvOrDieInProduction('ADS_TOKEN_TOOLTIP')
 
-export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
+export async function loader({
+  request: { headers },
+  params: { '*': value },
+}: LoaderFunctionArgs) {
+  notFoundIfBrowserRequest(headers)
   invariant(value)
 
   const url = new URL('https://api.adsabs.harvard.edu/v1/search/query')
@@ -29,10 +37,7 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
     headers: { Authorization: `Bearer ${adsTokenTooltip}` },
   })
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error('ADS request failed')
-  }
+  throwForStatus(response)
 
   const item:
     | {

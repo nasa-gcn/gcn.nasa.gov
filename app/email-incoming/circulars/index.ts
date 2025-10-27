@@ -52,7 +52,7 @@ const fromName = 'GCN Circulars'
 export const handler = createEmailIncomingMessageHandler(
   async ({ content }) => {
     const parsed = await parseEmailContentFromSource(content)
-    const { address: userEmail, submittedHow } = getFromAddress(parsed.from)
+    const userEmail = getFromAddress(parsed.from)
     const to = getReplyToAddresses(parsed.replyTo) ?? [userEmail]
 
     const userData =
@@ -91,7 +91,7 @@ export const handler = createEmailIncomingMessageHandler(
       body: parsed.text,
       sub: userData.sub,
       submitter: formatAuthor(userData),
-      submittedHow,
+      submittedHow: 'email',
     }
 
     const eventId = parseEventFromSubject(parsed.subject)
@@ -99,8 +99,8 @@ export const handler = createEmailIncomingMessageHandler(
 
     // Removes sub as a property if it is undefined from the legacy users
     if (!circular.sub) delete circular.sub
-    const { circularId } = await putRaw(circular)
-    if (eventId) await tryInitSynonym(eventId)
+    const { circularId, createdOn } = await putRaw(circular)
+    if (eventId) await tryInitSynonym(eventId, createdOn)
 
     // Send a success email
     await sendSuccessEmail({
@@ -203,7 +203,7 @@ If you have not already done so, we encourage you to make an account at ${origin
 - Your Circulars settings have been transferred automatically.
 - You are able to submit Circulars from the same email addresses registered in the legacy service.
 - Emails from GCN come from a new address, no-reply@${hostname}.
-- We encourage you to submit Circulars to the new address, circulars@${hostname}. The old GCN Circulars submission address, gcncirc@capella2.gsfc.nasa.gov, will be retired on December 31, 2024.
+- We encourage you to submit Circulars to the new address, circulars@${hostname}. The old address, gcncirc@capella2.gsfc.nasa.gov, has been retired.
 - The new archive, ${origin}/circulars, includes all past Circulars. We have frozen the old archive, https://gcn.gsfc.nasa.gov/gcn3_archive.html.
 
 For more information about the GCN Circulars, please see ${origin}/circulars.

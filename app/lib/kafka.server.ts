@@ -5,8 +5,9 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Kafka } from 'gcn-kafka'
+import { Kafka, KafkaJSError } from 'gcn-kafka'
 import memoizee from 'memoizee'
+import { custom } from 'openid-client'
 
 import { domain, getEnvOrDieInProduction } from './env.server'
 
@@ -17,6 +18,12 @@ const kafka = new Kafka({
   client_secret,
   domain,
 })
+
+function setOidcHttpOptions() {
+  // Increase the timeout used for OpenID Connect requests.
+  // See https://github.com/nasa-gcn/gcn.nasa.gov/issues/2659
+  custom.setHttpOptionsDefaults({ timeout: 10_000 })
+}
 
 export let send: (topic: string, value: string) => Promise<void>
 
@@ -37,10 +44,19 @@ export let send: (topic: string, value: string) => Promise<void>
 // testing.
 if (process.env.ARC_SANDBOX) {
   send = async (topic, value) => {
+    setOidcHttpOptions()
     const producer = kafka.producer()
     await producer.connect()
     try {
       await producer.send({ topic, messages: [{ value }] })
+    } catch (e) {
+      if (e instanceof KafkaJSError) {
+        console.warn(
+          'Failed to send Kafka message. This would be an error in production.'
+        )
+      } else {
+        throw e
+      }
     } finally {
       await producer.disconnect()
     }
@@ -49,6 +65,7 @@ if (process.env.ARC_SANDBOX) {
   // FIXME: remove memoizee and use top-level await once we switch to ESM builds.
   const getProducer = memoizee(
     async () => {
+      setOidcHttpOptions()
       const producer = kafka.producer()
       await producer.connect()
       ;['SIGINT', 'SIGTERM'].forEach((event) =>

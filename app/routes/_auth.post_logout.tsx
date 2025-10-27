@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import { type LoaderFunctionArgs, redirect } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import {
@@ -16,9 +15,10 @@ import {
 } from '@trussworks/react-uswds'
 
 import { storage } from './_auth/auth.server'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: SEOHandle = {
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({ request: { headers } }: LoaderFunctionArgs) {
@@ -54,10 +54,7 @@ export default function () {
         </p>
         <p className="text-base">
           To change your sign-in method,{' '}
-          <a href="https://heasarc.gsfc.nasa.gov/cgi-bin/Feedback?selected=kafkagcn">
-            contact us for help
-          </a>
-          .
+          <a href="/contact">contact us for help</a>.
         </p>
       </div>
       <ModalFooter>

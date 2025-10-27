@@ -5,14 +5,14 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import { Link, Outlet } from '@remix-run/react'
 
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Moderation',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export default function () {

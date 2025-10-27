@@ -3,106 +3,21 @@ handle:
   breadcrumb: General Coordinates Network
 ---
 
-import { Link } from '@remix-run/react'
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  CardGroup,
-  CardHeader,
-  CardMedia,
-  GridContainer,
-  Icon,
-} from '@trussworks/react-uswds'
+import { GridContainer, Icon } from '@trussworks/react-uswds'
 
 import { Hero } from './hero/Hero'
 
-import gcn_classic_over_kafka from './gcn-classic-over-kafka.svg'
-import gcn_classic from './gcn-classic.svg'
-import gcn_kafka from './gcn-kafka.svg'
+import { NoticeFormatsAd } from './NoticeFormatsAd'
 
 <Hero />
 
 <GridContainer className="usa-section">
-  The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. For more information, see [What is GCN?](/docs/#what-is-gcn) or check out our [slide deck](https://nasa-gcn.github.io/gcn-presentation/).
+  The General Coordinates Network (GCN) is a public collaboration platform run by NASA for the astronomy research community to share alerts and rapid communications about high-energy, multimessenger, and transient phenomena. For more information, see [What is GCN?](/docs/about) or check out our [slide deck](https://nasa-gcn.github.io/gcn-presentation/).
 
 There are three ways to stream GCN Notices in real time:
 
 <br />
-<CardGroup>
-  <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
-    <CardHeader className="bg-base-lighter">
-      <p className="margin-0 text-base-dark">For legacy applications</p>
-      <h4 className="usa-card__heading">GCN Classic</h4>
-    </CardHeader>
-    <CardMedia imageClass="bg-white padding-2">
-      <img
-        src={gcn_classic}
-        width="347.84"
-        height="282.47"
-        loading="lazy"
-        alt="Data flow diagram for GCN Classic"
-      />
-    </CardMedia>
-    <CardBody>
-      <p>Three formats, three protocols.</p>
-    </CardBody>
-    <CardFooter>
-      <a
-        className="usa-button usa-button--base"
-        href="https://gcn.gsfc.nasa.gov/invitation.html"
-      >
-        <>Get Started (Old Web Site)</>
-      </a>
-    </CardFooter>
-  </Card>
-  <Card
-    className="card-accent-cool"
-    gridLayout={{ tablet: { col: 4 } }}
-    headerFirst
-  >
-    <CardHeader>
-      <p className="margin-0">Recommended</p>
-      <h4 className="usa-card__heading">GCN Classic over Kafka</h4>
-    </CardHeader>
-    <CardMedia imageClass="bg-white padding-2">
-      <img
-        src={gcn_classic_over_kafka}
-        width="347.84"
-        height="282.47"
-        loading="lazy"
-        className="height-auto"
-        alt="Data flow diagram for GCN Classic over Kafka"
-      />
-    </CardMedia>
-    <CardBody>
-      <p>Three formats, one protocol.</p>
-    </CardBody>
-    <CardFooter>
-      <Link className="usa-button" to="/quickstart">
-        Get Started
-      </Link>
-    </CardFooter>
-  </Card>
-  <Card gridLayout={{ tablet: { col: 4 } }} headerFirst>
-    <CardHeader className="bg-base-lighter">
-      <p className="margin-0 text-base-dark">Coming soon</p>
-      <h4 className="usa-card__heading">GCN Kafka</h4>
-    </CardHeader>
-    <CardMedia imageClass="bg-white padding-2">
-      <img
-        src={gcn_kafka}
-        width="347.84"
-        height="282.47"
-        loading="lazy"
-        alt="Data flow diagram for GCN Kafka"
-      />
-    </CardMedia>
-    <CardBody>
-      <p>One format, one protocol.</p>
-    </CardBody>
-  </Card>
-</CardGroup>
+<NoticeFormatsAd />
 
 ## Why switch from GCN Classic to Kafka?
 
@@ -117,17 +32,5 @@ There are three ways to stream GCN Notices in real time:
 | <div><Icon.Security role="presentation" size="3"/></div> **Secure**                      | <span className="text-red text-bold">NO.</span> Notices are sent as plaintext                                                         | <span className="text-green text-bold">YES.</span> Notices are protected with SSL/TLS                                                     |
 
   </div>
-
-## Honors and Awards
-
-- [Data Streaming Awards 2022: Streaming Company of the Year](https://www.datastreamingawards.io/winners/nasa-jpl)
-- [NASA Honor Awards 2022: Group Achievement Award](https://science.gsfc.nasa.gov/sci/awards/1048)
-- [Robert H. Goddard Award 2023](https://science.gsfc.nasa.gov/sci/awards/1057)
-
-## Coming Soon
-
-The [GCN Viewer](https://heasarc.gsfc.nasa.gov/tachgcn) is an interactive, searchable, filterable index of all GCN Notices and Circulars, updated in real time. In the near future, it will be integrated with this web site.
-
-See the [GCN Road Map](docs/roadmap) for more features that are coming soon to GCN.
 
 </GridContainer>

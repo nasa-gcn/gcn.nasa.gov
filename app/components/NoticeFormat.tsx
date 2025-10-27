@@ -18,7 +18,7 @@ export function NoticeFormatInput({
   onChange,
 }: {
   name: string
-  showJson: boolean
+  showJson?: boolean
   value?: NoticeFormat
   onChange?: (arg: NoticeFormat) => void
 }) {

@@ -50,19 +50,29 @@ export interface CircularChangeRequestKeys {
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
-  [/GRB[.\s_-]*(\d{6}[a-z|.]\d*)/i, ([, id]) => `GRB ${id.toUpperCase()}`],
+  [
+    /GRB[.\s_-]*(\d{6}(?:[a-z]|\.[0-9]+)?)/i,
+    ([, id]) => `GRB ${id.toUpperCase()}`,
+  ],
   [/SGR[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i, ([, id]) => `SGR ${id.toUpperCase()}`],
   [
     /SGR[.\s_-]*Swift[.\s_-]*(J*\d{4}\.?\d*\+\d{4})/i,
     ([, id]) => `SGR Swift ${id.toUpperCase()}`,
   ],
   [/IceCube[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `IceCube-${id.toUpperCase()}`],
+  [
+    /IceCube[.\s_-]*Cascade[.\s_-]*(\d{6}[a-z])/i,
+    ([, id]) => `IceCube-Cascade ${id.toUpperCase()}`,
+  ],
   [/ZTF[.\s_-]*(\d{2}[a-z]*)/i, ([, id]) => `ZTF${id.toLowerCase()}`],
   [/HAWC[.\s_-]*(\d{6}A)/i, ([, id]) => `HAWC-${id.toUpperCase()}`],
   [
     /((?:LIGO|Virgo|KAGRA)(?:[/-](?:LIGO|Virgo|KAGRA))*)[-_ \s]?(S|G|GW)(\d{5,}[a-z]*)/i,
     ([, instrument, flag, id]) => {
-      return `${instrument} ${flag.toUpperCase()}${id.toLowerCase()}`
+      const normalizedInstrument = instrument
+        .toUpperCase()
+        .replace('VIRGO', 'Virgo')
+      return `${normalizedInstrument} ${flag.toUpperCase()}${id.toLowerCase()}`
     },
   ],
   [/ANTARES[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `ANTARES ${id}`.toUpperCase()],
@@ -70,6 +80,19 @@ const subjectMatchers: SubjectMatcher[] = [
     /Baksan\sNeutrino\sObservatory\sAlert[.\s_-]*(\d{6}.\d{2})/i,
     ([, id]) => `Baksan Neutrino Observatory Alert ${id}`,
   ],
+  [/EP[.\s_-]*(\d{6}[a-z])/i, ([, id]) => `EP${id.toLowerCase()}`],
+  [
+    /SN[.\s_-]*(\d{4}[a-z]*)/i,
+    ([, id]) => `SN ${id.length == 5 ? id.toUpperCase() : id.toLowerCase()}`,
+  ],
+  [/GW[.\s_-]*(\d{6})/i, ([, id]) => `GW${id}`],
+  [
+    /FRB[.\s_-]*(\d{8}[a-z]|\d{6}[a-z]?)/i,
+    ([, id]) => `FRB ${id}`.toUpperCase(),
+  ],
+  [/sb[.\s_-]*(\d{8})/i, ([, id]) => `sb${id}`],
+  [/XRF[.\s_-]*(\d{6}[a-z]?)/i, ([, id]) => `XRF ${id.toUpperCase()}`],
+  [/AT[.\s_-]*(\d{4}[a-z]*)/i, ([, id]) => `AT${id.toLowerCase()}`],
 ]
 
 /** Format a Circular as plain text. */
@@ -157,6 +180,7 @@ export const validSubjectKeywords = [
   'Chandra',
   'EP',
   'Fermi',
+  'FRB',
   'FXT',
   'GRANDMA',
   'GRB',
@@ -186,8 +210,11 @@ export const validSubjectKeywords = [
   'SDSS',
   'SFXT',
   'SGR',
+  'SN',
   'Super-Kamiokande',
+  'Supernova',
   'Suzaku',
+  'SVOM',
   'Swift',
   'transient',
   'VLA',
@@ -228,6 +255,7 @@ export const emailAutoReplyChecklist = [
   ' r: ',
   ' ris: ',
   'subject:',
+  'draft',
 ]
 
 export function formatAuthor({
@@ -246,7 +274,9 @@ export function formatAuthor({
 
 export function parseEventFromSubject(value: string) {
   for (const [regexp, normalize] of subjectMatchers) {
-    const startsWithMatch = RegExp(`^${regexp.source}`).exec(value)
+    const startsWithMatch = RegExp(`^${regexp.source}`, regexp.flags).exec(
+      value
+    )
     if (startsWithMatch) return normalize(startsWithMatch)
   }
   for (const [regexp, normalize] of subjectMatchers) {

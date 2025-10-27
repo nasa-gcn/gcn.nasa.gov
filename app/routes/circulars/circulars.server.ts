@@ -17,12 +17,16 @@ import {
   DynamoDBAutoIncrement,
   DynamoDBHistoryAutoIncrement,
 } from '@nasa-gcn/dynamodb-autoincrement'
+import { errors } from '@opensearch-project/opensearch'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
 
 import { type User, getUser } from '../_auth/user.server'
-import { tryInitSynonym } from '../synonyms/synonyms.server'
+import {
+  manageSynonymOnVersionUpdates,
+  tryInitSynonym,
+} from '../synonyms/synonyms.server'
 import {
   bodyIsValid,
   formatAuthor,
@@ -38,7 +42,8 @@ import type {
   CircularMetadata,
 } from './circulars.lib'
 import { sendEmail, sendEmailBulk } from '~/lib/email.server'
-import { feature, origin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
+import { truncateJsonMaxBytes } from '~/lib/utils'
 import { closeZendeskTicket } from '~/lib/zendesk.server'
 
 // A type with certain keys required.
@@ -153,8 +158,11 @@ export async function search({
   items: CircularMetadata[]
   totalPages: number
   totalItems: number
+  queryFallback: boolean
 }> {
   const client = await getSearch()
+
+  let queryFallback = false
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
@@ -168,29 +176,16 @@ export async function search({
         }
 
   const queryObj = query
-    ? feature('CIRCULARS_LUCENE')
-      ? {
-          simple_query_string: {
-            query,
-            fields: ['submitter', 'subject', 'body'],
-          },
-        }
-      : {
-          multi_match: {
-            query,
-            fields: ['submitter', 'subject', 'body'],
-          },
-        }
+    ? {
+        [queryFallback ? 'multi_match' : 'query_string']: {
+          query,
+          fields: ['submitter', 'subject', 'body'],
+          ...(queryFallback ? {} : { lenient: true }),
+        },
+      }
     : undefined
 
-  const {
-    body: {
-      hits: {
-        total: { value: totalItems },
-        hits,
-      },
-    },
-  } = await client.search({
+  const searchBody = {
     index: 'circulars',
     body: {
       query: {
@@ -213,7 +208,37 @@ export async function search({
       size: limit,
       track_total_hits: true,
     },
-  })
+  }
+
+  let searchResult
+  try {
+    searchResult = await client.search(searchBody)
+  } catch (error) {
+    if (
+      error instanceof errors.ResponseError &&
+      error.message.includes('Failed to parse query')
+    ) {
+      searchBody.body.query.bool.must = {
+        multi_match: {
+          query: query ?? '',
+          fields: ['submitter', 'subject', 'body'],
+        },
+      }
+      searchResult = await client.search(searchBody)
+      queryFallback = true
+    } else {
+      throw error
+    }
+  }
+
+  const {
+    body: {
+      hits: {
+        total: { value: totalItems },
+        hits,
+      },
+    },
+  } = searchResult
 
   const items = hits.map(
     ({
@@ -232,7 +257,7 @@ export async function search({
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
 
-  return { items, totalPages, totalItems }
+  return { items, totalPages, totalItems, queryFallback }
 }
 
 /** Get a circular by ID. */
@@ -240,6 +265,8 @@ export async function get(
   circularId: number,
   version?: number
 ): Promise<Circular> {
+  if (isNaN(circularId) || (version !== undefined && isNaN(version)))
+    throw new Response(null, { status: 404 })
   const circularVersions = await getDynamoDBVersionAutoIncrement(circularId)
   const result = await circularVersions.get(version)
   if (!result)
@@ -247,6 +274,38 @@ export async function get(
       status: 404,
     })
   return result as Circular
+}
+
+/** Check if a Circular exists by ID. */
+export async function exists(circularId: number): Promise<boolean> {
+  const db = await tables()
+  const doc = db._doc as unknown as DynamoDBDocument
+  const result = await doc.get({
+    TableName: db.name('circulars'),
+    Key: { circularId },
+    ProjectionExpression: 'circularId',
+  })
+  return Boolean(result.Item)
+}
+
+/** Find the next or previous circular by ID.
+ * Returns false if no circular is found.
+ * Checks for 10 circulars in the given direction.
+ * Iterates by 0.5 to account for non-integer circular IDs.
+ */
+export async function findAdjacentCircular(
+  circularId: number,
+  direction: 'next' | 'previous'
+): Promise<number | false> {
+  const increment = direction === 'next' ? 0.5 : -0.5
+  let nextCircular = circularId + increment
+  for (let i = 0; i < 10; i++) {
+    if (await exists(nextCircular)) {
+      return nextCircular
+    }
+    nextCircular += increment
+  }
+  return false
 }
 
 /** Delete a circular by ID.
@@ -313,7 +372,7 @@ export async function put(
   const eventId = parseEventFromSubject(item.subject)
   if (eventId) circular.eventId = eventId
   const result = await putRaw(circular)
-  if (eventId) await tryInitSynonym(eventId)
+  if (eventId) await tryInitSynonym(eventId, result.createdOn)
   return result
 }
 
@@ -356,9 +415,20 @@ export async function putVersion(
     editedBy: formatAuthor(user),
     editedOn: Date.now(),
   }
+
   validateCircular(newCircularVersion)
 
-  return await circularVersionsAutoIncrement.put(newCircularVersion)
+  const newVersionNumber =
+    await circularVersionsAutoIncrement.put(newCircularVersion)
+
+  await manageSynonymOnVersionUpdates(
+    newCircularVersion.createdOn,
+    oldCircular.createdOn,
+    newCircularVersion.eventId,
+    oldCircular.eventId
+  )
+
+  return newVersionNumber
 }
 
 /**
@@ -367,6 +437,7 @@ export async function putVersion(
  * @returns an array of previous versions of a Circular sorted by version
  */
 export async function getVersions(circularId: number): Promise<number[]> {
+  if (isNaN(circularId)) throw new Response(null, { status: 404 })
   const circularVersionsAutoIncrement =
     await getDynamoDBVersionAutoIncrement(circularId)
   return await circularVersionsAutoIncrement.list()
@@ -546,10 +617,11 @@ export async function approveChangeRequest(
     format: changeRequest.format,
     submitter: changeRequest.submitter,
     createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
+    eventId: changeRequest.eventId || undefined,
   }
 
+  await autoincrementVersion.put(newVersion)
   const promises = [
-    autoincrementVersion.put(newVersion),
     deleteChangeRequestRaw(circularId, requestorSub),
     sendEmail({
       to: [changeRequest.requestorEmail],
@@ -567,6 +639,13 @@ export async function approveChangeRequest(
     promises.push(closeZendeskTicket(changeRequest.zendeskTicketId))
 
   await Promise.all(promises)
+
+  await manageSynonymOnVersionUpdates(
+    newVersion.createdOn,
+    circular.createdOn,
+    newVersion.eventId,
+    circular.eventId
+  )
 }
 
 /**
@@ -590,7 +669,7 @@ export async function getChangeRequest(
   return changeRequest
 }
 
-function validateCircular({
+export function validateCircular({
   body,
   subject,
   format,
@@ -648,13 +727,19 @@ export async function send(circular: Circular) {
     getLegacyEmails(),
   ])
   const to = [...emails, ...legacyEmails]
+
+  // There is a limit of 262144 bytes for the Amazon SES API's TemplateData argument.
+  // See https://docs.aws.amazon.com/ses/latest/APIReference-V2/API_Template.html#SES-Type-Template-TemplateData
+  const { text, truncated } = truncateJsonMaxBytes(
+    formatCircularText(circular),
+    200_000
+  )
+
   await sendEmailBulk({
     fromName,
     to,
     subject: circular.subject,
-    body: `${formatCircularText(
-      circular
-    )}\n\n\nView this GCN Circular online at ${origin}/circulars/${
+    body: `${text}${truncated ? '...\n\n\nThis message was truncated. View the full' : '\n\n\nView this'} GCN Circular online at ${origin}/circulars/${
       circular.circularId
     }.`,
     topic: 'circulars',

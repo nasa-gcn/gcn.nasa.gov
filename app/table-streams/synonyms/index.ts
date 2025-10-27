@@ -8,6 +8,7 @@
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import { errors } from '@opensearch-project/opensearch'
 import type { DynamoDBRecord } from 'aws-lambda'
+import min from 'lodash/min.js'
 
 import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
@@ -18,6 +19,7 @@ const index = 'synonym-groups'
 
 async function removeIndex(id: string) {
   const client = await getSearchClient()
+
   try {
     await client.delete({ index, id })
   } catch (e) {
@@ -39,15 +41,29 @@ async function putIndex(synonymGroup: SynonymGroup) {
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     if (!eventName || !dynamodb) return
-    const { synonymId } = unmarshallTrigger(dynamodb!.NewImage) as Synonym
-    const dynamoSynonyms = await getSynonymsByUuid(synonymId)
-    if (dynamoSynonyms.length > 0) {
-      await putIndex({
-        synonymId,
-        eventIds: dynamoSynonyms.map((synonym) => synonym.eventId),
-      })
-    } else {
-      await removeIndex(synonymId)
-    }
+    await Promise.all(
+      [dynamodb.OldImage, dynamodb.NewImage]
+        .filter((image) => image !== undefined)
+        .map(async (image) => {
+          const { synonymId } = unmarshallTrigger(image) as Synonym
+          const synonyms = await getSynonymsByUuid(synonymId)
+
+          if (synonyms.length > 0) {
+            const oldestDate = min(
+              synonyms.map(({ initialDate }) => initialDate)
+            )!
+            const initialDate = oldestDate ?? -1
+
+            await putIndex({
+              synonymId,
+              eventIds: synonyms.map((synonym) => synonym.eventId),
+              slugs: synonyms.map((synonym) => synonym.slug),
+              initialDate,
+            })
+          } else {
+            await removeIndex(synonymId)
+          }
+        })
+    )
   }
 )

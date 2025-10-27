@@ -1,9 +1,11 @@
 import properties from 'highlight.js/lib/languages/properties'
 import { common } from 'lowlight'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
+import rehypeCitation from 'rehype-citation'
 import rehypeClassNames from 'rehype-class-names'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeMermaid from 'rehype-mermaid'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 
@@ -45,10 +47,20 @@ const esmOnlyModules = [
   /^vfile/,
 ]
 
+// These packages should never be bundled.
+const neverBundledModules = [
+  // Included in AWS Lambda base image
+  /@?aws-sdk(?:\/|$)/,
+  // Used to polyfill Web Fetch; not needed for Node.js >= 20
+  'undici',
+  '@remix-run/web-fetch',
+]
+
 /** @type {import('@remix-run/dev').AppConfig} */
 export default {
   mdx: {
     rehypePlugins: [
+      rehypeMermaid,
       (options) => rehypeHighlight({ ...common, properties }),
       rehypeSlug,
       (options) =>
@@ -67,6 +79,13 @@ export default {
           ...options,
         }),
       (options) => rehypeAutolinkHeadings({ behavior: 'wrap', ...options }),
+      (options) =>
+        rehypeCitation({
+          bibliography: 'references.bib',
+          linkCitations: true,
+          csl: 'chicago',
+          ...options,
+        }),
     ],
     remarkPlugins: [remarkGfm],
   },
@@ -80,7 +99,19 @@ export default {
   serverModuleFormat: 'cjs',
   serverDependenciesToBundle: [
     ...esmOnlyModules,
-    ...(isProduction ? [/^(?!@?aws-sdk(\/|$))/] : []),
+    ...(isProduction
+      ? [
+          new RegExp(
+            `^(?!${neverBundledModules
+              .map((item) => (item instanceof RegExp ? item.source : item))
+              .join('|')})`
+          ),
+        ]
+      : []),
   ],
-  future: { v3_relativeSplatPath: true },
+  future: {
+    v3_lazyRouteDiscovery: true,
+    v3_relativeSplatPath: true,
+    v3_throwAbortReason: true,
+  },
 }

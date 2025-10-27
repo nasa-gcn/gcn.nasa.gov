@@ -9,26 +9,31 @@ import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import { DOMParser } from '@xmldom/xmldom'
 import invariant from 'tiny-invariant'
 
-import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import {
+  notFoundIfBrowserRequest,
+  publicStaticShortTermCacheControlHeaders,
+} from '~/lib/headers.server'
+import { throwForStatus } from '~/lib/utils'
 
-export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
+export async function loader({
+  request: { headers },
+  params: { '*': value },
+}: LoaderFunctionArgs) {
+  notFoundIfBrowserRequest(headers)
   invariant(value)
 
   const url = new URL('https://export.arxiv.org/api/query')
   url.searchParams.set('id_list', value)
   const response = await fetch(url)
 
-  if (!response.ok) {
-    console.error(response)
-    throw new Error('arXiv request failed')
-  }
+  throwForStatus(response)
 
   const text = await response.text()
   const entry = new DOMParser()
     .parseFromString(text, 'text/xml')
     .getElementsByTagName('entry')[0]
 
-  // If arXiv does not find the article, then it still returns an entyr,
+  // If arXiv does not find the article, then it still returns an entry,
   // although the entry does not contain much. If the id field is missing, then
   // we report that it was not found.
   if (!entry.getElementsByTagName('id').length) {

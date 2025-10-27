@@ -9,7 +9,6 @@ import { Link, NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav, SideNavSub } from '~/components/SideNav'
-import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle = {
@@ -23,9 +22,29 @@ export default function () {
         <div className="desktop:grid-col-3">
           <SideNav
             items={[
-              <NavLink key="." to="." end>
-                About GCN
-              </NavLink>,
+              <>
+                <NavLink key="about" to="about">
+                  About GCN
+                </NavLink>{' '}
+                <SideNavSub
+                  base="about"
+                  key="about-sub"
+                  items={[
+                    <NavLink
+                      key="conferences-awards"
+                      to="about/conferences-awards"
+                    >
+                      Conferences & Awards
+                    </NavLink>,
+                    <NavLink key="history" to="about/history">
+                      History
+                    </NavLink>,
+                    <NavLink key="team" to="about/team">
+                      Team
+                    </NavLink>,
+                  ]}
+                />
+              </>,
               <>
                 <NavLink key="circulars" to="circulars">
                   Circulars
@@ -54,14 +73,6 @@ export default function () {
                     <NavLink key="markdown" to="circulars/markdown">
                       Markdown
                     </NavLink>,
-                    useFeature('CIRCULARS_LUCENE') && (
-                      <NavLink
-                        key="advanced-search"
-                        to="circulars/advanced-search"
-                      >
-                        Advanced Search
-                      </NavLink>
-                    ),
                   ]}
                 />
               </>,
@@ -96,9 +107,6 @@ export default function () {
                     </NavLink>,
                     <NavLink key="deployment" to="contributing/deployment">
                       Deployment
-                    </NavLink>,
-                    <NavLink key="email" to="contributing/email">
-                      Email Data Flow
                     </NavLink>,
                     <NavLink key="project" to="contributing/project">
                       GitHub Project Board
@@ -135,9 +143,6 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="history" to="history">
-                History
-              </NavLink>,
               <>
                 <NavLink key="client" to="client">
                   Kafka Client Setup
@@ -161,8 +166,34 @@ export default function () {
                     <Link key="java" to="client#java">
                       Java
                     </Link>,
-                    <NavLink key="code-samples" to="client/samples">
-                      Sample Code
+                    <Link key="pyspark" to="client#pyspark">
+                      PySpark
+                    </Link>,
+                  ]}
+                />
+              </>,
+              <>
+                <NavLink key="sample" to="sample">
+                  Sample Code
+                </NavLink>
+                <SideNavSub
+                  base="sample"
+                  key="sample-sub"
+                  items={[
+                    <NavLink key="kafka" to="sample/kafka">
+                      Kafka Messages
+                    </NavLink>,
+                    <NavLink key="text" to="sample/text">
+                      Plain Text
+                    </NavLink>,
+                    <NavLink key="xml" to="sample/xml">
+                      VOEvent XML
+                    </NavLink>,
+                    <NavLink key="json" to="sample/json">
+                      JSON Format
+                    </NavLink>,
+                    <NavLink key="healpix" to="sample/healpix">
+                      HEALPix Maps
                     </NavLink>,
                   ]}
                 />
@@ -192,18 +223,32 @@ export default function () {
                   ]}
                 />
               </>,
-              <NavLink key="roadmap" to="roadmap">
-                Road Map
-              </NavLink>,
               <NavLink key="schema" to="schema">
                 Schema Browser
               </NavLink>,
               <NavLink key="vtp" to="vtp">
                 VOEvent Transport Protocol Migration
               </NavLink>,
-              <NavLink key="admin" to="admin">
-                Administration
-              </NavLink>,
+              <>
+                <NavLink key="internal" to="internal">
+                  Internal
+                </NavLink>
+                <SideNavSub
+                  base="internal"
+                  key="internal-sub"
+                  items={[
+                    <NavLink key="admin" to="internal/admin">
+                      Administration
+                    </NavLink>,
+                    <NavLink key="auth" to="internal/auth">
+                      Auth
+                    </NavLink>,
+                    <NavLink key="email" to="internal/email">
+                      Email Data Flow
+                    </NavLink>,
+                  ]}
+                />
+              </>,
             ]}
           />
         </div>

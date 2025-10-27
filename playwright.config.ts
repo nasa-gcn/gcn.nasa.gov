@@ -28,7 +28,7 @@ const circularsTests = deviceList.map((device) => {
       storageState: '__playwright__/.auth/user.json',
     },
     testMatch: 'circulars/*',
-    dependencies: ['setup'],
+    dependencies: ['authSetup'],
   }
 })
 
@@ -42,11 +42,11 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: Boolean(process.env.CI),
   /* Retry on CI only */
-  retries: 3,
+  retries: 5,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  // workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
+  reporter: process.env.CI ? 'blob' : 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -58,8 +58,17 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: 'setup', testMatch: 'auth.setup.ts' },
-    { name: 'adminSetup', testMatch: 'admin.setup.ts' },
+    { name: 'serverSetup', testMatch: 'server.setup.ts' },
+    {
+      name: 'authSetup',
+      dependencies: ['serverSetup'],
+      testMatch: 'auth.setup.ts',
+    },
+    {
+      name: 'adminSetup',
+      dependencies: ['serverSetup'],
+      testMatch: 'admin.setup.ts',
+    },
     ...adminTests,
     ...circularsTests,
   ],
@@ -70,6 +79,6 @@ export default defineConfig({
     url: 'http://localhost:3333',
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
-    timeout: 120 * 1000, // 120 Seconds timeout on webServer
+    timeout: 300 * 1000, // 300 Seconds timeout on webServer
   },
 })

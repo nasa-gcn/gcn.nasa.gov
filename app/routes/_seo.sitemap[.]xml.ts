@@ -10,9 +10,21 @@ import { routes } from '@remix-run/dev/server-build'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 
 import { origin } from '~/lib/env.server'
+import type { SEOHandle } from '~/root/seo'
 
 export function loader({ request }: LoaderFunctionArgs) {
-  return generateSitemap(request, routes, {
+  const routesToIndex = Object.fromEntries(
+    Object.entries(routes).filter(
+      ([
+        ,
+        {
+          module: { handle },
+        },
+      ]) => !(handle as SEOHandle | undefined)?.noIndex
+    )
+  )
+
+  return generateSitemap(request, routesToIndex, {
     siteUrl: origin,
     headers: {
       'Cache-Control': `public, max-age=${60 * 5}`,

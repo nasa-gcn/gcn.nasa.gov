@@ -14,16 +14,15 @@ import invariant from 'tiny-invariant'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../circulars.$circularId/route'
-import { get } from '../circulars/circulars.server'
-import { MarkdownBody, PlainTextBody } from './Body'
-import { FrontMatter } from './FrontMatter'
+import { findAdjacentCircular, get } from '../circulars/circulars.server'
 import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
+import { MarkdownBody, PlainTextBody } from '~/components/circularDisplay/Body'
+import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders, pickHeaders } from '~/lib/headers.server'
 import { useSearchString } from '~/lib/utils'
-import { useModStatus, useSubmitterStatus } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<typeof loader> = {
@@ -43,12 +42,19 @@ export async function loader({
     parseFloat(circularId),
     version ? parseFloat(version) : undefined
   )
+  const [nextCircular, previousCircular] = await Promise.all([
+    findAdjacentCircular(parseFloat(circularId), 'next'),
+    findAdjacentCircular(parseFloat(circularId), 'previous'),
+  ])
 
-  return json(result, {
-    headers: {
-      ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
-    },
-  })
+  return json(
+    { ...result, nextCircular, previousCircular },
+    {
+      headers: {
+        ...getCanonicalUrlHeaders(new URL(`/circulars/${circularId}`, origin)),
+      },
+    }
+  )
 }
 
 export function shouldRevalidate() {
@@ -59,11 +65,18 @@ export const headers: HeadersFunction = ({ loaderHeaders }) =>
   pickHeaders(loaderHeaders, ['Link'])
 
 export default function () {
-  const { circularId, body, bibcode, version, format, ...frontMatter } =
-    useLoaderData<typeof loader>()
+  const {
+    circularId,
+    body,
+    bibcode,
+    version,
+    format,
+    nextCircular,
+    previousCircular,
+    ...frontMatter
+  } = useLoaderData<typeof loader>()
   const searchString = useSearchString()
   const Body = format === 'text/markdown' ? MarkdownBody : PlainTextBody
-
   const result = useRouteLoaderData<typeof parentLoader>(
     'routes/circulars.$circularId'
   )
@@ -72,20 +85,13 @@ export default function () {
   const linkString = `/circulars/${circularId}${
     !latest && version ? `/${version}` : ''
   }`
+
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link
-          to={`/circulars${searchString}`}
-          className="usa-button flex-align-stretch"
-        >
-          <div className="position-relative">
-            <Icon.ArrowBack
-              role="presentation"
-              className="position-absolute top-0 left-0"
-            />
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+        <Link to={`/circulars${searchString}`} className="usa-button">
+          <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+          Back
         </Link>
         <ButtonGroup type="segmented">
           <Link
@@ -121,29 +127,63 @@ export default function () {
             </Button>
           )}
         </ButtonGroup>
-        {useSubmitterStatus() && (
-          <Link
-            className="usa-button usa-button--outline"
-            to={`/circulars/correction/${circularId}`}
-          >
-            Request Correction
-          </Link>
-        )}
+        <Link
+          to={`/circulars/new/${circularId}`}
+          className="usa-button usa-button--outline"
+          title="Submit a correction to this GCN Circular."
+        >
+          <Icon.Edit role="presentation" className="margin-y-neg-2px" />
+          Edit
+        </Link>
         {result?.history && result.history.length > 0 && (
           <CircularsHistory circular={circularId} history={result?.history} />
-        )}
-        {useModStatus() && (
-          <Link
-            to={`/circulars/edit/${circularId}`}
-            className="usa-button usa-button--outline"
-          >
-            Edit
-          </Link>
         )}
       </ToolbarButtonGroup>
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
       <FrontMatter {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
+      <ButtonGroup type="segmented">
+        {Number.isFinite(previousCircular) ? (
+          <Link
+            to={`/circulars/${previousCircular}${searchString}`}
+            className="usa-button"
+          >
+            <Icon.NavigateBefore
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
+            Previous Circular
+          </Link>
+        ) : (
+          <Button type="button" className="usa-button" disabled aria-disabled>
+            <Icon.NavigateBefore
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
+            Previous Circular
+          </Button>
+        )}
+        {Number.isFinite(nextCircular) ? (
+          <Link
+            to={`/circulars/${nextCircular}${searchString}`}
+            className="usa-button"
+          >
+            Next Circular
+            <Icon.NavigateNext
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
+          </Link>
+        ) : (
+          <Button type="button" className="usa-button" disabled aria-disabled>
+            Next Circular
+            <Icon.NavigateNext
+              role="presentation"
+              className="margin-y-neg-2px"
+            />
+          </Button>
+        )}
+      </ButtonGroup>
     </>
   )
 }
@@ -165,6 +205,7 @@ function CircularsHistory({
     <div ref={ref}>
       <DetailsDropdownButton
         outline
+        expanded={showContent}
         onClick={() => {
           setShowContent((shown) => !shown)
         }}

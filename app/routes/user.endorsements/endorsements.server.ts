@@ -21,7 +21,7 @@ import {
   extractAttributeRequired,
   getCognitoUserFromSub,
   listUsersInGroup,
-  maybeThrow,
+  maybeThrowCognito,
 } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { origin } from '~/lib/env.server'
@@ -215,7 +215,7 @@ export class EndorsementsServer {
 
     const promiseArray: Promise<void>[] = []
 
-    let requestorMessage = `You are receiving this email because the status of your peer endorsment requested from ${this.#currentUserEmail} has been updated to ${status}.`
+    let requestorMessage = `You are receiving this email because the status of your peer endorsement requested from ${this.#currentUserEmail} has been updated to ${status}.`
 
     if (status === 'approved') {
       promiseArray.push(
@@ -373,7 +373,7 @@ async function getUsersInGroup(): Promise<EndorsementUser[]> {
   try {
     users = await listUsersInGroup(submitterGroup)
   } catch (error) {
-    maybeThrow(error, 'returning fake users')
+    maybeThrowCognito(error, 'returning fake users')
     return [
       {
         sub: crypto.randomUUID(),

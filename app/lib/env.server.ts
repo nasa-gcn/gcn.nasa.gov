@@ -18,13 +18,8 @@ export function getEnvOrDie(key: string) {
 
 export function getEnvOrDieInProduction(key: string) {
   const result = process.env[key]
-  if (!result) {
-    if (process.env.NODE_ENV === 'production') {
-      dieForEnv(key)
-    }
-    console.warn(
-      `environment variable ${key} must be set for production. Proceeding anyway since we are in ${process.env.NODE_ENV}`
-    )
+  if (!result && process.env.NODE_ENV === 'production') {
+    dieForEnv(key)
   }
   return result
 }

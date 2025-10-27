@@ -9,6 +9,9 @@ import { tables } from '@architect/functions'
 import { type DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import crypto from 'crypto'
+import { slug } from 'github-slugger'
+import min from 'lodash/min.js'
+import orderBy from 'lodash/orderBy.js'
 
 import type { Circular } from '../circulars/circulars.lib'
 import type { Synonym, SynonymGroup } from './synonyms.lib'
@@ -26,41 +29,69 @@ export async function getSynonymsByUuid(synonymId: string) {
   return Items as Synonym[]
 }
 
+export async function getSynonymsBySlug(slug: string) {
+  const db = await tables()
+  const { Items } = await db.synonyms.query({
+    IndexName: 'synonymsBySlug',
+    KeyConditionExpression: 'slug = :slug',
+    ExpressionAttributeValues: {
+      ':slug': slug,
+    },
+  })
+  const synonym = Items[0]
+  return getSynonymsByUuid(synonym.synonymId)
+}
+
 export async function searchSynonymsByEventId({
   limit = 10,
   page,
-  eventId,
+  query,
 }: {
   limit?: number
   page: number
-  eventId?: string
+  query?: string
 }): Promise<{
-  synonyms: SynonymGroup[]
+  items: SynonymGroup[]
   totalItems: number
   totalPages: number
-  page: number
+  queryFallback: boolean
 }> {
   const client = await getSearchClient()
-  const query: any = {
-    bool: {
-      should: [
-        {
-          match_all: {},
-        },
-      ],
-      minimum_should_match: 1,
+  const body: any = {
+    query: {
+      bool: {},
     },
   }
-
-  if (eventId) {
-    query.bool.should.push({
-      match: {
-        eventIds: {
-          query: eventId,
-          fuzziness: '1',
+  if (query) {
+    body.query.bool.filter = [
+      {
+        wildcard: {
+          'eventIds.keyword': {
+            value: `*${query}*`,
+            case_insensitive: true,
+          },
         },
       },
-    })
+    ]
+  } else {
+    body.query.bool.should = [
+      {
+        match_all: {},
+      },
+    ]
+    body.query.bool.minimum_should_match = 1
+    // While initialDate is always present, because of caching and sharding, OpenSearch doesn't promise
+    // exact ordering. Adding the missing and unmapped_types fields helps give it direction and makes the
+    // sort more explicit so it behaves more precisely.
+    body.sort = [
+      {
+        initialDate: {
+          order: 'desc',
+          missing: '_last',
+          unmapped_type: 'long',
+        },
+      },
+    ]
   }
 
   const {
@@ -72,11 +103,9 @@ export async function searchSynonymsByEventId({
     },
   } = await client.search({
     index: 'synonym-groups',
-    from: page && limit && (page - 1) * limit,
+    from: page * limit,
     size: limit,
-    body: {
-      query,
-    },
+    body,
   })
 
   const totalPages: number = Math.ceil(totalItems / limit)
@@ -85,41 +114,21 @@ export async function searchSynonymsByEventId({
       _source: body,
     }: {
       _source: SynonymGroup
-      fields: { eventIds: []; synonymId: string }
+      fields: {
+        eventIds: string[]
+        synonymId: string
+        slugs: string[]
+        initialDate: number
+      }
     }) => body
   )
 
   return {
-    synonyms: results,
+    items: results,
     totalItems,
     totalPages,
-    page,
+    queryFallback: false,
   }
-}
-
-async function validateEventIds({ eventIds }: { eventIds: string[] }) {
-  const promises = eventIds.map((eventId) => {
-    return getSynonymMembers(eventId)
-  })
-
-  const validityResponse = await Promise.all(promises)
-  const filteredResponses = validityResponse.filter((resp) => {
-    return resp.length
-  })
-
-  return filteredResponses.length === eventIds.length
-}
-
-async function getSynonymMembers(eventId: string) {
-  const db = await tables()
-  const { Items } = await db.circulars.query({
-    IndexName: 'circularsByEventId',
-    KeyConditionExpression: 'eventId = :eventId',
-    ExpressionAttributeValues: {
-      ':eventId': eventId,
-    },
-  })
-  return Items as Circular[]
 }
 
 /*
@@ -138,36 +147,106 @@ export async function moderatorCreateSynonyms(synonymousEventIds: string[]) {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
-  const isValid = await validateEventIds({ eventIds: synonymousEventIds })
-  if (!isValid) throw new Response('eventId does not exist', { status: 400 })
+  const writePromises = synonymousEventIds.map(async (eventId) => ({
+    PutRequest: {
+      Item: {
+        synonymId: uuid,
+        eventId,
+        slug: slug(eventId),
+        initialDate: await getOldestDate(eventId),
+      },
+    },
+  }))
+  const writes = await Promise.all(writePromises)
 
   await client.batchWrite({
     RequestItems: {
-      [TableName]: synonymousEventIds.map((eventId) => ({
-        PutRequest: {
-          Item: { synonymId: uuid, eventId },
-        },
-      })),
+      [TableName]: writes,
     },
   })
   return uuid
 }
 
-export async function tryInitSynonym(eventId: string) {
+/**
+ * Manages Synonyms upon Circular version update
+ *
+ * If there is a newEventId:
+ *   - It attempts to create a new synonym for it. If one is not created that is because
+ *     one already exists for that eventId.
+ *   - If a new synonym was not created, it updates the initialDate on the existing synonym.
+ *
+ * If there is an oldEventId:
+ *   - It sets the old synonym initialDate to -1 if no circulars have that eventId.
+ *   - If it's not empty, it updates the initialDate on the remaining synonym.
+ *
+ * @param newCreatedOn - the Circular createdOn timestamp for the new circular version
+ * @param oldCreatedOn - the Circular createdOn timestamp for the old circular
+ * @param newEventId - the updated eventId
+ * @param oldEventId - the original eventId
+ */
+export async function manageSynonymOnVersionUpdates(
+  newCreatedOn: number,
+  oldCreatedOn: number,
+  newEventId?: string,
+  oldEventId?: string
+) {
+  if (newEventId === oldEventId && newCreatedOn === oldCreatedOn) return
+
+  if (newCreatedOn != oldCreatedOn && newEventId === oldEventId) {
+    if (oldEventId) await updateInitialDate(oldEventId)
+    if (newEventId) await updateInitialDate(newEventId)
+
+    return
+  }
+
+  if (newEventId) {
+    const newSynonymCreated = await tryInitSynonym(newEventId, newCreatedOn)
+    if (!newSynonymCreated) updateInitialDate(newEventId)
+  }
+
+  if (oldEventId) {
+    await updateInitialDate(oldEventId)
+  }
+}
+
+export async function updateInitialDate(eventId: string) {
+  const oldestDate = await getOldestDate(eventId)
+
+  const db = await tables()
+  await db.synonyms.update({
+    Key: { eventId },
+    UpdateExpression: 'set #initialDate = :initialDate',
+    ExpressionAttributeNames: {
+      '#initialDate': 'initialDate',
+    },
+    ExpressionAttributeValues: {
+      ':initialDate': oldestDate,
+    },
+  })
+}
+
+export async function tryInitSynonym(eventId: string, createdOn: number) {
   const db = await tables()
 
   try {
-    await db.synonyms.update({
+    const synonym = await db.synonyms.update({
       Key: { eventId },
-      UpdateExpression: 'set #synonymId = :synonymId',
+      UpdateExpression:
+        'set #synonymId = :synonymId, #slug = :slug, #initialDate = :initialDate',
       ExpressionAttributeNames: {
         '#synonymId': 'synonymId',
+        '#slug': 'slug',
+        '#initialDate': 'initialDate',
       },
       ExpressionAttributeValues: {
         ':synonymId': crypto.randomUUID(),
+        ':slug': slug(eventId),
+        ':initialDate': createdOn,
       },
       ConditionExpression: 'attribute_not_exists(eventId)',
     })
+
+    return synonym
   } catch (error) {
     if ((error as Error).name !== 'ConditionalCheckFailedException') throw error
   }
@@ -191,30 +270,38 @@ export async function putSynonyms({
   subtractions?: string[]
 }) {
   if (!subtractions?.length && !additions?.length) return
-  if (additions?.length) {
-    const isValid = await validateEventIds({ eventIds: additions })
-    if (!isValid) throw new Response('eventId does not exist', { status: 400 })
-  }
+
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
   const TableName = db.name('synonyms')
   const writes = []
   if (subtractions?.length) {
-    const subtraction_writes = subtractions.map((eventId) => ({
+    const subtractionPromises = subtractions.map(async (eventId) => ({
       PutRequest: {
-        Item: { synonymId: crypto.randomUUID(), eventId },
+        Item: {
+          synonymId: crypto.randomUUID(),
+          eventId,
+          slug: slug(eventId),
+          initialDate: await getOldestDate(eventId),
+        },
       },
     }))
-
-    writes.push(...subtraction_writes)
+    const subtractionWrites = (await Promise.all(subtractionPromises)).flat()
+    writes.push(...subtractionWrites)
   }
   if (additions?.length) {
-    const addition_writes = additions.map((eventId) => ({
+    const additionPromises = additions.map(async (eventId) => ({
       PutRequest: {
-        Item: { synonymId, eventId },
+        Item: {
+          synonymId,
+          eventId,
+          slug: slug(eventId),
+          initialDate: await getOldestDate(eventId),
+        },
       },
     }))
-    writes.push(...addition_writes)
+    const additionWrites = (await Promise.all(additionPromises)).flat()
+    writes.push(...additionWrites)
   }
   const params = {
     RequestItems: {
@@ -222,6 +309,12 @@ export async function putSynonyms({
     },
   }
   await client.batchWrite(params)
+}
+
+export async function getOldestDate(eventId: string) {
+  const circulars = await getSynonymMembers(eventId)
+  const oldest = min(circulars.map(({ createdOn }) => createdOn))
+  return oldest ?? -1
 }
 
 /*
@@ -241,11 +334,30 @@ export async function deleteSynonyms(synonymId: string) {
     },
   })
 
-  const writes = results.Items.map(({ eventId }) => ({
-    PutRequest: {
-      Item: { synonymId: crypto.randomUUID(), eventId },
-    },
-  }))
+  const writePromises = results.Items.map(async ({ eventId }) => {
+    const initialDate = await getOldestDate(eventId)
+    if (initialDate >= 0) {
+      return {
+        PutRequest: {
+          Item: {
+            synonymId: crypto.randomUUID(),
+            eventId,
+            slug: slug(eventId),
+            initialDate,
+          },
+        },
+      }
+    } else {
+      return {
+        DeleteRequest: {
+          Key: {
+            eventId,
+          },
+        },
+      }
+    }
+  })
+  const writes = await Promise.all(writePromises)
   const params = {
     RequestItems: {
       [TableName]: writes,
@@ -261,7 +373,6 @@ export async function autoCompleteEventIds({
 }): Promise<{
   options: string[]
 }> {
-  const cleanedQuery = query.replace('-', ' ')
   const client = await getSearchClient()
   const {
     body: {
@@ -272,12 +383,13 @@ export async function autoCompleteEventIds({
     body: {
       query: {
         bool: {
-          must: [
+          filter: [
             {
-              query_string: {
-                query: `*${cleanedQuery}*`,
-                fields: ['eventId'],
-                fuzziness: 'AUTO',
+              wildcard: {
+                'eventId.keyword': {
+                  value: `*${query}*`,
+                  case_insensitive: true,
+                },
               },
             },
           ],
@@ -302,4 +414,26 @@ export async function autoCompleteEventIds({
   )
 
   return { options }
+}
+
+export async function getSynonymMembers(eventId: string) {
+  const db = await tables()
+  const { Items } = await db.circulars.query({
+    IndexName: 'circularsByEventId',
+    KeyConditionExpression: 'eventId = :eventId',
+    ExpressionAttributeValues: {
+      ':eventId': eventId,
+    },
+  })
+  return Items as Circular[]
+}
+
+export async function getAllSynonymMembers(eventIds: string[]) {
+  const promises = eventIds.map(getSynonymMembers)
+  const results = orderBy(
+    (await Promise.all(promises)).flat(),
+    ['circularId'],
+    ['desc']
+  )
+  return results
 }

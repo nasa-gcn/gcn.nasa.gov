@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher } from '@remix-run/react'
 import {
@@ -26,10 +25,11 @@ import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useUserIdp } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Reset Password',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {

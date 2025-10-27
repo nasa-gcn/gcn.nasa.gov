@@ -11,6 +11,13 @@ import { GridContainer } from '@trussworks/react-uswds'
 
 import { getUser } from '../_auth/user.server'
 import { moderatorGroup } from '../circulars/circulars.server'
+import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Synonyms',
+  noIndex: true,
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)

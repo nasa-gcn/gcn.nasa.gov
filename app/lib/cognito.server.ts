@@ -18,6 +18,7 @@ import {
   CognitoIdentityProviderClient,
   CreateGroupCommand,
   DeleteGroupCommand,
+  DeleteUserPoolClientCommand,
   GetGroupCommand,
   ListUsersCommand,
   UpdateGroupCommand,
@@ -27,6 +28,7 @@ import {
   paginateListUsersInGroup,
 } from '@aws-sdk/client-cognito-identity-provider'
 
+import { maybeThrow } from './utils'
 import type { User } from '~/routes/_auth/user.server'
 
 export const gcnGroupPrefix = 'gcn.nasa.gov/'
@@ -142,24 +144,14 @@ export async function listUsersInGroup(GroupName: string) {
   return users
 }
 
-export function maybeThrow(e: any, warning: string) {
-  const errorsAllowedInDev = [
+export function maybeThrowCognito(e: any, warning: string) {
+  const formattedWarning = `Cognito threw ${(e as CognitoIdentityProviderServiceException).name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
+
+  maybeThrow<CognitoIdentityProviderServiceException>(e, formattedWarning, [
     'ExpiredTokenException',
     'NotAuthorizedException',
     'UnrecognizedClientException',
-  ]
-  const { name } = e as CognitoIdentityProviderServiceException
-
-  if (
-    !errorsAllowedInDev.includes(name) ||
-    process.env.NODE_ENV === 'production'
-  ) {
-    throw e
-  } else {
-    console.warn(
-      `Cognito threw ${name}. This would be an error in production. Since we are in ${process.env.NODE_ENV}, ${warning}.`
-    )
-  }
+  ])
 }
 
 export async function createGroup(GroupName: string, Description: string) {
@@ -266,4 +258,13 @@ export async function removeUserFromGroup(sub: string, GroupName: string) {
     GroupName,
   })
   await cognito.send(command)
+}
+
+export async function deleteAppClient(client_id: string) {
+  await cognito.send(
+    new DeleteUserPoolClientCommand({
+      UserPoolId,
+      ClientId: client_id,
+    })
+  )
 }

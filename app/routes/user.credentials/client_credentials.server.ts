@@ -11,10 +11,11 @@ import {
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
   ListGroupsCommand,
+  ResourceNotFoundException,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { generators } from 'openid-client'
 
-import { cognito, maybeThrow } from '~/lib/cognito.server'
+import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
 import { getUser } from '~/routes/_auth/user.server'
 
 export interface RedactedClientCredential {
@@ -22,6 +23,9 @@ export interface RedactedClientCredential {
   client_id: string
   scope: string
   created: number
+  lastUsed?: number
+  expired?: number
+  countUsed?: number
 }
 
 export interface ClientCredential extends RedactedClientCredential {
@@ -68,7 +72,8 @@ export class ClientCredentialVendingMachine {
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression: 'client_id, #name, #scope, created',
+      ProjectionExpression:
+        'client_id, #name, #scope, created, lastUsed, countUsed, expired',
     })
     const credentials = results.Items as RedactedClientCredential[]
     credentials.sort((a, b) => a.created - b.created)
@@ -155,7 +160,7 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'creating fake client credentials')
+      maybeThrowCognito(e, 'creating fake client credentials')
       const client_id = generators.random(26)
       const client_secret = generators.random(51)
       return { client_id, client_secret }
@@ -178,7 +183,7 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'creating fake client secret')
+      maybeThrowCognito(e, 'creating fake client secret')
       const client_secret = generators.random(51)
       return client_secret
     }
@@ -197,7 +202,13 @@ export class ClientCredentialVendingMachine {
     try {
       await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'deleting fake client credentials')
+      // Suppress error if Resource not found, which will throw when the
+      // DeleteUserPoolClientCommand is called after a credential has
+      // expired and the App Client is already deleted
+      if (e instanceof ResourceNotFoundException) {
+        return
+      }
+      maybeThrowCognito(e, 'deleting fake client credentials')
     }
   }
 
@@ -215,7 +226,13 @@ export class ClientCredentialVendingMachine {
     try {
       response = await cognito.send(command)
     } catch (e) {
-      maybeThrow(e, 'not getting group descriptions')
+      maybeThrowCognito(e, 'returning fake group descriptions')
+      return [
+        [
+          'gcn.nasa.gov/kafka-public-consumer',
+          'Consume any public Kafka topic',
+        ],
+      ]
     }
 
     const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(

@@ -19,11 +19,18 @@ import {
   listGroupsForUser,
   removeUserFromGroup,
 } from '~/lib/cognito.server'
+import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 interface GroupSelectionItem {
   groupName: string
   defaultChecked: boolean
   description: string
+}
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: ({ params: { userId } }) => userId,
+  noIndex: true,
 }
 
 export async function loader({

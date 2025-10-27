@@ -5,13 +5,12 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
 
 import {
-  createAnnouncementSubsciption,
+  createAnnouncementSubscription,
   deleteAnnouncementSubscription,
   getAnnouncementSubscription,
 } from '../user.email/email_announcements.server'
@@ -32,9 +31,10 @@ import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useHostname } from '~/root'
+import type { SEOHandle } from '~/root/seo'
 import { getUser } from '~/routes/_auth/user.server'
 
-export const handle: SEOHandle = { getSitemapEntries: () => null }
+export const handle: SEOHandle = { noIndex: true }
 
 export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
@@ -58,7 +58,7 @@ export async function action({ request }: ActionFunctionArgs) {
       }
       break
     case 'subscribe_announcements':
-      await createAnnouncementSubsciption(user.sub, user.email)
+      await createAnnouncementSubscription(user.sub, user.email)
       break
     case 'unsubscribe_announcements':
       await deleteAnnouncementSubscription(user.sub, user.email)
@@ -213,7 +213,7 @@ export default function () {
         into your inbox.
       </p>
       <p className="usa-paragraph">
-        Note that your preferenes here do not affect prior subscriptions on the
+        Note that your preferences here do not affect prior subscriptions on the
         old web site,{' '}
         <a
           rel="external noopener"

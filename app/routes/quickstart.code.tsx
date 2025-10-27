@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, FormGroup } from '@trussworks/react-uswds'
@@ -15,10 +14,11 @@ import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Tab, Tabs } from '~/components/tabs'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Get Sample Code',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -89,9 +89,19 @@ export default function () {
             language="java"
           />
         </Tab>
+        <Tab label="PySpark">
+          <ClientSampleCode
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
+            language="pyspark"
+          />
+        </Tab>
       </Tabs>
       <Form method="GET" action="../alerts">
         <input type="hidden" name="clientId" value={clientId} />
+        <input type="hidden" name="noticeFormat" value={noticeFormat} />
+        {noticeTypes.map((notice) => (
+          <input key={notice} type="hidden" name="alerts" value={notice} />
+        ))}
         <FormGroup>
           <ButtonGroup>
             <Button type="submit" className="usa-button--outline">

@@ -6,17 +6,13 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { useSearchParams } from '@remix-run/react'
-import { stripHtml } from 'string-strip-html'
-
-export function stripTags(text: string) {
-  return stripHtml(text).result
-}
+import invariant from 'tiny-invariant'
 
 export function formatAndNoticeTypeToTopic(
   noticeFormat: string,
   noticeType: string
 ) {
-  return noticeFormat == 'json'
+  return noticeFormat == 'json' || noticeType.startsWith('gcn.notices')
     ? noticeType
     : `gcn.classic.${noticeFormat}.${noticeType}`
 }
@@ -45,7 +41,7 @@ export function getFormDataString(formData: FormData, key: string) {
   }
 }
 
-export function getEnvBannerHeaderAndDescription(hostname: string) {
+export function getEnvBannerHeaderAndDescription(hostname?: string) {
   const production_hostname = 'gcn.nasa.gov'
   let heading, description
   if (hostname === `dev.${production_hostname}`) {
@@ -71,4 +67,64 @@ export function useSearchString() {
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
   return searchString
+}
+
+/** Throw an error if the request failed.
+ *
+ * Based on https://requests.readthedocs.io/en/latest/api/#requests.Response.raise_for_status.
+ */
+export function throwForStatus(response: Response) {
+  if (!response.ok) {
+    throw new Error('Request failed', { cause: response })
+  }
+}
+
+interface ErrorType {
+  name: string
+}
+
+export function maybeThrow<Type extends ErrorType>(
+  e: Type,
+  warning: string,
+  errorsAllowedInDev: string[]
+) {
+  const { name } = e as Type
+
+  if (
+    !errorsAllowedInDev.includes(name) ||
+    process.env.NODE_ENV === 'production'
+  ) {
+    throw e
+  } else {
+    console.warn(warning)
+  }
+}
+
+export function joinListWithOxfordComma(
+  list: string[],
+  conjunction: string = 'and'
+) {
+  invariant(list.length >= 1)
+  if (list.length == 1) {
+    return list[0]
+  } else if (list.length == 2) {
+    return list.join(` ${conjunction} `)
+  } else {
+    const last = list.pop()
+    return `${list.join(', ')}, ${conjunction} ${last}`
+  }
+}
+
+const encoder = new TextEncoder()
+
+/**
+ * Truncate a string so that its JSON serialization has a maximum byte length.
+ */
+export function truncateJsonMaxBytes(text: string, maxBytes: number) {
+  let truncated = false
+  while (encoder.encode(JSON.stringify(text)).byteLength > maxBytes) {
+    text = text.substring(0, text.length / 2)
+    truncated = true
+  }
+  return { text, truncated }
 }

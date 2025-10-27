@@ -6,9 +6,9 @@ type Page =
   | { type: 'number'; number: number; isCurrent: boolean }
 
 /**
- * Implement the pagination algorithm desscribed at
+ * Implement the pagination algorithm described at
  * https://designsystem.digital.gov/components/pagination/.
- * Impmenetation is adapted from https://github.com/trussworks/react-uswds/blob/main/src/components/Pagination/Pagination.tsx */
+ * Implementation is adapted from https://github.com/trussworks/react-uswds/blob/main/src/components/Pagination/Pagination.tsx */
 export function usePagination({
   totalPages,
   currentPage,

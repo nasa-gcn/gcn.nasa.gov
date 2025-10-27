@@ -12,7 +12,7 @@ import {
   extractAttributeRequired,
 } from '~/lib/cognito.server'
 
-const mockUserAttribues: AttributeType[] = [
+const mockUserAttributes: AttributeType[] = [
   { Name: 'sub', Value: '00000000-0000-0000-0000-000000000000' },
   { Name: 'email', Value: 'example@example.com' },
   { Name: 'name', Value: 'Example User' },
@@ -21,17 +21,17 @@ const mockUserAttribues: AttributeType[] = [
 
 describe('extractAttribute', () => {
   test('extracts name attribute', () => {
-    expect(extractAttribute(mockUserAttribues, 'name')).toBe('Example User')
+    expect(extractAttribute(mockUserAttributes, 'name')).toBe('Example User')
   })
 
   test('extracts affiliation attribute', () => {
-    expect(extractAttribute(mockUserAttribues, 'custom:affiliation')).toBe(
+    expect(extractAttribute(mockUserAttributes, 'custom:affiliation')).toBe(
       'The Example Institute'
     )
   })
 
   test('returns undefined if missing attribute', () => {
-    expect(extractAttribute(mockUserAttribues, 'username')).toBe(undefined)
+    expect(extractAttribute(mockUserAttributes, 'username')).toBe(undefined)
   })
 
   test('returns undefined if attributes array is undefined', () => {
@@ -41,20 +41,20 @@ describe('extractAttribute', () => {
 
 describe('extractAttributeRequired', () => {
   test('extracts email attribute', () => {
-    expect(extractAttributeRequired(mockUserAttribues, 'email')).toBe(
+    expect(extractAttributeRequired(mockUserAttributes, 'email')).toBe(
       'example@example.com'
     )
   })
 
   test('extracts sub attribute', () => {
-    expect(extractAttributeRequired(mockUserAttribues, 'sub')).toBe(
+    expect(extractAttributeRequired(mockUserAttributes, 'sub')).toBe(
       '00000000-0000-0000-0000-000000000000'
     )
   })
 
   test('throws error when attribute key is missing', () => {
     expect(() =>
-      extractAttributeRequired(mockUserAttribues, 'username')
+      extractAttributeRequired(mockUserAttributes, 'username')
     ).toThrow(new Error('required user attribute username is missing'))
   })
 })

@@ -9,12 +9,14 @@ import {
   listUsers,
   listUsersInGroup,
 } from '~/lib/cognito.server'
+import { notFoundIfBrowserRequest } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 
 // Groups verified users are allowed to search
 const filterableGroups = [submitterGroup]
 
 export async function action({ request }: ActionFunctionArgs) {
+  notFoundIfBrowserRequest(request.headers)
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const userIsAdmin = user.groups.includes(adminGroup)
@@ -35,7 +37,7 @@ export async function action({ request }: ActionFunctionArgs) {
             sub: x.Attributes?.find((x) => x.Name == 'sub')?.Value,
             email: x.Attributes?.find((x) => x.Name == 'email')?.Value ?? '',
             name: x.Attributes?.find((x) => x.Name == 'name')?.Value,
-            affiliation: x.Attributes?.find((x) => x.Name == 'affilitation')
+            affiliation: x.Attributes?.find((x) => x.Name == 'affiliation')
               ?.Value,
           }
         })

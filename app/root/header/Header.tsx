@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { useClickAnyWhere, useWindowSize } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
-import { useEmail, useUserIdp } from '~/root'
+import { useEmail, usePermissionAdmin, useUserIdp } from '~/root'
 
 import styles from './header.module.css'
 
@@ -71,6 +71,7 @@ function NavDropDownButton({
 export function Header() {
   const email = useEmail()
   const idp = useUserIdp()
+  const isAdmin = usePermissionAdmin()
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const isMobile = useWindowSize().width < 1024
@@ -139,7 +140,11 @@ export function Header() {
               >
                 Circulars
               </NavLink>,
-              <NavLink className="usa-nav__link" to="/docs" key="/docs">
+              <NavLink
+                className="usa-nav__link"
+                to="/docs/about"
+                key="/docs/about"
+              >
                 Documentation
               </NavLink>,
               email ? (
@@ -176,6 +181,13 @@ export function Header() {
                       <NavLink key="email" to="/user/email">
                         Email Notifications
                       </NavLink>,
+                      ...(isAdmin
+                        ? [
+                            <NavLink key="email" to="/admin">
+                              Admin
+                            </NavLink>,
+                          ]
+                        : []),
                       <Link key="logout" to="/logout">
                         Sign Out
                       </Link>,
