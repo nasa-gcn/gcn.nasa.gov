@@ -8,8 +8,7 @@
 import { RequestError } from '@octokit/request-error'
 import { Octokit } from '@octokit/rest'
 import memoizee from 'memoizee'
-import { basename, dirname, extname } from 'path'
-import { join, relative } from 'path/posix'
+import { basename, dirname, extname, join, relative } from 'path/posix'
 
 import { getEnvOrDieInProduction } from './env.server'
 import { exampleSuffix, schemaSuffix } from './schema-data'
