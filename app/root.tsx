@@ -50,7 +50,6 @@ import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
 import { DevBanner } from './root/DevBanner'
 import { Footer } from './root/Footer'
 import NewsBanner from './root/NewsBanner'
-import ShutdownBanner from './root/ShutdownBanner'
 import { type BreadcrumbHandle, Title } from './root/Title'
 import { Header } from './root/header/Header'
 import type { SEOHandle } from './root/seo'
@@ -268,7 +267,6 @@ export function Layout({ children }: { children?: ReactNode }) {
         <GovBanner />
         <DevBanner />
         <Header />
-        <ShutdownBanner />
         <NewsBanner>
           New! Super-Kamiokande JSON Notices and Schema v4.5.0. See{' '}
           <Link
