@@ -3,14 +3,7 @@ handle:
   breadcrumb: DSA-110
 ---
 
-import { feature } from '~/lib/env.server'
-
 import logo from './logo.png'
-
-export async function loader() {
-  if (!feature('DSA110')) throw new Response(null, { status: 404 })
-  return null
-}
 
 # Deep Synoptic Survey - 110
 
