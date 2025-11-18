@@ -30,6 +30,7 @@ describe('ClientSampleCode', () => {
         clientSecret={clientSecret}
         listTopics={false}
         language="py"
+        groupType="consumer"
       />
     )
 
@@ -56,6 +57,7 @@ describe('ClientSampleCode', () => {
         clientSecret={clientSecret}
         listTopics={false}
         language="py"
+        groupType="consumer"
       />
     )
     expect(container.textContent).toContain(domain)
@@ -75,6 +77,7 @@ describe('ClientSampleCode', () => {
         clientSecret={clientSecret}
         listTopics={false}
         language="py"
+        groupType="consumer"
       />
     )
 
@@ -98,6 +101,7 @@ describe('ClientSampleCode', () => {
         listTopics
         language="py"
         topics={[]}
+        groupType="consumer"
       />
     )
 
