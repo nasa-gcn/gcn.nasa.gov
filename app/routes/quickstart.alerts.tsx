@@ -30,6 +30,7 @@ export default function () {
   const [noticeFormat, setFormat] = useState<NoticeFormat>(
     defaultFormat ?? 'text'
   )
+  const groupType = params.get('groupType') || 'consumer'
 
   return (
     <Form method="GET" action="../code">
@@ -56,6 +57,7 @@ export default function () {
         validationFunction={setAlertsValid}
       />
       <input type="hidden" name="clientId" value={clientId} />
+      <input type="hidden" name="groupType" value={groupType} />
       <FormGroup>
         <ButtonGroup>
           <Link

@@ -21,6 +21,7 @@ export function ClientSampleCode({
     'gcn.classic.text.LVC_INITIAL',
   ],
   language,
+  groupType,
 }: {
   clientName?: string
   clientId?: string
@@ -28,6 +29,7 @@ export function ClientSampleCode({
   listTopics?: boolean
   topics?: string[]
   language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark'
+  groupType: string
 }) {
   const domain = useDomain()
 
@@ -65,52 +67,26 @@ export function ClientSampleCode({
             code="conda install -c conda-forge gcn-kafka"
           />
           <p className="usa-paragraph">
-            Save the Python code below to a file called <code>example.py</code>:
+            Save the Python code below to a file called{' '}
+            <code>example-{groupType}.py</code>:
           </p>
           <Highlight
             language={language}
-            filename={`example.${language}`}
-            code={dedent(`
-            from gcn_kafka import Consumer
-
-            # Connect as a consumer${
-              clientName ? ` (client "${clientName}")` : ''
-            }
-            # Warning: don't share the client secret with others.
-            consumer = Consumer(client_id='${clientId}',
-                                client_secret='${clientSecret}'${
-                                  domain
-                                    ? `,
-                                domain='${domain}'`
-                                    : ''
-                                })
-            ${
-              listTopics
-                ? `
-            # List all topics
-            print(consumer.list_topics().topics)
-            `
-                : ''
-            }
-            # Subscribe to topics and receive alerts
-            consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
-                                `)}])
-            while True:
-                for message in consumer.consume(timeout=1):
-                    if message.error():
-                        print(message.error())
-                        continue
-                    # Print the topic and message ID
-                    print(f'topic={message.topic()}, offset={message.offset()}')
-                    value = message.value()
-                    print(value)
-
-            `)}
+            filename={`example-${groupType}.${language}`}
+            code={pythonCodeSample(
+              groupType,
+              clientId,
+              clientSecret,
+              domain,
+              listTopics,
+              topics,
+              clientName
+            )}
           />
           <p className="usa-paragraph">
             Run the code by typing this command in the terminal:
           </p>
-          <Highlight language="sh" code="python example.py" />
+          <Highlight language="sh" code={`python example-${groupType}.py`} />
         </>
       )
     case 'mjs':
@@ -131,70 +107,24 @@ export function ClientSampleCode({
           <Highlight language="sh" code="npm install gcn-kafka" />
           <p className="usa-paragraph">
             Save the JavaScript code below to a file called{' '}
-            <code>example.mjs</code>:
+            <code>example-{groupType}.mjs</code>:
           </p>
           <Highlight
             language={language}
-            filename={`example.${language}`}
-            code={dedent(`
-            import { Kafka } from 'gcn-kafka'
-
-            // Create a client.
-            // Warning: don't share the client secret with others.
-            const kafka = new Kafka({
-              client_id: '${clientId}',
-              client_secret: '${clientSecret}',${
-                domain
-                  ? `
-              domain: '${domain}',`
-                  : ''
-              }
-            })
-            ${
-              listTopics
-                ? `
-            // List topics
-            const admin = kafka.admin()
-            const topics = await admin.listTopics()
-            console.log(topics)
-            `
-                : ''
-            }
-            // Subscribe to topics and receive alerts
-            const consumer = kafka.consumer()
-            try {
-              await consumer.subscribe({
-                topics: [${topics
-                  .map(
-                    (topic) => `
-                    '${topic}',`
-                  )
-                  .join('')}
-                ],
-              })
-            } catch (error) {
-              if (error.type === 'TOPIC_AUTHORIZATION_FAILED')
-              {
-                console.warn('Not all subscribed topics are available')
-              } else {
-                throw error
-              }
-            }
-
-            await consumer.run({
-              eachMessage: async (payload) => {
-                const value = payload.message.value
-                console.log(\`topic=\${payload.topic}, offset=\${payload.message.offset}\`)
-                console.log(value?.toString())
-              },
-            })
-
-            `)}
+            filename={`example-${groupType}.${language}`}
+            code={mjsCodeSample(
+              groupType,
+              clientId,
+              clientSecret,
+              domain,
+              listTopics,
+              topics
+            )}
           />
           <p className="usa-paragraph">
             Run the code by typing this command in the terminal:
           </p>
-          <Highlight language="sh" code="node example.mjs" />
+          <Highlight language="sh" code={`node example-${groupType}.mjs`} />
         </>
       )
     case 'cjs':
@@ -219,68 +149,20 @@ export function ClientSampleCode({
           </p>
           <Highlight
             language={language}
-            filename={`example.${language}`}
-            code={dedent(`
-            const { Kafka } = require('gcn-kafka');
-
-            (async () => {
-              // Create a client.
-              // Warning: don't share the client secret with others.
-              const kafka = new Kafka({
-                client_id: '${clientId}',
-                client_secret: '${clientSecret}',${
-                  domain
-                    ? `
-                domain: '${domain}',`
-                    : ''
-                }
-              })
-            ${
-              listTopics
-                ? `
-              // List topics
-              const admin = kafka.admin()
-              const topics = await admin.listTopics()
-              console.log(topics)
-              `
-                : ''
-            }
-              // Subscribe to topics and receive alerts
-              const consumer = kafka.consumer()
-              try {
-                await consumer.subscribe({
-                  topics: [${topics
-                    .map(
-                      (topic) => `
-                      '${topic}',`
-                    )
-                    .join('')}
-                  ],
-                })
-              } catch (error) {
-                if (error.type === 'TOPIC_AUTHORIZATION_FAILED')
-                {
-                  console.warn('Not all subscribed topics are available')
-                } else {
-                  throw error
-                }
-              }
-
-              await consumer.run({
-                eachMessage: async (payload) => {
-                  const value = payload.message.value
-                  console.log(\`topic=\${payload.topic}, offset=\${payload.message.offset}\`)
-                  console.log(value?.toString())
-                },
-              })
-            })()
-
-            `)}
+            filename={`example-${groupType}.${language}`}
+            code={cjsSampleCode(
+              groupType,
+              clientId,
+              clientSecret,
+              domain,
+              listTopics,
+              topics
+            )}
           />
           <p className="usa-paragraph">
             Run the code by typing this command in the terminal:
           </p>
-          <Highlight language="sh" code="node example.cjs" />
+          <Highlight language="sh" code={`node example-${groupType}.cjs`} />
         </>
       )
     case 'c':
@@ -693,4 +575,227 @@ export function ClientSampleCode({
         </>
       )
   }
+}
+
+function pythonCodeSample(
+  groupType: string,
+  clientId: string,
+  clientSecret: string,
+  domain: 'dev.gcn.nasa.gov' | 'test.gcn.nasa.gov' | null,
+  listTopics: boolean,
+  topics: string[],
+  clientName?: string
+): string {
+  if (groupType === 'consumer') {
+    return dedent(`
+  from gcn_kafka import Consumer
+
+  # Connect as a consumer${clientName ? ` (client "${clientName}")` : ''}
+  # Warning: don't share the client secret with others.
+  consumer = Consumer(client_id='${clientId}',
+                      client_secret='${clientSecret}'${
+                        domain
+                          ? `,
+                      domain='${domain}'`
+                          : ''
+                      })
+  ${
+    listTopics
+      ? `
+  # List all topics
+  print(consumer.list_topics().topics)
+  `
+      : ''
+  }
+  # Subscribe to topics and receive alerts
+  consumer.subscribe([${topics.map((topic) => `'${topic}'`).join(`,
+                      `)}])
+  while True:
+      for message in consumer.consume(timeout=1):
+          if message.error():
+              print(message.error())
+              continue
+          # Print the topic and message ID
+          print(f'topic={message.topic()}, offset={message.offset()}')
+          value = message.value()
+          print(value)
+
+    `)
+  } else {
+    return dedent(`
+  from gcn_kafka import Producer
+  import json
+
+  producer = Producer(
+      client_id="${clientId}",
+      client_secret="${clientSecret}"${
+        domain
+          ? `,
+      domain='${domain}'`
+          : ''
+      }
+  )
+  data = json.dumps(
+      {
+          # Fill in your alert data here
+          "key": "value"
+      }
+  ).encode()
+
+  # Only produce your messages to a single Kafka Topic
+  producer.produce("${topics[0]}", data)
+  producer.flush()
+      `)
+  }
+}
+
+function mjsCodeSample(
+  groupType: string,
+  clientId: string,
+  clientSecret: string,
+  domain: 'dev.gcn.nasa.gov' | 'test.gcn.nasa.gov' | null,
+  listTopics: boolean,
+  topics: string[]
+) {
+  return dedent(`
+  import { Kafka } from 'gcn-kafka'
+
+  // Create a client.
+  // Warning: don't share the client secret with others.
+  const kafka = new Kafka({
+    client_id: '${clientId}',
+    client_secret: '${clientSecret}',${
+      domain
+        ? `
+    domain: '${domain}',`
+        : ''
+    }
+  })
+  ${
+    listTopics
+      ? `
+  // List topics
+  const admin = kafka.admin()
+  const topics = await admin.listTopics()
+  console.log(topics)
+  `
+      : ''
+  }
+  ${
+    groupType === 'consumer'
+      ? `
+    // Subscribe to topics and receive alerts
+    const consumer = kafka.consumer()
+    try {
+      await consumer.subscribe({
+        topics: [${topics
+          .map(
+            (topic) => `
+            '${topic}',`
+          )
+          .join('')}
+        ],
+      })
+    } catch (error) {
+      if (error.type === 'TOPIC_AUTHORIZATION_FAILED')
+      {
+        console.warn('Not all subscribed topics are available')
+      } else {
+        throw error
+      }
+    }
+
+    await consumer.run({
+      eachMessage: async (payload) => {
+        const value = payload.message.value
+        console.log(\`topic=\${payload.topic}, offset=\${payload.message.offset}\`)
+        console.log(value?.toString())
+      },
+    })
+    `
+      : `const producer = kafka.producer()
+  await producer.connect()
+  const value = {
+    // Fill in your data here
+    "key": "value"
+  }
+  await producer.send({topic: ${topics[0]}, messages:[{ value }]})
+  `
+  }
+`)
+}
+
+function cjsSampleCode(
+  groupType: string,
+  clientId: string,
+  clientSecret: string,
+  domain: 'dev.gcn.nasa.gov' | 'test.gcn.nasa.gov' | null,
+  listTopics: boolean,
+  topics: string[]
+) {
+  return dedent(`
+  const { Kafka } = require('gcn-kafka');
+
+  (async () => {
+    // Create a client.
+    // Warning: don't share the client secret with others.
+    const kafka = new Kafka({
+      client_id: '${clientId}',
+      client_secret: '${clientSecret}',${
+        domain
+          ? `
+      domain: '${domain}',`
+          : ''
+      }
+    })
+  ${
+    listTopics
+      ? `
+    // List topics
+    const admin = kafka.admin()
+    const topics = await admin.listTopics()
+    console.log(topics)
+    `
+      : ''
+  }
+  ${
+    groupType === 'consumer'
+      ? `// Subscribe to topics and receive alerts
+    const consumer = kafka.consumer()
+    try {
+      await consumer.subscribe({
+        topics: [${topics
+          .map(
+            (topic) => `
+            '${topic}',`
+          )
+          .join('')}
+        ],
+      })
+    } catch (error) {
+      if (error.type === 'TOPIC_AUTHORIZATION_FAILED')
+      {
+        console.warn('Not all subscribed topics are available')
+      } else {
+        throw error
+      }
+    }
+
+    await consumer.run({
+      eachMessage: async (payload) => {
+        const value = payload.message.value
+        console.log(\`topic=\${payload.topic}, offset=\${payload.message.offset}\`)
+        console.log(value?.toString())
+      },
+    })`
+      : `
+    const producer = kafka.producer()
+    await producer.connect()
+    const value = {
+      // Fill in your data here
+      "key": "value"
+    }
+    await producer.send({topic: ${topics[0]}, messages:[{ value }]})`
+  }
+  })()`)
 }
