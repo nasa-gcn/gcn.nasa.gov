@@ -94,6 +94,7 @@ import json
 producer = Producer(client_id='fill me in',
 	client_secret='fill me in',
 	config={"message.max.bytes": 204194304},
+)
 
 # Set Kafka Topic and Producer Configuration
 TOPIC = "igwn.gwalert"
