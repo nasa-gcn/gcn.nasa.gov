@@ -38,7 +38,7 @@ describe('ClientSampleCode', () => {
     expect(container.querySelector('.language-py')).not.toBeNull()
     expect(getByText('pip')).toHaveAttribute('href', 'https://pip.pypa.io/')
     expect(getByText('conda')).toHaveAttribute('href', 'https://docs.conda.io/')
-    expect(getByText(`example.py`)).toBeInTheDocument()
+    expect(getByText(`example-consumer.py`)).toBeInTheDocument()
     expect(container.textContent).toContain(clientId)
     expect(container.textContent).toContain(clientSecret)
     expect(container.textContent).toContain(topics[0])
