@@ -127,16 +127,16 @@ export async function listUsers(
         )
       )
   }
-  return [
-    ...new Set(
-      results.map((user) => ({
-        sub: extractAttributeRequired(user.Attributes, 'sub'),
-        email: extractAttributeRequired(user.Attributes, 'email'),
-        name: extractAttribute(user.Attributes, 'name'),
-        affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
-      }))
-    ),
-  ]
+  return results
+    .map((user) => ({
+      sub: extractAttributeRequired(user.Attributes, 'sub'),
+      email: extractAttributeRequired(user.Attributes, 'email'),
+      name: extractAttribute(user.Attributes, 'name'),
+      affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
+    }))
+    .filter(
+      (item, index, self) => index === self.findIndex((t) => t.sub === item.sub)
+    )
 }
 
 export async function listUsersInGroup(GroupName: string) {
