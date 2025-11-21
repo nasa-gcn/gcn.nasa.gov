@@ -94,31 +94,33 @@ export async function getCognitoUserFromSub(sub: string) {
 export async function listUsers(
   filterString: string
 ): Promise<Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[]> {
-  const email_pages = paginateListUsers(
-    { client: cognito },
-    {
-      UserPoolId,
-      Filter: `email ^= "${filterString}"`,
-    }
+  const results = [
+    ...(await searchForUsersByKey(filterString, 'email')),
+    ...(await searchForUsersByKey(filterString, 'name')),
+  ].map((user) => ({
+    sub: extractAttributeRequired(user.Attributes, 'sub'),
+    email: extractAttributeRequired(user.Attributes, 'email'),
+    name: extractAttribute(user.Attributes, 'name'),
+    affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
+  }))
+  return results.filter(
+    (item, index, self) => index === self.findIndex((t) => t.sub === item.sub)
   )
-  const name_pages = paginateListUsers(
+}
+
+async function searchForUsersByKey(
+  filterString: string,
+  filterKey: 'email' | 'name'
+) {
+  const pages = paginateListUsers(
     { client: cognito },
     {
       UserPoolId,
-      Filter: `name ^= "${filterString}"`,
+      Filter: `${filterKey} ^= "${filterString}"`,
     }
   )
   const results = []
-  for await (const page of email_pages) {
-    const nextUsers = page.Users
-    if (nextUsers)
-      results.push(
-        ...nextUsers.filter((user) =>
-          Boolean(extractAttribute(user.Attributes, 'email'))
-        )
-      )
-  }
-  for await (const page of name_pages) {
+  for await (const page of pages) {
     const nextUsers = page.Users
     if (nextUsers)
       results.push(
@@ -128,15 +130,6 @@ export async function listUsers(
       )
   }
   return results
-    .map((user) => ({
-      sub: extractAttributeRequired(user.Attributes, 'sub'),
-      email: extractAttributeRequired(user.Attributes, 'email'),
-      name: extractAttribute(user.Attributes, 'name'),
-      affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
-    }))
-    .filter(
-      (item, index, self) => index === self.findIndex((t) => t.sub === item.sub)
-    )
 }
 
 export async function listUsersInGroup(GroupName: string) {
