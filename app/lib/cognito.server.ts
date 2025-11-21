@@ -91,41 +91,45 @@ export async function getCognitoUserFromSub(sub: string) {
   return user
 }
 
-export async function listUsers(filterString: string) {
+export async function listUsers(
+  filterString: string
+): Promise<Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[]> {
+  const results = [
+    ...(await searchForUsersByKey(filterString, 'email')),
+    ...(await searchForUsersByKey(filterString, 'name')),
+  ].map((user) => ({
+    sub: extractAttributeRequired(user.Attributes, 'sub'),
+    email: extractAttributeRequired(user.Attributes, 'email'),
+    name: extractAttribute(user.Attributes, 'name'),
+    affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
+  }))
+  return results.filter(
+    (item, index, self) => index === self.findIndex((t) => t.sub === item.sub)
+  )
+}
+
+async function searchForUsersByKey(
+  filterString: string,
+  filterKey: 'email' | 'name'
+) {
   const pages = paginateListUsers(
     { client: cognito },
     {
       UserPoolId,
+      Filter: `${filterKey} ^= "${filterString}"`,
     }
   )
-  const users: Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[] = []
+  const results = []
   for await (const page of pages) {
     const nextUsers = page.Users
     if (nextUsers)
-      users.push(
-        ...nextUsers
-          .filter(
-            (user) =>
-              Boolean(extractAttribute(user.Attributes, 'email')) &&
-              (extractAttribute(user.Attributes, 'name')
-                ?.toLowerCase()
-                .includes(filterString.toLowerCase()) ||
-                extractAttribute(user.Attributes, 'email')
-                  ?.toLowerCase()
-                  .includes(filterString.toLowerCase()))
-          )
-          .map((user) => ({
-            sub: extractAttributeRequired(user.Attributes, 'sub'),
-            email: extractAttributeRequired(user.Attributes, 'email'),
-            name: extractAttribute(user.Attributes, 'name'),
-            affiliation: extractAttribute(
-              user.Attributes,
-              'custom:affiliation'
-            ),
-          }))
+      results.push(
+        ...nextUsers.filter((user) =>
+          Boolean(extractAttribute(user.Attributes, 'email'))
+        )
       )
   }
-  return users
+  return results
 }
 
 export async function listUsersInGroup(GroupName: string) {
