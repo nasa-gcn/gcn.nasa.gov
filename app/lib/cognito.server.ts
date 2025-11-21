@@ -91,41 +91,52 @@ export async function getCognitoUserFromSub(sub: string) {
   return user
 }
 
-export async function listUsers(filterString: string) {
-  const pages = paginateListUsers(
+export async function listUsers(
+  filterString: string
+): Promise<Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[]> {
+  const email_pages = paginateListUsers(
     { client: cognito },
     {
       UserPoolId,
+      Filter: `email ^= "${filterString}"`,
     }
   )
-  const users: Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[] = []
-  for await (const page of pages) {
+  const name_pages = paginateListUsers(
+    { client: cognito },
+    {
+      UserPoolId,
+      Filter: `name ^= "${filterString}"`,
+    }
+  )
+  const results = []
+  for await (const page of email_pages) {
     const nextUsers = page.Users
     if (nextUsers)
-      users.push(
-        ...nextUsers
-          .filter(
-            (user) =>
-              Boolean(extractAttribute(user.Attributes, 'email')) &&
-              (extractAttribute(user.Attributes, 'name')
-                ?.toLowerCase()
-                .includes(filterString.toLowerCase()) ||
-                extractAttribute(user.Attributes, 'email')
-                  ?.toLowerCase()
-                  .includes(filterString.toLowerCase()))
-          )
-          .map((user) => ({
-            sub: extractAttributeRequired(user.Attributes, 'sub'),
-            email: extractAttributeRequired(user.Attributes, 'email'),
-            name: extractAttribute(user.Attributes, 'name'),
-            affiliation: extractAttribute(
-              user.Attributes,
-              'custom:affiliation'
-            ),
-          }))
+      results.push(
+        ...nextUsers.filter((user) =>
+          Boolean(extractAttribute(user.Attributes, 'email'))
+        )
       )
   }
-  return users
+  for await (const page of name_pages) {
+    const nextUsers = page.Users
+    if (nextUsers)
+      results.push(
+        ...nextUsers.filter((user) =>
+          Boolean(extractAttribute(user.Attributes, 'email'))
+        )
+      )
+  }
+  return [
+    ...new Set(
+      results.map((user) => ({
+        sub: extractAttributeRequired(user.Attributes, 'sub'),
+        email: extractAttributeRequired(user.Attributes, 'email'),
+        name: extractAttribute(user.Attributes, 'name'),
+        affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
+      }))
+    ),
+  ]
 }
 
 export async function listUsersInGroup(GroupName: string) {
