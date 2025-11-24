@@ -6,18 +6,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
+import { ListUsersCommand } from '@aws-sdk/client-cognito-identity-provider'
+import { CognitoIdentityProviderClient } from '@aws-sdk/client-cognito-identity-provider/dist-types/CognitoIdentityProviderClient'
 import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import partition from 'lodash/partition'
 import { dedent } from 'ts-dedent'
 
 import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
-import {
-  deleteAppClient,
-  extractAttribute,
-  getCognitoUserFromSub,
-} from '~/lib/cognito.server'
+import { deleteAppClient, extractAttribute } from '~/lib/cognito.server'
 import { sendEmail } from '~/lib/email.server'
 import { feature, origin } from '~/lib/env.server'
+
+const UserPoolId = process.env.COGNITO_USER_POOL_ID
 
 type CredentialInfo = {
   sub: string
@@ -25,6 +25,34 @@ type CredentialInfo = {
   client_id: string
   created: number
   lastUsed?: number
+}
+
+const cognitoClient = new CognitoIdentityProviderClient({
+  requestHandler: {
+    httpsAgent: {
+      maxSockets: 3,
+    },
+  },
+})
+
+// This duplicates the function from cognito.server, with a much more throttled client
+async function getCognitoUserFromSub(sub: string) {
+  const escapedSub = sub.replaceAll('"', '\\"')
+  const user = (
+    await cognitoClient.send(
+      new ListUsersCommand({
+        UserPoolId,
+        Filter: `sub = "${escapedSub}"`,
+      })
+    )
+  )?.Users?.[0]
+
+  if (!user?.Username)
+    throw new Response('Requested user does not exist', {
+      status: 400,
+    })
+
+  return user
 }
 
 export async function handler() {
