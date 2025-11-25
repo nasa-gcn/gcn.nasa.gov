@@ -32,7 +32,13 @@ import { maybeThrow } from './utils'
 import type { User } from '~/routes/_auth/user.server'
 
 export const gcnGroupPrefix = 'gcn.nasa.gov/'
-export const cognito = new CognitoIdentityProviderClient({})
+export const cognito = new CognitoIdentityProviderClient({
+  requestHandler: {
+    httpsAgent: {
+      maxSockets: 3,
+    },
+  },
+})
 const UserPoolId = process.env.COGNITO_USER_POOL_ID
 
 /**
