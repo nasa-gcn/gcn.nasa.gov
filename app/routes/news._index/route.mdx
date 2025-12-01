@@ -15,6 +15,7 @@ import {
 import teamPhoto from './AAS243_booth.jpg'
 import { SendAnnouncementButton } from './components'
 import { Anchor } from '~/components/Anchor'
+import { WithFeature } from '~/root'
 
 <Grid row>
   <h1 className="grid-col-fill">GCN News and Events</h1>
@@ -24,6 +25,33 @@ import { Anchor } from '~/components/Anchor'
 </Grid>
 
 <Collection>
+
+  <WithFeature DSA110>
+    ## 2026
+      <CollectionItem
+        className="maxw-none grid-container"
+        variantComponent={
+
+          <CollectionCalendarDate datetime='February 3, 2026' />
+        }
+      >
+        <CollectionHeading headingLevel="h3">
+          <Anchor>DSA-110 FRB JSON Notices</Anchor>
+        </CollectionHeading>
+        <CollectionDescription>
+
+            The DSA-110 team and the GCN team are pleased to announce the availability of DSA-110 notice types via the [new GCN](/) in JSON format.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).
+
+            The [Deep Synoptic Array-110 (DSA-110)](https://www.deepsynoptic.org/instrument) is a radio interferometer purpose-built for fast radio burst (FRB) detection and direct localization. The array is located at the [Owens Valley Radio Observatory (OVRO)](https://www.ovro.caltech.edu) comprised of 96 4.65-m dishes that continuously survey for FRBs at frequencies between 1280 to 1530 MHz. Over a three-year science program, the DSA-110 will deliver a sample of more than 300 FRBs, each localized to regions ~1 arcminute radius within 1 minute of detection. This is made possible by a suite of novel instrumentation, including precisely engineered antennas, ultra-low noise ambient-temperature receivers, and a powerful real-time, autonomous data-analysis system.
+
+            DSA-110 notices provide FRB detection and localization distributed on the topic `gcn.notice.dsa110.frb`.
+
+            See the [DSA-110 mission page](/missions/dsa_110) for a more extensive description of the information provided in these new notices.
+
+        </CollectionDescription>
+      </CollectionItem>
+
+  </WithFeature>
 
 ## 2025
 
