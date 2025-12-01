@@ -8,6 +8,7 @@
 import { tables } from '@architect/functions'
 import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import partition from 'lodash/partition'
+import pThrottle from 'p-throttle'
 import { dedent } from 'ts-dedent'
 
 import { EXPIRATION_MILLIS, WARNING_MILLIS } from '~/lib/cognito'
@@ -26,6 +27,16 @@ type CredentialInfo = {
   created: number
   lastUsed?: number
 }
+
+// Cognito API calls have severe rate limits.
+// Throttle the rate of requests to at most 1/3 of their rate limit.
+// See https://docs.aws.amazon.com/cognito/latest/developerguide/quotas.html.
+const throttledGetCognitoUserFromSub = pThrottle({ interval: 1000, limit: 10 })(
+  getCognitoUserFromSub
+)
+const throttledDeleteAppClient = pThrottle({ interval: 1000, limit: 5 })(
+  deleteAppClient
+)
 
 export async function handler() {
   const db = await tables()
@@ -77,7 +88,7 @@ export async function handler() {
       uniqueSubs.map(async (sub) => {
         let user
         try {
-          user = await getCognitoUserFromSub(sub)
+          user = await throttledGetCognitoUserFromSub(sub)
         } catch (e) {
           if (e instanceof Response) {
             console.error('user does not exist: ', sub)
@@ -130,7 +141,7 @@ export async function handler() {
       })
     ),
     // Delete App clients from Cognito
-    ...expiredCreds.map((cred) => deleteAppClient(cred.client_id)),
+    ...expiredCreds.map((cred) => throttledDeleteAppClient(cred.client_id)),
     // Send emails
     ...expirationEmailPromises,
     ...warningEmailPromises,
