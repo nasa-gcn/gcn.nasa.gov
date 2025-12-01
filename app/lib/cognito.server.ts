@@ -35,7 +35,6 @@ export const gcnGroupPrefix = 'gcn.nasa.gov/'
 export const cognito = new CognitoIdentityProviderClient({
   requestHandler: {
     httpsAgent: {
-      requestTimeout: 600000,
       maxSockets: 3,
     },
   },
