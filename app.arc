@@ -162,7 +162,7 @@ client_credentials
   name credentialsByClientId
 
 @aws
-runtime nodejs22.x
+runtime nodejs24.x
 region us-east-1
 architecture arm64
 memory 256
