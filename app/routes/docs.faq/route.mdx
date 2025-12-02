@@ -64,7 +64,7 @@ Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP c
 
 Our [Kafka client setup code sample](/docs/client) is designed to be used as part of a long or indefinitely running program. If you leave it running, our Kafka client code will periodically provide you with the latest received messages, and will recover automatically from transient failures like network connectivity problems or temporary broker outages.
 
-Please do _not_ launch short-lived, single-shot clients (e.g., clients that consume or produce zero or one messages, and then halt). Each time that you launch a new client, we are billed a tiny amount. Due to how our authentication works, launching many short-lived clients can increase our operating costs. Please be responsible and don't launch clients periodically in [cron](https://en.wikipedia.org/wiki/Cron) jobs.
+Please do _not_ launch short-lived, single-shot clients (e.g., clients that consume or produce zero or one messages, and then halt). Each time that you launch a new client, we are billed a tiny amount which can add up significantly. Due to how our authentication works, launching many short-lived clients can increase our operating costs. Please be responsible and don't launch clients periodically in [cron](https://en.wikipedia.org/wiki/Cron) jobs.
 
 See the next FAQ for a better way to monitor your connection's health.
 
