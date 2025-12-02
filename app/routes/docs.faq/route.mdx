@@ -60,6 +60,14 @@ Clients connecting to GCN only need to be able to make _outbound_ (egress) TCP c
   </tbody>
 </table>
 
+### How do I make a 'cron' job to periodically check for new Kafka messages?
+
+Our [Kafka client setup code sample](/docs/client) is designed to be used as part of a long or indefinitely running program. If you leave it running, our Kafka client code will promptly provide you with the latest received messages, and will recover automatically from transient failures like network connectivity problems or temporary broker outages.
+
+Please do _not_ launch short-lived, single-shot clients (e.g., clients that consume or produce zero or one messages, and then halt). Each time that you launch a new client, we are billed a tiny amount which can add up significantly. Due to how our authentication works, launching many short-lived clients can increase our operating costs. Please be responsible and don't launch clients periodically in [cron](https://en.wikipedia.org/wiki/Cron) jobs.
+
+See the next FAQ for a better way to monitor your connection's health.
+
 ### How can I tell that my Kafka client is working?
 
 Subscribe to the topic `gcn.heartbeat`, which broadcasts a test message approximately once a second. The contents of the heartbeat messages looks like this:
