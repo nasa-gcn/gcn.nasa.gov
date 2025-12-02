@@ -151,7 +151,7 @@
     "rimraf": "^5.0.0",
     "sass": "^1.64.2",
     "ts-jest": "^29.3.2",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "wait-port": "^1.1.0",
     "yarn": "^1.22.21"
   },
