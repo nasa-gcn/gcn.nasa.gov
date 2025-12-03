@@ -75,7 +75,6 @@ export function Header() {
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const isMobile = useWindowSize().width < 1024
-  const userIsAdmin = usePermissionAdmin()
 
   function toggleMobileNav() {
     setExpanded((expanded) => !expanded)
@@ -168,11 +167,6 @@ export function Header() {
                       <NavLink end key="user" to="/user">
                         Profile
                       </NavLink>,
-                      userIsAdmin && (
-                        <NavLink key="admin" to="/admin/kafka">
-                          Admin
-                        </NavLink>
-                      ),
                       <NavLink key="endorsements" to="/user/endorsements">
                         Peer Endorsements
                       </NavLink>,

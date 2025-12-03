@@ -170,10 +170,6 @@ export function usePermissionAdmin() {
   return useLoaderDataRoot()?.userIsAdmin
 }
 
-export function useAdminStatus() {
-  return useLoaderDataRoot()?.userIsAdmin
-}
-
 export function useRecaptchaSiteKey() {
   return useLoaderDataRoot()?.recaptchaSiteKey
 }
