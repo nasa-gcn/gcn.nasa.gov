@@ -140,7 +140,6 @@ export function CircularEditForm({
   const [eventId, setEventId] = useState(
     linkEventId ? derivedEventId : originalEventId
   )
-  const eventIdValue = linkEventId ? derivedEventId : eventId
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const sending = Boolean(useNavigation().formData)
@@ -234,8 +233,8 @@ export function CircularEditForm({
                 <InputPrefix className="wide-input-prefix">
                   Event ID
                 </InputPrefix>
-                <span className="padding-1">{eventIdValue}</span>
-                <input type="hidden" name="eventId" value={eventIdValue} />
+                <span className="padding-1">{eventId}</span>
+                <input type="hidden" name="eventId" value={eventId} />
               </InputGroup>
             ) : (
               <InputGroup className="maxw-full">
@@ -244,7 +243,7 @@ export function CircularEditForm({
                 </InputPrefix>
                 <TextInput
                   className="maxw-full"
-                  defaultValue={eventIdValue}
+                  defaultValue={eventId}
                   name="eventId"
                   id="eventId"
                   type="text"
@@ -261,7 +260,7 @@ export function CircularEditForm({
               label={
                 <>
                   Automatically fill event ID from subject
-                  {eventIdValue !== derivedEventId &&
+                  {eventId !== derivedEventId &&
                     '. The event ID does not match.'}
                 </>
               }
