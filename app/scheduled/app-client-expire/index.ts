@@ -31,12 +31,16 @@ type CredentialInfo = {
 // Cognito API calls have severe rate limits.
 // Throttle the rate of requests to at most 1/3 of their rate limit.
 // See https://docs.aws.amazon.com/cognito/latest/developerguide/quotas.html.
-const throttledGetCognitoUserFromSub = pThrottle({ interval: 1000, limit: 10 })(
-  getCognitoUserFromSub
-)
-const throttledDeleteAppClient = pThrottle({ interval: 1000, limit: 5 })(
-  deleteAppClient
-)
+const throttledGetCognitoUserFromSub = pThrottle({
+  interval: 1000,
+  limit: 10,
+  strict: true,
+})(getCognitoUserFromSub)
+const throttledDeleteAppClient = pThrottle({
+  interval: 1000,
+  limit: 5,
+  strict: true,
+})(deleteAppClient)
 
 export async function handler() {
   const db = await tables()
