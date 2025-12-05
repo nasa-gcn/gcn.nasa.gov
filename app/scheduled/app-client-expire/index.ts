@@ -7,6 +7,7 @@
  */
 import { tables } from '@architect/functions'
 import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
+import groupBy from 'lodash/groupBy.js'
 import partition from 'lodash/partition'
 import pThrottle from 'p-throttle'
 import { dedent } from 'ts-dedent'
@@ -42,6 +43,20 @@ const throttledDeleteAppClient = pThrottle({
   strict: true,
 })(deleteAppClient)
 
+async function getEmailForSub(sub: string) {
+  let user
+  try {
+    user = await throttledGetCognitoUserFromSub(sub)
+  } catch (e) {
+    if (e instanceof Response) {
+      console.error('user does not exist: ', sub)
+    } else {
+      throw e
+    }
+  }
+  return extractAttribute(user?.Attributes, 'email')
+}
+
 export async function handler() {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
@@ -51,7 +66,8 @@ export async function handler() {
   const deletionCutoff = expirationDate - EXPIRATION_MILLIS
   const warningCutoff = expirationDate - WARNING_MILLIS
 
-  const expiredAndWarningCredentials = paginateScan(
+  const credentials: CredentialInfo[] = []
+  for await (const { Items } of paginateScan(
     {
       client,
     },
@@ -63,91 +79,56 @@ export async function handler() {
         ':warningCutoff': warningCutoff,
       },
     }
-  )
-
-  const expiredCreds: CredentialInfo[] = []
-  const warningCreds: CredentialInfo[] = []
-  const subs = []
-  for await (const { Items } of expiredAndWarningCredentials) {
-    if (Items) {
-      const creds = Items as CredentialInfo[]
-      const [moreExpiredCreds, moreWarningCreds] = partition(
-        creds,
-        (cred) => (cred.lastUsed ?? cred.created) < deletionCutoff
-      )
-      if (feature('APP_CLIENT_TRACKING')) {
-        expiredCreds.push(...moreExpiredCreds)
-        warningCreds.push(...moreWarningCreds)
-      } else {
-        // Put both expired and warning together for the first few iterations of the scheduled task
-        warningCreds.push(...moreWarningCreds, ...moreExpiredCreds)
-      }
-      subs.push(...creds.map((cred) => cred.sub))
-    }
+  )) {
+    if (Items) credentials.push(...(Items as CredentialInfo[]))
   }
 
-  const uniqueSubs = [...new Set(subs)]
-  const userEmailMap: { [key: string]: string } = Object.fromEntries(
-    await Promise.all(
-      uniqueSubs.map(async (sub) => {
-        let user
-        try {
-          user = await throttledGetCognitoUserFromSub(sub)
-        } catch (e) {
-          if (e instanceof Response) {
-            console.error('user does not exist: ', sub)
-          } else {
-            throw e
-          }
+  await Promise.all(
+    Object.entries(groupBy(credentials, ({ sub }) => sub)).map(
+      async ([sub, credentialsForSub]) => {
+        const email = await getEmailForSub(sub)
+        if (email) {
+          const [expired, expiringSoon] = partition(
+            credentialsForSub,
+            ({ lastUsed, created }) =>
+              feature('APP_CLIENT_TRACKING') &&
+              (lastUsed ?? created) < deletionCutoff
+          )
+
+          await Promise.all([
+            ...expired.flatMap(({ name, sub, client_id }) => [
+              db.client_credentials.update({
+                Key: { sub, client_id },
+                UpdateExpression: 'SET expired = :expired',
+                ExpressionAttributeValues: {
+                  ':expired': expirationDate,
+                },
+              }),
+              throttledDeleteAppClient(client_id),
+              sendEmail({
+                to: [email],
+                fromName: 'GCN Kafka Service',
+                subject: 'Client Credential Deleted',
+                body: `Your Kafka client credential "${name}" has expired. For more information about our credential expiration policy, please visit ${origin}/docs/internal/auth or ${origin}/contact for support.`,
+              }),
+            ]),
+            ...expiringSoon.map(({ name }) =>
+              sendEmail({
+                to: [email],
+                fromName: 'GCN Kafka Service',
+                subject: 'GCN Kafka Client Credentials Expiring Soon',
+                body: dedent`
+                Your GCN client credential named "${name}" has not been used recently and will expire in the next few days.
+
+                For security purposes, we disable client credentials that you have not used to connect to a Kafka broker for the past 30 days. Once disabled, a client credential cannot be used again. To prevent a credential from expiring and being disabled, simply use it to connect to a Kafka broker. You may create new client credentials at any time. For more information on this policy, see our documentation at ${origin}/docs/faq#why-are-my-kafka-client-credentials-expiring.
+
+                No actions are needed on your end. You can review your client credentials at ${origin}/user/credentials or visit ${origin}/contact for questions and support.
+              `,
+              })
+            ),
+          ])
         }
-        return [sub, extractAttribute(user?.Attributes, 'email')]
-      })
+      }
     )
   )
-
-  const expirationEmailPromises = expiredCreds
-    .filter((cred) => userEmailMap[cred.sub] !== undefined)
-    .map((cred) =>
-      sendEmail({
-        to: [userEmailMap[cred.sub]],
-        fromName: 'GCN Kafka Service',
-        subject: 'Client Credential Deleted',
-        body: `Your Kafka client credential "${cred.name}" has expired. For more information about our credential expiration policy, please visit ${origin}/docs/internal/auth or ${origin}/contact for support.`,
-      })
-    )
-
-  const warningEmailPromises = warningCreds
-    .filter((cred) => userEmailMap[cred.sub] !== undefined)
-    .map((cred) =>
-      sendEmail({
-        to: [userEmailMap[cred.sub]],
-        fromName: 'GCN Kafka Service',
-        subject: 'GCN Kafka Client Credentials Expiring Soon',
-        body: dedent`
-        Your GCN client credential named "${cred.name}" has not been used recently and will expire in the next few days.
-
-        For security purposes, we disable client credentials that you have not used to connect to a Kafka broker for the past 30 days. Once disabled, a client credential cannot be used again. To prevent a credential from expiring and being disabled, simply use it to connect to a Kafka broker. You may create new client credentials at any time. For more information on this policy, see our documentation at ${origin}/docs/faq#why-are-my-kafka-client-credentials-expiring.
-
-        No actions are needed on your end. You can review your client credentials at ${origin}/user/credentials or visit ${origin}/contact for questions and support.
-      `,
-      })
-    )
-
-  await Promise.all([
-    // Mark as expired in DynamoDB
-    ...expiredCreds.map((cred) =>
-      db.client_credentials.update({
-        Key: { sub: cred.sub, client_id: cred.client_id },
-        UpdateExpression: 'SET expired = :expired',
-        ExpressionAttributeValues: {
-          ':expired': expirationDate,
-        },
-      })
-    ),
-    // Delete App clients from Cognito
-    ...expiredCreds.map((cred) => throttledDeleteAppClient(cred.client_id)),
-    // Send emails
-    ...expirationEmailPromises,
-    ...warningEmailPromises,
-  ])
 }
