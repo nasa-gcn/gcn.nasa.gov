@@ -27,21 +27,21 @@ export async function loader() {
 
 **Data Archive:** [KM3NeT archive](https://opendata.km3net.de/)
 
-The [Kilometer Cube Neutrino Telescope (KM3NeT)](https://www.km3net.org/) is an underwater neutrino observatory, composed by two detectors, KM3NeT/ARCA (Astrophysic Research with Cosmic in the Abyss) and KM3NeT/ORCA (Oscillation Research with Cosmic in the Abyss). They are located respectively offshore of Sicily (It) and offshore of Toulon (Fr), with maximal depth of -3500 m and -2500 m. 
+The [Kilometer Cube Neutrino Telescope (KM3NeT)](https://www.km3net.org/) is an underwater neutrino observatory, composed of two detectors, KM3NeT/ARCA (Astrophysic Research with Cosmic in the Abyss) and KM3NeT/ORCA (Oscillation Research with Cosmic in the Abyss). They are located respectively offshore of Sicily (It) and offshore of Toulon (Fr), with maximal depth of -3500 m and -2500 m. 
 
-Both detectors are 3D arrays of Digital Optical Modules (DOMs), sharing the same hardware components. The DOMs are individually equiped with 31 PMTs (PhotoMultiplier Tube). They are laid in Detection Units (DUs), forming vertical lines of 18 DOMs each. 
-This DUs are placed on the seabed with specific patterns for KM3NeT/ARCA and KM3NeT/ORCA. In addition to the DUs pattern, the detectors differs also by their inter-DOM spacing: KM3NeT/ARCA design is optimized for neutrino detection with energies above the TeV, while KM3NeT/ORCA is bested suited for the GeV-TeV energy range.
+Both detectors are 3D arrays of Digital Optical Modules (DOMs), sharing the same hardware components. The DOMs are individually equipped with 31 photomultiplier tubes (PMTs). They are arranged in Detection Units (DUs), forming vertical lines of 18 DOMs each. 
+These DUs are placed on the seabed with specific patterns for KM3NeT/ARCA and KM3NeT/ORCA. In addition to the DUs pattern, the detectors also differs in their inter-DOM spacing: KM3NeT/ARCA design is optimized for neutrino detection with energies above the TeV, while KM3NeT/ORCA is bested suited for the GeV-TeV energy range.
 
-In its final configuration, KM3NeT/ORCA will reach a 7 kton scale with 112 (DUs) and KM3NeT/ARCA will be instrumenting a kilometer-cube volume of sea water with 230 DUs.
-KM3NeT/ARCA detection capabilities should reach an energy resoltion of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024).](https://doi.org/10.1140/epjc/s10052-024-13137-2). 
+In its final configuration, KM3NeT/ORCA will reach a 7 kton scale with 112 (DUs) and KM3NeT/ARCA will instrument a cubic kilometer volume of sea water with 230 DUs.
+KM3NeT/ARCA detection capabilities should reach an energy resolution of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024).](https://doi.org/10.1140/epjc/s10052-024-13137-2). 
 
 Currently (early 2026), the detectors are under construction and the data-taking is carried out by 51 DUs for KM3NeT/ARCA and 33 for KM3NeT/ORCA. This configuration exhibits sub-degree resolution above 1 TeV and below 0.3º above 100 TeV.
 
-An autonomous real-time analysis system reconstruct and classify data, then identify potential astrophysical events according to the two following implemented methods (for more details, see [PoS(ICRC2025)920](https://doi.org/10.22323/1.501.0920)):
-- A "High-Energy neutrino" search, prioritizing candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
-- A "multiplet" search, looking for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
+An autonomous real-time analysis system reconstructs and classifies data, then identifies potential astrophysical events according to the two following implemented methods (for more details, see [PoS(ICRC2025)920](https://doi.org/10.22323/1.501.0920)):
+- A "High-Energy neutrino" search, prioritizes candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
+- A "multiplet" search, looks for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
 
-Only track-like events are used in this real-time analysis (may be subject to future changes), as they gives the best angular resolution.
+Only track-like events are used in this real-time analysis (may be subject to future changes), as they provide the best angular resolution.
 
 To mitigate the cosmic-ray background, only up-going and horizontal tracks (dz > -0.1) are selected.
 
