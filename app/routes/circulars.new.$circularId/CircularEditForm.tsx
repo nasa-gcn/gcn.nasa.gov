@@ -234,8 +234,8 @@ export function CircularEditForm({
                 <InputPrefix className="wide-input-prefix">
                   Event ID
                 </InputPrefix>
-                <span className="padding-1">{defaultEventId}</span>
-                <input type="hidden" name="eventId" value={defaultEventId} />
+                <span className="padding-1">{derivedEventId}</span>
+                <input type="hidden" name="eventId" value={derivedEventId} />
               </InputGroup>
             ) : (
               <InputGroup className="maxw-full">
@@ -261,7 +261,8 @@ export function CircularEditForm({
               label={
                 <>
                   Automatically fill event ID from subject
-                  {defaultEventId !== derivedEventId &&
+                  {!linkEventId &&
+                    eventId !== derivedEventId &&
                     '. The event ID does not match.'}
                 </>
               }
