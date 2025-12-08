@@ -5,7 +5,7 @@ handle:
 
 import { feature } from '~/lib/env.server'
 
-import logo from './logo.png'
+import logo from './KM3NeT_logo_web_long_no_text.png'
 
 export async function loader() {
   if (!feature('KM3NeT')) throw new Response(null, { status: 404 })
@@ -25,27 +25,37 @@ export async function loader() {
 
 **Commission Date:** January 2022
 
-**Data Archive:** [KM3NeT archive](https://code.deepsynoptic.org/dsa110-archive/)
+**Data Archive:** [KM3NeT archive](https://opendata.km3net.de/)
 
-The [Deep Synoptic Array-110 (KM3NeT)](https://www.deepsynoptic.org/instrument) is a radio interferometer purpose-built for fast radio burst (FRB) detection and direct localization. The array is located at the [Owens Valley Radio Observatory (OVRO)](https://www.ovro.caltech.edu) comprised of 96 4.65-m dishes that continuously survey for FRBs at frequencies between 1280 - 1530 MHz. Over a three-year science program, the KM3NeT will deliver a sample of more than 300 FRBs localized to regions smaller than 3 arcseconds (< 1/1000 of a degree) on the sky. This is made possible by a suite of novel instrumentation, including precisely engineered antennas, ultra-low noise ambient-temperature receivers, and a powerful real-time, autonomous data-analysis system.
+The [Kilometer Cube Neutrino Telescope (KM3NeT)](https://www.km3net.org/) is an underwater neutrino observatory, composed by two detectors, KM3NeT/ARCA (Astrophysic Research with Cosmic in the Abyss) and KM3NeT/ORCA (Oscillation Research with Cosmic in the Abyss). They are located respectively offshore of Sicily (It) and offshore of Toulon (Fr), with maximal depth of -3500 m and -2500 m. 
 
-<div className="overflow-table">
+Both detectors are 3D arrays of Digital Optical Modules (DOMs), sharing the same hardware components. The DOMs are individually equiped with 31 PMTs (PhotoMultiplier Tube). They are laid in Detection Units (DUs), forming vertical lines of 18 DOMs each. 
+This DUs are placed on the seabed with specific patterns for KM3NeT/ARCA and KM3NeT/ORCA. In addition to the DUs pattern, the detectors differs also by their inter-DOM spacing: KM3NeT/ARCA design is optimized for neutrino detection with energies above the TeV, while KM3NeT/ORCA is bested suited for the GeV-TeV energy range.
 
-| Instruments | Energy Range    | Field of View       | Localization |
-| ----------- | --------------- | ------------------- | ------------ |
-| KM3NeT     | 1280 - 1530 MHz | ~10 deg<sup>2</sup> | ~3 arcsec    |
+In its final configuration, KM3NeT/ORCA will reach a 7 kton scale with 112 (DUs) and KM3NeT/ARCA will be instrumenting a kilometer-cube volume of sea water with 230 DUs.
+KM3NeT/ARCA detection capabilities should reach an energy resoltion of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024).](https://doi.org/10.1140/epjc/s10052-024-13137-2). 
 
-</div>
+Currently (early 2026), the detectors are under construction and the data-taking is carried out by 51 DUs for KM3NeT/ARCA and 33 for KM3NeT/ORCA.
+
+An autonomous real-time analysis system reconstruct and classify data, then identify potential astrophysical events according to the two following implemented methods:
+- A "High-Energy neutrino" search, prioritizing candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
+- A "multiplet" search, looking for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
+Only track-like events are used in this real-time analysis (may be subject to future changes), as they gives the best angular resolution.
+To mitigate the cosmic-ray background, only up-going and horizontal tracks (dz > -0.1) are selected.
+
+The direction error is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed neutrinos.
+Each method compute a False Alarm Rate (FAR) for all event candidates passing a preselection filter. If this FAR is below a threshold of 3.9E-7 (one per month), an alert is issued. 
 
 **JSON-Serialized GCN Notices Types in GCN Kafka**
 
-KM3NeT [GCN schema](/schema/stable/gcn/notices/dsa110.frb.schema.json) and example JSON messages ([detection](/schema/stable/gcn/notices/dsa110/frb.detection.example.json), [update](/schema/stable/gcn/notices/dsa110/frb.detection.example.json), [retraction](/schema/stable/gcn/notices/dsa110/frb.retraction.example.json), [subsequent](/schema/stable/gcn/notices/dsa110/frb.subsequent.example.json)]) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/dsa110/frb.schema.json) for more information on the properties defined in the schema. Detailed description and examples of KM3NeT Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/dsa110).
+KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and example JSON messages ([detection](/schema/stable/gcn/notices/km3net/alert.example.json), [detection](/schema/stable/gcn/notices/km3net/alert.multiplet.example.json)) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/km3net/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of KM3NeT Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/km3net).
 
 <div className="overflow-table">
 
-| Type                     | Contents                                                                 | Latency |
-| ------------------------ | ------------------------------------------------------------------------ | ------- |
-| `gcn.notices.dsa110.frb` | Localization, time of arrival, dispersion measure, signal-to-noise ratio | ~1 min  |
+| Type                         | Contents                                                                                           | Latency |
+| ---------------------------- | -------------------------------------------------------------------------------------------------- | ------- |
+| `gcn.notices.km3net`         | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
+| `gcn.notices.km3net.voevent` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
 
 </div>
 
@@ -53,9 +63,9 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/dsa110.frb.schema.json) and examp
 
 <div className="overflow-table">
 
-| Instrument | Type              | Rates |
-| ---------- | ----------------- | ----- |
-| KM3NeT    | High-Energy Neutrino | ~25   |
-| KM3NeT    | Neutrino Multiplet | ~25   |
+| Instrument | Type                 | Rates |
+| ---------- | -------------------- | ----- |
+| KM3NeT     | High-Energy Neutrino | ~25   |
+| KM3NeT     | Neutrino Multiplet   | ~25   |
 
 </div>
