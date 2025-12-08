@@ -35,20 +35,24 @@ This DUs are placed on the seabed with specific patterns for KM3NeT/ARCA and KM3
 In its final configuration, KM3NeT/ORCA will reach a 7 kton scale with 112 (DUs) and KM3NeT/ARCA will be instrumenting a kilometer-cube volume of sea water with 230 DUs.
 KM3NeT/ARCA detection capabilities should reach an energy resoltion of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024).](https://doi.org/10.1140/epjc/s10052-024-13137-2). 
 
-Currently (early 2026), the detectors are under construction and the data-taking is carried out by 51 DUs for KM3NeT/ARCA and 33 for KM3NeT/ORCA.
+Currently (early 2026), the detectors are under construction and the data-taking is carried out by 51 DUs for KM3NeT/ARCA and 33 for KM3NeT/ORCA. This configuration exhibits sub-degree resolution above 1 TeV and below 0.3º above 100 TeV.
 
-An autonomous real-time analysis system reconstruct and classify data, then identify potential astrophysical events according to the two following implemented methods:
+An autonomous real-time analysis system reconstruct and classify data, then identify potential astrophysical events according to the two following implemented methods (for more details, see [PoS(ICRC2025)920](https://doi.org/10.22323/1.501.0920)):
 - A "High-Energy neutrino" search, prioritizing candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
 - A "multiplet" search, looking for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
+
 Only track-like events are used in this real-time analysis (may be subject to future changes), as they gives the best angular resolution.
+
 To mitigate the cosmic-ray background, only up-going and horizontal tracks (dz > -0.1) are selected.
 
-The direction error is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed neutrinos.
+The detector used for the real-time reconstruction is a static one, not taking into account the movement induced by the sea currents, therefore adding an additional error to the angular resolution of the alerts (a time/position calibration of the DOMs in real-time is under implementation).
+To account for all the systematics, the direction error is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed neutrinos. These simulations are done using minimal and maximal water properties for static detector in vertical as well as maximally shifted detector.
+
 Each method compute a False Alarm Rate (FAR) for all event candidates passing a preselection filter. If this FAR is below a threshold of 3.9E-7 (one per month), an alert is issued. 
 
 **JSON-Serialized GCN Notices Types in GCN Kafka**
 
-KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and example JSON messages ([detection](/schema/stable/gcn/notices/km3net/alert.example.json), [detection](/schema/stable/gcn/notices/km3net/alert.multiplet.example.json)) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/km3net/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of KM3NeT Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/km3net).
+KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and example JSON messages ([High-Energy detection](/schema/stable/gcn/notices/km3net/alert.example.json), [Multiplet detection](/schema/stable/gcn/notices/km3net/alert.multiplet.example.json)) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/km3net/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of KM3NeT Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/km3net).
 
 <div className="overflow-table">
 
