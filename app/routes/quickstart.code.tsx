@@ -22,7 +22,7 @@ export const handle: BreadcrumbHandle & SEOHandle = {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const { clientId, noticeFormat, ...rest } = Object.fromEntries(
+  const { clientId, noticeFormat, groupType, ...rest } = Object.fromEntries(
     new URL(request.url).searchParams
   )
   const noticeTypes = Object.keys(rest)
@@ -31,6 +31,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return {
     noticeFormat,
     noticeTypes,
+    groupType,
     ...clientCredentialProps,
   }
 }
@@ -42,6 +43,7 @@ export default function () {
     client_secret: clientSecret,
     noticeFormat,
     noticeTypes,
+    groupType,
   } = useLoaderData<typeof loader>()
 
   const topics = noticeTypes.map((noticeType) =>
@@ -57,42 +59,49 @@ export default function () {
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="py"
+            groupType={groupType}
           />
         </Tab>
         <Tab label="Node.js (ESM)">
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="mjs"
+            groupType={groupType}
           />
         </Tab>
         <Tab label="Node.js (CommonJS)">
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="cjs"
+            groupType={groupType}
           />
         </Tab>
         <Tab label="C/C++">
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="c"
+            groupType={groupType}
           />
         </Tab>
         <Tab label="C#">
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="cs"
+            groupType={groupType}
           />
         </Tab>
         <Tab label="Java">
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="java"
+            groupType={groupType}
           />
         </Tab>
         <Tab label="PySpark">
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
             language="pyspark"
+            groupType={groupType}
           />
         </Tab>
       </Tabs>
