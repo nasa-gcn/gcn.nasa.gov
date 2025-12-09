@@ -137,10 +137,10 @@ export function CircularEditForm({
   const [linkEventId, setLinkEventId] = useState(
     originalEventId === derivedEventId
   )
-  const [defaultEventId, setDefaultEventId] = useState(
-    originalEventId || derivedEventId
+  const [eventId, setEventId] = useState(
+    linkEventId ? derivedEventId : originalEventId
   )
-  const [eventId, setEventId] = useState(defaultEventId)
+  const defaultEventId = linkEventId ? derivedEventId : eventId
   const submitterValid = circularId ? submitterIsValid(submitter) : true
   const bodyValid = bodyIsValid(body)
   const sending = Boolean(useNavigation().formData)
@@ -216,7 +216,7 @@ export function CircularEditForm({
             required
             onChange={({ target: { value } }) => {
               setSubject(value)
-              setDefaultEventId(parseEventFromSubject(value))
+              if (linkEventId) setEventId(parseEventFromSubject(value))
             }}
           />
         </InputGroup>
@@ -235,7 +235,7 @@ export function CircularEditForm({
                   Event ID
                 </InputPrefix>
                 <span className="padding-1">{derivedEventId}</span>
-                <input type="hidden" name="eventId" value={eventId} />
+                <input type="hidden" name="eventId" value={derivedEventId} />
               </InputGroup>
             ) : (
               <InputGroup className="maxw-full">
@@ -261,14 +261,14 @@ export function CircularEditForm({
               label={
                 <>
                   Automatically fill event ID from subject
-                  {eventId !== derivedEventId &&
+                  {!linkEventId &&
+                    eventId !== derivedEventId &&
                     '. The event ID does not match.'}
                 </>
               }
               checked={linkEventId}
-              onChange={({ target: { checked } }) => {
-                setLinkEventId(checked)
-                setDefaultEventId(derivedEventId)
+              onChange={() => {
+                setLinkEventId(!linkEventId)
                 setEventId(derivedEventId)
               }}
             />
