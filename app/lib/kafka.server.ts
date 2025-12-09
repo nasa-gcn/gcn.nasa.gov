@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-// import { tables } from '@architect/functions'
 import { Kafka, KafkaJSError } from 'gcn-kafka'
 import type { AclEntry } from 'kafkajs'
 import {
