@@ -268,10 +268,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Super-Kamiokande JSON Notices and Schema v4.5.0. See{' '}
+          New! DSA-110 FRB Notices and Schema v6.0.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-super-kamiokande-json-notices"
+            to="/news#dsa-110-frb-json-notices-and-schema-v600"
           >
             news and announcements
           </Link>
