@@ -7,32 +7,26 @@ import { feature } from '~/lib/env.server'
 
 import logo from './logo.png'
 
-export async function loader() {
-  if (!feature('BLACKCAT')) throw new Response(null, { status: 404 })
-  return null
-}
-
 # BlackCAT CubeSat
 
 <img
   src={logo}
   align="right"
-  width="990"
-  height="765"
+  width="1500"
+  height="1200"
   alt="BlackCAT logo"
   className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
 />
 
-**Launch Date:** As early as Jan 2026  
-
+**Launch Date:** As early as Jan 2026
 
 **Mission Duration:** ~1 year (with possible extension)
 
-The **Black hole Coded Aperture Telescope (BlackCAT)** is a NASA-funded **6U CubeSat mission** led by **Pennsylvania State University**. BlackCAT is designed to monitor the **soft X-ray sky (0.5 - 20 keV)** with a wide field of view, enabling the rapid detection and localization of high-energy transients.
+The Black hole Coded Aperture Telescope (BlackCAT) is a NASA-funded 6U CubeSat mission led by Pennsylvania State University. BlackCAT is designed to monitor the soft X-ray sky (0.5 - 20 keV) with a wide field of view, enabling the rapid detection and localization of high-energy transients.
 
-The primary science objective of BlackCAT is the discovery of **high-redshift gamma-ray bursts (GRBs)**, which serve as probes of star formation, metal enrichment, and reionization in the early Universe. Sensitivity in the soft X-ray band provides an intrinsic advantage for detecting distant GRBs whose spectra are redshifted out of the gamma-ray regime. BlackCAT also functions as a wide field X-ray transient monitor, providing rapid alerts for multiwavelength and multimessenger follow-up.
+The primary science objective of BlackCAT is the discovery of high-redshift gamma-ray bursts (GRBs), which serve as probes of star formation, metal enrichment, and reionization in the early Universe. Sensitivity in the soft X-ray band provides an intrinsic advantage for detecting distant GRBs whose spectra are redshifted out of the gamma-ray regime. BlackCAT also functions as a wide field X-ray transient monitor, providing rapid alerts for multiwavelength and multimessenger follow-up.
 
-The science instrument is designed, built, and calibrated by **Penn State**, while the spacecraft bus is provided by **Kongsberg NanoAvionics US**.
+The science instrument is designed, built, and calibrated by Penn State, while the spacecraft bus is provided by Kongsberg NanoAvionics US.
 
 <div className="overflow-table">
 
