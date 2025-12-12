@@ -33,8 +33,3 @@ setup('wait for OpenSearch to be up', async () => {
   setup.setTimeout(60000)
   await waitPort({ port: 9200, protocol: 'http', output: 'silent' })
 })
-
-setup('wait for web server to be up', async () => {
-  setup.setTimeout(60000)
-  await waitPort({ port: 3333, protocol: 'http', output: 'silent' })
-})

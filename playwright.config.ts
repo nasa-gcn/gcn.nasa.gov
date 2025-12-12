@@ -76,7 +76,7 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3333',
+    port: 3333,
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
     timeout: 300 * 1000, // 300 Seconds timeout on webServer
