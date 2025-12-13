@@ -41,21 +41,21 @@ Currently (early 2026), the detectors are under construction and the data-taking
 ### Alert generation
 
 An autonomous real-time analysis system reconstructs and classifies data, then identifies potential astrophysical events according to the two following implemented methods (for more details, see [PoS(ICRC2025)920](https://doi.org/10.22323/1.501.0920)):
-- A "High-Energy neutrino" search, prioritizes candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
-- A "multiplet" search, looks for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
+- A **"High-Energy neutrino" search**, prioritizes candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
+- A **"multiplet" search**, looks for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
 
-Each method compute a False Alarm Rate (FAR) for all event candidates passing a preselection filter. If this FAR is below a threshold of 3.9E-7 (one per month), an alert is issued. 
+Each method **compute a False Alarm Rate (FAR)** for all event candidates passing a preselection filter. If this FAR is below a threshold of 3.9E-7 (one per month), an alert is issued. 
 
 Only track-like events are used in this real-time analysis (may be subject to future changes), as they provide the best angular resolution.
 
-The error region is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed neutrino. To account for all the systematics, these simulations are done using minimal and maximal water properties for static detector with vertical and maximally tilted lines.
+The **error region** is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed neutrino. To account for all the systematics, these simulations are done using minimal and maximal water properties for static detector with vertical and maximally tilted lines.
 To account for the neutrino scattering angle, each simulated event is used as a seed to generate an additional list of event, gaussiannlly distributed with a standard deviation of 1◦/(E/TeV)^0.55.
 The areas containing 50%, 68% and 90% of the events are used to define contours that are reported in the alert.
 
-The 50%, 68% and 90% contours are used to produce a HEALPix skymap, distributed as a fits file. The value of each pixel of this map is the probability per square degrees. 
+The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file. The value of each pixel of this map is the probability per square degrees. 
 
 
-Finally, after having identified an interesting neutrino candidate and computed its errors contours, we run a search for astrophysical counterparts. We look for Blazars, GRBs, TDEs and 𝜇Quasars in the 90% error region of our alert candidate, cross-checking the results of 4FGL, TeVCat, XRB, Rosat and RFC catalogs. Each source is ranked based on its distance to the alert, the flux reported in the catalog and eventual timing information.
+Finally, after having identified an interesting neutrino candidate and computed its errors contours, we run a **search for astrophysical counterparts**. We look for Blazars, GRBs, TDEs and 𝜇Quasars in the 90% error region of our alert candidate, cross-checking the results of 4FGL, TeVCat, XRB, Rosat and RFC catalogs. Each source is ranked based on its distance to the alert, the flux reported in the catalog and eventual timing information.
 If this counterpart search is not done, the flag "potential_counterpart" is set at "No Search", if it is done but returns no result, the flag is set at "false". If counterparts are founds, that flag is set at "true.
 In this latter case, the list of sources is reported in the alert under "counterpart_info".
 
