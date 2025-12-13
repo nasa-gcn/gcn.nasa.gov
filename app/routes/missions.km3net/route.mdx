@@ -23,7 +23,7 @@ export async function loader() {
   className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
 />
 
-**Commission Date:** January 2022
+**Alert system commission date:** January 2026
 
 **Data Archive:** [KM3NeT archive](https://opendata.km3net.de/)
 
@@ -36,6 +36,9 @@ In its final configuration, KM3NeT/ORCA will reach a 7 kton scale with 112 (DUs)
 KM3NeT/ARCA detection capabilities should reach an energy resolution of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024).](https://doi.org/10.1140/epjc/s10052-024-13137-2). 
 
 Currently (early 2026), the detectors are under construction and the data-taking is carried out by 51 DUs for KM3NeT/ARCA and 33 for KM3NeT/ORCA. This configuration exhibits sub-degree resolution above 1 TeV and below 0.3º above 100 TeV.
+
+
+### Alert generation
 
 An autonomous real-time analysis system reconstructs and classifies data, then identifies potential astrophysical events according to the two following implemented methods (for more details, see [PoS(ICRC2025)920](https://doi.org/10.22323/1.501.0920)):
 - A "High-Energy neutrino" search, prioritizes candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
@@ -56,7 +59,10 @@ Finally, after having identified an interesting neutrino candidate and computed 
 If this counterpart search is not done, the flag "potential_counterpart" is set at "No Search", if it is done but returns no result, the flag is set at "false". If counterparts are founds, that flag is set at "true.
 In this latter case, the list of sources is reported in the alert under "counterpart_info".
 
-**JSON-Serialized GCN Notices Types in GCN Kafka**
+### GCN notice types
+Notices are distributed both as JSON and VOEvent.
+
+#### JSON-Serialized GCN Notices Types in GCN Kafka
 
 KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and example JSON messages ([High-Energy detection](/schema/stable/gcn/notices/km3net/alert.example.json), [Multiplet detection](/schema/stable/gcn/notices/km3net/alert.multiplet.example.json)) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/km3net/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of KM3NeT Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/km3net).
 
@@ -65,11 +71,21 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and exa
 | Type                         | Contents                                                                                           | Latency |
 | ---------------------------- | -------------------------------------------------------------------------------------------------- | ------- |
 | `gcn.notices.km3net`         | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
-| `gcn.notices.km3net.voevent` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
 
 </div>
 
-**Yearly Trigger Rates:**
+
+#### VOEvent XML-serialized GCN notice types
+
+ <div className="overflow-table">
+| Type                         | Contents                                                                                           | Latency |
+| ---------------------------- | -------------------------------------------------------------------------------------------------- | ------- |
+| `gcn.notices.km3net.voevent` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
+ </div>
+
+### Yearly Trigger Rates:
+
+The threshold for issuing and alert is set at FAR=3.9E-7 Hz.
 
 <div className="overflow-table">
 
