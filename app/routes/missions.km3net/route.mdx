@@ -48,8 +48,8 @@ Each method **compute a False Alarm Rate (FAR)** for all event candidates passin
 
 Only track-like events are used in this real-time analysis (may be subject to future changes), as they provide the best angular resolution.
 
-The **error region** is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed neutrino. To account for all the systematics, these simulations are done using minimal and maximal water properties for static detector with vertical and maximally tilted lines.
-To account for the neutrino scattering angle, each simulated event is used as a seed to generate an additional list of event, gaussiannlly distributed with a standard deviation of 1◦/(E/TeV)^0.55.
+The **error region** is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed muon. To account for all the systematics, these simulations are done using minimal and maximal water properties for static detector with vertical and maximally tilted lines.
+To account for the neutrino scattering angle, each simulated event is used as a seed to generate an additional list of event, gaussiannlly distributed with a standard deviation of [0.7º/(E_mu[TeV])^0.7](https://www.annualreviews.org/content/journals/10.1146/annurev.nucl.50.1.679).
 The areas containing 50%, 68% and 90% of the events are used to define contours that are reported in the alert.
 
 The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file. The value of each pixel of this map is the probability per square degrees. 
