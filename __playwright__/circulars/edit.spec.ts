@@ -83,6 +83,9 @@ test.describe('Circulars edit page', () => {
     await page
       .locator('#subject')
       .fill(testSubject.replace(newEventId, originalEventId))
+    await page
+      .getByRole('button', { name: 'Save as New Version' })
+      .click({ timeout: 10000 })
     await page.waitForURL('/circulars?index')
     await page.goto(`/circulars/${eventIdTestsCircular.circularId}`)
     await expect(
