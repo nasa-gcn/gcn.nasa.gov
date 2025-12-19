@@ -63,7 +63,7 @@ If this counterpart search is not done, the flag "potential_counterpart" is set 
 In this latter case, the list of sources is reported in the alert under "counterpart_info".
 
 ### GCN notice types
-Notices are distributed both as JSON and VOEvent.
+Notices are distributed both as JSON and VOEvent. Note that VOEvent notices content may be less contains only the alert related information.
 
 #### JSON-Serialized GCN Notices Types in GCN Kafka
 
@@ -87,6 +87,181 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and exa
 | `gcn.notices.km3net.voevent` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
 
  </div>
+
+<details>
+    <summary>`Single HE event`</summary>
+    ```xml
+<?xml version='1.0' encoding='UTF-8'?>
+<voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd" version="2.0" role="observation" ivorn="ivo://KM3NeT_Neutrino#KM3-240901A_1_2024-09-01T12:01:00.00Z">
+  <Who>
+    <Description>VOEvent created with voevent-parse, version 1.0.3. See https://github.com/timstaley/voevent-parse for details.</Description>
+    <Date>2024-09-01T12:01:00+00:00</Date>
+    <Author>
+      <title>KM3NeT real-time Alert System</title>
+      <contactName>KM3NeT Astro WG</contactName>
+      <contactEmail>online@km3net.de</contactEmail>
+    </Author>
+  </Who>
+  <What>
+    <Param name="TrigID" value="1" ucd="meta.id"/>
+    <Param name="record_number" value="1" ucd="meta.id" dataType="int"/>
+    <Param name="Event_Name" value="KM3-240901A" ucd="meta.id"/>
+    <Param name="Instrument" value="ORCA024"/>
+    <Param name="Pipeline" value="orca_HE"/>
+    <Param name="Alert_Type" value="initial"/>
+    <Param name="Alert_Tense" value="current"/>
+    <Param name="FAR" value="8.029e-08" unit="yr^-1" ucd="stat.probability" dataType="float"/>
+    <Param name="healpix_url" value="https://opendata.km3net.de/" ucd="meta.ref.url"/>
+    <Param name="src_error_90" value="0.9" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="src_error_50" value="0.49" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="alert_topology" value="Track" ucd="meta"/>
+    <Param name="N_events" value="1" ucd="meta.number" dataType="int"/>
+    <Group name="Nu_Event_1">
+      <Param name="id" value="km3.234.23492.58968.763" ucd="meta"/>
+      <Param name="trigger_time" value="2024-09-01T01:16:47.0Z" ucd="meta"/>
+      <Param name="ra" value="10.82" ucd="meta" dataType="float"/>
+      <Param name="dec" value="20.01" ucd="meta" dataType="float"/>
+      <Param name="ra_dec_error" value="0.9" ucd="meta" dataType="float"/>
+      <Param name="cos_zenith" value="0.01" ucd="meta" dataType="float"/>
+      <Param name="prob_evt_topology" value="track" ucd="meta"/>
+      <Param name="energy_measured" value="120000.0" ucd="meta" dataType="float"/>
+    </Group>
+    <Param name="potential_counterpart" value="False" ucd="meta.code" dataType="string"/>
+  </What>
+  <WhereWhen>
+    <ObsDataLocation>
+      <ObservatoryLocation id="GEOLUN"/>
+      <ObservationLocation>
+        <AstroCoordSystem id="UTC-ICRS-GEO"/>
+        <AstroCoords coord_system_id="UTC-ICRS-GEO">
+          <Time unit="s">
+            <TimeInstant>
+              <ISOTime>2024-09-01T01:16:47</ISOTime>
+            </TimeInstant>
+          </Time>
+          <Position2D unit="deg">
+            <Name1>RA</Name1>
+            <Name2>Dec</Name2>
+            <Value2>
+              <C1>10.82</C1>
+              <C2>20.01</C2>
+            </Value2>
+            <Error2Radius>0.9</Error2Radius>
+          </Position2D>
+        </AstroCoords>
+      </ObservationLocation>
+    </ObsDataLocation>
+  </WhereWhen>
+  <Description>KM3NeT candidate neutrino observation, real-time alert distributed via GCN.</Description>
+  <How>
+    <Description>GCN</Description>
+    <Reference uri="https://gcn.nasa.gov/missions/km3net"/>
+    <Reference uri="https://opendata.km3net.de/"/>
+  </How>
+  <Why>
+    <Description>Event with FAR below the KM3NeT alert publication threshold.</Description>
+  </Why>
+</voe:VOEvent>
+    ```
+</details>
+<br/>
+
+<details>
+    <summary>`Multiplet event`</summary>
+    ```xml
+<?xml version='1.0' encoding='UTF-8'?>
+<voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd" version="2.0" role="observation" ivorn="ivo://KM3NeT_Neutrino#KM3-240901B_2_2025-01-01T12:01:00.00Z">
+  <Who>
+    <Description>VOEvent created with voevent-parse, version 1.0.3. See https://github.com/timstaley/voevent-parse for details.</Description>
+    <Date>2025-01-01T12:01:00+00:00</Date>
+    <Author>
+      <title>KM3NeT real-time Alert System</title>
+      <contactName>KM3NeT Astro WG</contactName>
+      <contactEmail>online@km3net.de</contactEmail>
+    </Author>
+  </Who>
+  <What>
+    <Param name="TrigID" value="2" ucd="meta.id"/>
+    <Param name="record_number" value="1" ucd="meta.id" dataType="int"/>
+    <Param name="Event_Name" value="KM3-240901B" ucd="meta.id"/>
+    <Param name="Instrument" value="ARCA021"/>
+    <Param name="Pipeline" value="multiplet_arca"/>
+    <Param name="Alert_Type" value="initial"/>
+    <Param name="Alert_Tense" value="current"/>
+    <Param name="FAR" value="8.029e-08" unit="yr^-1" ucd="stat.probability" dataType="float"/>
+    <Param name="healpix_url" value="https://opendata.km3net.de/" ucd="meta.ref.url"/>
+    <Param name="src_error_90" value="0.41" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="src_error_50" value="0.225" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="alert_topology" value="Multiplet" ucd="meta"/>
+    <Param name="N_events" value="2" ucd="meta.number" dataType="int"/>
+    <Group name="Nu_Event_1">
+      <Param name="id" value="km3.234.22488.72853.13018" ucd="meta"/>
+      <Param name="trigger_time" value="2025-01-01T11:56:07.0Z" ucd="meta"/>
+      <Param name="ra" value="13.79" ucd="meta" dataType="float"/>
+      <Param name="dec" value="18.56" ucd="meta" dataType="float"/>
+      <Param name="ra_dec_error" value="0.69" ucd="meta" dataType="float"/>
+      <Param name="cos_zenith" value="0.01" ucd="meta" dataType="float"/>
+      <Param name="prob_evt_topology" value="track" ucd="meta"/>
+      <Param name="energy_measured" value="120000.0" ucd="meta" dataType="float"/>
+    </Group>
+    <Group name="Nu_Event_2">
+      <Param name="id" value="km3.234.23492.58959.787" ucd="meta"/>
+      <Param name="trigger_time" value="2025-01-01T01:16:47.0Z" ucd="meta"/>
+      <Param name="ra" value="13.82" ucd="meta" dataType="float"/>
+      <Param name="dec" value="19.01" ucd="meta" dataType="float"/>
+      <Param name="ra_dec_error" value="0.52" ucd="meta" dataType="float"/>
+      <Param name="cos_zenith" value="-0.02" ucd="meta" dataType="float"/>
+      <Param name="prob_evt_topology" value="shower" ucd="meta"/>
+      <Param name="energy_measured" value="120000.0" ucd="meta" dataType="float"/>
+    </Group>
+    <Param name="potential_counterpart" value="True" ucd="meta.code" dataType="string"/>
+    <Group name="Counterpart_1">
+      <Param name="name" value="SourceName" ucd="meta"/>
+      <Param name="reference" value="{'url': 'url to catalog or notice'}" ucd="meta"/>
+      <Param name="ra" value="13.0" ucd="meta"/>
+      <Param name="dec" value="19.5" ucd="meta"/>
+      <Param name="angular_distance" value="1.004" ucd="meta"/>
+      <Param name="trigger_time" value="2024-12-31T09:56:15.0Z" ucd="meta"/>
+    </Group>
+  </What>
+  <WhereWhen>
+    <ObsDataLocation>
+      <ObservatoryLocation id="GEOLUN"/>
+      <ObservationLocation>
+        <AstroCoordSystem id="UTC-ICRS-GEO"/>
+        <AstroCoords coord_system_id="UTC-ICRS-GEO">
+          <Time unit="s">
+            <TimeInstant>
+              <ISOTime>2025-01-01T01:16:47</ISOTime>
+            </TimeInstant>
+          </Time>
+          <Position2D unit="deg">
+            <Name1>RA</Name1>
+            <Name2>Dec</Name2>
+            <Value2>
+              <C1>13.81</C1>
+              <C2>18.85</C2>
+            </Value2>
+            <Error2Radius>0.41</Error2Radius>
+          </Position2D>
+        </AstroCoords>
+      </ObservationLocation>
+    </ObsDataLocation>
+  </WhereWhen>
+  <Description>KM3NeT candidate neutrino observation, real-time alert distributed via GCN.</Description>
+  <How>
+    <Description>GCN</Description>
+    <Reference uri="https://gcn.nasa.gov/missions/km3net"/>
+    <Reference uri="https://opendata.km3net.de/"/>
+  </How>
+  <Why>
+    <Description>Event with FAR below the KM3NeT alert publication threshold.</Description>
+  </Why>
+</voe:VOEvent>
+
+    ```
+</details>
+
 
 ### Yearly Trigger Rates:
 
