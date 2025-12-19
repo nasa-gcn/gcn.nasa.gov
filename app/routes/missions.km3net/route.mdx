@@ -58,7 +58,7 @@ The areas containing 50%, 68% and 90% of the events are used to define contours 
 The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file. The value of each pixel of this map is the probability per square degrees. 
 
 
-Finally, after having identified an interesting neutrino candidate and computed its errors contours, we run a **search for astrophysical counterparts**. We look for Blazars, GRBs, TDEs and 𝜇Quasars in the 90% error region of our alert candidate, cross-checking the results of 4FGL, TeVCat, XRB, Rosat and RFC catalogs. Each source is ranked based on its distance to the alert, the flux reported in the catalog and eventual timing information.
+Finally, after having identified an interesting neutrino candidate and computed its errors contours, we run a **search for astrophysical counterparts**. We look for Blazars, GRBs, TDEs and microquasars in the 90% error region of our alert candidate, cross-checking the results of 4FGL, TeVCat, XRB, Rosat and RFC catalogs. Each source is ranked based on its distance to the alert, the flux reported in the catalog and eventual timing information.
 If this counterpart search is not done, the flag "potential_counterpart" is set at "No Search", if it is done but returns no result, the flag is set at "false". If counterparts are founds, that flag is set at "true.
 In this latter case, the list of sources is reported in the alert under "counterpart_info".
 
