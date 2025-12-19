@@ -27,7 +27,7 @@ export async function loader() {
 
 **Data Archive:** [KM3NeT archive](https://opendata.km3net.de/)
 
-**Extended Documentation:** [KM3NeT Real-Time Activities webpage (in construction)]()
+**Extended Documentation:** [KM3NeT Real-Time Activities webpage (in construction)](https://open-data.pages.km3net.de/openscienceportal//docs/systems/computing/cc_services/online)
 
 The [Kilometer Cube Neutrino Telescope (KM3NeT)](https://www.km3net.org/) is an underwater neutrino observatory, composed of two detectors, KM3NeT/ARCA (Astrophysic Research with Cosmic in the Abyss) and KM3NeT/ORCA (Oscillation Research with Cosmic in the Abyss). They are located respectively offshore of Sicily (It) and offshore of Toulon (Fr), with maximal depth of -3500 m and -2500 m. 
 KM3NeT will search for neutrinos from astrophysical sources such as supernovae, gamma ray bursters, colliding stars and other interesting transient as steady sources.
@@ -55,7 +55,7 @@ The **error region** is computed from the distribution of simulated muons, with 
 To account for the neutrino scattering angle, each simulated event is used as a seed to generate an additional list of event, gaussiannlly distributed with a standard deviation of [0.7º/(E_mu[TeV])^0.7](https://www.annualreviews.org/content/journals/10.1146/annurev.nucl.50.1.679).
 The areas containing 50%, 68% and 90% of the events are used to define contours that are reported in the alert.
 
-The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file. The value of each pixel of this map is the probability per square degrees. 
+The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file, accessuble through URL link. The value of each pixel of this map is the probability per square degrees. 
 
 
 Finally, after having identified an interesting neutrino candidate and computed its errors contours, we run a **search for astrophysical counterparts**. We look for Blazars, GRBs, TDEs and microquasars in the 90% error region of our alert candidate, cross-checking the results of 4FGL, TeVCat, XRB, Rosat and RFC catalogs. Each source is ranked based on its distance to the alert, the flux reported in the catalog and eventual timing information.
@@ -89,8 +89,8 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and exa
  </div>
 
 <details>
-    <summary>`Single HE event`</summary>
-    ```xml
+<summary>`Single HE event`</summary>
+```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd" version="2.0" role="observation" ivorn="ivo://KM3NeT_Neutrino#KM3-240901A_1_2024-09-01T12:01:00.00Z">
   <Who>
@@ -162,13 +162,13 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and exa
     <Description>Event with FAR below the KM3NeT alert publication threshold.</Description>
   </Why>
 </voe:VOEvent>
-    ```
+```
 </details>
 <br/>
 
 <details>
-    <summary>`Multiplet event`</summary>
-    ```xml
+<summary>`Multiplet event`</summary>
+```xml
 <?xml version='1.0' encoding='UTF-8'?>
 <voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd" version="2.0" role="observation" ivorn="ivo://KM3NeT_Neutrino#KM3-240901B_2_2025-01-01T12:01:00.00Z">
   <Who>
@@ -258,8 +258,7 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and exa
     <Description>Event with FAR below the KM3NeT alert publication threshold.</Description>
   </Why>
 </voe:VOEvent>
-
-    ```
+```
 </details>
 
 
