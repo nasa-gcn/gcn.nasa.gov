@@ -57,10 +57,11 @@
     "isbot": "^5.1.28",
     "lodash": "^4.17.21",
     "lucene": "^2.1.1",
-    "mailparser": "^3.7.5",
+    "mailparser": "^3.9.1",
     "memoizee": "^0.4.15",
-    "nodemailer": "^7.0.7",
+    "nodemailer": "^7.0.11",
     "openid-client": "^5.6.1",
+    "p-throttle": "^8.1.0",
     "pretty-bytes": "^6.1.1",
     "react": "^18.2.0",
     "react-copy-to-clipboard": "^5.0.4",
@@ -156,7 +157,8 @@
   },
   "overrides": {
     "@architect/deploy": "github:DocLM/deploy#d3116f41d5fda00337ebfda543a69d3b3d4546be",
-    "@architect/inventory": "github:lpsinger/inventory#allow-set-env-plugin-to-return-empty-object"
+    "@architect/inventory": "github:lpsinger/inventory#allow-set-env-plugin-to-return-empty-object",
+    "lambda-runtimes": "3.0.0"
   },
   "engines": {
     "node": ">=22"
