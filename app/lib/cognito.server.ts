@@ -103,9 +103,8 @@ export async function listUsers(
     name: extractAttribute(user.Attributes, 'name'),
     affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
   }))
-  return results.filter(
-    (item, index, self) => index === self.findIndex((t) => t.sub === item.sub)
-  )
+  const userMap = new Map(results.map((user) => [user.name, user])).values()
+  return Array.from(userMap)
 }
 
 async function searchForUsersByKey(
