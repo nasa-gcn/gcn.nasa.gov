@@ -1,0 +1,276 @@
+---
+handle:
+  breadcrumb: KM3NeT
+---
+
+import { feature } from '~/lib/env.server'
+
+import logo from './KM3NeT_logo_web_long_no_text.png'
+
+export async function loader() {
+  if (!feature('KM3NeT')) throw new Response(null, { status: 404 })
+  return null
+}
+
+# KM3NeT
+
+<img
+  src={logo}
+  align="right"
+  width="990"
+  height="765"
+  alt="KM3NeT logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
+**Alert system commission date:** January 2026
+
+**Data Archive:** [KM3NeT archive](https://opendata.km3net.de/)
+
+**Extended Documentation:** [KM3NeT Real-Time Activities webpage (in construction)](https://openscience.km3net.de/real-time)
+
+The [Kilometer Cube Neutrino Telescope (KM3NeT)](https://www.km3net.org/) is an underwater neutrino observatory, composed of two detectors, KM3NeT/ARCA (Astrophysic Research with Cosmic in the Abyss) and KM3NeT/ORCA (Oscillation Research with Cosmic in the Abyss). They are located respectively offshore of Sicily (It) and offshore of Toulon (Fr), with maximal depth of -3500 m and -2500 m. 
+KM3NeT will search for neutrinos from astrophysical sources such as supernovae, gamma ray bursters, colliding stars and other interesting transient as steady sources.
+
+Both detectors are 3D arrays of Digital Optical Modules (DOMs), sharing the same hardware components. The DOMs are individually equipped with 31 photomultiplier tubes (PMTs). They are arranged in Detection Units (DUs), forming vertical lines of 18 DOMs each. 
+These DUs are placed on the seabed with specific patterns for KM3NeT/ARCA and KM3NeT/ORCA. In addition to the DUs pattern, the detectors also differs in their inter-DOM spacing: KM3NeT/ARCA design is optimized for neutrino detection with energies above the TeV, while KM3NeT/ORCA is bested suited for the GeV-TeV energy range.
+
+In its final configuration, KM3NeT/ORCA will reach a 7 kton scale with 112 DUs and KM3NeT/ARCA will instrument a cubic kilometer volume of sea water with 230 DUs.
+KM3NeT/ARCA detection capabilities should reach an energy resolution of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024)](https://doi.org/10.1140/epjc/s10052-024-13137-2). 
+
+As of early 2026, the detectors are under construction and the data-taking is carried out by 51 DUs for KM3NeT/ARCA and 33 for KM3NeT/ORCA. This configuration exhibits sub-degree resolution above 1 TeV and below 0.3º above 100 TeV.
+
+
+### Alert generation
+
+An autonomous real-time analysis system reconstructs and classifies data, then identifies potential astrophysical events according to the two following implemented methods (for more details, see [PoS(ICRC2025)920](https://doi.org/10.22323/1.501.0920)):
+- A **"High-Energy neutrino" search**, prioritizes candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
+- A **"multiplet" search**, looks for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
+
+Each method **compute a False Alarm Rate (FAR)** for all event candidates passing a preselection filter. If this FAR is below a threshold of 3.9E-7 (one per month), an alert is issued. 
+
+Only track-like events are used in this real-time analysis (may be subject to future changes), as they provide the best angular resolution.
+
+The **error region** is computed from the distribution of simulated muons, with initial direction and energy corresponding to the ones of the reconstructed muon. To account for all the systematics, these simulations are done using minimal and maximal water properties for static detector with vertical and maximally tilted lines.
+To account for the neutrino scattering angle, each simulated event is used as a seed to generate an additional list of event, gaussiannlly distributed with a standard deviation of [0.7º/(E_mu[TeV])^0.7](https://www.annualreviews.org/content/journals/10.1146/annurev.nucl.50.1.679).
+The areas containing 50%, 68% and 90% of the events are used to define contours that are reported in the alert.
+
+The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file, accessuble through URL link. The value of each pixel of this map is the probability per square degrees. 
+
+
+Finally, after having identified an interesting neutrino candidate and computed its errors contours, we run a **search for astrophysical counterparts**. We look for Blazars, GRBs, TDEs and microquasars in the 90% error region of our alert candidate, cross-checking the results of 4FGL, TeVCat, XRB, Rosat and RFC catalogs. Each source is ranked based on its distance to the alert, the flux reported in the catalog and eventual timing information.
+If this counterpart search is not done, the flag "potential_counterpart" is set at "No Search", if it is done but returns no result, the flag is set at "false". If counterparts are founds, that flag is set at "true.
+In this latter case, the list of sources is reported in the alert under "counterpart_info".
+
+### GCN notice types
+Notices are distributed both as JSON and VOEvent. Note that VOEvent notices content may be less contains only the alert related information.
+
+#### JSON-Serialized GCN Notices Types in GCN Kafka
+
+KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and example JSON messages ([High-Energy detection](/schema/stable/gcn/notices/km3net/alert.example.json), [Multiplet detection](/schema/stable/gcn/notices/km3net/alert.multiplet.example.json)) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/km3net/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of KM3NeT Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/km3net).
+
+<div className="overflow-table">
+
+| Type                 | Contents                                                                                           | Latency |
+| -------------------- | -------------------------------------------------------------------------------------------------- | ------- |
+| `gcn.notices.km3net.alert` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
+
+</div>
+
+
+#### VOEvent XML-serialized GCN notice types
+
+ <div className="overflow-table">
+
+| Type                         | Contents                                                                                           | Latency |
+| ---------------------------- | -------------------------------------------------------------------------------------------------- | ------- |
+| `gcn.notices.km3net.voevent` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
+
+ </div>
+
+<details>
+<summary>`Single HE event`</summary>
+```xml
+<?xml version='1.0' encoding='UTF-8'?>
+<voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd" version="2.0" role="observation" ivorn="ivo://KM3NeT_Neutrino#KM3-240901A_1_2024-09-01T12:01:00.00Z">
+  <Who>
+    <Description>VOEvent created with voevent-parse, version 1.0.3. See https://github.com/timstaley/voevent-parse for details.</Description>
+    <Date>2024-09-01T12:01:00+00:00</Date>
+    <Author>
+      <title>KM3NeT real-time Alert System</title>
+      <contactName>KM3NeT Astro WG</contactName>
+      <contactEmail>online@km3net.de</contactEmail>
+    </Author>
+  </Who>
+  <What>
+    <Param name="TrigID" value="1" ucd="meta.id"/>
+    <Param name="record_number" value="1" ucd="meta.id" dataType="int"/>
+    <Param name="Event_Name" value="KM3-240901A" ucd="meta.id"/>
+    <Param name="Instrument" value="ORCA024"/>
+    <Param name="Pipeline" value="orca_HE"/>
+    <Param name="Alert_Type" value="initial"/>
+    <Param name="Alert_Tense" value="current"/>
+    <Param name="FAR" value="8.029e-08" unit="yr^-1" ucd="stat.probability" dataType="float"/>
+    <Param name="healpix_url" value="https://opendata.km3net.de/" ucd="meta.ref.url"/>
+    <Param name="src_error_90" value="0.9" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="src_error_50" value="0.49" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="alert_topology" value="Track" ucd="meta"/>
+    <Param name="N_events" value="1" ucd="meta.number" dataType="int"/>
+    <Group name="Nu_Event_1">
+      <Param name="id" value="km3.234.23492.58968.763" ucd="meta"/>
+      <Param name="trigger_time" value="2024-09-01T01:16:47.0Z" ucd="meta"/>
+      <Param name="ra" value="10.82" ucd="meta" dataType="float"/>
+      <Param name="dec" value="20.01" ucd="meta" dataType="float"/>
+      <Param name="ra_dec_error" value="0.9" ucd="meta" dataType="float"/>
+      <Param name="cos_zenith" value="0.01" ucd="meta" dataType="float"/>
+      <Param name="prob_evt_topology" value="track" ucd="meta"/>
+      <Param name="energy_measured" value="120000.0" ucd="meta" dataType="float"/>
+    </Group>
+    <Param name="potential_counterpart" value="False" ucd="meta.code" dataType="string"/>
+  </What>
+  <WhereWhen>
+    <ObsDataLocation>
+      <ObservatoryLocation id="GEOLUN"/>
+      <ObservationLocation>
+        <AstroCoordSystem id="UTC-ICRS-GEO"/>
+        <AstroCoords coord_system_id="UTC-ICRS-GEO">
+          <Time unit="s">
+            <TimeInstant>
+              <ISOTime>2024-09-01T01:16:47</ISOTime>
+            </TimeInstant>
+          </Time>
+          <Position2D unit="deg">
+            <Name1>RA</Name1>
+            <Name2>Dec</Name2>
+            <Value2>
+              <C1>10.82</C1>
+              <C2>20.01</C2>
+            </Value2>
+            <Error2Radius>0.9</Error2Radius>
+          </Position2D>
+        </AstroCoords>
+      </ObservationLocation>
+    </ObsDataLocation>
+  </WhereWhen>
+  <Description>KM3NeT candidate neutrino observation, real-time alert distributed via GCN.</Description>
+  <How>
+    <Description>GCN</Description>
+    <Reference uri="https://gcn.nasa.gov/missions/km3net"/>
+    <Reference uri="https://opendata.km3net.de/"/>
+  </How>
+  <Why>
+    <Description>Event with FAR below the KM3NeT alert publication threshold.</Description>
+  </Why>
+</voe:VOEvent>
+```
+</details>
+<br/>
+
+<details>
+<summary>`Multiplet event`</summary>
+```xml
+<?xml version='1.0' encoding='UTF-8'?>
+<voe:VOEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:voe="http://www.ivoa.net/xml/VOEvent/v2.0" xsi:schemaLocation="http://www.ivoa.net/xml/VOEvent/v2.0 http://www.ivoa.net/xml/VOEvent/VOEvent-v2.0.xsd" version="2.0" role="observation" ivorn="ivo://KM3NeT_Neutrino#KM3-240901B_2_2025-01-01T12:01:00.00Z">
+  <Who>
+    <Description>VOEvent created with voevent-parse, version 1.0.3. See https://github.com/timstaley/voevent-parse for details.</Description>
+    <Date>2025-01-01T12:01:00+00:00</Date>
+    <Author>
+      <title>KM3NeT real-time Alert System</title>
+      <contactName>KM3NeT Astro WG</contactName>
+      <contactEmail>online@km3net.de</contactEmail>
+    </Author>
+  </Who>
+  <What>
+    <Param name="TrigID" value="2" ucd="meta.id"/>
+    <Param name="record_number" value="1" ucd="meta.id" dataType="int"/>
+    <Param name="Event_Name" value="KM3-240901B" ucd="meta.id"/>
+    <Param name="Instrument" value="ARCA021"/>
+    <Param name="Pipeline" value="multiplet_arca"/>
+    <Param name="Alert_Type" value="initial"/>
+    <Param name="Alert_Tense" value="current"/>
+    <Param name="FAR" value="8.029e-08" unit="yr^-1" ucd="stat.probability" dataType="float"/>
+    <Param name="healpix_url" value="https://opendata.km3net.de/" ucd="meta.ref.url"/>
+    <Param name="src_error_90" value="0.41" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="src_error_50" value="0.225" unit="deg" ucd="stat.error.sys" dataType="float"/>
+    <Param name="alert_topology" value="Multiplet" ucd="meta"/>
+    <Param name="N_events" value="2" ucd="meta.number" dataType="int"/>
+    <Group name="Nu_Event_1">
+      <Param name="id" value="km3.234.22488.72853.13018" ucd="meta"/>
+      <Param name="trigger_time" value="2025-01-01T11:56:07.0Z" ucd="meta"/>
+      <Param name="ra" value="13.79" ucd="meta" dataType="float"/>
+      <Param name="dec" value="18.56" ucd="meta" dataType="float"/>
+      <Param name="ra_dec_error" value="0.69" ucd="meta" dataType="float"/>
+      <Param name="cos_zenith" value="0.01" ucd="meta" dataType="float"/>
+      <Param name="prob_evt_topology" value="track" ucd="meta"/>
+      <Param name="energy_measured" value="120000.0" ucd="meta" dataType="float"/>
+    </Group>
+    <Group name="Nu_Event_2">
+      <Param name="id" value="km3.234.23492.58959.787" ucd="meta"/>
+      <Param name="trigger_time" value="2025-01-01T01:16:47.0Z" ucd="meta"/>
+      <Param name="ra" value="13.82" ucd="meta" dataType="float"/>
+      <Param name="dec" value="19.01" ucd="meta" dataType="float"/>
+      <Param name="ra_dec_error" value="0.52" ucd="meta" dataType="float"/>
+      <Param name="cos_zenith" value="-0.02" ucd="meta" dataType="float"/>
+      <Param name="prob_evt_topology" value="shower" ucd="meta"/>
+      <Param name="energy_measured" value="120000.0" ucd="meta" dataType="float"/>
+    </Group>
+    <Param name="potential_counterpart" value="True" ucd="meta.code" dataType="string"/>
+    <Group name="Counterpart_1">
+      <Param name="name" value="SourceName" ucd="meta"/>
+      <Param name="reference" value="{'url': 'url to catalog or notice'}" ucd="meta"/>
+      <Param name="ra" value="13.0" ucd="meta"/>
+      <Param name="dec" value="19.5" ucd="meta"/>
+      <Param name="angular_distance" value="1.004" ucd="meta"/>
+      <Param name="trigger_time" value="2024-12-31T09:56:15.0Z" ucd="meta"/>
+    </Group>
+  </What>
+  <WhereWhen>
+    <ObsDataLocation>
+      <ObservatoryLocation id="GEOLUN"/>
+      <ObservationLocation>
+        <AstroCoordSystem id="UTC-ICRS-GEO"/>
+        <AstroCoords coord_system_id="UTC-ICRS-GEO">
+          <Time unit="s">
+            <TimeInstant>
+              <ISOTime>2025-01-01T01:16:47</ISOTime>
+            </TimeInstant>
+          </Time>
+          <Position2D unit="deg">
+            <Name1>RA</Name1>
+            <Name2>Dec</Name2>
+            <Value2>
+              <C1>13.81</C1>
+              <C2>18.85</C2>
+            </Value2>
+            <Error2Radius>0.41</Error2Radius>
+          </Position2D>
+        </AstroCoords>
+      </ObservationLocation>
+    </ObsDataLocation>
+  </WhereWhen>
+  <Description>KM3NeT candidate neutrino observation, real-time alert distributed via GCN.</Description>
+  <How>
+    <Description>GCN</Description>
+    <Reference uri="https://gcn.nasa.gov/missions/km3net"/>
+    <Reference uri="https://opendata.km3net.de/"/>
+  </How>
+  <Why>
+    <Description>Event with FAR below the KM3NeT alert publication threshold.</Description>
+  </Why>
+</voe:VOEvent>
+```
+</details>
+
+
+### Yearly Trigger Rates:
+
+The threshold for issuing and alert is set at FAR < 3.9E-7 Hz.
+
+<div className="overflow-table">
+
+| Instrument | Type                 | Rates    |
+| ---------- | -------------------- | -------- |
+| KM3NeT     | High-Energy Neutrino | ~1/month |
+| KM3NeT     | Neutrinos Multiplet  | ~1/month |
+
+</div>
