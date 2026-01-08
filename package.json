@@ -38,7 +38,7 @@
     "@remix-run/architect": "~2.17.2",
     "@remix-run/css-bundle": "~2.17.2",
     "@remix-run/node": "~2.17.2",
-    "@remix-run/react": "~2.17.2",
+    "@remix-run/react": "~2.17.3",
     "@trussworks/react-uswds": "github:lpsinger/react-uswds#gcn",
     "@xmldom/xmldom": "^0.9.8",
     "aws-lambda-ses-forwarder": "^6.0.0",
