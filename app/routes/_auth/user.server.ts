@@ -11,6 +11,8 @@ import type { Session } from '@remix-run/node'
 import { TokenSet } from 'openid-client'
 
 import { getOpenIDClient, storage } from './auth.server'
+import type { TeamPermission } from '~/lib/user.server'
+import { getUserMetadata, getUsersKafkaPermissions } from '~/lib/user.server'
 
 export interface User {
   sub: string
@@ -18,8 +20,9 @@ export interface User {
   idp: string | null
   groups: string[]
   cognitoUserName: string
-  name: string | undefined
-  affiliation: string | undefined
+  name?: string | undefined
+  affiliation?: string | undefined
+  kafkaPermissions?: TeamPermission[]
 }
 
 export function parseIdp(identities: unknown) {
@@ -61,8 +64,8 @@ export function parseTokenSet(tokenSet: TokenSet): {
   const { sub, email, 'cognito:username': cognitoUserName } = claims
   const idp = parseIdp(claims.identities)
   const groups = parseGroups(claims['cognito:groups'] as string[] | undefined)
-  const name = claims.name
-  const affiliation = claims['affiliation'] as string | undefined
+  // const name = claims.name
+  // const affiliation = claims['affiliation'] as string | undefined
   const accessToken = tokenSet.access_token
   const refreshToken = tokenSet.refresh_token
   const expiresAt = tokenSet.expires_at
@@ -72,7 +75,13 @@ export function parseTokenSet(tokenSet: TokenSet): {
   if (typeof cognitoUserName !== 'string')
     throw new Error('cognito:username claim must be a string')
 
-  const user = { sub, email, groups, idp, cognitoUserName, name, affiliation }
+  const user = {
+    sub,
+    email,
+    groups,
+    idp,
+    cognitoUserName,
+  }
   return { user, accessToken, refreshToken, expiresAt, existingIdp }
 }
 
@@ -87,19 +96,18 @@ export async function getUser({ headers }: Request) {
     return await refreshUser(refreshToken, session)
   } else {
     const user = Object.fromEntries(
-      [
-        'sub',
-        'email',
-        'groups',
-        'idp',
-        'cognitoUserName',
-        'name',
-        'affiliation',
-      ]
+      ['sub', 'groups', 'idp', 'cognitoUserName']
         .map((key) => [key, session.get(key)])
         .filter(([, value]) => value !== undefined)
     )
-    if (user.sub) return user as User
+    if (user.sub) {
+      const { username, affiliation, email } = await getUserMetadata(user.sub)
+      user.name = username
+      user.affiliation = affiliation
+      user.email = email
+      user.kafkaPermissions = await getUsersKafkaPermissions(user.sub)
+      return user as User
+    }
   }
 }
 
