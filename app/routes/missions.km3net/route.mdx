@@ -29,25 +29,25 @@ export async function loader() {
 
 **Extended Documentation:** [KM3NeT Real-Time Activities webpage (in construction)](https://openscience.km3net.de/real-time)
 
-The [Kilometer Cube Neutrino Telescope (KM3NeT)](https://www.km3net.org/) is an underwater neutrino observatory, composed of two detectors, KM3NeT/ARCA (Astrophysic Research with Cosmic in the Abyss) and KM3NeT/ORCA (Oscillation Research with Cosmic in the Abyss). They are located respectively offshore of Sicily (It) and offshore of Toulon (Fr), with maximal depth of -3500 m and -2500 m. 
+The [Kilometer Cube Neutrino Telescope (KM3NeT)](https://www.km3net.org/) is an underwater neutrino observatory, composed of two detectors, KM3NeT/ARCA (Astrophysic Research with Cosmic in the Abyss) and KM3NeT/ORCA (Oscillation Research with Cosmic in the Abyss). They are located respectively offshore of Sicily (It) and offshore of Toulon (Fr), with maximal depth of -3500 m and -2500 m.
 KM3NeT will search for neutrinos from astrophysical sources such as supernovae, gamma ray bursters, colliding stars and other interesting transient as steady sources.
 
-Both detectors are 3D arrays of Digital Optical Modules (DOMs), sharing the same hardware components. The DOMs are individually equipped with 31 photomultiplier tubes (PMTs). They are arranged in Detection Units (DUs), forming vertical lines of 18 DOMs each. 
+Both detectors are 3D arrays of Digital Optical Modules (DOMs), sharing the same hardware components. The DOMs are individually equipped with 31 photomultiplier tubes (PMTs). They are arranged in Detection Units (DUs), forming vertical lines of 18 DOMs each.
 These DUs are placed on the seabed with specific patterns for KM3NeT/ARCA and KM3NeT/ORCA. In addition to the DUs pattern, the detectors also differs in their inter-DOM spacing: KM3NeT/ARCA design is optimized for neutrino detection with energies above the TeV, while KM3NeT/ORCA is bested suited for the GeV-TeV energy range.
 
 In its final configuration, KM3NeT/ORCA will reach a 7 kton scale with 112 DUs and KM3NeT/ARCA will instrument a cubic kilometer volume of sea water with 230 DUs.
-KM3NeT/ARCA detection capabilities should reach an energy resolution of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024)](https://doi.org/10.1140/epjc/s10052-024-13137-2). 
+KM3NeT/ARCA detection capabilities should reach an energy resolution of less than 10% for shower-like events (energy contained in the detection volume) and an angular deviation below 0.1 degree for track-like events above 100 TeV. The full capabilites are described in [KM3NeT Collaboration., Astronomy potential of KM3NeT/ARCA. Eur. Phys. J. C 84, 885 (2024)](https://doi.org/10.1140/epjc/s10052-024-13137-2).
 
 As of early 2026, the detectors are under construction and the data-taking is carried out by 51 DUs for KM3NeT/ARCA and 33 for KM3NeT/ORCA. This configuration exhibits sub-degree resolution above 1 TeV and below 0.3º above 100 TeV.
-
 
 ### Alert generation
 
 An autonomous real-time analysis system reconstructs and classifies data, then identifies potential astrophysical events according to the two following implemented methods (for more details, see [PoS(ICRC2025)920](https://doi.org/10.22323/1.501.0920)):
+
 - A **"High-Energy neutrino" search**, prioritizes candidates according to the exceptionality of the reconstruction features (track length, track energy, ...).
 - A **"multiplet" search**, looks for neutrino events coming from compatible sky locations in a sliding time window (currently set at 2 weeks).
 
-Each method **compute a False Alarm Rate (FAR)** for all event candidates passing a preselection filter. If this FAR is below a threshold of 3.9E-7 (one per month), an alert is issued. 
+Each method **compute a False Alarm Rate (FAR)** for all event candidates passing a preselection filter. If this FAR is below a threshold of 3.9E-7 (one per month), an alert is issued.
 
 Only track-like events are used in this real-time analysis (may be subject to future changes), as they provide the best angular resolution.
 
@@ -55,14 +55,14 @@ The **error region** is computed from the distribution of simulated muons, with 
 To account for the neutrino scattering angle, each simulated event is used as a seed to generate an additional list of event, gaussiannlly distributed with a standard deviation of [0.7º/(E_mu[TeV])^0.7](https://www.annualreviews.org/content/journals/10.1146/annurev.nucl.50.1.679).
 The areas containing 50%, 68% and 90% of the events are used to define contours that are reported in the alert.
 
-The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file, accessuble through URL link. The value of each pixel of this map is the probability per square degrees. 
-
+The 50%, 68% and 90% contours are used to produce a **HEALPix skymap**, distributed as a fits file, accessuble through URL link. The value of each pixel of this map is the probability per square degrees.
 
 Finally, after having identified an interesting neutrino candidate and computed its errors contours, we run a **search for astrophysical counterparts**. We look for Blazars, GRBs, TDEs and microquasars in the 90% error region of our alert candidate, cross-checking the results of 4FGL, TeVCat, XRB, Rosat and RFC catalogs. Each source is ranked based on its distance to the alert, the flux reported in the catalog and eventual timing information.
 If this counterpart search is not done, the flag "potential_counterpart" is set at "No Search", if it is done but returns no result, the flag is set at "false". If counterparts are founds, that flag is set at "true.
 In this latter case, the list of sources is reported in the alert under "counterpart_info".
 
 ### GCN notice types
+
 Notices are distributed both as JSON and VOEvent. Note that VOEvent notices content may be less contains only the alert related information.
 
 #### JSON-Serialized GCN Notices Types in GCN Kafka
@@ -71,20 +71,19 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and exa
 
 <div className="overflow-table">
 
-| Type                 | Contents                                                                                           | Latency |
-| -------------------- | -------------------------------------------------------------------------------------------------- | ------- |
-| `gcn.notices.km3net.alert` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
+| Type                       | Contents                                                                                          | Latency |
+| -------------------------- | ------------------------------------------------------------------------------------------------- | ------- |
+| `gcn.notices.km3net.alert` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy) | ~1 min  |
 
 </div>
-
 
 #### VOEvent XML-serialized GCN notice types
 
  <div className="overflow-table">
 
-| Type                         | Contents                                                                                           | Latency |
-| ---------------------------- | -------------------------------------------------------------------------------------------------- | ------- |
-| `gcn.notices.km3net.voevent` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy)  | ~1 min  |
+| Type                         | Contents                                                                                          | Latency |
+| ---------------------------- | ------------------------------------------------------------------------------------------------- | ------- |
+| `gcn.notices.km3net.voevent` | Localization, time of arrival, FAR, Neutrino details (local direction, topology, observed energy) | ~1 min  |
 
  </div>
 
@@ -260,7 +259,6 @@ KM3NeT [GCN schema](/schema/stable/gcn/notices/km3net/alert.schema.json) and exa
 </voe:VOEvent>
 ```
 </details>
-
 
 ### Yearly Trigger Rates:
 
