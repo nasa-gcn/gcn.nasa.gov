@@ -11,6 +11,13 @@ import type { Session } from '@remix-run/node'
 import { TokenSet } from 'openid-client'
 
 import { getOpenIDClient, storage } from './auth.server'
+import { feature } from '~/lib/env.server'
+import type { TeamPermission } from '~/lib/user.server'
+import {
+  addUser,
+  getUserMetadata,
+  getUsersKafkaPermissions,
+} from '~/lib/user.server'
 
 export interface User {
   sub: string
@@ -18,8 +25,9 @@ export interface User {
   idp: string | null
   groups: string[]
   cognitoUserName: string
-  name: string | undefined
-  affiliation: string | undefined
+  name?: string | undefined
+  affiliation?: string | undefined
+  kafkaPermissions?: TeamPermission[]
 }
 
 export function parseIdp(identities: unknown) {
@@ -99,7 +107,25 @@ export async function getUser({ headers }: Request) {
         .map((key) => [key, session.get(key)])
         .filter(([, value]) => value !== undefined)
     )
-    if (user.sub) return user as User
+    if (user.sub) {
+      // Passively add users to the new Users metadata table
+      if (!(await getUserMetadata(user.sub))) {
+        await addUser({
+          sub: user.sub,
+          email: user.email,
+          username: user.name,
+          affiliation: user.affiliation,
+        })
+      }
+      if (feature('TEAMS')) {
+        const { username, affiliation, email } = await getUserMetadata(user.sub)
+        user.name = username
+        user.affiliation = affiliation
+        user.email = email
+        user.kafkaPermissions = await getUsersKafkaPermissions(user.sub)
+      }
+      return user as User
+    }
   }
 }
 

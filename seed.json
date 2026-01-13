@@ -5787,5 +5787,53 @@
       "lastUsed": 1745014628845,
       "countUsed": 1
     }
+  ],
+  "users": [
+    {
+      "sub": "default",
+      "username": "Example User",
+      "affiliation": "Testing Corp",
+      "email": "user@example.com"
+    }
+  ],
+  "teams": [
+    {
+      "teamId": "team_abc",
+      "teamName": "Team ABC",
+      "description": "A cool new team",
+      "topic": "gcn.notices.team_abc",
+      "public": true
+    },
+    {
+      "teamId": "team_def",
+      "teamName": "Team Def",
+      "description": "A second team",
+      "topic": "gcn.notices.team_def",
+      "public": false
+    },
+    {
+      "teamId": "team_ghi",
+      "teamName": "Team ghi",
+      "description": "Example team",
+      "topic": "gcn.notices.team_ghi",
+      "public": false
+    }
+  ],
+  "team_members": [
+    {
+      "sub": "default",
+      "teamId": "team_abc",
+      "permission": "admin"
+    },
+    {
+      "sub": "default",
+      "teamId": "team_def",
+      "permission": "write"
+    },
+    {
+      "sub": "default",
+      "teamId": "team_ghi",
+      "permission": "read"
+    }
   ]
 }
