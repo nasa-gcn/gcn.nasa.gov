@@ -10,12 +10,11 @@ import {
   CreateUserPoolClientCommand,
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
-  ListGroupsCommand,
   ResourceNotFoundException,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { generators } from 'openid-client'
 
-import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
+import { cognito, getGroups, maybeThrowCognito } from '~/lib/cognito.server'
 import { getUser } from '~/routes/_auth/user.server'
 
 export interface RedactedClientCredential {
@@ -218,13 +217,9 @@ export class ClientCredentialVendingMachine {
    * followed by the remaining group sin alphabetical order.
    */
   async getGroupDescriptions(): Promise<[string, string | undefined][]> {
-    const command = new ListGroupsCommand({
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
-
-    let response
+    let groups
     try {
-      response = await cognito.send(command)
+      groups = await getGroups()
     } catch (e) {
       maybeThrowCognito(e, 'returning fake group descriptions')
       return [
@@ -236,10 +231,9 @@ export class ClientCredentialVendingMachine {
     }
 
     const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(
-      response?.Groups?.map(({ GroupName, Description }) => [
-        GroupName,
-        Description,
-      ])?.filter(([GroupName]) => GroupName) ?? []
+      groups
+        .map(({ GroupName, Description }) => [GroupName, Description])
+        ?.filter(([GroupName]) => GroupName) ?? []
     )
 
     return [...this.groups]
