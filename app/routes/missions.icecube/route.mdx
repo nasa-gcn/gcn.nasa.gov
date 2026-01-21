@@ -40,17 +40,17 @@ leave track signatures (order-km in length) in the IceCube detector array when t
 
 The IceCube realtime alert point of contact can be reached at roc@icecube.wisc.edu.
 
-IceCube has been operating a real-time alert system since 2016 [^3]. The system includes multiple event types.
+IceCube has been operating a real-time alert system since 2016 [@2017JInst..12P3012A]. The system includes multiple event types.
 
 ### IceCube High-Energy Neutrino Track Alerts
 
 This section focuses on high-energy (of order TeV-PeV) track-like alerts. These events originate from charged-current interactions between muon neutrinos and quarks in the ice. Owing to their excellent angular resolution, which improves with energy, track-like alerts are particularly valuable for neutrino astronomy.
 
-The system allows rapid notification of the multimessenger community about likely astrophysical neutrino track-like events detected by IceCube, initiating follow-ups to detect source candidates. A major breakthrough occurred in September 2017, when a neutrino with an energy of approximately 300 TeV (IC-170922A) was found in spatial and temporal coincidence with the flaring blazar TXS 0506+056. This association, supported by gamma-ray data from Fermi-LAT, had a significance of ~3sigma [^4]. This marked the first compelling multimessenger association between a neutrino and an astrophysical object, providing evidence that blazars can act as cosmic-ray accelerators. Archival analysis revealed a possible earlier neutrino flare from the same source between September 2014 and March 2015, with a significance of 3.5sigma independent of the 2017 alert [^5]. These observations highlight the potential of real-time multimessenger astronomy.
+The system allows rapid notification of the multimessenger community about likely astrophysical neutrino track-like events detected by IceCube, initiating follow-ups to detect source candidates. A major breakthrough occurred in September 2017, when a neutrino with an energy of approximately 300 TeV (IC-170922A) was found in spatial and temporal coincidence with the flaring blazar TXS 0506+056. This association, supported by gamma-ray data from Fermi-LAT, had a significance of ~3sigma [@2018Sci...361.1378I]. This marked the first compelling multimessenger association between a neutrino and an astrophysical object, providing evidence that blazars can act as cosmic-ray accelerators. Archival analysis revealed a possible earlier neutrino flare from the same source between September 2014 and March 2015, with a significance of 3.5sigma independent of the 2017 alert [@2018Sci...361.1378I]. These observations highlight the potential of real-time multimessenger astronomy.
 
-In 2019, the real-time framework for track-like events was upgraded to improve event selection and alert message content [^6][^7].
+In 2019, the real-time framework for track-like events was upgraded to improve event selection and alert message content (see [https://gcn.gsfc.nasa.gov/doc/IceCube_High_Energy_Neutrino_Track_Alerts.pdf](https://gcn.gsfc.nasa.gov/doc/IceCube_High_Energy_Neutrino_Track_Alerts.pdf)) [@2023ApJS..269...25A].
 
-A recent enhancement in the IceCube real-time system was introduced in September 2024 [^8]. IceCube now adopts a revised follow-up reconstruction strategy that applies different algorithms based on the event's energy deposition or topology. This hybrid approach improves angular resolution across a broad energy range and ensures robust statistical coverage of the reported localization uncertainties [^9].
+A recent enhancement in the IceCube real-time system was introduced in September 2024 [@2024GCN.38267....1I]. IceCube now adopts a revised follow-up reconstruction strategy that applies different algorithms based on the event's energy deposition or topology. This hybrid approach improves angular resolution across a broad energy range and ensures robust statistical coverage of the reported localization uncertainties [@2025icrc.confE1184S].
 
 #### Description
 
@@ -70,7 +70,7 @@ Each alert selection determines the values to report in the GCN Notice (probabil
 
 The total rate of distributed alerts is approximately 26 per year (10 Gold and 16 Bronze).
 
-The neutrino effective areas for these combined selections, for both through-going and starting events, are shown in Figure 1 of [^7]. Astrophysical neutrino-generated tracks selected by these selections are expected to have very good angular resolution. The median angular resolution for these events as a function of energy is shown in Figure 2 of [^6].
+The neutrino effective areas for these combined selections, for both through-going and starting events, are shown in Figure 1 of [^7]. Astrophysical neutrino-generated tracks selected by these selections are expected to have very good angular resolution. The median angular resolution for these events as a function of energy is shown in Figure 2 of [@2023ApJS..269...25A].
 
 #### Alert distribution
 
@@ -84,7 +84,7 @@ High-energy track alerts are openly circulated to the community via GCN as Notic
 
 ## GCN Notice Types in GCN Classic and GCN Classic Over Kafka
 
-Historically, IceCube alerts generated by real-time astrophysical neutrino searches[^1][^2] have been sent over the classic GCN system through the [Astrophysical Multimessenger Observatory Network (AMON)](https://www.amon.psu.edu). [Detailed descriptions and examples are available.](https://gcn.gsfc.nasa.gov/amon.html)
+Historically, IceCube alerts generated by real-time astrophysical neutrino searches[@2017APh....92...30A][@2023ApJS..269...25A] have been sent over the classic GCN system through the [Astrophysical Multimessenger Observatory Network (AMON)](https://www.amon.psu.edu). [Detailed descriptions and examples are available.](https://gcn.gsfc.nasa.gov/amon.html)
 
 <div className="overflow-table">
 
@@ -107,7 +107,7 @@ This page documents alert content, schema, and probability maps.
 
 ## GCN Notice Types in GCN Classic
 
-Historically, IceCube alerts generated by real-time astrophysical neutrino searches[^1][^2] have been sent over the classic GCN system through the [Astrophysical Multimessenger Observatory Network (AMON)](https://www.amon.psu.edu). [Detailed descriptions and examples are available.](https://gcn.gsfc.nasa.gov/amon.html)
+Historically, IceCube alerts generated by real-time astrophysical neutrino searches[@2017APh....92...30A][@2023ApJS..269...25A] have been sent over the classic GCN system through the [Astrophysical Multimessenger Observatory Network (AMON)](https://www.amon.psu.edu). [Detailed descriptions and examples are available.](https://gcn.gsfc.nasa.gov/amon.html)
 
 <div className="overflow-table">
 
@@ -163,7 +163,7 @@ err_combined = np.sqrt( (ra_err_mean * np.cos(np.deg2rad(dec)))**2 + (dec_err_me
 These `ra_err_plus`, `ra_err_minus`, `dec_err_plus`, and `dec_err_minus` values correspond to the 90% containment errors, which are published in the GCN circular associated with the event.
 
 - `containment_probability` - Confidence level for the positional error (e.g., `0.9` for 90%).
-- `systematic_included` - `True` if systematics are included in the positional uncertainty, otherwise `False`. For `"record_number"`=`0` (preliminary reconstruction), this is set to `False`. For `"record_number"`=`1` (updated reconstruction associated to the GCN circular), this is set to `True`. In fact, starting from September 2024, the reconstruction algorithms used for realtime alerts have been improved [^8]. Systematic errors affecting the reconstructions, such as those from the ice model or detector geometry, have been thoroughly investigated to ensure proper statistical coverage (see details in [^9]).
+- `systematic_included` - `True` if systematics are included in the positional uncertainty, otherwise `False`. For `"record_number"`=`0` (preliminary reconstruction), this is set to `False`. For `"record_number"`=`1` (updated reconstruction associated to the GCN circular), this is set to `True`. In fact, starting from September 2024, the reconstruction algorithms used for realtime alerts have been improved [^8]. Systematic errors affecting the reconstructions, such as those from the ice model or detector geometry, have been thoroughly investigated to ensure proper statistical coverage (see details in [@2025icrc.confE1184S]).
 - `healpix_url` - URL to the multi-order probability map of the event; `null` for preliminary reconstruction. For `"record_number"`=`0` (preliminary reconstruction), `healpix_url` is expected to be `null`. For `"record_number"`=`1` (updated reconstruction associated to the GCN circular), it contains a link from which the file can be downloaded. A description of the multi-order probability map of the event is provided in the section "Multi-order Probability Maps (MOC/HEALPix)" below. The probability maps have correct coverage including both statistical and systematic uncertainties.
 - `trigger_time` - Time of the triggered neutrino event (UTC time).
 - `nu_energy` - Estimated neutrino energy (TeV).
@@ -200,7 +200,7 @@ The header of each file contains:
 
 For scientific work using IceCube track alerts or the associated probability maps, we kindly ask that you consider citing the following:
 
-- The IceCube catalog (IceCat-1) [^7]
+- The IceCube catalog (IceCat-1) [@2023ApJS..269...25A]
 - The documentation describing the reconstruction algorithms adopted for alert tracks [^8]
 
 If you refer to a specific alert and use a multi-order probability map, please cite also:
@@ -220,10 +220,10 @@ This helps ensure that particular events and datasets are clearly identified.
 
 IceCube performs realtime searches for coincident neutrino signals with all
 [LIGO/Virgo/KAGRA gravitational-wave alerts](https://emfollow.docs.ligo.org/userguide/), using
-a realtime muon neutrino track event selection[^10] and the sky maps from gravitational
+a realtime muon neutrino track event selection[@2016JInst..1111009I] and the sky maps from gravitational
 wave detectors. These low-latency joint searches identify neutrino signals within a +-500 second time
 window surrounding the LVK alert time, and aim to identify multi-messenger transient
-sources and seed electromagnetic followup up observations[^11] [^12].
+sources and seed electromagnetic followup up observations[@2020ApJ...898L..10A] [@2023ApJ...944...80A].
 
 These searches are performed as quickly as possible, as soon as the realtime neutrino information for the 1000 second window
 are available, and are repeated for each update
@@ -234,7 +234,7 @@ in LVK Runs 03 and 04 are available on the [IceCube Realtime Gravitational Wave 
 For high-significance LVK alerts, two hypothesis tests
 are conducted. The first search is a maximum likelihood analysis which searches for a
 generic point-like neutrino source coincident with the given GW sky map. The
-second uses a Bayesian approach[^13] to quantify the joint GW + neutrino event significance, which
+second uses a Bayesian approach[@2019PhRvD.100h3017B] to quantify the joint GW + neutrino event significance, which
 assumes a binary merger scenario and accounts for known astrophysical priors, such as GW source
 distance, in the significance estimate. For low-significance LVK alerts, only the Bayesian search
 is performed. All searches are reported via GCN Notices over Kafka, and any coincident
@@ -308,28 +308,4 @@ Education and Research (BMBF) and the German Research Foundation (DFG) in German
 Knut and Alice Wallenberg Foundation, the Swedish Polar Research Secretariat, and the
 Swedish Research Council in Sweden; and the Wisconsin Alumni Research Foundation in the U.S.
 
-[^1]: M. G. Aartsen et al. (2017), _Astropart. Phys._, 92, 30. [https://doi.org/10.1016/j.astropartphys.2017.05.002](http://dx.doi.org/10.1016/j.astropartphys.2017.05.002)
-
-[^2]: R. Abbasi et al. (2023), [arXiv:2304.01174](https://arxiv.org/abs/2304.01174)
-
-[^3]: M. G. Aartsen et al. (2017), _JINST_ 12, P03012. [https://iopscience.iop.org/article/10.1088/1748-0221/12/03/P03012](https://iopscience.iop.org/article/10.1088/1748-0221/12/03/P03012)
-
-[^4]: M. G. Aartsen et al. (2018), _Science_ 361(6398), eaat1378. [https://www.science.org/doi/10.1126/science.aat1378](https://www.science.org/doi/10.1126/science.aat1378)
-
-[^5]: M. G. Aartsen et al. (2018), _Science_ 361(6398), 147-151. [https://www.science.org/doi/10.1126/science.aat2890](https://www.science.org/doi/10.1126/science.aat2890)
-
-[^6]: IceCube Collaboration, (2019), _High-Energy Neutrino Track Alerts_. [https://gcn.gsfc.nasa.gov/doc/IceCube_High_Energy_Neutrino_Track_Alerts.pdf](https://gcn.gsfc.nasa.gov/doc/IceCube_High_Energy_Neutrino_Track_Alerts.pdf)
-
-[^7]: R. Abbasi et al. (2023), _ApJS_ 269, 25. [https://iopscience.iop.org/article/10.3847/1538-4365/acfa95](https://iopscience.iop.org/article/10.3847/1538-4365/acfa95)
-
-[^8]: IceCube Collaboration, (2024), _Update on Muon Alert Reconstruction_. [https://roc.icecube.wisc.edu/public/docs/IceCube_Update_Muon_Alert_Reco.pdf](https://roc.icecube.wisc.edu/public/docs/IceCube_Update_Muon_Alert_Reco.pdf)
-
-[^9]: G. Sommani and T. Yuan (2025), _PoS ICRC2025_, 1184. [https://arxiv.org/abs/2507.06957](https://arxiv.org/abs/2507.06957)
-
-[^10]: M. G. Aartsen et al. (2016), _JINST_ 11, P11009. [https://doi.org/10.1088/1748-0221/11/11/P11009](https://doi.org/10.1088/1748-0221/11/11/P11009)
-
-[^11]: M. G. Aartsen et al. (2020), _ApJL_ 898, L10. [https://doi.org/10.3847/2041-8213/ab9d24](https://doi.org/10.3847/2041-8213/ab9d24)
-
-[^12]: R. Abbasi et al. (2023), _ApJ_ 944, 80. [https://doi.org/10.3847/1538-4357/aca5fc](https://doi.org/10.3847/1538-4357/aca5fc)
-
-[^13]: I. Bartos et al. (2019), _Phys. Rev. D_ 100, 083017. [https://doi.org/10.1103/PhysRevD.100.083017](https://doi.org/10.1103/PhysRevD.100.083017)
+## Bibliography
