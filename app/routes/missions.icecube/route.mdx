@@ -64,13 +64,13 @@ The streams were optimized assuming an astrophysical neutrino power-law energy s
 
 The selection criteria for the alerts were tuned to achieve, on average, a probability of being astrophysical of 30% for **Bronze alerts** and 50% for **Gold alerts**.
 
-Several neutrino candidate selections have been developed, each targeting different types of events. The resulting samples are combined to produce the Gold and Bronze alerts. For details about the selection filters, see [^7].
+Several neutrino candidate selections have been developed, each targeting different types of events. The resulting samples are combined to produce the Gold and Bronze alerts. For details about the selection filters, see [@2023ApJS..269...25A].
 
 Each alert selection determines the values to report in the GCN Notice (probability of being astrophysical, false alarm rate, and likely neutrino energy) based on the parameters used in candidate event identification. When an event is identified by multiple selections, a single GCN Notice is issued, and a hierarchical rule is applied to decide which selection's information is included. This ordering is based on astrophysical signal purity and angular resolution studies.
 
 The total rate of distributed alerts is approximately 26 per year (10 Gold and 16 Bronze).
 
-The neutrino effective areas for these combined selections, for both through-going and starting events, are shown in Figure 1 of [^7]. Astrophysical neutrino-generated tracks selected by these selections are expected to have very good angular resolution. The median angular resolution for these events as a function of energy is shown in Figure 2 of [@2023ApJS..269...25A].
+The neutrino effective areas for these combined selections, for both through-going and starting events, are shown in Figure 1 of [@2023ApJS..269...25A]. Astrophysical neutrino-generated tracks selected by these selections are expected to have very good angular resolution. The median angular resolution for these events as a function of energy is shown in Figure 2 of [@2023ApJS..269...25A].
 
 #### Alert distribution
 
@@ -163,7 +163,7 @@ err_combined = np.sqrt( (ra_err_mean * np.cos(np.deg2rad(dec)))**2 + (dec_err_me
 These `ra_err_plus`, `ra_err_minus`, `dec_err_plus`, and `dec_err_minus` values correspond to the 90% containment errors, which are published in the GCN circular associated with the event.
 
 - `containment_probability` - Confidence level for the positional error (e.g., `0.9` for 90%).
-- `systematic_included` - `True` if systematics are included in the positional uncertainty, otherwise `False`. For `"record_number"`=`0` (preliminary reconstruction), this is set to `False`. For `"record_number"`=`1` (updated reconstruction associated to the GCN circular), this is set to `True`. In fact, starting from September 2024, the reconstruction algorithms used for realtime alerts have been improved [^8]. Systematic errors affecting the reconstructions, such as those from the ice model or detector geometry, have been thoroughly investigated to ensure proper statistical coverage (see details in [@2025icrc.confE1184S]).
+- `systematic_included` - `True` if systematics are included in the positional uncertainty, otherwise `False`. For `"record_number"`=`0` (preliminary reconstruction), this is set to `False`. For `"record_number"`=`1` (updated reconstruction associated to the GCN circular), this is set to `True`. In fact, starting from September 2024, the reconstruction algorithms used for realtime alerts have been improved [@2024GCN.38267....1I]. Systematic errors affecting the reconstructions, such as those from the ice model or detector geometry, have been thoroughly investigated to ensure proper statistical coverage (see details in [@2025icrc.confE1184S]).
 - `healpix_url` - URL to the multi-order probability map of the event; `null` for preliminary reconstruction. For `"record_number"`=`0` (preliminary reconstruction), `healpix_url` is expected to be `null`. For `"record_number"`=`1` (updated reconstruction associated to the GCN circular), it contains a link from which the file can be downloaded. A description of the multi-order probability map of the event is provided in the section "Multi-order Probability Maps (MOC/HEALPix)" below. The probability maps have correct coverage including both statistical and systematic uncertainties.
 - `trigger_time` - Time of the triggered neutrino event (UTC time).
 - `nu_energy` - Estimated neutrino energy (TeV).
@@ -201,7 +201,7 @@ The header of each file contains:
 For scientific work using IceCube track alerts or the associated probability maps, we kindly ask that you consider citing the following:
 
 - The IceCube catalog (IceCat-1) [@2023ApJS..269...25A]
-- The documentation describing the reconstruction algorithms adopted for alert tracks [^8]
+- The documentation describing the reconstruction algorithms adopted for alert tracks [@2024GCN.38267....1I]
 
 If you refer to a specific alert and use a multi-order probability map, please cite also:
 
