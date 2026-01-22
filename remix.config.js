@@ -5,9 +5,11 @@ import rehypeCitation from 'rehype-citation'
 import rehypeClassNames from 'rehype-class-names'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeMathjax from 'rehype-mathjax'
 import rehypeMermaid from 'rehype-mermaid'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -86,8 +88,9 @@ export default {
           csl: 'chicago',
           ...options,
         }),
+      rehypeMathjax,
     ],
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [remarkGfm, remarkMath],
   },
   postcss: true,
   ignoredRouteFiles: ['**/.*'],
