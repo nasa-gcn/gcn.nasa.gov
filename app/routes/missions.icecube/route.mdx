@@ -54,7 +54,7 @@ A recent enhancement in the IceCube real-time system was introduced in September
 
 #### Description
 
-Events are classified into **Gold** and **Bronze** streams based on their likelihood of being astrophysical, quantified by a metric historically called *signalness* (with the switch to GCN over Kafka, this metric is now referred to as *p_astro*):
+Events are classified into **Gold** and **Bronze** streams based on their likelihood of being astrophysical, quantified by a metric historically called _signalness_ (with the switch to GCN over Kafka, this metric is now referred to as _p_astro_):
 
 $$p_{\mathrm{astro}}(E > E_{\mathrm{event}}, \delta) = \frac{N_{\mathrm{signal}}(E > E_{\mathrm{event}}, \delta)}{N_{\mathrm{signal}}(E > E_{\mathrm{event}}, \delta)+N_{\mathrm{background}}(E > E_{\mathrm{event}}, \delta)}$$
 
@@ -178,7 +178,7 @@ are available to use.
 
 #### **Multi-order Probability Maps (MOC/HEALPix)**
 
-GCN strongly encourages the use of multi-order sky maps (MOC). See the [documentation](/docs/sample/healpix).
+GCN strongly encourages the use of multi-order sky maps (MOC). See the [documentation](https://gcn.nasa.gov/docs/sample/healpix).
 
 These maps use a variable angular resolution, with regions of higher probability represented at finer resolution and lower-probability regions encoded at coarser resolution. Compared to single-resolution HEALPix maps, multi-order sky maps are significantly more efficient in terms of storage footprint and I/O performance, while retaining full localization information.
 
