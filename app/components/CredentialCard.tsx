@@ -116,6 +116,11 @@ export default function CredentialCard({
             </ModalToggleButton>
             <Form method="GET" action="/quickstart/alerts">
               <input type="hidden" name="clientId" value={client_id} />
+              <input
+                type="hidden"
+                name="groupType"
+                value={scope.endsWith('-consumer') ? 'consumer' : 'producer'}
+              />
               {alerts.map((alert) => (
                 <input key={alert} type="hidden" name="alerts" value={alert} />
               ))}

@@ -48,6 +48,10 @@ export async function handleCredentialActions(
       if (redirectSource == 'quickstart') {
         const params = new URL(request.url).searchParams
         params.set('clientId', client_id)
+        params.set(
+          'groupType',
+          scope?.endsWith('-consumer') ? 'consumer' : 'producer'
+        )
         redirectTarget = `/quickstart/alerts?${params.toString()}`
       } else if (redirectSource == 'user') {
         redirectTarget = '/user/credentials'
