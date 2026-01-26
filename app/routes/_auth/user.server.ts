@@ -64,8 +64,6 @@ export function parseTokenSet(tokenSet: TokenSet): {
   const { sub, email, 'cognito:username': cognitoUserName } = claims
   const idp = parseIdp(claims.identities)
   const groups = parseGroups(claims['cognito:groups'] as string[] | undefined)
-  // const name = claims.name
-  // const affiliation = claims['affiliation'] as string | undefined
   const accessToken = tokenSet.access_token
   const refreshToken = tokenSet.refresh_token
   const expiresAt = tokenSet.expires_at
