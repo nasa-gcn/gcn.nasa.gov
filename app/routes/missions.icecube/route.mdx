@@ -195,6 +195,17 @@ The header of each file contains:
 - `RA`,`DEC` [deg] (and `_ERR_50`, `_ERR_90`): Best fit direction in J2000 equatorial coordinates, with asymmetric 50% and 90% CL error rectangle boundaries.
 - `CONTOUR AREA (50%)`,`CONTOUR AREA (90%)` [sdeg]: Contour area of uncertainty contours at 50% and 90% confidence levels around the best-fit direction.
 
+#### IceCube Alert Archive 
+
+The IceCube alert archive is publicly accessible at: `https://roc-2.icecube.wisc.edu/public/alerts/`
+
+Each alert is provided as a compressed FITS file using the following naming convention:
+`IceCube-YYMMDDX_skymap_probdensity_multiorder.fits.gz`
+
+The alert identifier follows the format: `IceCube-YYMMDDX`, where **YYMMDD** denotes the date of the event (e.g., `IceCube-260125A` corresponds to an alert issued on January 25, 2026), and **X** is a letter distinguishing multiple alerts occurring on the same day (A, B, C, …).
+
+The download link for each file is also included in the corresponding GCN notice distributed via Kafka through the item `healpix_url` (see the schema explanation above).
+
 ### Citing IceCube Track Alerts
 
 For scientific work using IceCube track alerts or the associated probability maps, we kindly ask that you consider citing the following:
