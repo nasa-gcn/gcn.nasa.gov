@@ -89,6 +89,12 @@ export default function () {
             language="java"
           />
         </Tab>
+        <Tab label="Rust">
+          <ClientSampleCode
+            {...{ clientName, clientId, clientSecret, topics, listTopics }}
+            language="rs"
+          />
+        </Tab>
         <Tab label="PySpark">
           <ClientSampleCode
             {...{ clientName, clientId, clientSecret, topics, listTopics }}
