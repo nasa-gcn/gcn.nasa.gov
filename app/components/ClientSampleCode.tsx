@@ -27,7 +27,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark'
+  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark' | 'rs'
 }) {
   const domain = useDomain()
 
@@ -690,6 +690,97 @@ export function ClientSampleCode({
             Run the code by typing this command in the terminal:
           </p>
           <Highlight language="sh" code="python example.py" />
+        </>
+      )
+    case 'rs':
+      return (
+        <>
+          {' '}
+          <p className="usa-paragraph">
+            Open a terminal and run these commands to start a new Rust project
+            with{' '}
+            <Link
+              className="usa-link"
+              rel="external noopener"
+              target="_blank"
+              href="https://doc.rust-lang.org/cargo/getting-started/installation.html"
+            >
+              cargo
+            </Link>
+            :
+          </p>
+          <Highlight
+            language="sh"
+            code={dedent`
+            cargo new --bin example
+            cd example
+            cargo add gcn-kafka rdkafka tokio -F tokio/full
+            `}
+          />
+          <p className="usa-paragraph">
+            Save the code below to the file <code>src/main.rs</code>:
+          </p>
+          <Highlight
+            language={language}
+            filename={`main.${language}`}
+            code={dedent`
+              use gcn_kafka::GcnClientConfig;
+              use rdkafka::{
+                  ClientConfig, Message,
+                  consumer::{Consumer, StreamConsumer},
+              };${listTopics ? '\nuse std::time::Duration;' : ''}
+
+              #[tokio::main]
+              pub async fn main() {
+                  let mut config = ClientConfig::new();
+
+                  // Connect as a consumer${clientName ? ` (client "${clientName}")` : ''}
+                  // Warning: don't share the client secret with others.
+                  config.set_gcn_auth(
+                      "${clientId}",
+                      "${clientSecret}",
+                      ${domain ? `Some("${domain}")` : 'None'},
+                  );
+
+                  let consumer: StreamConsumer = config.create().unwrap();
+                  consumer.subscribe(&[${topics
+                    .map(
+                      (topic) => `
+        "${topic}",`
+                    )
+                    .join('')}
+                  ]).unwrap();
+                  ${
+                    listTopics
+                      ? dedent`
+
+                    println!("Topics:");
+                    consumer
+                        .fetch_metadata(None, Duration::from_secs(3))
+                        .unwrap()
+                        .topics()
+                        .iter()
+                        .for_each(|topic| println!("  {}", topic.name()));
+
+                        `
+                      : ''
+                  }
+                  loop {
+                      match consumer.recv().await {
+                          Err(err) => println!("Receive message failed: {}", err),
+                          Ok(msg) => {
+                              if let Some(result) = msg.payload_view::<str>() {
+                                  match result {
+                                      Err(err) => println!("Decode message failed: {}", err),
+                                      Ok(value) => println!("{}", value),
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+            `}
+          />
         </>
       )
   }

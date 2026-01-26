@@ -166,6 +166,9 @@ export default function () {
                     <Link key="java" to="client#java">
                       Java
                     </Link>,
+                    <Link key="pyspark" to="client#rust">
+                      Rust
+                    </Link>,
                     <Link key="pyspark" to="client#pyspark">
                       PySpark
                     </Link>,
