@@ -86,5 +86,5 @@ export async function getUsersByTeamId(teamId: string) {
 
 export async function removeUserFromTeam(sub: string, teamId: string) {
   const db = await tables()
-  await db.user_permissons.delete({ sub, teamId })
+  await db.team_members.delete({ sub, teamId })
 }
