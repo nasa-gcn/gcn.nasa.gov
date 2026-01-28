@@ -23,6 +23,7 @@ import { formatAuthor } from './circulars/circulars.lib'
 import Hint from '~/components/Hint'
 import Spinner from '~/components/Spinner'
 import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
+import { updateUser } from '~/lib/user.server'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
 import type { SEOHandle } from '~/root/seo'
@@ -63,6 +64,13 @@ export async function action({ request }: ActionFunctionArgs) {
       },
     ],
     AccessToken: session.get('accessToken'),
+  })
+
+  await updateUser({
+    sub: user.sub,
+    email: user.email,
+    username: name,
+    affiliation,
   })
 
   try {
