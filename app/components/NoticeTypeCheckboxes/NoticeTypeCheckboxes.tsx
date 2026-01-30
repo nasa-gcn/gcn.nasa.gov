@@ -63,7 +63,10 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 export const JsonNoticeTypes: { [key: string]: string[] } = {
   Circulars: ['gcn.circulars'],
   Heartbeat: ['gcn.heartbeat'],
-  IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
+  IceCube: [
+    'gcn.notices.icecube.lvk_nu_track_search',
+    'gcn.notices.icecube.gold_bronze_track_alerts',
+  ],
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
   'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
