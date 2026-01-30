@@ -6,6 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { paginateScan } from '@aws-sdk/lib-dynamodb'
 
 import type { Team, TeamMember } from './teams.server'
 
@@ -29,6 +31,31 @@ export async function getUserMetadata(sub: string) {
   const db = await tables()
   const user = await db.users.get({ sub })
   return user
+}
+
+export async function findUsersByNameOrEmail(
+  value: string
+): Promise<UserMetadata[]> {
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('users')
+
+  const pages = paginateScan(
+    { client },
+    {
+      TableName,
+      FilterExpression: 'contains(username, :value) OR contains(email, :value)',
+      ExpressionAttributeValues: {
+        ':value': value,
+      },
+    }
+  )
+  const users: UserMetadata[] = []
+  for await (const page of pages) {
+    const newUsers = page.Items as UserMetadata[]
+    if (newUsers) users.push(...newUsers)
+  }
+  return users
 }
 
 export async function updateUser(user: UserMetadata) {
