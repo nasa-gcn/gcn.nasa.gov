@@ -242,15 +242,20 @@ export async function getUserGroupStrings(Username: string) {
 }
 
 export async function checkUserIsVerified(sub: string) {
-  const { Username } = await getCognitoUserFromSub(sub)
+  try {
+    const { Username } = await getCognitoUserFromSub(sub)
 
-  const { UserAttributes } = await cognito.send(
-    new AdminGetUserCommand({
-      UserPoolId,
-      Username,
-    })
-  )
-  return extractAttribute(UserAttributes, 'email_verified')
+    const { UserAttributes } = await cognito.send(
+      new AdminGetUserCommand({
+        UserPoolId,
+        Username,
+      })
+    )
+    return extractAttribute(UserAttributes, 'email_verified')
+  } catch (error) {
+    maybeThrowCognito(error, 'returning is verified as true')
+    return 'true'
+  }
 }
 
 export async function removeUserFromGroup(sub: string, GroupName: string) {

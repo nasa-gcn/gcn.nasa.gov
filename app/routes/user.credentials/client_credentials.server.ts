@@ -15,6 +15,7 @@ import {
 import { generators } from 'openid-client'
 
 import { cognito, getGroups, maybeThrowCognito } from '~/lib/cognito.server'
+import type { Team, TeamMember } from '~/lib/teams.server'
 import { getUser } from '~/routes/_auth/user.server'
 
 export interface RedactedClientCredential {
@@ -241,4 +242,61 @@ export class ClientCredentialVendingMachine {
       .sort((a, b) => Number(b === defaultGroup) - Number(a === defaultGroup))
       .map((key) => [key, groupsMap[key]])
   }
+}
+
+export async function createClientCredential(
+  sub: string,
+  teamId: string,
+  name: string
+): Promise<UnRedactedClientCredential> {
+  const db = await tables()
+  const membership = (await db.team_members.get({ sub, teamId })) as TeamMember
+
+  if (!membership)
+    throw new Response('user does not belong to the requested team', {
+      status: 403,
+    })
+
+  const team = (await db.teams.get({ teamId })) as Team
+  const scope = `${membership.permission}:${team.teamName}`
+  const { client_id, client_secret } =
+    await createClientCredentialInternal(scope)
+  const created = Date.now()
+
+  await db.client_credentials.put({
+    name,
+    created,
+    client_id,
+    scope,
+    sub,
+  })
+
+  return { name, created, client_id, client_secret, scope }
+}
+
+async function createClientCredentialInternal(scope: string) {
+  const command = new CreateUserPoolClientCommand({
+    AllowedOAuthFlows: ['client_credentials'],
+    AllowedOAuthFlowsUserPoolClient: true,
+    AllowedOAuthScopes: [scope],
+    ClientName: 'auto-generated',
+    GenerateSecret: true,
+    UserPoolId: process.env.COGNITO_USER_POOL_ID,
+  })
+
+  let response
+  try {
+    response = await cognito.send(command)
+  } catch (e) {
+    maybeThrowCognito(e, 'creating fake client credentials')
+    const client_id = generators.random(26)
+    const client_secret = generators.random(51)
+    return { client_id, client_secret }
+  }
+
+  const client_id = response.UserPoolClient?.ClientId
+  const client_secret = response.UserPoolClient?.ClientSecret
+  if (!client_id) throw new Error('AWS SDK must return ClientId')
+  if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
+  return { client_id, client_secret }
 }

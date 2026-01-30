@@ -20,9 +20,14 @@ import {
 import { useState } from 'react'
 
 import { ReCAPTCHA, verifyRecaptcha } from './ReCAPTCHA'
+import { feature } from '~/lib/env.server'
 import { getFormDataString } from '~/lib/utils'
-import { useRecaptchaSiteKey } from '~/root'
-import { ClientCredentialVendingMachine } from '~/routes/user.credentials/client_credentials.server'
+import { useFeature, useRecaptchaSiteKey } from '~/root'
+import { getUser } from '~/routes/_auth/user.server'
+import {
+  ClientCredentialVendingMachine,
+  createClientCredential,
+} from '~/routes/user.credentials/client_credentials.server'
 
 export async function loader(args: LoaderFunctionArgs) {
   return await handleCredentialLoader(args)
@@ -41,9 +46,15 @@ export async function handleCredentialActions(
     case 'create':
       const name = getFormDataString(data, 'name')
       const scope = getFormDataString(data, 'scope')
+      const teamId = getFormDataString(data, 'teamId')
       const recaptchaResponse = getFormDataString(data, 'g-recaptcha-response')
       await verifyRecaptcha(recaptchaResponse)
-      const { client_id } = await machine.createClientCredential(name, scope)
+      const user = await getUser(request)
+      if (!user) throw new Response(null, { status: 403 })
+      if (!teamId || !name) throw new Response(null, { status: 400 })
+      const { client_id } = feature('TEAMS')
+        ? await createClientCredential(user.sub, teamId, name)
+        : await machine.createClientCredential(name, scope)
       let redirectTarget = ''
       if (redirectSource == 'quickstart') {
         const params = new URL(request.url).searchParams
@@ -68,16 +79,22 @@ export async function handleCredentialActions(
   }
 }
 export async function handleCredentialLoader({ request }: LoaderFunctionArgs) {
+  const user = await getUser(request)
   const machine = await ClientCredentialVendingMachine.create(request)
   const client_credentials = await machine.getClientCredentials()
   const groups = await machine.getGroupDescriptions()
-  return { client_credentials, groups }
+
+  return {
+    client_credentials,
+    groups,
+    kafkaPermissions: user?.kafkaPermissions,
+  }
 }
 
 export function NewCredentialForm({
   autoFocus,
 }: Pick<JSX.IntrinsicElements['button'], 'autoFocus'>) {
-  const { groups } = useLoaderData<typeof loader>()
+  const { groups, kafkaPermissions } = useLoaderData<typeof loader>()
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
   const [nameValid, setNameValid] = useState(false)
 
@@ -101,20 +118,41 @@ export function NewCredentialForm({
         placeholder="Name"
         onChange={(e) => setNameValid(Boolean(e.target.value))}
       />
-      <Label htmlFor="scope">Scope</Label>
-      <Fieldset id="scope">
-        {groups.map(([key, description], index) => (
-          <Radio
-            name="scope"
-            id={key}
-            key={key}
-            value={key}
-            defaultChecked={index === 0}
-            label={key}
-            labelDescription={description}
-          />
-        ))}
-      </Fieldset>
+      {useFeature('TEAMS') ? (
+        <>
+          <Label htmlFor="teamId">Team</Label>
+          <Fieldset id="teamId">
+            {kafkaPermissions?.map((item, index) => (
+              <Radio
+                name="teamId"
+                id={item.teamId}
+                key={item.teamId}
+                value={item.teamId}
+                defaultChecked={index === 0}
+                label={item.teamName}
+                labelDescription={`${item.description} - Permission: ${item.permission}`}
+              />
+            ))}
+          </Fieldset>
+        </>
+      ) : (
+        <>
+          <Label htmlFor="scope">Scope</Label>
+          <Fieldset id="scope">
+            {groups.map(([key, description], index) => (
+              <Radio
+                name="scope"
+                id={key}
+                key={key}
+                value={key}
+                defaultChecked={index === 0}
+                label={key}
+                labelDescription={description}
+              />
+            ))}
+          </Fieldset>
+        </>
+      )}
       <ReCAPTCHA
         onChange={(value) => {
           setRecaptchaValid(Boolean(value))
