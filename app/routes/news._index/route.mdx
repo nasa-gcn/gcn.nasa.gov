@@ -15,6 +15,7 @@ import {
 import teamPhoto from './AAS243_booth.jpg'
 import { SendAnnouncementButton } from './components'
 import { Anchor } from '~/components/Anchor'
+import { WithFeature } from '~/root'
 
 <Grid row>
   <h1 className="grid-col-fill">GCN News and Events</h1>
@@ -25,6 +26,39 @@ import { Anchor } from '~/components/Anchor'
 
 <Collection>
 
+  <WithFeature ICECUBE>
+    ## 2026
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+
+        <CollectionCalendarDate datetime='February 3, 2026' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>IceCube Gold/Bronze Notices and Schema v6.1.0</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+        #### New IceCube Notices
+
+        The IceCube Team and the GCN team are pleased to announce the availability of a new IceCube Notice type via the [new GCN](/) in JSON format for Gold/Bronze Track alerts.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart). The information included in the JSON-format Notices largely overlaps with that in GCN Classic with the addition of a URL of multi-order probability maps. [AMON_ICECUBE_GOLD and AMON_ICECUBE_BRONZE](https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html) notices remain available via GCN Classic and GCN Classic over Kafka.
+
+        [IceCube](https://icecube.wisc.edu/) is a is a cubic-kilometer Cherenkov particle detector deployed in the Antarctic ice beneath the Amundsen-Scott South Pole Station. IceCube detects neutrinos by observing the light produced by relativistic charged particles created by neutrino interactions in or near the instrumented volume of ice.
+
+        Notice Topic: new Gold/Bronze Notices provide high-energy (TeV-PeV) track-like alerts with $$0.25-0.75^\circ$$ radius angular resolution.  Events are classified into Gold and Bronze based on their likelihood of being astrophysical. Two GCN Notices are sent for each event - one corresponding to the preliminary reconstruction and one corresponding to the revised reconstruction. Gold and Bronze events occur at a rate of 10 and 16 per year, respectively, with a latency of 0.5-1 minute from detection.  These new alerts are distributed via GCN Kafka on the topic `gcn.notices.icecube.gold_bronze_track_alerts`.
+
+        See the [IceCube mission page](/missions/icecube) for a more extensive description of the information provided in these new Notices.
+
+        #### Schema v6.1.0
+        GCN Schema v6.1.0 is available with recent changes including minor changes to the core schema to be used in upcoming Notice types ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v6.1.0)).
+
+      </CollectionDescription>
+    </CollectionItem>
+
+  </WithFeature>
+  
 ## 2025
 
     <CollectionItem

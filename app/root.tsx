@@ -268,10 +268,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! Super-Kamiokande JSON Notices and Schema v4.5.0. See{' '}
+          New! IceCube Single Neutrino Notices and Schema v6.1.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-super-kamiokande-json-notices"
+            to="/news#icecube-goldbronze-notices-and-schema-v610"
           >
             news and announcements
           </Link>
