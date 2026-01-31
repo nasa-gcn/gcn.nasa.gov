@@ -32,11 +32,9 @@ export default function () {
                   CHIME
                 </NavLink>
               ),
-              useFeature('DSA110') && (
-                <NavLink key="dsa110" to="dsa110">
-                  DSA-110
-                </NavLink>
-              ),
+              <NavLink key="dsa110" to="dsa110">
+                DSA-110
+              </NavLink>,
               <NavLink key="einstein-probe" to="einstein-probe">
                 Einstein Probe
               </NavLink>,
