@@ -247,7 +247,8 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! CHIME FRB Notices. See{' '}
+          New! CHIME and DSA-110 FRB Notices, IceCube Neutrino Notices, and
+          Schema v6.1.1. See{' '}
           <Link
             className="usa-link"
             to="/news#new-chime-fast-radio-burst-notices"
