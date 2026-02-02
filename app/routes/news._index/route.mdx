@@ -15,6 +15,7 @@ import {
 import { SendAnnouncementButton } from '../news/components'
 import teamPhoto from './AAS243_booth.jpg'
 import { Anchor } from '~/components/Anchor'
+import { WithFeature } from '~/root'
 
 <Grid row>
   <h1 className="grid-col-fill">GCN News and Events</h1>
@@ -25,12 +26,12 @@ import { Anchor } from '~/components/Anchor'
 
 <Collection>
 
-## 2025
-
+<WithFeature CHIME>
+## 2026
     <CollectionItem
       className="maxw-none grid-container"
       variantComponent={
-        <CollectionCalendarDate datetime='July 11, 2025' />
+        <CollectionCalendarDate datetime='February 3, 2026' />
       }
     >
       <CollectionHeading headingLevel="h3">
@@ -49,6 +50,9 @@ import { Anchor } from '~/components/Anchor'
       </CollectionDescription>
     </CollectionItem>
 
+</WithFeature>
+
+## 2025
 
     <CollectionItem
       className="maxw-none grid-container"
