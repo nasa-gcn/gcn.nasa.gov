@@ -63,10 +63,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 export const JsonNoticeTypes: { [key: string]: string[] } = {
   Circulars: ['gcn.circulars'],
   Heartbeat: ['gcn.heartbeat'],
-  IceCube: [
-    'gcn.notices.icecube.lvk_nu_track_search',
-    'gcn.notices.icecube.gold_bronze_track_alerts',
-  ],
+  IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
   LVK: ['igwn.gwalert'],
   Swift: ['gcn.notices.swift.bat.guano'],
   'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
@@ -113,6 +110,14 @@ export function NoticeTypeCheckboxes({
       'gcn.notices.svom.voevent.eclairs',
       'gcn.notices.svom.voevent.mxt',
     ]
+  }
+
+  if (useFeature('ICECUBE')) {
+    JsonNoticeTypes.IceCube = [
+      'gcn.notices.icecube.gold_bronze_track_alerts',
+      'gcn.notices.icecube.lvk_nu_track_search',
+    ]
+    JsonNoticeTypeLinks.IceCube = '/missions/icecube'
   }
 
   if (useFeature('FERMI_GBM_QUICKSTART')) {
