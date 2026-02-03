@@ -15,7 +15,6 @@ import {
 import teamPhoto from './AAS243_booth.jpg'
 import { SendAnnouncementButton } from './components'
 import { Anchor } from '~/components/Anchor'
-import { WithFeature } from '~/root'
 
 <Grid row>
   <h1 className="grid-col-fill">GCN News and Events</h1>
@@ -26,38 +25,64 @@ import { WithFeature } from '~/root'
 
 <Collection>
 
-  <WithFeature ICECUBE>
-    ## 2026
+## 2026
 
-    <CollectionItem
-      className="maxw-none grid-container"
-      variantComponent={
+  <CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
 
-        <CollectionCalendarDate datetime='February 3, 2026' />
-      }
-    >
-      <CollectionHeading headingLevel="h3">
-        <Anchor>IceCube Gold/Bronze Notices and Schema v6.1.0</Anchor>
-      </CollectionHeading>
-      <CollectionDescription>
+      <CollectionCalendarDate datetime='February 3, 2026' />
+    }
 
-        #### New IceCube Notices
+>
 
-        The IceCube Team and the GCN team are pleased to announce the availability of a new IceCube Notice type via the [new GCN](/) in JSON format for Gold/Bronze Track alerts.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart). The information included in the JSON-format Notices largely overlaps with that in GCN Classic with the addition of a URL of multi-order probability maps. [AMON_ICECUBE_GOLD and AMON_ICECUBE_BRONZE](https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html) notices remain available via GCN Classic and GCN Classic over Kafka.
+    <CollectionHeading headingLevel="h3">
+      <Anchor>New CHIME, DSA-110, and IceCube Notices and Schema v6.1.1</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
 
-        [IceCube](https://icecube.wisc.edu/) is a is a cubic-kilometer Cherenkov particle detector deployed in the Antarctic ice beneath the Amundsen-Scott South Pole Station. IceCube detects neutrinos by observing the light produced by relativistic charged particles created by neutrino interactions in or near the instrumented volume of ice.
+        The GCN Team is pleased to announce new Notice Types and a schema release.
+        - [CHIME Fast Radio Burst  Notices](/news#chime-fast-radio-burst-notices)
+        - [DSA-110 Fast Radio Burst  Notices](/news#dsa-110-fast-radio-burst-notices)
+        - [IceCube Gold/Bronze Notices](/news#icecube-goldbronze-notices)
+        - [Schema v6.1.1](/news#schema-v611)
 
-        Notice Topic: new Gold/Bronze Notices provide high-energy (TeV-PeV) track-like alerts with $$0.25-0.75^\circ$$ radius angular resolution.  Events are classified into Gold and Bronze based on their likelihood of being astrophysical. Two GCN Notices are sent for each event - one corresponding to the preliminary reconstruction and one corresponding to the revised reconstruction. Gold and Bronze events occur at a rate of 10 and 16 per year, respectively, with a latency of 0.5-1 minute from detection.  These new alerts are distributed via GCN Kafka on the topic `gcn.notices.icecube.gold_bronze_track_alerts`.
+      #### CHIME Fast Radio Burst Notices
+        The CHIME Team and the GCN Team are pleased to announce the availability of a new CHIME Fast Radio Burst (FRB) notice type via the [new GCN](https://gcn.nasa.gov) in JSON format.  We welcome this new transient type to the GCN community and encourage follow-up observations. These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).  They are not available via GCN Classic.
 
-        See the [IceCube mission page](/missions/icecube) for a more extensive description of the information provided in these new Notices.
+        The [Canadian Hydrogen Intensity Mapping Experiment (CHIME)](https://chime-experiment.ca/en) is a transit radio telescope located in Penticton, BC, Canada. It consists of 4 semi-cylindrical reflectors, each with 2000 square meters of collecting area and 256 dual-polarization antennas. The telescope observes between 400 MHz and 800 MHz and covers an instantaneous field of view of ~200 square degrees. CHIME houses several electronic backends, which are tailored for specific scientific goals, such as generating cosmological maps of hydrogen density, detecting Fast Radio Bursts, and observing and timing pulsars. In particular, the FRB backend operates at ~1 ms time resolution and ~ 0.4 MHz frequency resolution.
 
-        #### Schema v6.1.0
-        GCN Schema v6.1.0 is available with recent changes including minor changes to the core schema to be used in upcoming Notice types ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v6.1.0)).
+        The new CHIME notices provide FRB detection details including ~arcminute localization with a latency of ~1 minute. The detection rate is ~600 per year.  Notices will be distributed on the Kafka topic: <br/>
+        `gcn.notices.chime.frb`
 
-      </CollectionDescription>
-    </CollectionItem>
+        A more extensive description of the information provided in these new notices is available at https://gcn.nasa.gov/missions/chime.
 
-  </WithFeature>
+      #### DSA-110 Fast Radio Burst Notices
+
+        The DSA-110 Team and the GCN Team are pleased to announce the availability of DSA-110 notice types via the [new GCN](/) in JSON format.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).
+
+        The [Deep Synoptic Array-110 (DSA-110)](https://www.deepsynoptic.org/instrument) is a radio interferometer purpose-built for fast radio burst (FRB) detection and direct localization. The array is located at the [Owens Valley Radio Observatory (OVRO)](https://www.ovro.caltech.edu) comprised of 96 4.65-m dishes that continuously survey for FRBs at frequencies between 1280 to 1530 MHz. Over a three-year science program, the DSA-110 will deliver a sample of more than 300 FRBs, each localized to regions ~1 arcminute radius within 1 minute of detection. This is made possible by a suite of novel instrumentation, including precisely engineered antennas, ultra-low noise ambient-temperature receivers, and a powerful real-time, autonomous data-analysis system.
+
+        DSA-110 notices provide FRB detection and localization distributed on the topic `gcn.notice.dsa110.frb`.
+
+        See the [DSA-110 mission page](/missions/dsa_110) for a more extensive description of the information provided in these new notices.
+
+      #### IceCube Gold/Bronze Notices
+
+      The IceCube Team and the GCN Team are pleased to announce the availability of a new IceCube Notice type via the [new GCN](/) in JSON format for Gold/Bronze Track alerts.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart). The information included in the JSON-format Notices largely overlaps with that in GCN Classic with the addition of a URL of multi-order probability maps. [AMON_ICECUBE_GOLD and AMON_ICECUBE_BRONZE](https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html) notices remain available via GCN Classic and GCN Classic over Kafka.
+
+      [IceCube](https://icecube.wisc.edu/) is a cubic-kilometer Cherenkov particle detector deployed in the Antarctic ice beneath the Amundsen-Scott South Pole Station. IceCube detects neutrinos by observing the light produced by relativistic charged particles created by neutrino interactions in or near the instrumented volume of ice.
+
+      Notice Topic: new Gold/Bronze Notices provide high-energy (TeV-PeV) track-like alerts with $$0.25-0.75^\circ$$ radius angular resolution.  Events are classified into Gold and Bronze based on their likelihood of being astrophysical. Two GCN Notices are sent for each event - one corresponding to the preliminary reconstruction and one corresponding to the revised reconstruction. Gold and Bronze events occur at a rate of 10 and 16 per year, respectively, with a latency of 0.5-1 minute from detection.  These new alerts are distributed via GCN Kafka on the topic `gcn.notices.icecube.gold_bronze_track_alerts`.
+
+      The [IceCube documentation](missions/icecube) has been extensively updated. It now includes details on the new information released with the updated schema, as well as explanations of the quantities listed in the FITS file headers for the multi-order probability maps.
+
+      #### Schema v6.1.1
+      GCN Schema v6.1.1 is available with recent changes including new Notice types ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v6.1.1)).
+
+    </CollectionDescription>
+
+  </CollectionItem>
   
 ## 2025
 

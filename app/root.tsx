@@ -268,10 +268,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! IceCube Single Neutrino Notices and Schema v6.1.0. See{' '}
+          New! CHIME and DSA-110 FRB Notices, IceCube Notices and Schema v6.1.1.
+          See{' '}
           <Link
             className="usa-link"
-            to="/news#icecube-goldbronze-notices-and-schema-v610"
+            to="/news#new-chime-dsa-110-and-icecube-notices-and-schema-v611"
           >
             news and announcements
           </Link>
