@@ -3,14 +3,7 @@ handle:
   breadcrumb: CHIME
 ---
 
-import { feature } from '~/lib/env.server'
-
 import logo from './logo.svg'
-
-export async function loader() {
-  if (!feature('CHIME')) throw new Response(null, { status: 404 })
-  return null
-}
 
 # Canadian Hydrogen Intensity Mapping Experiment (CHIME)
 
@@ -65,5 +58,3 @@ Detailed description and examples of CHIME Notices are available in the [GCN Sch
 | CHIME/FRB  | Fast Radio Bursts | ~600  |
 
 </div>
-
-For comments, questions, or concerns, feel free to reach out to Thomas Abbott at thomas.abbott@mail.mcgill.ca.
