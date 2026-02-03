@@ -62,22 +62,29 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 
 export const JsonNoticeTypes: { [key: string]: string[] } = {
   Circulars: ['gcn.circulars'],
-  Heartbeat: ['gcn.heartbeat'],
-  IceCube: ['gcn.notices.icecube.lvk_nu_track_search'],
-  LVK: ['igwn.gwalert'],
-  Swift: ['gcn.notices.swift.bat.guano'],
+  CHIME: ['gcn.notices.chime.frb'],
+  'DSA-110': ['gcn.notices.dsa110.frb'],
   'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
+  Heartbeat: ['gcn.heartbeat'],
+  IceCube: [
+    'gcn.notices.icecube.lvk_nu_track_search',
+    'gcn.notices.icecube.gold_bronze_track_alerts',
+  ],
+  LVK: ['igwn.gwalert'],
   'Super-Kamiokande': ['gcn.notices.superk.sn_alert'],
+  Swift: ['gcn.notices.swift.bat.guano'],
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   Circulars: '/circulars',
+  CHIME: '/missions/chime',
+  'DSA-110': '/missions/dsa110',
+  'Einstein Probe': '/missions/einstein-probe',
   Heartbeat: '/docs/faq#how-can-i-tell-that-my-kafka-client-is-working',
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
-  Swift: '/missions/swift',
-  'Einstein Probe': '/missions/einstein-probe',
   'Super-Kamiokande': '/missions/sksn',
+  Swift: '/missions/swift',
 }
 
 interface NoticeTypeCheckboxProps {
@@ -117,19 +124,9 @@ export function NoticeTypeCheckboxes({
     JsonNoticeTypeLinks.Fermi = '/missions/fermi'
   }
 
-  if (useFeature('CHIME')) {
-    JsonNoticeTypes.Chime = ['gcn.notices.chime.alert']
-    JsonNoticeTypeLinks.Chime = '/missions/chime'
-  }
-
   if (useFeature('KM3NET')) {
     JsonNoticeTypes.KM3NET = ['gcn.notices.km3net']
     JsonNoticeTypeLinks.KM3NET = '/missions/km3net'
-  }
-
-  if (useFeature('DSA110')) {
-    JsonNoticeTypes['DSA-110'] = ['gcn.notices.dsa110.frb']
-    JsonNoticeTypeLinks['DSA-110'] = '/missions/dsa110'
   }
 
   const counterFunction = (childRef: HTMLInputElement) => {
