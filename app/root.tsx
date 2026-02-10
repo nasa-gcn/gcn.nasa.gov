@@ -47,6 +47,7 @@ import { useSpinDelay } from 'spin-delay'
 import invariant from 'tiny-invariant'
 
 import { features, getEnvOrDieInProduction, origin } from './lib/env.server'
+import { adminGroup } from './lib/kafka.server'
 import { DevBanner } from './root/DevBanner'
 import { Footer } from './root/Footer'
 import NewsBanner from './root/NewsBanner'
@@ -54,7 +55,6 @@ import { type BreadcrumbHandle, Title } from './root/Title'
 import { Header } from './root/header/Header'
 import type { SEOHandle } from './root/seo'
 import { getUser } from './routes/_auth/user.server'
-import { adminGroup } from './routes/admin'
 import {
   moderatorGroup,
   submitterGroup,

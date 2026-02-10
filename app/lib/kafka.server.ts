@@ -6,10 +6,18 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Kafka, KafkaJSError } from 'gcn-kafka'
+import type { AclEntry } from 'kafkajs'
+import {
+  AclOperationTypes,
+  AclPermissionTypes,
+  AclResourceTypes,
+  ResourcePatternTypes,
+} from 'kafkajs'
 import memoizee from 'memoizee'
 import { custom } from 'openid-client'
 
 import { domain, getEnvOrDieInProduction } from './env.server'
+import type { User } from '~/routes/_auth/user.server'
 
 const client_id = getEnvOrDieInProduction('KAFKA_CLIENT_ID') ?? ''
 const client_secret = getEnvOrDieInProduction('KAFKA_CLIENT_SECRET')
@@ -84,4 +92,64 @@ if (process.env.ARC_SANDBOX) {
     const producer = await getProducer()
     await producer.send({ topic, messages: [{ value }] })
   }
+}
+
+export type KafkaACL = AclEntry & {
+  aclId?: string
+}
+
+export type UserClientType = 'producer' | 'consumer'
+
+export const adminGroup = 'gcn.nasa.gov/gcn-admin'
+
+export const consumerOperations = [
+  AclOperationTypes.READ,
+  AclOperationTypes.DESCRIBE,
+]
+export const producerOperations = [
+  AclOperationTypes.CREATE,
+  AclOperationTypes.WRITE,
+  AclOperationTypes.DESCRIBE,
+]
+
+const admin_client_id = getEnvOrDieInProduction('KAFKA_ADMIN_CLIENT_ID') ?? ''
+const admin_client_secret = getEnvOrDieInProduction('KAFKA_ADMIN_CLIENT_SECRET')
+const adminKafka = new Kafka({
+  client_id: admin_client_id,
+  client_secret: admin_client_secret,
+  domain,
+})
+
+function validateUser(user: User) {
+  if (!user.groups.includes(adminGroup))
+    throw new Response(null, { status: 403 })
+}
+
+export async function getAclsFromBrokers(user: User, filter?: string) {
+  validateUser(user)
+  const adminClient = adminKafka.admin()
+  await adminClient.connect()
+  const acls = await adminClient.describeAcls({
+    resourceType: AclResourceTypes.ANY,
+    host: '*',
+    permissionType: AclPermissionTypes.ANY,
+    operation: AclOperationTypes.ANY,
+    resourcePatternType: ResourcePatternTypes.ANY,
+  })
+  await adminClient.disconnect()
+  const results: KafkaACL[] = []
+  for (const item of acls.resources) {
+    results.push(
+      ...item.acls.map((acl) => {
+        return {
+          ...acl,
+          resourceName: item.resourceName,
+          resourceType: item.resourceType,
+          resourcePatternType: item.resourcePatternType,
+        }
+      })
+    )
+  }
+
+  return results
 }
