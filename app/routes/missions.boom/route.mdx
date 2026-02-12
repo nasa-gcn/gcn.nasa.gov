@@ -1,0 +1,47 @@
+---
+handle:
+  breadcrumb: Burst & Outburst Observations Monitor
+---
+
+import logo from './logo.png'
+
+# Burst & Outburst Observations Monitor (BOOM)
+
+<img
+  src={logo}
+  align="right"
+  width="284"
+  height="210"
+  alt="BOOM logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
+**Begun Operation:** 2025
+
+[Burst & Outburst Observations Monitor (BOOM)](https://www.ztf.caltech.edu/ztf-boom-babamul.html) is the underlying hardware and software infrastructure that enables a full blown science data platform for transient astronomy. BOOM features a multi-survey data archive and alert broker (Babamul) combining data from the ZTF and Rubin alert stream to offer users combined lightcurve infomation at filtering times. It serves as an interactive collaborative marshal for the transient, variable, and solar system science cases. The BOOM GCN Notices stream provides correlation between BOOM transient streams and other GCN Notices.
+
+**JSON-Serialized GCN Notices Types in GCN Kafka:**
+
+BOOM distributes alerts for potential correlations between optical transients and transients reported through GCN Notices. These notices are published on the GCN Kafka topic `gcn.notices.boom.alert`.
+
+BOOM [GCN schema](/schema/stable/gcn/notices/boom/alert.schema.json) and
+example [JSON message](/schema/stable/gcn/notices/boom/alert.example.json) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/boom/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of BOOM Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/boom).
+
+<div className="overflow-table">
+
+| Type                     | Contents                          | Latency |
+| ------------------------ | --------------------------------- | ------- |
+| `gcn.notices.boom.alert` | Localization, Classification, ??? | ~? min  |
+
+</div>
+
+**Yearly Trigger Rates:**
+
+<div className="overflow-table">
+
+| Survey | Type                                        | Rates |
+| ------ | ------------------------------------------- | ----- |
+| ZTF    | GRB afterglows, kilonovae, other transients | ~?    |
+| Rubin  | GRB afterglows, kilonovae, other transients | ~?    |
+
+</div>
