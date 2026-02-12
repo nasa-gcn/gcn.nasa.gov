@@ -24,6 +24,9 @@ export default function () {
               <NavLink key="." to="." end>
                 Missions, Instruments, and Facilities
               </NavLink>,
+              <NavLink key="blackcat" to="blackcat">
+                BlackCAT
+              </NavLink>,
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,

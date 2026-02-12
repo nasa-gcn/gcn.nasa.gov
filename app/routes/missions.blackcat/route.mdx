@@ -1,0 +1,59 @@
+---
+handle:
+  breadcrumb: BlackCAT
+---
+
+import { feature } from '~/lib/env.server'
+
+import logo from './logo.png'
+
+# BlackCAT CubeSat
+
+<img
+  src={logo}
+  align="right"
+  width="1500"
+  height="1200"
+  alt="BlackCAT logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
+**Launch Date:** As early as Jan 2026
+
+**Mission Duration:** ~1 year (with possible extension)
+
+The Black hole Coded Aperture Telescope (BlackCAT) is a NASA-funded 6U CubeSat mission led by Pennsylvania State University. BlackCAT is designed to monitor the soft X-ray sky (0.5 - 20 keV) with a wide field of view, enabling the rapid detection and localization of high-energy transients.
+
+The primary science objective of BlackCAT is the discovery of high-redshift gamma-ray bursts (GRBs), which serve as probes of star formation, metal enrichment, and reionization in the early Universe. Sensitivity in the soft X-ray band provides an intrinsic advantage for detecting distant GRBs whose spectra are redshifted out of the gamma-ray regime. BlackCAT also functions as a wide field X-ray transient monitor, providing rapid alerts for multiwavelength and multimessenger follow-up.
+
+The science instrument is designed, built, and calibrated by Penn State, while the spacecraft bus is provided by Kongsberg NanoAvionics US.
+
+<div className="overflow-table">
+
+| Instrument                     | Energy Range | Field of View | Localization  |
+| ------------------------------ | ------------ | ------------- | ------------- |
+| Coded-Aperture X-ray Telescope | 0.5 - 20 keV | ~0.85 sr      | ~30–60 arcsec |
+
+</div>
+
+**JSON-Serialized GCN Notices Types in GCN Kafka**
+
+BlackCAT will distribute alerts for gamma-ray bursts and other high energy X-ray transients via GCN Kafka. Mission-specific schemas and example JSON messages will be provided through the GCN Schema Browser and GitHub repository prior to operations.
+
+<div className="overflow-table">
+
+| Type                         | Contents                               | Latency |
+| ---------------------------- | -------------------------------------- | ------- |
+| `gcn.notices.blackcat.alert` | Localization, significance, event data | ~1 min  |
+
+</div>
+
+**Yearly Trigger Rates:**
+
+<div className="overflow-table">
+
+| Instrument | Type                                  | Rates         |
+| ---------- | ------------------------------------- | ------------- |
+| BlackCAT   | Gamma-ray bursts and X-ray transients | ~40 GRBs/year |
+
+</div>
