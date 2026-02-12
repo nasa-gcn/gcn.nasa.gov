@@ -147,29 +147,22 @@ async function getUserAttributes(Username: string) {
  *    c. Save the resulting refresh token and auth token on the server side in
  *       a record associated with the user's account.
  *
+ *    d. To post a GCN Circular on behalf of the user, make a POST request to
+ *       https://<stage>.gcn.nasa.gov/api/circulars. Provide the access token
+ *       in the Authorization: Bearer header. The request body should be a JSON
+ *       document of the form '{"subject": "...", "body": "..."}'.
+ *
+ *       To edit a GCN Circular as a moderator, make a PUT request to
+ *       https://<stage>.gcn.nasa.gov/api/circulars. Edits may be made to the
+ *       subject, body, or eventId. The subject and body are required, even if
+ *       no changes are made. The eventId is optional. A new circular version
+ *       will be created.
+ *
  *    e. The application is responsible for renewing the access token as needed
  *       using the refreshing token.
  *
  * [app client]: https://docs.aws.amazon.com/cognito/latest/developerguide/user-pool-settings-client-apps.html
  * [authorization code flow]: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow
- *
- * METHOD: POST
- * GCN Circulars submission by third parties on behalf of users via an API.
- * To post a GCN Circular on behalf of the user, make a POST request to
- *       https://<stage>.gcn.nasa.gov/api/circulars. Provide the access token
- *       in the Authorization: Bearer header. The request body should be a JSON
- *       document of the form '{"subject": "...", "body": "..."}'.
- *
- * METHOD: PUT
- * GCN Circulars edit by moderators via the API.
- * To edit a GCN Circular as a moderator, make a PUT request to
- *       https://<stage>.gcn.nasa.gov/api/circulars. Provide the access token
- *       in the Authorization: Bearer header. The request body should be a JSON
- *       document of the form '{"subject": "...", "body": "..."}'.
- * Edits may be made to the subject, body, or eventId.
- * The subject and body are required, even if no changes are made.
- * EventId is optional.
- * A new circular version will be created.
  */
 export async function action({ request }: ActionFunctionArgs) {
   notFoundIfBrowserRequest(request.headers)
