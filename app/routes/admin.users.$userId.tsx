@@ -42,7 +42,8 @@ export async function loader({
     throw new Response(null, { status: 403 })
   if (!userId) throw new Response(null, { status: 404 })
   const user = await getCognitoUserFromSub(userId)
-  const userGroups = (await listGroupsForUser(userId)).map(
+  if (!user || !user.Username) throw new Response(null, { status: 404 })
+  const userGroups = (await listGroupsForUser(user.Username)).map(
     (group) => group.GroupName
   )
   const allGroups: GroupSelectionItem[] = (await getGroups())

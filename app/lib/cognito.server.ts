@@ -219,8 +219,7 @@ export async function addUserToGroup(sub: string, GroupName: string) {
   await cognito.send(command)
 }
 
-export async function listGroupsForUser(sub: string) {
-  const { Username } = await getCognitoUserFromSub(sub)
+export async function listGroupsForUser(Username: string) {
   const pages = paginateAdminListGroupsForUser(
     { client: cognito },
     { UserPoolId, Username }
