@@ -268,11 +268,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! CHIME and DSA-110 FRB Notices, IceCube Notices and Schema v6.1.1.
-          See{' '}
+          Passing of Scott Barthelmy, GCN Founder See{' '}
           <Link
             className="usa-link"
-            to="/news#new-chime-dsa-110-and-icecube-notices-and-schema-v611"
+            to="/news#passing-of-scott-barthelmy-gcn-founder"
           >
             news and announcements
           </Link>
