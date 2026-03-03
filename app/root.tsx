@@ -268,10 +268,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Passing of Scott Barthelmy, GCN Founder See{' '}
+          Retirement of GCN Classic VOEvent Brokers. See{' '}
           <Link
             className="usa-link"
-            to="/news#passing-of-scott-barthelmy-gcn-founder"
+            to="/news#retirement-of-gcn-classic-voevent-brokers"
           >
             news and announcements
           </Link>
