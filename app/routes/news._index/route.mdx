@@ -30,6 +30,22 @@ import { Anchor } from '~/components/Anchor'
   <CollectionItem
     className="maxw-none grid-container"
     variantComponent={
+      <CollectionCalendarDate datetime='March 4, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>Retirement of GCN Classic VOEvent Brokers</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+      As initially [announced in 2025](news#planned-retirement-of-gcn-classic-voevent-brokers), we are planning to retire the [GCN Classic VOEvent brokers](https://gcn.gsfc.nasa.gov/voevent.html) on **April 6, 2026**.  This impacts users who utilize the VOEvent Transfer Protocol (VTP) to receive VOEvent-format GCN Classic Notices. VOEvent-format Notices remain available via [Kafka and email](/docs/notices/consuming), and we recommend users migrate from VTP to Kafka.
+    </CollectionDescription>
+
+  </CollectionItem>
+
+  <CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
       <CollectionCalendarDate datetime='February 25, 2026' />
     }
 >
