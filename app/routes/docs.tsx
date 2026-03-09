@@ -39,6 +39,12 @@ export default function () {
                     <NavLink key="history" to="about/history">
                       History
                     </NavLink>,
+                    <NavLink
+                      key="publications-presentations"
+                      to="about/publications-presentations"
+                    >
+                      Publications & Presentations
+                    </NavLink>,
                     <NavLink key="team" to="about/team">
                       Team
                     </NavLink>,
