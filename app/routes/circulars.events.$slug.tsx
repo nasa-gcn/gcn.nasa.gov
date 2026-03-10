@@ -10,7 +10,6 @@ import {
   Link,
   useLoaderData,
   useNavigate,
-  useSearchParams,
 } from '@remix-run/react'
 import { Icon } from '@trussworks/react-uswds'
 import invariant from 'tiny-invariant'
@@ -44,7 +43,6 @@ export async function loader({ params: { slug } }: LoaderFunctionArgs) {
 
 export default function Group() {
   const { members, eventIds } = useLoaderData<typeof loader>()
-  const [searchParams] = useSearchParams()
   const navigate = useNavigate()
   return (
     <>

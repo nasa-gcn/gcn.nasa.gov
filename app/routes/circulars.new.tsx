@@ -13,7 +13,6 @@ import {
   ModalHeading,
 } from '@trussworks/react-uswds'
 
-import { useSearchString } from '~/lib/utils'
 import {
   useEmail,
   usePermissionModerator,
