@@ -15,11 +15,11 @@ export default function () {
   return (
     <>
       <div className="grid-container usa-prose padding-left-0 padding-right-0">
-        <div className="grid-row">
-          <div className="grid-col-auto">
+        <div className="grid-row grid-row-gap-0">
+          <div className="grid-col-auto display-flex flex-align-center">
             <h1 className="margin-bottom-0">GCN Circulars</h1>
           </div>
-          <div className="grid-col-auto margin-left-auto">
+          <div className="grid-col-auto margin-left-auto display-flex flex-align-center">
             <Link to={`/circulars/new${searchString}`}>
               <Button type="button" className="">
                 <Icon.Edit role="presentation" /> Submit New Circular
