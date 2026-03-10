@@ -6,11 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import {
-  Link,
-  useLoaderData,
-  useNavigate,
-} from '@remix-run/react'
+import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { Icon } from '@trussworks/react-uswds'
 import invariant from 'tiny-invariant'
 
