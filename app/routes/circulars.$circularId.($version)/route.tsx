@@ -7,7 +7,12 @@
  */
 import type { HeadersFunction, LoaderFunctionArgs } from '@remix-run/node'
 import { json } from '@remix-run/node'
-import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
+import {
+  Link,
+  useLoaderData,
+  useNavigate,
+  useRouteLoaderData,
+} from '@remix-run/react'
 import { Button, ButtonGroup, CardBody, Icon } from '@trussworks/react-uswds'
 import { useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
@@ -85,11 +90,12 @@ export default function () {
   const linkString = `/circulars/${circularId}${
     !latest && version ? `/${version}` : ''
   }`
+  const navigate = useNavigate()
 
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link to={`/circulars${searchString}`} className="usa-button">
+        <Link onClick={() => navigate(-1)} className="usa-button" to="">
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back
         </Link>
