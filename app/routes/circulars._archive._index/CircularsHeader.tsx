@@ -15,13 +15,13 @@ export default function () {
   return (
     <>
       <div className="grid-container usa-prose padding-left-0 padding-right-0">
-        <div className="grid-row grid-row-gap-0">
+        <div className="grid-row grid-row-gap-0 flex-column-reverse tablet:flex-row">
           <div className="grid-col-auto display-flex flex-align-center">
             <h1 className="margin-bottom-0">GCN Circulars</h1>
           </div>
-          <div className="grid-col-auto margin-left-auto display-flex flex-align-center">
-            <Link to={`/circulars/new${searchString}`}>
-              <Button type="button" className="">
+          <div className="grid-col-auto margin-left-auto display-flex flex-align-center width-full tablet:width-auto">
+            <Link to={`/circulars/new${searchString}`} className="width-full">
+              <Button type="button" className="width-full">
                 <Icon.Edit role="presentation" /> Submit New Circular
               </Button>
             </Link>
