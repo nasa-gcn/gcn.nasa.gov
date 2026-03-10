@@ -14,14 +14,18 @@ export default function () {
   if (searchString) searchString = `?${searchString}`
   return (
     <>
-      <div className="display-flex flex-justify-space-between flex-align-center">
-        <h1>GCN Circulars</h1>
-        <div className="margin-left-auto">
-          <Link to={`/circulars/new${searchString}`}>
-            <Button type="button" className="padding-y-1">
-              <Icon.Edit role="presentation" /> Submit New Circular
-            </Button>
-          </Link>
+      <div className="grid-container usa-prose padding-left-0 padding-right-0">
+        <div className="grid-row">
+          <div className="grid-col-auto">
+            <h1 className="margin-bottom-0">GCN Circulars</h1>
+          </div>
+          <div className="grid-col-auto margin-left-auto">
+            <Link to={`/circulars/new${searchString}`}>
+              <Button type="button" className="">
+                <Icon.Edit role="presentation" /> Submit New Circular
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
       <p className="usa-paragraph">
