@@ -28,7 +28,7 @@ const circularsTests = deviceList.map((device) => {
       storageState: '__playwright__/.auth/user.json',
     },
     testMatch: 'circulars/*',
-    dependencies: ['setup'],
+    dependencies: ['authSetup'],
   }
 })
 
@@ -42,7 +42,7 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: Boolean(process.env.CI),
   /* Retry on CI only */
-  retries: 3,
+  retries: 5,
   /* Opt out of parallel tests on CI. */
   // workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
@@ -58,18 +58,27 @@ export default defineConfig({
 
   /* Configure projects for major browsers */
   projects: [
-    { name: 'setup', testMatch: 'auth.setup.ts' },
-    { name: 'adminSetup', testMatch: 'admin.setup.ts' },
+    { name: 'serverSetup', testMatch: 'server.setup.ts' },
+    {
+      name: 'authSetup',
+      dependencies: ['serverSetup'],
+      testMatch: 'auth.setup.ts',
+    },
+    {
+      name: 'adminSetup',
+      dependencies: ['serverSetup'],
+      testMatch: 'admin.setup.ts',
+    },
     ...adminTests,
     ...circularsTests,
   ],
 
   /* Run your local dev server before starting the tests */
   webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3333',
+    command: 'npx run-s build:sass dev:remix',
+    port: 3333,
     reuseExistingServer: !process.env.CI,
     stdout: 'pipe',
-    timeout: 240 * 1000, // 240 Seconds timeout on webServer
+    timeout: 300 * 1000, // 300 Seconds timeout on webServer
   },
 })

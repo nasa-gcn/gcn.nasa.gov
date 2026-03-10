@@ -4,7 +4,6 @@ const loadingTestsCircular = {
   subject: 'LIGO/Virgo/KAGRA S240630t: Updated Sky localization',
   eventId: 'LIGO/Virgo/KAGRA S240630t',
   submittedHow: 'web',
-  createdOn: 1719767201026,
   circularId: 36796,
   submitter:
     'Christopher P L Berry at LVK Collaboration <christopher.berry@ligo.org>',
@@ -17,15 +16,13 @@ test.beforeEach(async ({ page }) => {
   await page.waitForSelector('#query')
 })
 
-test.describe('Circulars correction page', () => {
+test.describe('Circulars edit page', () => {
   test('populates all fields on load', async ({ page }) => {
     test.slow()
-    await page.goto(`/circulars/correction/${loadingTestsCircular.circularId}`)
+    await page.goto(`/circulars/new/${loadingTestsCircular.circularId}`)
     await expect(page.locator('#submitter')).toHaveValue(
       loadingTestsCircular.submitter
     )
-    const testDateTime = new Date(loadingTestsCircular.createdOn).toISOString()
-    await expect(page.locator('#createdOn')).toHaveValue(testDateTime)
     await expect(page.locator('#subject')).toHaveValue(
       loadingTestsCircular.subject
     )

@@ -9,12 +9,19 @@ import { type LoaderFunctionArgs, json } from '@remix-run/node'
 import invariant from 'tiny-invariant'
 
 import { getEnvOrDie } from '~/lib/env.server'
-import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import {
+  notFoundIfBrowserRequest,
+  publicStaticShortTermCacheControlHeaders,
+} from '~/lib/headers.server'
 import { throwForStatus } from '~/lib/utils'
 
 const splitter = /[:.]/
 
-export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
+export async function loader({
+  request: { headers },
+  params: { '*': value },
+}: LoaderFunctionArgs) {
+  notFoundIfBrowserRequest(headers)
   invariant(value)
 
   const tnsBotName = getEnvOrDie('TNS_BOT_NAME')
@@ -48,7 +55,7 @@ export async function loader({ params: { '*': value } }: LoaderFunctionArgs) {
     ra?: string
     dec?: string
     internal_names?: string
-  } = (await response.json()).data.reply
+  } = (await response.json()).data
 
   if (!(ra && dec)) throw new Response(null, { status: 404 })
 

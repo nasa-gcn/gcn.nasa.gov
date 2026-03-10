@@ -15,6 +15,13 @@ import { getUser } from './_auth/user.server'
 import { adminGroup } from './admin'
 import { UserLookupComboBox } from '~/components/UserLookup'
 import { getFormDataString } from '~/lib/utils'
+import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Users',
+  noIndex: true,
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)

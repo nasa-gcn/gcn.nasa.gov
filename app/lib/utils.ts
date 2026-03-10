@@ -114,3 +114,17 @@ export function joinListWithOxfordComma(
     return `${list.join(', ')}, ${conjunction} ${last}`
   }
 }
+
+const encoder = new TextEncoder()
+
+/**
+ * Truncate a string so that its JSON serialization has a maximum byte length.
+ */
+export function truncateJsonMaxBytes(text: string, maxBytes: number) {
+  let truncated = false
+  while (encoder.encode(JSON.stringify(text)).byteLength > maxBytes) {
+    text = text.substring(0, text.length / 2)
+    truncated = true
+  }
+  return { text, truncated }
+}

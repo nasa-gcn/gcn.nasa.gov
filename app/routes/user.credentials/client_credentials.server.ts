@@ -10,11 +10,11 @@ import {
   CreateUserPoolClientCommand,
   DeleteUserPoolClientCommand,
   DescribeUserPoolClientCommand,
-  ListGroupsCommand,
+  ResourceNotFoundException,
 } from '@aws-sdk/client-cognito-identity-provider'
 import { generators } from 'openid-client'
 
-import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
+import { cognito, getGroups, maybeThrowCognito } from '~/lib/cognito.server'
 import { getUser } from '~/routes/_auth/user.server'
 
 export interface RedactedClientCredential {
@@ -22,6 +22,9 @@ export interface RedactedClientCredential {
   client_id: string
   scope: string
   created: number
+  lastUsed?: number
+  expired?: number
+  countUsed?: number
 }
 
 export interface ClientCredential extends RedactedClientCredential {
@@ -68,7 +71,8 @@ export class ClientCredentialVendingMachine {
       ExpressionAttributeValues: {
         ':sub': this.#sub,
       },
-      ProjectionExpression: 'client_id, #name, #scope, created',
+      ProjectionExpression:
+        'client_id, #name, #scope, created, lastUsed, countUsed, expired',
     })
     const credentials = results.Items as RedactedClientCredential[]
     credentials.sort((a, b) => a.created - b.created)
@@ -197,6 +201,12 @@ export class ClientCredentialVendingMachine {
     try {
       await cognito.send(command)
     } catch (e) {
+      // Suppress error if Resource not found, which will throw when the
+      // DeleteUserPoolClientCommand is called after a credential has
+      // expired and the App Client is already deleted
+      if (e instanceof ResourceNotFoundException) {
+        return
+      }
       maybeThrowCognito(e, 'deleting fake client credentials')
     }
   }
@@ -207,22 +217,23 @@ export class ClientCredentialVendingMachine {
    * followed by the remaining group sin alphabetical order.
    */
   async getGroupDescriptions(): Promise<[string, string | undefined][]> {
-    const command = new ListGroupsCommand({
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
-
-    let response
+    let groups
     try {
-      response = await cognito.send(command)
+      groups = await getGroups()
     } catch (e) {
-      maybeThrowCognito(e, 'not getting group descriptions')
+      maybeThrowCognito(e, 'returning fake group descriptions')
+      return [
+        [
+          'gcn.nasa.gov/kafka-public-consumer',
+          'Consume any public Kafka topic',
+        ],
+      ]
     }
 
     const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(
-      response?.Groups?.map(({ GroupName, Description }) => [
-        GroupName,
-        Description,
-      ])?.filter(([GroupName]) => GroupName) ?? []
+      groups
+        .map(({ GroupName, Description }) => [GroupName, Description])
+        ?.filter(([GroupName]) => GroupName) ?? []
     )
 
     return [...this.groups]

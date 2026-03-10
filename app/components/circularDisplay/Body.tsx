@@ -21,7 +21,7 @@ import { AstroData } from './AstroData'
 import { AstroDataLink } from './AstroDataContext'
 import rehypeAutolinkLiteral from './rehypeAutolinkLiteral'
 
-import styles from './PlainTextBody.module.css'
+import styles from './Body.module.css'
 
 /** A Unified.js parser plugin that just returns a canned tree. */
 const remarkFromMdast: Plugin<[Root], string, Root> = function (tree) {
@@ -44,6 +44,7 @@ function LinkWrapper({
 }
 
 export function MarkdownBody({
+  className,
   children,
   ...props
 }: {
@@ -67,7 +68,11 @@ export function MarkdownBody({
     })
     .processSync(children)
 
-  return <div {...props}>{result}</div>
+  return (
+    <div {...props} className={classNames(styles.MarkdownBody, className)}>
+      {result}
+    </div>
+  )
 }
 
 export function PlainTextBody({

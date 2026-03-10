@@ -5,8 +5,11 @@ import rehypeCitation from 'rehype-citation'
 import rehypeClassNames from 'rehype-class-names'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeMathjax from 'rehype-mathjax'
+import rehypeMermaid from 'rehype-mermaid'
 import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
@@ -59,6 +62,7 @@ const neverBundledModules = [
 export default {
   mdx: {
     rehypePlugins: [
+      rehypeMermaid,
       (options) => rehypeHighlight({ ...common, properties }),
       rehypeSlug,
       (options) =>
@@ -81,10 +85,12 @@ export default {
         rehypeCitation({
           bibliography: 'references.bib',
           linkCitations: true,
+          csl: 'chicago',
           ...options,
         }),
+      rehypeMathjax,
     ],
-    remarkPlugins: [remarkGfm],
+    remarkPlugins: [remarkGfm, remarkMath],
   },
   postcss: true,
   ignoredRouteFiles: ['**/.*'],
@@ -106,5 +112,9 @@ export default {
         ]
       : []),
   ],
-  future: { v3_relativeSplatPath: true },
+  future: {
+    v3_lazyRouteDiscovery: true,
+    v3_relativeSplatPath: true,
+    v3_throwAbortReason: true,
+  },
 }

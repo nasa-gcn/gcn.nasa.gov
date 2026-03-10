@@ -15,18 +15,17 @@ import {
   getAllSynonymMembers,
   getSynonymsBySlug,
 } from './synonyms/synonyms.server'
+import { Anchor } from '~/components/Anchor'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
-import { PlainTextBody } from '~/components/circularDisplay/Body'
+import { MarkdownBody, PlainTextBody } from '~/components/circularDisplay/Body'
 import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
-import { feature } from '~/lib/env.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
-export const handle: BreadcrumbHandle = {
-  breadcrumb: 'Circular Event Group',
+export const handle: BreadcrumbHandle<Awaited<ReturnType<typeof loader>>> = {
+  breadcrumb: ({ data: { eventIds } }) => eventIds.join(', '),
 }
 
 export async function loader({ params: { slug } }: LoaderFunctionArgs) {
-  if (!feature('SYNONYMS')) throw new Response(null, { status: 404 })
   invariant(slug)
 
   const synonyms = await getSynonymsBySlug(slug)
@@ -50,34 +49,46 @@ export default function Group() {
           to={`/circulars?${searchString}`}
           className="usa-button flex-align-stretch"
         >
-          <div className="position-relative">
-            <Icon.ArrowBack
-              role="presentation"
-              className="position-absolute top-0 left-0"
-            />
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+          <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+          Back
         </Link>
       </ToolbarButtonGroup>
 
       <h1>{eventIds.join(', ')}</h1>
-      {members.map((circular) => (
-        <div key={circular.circularId}>
-          <h2 className="margin-2">{`GCN Circular ${circular.circularId}`}</h2>
-          <div className="margin-2">
-            <FrontMatter
-              createdOn={circular.createdOn}
-              submitter={circular.submitter}
-              subject={circular.subject}
-              submittedHow={circular.submittedHow}
-              editedBy={circular.editedBy}
-              editedOn={circular.editedOn}
-            />
-          </div>
-          <PlainTextBody className="margin-2" children={circular.body} />
-          <hr />
-        </div>
-      ))}
+      {members.map(
+        ({
+          circularId,
+          createdOn,
+          submitter,
+          subject,
+          submittedHow,
+          editedBy,
+          editedOn,
+          body,
+          format,
+        }) => {
+          const Body = format === 'text/markdown' ? MarkdownBody : PlainTextBody
+          return (
+            <div key={circularId}>
+              <h2 className="margin-2">
+                <Anchor>{`GCN Circular ${circularId}`}</Anchor>
+              </h2>
+              <div className="margin-2">
+                <FrontMatter
+                  createdOn={createdOn}
+                  submitter={submitter}
+                  subject={subject}
+                  submittedHow={submittedHow}
+                  editedBy={editedBy}
+                  editedOn={editedOn}
+                />
+              </div>
+              <Body className="margin-2" children={body} />
+              <hr />
+            </div>
+          )
+        }
+      )}
     </>
   )
 }

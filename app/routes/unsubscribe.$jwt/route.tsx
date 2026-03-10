@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
@@ -31,10 +30,11 @@ import { decodeFromURLParams } from './jwt.server'
 import Hint from '~/components/Hint'
 import { joinListWithOxfordComma } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Unsubscribe',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({ params }: LoaderFunctionArgs) {

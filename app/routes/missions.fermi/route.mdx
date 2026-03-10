@@ -39,6 +39,7 @@ import { WithFeature } from '~/root'
 </div>
 
 <WithFeature GBM_JSON>
+
 **JSON-Serialized GCN Notices Types in GCN Kafka:**
 
 Fermi/GBM distributes JSON-serialized notices for the detection of gamma-ray transients on the GCN Kafka topic `gcn.notices.fermi.gbm`.
@@ -49,9 +50,12 @@ Detailed description and examples of Fermi/GBM Notices are available in the [GCN
 
 <div className="overflow-table">
 
-| Type                          | Contents                               | Latency    |
-| ----------------------------- | -------------------------------------- | ---------- |
-| `gcn.notices.fermi.gbm.alert` | Localization, Count Rate, Significance | ~5 seconds |
+| Topic                           | Contents                                            | Latency        |
+| ------------------------------- | --------------------------------------------------- | -------------- |
+| `gcn.notices.fermi.gbm.trigger` | Initial notice -- trigger info                      | ~5 seconds     |
+|                                 | Flight updates with localization and classification | ~10 seconds    |
+|                                 | Ground updates with finer localization              | 20–300 seconds |
+|                                 | Final location update                               | 15 minutes     |
 
 </div>
 

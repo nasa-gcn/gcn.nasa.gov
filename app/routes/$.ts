@@ -1,11 +1,11 @@
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunction, LoaderFunction } from '@remix-run/node'
 
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Page Not Found',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export const loader: LoaderFunction = function () {

@@ -136,6 +136,7 @@ function VersionSelector({
     <div ref={ref}>
       <DetailsDropdownButton
         title="Select version"
+        expanded={showContent}
         onClick={() => {
           setShowContent((shown) => !shown)
         }}

@@ -9,12 +9,14 @@ import {
   listUsers,
   listUsersInGroup,
 } from '~/lib/cognito.server'
+import { notFoundIfBrowserRequest } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 
 // Groups verified users are allowed to search
 const filterableGroups = [submitterGroup]
 
 export async function action({ request }: ActionFunctionArgs) {
+  notFoundIfBrowserRequest(request.headers)
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const userIsAdmin = user.groups.includes(adminGroup)

@@ -7,9 +7,11 @@
  */
 import { Grid, Link } from '@trussworks/react-uswds'
 import { term } from 'lucene'
+import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
 
 import TimeAgo from '~/components/TimeAgo'
+import { useSearchString } from '~/lib/utils'
 import { type Circular, formatDateISO } from '~/routes/circulars/circulars.lib'
 
 const submittedHowMap = {
@@ -39,6 +41,7 @@ function FrontMatterItem({
 export function FrontMatter({
   subject,
   createdOn,
+  eventId,
   submitter,
   submittedHow,
   editedBy,
@@ -47,6 +50,7 @@ export function FrontMatter({
   Circular,
   | 'subject'
   | 'createdOn'
+  | 'eventId'
   | 'submitter'
   | 'submittedHow'
   | 'editedBy'
@@ -66,6 +70,13 @@ export function FrontMatter({
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
+      {eventId && (
+        <FrontMatterItem label="Event">
+          <Link to={`/circulars/events/${slug(eventId)}${searchString}`}>
+            {eventId}
+          </Link>
+        </FrontMatterItem>
+      )}
       <FrontMatterItem label="Date">
         {formatDateISO(createdOn)}{' '}
         <small className="text-base-light">

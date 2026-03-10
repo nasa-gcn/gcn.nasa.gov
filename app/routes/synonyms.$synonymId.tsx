@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { redirect } from '@remix-run/node'
 import {
@@ -45,10 +44,11 @@ import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { getFormDataString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const handle: BreadcrumbHandle & SEOHandle = {
   breadcrumb: 'Edit',
-  getSitemapEntries: () => null,
+  noIndex: true,
 }
 
 export async function loader({
@@ -133,20 +133,12 @@ export default function () {
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link to="/synonyms" className="usa-button flex-align-stretch">
-          <div className="position-relative">
-            <Icon.ArrowBack
-              role="presentation"
-              className="position-absolute top-0 left-0"
-            />
-          </div>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Back
+        <Link to="/synonyms" className="usa-button">
+          <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
+          Back
         </Link>
         <ModalToggleButton modalRef={modalRef} opener type="button">
-          <Icon.Delete
-            role="presentation"
-            className="bottom-aligned margin-right-05"
-          />{' '}
+          <Icon.Delete role="presentation" className="margin-y-neg-2px" />
           Delete
         </ModalToggleButton>
       </ToolbarButtonGroup>
@@ -286,10 +278,7 @@ export default function () {
             <Form method="POST">
               <input type="hidden" name="intent" value="delete" />
               <Button type="submit" outline>
-                <Icon.Delete
-                  role="presentation"
-                  className="bottom-aligned margin-right-05"
-                />{' '}
+                <Icon.Delete role="presentation" className="margin-y-neg-2px" />
                 Delete
               </Button>
             </Form>

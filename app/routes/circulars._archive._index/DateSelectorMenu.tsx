@@ -8,7 +8,6 @@
 import { useSubmit } from '@remix-run/react'
 import {
   Button,
-  ButtonGroup,
   CardBody,
   CardFooter,
   DateRangePicker,
@@ -36,36 +35,37 @@ function DateSelectorButton({
   startDate,
   endDate,
   expanded,
+  className,
   ...props
 }: {
   startDate?: string
   endDate?: string
   expanded?: boolean
-} & Omit<Parameters<typeof ButtonGroup>[0], 'segmented' | 'children'>) {
+} & Omit<Parameters<typeof Button>[0], 'children' | 'type'>) {
   const slimClasses = 'padding-y-1'
 
   return (
-    <ButtonGroup type="segmented" {...props}>
-      <Button type="button" className={`${slimClasses} padding-x-2`}>
-        {(startDate && dateSelectorLabels[startDate]) ||
-          (startDate && endDate && (
-            <>
-              {startDate}—{endDate}
-            </>
-          )) ||
-          (startDate && <>After {startDate}</>) ||
-          (endDate && <>Before {endDate}</>) ||
-          'Filter by date'}
-      </Button>
-      <Button type="button" className={`${slimClasses} padding-x-1`}>
-        <Icon.CalendarToday role="presentation" />
-        {expanded ? (
-          <Icon.ExpandLess role="presentation" />
-        ) : (
-          <Icon.ExpandMore role="presentation" />
-        )}
-      </Button>
-    </ButtonGroup>
+    <Button
+      type="button"
+      className={classNames(className, slimClasses, 'padding-x-2')}
+      {...props}
+    >
+      <Icon.CalendarToday role="presentation" />
+      {(startDate && dateSelectorLabels[startDate]) ||
+        (startDate && endDate && (
+          <>
+            {startDate}—{endDate}
+          </>
+        )) ||
+        (startDate && <>After {startDate}</>) ||
+        (endDate && <>Before {endDate}</>) ||
+        'Filter by date'}
+      {expanded ? (
+        <Icon.ExpandLess role="presentation" />
+      ) : (
+        <Icon.ExpandMore role="presentation" />
+      )}
+    </Button>
   )
 }
 

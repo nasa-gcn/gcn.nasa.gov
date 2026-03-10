@@ -18,6 +18,7 @@ import {
   CognitoIdentityProviderClient,
   CreateGroupCommand,
   DeleteGroupCommand,
+  DeleteUserPoolClientCommand,
   GetGroupCommand,
   ListUsersCommand,
   UpdateGroupCommand,
@@ -90,41 +91,44 @@ export async function getCognitoUserFromSub(sub: string) {
   return user
 }
 
-export async function listUsers(filterString: string) {
+export async function listUsers(
+  filterString: string
+): Promise<Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[]> {
+  const results = [
+    ...(await searchForUsersByKey(filterString, 'email')),
+    ...(await searchForUsersByKey(filterString, 'name')),
+  ].map((user) => ({
+    sub: extractAttributeRequired(user.Attributes, 'sub'),
+    email: extractAttributeRequired(user.Attributes, 'email'),
+    name: extractAttribute(user.Attributes, 'name'),
+    affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
+  }))
+  const userMap = new Map(results.map((user) => [user.name, user])).values()
+  return Array.from(userMap)
+}
+
+async function searchForUsersByKey(
+  filterString: string,
+  filterKey: 'email' | 'name'
+) {
   const pages = paginateListUsers(
     { client: cognito },
     {
       UserPoolId,
+      Filter: `${filterKey} ^= "${filterString}"`,
     }
   )
-  const users: Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[] = []
+  const results = []
   for await (const page of pages) {
     const nextUsers = page.Users
     if (nextUsers)
-      users.push(
-        ...nextUsers
-          .filter(
-            (user) =>
-              Boolean(extractAttribute(user.Attributes, 'email')) &&
-              (extractAttribute(user.Attributes, 'name')
-                ?.toLowerCase()
-                .includes(filterString.toLowerCase()) ||
-                extractAttribute(user.Attributes, 'email')
-                  ?.toLowerCase()
-                  .includes(filterString.toLowerCase()))
-          )
-          .map((user) => ({
-            sub: extractAttributeRequired(user.Attributes, 'sub'),
-            email: extractAttributeRequired(user.Attributes, 'email'),
-            name: extractAttribute(user.Attributes, 'name'),
-            affiliation: extractAttribute(
-              user.Attributes,
-              'custom:affiliation'
-            ),
-          }))
+      results.push(
+        ...nextUsers.filter((user) =>
+          Boolean(extractAttribute(user.Attributes, 'email'))
+        )
       )
   }
-  return users
+  return results
 }
 
 export async function listUsersInGroup(GroupName: string) {
@@ -215,8 +219,7 @@ export async function addUserToGroup(sub: string, GroupName: string) {
   await cognito.send(command)
 }
 
-export async function listGroupsForUser(sub: string) {
-  const { Username } = await getCognitoUserFromSub(sub)
+export async function listGroupsForUser(Username: string) {
   const pages = paginateAdminListGroupsForUser(
     { client: cognito },
     { UserPoolId, Username }
@@ -257,4 +260,13 @@ export async function removeUserFromGroup(sub: string, GroupName: string) {
     GroupName,
   })
   await cognito.send(command)
+}
+
+export async function deleteAppClient(client_id: string) {
+  await cognito.send(
+    new DeleteUserPoolClientCommand({
+      UserPoolId,
+      ClientId: client_id,
+    })
+  )
 }

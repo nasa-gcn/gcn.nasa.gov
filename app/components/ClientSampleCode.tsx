@@ -27,7 +27,7 @@ export function ClientSampleCode({
   clientSecret?: string
   listTopics?: boolean
   topics?: string[]
-  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java'
+  language: 'py' | 'mjs' | 'cjs' | 'c' | 'cs' | 'java' | 'pyspark' | 'rs'
 }) {
   const domain = useDomain()
 
@@ -605,6 +605,181 @@ export function ClientSampleCode({
             code={`kafka-console-consumer.sh --bootstrap-server kafka.${
               domain ?? 'gcn.nasa.gov'
             }:9092 --consumer.config example.properties --topic ${topics[0]}`}
+          />
+        </>
+      )
+    case 'pyspark':
+      return (
+        <>
+          <p className="usa-paragraph">
+            Open a terminal and run this command to install with{' '}
+            <Link
+              className="usa-link"
+              rel="external noopener"
+              target="_blank"
+              href="https://pip.pypa.io/"
+            >
+              pip
+            </Link>
+            :
+          </p>
+          <Highlight language="sh" code="pip install pyspark" />
+          <p className="usa-paragraph">
+            or this command to install with with{' '}
+            <Link
+              className="usa-link"
+              rel="external noopener"
+              target="_blank"
+              href="https://docs.conda.io/"
+            >
+              conda
+            </Link>
+            :
+          </p>
+          <Highlight
+            language="sh"
+            code="conda install -c conda-forge pyspark"
+          />
+          <p className="usa-paragraph">
+            Save the Python code below to a file called <code>example.py</code>:
+          </p>
+          <Highlight
+            language="py"
+            filename="example.py"
+            code={dedent(`
+            from pyspark.sql import SparkSession
+
+            spark = SparkSession.builder.config(
+                "spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5"
+            ).appName(
+                "example"
+            ).getOrCreate()
+
+            kafka = spark.readStream.format(
+                "kafka"
+            ).option(
+                "kafka.bootstrap.servers", "kafka.${domain ?? 'gcn.nasa.gov'}:9092"
+            ).option(
+                "kafka.security.protocol", "SASL_SSL"
+            ).option(
+                "kafka.sasl.jaas.config",
+                "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required "
+                # Connect as a consumer${
+                  clientName ? ` (client "${clientName}")` : ''
+                }
+                # Warning: don't share the client secret with others.
+                'clientId="${clientId}" '
+                'clientSecret="${clientSecret}";',
+            ).option(
+                "kafka.sasl.login.callback.handler.class",
+                "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler",
+            ).option(
+                "kafka.sasl.mechanism", "OAUTHBEARER"
+            ).option(
+                "kafka.sasl.oauthbearer.token.endpoint.url",
+                "https://auth.${domain ?? 'gcn.nasa.gov'}/oauth2/token",
+            ).option(
+                "subscribe", "${topics.join(',')}"
+            ).load()
+
+            query = kafka.writeStream.format("console").start()
+            query.awaitTermination()
+            `)}
+          />
+          <p className="usa-paragraph">
+            Run the code by typing this command in the terminal:
+          </p>
+          <Highlight language="sh" code="python example.py" />
+        </>
+      )
+    case 'rs':
+      return (
+        <>
+          {' '}
+          <p className="usa-paragraph">
+            Open a terminal and run these commands to start a new Rust project
+            with{' '}
+            <Link
+              className="usa-link"
+              rel="external noopener"
+              target="_blank"
+              href="https://doc.rust-lang.org/cargo/getting-started/installation.html"
+            >
+              cargo
+            </Link>
+            :
+          </p>
+          <Highlight
+            language="sh"
+            code={dedent`
+            cargo new --bin example
+            cd example
+            cargo add gcn-kafka rdkafka tokio -F tokio/full
+            `}
+          />
+          <p className="usa-paragraph">
+            Save the code below to the file <code>src/main.rs</code>:
+          </p>
+          <Highlight
+            language={language}
+            filename={`main.${language}`}
+            code={dedent`
+              use gcn_kafka::GcnClientConfig;
+              use rdkafka::{
+                  ClientConfig, Message,
+                  consumer::{Consumer, StreamConsumer},
+              };${listTopics ? '\nuse std::time::Duration;' : ''}
+
+              #[tokio::main]
+              pub async fn main() {
+                  let mut config = ClientConfig::new();
+
+                  // Connect as a consumer${clientName ? ` (client "${clientName}")` : ''}
+                  // Warning: don't share the client secret with others.
+                  config.set_gcn_auth(
+                      "${clientId}",
+                      "${clientSecret}",
+                      ${domain ? `Some("${domain}")` : 'None'},
+                  );
+
+                  let consumer: StreamConsumer = config.create().unwrap();
+                  consumer.subscribe(&[${topics
+                    .map(
+                      (topic) => `
+        "${topic}",`
+                    )
+                    .join('')}
+                  ]).unwrap();
+                  ${
+                    listTopics
+                      ? dedent`
+
+                    println!("Topics:");
+                    consumer
+                        .fetch_metadata(None, Duration::from_secs(3))
+                        .unwrap()
+                        .topics()
+                        .iter()
+                        .for_each(|topic| println!("  {}", topic.name()));
+
+                        `
+                      : ''
+                  }
+                  loop {
+                      match consumer.recv().await {
+                          Err(err) => println!("Receive message failed: {}", err),
+                          Ok(msg) => {
+                              if let Some(result) = msg.payload_view::<str>() {
+                                  match result {
+                                      Err(err) => println!("Decode message failed: {}", err),
+                                      Ok(value) => println!("{}", value),
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+            `}
           />
         </>
       )

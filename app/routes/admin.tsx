@@ -10,8 +10,15 @@ import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer, SideNav } from '@trussworks/react-uswds'
 
 import { getUser } from './_auth/user.server'
+import type { BreadcrumbHandle } from '~/root/Title'
+import type { SEOHandle } from '~/root/seo'
 
 export const adminGroup = 'gcn.nasa.gov/gcn-admin'
+
+export const handle: BreadcrumbHandle & SEOHandle = {
+  breadcrumb: 'Admin',
+  noIndex: true,
+}
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)

@@ -15,7 +15,13 @@ import invariant from 'tiny-invariant'
 
 import { getOpenIDClient } from './_auth/auth.server'
 import { type User, parseGroups, parseIdp } from './_auth/user.server'
-import { put, submitterGroup } from './circulars/circulars.server'
+import {
+  moderatorGroup,
+  put,
+  putVersion,
+  submitterGroup,
+  validateCircular,
+} from './circulars/circulars.server'
 import {
   cognito,
   extractAttribute,
@@ -23,6 +29,7 @@ import {
   getUserGroupStrings,
 } from '~/lib/cognito.server'
 import { getEnvOrDie } from '~/lib/env.server'
+import { notFoundIfBrowserRequest } from '~/lib/headers.server'
 
 // FIXME: BaseClient.validateJWT is non-private but undocumented.
 // openid-client doesn't provide a type for it.
@@ -101,8 +108,6 @@ async function getUserAttributes(Username: string) {
 }
 
 /**
- * GCN Circulars submission by third parties on behalf of users via an API.
- *
  * Here's how this works.
  *
  * 1. We configure a Cognito user pool [app client] for the third party.
@@ -127,7 +132,7 @@ async function getUserAttributes(Username: string) {
  *    application does the following:
  *
  *    a. Do the [authorization code flow] to sign the user in with GCN's IdP.
- *       When requesting the authorization endpoint, be sure to reuqest
+ *       When requesting the authorization endpoint, be sure to request
  *       scope="openid profile gcn.nasa.gov/circular-submitter". (Note: the
  *       name of the last scope may change in the future.)
  *
@@ -147,6 +152,12 @@ async function getUserAttributes(Username: string) {
  *       in the Authorization: Bearer header. The request body should be a JSON
  *       document of the form '{"subject": "...", "body": "..."}'.
  *
+ *       To edit a GCN Circular as a moderator, make a PUT request to
+ *       https://<stage>.gcn.nasa.gov/api/circulars. Edits may be made to the
+ *       subject, body, or eventId. The subject and body are required, even if
+ *       no changes are made. The eventId is optional. A new circular version
+ *       will be created.
+ *
  *    e. The application is responsible for renewing the access token as needed
  *       using the refreshing token.
  *
@@ -154,7 +165,9 @@ async function getUserAttributes(Username: string) {
  * [authorization code flow]: https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow
  */
 export async function action({ request }: ActionFunctionArgs) {
-  if (request.method !== 'POST') throw new Response(null, { status: 405 })
+  notFoundIfBrowserRequest(request.headers)
+  if (!['PUT', 'POST'].includes(request.method))
+    throw new Response(null, { status: 405 })
 
   const bearer = getBearer(request)
   if (!bearer) throw new Response('Bearer missing', { status: 403 })
@@ -166,8 +179,20 @@ export async function action({ request }: ActionFunctionArgs) {
   } = await parseAccessToken(bearer)
 
   // Make sure that the access token contains the required scope for this API
-  if (!scope.split(' ').includes(submitterGroup))
-    throw new Response('Invalid scope', { status: 403 })
+  switch (request.method) {
+    case 'POST':
+      if (!scope.split(' ').includes(submitterGroup))
+        throw new Response('Invalid scope', { status: 403 })
+      break
+
+    case 'PUT':
+      if (!scope.split(' ').includes(moderatorGroup))
+        throw new Response('Invalid scope', { status: 403 })
+      break
+
+    default:
+      throw new Error('this code should not be reached')
+  }
 
   const [{ existingIdp, ...attrs }, groups] = await Promise.all([
     getUserAttributes(cognitoUserName),
@@ -182,7 +207,7 @@ export async function action({ request }: ActionFunctionArgs) {
     ...attrs,
   }
 
-  const { subject, body, format } = await request.json()
+  const { subject, body, format, eventId, circularId } = await request.json()
   if (
     !(
       typeof subject === 'string' &&
@@ -190,14 +215,33 @@ export async function action({ request }: ActionFunctionArgs) {
       (format === undefined || typeof format === 'string')
     )
   )
-    throw new Response(null, { status: 400 })
+    throw new Response('missing required parameter', { status: 400 })
 
-  const circular = {
-    submittedHow: 'api',
-    subject,
-    body,
-    ...(format ? { format } : {}),
-  } as const
+  switch (request.method) {
+    case 'POST':
+      const circular = {
+        submittedHow: 'api',
+        subject,
+        body,
+        eventId,
+        ...(format ? { format } : {}),
+      } as const
 
-  return await put(circular, user)
+      return await put(circular, user)
+
+    case 'PUT':
+      const circularVersion = {
+        circularId,
+        subject,
+        body,
+        eventId,
+      }
+
+      validateCircular(circularVersion)
+
+      return await putVersion(circularVersion, user)
+
+    default:
+      throw new Error('this code should not be reached')
+  }
 }

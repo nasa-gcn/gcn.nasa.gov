@@ -5,23 +5,19 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
+import type { ActionFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
 import { ClientCredentialVendingMachine } from './user.credentials/client_credentials.server'
-import CredentialCard from '~/components/CredentialCard'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
-import SegmentedCards from '~/components/SegmentedCards'
+import { handleCredentialLoader } from '~/components/NewCredentialForm'
+import { UserCredentials } from '~/components/UserCredentials'
 import { getFormDataString } from '~/lib/utils'
+import type { SEOHandle } from '~/root/seo'
 
-export const handle: SEOHandle = { getSitemapEntries: () => null }
+export const handle: SEOHandle = { noIndex: true }
 
-export async function loader({ request }: LoaderFunctionArgs) {
-  const machine = await ClientCredentialVendingMachine.create(request)
-  const client_credentials = await machine.getClientCredentials()
-  return { client_credentials }
-}
+export const loader = handleCredentialLoader
 
 export async function action({ request }: ActionFunctionArgs) {
   const [data, machine] = await Promise.all([
@@ -44,7 +40,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function () {
-  const { client_credentials } = useLoaderData<typeof loader>()
+  const { client_credentials, groups } = useLoaderData<typeof loader>()
 
   return (
     <>
@@ -65,11 +61,20 @@ export default function () {
         </Link>
         .
       </p>
-      <SegmentedCards>
-        {client_credentials.map((credential) => (
-          <CredentialCard key={credential.client_id} {...credential} />
-        ))}
-      </SegmentedCards>
+      <p>
+        Unused client credentials{' '}
+        <Link
+          className="usa-link"
+          to="/docs/faq#why-are-my-kafka-client-credentials-expiring"
+        >
+          expire after 30 days
+        </Link>
+        .
+      </p>
+      <UserCredentials
+        client_credentials={client_credentials}
+        groups={groups}
+      />
     </>
   )
 }

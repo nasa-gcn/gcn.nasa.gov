@@ -9,6 +9,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
+  json,
   useActionData,
   useLoaderData,
   useSearchParams,
@@ -46,26 +47,26 @@ import SynonymGroupIndex from './SynonymGroupIndex'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
-import { feature, origin } from '~/lib/env.server'
+import { origin } from '~/lib/env.server'
+import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { useFeature, useModStatus } from '~/root'
+import { usePermissionModerator } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 import {
   type CircularFormat,
   type CircularMetadata,
   circularFormats,
 } from '~/routes/circulars/circulars.lib'
-import type { SynonymGroupWithMembers } from '~/routes/synonyms/synonyms.lib'
-import { groupMembersByEventId } from '~/routes/synonyms/synonyms.server'
+import type { SynonymGroup } from '~/routes/synonyms/synonyms.lib'
+import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ request: { url } }: LoaderFunctionArgs) {
-  const synonymFlagIsOn = feature('SYNONYMS')
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
-  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
+  const view = searchParams.get('view') || 'index'
   const isGroupView = view === 'group'
 
   if (query && view === 'index') {
@@ -77,7 +78,7 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const page = parseInt(searchParams.get('page') || '1')
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
   const sort = searchParams.get('sort') || 'circularId'
-  const searchFunction = view != 'group' ? search : groupMembersByEventId
+  const searchFunction = view != 'group' ? search : searchSynonymsByEventId
   const results = await searchFunction({
     query,
     page: page - 1,
@@ -88,13 +89,16 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   })
   const requestedChangeCount = (await getChangeRequests()).length
 
-  return {
-    page,
-    ...results,
-    requestedChangeCount,
-    limit,
-    isGroupView,
-  }
+  return json(
+    {
+      page,
+      ...results,
+      requestedChangeCount,
+      limit,
+      isGroupView,
+    },
+    { headers: getCanonicalUrlHeaders(new URL(`/circulars`, origin)) }
+  )
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -103,6 +107,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const subject = getFormDataString(data, 'subject')
   const intent = getFormDataString(data, 'intent')
   const format = getFormDataString(data, 'format') as CircularFormat | undefined
+  const eventId = getFormDataString(data, 'eventId') || undefined
   if (format && !circularFormats.includes(format)) {
     throw new Response('Invalid format', { status: 400 })
   }
@@ -110,26 +115,20 @@ export async function action({ request }: ActionFunctionArgs) {
     throw new Response('Body and subject are required', { status: 400 })
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
-  const createdOnDate =
-    getFormDataString(data, 'createdOn') || Date.now().toString()
-  const createdOn = Date.parse(createdOnDate)
   let newCircular
-  const props = { body, subject, ...(format ? { format } : {}) }
+  const props = { body, subject, eventId, ...(format ? { format } : {}) }
   switch (intent) {
     case 'correction':
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
 
-      if (!user?.name || !user.email) throw new Response(null, { status: 403 })
+      if (!user?.email) throw new Response(null, { status: 403 })
+      const name = user.name ?? user.email
       let submitter
       if (user.groups.includes(moderatorGroup)) {
         submitter = getFormDataString(data, 'submitter')
         if (!submitter) throw new Response(null, { status: 400 })
       }
-      const eventId = getFormDataString(data, 'eventId')
-
-      if (!createdOnDate || !createdOn)
-        throw new Response(null, { status: 400 })
 
       let zendeskTicketId: number | undefined
 
@@ -143,10 +142,10 @@ export async function action({ request }: ActionFunctionArgs) {
 
       if (!zendeskTicketId) {
         zendeskTicketId = await postZendeskRequest({
-          requester: { name: user.name, email: user.email },
+          requester: { name, email: user.email },
           subject: `Change Request for Circular ${circularId}`,
           comment: {
-            body: `${user.name} has requested an edit. Review at ${origin}/circulars`,
+            body: `${name} has requested an edit. Review at ${origin}/circulars`,
           },
         })
       }
@@ -158,7 +157,6 @@ export async function action({ request }: ActionFunctionArgs) {
           circularId: parseFloat(circularId),
           ...props,
           submitter,
-          createdOn,
           zendeskTicketId,
           eventId,
         },
@@ -169,13 +167,11 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'edit':
       if (circularId === undefined)
         throw new Response('circularId is required', { status: 400 })
-      if (!createdOnDate || !createdOn)
-        throw new Response(null, { status: 400 })
+
       await putVersion(
         {
           circularId: parseFloat(circularId),
           ...props,
-          createdOn,
         },
         user
       )
@@ -212,8 +208,7 @@ export default function () {
   const formId = useId()
   const submit = useSubmit()
   const [searchParams] = useSearchParams()
-  const userIsModerator = useModStatus()
-  const synonymFlagIsOn = useFeature('SYNONYMS')
+  const userIsModerator = usePermissionModerator()
 
   // Strip off the ?index param if we navigated here from a form.
   // See https://remix.run/docs/en/main/guides/index-query-param.
@@ -223,7 +218,7 @@ export default function () {
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
-  const view = synonymFlagIsOn ? searchParams.get('view') || 'index' : 'index'
+  const view = searchParams.get('view') || 'index'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -300,26 +295,24 @@ export default function () {
           </Button>
         </Form>
 
-        {synonymFlagIsOn && (
-          <ButtonGroup type="segmented">
-            <Link
-              to={`/circulars?view=index&limit=${limit}`}
-              preventScrollReset
-              className={getSelection('index')}
-            >
-              <Icon.List role="presentation" />
-              Circulars
-            </Link>
-            <Link
-              to={`/circulars?view=group&limit=${limit}`}
-              preventScrollReset
-              className={getSelection('group')}
-            >
-              <Icon.ContentCopy role="presentation" />
-              Events
-            </Link>
-          </ButtonGroup>
-        )}
+        <ButtonGroup type="segmented">
+          <Link
+            to={`/circulars?view=index&limit=${limit}`}
+            preventScrollReset
+            className={getSelection('index')}
+          >
+            <Icon.List role="presentation" />
+            Circulars
+          </Link>
+          <Link
+            to={`/circulars?view=group&limit=${limit}`}
+            preventScrollReset
+            className={getSelection('group')}
+          >
+            <Icon.ContentCopy role="presentation" />
+            Events
+          </Link>
+        </ButtonGroup>
 
         <Link to={`/circulars/new${searchString}`}>
           <Button type="button" className="padding-y-1">
@@ -366,13 +359,14 @@ export default function () {
           </>
         )}
       </Hint>
-      <LuceneAccordion />
+
+      {!isGroupView && <LuceneAccordion />}
 
       {clean && (
         <>
           {isGroupView ? (
             <SynonymGroupIndex
-              allItems={items as SynonymGroupWithMembers[]}
+              allItems={items as SynonymGroup[]}
               searchString={searchString}
               totalItems={totalItems}
               query={query}

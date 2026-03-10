@@ -12,8 +12,8 @@ import {
   Grid,
 } from '@trussworks/react-uswds'
 
-import { SendAnnouncementButton } from '../news/components'
 import teamPhoto from './AAS243_booth.jpg'
+import { SendAnnouncementButton } from './components'
 import { Anchor } from '~/components/Anchor'
 
 <Grid row>
@@ -25,7 +25,189 @@ import { Anchor } from '~/components/Anchor'
 
 <Collection>
 
+## 2026
+
+  <CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
+      <CollectionCalendarDate datetime='March 4, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>Retirement of GCN Classic VOEvent Brokers</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+      As initially [announced in 2025](news#planned-retirement-of-gcn-classic-voevent-brokers), we are planning to retire the [GCN Classic VOEvent brokers](https://gcn.gsfc.nasa.gov/voevent.html) on **April 6, 2026**.  This impacts users who utilize the VOEvent Transfer Protocol (VTP) to receive VOEvent-format GCN Classic Notices. VOEvent-format Notices remain available via [Kafka and email](/docs/notices/consuming), and we recommend users migrate from VTP to Kafka.
+    </CollectionDescription>
+
+  </CollectionItem>
+
+  <CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
+      <CollectionCalendarDate datetime='February 25, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>Passing of Scott Barthelmy, GCN Founder</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+      With heavy hearts, we report that our colleague and mentor Scott Barthelmy passed away on February 25, 2026. Scott was the founder, architect, and tireless maintainer of GCN from its inception in 1993 until his retirement ([history of GCN](/docs/about/history)). Scott was supportive of the development of the new GCN, and we have always aimed to honor his legacy and service to our community. As PI of the Swift-BAT and Swift Project Scientist, he had exceptional impacts on our field.
+    </CollectionDescription>
+
+  </CollectionItem>
+
+  <CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
+      <CollectionCalendarDate datetime='February 3, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>New CHIME, DSA-110, and IceCube Notices and Schema v6.1.1</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+
+        The GCN Team is pleased to announce new Notice Types and a schema release.
+        - [CHIME Fast Radio Burst  Notices](/news#chime-fast-radio-burst-notices)
+        - [DSA-110 Fast Radio Burst  Notices](/news#dsa-110-fast-radio-burst-notices)
+        - [IceCube Gold/Bronze Notices](/news#icecube-goldbronze-notices)
+        - [Schema v6.1.1](/news#schema-v611)
+
+      #### CHIME Fast Radio Burst Notices
+        The CHIME Team and the GCN Team are pleased to announce the availability of a new CHIME Fast Radio Burst (FRB) notice type via the [new GCN](https://gcn.nasa.gov) in JSON format.  We welcome this new transient type to the GCN community and encourage follow-up observations. These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).  They are not available via GCN Classic.
+
+        The [Canadian Hydrogen Intensity Mapping Experiment (CHIME)](https://chime-experiment.ca/en) is a transit radio telescope located in Penticton, BC, Canada. It consists of 4 semi-cylindrical reflectors, each with 2000 square meters of collecting area and 256 dual-polarization antennas. The telescope observes between 400 MHz and 800 MHz and covers an instantaneous field of view of ~200 square degrees. CHIME houses several electronic backends, which are tailored for specific scientific goals, such as generating cosmological maps of hydrogen density, detecting Fast Radio Bursts, and observing and timing pulsars. In particular, the FRB backend operates at ~1 ms time resolution and ~ 0.4 MHz frequency resolution.
+
+        The new CHIME notices provide FRB detection details including ~arcminute localization with a latency of ~1 minute. The detection rate is ~600 per year.  Notices will be distributed on the Kafka topic: <br/>
+        `gcn.notices.chime.frb`
+
+        A more extensive description of the information provided in these new notices is available at https://gcn.nasa.gov/missions/chime.
+
+      #### DSA-110 Fast Radio Burst Notices
+
+        The DSA-110 Team and the GCN Team are pleased to announce the availability of DSA-110 notice types via the [new GCN](/) in JSON format.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).
+
+        The [Deep Synoptic Array-110 (DSA-110)](https://www.deepsynoptic.org/instrument) is a radio interferometer purpose-built for fast radio burst (FRB) detection and direct localization. The array is located at the [Owens Valley Radio Observatory (OVRO)](https://www.ovro.caltech.edu) comprised of 96 4.65-m dishes that continuously survey for FRBs at frequencies between 1280 to 1530 MHz. Over a three-year science program, the DSA-110 will deliver a sample of more than 300 FRBs, each localized to regions ~1 arcminute radius within 1 minute of detection. This is made possible by a suite of novel instrumentation, including precisely engineered antennas, ultra-low noise ambient-temperature receivers, and a powerful real-time, autonomous data-analysis system.
+
+        DSA-110 notices provide FRB detection and localization distributed on the topic `gcn.notices.dsa110.frb`.
+
+        See the [DSA-110 mission page](/missions/dsa110) for a more extensive description of the information provided in these new notices.
+
+      #### IceCube Gold/Bronze Notices
+
+      The IceCube Team and the GCN Team are pleased to announce the availability of a new IceCube Notice type via the [new GCN](/) in JSON format for Gold/Bronze Track alerts.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart). The information included in the JSON-format Notices largely overlaps with that in GCN Classic with the addition of a URL of multi-order probability maps. [AMON_ICECUBE_GOLD and AMON_ICECUBE_BRONZE](https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html) notices remain available via GCN Classic and GCN Classic over Kafka.
+
+      [IceCube](https://icecube.wisc.edu/) is a cubic-kilometer Cherenkov particle detector deployed in the Antarctic ice beneath the Amundsen-Scott South Pole Station. IceCube detects neutrinos by observing the light produced by relativistic charged particles created by neutrino interactions in or near the instrumented volume of ice.
+
+      Notice Topic: new Gold/Bronze Notices provide high-energy (TeV-PeV) track-like alerts with $$0.25-0.75^\circ$$ radius angular resolution.  Events are classified into Gold and Bronze based on their likelihood of being astrophysical. Two GCN Notices are sent for each event - one corresponding to the preliminary reconstruction and one corresponding to the revised reconstruction. Gold and Bronze events occur at a rate of 10 and 16 per year, respectively, with a latency of 0.5-1 minute from detection.  These new alerts are distributed via GCN Kafka on the topic `gcn.notices.icecube.gold_bronze_track_alerts`.
+
+      The [IceCube documentation](missions/icecube) has been extensively updated. It now includes details on the new information released with the updated schema, as well as explanations of the quantities listed in the FITS file headers for the multi-order probability maps.
+
+      #### Schema v6.1.1
+      GCN Schema v6.1.1 is available with recent changes including new Notice types ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v6.1.1)).
+
+    </CollectionDescription>
+
+  </CollectionItem>
+  
 ## 2025
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+
+        <CollectionCalendarDate datetime='August 26, 2025' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Super-Kamiokande JSON Notices and Schema v4.5.0</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+          #### New Super-Kamiokande JSON Notices
+
+          The Super-Kamiokande Team and the GCN team are pleased to announce the availability of Super-Kamiokande notice types via the [new GCN](/) in JSON format.  These notices can be streamed via [Kafka](https://gcn.nasa.gov/quickstart).  [SK_SN](https://gcn.gsfc.nasa.gov/sk_sn.html) notices remain available via GCN Classic and GCN Classic over Kafka.  The information included in the JSON-format Notices largely overlaps with that in GCN Classic with some additional parameters: the number of detected inverse beta decay (IBD) events, the analysis pipeline used (`snwatch` or `wit`), and the type of processed sample (full or partial) used for event detection.
+
+          Super-Kamiokande Summary: Also known as Super-K or SK, [Super-Kamiokande experiment](https://www-sk.icrr.u-tokyo.ac.jp/en/sk/) was built and has been operated with funding from the Japanese Ministry of Education, Science, Sports and Culture, and the U.S. Department of Energy. Designed to understand the nature of neutrinos, Super-K is a leading detector in the search for MeV neutrino detections of core-collapse supernovae.
+
+          Notice topic: new Super-Kamiokande notices provide core-collapse supernova detection and localization as well regular monthly test alerts distributed on the topic `gcn.notice.superk.sn_alert`.
+
+          See the [SKSN mission page](/missions/sksn) for a more extensive description of the information provided in these new notices.
+
+          #### Schema v4.5.0
+          GCN Schema v4.5.0 is available with recent changes including the Super-K schema ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v4.5.0)).
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+        <CollectionCalendarDate datetime='Aug 18, 2025' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Client Credential Expiration Policy</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+        For security purposes, we will [disable client credentials](/docs/faq#why-are-my-kafka-client-credentials-expiring) that you have not used to connect to a Kafka broker for the past 30 days. We will email you reminders 9 days before client credentials will expire. Once disabled, a client credential cannot be used again. To prevent a credential from expiring and being disabled, simply use it to connect to a Kafka broker. You may create new client credentials at any time. To review, create, delete, and manage your client credentials, see your account [client credential settings](/user/credentials).
+
+      </CollectionDescription>
+    </CollectionItem>
+
+    <CollectionItem
+      className="maxw-none grid-container"
+      variantComponent={
+        <CollectionCalendarDate datetime='May 27, 2025' />
+      }
+    >
+      <CollectionHeading headingLevel="h3">
+        <Anchor>Browse Circulars by Event, Advanced Search, Sample Codes, Schema Release</Anchor>
+      </CollectionHeading>
+      <CollectionDescription>
+
+        The GCN Team is pleased to announce new features, documentation, and a schema release.
+        - [Browse Circulars by Event](/news#browse-circulars-by-event)
+        - [Circulars Advanced Search](/news#circulars-advanced-search)
+        - [Mission Notices Table](/news#mission-notices-table)
+        - [Notices Sample Code](/news#notices-sample-code)
+        - [Apache Spark Kafka Client](/news#apache-spark-kafka-client)
+        - [Schema v4.4.0](/news#schema-v441)
+
+        ### Browse Circulars by Event
+        By popular demand, you can now view Circulars grouped by astronomical event. In the [Circulars archive](/circulars), you can now toggle between two view modes:
+
+          **Circulars View**
+          - View Circulars sorted inversely by Circular ID.
+          - Use the search bar to search for text strings (e.g. [250101A](/circulars?view=index&query=250101A&startDate=&endDate=)), Circulars numbers (e.g. [12345](/circulars?view=index&query=12345)), or use [Advanced Search](/news#circulars-advanced-search).
+
+          **Events View**
+          - View a list of astronomical events (e.g. [GRB 250101A](/circulars?view=group&query=GRB+250101A), [LIGO/Virgo/KAGRA S250331o](/circulars?view=group&query=LIGO%2FVirgo%2FKAGRA+S250331o), [EP250101a](/circulars?view=group&query=EP250101a)), expand to show all Circulars associated with that event, or tap the event name to see all related Circulars in sequence (similar to the GCN Classic Circulars archive).
+          - Use the search bar to search by event name (e.g. GRB 250404A).
+          - The GCN Team manually associates events with multiple names (e.g. [GRB 250404A, EP250404a](/circulars/events/grb-250404a)) into event groups. You can view all Circulars associated with any member of an event group by selecting that event in the event view.  You can also search for an event by any event name that group.  If you would like to suggest additional event names that should be in the same event group, please [contact the GCN Team](/support).
+
+        See [additional documentation](/docs/circulars/archive) on event view, event names, and event groups.
+
+        ### Circulars Advanced Search
+        The [Circulars archive](/circulars) now allows users to search for keywords by Subject, Body, and Submitter. Select "Advanced Search" to view and copy example syntax. See [documentation](/docs/circulars/archive#advanced-search) for more details, examples, and compound query logic.
+
+        ### Mission Notices Table
+        The [Missions page](/missions) now contains a table listing the status of all current, past, and upcoming Notices producers.  You can learn about the formats and distribution mechanisms that are available for every Notice type, including the transitions to GCN Kafka. The table provides mission-specific links to signup for Notices over email and the Kafka start streaming guide.
+
+        ### Notices Sample Code
+        [Sample code](/docs/sample) serves as a starting point for consumers of GCN Notices for functions including consuming Kafka messages, parsing plain text, VOEvent XML, and JSON format notices, and interacting with HEALPix maps.  We have also included producer sample code for encoding embedded data (e.g. HEALPix maps).  The GCN Team welcomes contributions of additional sample code that might be of use to our community.
+
+        ### Apache Spark Kafka client
+        We added [Kafka client sample code for Apache Spark](/docs/client#pyspark). [Apache Spark](https://spark.apache.org) is a multi-language engine for executing data engineering, data science, and machine learning on single-node machines or clusters.
+
+        ### Schema v4.4.1
+        GCN Schema v4.4.1 is available with recent changes including the generic high-energy neutrino and fast radio burst schema ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v4.4.1)).
+
+      </CollectionDescription>
+    </CollectionItem>
 
     <CollectionItem
       className="maxw-none grid-container"
@@ -65,7 +247,7 @@ import { Anchor } from '~/components/Anchor'
 
         The mission pages for GCN Notice producers that are no longer operational have been moved to a submenu for [archived missions](https://gcn.nasa.gov/missions/archive), including AGILE, BurstCube, and INTEGRAL.
 
-      </CollectionDescription>
+     </CollectionDescription>
     </CollectionItem>
 
     <CollectionItem
@@ -106,7 +288,7 @@ import { Anchor } from '~/components/Anchor'
       }
     >
       <CollectionHeading headingLevel="h3">
-        <Anchor>  GCN at AAS 245, Legacy Circulars Address Retirement</Anchor>
+        <Anchor>GCN at AAS 245, Legacy Circulars Address Retirement</Anchor>
       </CollectionHeading>
       <CollectionDescription>
         <div className="grid-row">
@@ -144,7 +326,7 @@ import { Anchor } from '~/components/Anchor'
       }
     >
       <CollectionHeading headingLevel="h3">
-        <Anchor> GCN Classic Migration Survey and Legacy Circular Submission Email Retirement</Anchor>
+        <Anchor>GCN Classic Migration Survey and Legacy Circular Submission Email Retirement</Anchor>
       </CollectionHeading>
       <CollectionDescription>
         #### VOEvent Transport Protocol (VTP) Migration Survey

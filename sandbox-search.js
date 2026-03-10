@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { readFile } from 'fs/promises'
-import orderBy from 'lodash/orderBy.js'
+import min from 'lodash/min.js'
 
 export default async function () {
   const text = await readFile('seed.json', { encoding: 'utf-8' })
@@ -18,7 +18,7 @@ export default async function () {
       synonymId,
       eventIds: values.map(({ eventId }) => eventId),
       slugs: values.map(({ slug }) => slug),
-      initialDate: orderBy(values, ['initialDate'], ['asc'])[0].initialDate,
+      initialDate: min(values.map(({ initialDate }) => initialDate)),
     },
   ])
   return [

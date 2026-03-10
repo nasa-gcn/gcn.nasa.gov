@@ -7,8 +7,7 @@
  */
 import { type HeadersFunction, type LoaderFunctionArgs } from '@remix-run/node'
 
-import { getUser } from '../_auth/user.server'
-import { getVersions, moderatorGroup } from '../circulars/circulars.server'
+import { getVersions } from '../circulars/circulars.server'
 import { pickHeaders } from '~/lib/headers.server'
 import type { BreadcrumbHandle } from '~/root/Title'
 
@@ -31,9 +30,7 @@ export async function loader({
   const history = await getVersions(parseFloat(circularId))
   history.reverse() // Sort by descending version
 
-  const user = await getUser(request)
-  const userIsModerator = user?.groups.includes(moderatorGroup)
-  return { circularId, history, userIsModerator }
+  return { circularId, history }
 }
 
 export const headers: HeadersFunction = ({ loaderHeaders }) =>

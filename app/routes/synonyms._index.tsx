@@ -43,7 +43,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const page = parseInt(searchParams.get('page') || '1')
   const synonyms = await searchSynonymsByEventId({
     page: page - 1,
-    eventId: query,
+    query,
     limit,
   })
 
@@ -114,7 +114,8 @@ export default function () {
             </Form>
             <Link to="/synonyms/new">
               <Button type="button" className="padding-y-1">
-                <Icon.Edit role="presentation" /> New
+                <Icon.Edit role="presentation" className="margin-y-neg-2px" />{' '}
+                New
               </Button>
             </Link>
           </ToolbarButtonGroup>

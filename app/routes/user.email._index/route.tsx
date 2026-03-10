@@ -5,7 +5,6 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { SEOHandle } from '@nasa-gcn/remix-seo'
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useFetcher, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Grid, Icon } from '@trussworks/react-uswds'
@@ -32,9 +31,10 @@ import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
 import { getFormDataString } from '~/lib/utils'
 import { useEmail, useHostname } from '~/root'
+import type { SEOHandle } from '~/root/seo'
 import { getUser } from '~/routes/_auth/user.server'
 
-export const handle: SEOHandle = { getSitemapEntries: () => null }
+export const handle: SEOHandle = { noIndex: true }
 
 export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)

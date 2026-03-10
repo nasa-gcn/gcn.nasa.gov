@@ -15,7 +15,7 @@ If an initial automated or manually-generated Notice/Circular is later deemed to
 
 ## Errata
 
-Circulars authors can request edits to their own archived Circulars to correct inaccurate information, especially when the correction is important for the follow-up community's activities. These may include author lists, subject corrections, typos, and incorrect citations. This capability should not be used to add details of new observations or analysis &mdash; instead users should submit new Circulars with subjects noting "refined analysis" or "additional observations". To request corrections, navigate to the archive page for that particular circular, and select "Request Correction." The GCN team moderators will review the requested correction, and may contact the submitter for their concurrence.
+Circulars authors can request edits to their own archived Circulars to correct inaccurate information, especially when the correction is important for the follow-up community's activities. These may include author lists, subject corrections, typos, and incorrect citations. This capability should not be used to add details of new observations or analysis &mdash; instead users should submit new Circulars with subjects noting "refined analysis" or "additional observations". To request corrections, navigate to the archive page for that particular circular, and select "Correct." The GCN team moderators will review the requested correction, and may contact the submitter for their concurrence.
 
 ## Reproducing GCN Notices or Circulars in External Archives
 

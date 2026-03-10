@@ -30,6 +30,7 @@ import {
   ScrollRestoration,
   isRouteErrorResponse,
   useLocation,
+  useMatches,
   useNavigation,
   useRouteError,
   useRouteLoaderData,
@@ -51,7 +52,9 @@ import { Footer } from './root/Footer'
 import NewsBanner from './root/NewsBanner'
 import { type BreadcrumbHandle, Title } from './root/Title'
 import { Header } from './root/header/Header'
+import type { SEOHandle } from './root/seo'
 import { getUser } from './routes/_auth/user.server'
+import { adminGroup } from './routes/admin'
 import {
   moderatorGroup,
   submitterGroup,
@@ -117,8 +120,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const name = user?.name
   const idp = user?.idp
   const recaptchaSiteKey = getEnvOrDieInProduction('RECAPTCHA_SITE_KEY')
-  const userIsMod = user?.groups.includes(moderatorGroup)
-  const userIsVerifiedSubmitter = user?.groups.includes(submitterGroup)
+  const userIsModerator = user?.groups.includes(moderatorGroup)
+  const userIsSubmitter = user?.groups.includes(submitterGroup)
+  const userIsAdmin = user?.groups.includes(adminGroup)
 
   return {
     origin,
@@ -127,8 +131,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
     features,
     recaptchaSiteKey,
     idp,
-    userIsMod,
-    userIsVerifiedSubmitter,
+    userIsModerator,
+    userIsSubmitter,
+    userIsAdmin,
   }
 }
 
@@ -153,12 +158,16 @@ export function useName() {
   return useLoaderDataRoot()?.name
 }
 
-export function useModStatus() {
-  return useLoaderDataRoot()?.userIsMod
+export function usePermissionModerator() {
+  return useLoaderDataRoot()?.userIsModerator
 }
 
-export function useSubmitterStatus() {
-  return useLoaderDataRoot()?.userIsVerifiedSubmitter
+export function usePermissionSubmitter() {
+  return useLoaderDataRoot()?.userIsSubmitter
+}
+
+export function usePermissionAdmin() {
+  return useLoaderDataRoot()?.userIsAdmin
 }
 
 export function useRecaptchaSiteKey() {
@@ -185,6 +194,15 @@ export function WithFeature({
   children: ReactNode
 } & Record<string, boolean>) {
   return <>{useFeature(Object.keys(features)[0]) && children}</>
+}
+
+export function WithoutFeature({
+  children,
+  ...features
+}: {
+  children: ReactNode
+} & Record<string, boolean>) {
+  return <>{useFeature(Object.keys(features)[0]) || children}</>
 }
 
 export function useOrigin() {
@@ -226,14 +244,17 @@ function Progress() {
 }
 
 export function Layout({ children }: { children?: ReactNode }) {
-  const noIndex = useHostname() !== 'gcn.nasa.gov'
+  const notProduction = useHostname() !== 'gcn.nasa.gov'
+  const noIndex = useMatches().some(
+    ({ handle }) => (handle as SEOHandle | undefined)?.noIndex
+  )
 
   return (
     <html lang="en-US">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        {noIndex && <meta name="robots" content="noindex" />}
+        {(notProduction || noIndex) && <meta name="robots" content="noindex" />}
         <Meta />
         <Links />
         <Title />
@@ -247,10 +268,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Circulars over Kafka event name backfill. See{' '}
+          Retirement of GCN Classic VOEvent Brokers. See{' '}
           <Link
             className="usa-link"
-            to="/news#circulars-over-kafka-event-name-backfill"
+            to="/news#retirement-of-gcn-classic-voevent-brokers"
           >
             news and announcements
           </Link>

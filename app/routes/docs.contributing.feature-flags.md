@@ -67,10 +67,10 @@ GCN can light things on fire with its mind! {
 }
 ```
 
-**_Important_**: The `useFeature()` method above does not render Markdown that is inside the conditionally displayed text. If you need conditionally rendered Markdown, then use the `<WithFeature>` React component.
+**_Important_**: Although you can use the `useFeature()` method above in Markdown files, it does not render Markdown that is inside the conditionally displayed text. If you need conditionally rendered Markdown, then use the `<WithFeature>` or `<WithoutFeature>` React component.
 
 ```text
-import { WithFeature } from '~/root'
+import { WithFeature, WithoutFeature } from '~/root'
 
 # Superpowers
 
@@ -83,4 +83,10 @@ GCN can see through walls!
 
   Fwoosh!
 </WithFeature>
+
+<WithoutFeature walkThroughWalls>
+  ## Walking through walls
+
+  GCN cannot currently walk through walls, although this feature is in development.
+</WithoutFeature>
 ```
