@@ -22,6 +22,8 @@ export type SchemaProperty = {
   type?: string | string[]
   enum?: string[]
   $ref?: string
+  oneOf?: SchemaProperty[]
+  items: ReferencedSchema
 }
 
 export type Schema = {
@@ -133,6 +135,20 @@ export function SchemaPropertiesTableBody({
                   <br />
                   Options: {schema.properties[itemKey].enum?.join(', ')}
                 </>
+              )}{' '}
+              {schema.properties && schema.properties[itemKey].oneOf && (
+                <>
+                  {schema.properties[itemKey].oneOf.map((x) => (
+                    <span key={JSON.stringify(x)}>
+                      <strong>
+                        {x.type}
+                        {x.type === 'array' ? `[${x.items.type}]` : ''}:
+                      </strong>{' '}
+                      {x.description}
+                      <br />
+                    </span>
+                  ))}
+                </>
               )}
             </td>
           </tr>
@@ -152,5 +168,6 @@ export function formatFieldType(item: SchemaProperty): string {
   if (item.type) return item.type
   if (item.enum) return 'enum'
   if (item.$ref) return item.$ref.split('/').slice(-1)[0]
+  if (item.oneOf) return item.oneOf.map((x) => x.type).join(' | ')
   return ''
 }
