@@ -18,30 +18,21 @@ import logo from './logo.png'
 
 **Begun Operation:** 2025
 
-[Burst & Outburst Observations Monitor (BOOM)](https://www.ztf.caltech.edu/ztf-boom-babamul.html) is the underlying hardware and software infrastructure that enables a full blown science data platform for transient astronomy. BOOM features a multi-survey data archive and alert broker (Babamul) combining data from the ZTF and Rubin alert stream to offer users combined lightcurve infomation at filtering times. It serves as an interactive collaborative marshal for the transient, variable, and solar system science cases. The BOOM GCN Notices stream provides correlation between BOOM transient streams and other GCN Notices.
+[Burst & Outburst Observations Monitor (BOOM)](https://www.ztf.caltech.edu/ztf-boom-babamul.html) is a community-facing data and alert infrastructure that supports time-domain and multi-messenger astronomy. BOOM provides real-time brokering, archival context, and coordination tools that enable rapid identification, vetting, and follow-up of astrophysical transients. In addition to alert distribution, BOOM has as interactive front-end designed to support astronomers interested in the filtered alert streams.
+
+BOOM is the software stack operating to enable a multi-survey alert broker and data archive (Babamul) that ingests and combines alerts from the Zwicky Transient Facility (ZTF) and the Vera C. Rubin Observatory alert stream. These alerts are processed in real time to generate unified light curves, contextual metadata, and filtered event streams that can be acted on at alert times or explored retrospectively.
 
 **JSON-Serialized GCN Notices Types in GCN Kafka:**
 
-BOOM distributes alerts for potential correlations between optical transients and transients reported through GCN Notices. These notices are published on the GCN Kafka topic `gcn.notices.boom.alert`.
+BOOM is contributing a GCN Notices stream, where cross-matches between the BOOM fast transient stream (which analyzes ZTF and LSST alert streams) is checked for (i) neutron star bearing gravitational-wave alert candidates and (ii) gamma-ray bursts from high-energy monitors. This enables rapid cross-identification of events across experiments and observatories, enhancing situational awareness and time-critical response for the broader transient astronomy community. Alert includes localization, photometry, cross-matches with other GCN Notices, and classification scores from machine-learning models. These notices are published on the GCN Kafka topic `gcn.notices.boom.alert`.
 
 BOOM [GCN schema](/schema/stable/gcn/notices/boom/alert.schema.json) and
 example [JSON message](/schema/stable/gcn/notices/boom/alert.example.json) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/boom/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of BOOM Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/boom).
 
 <div className="overflow-table">
 
-| Type                     | Contents                          | Latency |
-| ------------------------ | --------------------------------- | ------- |
-| `gcn.notices.boom.alert` | Localization, Classification, ??? | ~? min  |
-
-</div>
-
-**Yearly Trigger Rates:**
-
-<div className="overflow-table">
-
-| Survey | Type                                        | Rates |
-| ------ | ------------------------------------------- | ----- |
-| ZTF    | GRB afterglows, kilonovae, other transients | ~?    |
-| Rubin  | GRB afterglows, kilonovae, other transients | ~?    |
+| Type                     | Contents                                                | Latency |
+| ------------------------ | ------------------------------------------------------- | ------- |
+| `gcn.notices.boom.alert` | Localization, Classification, Photometry, Cross-matches | ~1 min  |
 
 </div>
