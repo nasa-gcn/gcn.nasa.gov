@@ -46,9 +46,6 @@ export default function Group() {
         <Link
           onClick={(event) => {
             event.preventDefault()
-            console.log(
-              'Navigating back to previous page with javaScript navigation'
-            )
             navigate(-1)
           }}
           className="usa-button"
