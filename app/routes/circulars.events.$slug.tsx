@@ -48,7 +48,7 @@ export default function Group() {
             event.preventDefault()
             navigate(-1)
           }}
-          className="usa-button"
+          className="usa-button flex-align-stretch"
           to="/circulars?view=group"
         >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
