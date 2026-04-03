@@ -73,7 +73,14 @@ function ModalUnauthorized() {
         get a peer endorsement from an existing GCN Circulars user.
       </p>
       <ModalFooter>
-        <Link onClick={() => navigate(-1)} className="usa-button" to="">
+        <Link
+          onClick={(event) => {
+            event.preventDefault()
+            navigate(-1)
+          }}
+          className="usa-button"
+          to="/circulars"
+        >
           <Button type="button" outline>
             Cancel
           </Button>

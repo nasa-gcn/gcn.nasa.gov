@@ -134,7 +134,14 @@ export default function () {
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link onClick={() => navigate(-1)} className="usa-button" to="">
+        <Link
+          onClick={(event) => {
+            event.preventDefault()
+            navigate(-1)
+          }}
+          className="usa-button"
+          to="/synonyms"
+        >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back
         </Link>

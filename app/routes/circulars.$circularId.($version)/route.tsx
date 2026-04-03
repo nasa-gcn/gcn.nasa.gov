@@ -95,7 +95,17 @@ export default function () {
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link onClick={() => navigate(-1)} className="usa-button" to="">
+        <Link
+          onClick={(event) => {
+            event.preventDefault()
+            console.log(
+              'Navigating back to previous page with javaScript navigation'
+            )
+            navigate(-1)
+          }}
+          className="usa-button"
+          to={`/circulars/${searchString}`}
+        >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back
         </Link>
