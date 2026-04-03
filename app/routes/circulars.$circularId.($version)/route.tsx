@@ -101,7 +101,7 @@ export default function () {
             navigate(-1)
           }}
           className="usa-button"
-          to={`/circulars/${searchString}`}
+          to={`/circulars${searchString}`}
         >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back
