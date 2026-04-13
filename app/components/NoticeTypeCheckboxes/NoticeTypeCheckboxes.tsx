@@ -61,6 +61,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
 }
 
 export const JsonNoticeTypes: { [key: string]: string[] } = {
+  BOOM: ['gcn.notices.boom.alert'],
   Circulars: ['gcn.circulars'],
   CHIME: ['gcn.notices.chime.frb'],
   'DSA-110': ['gcn.notices.dsa110.frb'],
@@ -76,6 +77,7 @@ export const JsonNoticeTypes: { [key: string]: string[] } = {
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
+  BOOM: '/missions/boom',
   Circulars: '/circulars',
   CHIME: '/missions/chime',
   'DSA-110': '/missions/dsa110',

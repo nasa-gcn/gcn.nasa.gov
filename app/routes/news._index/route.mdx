@@ -30,6 +30,37 @@ import { Anchor } from '~/components/Anchor'
   <CollectionItem
     className="maxw-none grid-container"
     variantComponent={
+      <CollectionCalendarDate datetime='April 29, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>New BOOM Notices and Schema v7.0.0</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+        The GCN Team is pleased to announce new Notice Types and a schema release.
+        - [BOOM Cross-Correlated Optical Transients Notices](/news#boom-cross-correlated-optical-transient-notices)
+        - [Schema v7.0.0](/news#schema-v700)
+
+      #### BOOM Cross-Correlated Optical Transient Notices
+
+      The [Burst & Outburst Observations Monitor (BOOM)/Babamul](https://www.ztf.caltech.edu/ztf-boom-babamul.html) Team and the GCN Team are pleased to announce the availability of a new notice type via the [new GCN](https://gcn.nasa.gov) in JSON format. BOOM provides real-time brokering, archival context, and coordination tools that enable rapid identification, vetting, and follow-up of astrophysical transients. BOOM is the software stack operating to enable a multi-survey alert broker and data archive (Babamul) that ingests and combines alerts from the Zwicky Transient Facility (ZTF) and the Vera C. Rubin Observatory alert stream.
+
+      BOOM is contributing a GCN Notices stream, where cross-matches from the BOOM fast transient stream (which analyzes ZTF and LSST alert streams) are checked for (i) gravitational-wave alert candidates consistent with a binary neutron star merger or neutron star-black hole merger and (ii) gamma-ray bursts detected by Fermi, SVOM, and Swift. This enables rapid cross-identification of events across experiments and observatories, enhancing situational awareness and time-critical response for the broader transient astronomy community. Alert includes localization, photometry, cross-matches with other GCN Notices, and classification scores from machine-learning models.
+
+      BOOM notices are published on the GCN Kafka topic `gcn.notices.boom.alert`.
+
+      See the [BOOM mission page](/missions/boom) for a more extensive description of the information provided in these new notices.
+
+      #### Schema v7.0.0
+      GCN Schema v7.0.0 is available with recent changes including new Notice types and a modified and generalized Spectral core schema ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v7.0.0)).
+    </CollectionDescription>
+
+  </CollectionItem>
+
+  <CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
       <CollectionCalendarDate datetime='March 4, 2026' />
     }
 >
