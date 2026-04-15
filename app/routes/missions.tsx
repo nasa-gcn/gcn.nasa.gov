@@ -24,6 +24,11 @@ export default function () {
               <NavLink key="." to="." end>
                 Missions, Instruments, and Facilities
               </NavLink>,
+              useFeature('BOOM') && (
+                <NavLink key="boom" to="boom" end>
+                  BOOM
+                </NavLink>
+              ),
               <NavLink key="calet" to="calet">
                 CALET
               </NavLink>,
