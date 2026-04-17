@@ -27,11 +27,3 @@ import logo from './logo.png'
 BOOM contributes a [GCN Notices stream](https://github.com/boom-astro/boom-gcn-pipeline) by extracting candidates from its [fast transient stream](https://github.com/boom-astro/boom-analysis-tools/blob/main/filters/fast_transient_ztf.json) (which analyzes ZTF and LSST alerts) and cross-matching them with (i) gravitational-wave alert candidates consistent with a binary neutron star merger or neutron star-black hole merger and (ii) gamma-ray bursts detected by Fermi, SVOM, and Swift. This enables rapid cross-identification of events across experiments and observatories, enhancing situational awareness and time-critical response for the broader transient astronomy community. Alert includes localization, photometry, cross-matches with other GCN Notices, and classification scores from machine-learning models. These notices are published on the GCN Kafka topic `gcn.notices.boom.alert`.
 
 Detailed description of the properties and examples of BOOM Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/boom).
-
-<div className="overflow-table">
-
-| Type                     | Contents                                                | Latency                                                                                      |
-| ------------------------ | ------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `gcn.notices.boom.alert` | Localization, Classification, Photometry, Cross-matches | ~1 s after optical transient passing the fast transient filter is consistent with GCN Notice |
-
-</div>
