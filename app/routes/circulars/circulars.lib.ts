@@ -179,6 +179,7 @@ export const validSubjectKeywords = [
   'CALET',
   'Chandra',
   'COLIBRI',
+  'COLIBRÍ',
   'EP',
   'Fermi',
   'FRB',
