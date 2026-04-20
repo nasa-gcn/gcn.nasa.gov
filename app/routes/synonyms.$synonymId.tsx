@@ -79,6 +79,12 @@ export async function action({
   params: { synonymId },
 }: ActionFunctionArgs) {
   invariant(synonymId)
+
+  const user = await getUser(request)
+
+  if (!user || !user.groups.includes(moderatorGroup))
+    throw new Response(null, { status: 403 })
+
   const data = await request.formData()
   const intent = getFormDataString(data, 'intent')
 
