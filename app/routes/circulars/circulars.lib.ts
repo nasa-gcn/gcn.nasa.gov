@@ -92,7 +92,7 @@ const subjectMatchers: SubjectMatcher[] = [
   ],
   [/sb[.\s_-]*(\d{8})/i, ([, id]) => `sb${id}`],
   [/XRF[.\s_-]*(\d{6}[a-z]?)/i, ([, id]) => `XRF ${id.toUpperCase()}`],
-  [/AT[.\s_-]*(\d{4}[a-z]*)/i, ([, id]) => `AT${id.toLowerCase()}`],
+  [/AT[.\s_-]*(\d{4}[a-z]+)/i, ([, id]) => `AT${id.toLowerCase()}`],
 ]
 
 /** Format a Circular as plain text. */
@@ -140,9 +140,10 @@ export function subjectIsValid(subject: string) {
     const subjectLowerCase = subject.toLowerCase()
     return (
       !emailIsAutoReply(subject) &&
-      validSubjectKeywords.some((x) =>
+      (validSubjectKeywords.some((x) =>
         subjectLowerCase.includes(x.toLowerCase())
-      )
+      ) ||
+        parseEventFromSubject(subject))
     )
   }
 }
