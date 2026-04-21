@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Link, Outlet } from '@remix-run/react'
+import { Link, Outlet, useNavigate } from '@remix-run/react'
 import {
   Button,
   Modal,
@@ -13,7 +13,6 @@ import {
   ModalHeading,
 } from '@trussworks/react-uswds'
 
-import { useSearchString } from '~/lib/utils'
 import {
   useEmail,
   usePermissionModerator,
@@ -54,9 +53,8 @@ function SignInButton() {
 }
 
 function ModalUnauthorized() {
-  const searchString = useSearchString()
   const isAuthenticated = useAuthenticated()
-
+  const navigate = useNavigate()
   return (
     <Modal
       id="modal-unauthorized"
@@ -75,7 +73,14 @@ function ModalUnauthorized() {
         get a peer endorsement from an existing GCN Circulars user.
       </p>
       <ModalFooter>
-        <Link to={`/circulars${searchString}`}>
+        <Link
+          onClick={(event) => {
+            event.preventDefault()
+            navigate(-1)
+          }}
+          className="usa-button"
+          to="/circulars"
+        >
           <Button type="button" outline>
             Cancel
           </Button>

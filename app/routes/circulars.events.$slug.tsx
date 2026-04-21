@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
-import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
+import { Link, useLoaderData, useNavigate } from '@remix-run/react'
 import { Icon } from '@trussworks/react-uswds'
 import invariant from 'tiny-invariant'
 
@@ -39,15 +39,17 @@ export async function loader({ params: { slug } }: LoaderFunctionArgs) {
 
 export default function Group() {
   const { members, eventIds } = useLoaderData<typeof loader>()
-  const [searchParams] = useSearchParams()
-  const searchString = searchParams.toString()
-
+  const navigate = useNavigate()
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
         <Link
-          to={`/circulars?${searchString}`}
+          onClick={(event) => {
+            event.preventDefault()
+            navigate(-1)
+          }}
           className="usa-button flex-align-stretch"
+          to="/circulars?view=group"
         >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back

@@ -12,6 +12,7 @@ import {
   Link,
   useFetcher,
   useLoaderData,
+  useNavigate,
   useSubmit,
 } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
@@ -115,7 +116,7 @@ export default function () {
   const ref = useRef<HTMLDivElement>(null)
   const fetcher = useFetcher()
   const submit = useSubmit()
-
+  const navigate = useNavigate()
   const [showContent, setShowContent] = useState(false)
   useOnClickOutside(ref, () => {
     setShowContent(false)
@@ -133,7 +134,14 @@ export default function () {
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link to="/synonyms" className="usa-button">
+        <Link
+          onClick={(event) => {
+            event.preventDefault()
+            navigate(-1)
+          }}
+          className="usa-button"
+          to="/synonyms"
+        >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back
         </Link>
