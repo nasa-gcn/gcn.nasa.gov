@@ -82,7 +82,7 @@ export async function action({
 
   const user = await getUser(request)
 
-  if (!user || !user.groups.includes(moderatorGroup))
+  if (!user?.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
 
   const data = await request.formData()
