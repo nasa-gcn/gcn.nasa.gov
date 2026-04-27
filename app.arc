@@ -104,6 +104,23 @@ legacy_users
   email *String
   PointInTimeRecovery true
 
+users
+  sub *String
+  PointInTimeRecovery true
+
+teams
+  teamId *String
+  PointInTimeRecovery true
+
+team_members
+  sub *String
+  teamId **String
+  PointInTimeRecovery true
+
+topics
+  topicId *String
+  PointInTimeRecovery true
+
 @tables-indexes
 email_notification_subscription
   topic *String
@@ -160,6 +177,18 @@ synonyms
 client_credentials
   client_id *String
   name credentialsByClientId
+
+users
+  username *String
+  name usersByUserName
+
+users
+  email *String
+  name usersByEmail
+
+team_members
+  teamId *String
+  name usersByTeam
 
 @aws
 runtime nodejs24.x

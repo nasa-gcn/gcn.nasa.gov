@@ -5787,5 +5787,70 @@
       "lastUsed": 1745014628845,
       "countUsed": 1
     }
+  ],
+  "users": [
+    {
+      "sub": "default",
+      "username": "Example User",
+      "affiliation": "Testing Corp",
+      "email": "user@example.com"
+    }
+  ],
+  "teams": [
+    {
+      "teamId": "team_abc",
+      "teamName": "Team ABC",
+      "description": "A cool new team"
+    },
+    {
+      "teamId": "team_def",
+      "teamName": "Team Def",
+      "description": "A second team"
+    },
+    {
+      "teamId": "team_ghi",
+      "teamName": "Team ghi",
+      "description": "Example team"
+    }
+  ],
+  "team_members": [
+    {
+      "sub": "default",
+      "teamId": "team_abc",
+      "permission": "admin",
+      "topicId": "topic_1"
+    },
+    {
+      "sub": "default",
+      "teamId": "team_def",
+      "permission": "write",
+      "topicId": "topic_2"
+    },
+    {
+      "sub": "default",
+      "teamId": "team_ghi",
+      "permission": "read",
+      "topicId": "topic_3"
+    }
+  ],
+  "topics": [
+    {
+      "topicId": "topic_1",
+      "topicName": "gcn.notices.team_abc",
+      "teamId": "team_abc",
+      "public": true
+    },
+    {
+      "topicId": "topic_2",
+      "topicName": "gcn.notices.team_def",
+      "public": false,
+      "teamId": "team_def"
+    },
+    {
+      "topicId": "topic_3",
+      "topicName": "gcn.notices.team_ghi",
+      "teamId": "team_ghi",
+      "public": true
+    }
   ]
 }
