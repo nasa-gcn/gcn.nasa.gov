@@ -210,9 +210,10 @@ export function useOrigin() {
 }
 
 export function useUrl() {
-  const origin = useOrigin()
-  invariant(origin)
+  const origin = useOrigin() || 'https://gcn.nasa.gov'
   const { pathname, search, hash } = useLocation()
+
+  invariant(origin)
   const url = new URL(origin)
   url.pathname = pathname
   url.search = search
