@@ -121,6 +121,11 @@ topics
   topicId *String
   PointInTimeRecovery true
 
+team_invites
+  teamId *String
+  email **String
+  PointInTimeRecovery true
+
 @tables-indexes
 email_notification_subscription
   topic *String
@@ -189,6 +194,10 @@ users
 team_members
   teamId *String
   name usersByTeam
+
+team_invites
+  email *String
+  name invitesByEmail
 
 @aws
 runtime nodejs24.x
