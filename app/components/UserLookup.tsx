@@ -24,11 +24,10 @@ export interface UserLookup {
   affiliation?: string
 }
 
-interface UserComboBoxProps
-  extends Omit<
-    UseComboboxProps<UserLookup>,
-    'items' | 'onInputValueChange' | 'itemToString'
-  > {
+interface UserComboBoxProps extends Omit<
+  UseComboboxProps<UserLookup>,
+  'items' | 'onInputValueChange' | 'itemToString'
+> {
   disabled?: boolean
   className?: string
   group?: string

@@ -85,7 +85,7 @@ export function DateSelector({
   })
   const defaultShowDateRange = Boolean(
     (defaultStartDate && !dateSelectorLabels[defaultStartDate]) ||
-      defaultEndDate
+    defaultEndDate
   )
   const [showDateRange, setShowDateRange] = useState(defaultShowDateRange)
   const startDateInputRef = useRef<HTMLInputElement>(null)
