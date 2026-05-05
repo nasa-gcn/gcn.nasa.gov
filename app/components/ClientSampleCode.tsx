@@ -736,7 +736,7 @@ export function ClientSampleCode({
 
                   // Connect as a consumer${clientName ? ` (client "${clientName}")` : ''}
                   // Warning: don't share the client secret with others.
-                  config.set_gcn_auth(
+                  config.set_gcn(
                       "${clientId}",
                       "${clientSecret}",
                       ${domain ? `Some("${domain}")` : 'None'},
