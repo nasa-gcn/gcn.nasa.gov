@@ -86,7 +86,6 @@ export default function () {
   const linkString = `/circulars/${circularId}${
     !latest && version ? `/${version}` : ''
   }`
-  // const navigate = useNavigate()
   const { handleBack } = useBack(`/circulars${searchString}`)
 
   return (
