@@ -145,7 +145,7 @@ Key fields are described below:
 ```python
 ra_err_mean = (abs(ra_err_plus) + abs(ra_err_minus)) / 2
 dec_err_mean = (abs(dec_err_plus) + abs(dec_err_minus)) / 2
-err_combined = np.sqrt(ra_err_mean * cos(np.deg2rad(dec)) * dec_err_mean)
+err_combined = np.sqrt(ra_err_mean * cos(dec) * dec_err_mean)
 ```
 
 These `ra_err_plus`, `ra_err_minus`, `dec_err_plus`, and `dec_err_minus` values correspond to the 90% containment errors, which are published in the GCN circular associated with the event.
