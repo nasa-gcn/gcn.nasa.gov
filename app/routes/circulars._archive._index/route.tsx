@@ -37,6 +37,7 @@ import {
   put,
   putVersion,
   search,
+  submitterGroup,
 } from '../circulars/circulars.server'
 import CircularsHeader from './CircularsHeader'
 import CircularsIndex from './CircularsIndex'
@@ -128,6 +129,8 @@ export async function action({ request }: ActionFunctionArgs) {
       if (user.groups.includes(moderatorGroup)) {
         submitter = getFormDataString(data, 'submitter')
         if (!submitter) throw new Response(null, { status: 400 })
+      } else if (!user.groups.includes(submitterGroup)) {
+        throw new Response(null, { status: 403 })
       }
 
       let zendeskTicketId: number | undefined
