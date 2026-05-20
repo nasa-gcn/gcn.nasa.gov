@@ -39,28 +39,29 @@ export function TableOfContents({
   }
 
   return (
-    <nav
-      aria-label="Table of contents"
-      className={classNames('margin-y-4 padding-2', className)}
-    >
-      <p className="usa-label margin-top-0 margin-bottom-2">
-        Table of Contents
-      </p>
-      <ul className="usa-list usa-list--unstyled margin-0">
-        {items.map((item) => (
-          <li
-            key={item.id}
-            className={classNames('margin-bottom-1', {
-              [`margin-left-${(item.level - 1) * 2}`]:
-                item.level >= 3 && item.level <= 6,
-            })}
-          >
-            <a className="usa-link" href={`#${item.id}`}>
-              {item.text}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+    <details>
+      <summary>Table of Contents</summary>
+
+      <nav
+        aria-label="Table of contents"
+        className={classNames('padding-2', className)}
+      >
+        <ul className="usa-list usa-list--unstyled margin-0">
+          {items.map((item) => (
+            <li
+              key={item.id}
+              className={classNames('margin-bottom-1', {
+                [`margin-left-${(item.level - 1) * 2}`]:
+                  item.level >= 3 && item.level <= 6,
+              })}
+            >
+              <a className="usa-link" href={`#${item.id}`}>
+                {item.text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </details>
   )
 }
