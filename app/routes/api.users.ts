@@ -37,8 +37,8 @@ export async function action({ request }: ActionFunctionArgs) {
             sub: x.Attributes?.find((x) => x.Name == 'sub')?.Value,
             email:
               x.Attributes?.find((x) => x.Name == 'email')?.Value?.replace(
-                /(.)(.*)@(.*)/,
-                '$1*****@$3'
+                /(.)(?:.*)@(.*)/,
+                '$1*****@$2'
               ) ?? '',
             name: x.Attributes?.find((x) => x.Name == 'name')?.Value,
             affiliation: x.Attributes?.find((x) => x.Name == 'affiliation')
