@@ -51,10 +51,8 @@ export function TableOfContents({
           <li
             key={item.id}
             className={classNames('margin-bottom-1', {
-              'margin-left-2': item.level === 3,
-              'margin-left-4': item.level === 4,
-              'margin-left-6': item.level === 5,
-              'margin-left-8': item.level === 6,
+              [`margin-left-${(item.level - 1) * 2}`]:
+                item.level >= 3 && item.level <= 6,
             })}
           >
             <a className="usa-link" href={`#${item.id}`}>
