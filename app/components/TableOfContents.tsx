@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 
 type TocItem = {
   id: string
+  level: number
   text: string
 }
 
@@ -10,6 +11,7 @@ function compileTOC(container: ParentNode): TocItem[] {
   return Array.from(container.querySelectorAll('h2, h3, h4, h5, h6'))
     .map((heading) => ({
       id: heading.id,
+      level: Number.parseInt(heading.tagName.slice(1), 10),
       text: heading.textContent?.trim() ?? '',
     }))
     .filter((heading) => heading.id && heading.text)
@@ -46,7 +48,15 @@ export function TableOfContents({
       </p>
       <ul className="usa-list usa-list--unstyled margin-0">
         {items.map((item) => (
-          <li key={item.id} className="margin-bottom-1">
+          <li
+            key={item.id}
+            className={classNames('margin-bottom-1', {
+              'margin-left-2': item.level === 3,
+              'margin-left-4': item.level === 4,
+              'margin-left-6': item.level === 5,
+              'margin-left-8': item.level === 6,
+            })}
+          >
             <a className="usa-link" href={`#${item.id}`}>
               {item.text}
             </a>
