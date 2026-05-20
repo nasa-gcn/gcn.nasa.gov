@@ -35,17 +35,18 @@ export async function action({ request }: ActionFunctionArgs) {
         .map((x) => {
           return {
             sub: x.Attributes?.find((x) => x.Name == 'sub')?.Value,
-            email: x.Attributes?.find((x) => x.Name == 'email')?.Value ?? '',
+            email:
+              x.Attributes?.find((x) => x.Name == 'email')?.Value?.replace(
+                /(.)(.*)@(.*)/,
+                '$1*****@$3'
+              ) ?? '',
             name: x.Attributes?.find((x) => x.Name == 'name')?.Value,
             affiliation: x.Attributes?.find((x) => x.Name == 'affiliation')
               ?.Value,
           }
         })
-        .filter(
-          ({ name, email }) =>
-            email !== undefined &&
-            (name?.toLowerCase().includes(filter.toLowerCase()) ||
-              email?.toLowerCase().includes(filter.toLowerCase()))
+        .filter(({ name }) =>
+          name?.toLowerCase().includes(filter.toLowerCase())
         )
         .slice(0, 5)
     } else if (userIsAdmin) {
