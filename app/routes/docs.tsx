@@ -262,7 +262,9 @@ export default function () {
           />
         </div>
         <div className="desktop:grid-col-9">
-          <Outlet />
+          <div data-mdx-content>
+            <Outlet />
+          </div>
         </div>
       </div>
     </GridContainer>
