@@ -476,6 +476,11 @@ export async function createChangeRequest(
     throw new Response('User is not signed in', {
       status: 403,
     })
+  if (
+    !user.groups.includes(submitterGroup) ||
+    !user.groups.includes(moderatorGroup)
+  )
+    throw new Response(null, { status: 403 })
   const requestor = formatAuthor(user)
   const db = await tables()
   const circular = (await db.circulars.get({
