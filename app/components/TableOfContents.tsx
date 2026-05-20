@@ -55,7 +55,20 @@ export function TableOfContents({
                   item.level >= 3 && item.level <= 6,
               })}
             >
-              <a className="usa-link" href={`#${item.id}`}>
+              <a
+                className="usa-link"
+                href={`#${item.id}`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  const target = document.getElementById(item.id)
+                  if (target) {
+                    target.scrollIntoView({
+                      behavior: 'smooth',
+                      block: 'start',
+                    })
+                  }
+                }}
+              >
                 {item.text}
               </a>
             </li>
