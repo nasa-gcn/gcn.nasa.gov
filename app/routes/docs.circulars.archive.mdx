@@ -15,12 +15,6 @@ Upon successful submission and distribution, a GCN Circular is assigned a number
   Go to GCN Circulars Archive
 </Link>
 
-## Searching the Archive
-
-You can search the Circulars Archive by keywords or phrases in the subject, body, and submitter fields. By default, results will be returned in reverse chronological order, but you can also choose to sort the results by relevance. You can navigate through the search results using pagination controls and specify the number of results to display per page. By default, 100 results are displayed per page.
-
-You can filter search results by submission date. Select the dropdown button labeled "Filter by date". From there, you can either select from a number of predefined time ranges (e.g., "Last Hour", "Last Day", etc.) or specify a custom date range, which can either be set as a start date, an end date, or both. All search filters can be cleared by clicking the 'x' button in the search bar.
-
 <WithFeature SYNONYMS>
 ## Event View
 
@@ -44,11 +38,19 @@ To save a direct link to all Circulars associated with a particular event name o
 
 </WithFeature>
 
-## Advanced Search
+## Searching the Archive
 
-The advanced search feature allows for searching keywords in a specific field of the circular. The search feature uses the [Lucene query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html) to specify the field and search term.
+The Circulars archive provides a number of search features to help users more easily find circulars relevant to their work. You can search the Circulars archive by keywords or phrases in the subject, body, and submitter fields. By default, results will be returned in reverse chronological order, but you can also choose to sort the results by relevance. You can navigate through the search results using pagination controls and specify the number of results to display per page. By default, 100 results are displayed per page.
 
-### Searching by Field
+### Date Filtering
+
+You can filter search results by their original submission date. Select the dropdown button labeled "Filter by date". From there, you can either select from a number of predefined time ranges (e.g., "Last Hour", "Last Day", etc.) or specify a custom date range, which can either be set as a start date, an end date, or both. This can be used in tandem with a keyword search to narrow down the results to a specific date range. All search filters can be cleared by clicking the 'x' button in the search bar.
+
+### Advanced Search
+
+The advanced search feature allows for searching keywords in specific fields. The search feature uses the [Lucene query syntax](https://lucene.apache.org/core/2_9_4/queryparsersyntax.html) to specify the field and search term.
+
+#### Searching by Field
 
 Searches can be performed by specifying the field and search term. The syntax for this is `field:"search term"`. For example, to search for circulars with the word 'Swift' in the subject field, the query would be `subject:"Swift"`.
 
@@ -56,7 +58,7 @@ The following fields are supported: `subject`, `body`, and `submitter`.
 
 By default, a query that does not contain the advanced search syntax will attempt to match the query against all 3 fields. For example, the query `Swift` will match any circular that contains the word 'Swift' in the subject, body, or submitter fields, whereas the query `subject:"Swift"` will only match circulars where the subject contains the word 'Swift'.
 
-### Compound Queries
+#### Compound Queries
 
 These separate field queries can be combined using additional keywords to form compound queries. The following boolean keywords are supported:
 
@@ -70,11 +72,11 @@ It is also possible to combine these operator keywords to form more complex quer
 
 Using one of these operators without an additional field query will result in an error. For example, `subject:"Swift" AND` will raise an error. For queries that do not adhere to the advanced search syntax, GCN will fall back onto a more basic search method that matches the query against all fields with a warning message.
 
-### Reserved Characters
+#### Reserved Characters
 
 There are a number of reserved characters that have special meaning in the advanced search syntax. These characters must be escaped using a backslash (`\`) to be treated as a literal character. Including these characters in a query without escaping them will raise an error.The reserved characters are: `+`, `-`, `=`, `&&`, `||`, `>`, `<`, `!`, `(`, `)`, `{`, `}`, `[`, `]`, `^`, `"`, `~`, `*`, `?`, `:`, `/`, `\`.
 
-### Examples
+#### Examples
 
 - `Swift`: Matches circulars where the subject, body, or submitter contains 'Swift'.
 - `subject:"Swift"`: Matches circulars where the subject contains 'Swift'.
