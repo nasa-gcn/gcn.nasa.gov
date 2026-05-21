@@ -3,6 +3,8 @@ handle:
   breadcrumb: Authentication and Authorization
 ---
 
+import { Mermaid } from '~/components/Mermaid'
+
 # Authentication and Authorization
 
 Kafka is usually employed within an organization that has central control over who can produce or consume topics. The way that GCN uses Kafka is unique in that there are a very large number of consumers, and that the consumers are members of the general public rather than members of a single organization. GCN's authentication and authorization design makes this use case possible with Kafka.
@@ -23,15 +25,17 @@ A user that is signed in to the GCN web site can navigate to the [client credent
 
 Once the user has a client ID and client secret, they can configure any of the [supported Kafka client libraries](/docs/client) to connect to GCN's Kafka broker. When the Kafka client starts up, it first sends the client ID and client secret to Cognito's OpenID Connect token endpoint over HTTPS. Cognito responds to the client with an access token which is valid for 1 hour. The Kafka client sends the access token to the Kafka broker. Finally, the Kafka broker makes an authorization decision based on the token. If successful, the Kafka session is now authorized. The client repeats the process shortly before the access token expires.
 
-```mermaid
-sequenceDiagram
+<Mermaid
+  chart={`
+  sequenceDiagram
     autonumber
     loop Every Hour
       Kafka Client->>Cognito: Client ID, Client Secret
       Cognito-->>Kafka Client: Access Token
       Kafka Client->>Kafka Broker: Access Token
     end
-```
+`}
+/>
 
 ## Kafka Broker Operation
 
