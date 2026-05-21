@@ -56,7 +56,7 @@ Events are classified into **Gold** and **Bronze** streams based on their likeli
 
 $$p_{\mathrm{astro}}(E > E_{\mathrm{event}}, \delta) = \frac{N_{\mathrm{signal}}(E > E_{\mathrm{event}}, \delta)}{N_{\mathrm{signal}}(E > E_{\mathrm{event}}, \delta)+N_{\mathrm{background}}(E > E_{\mathrm{event}}, \delta)}$$
 
-where $N_{\mathrm{signal}}$ and $N_{\mathrm{background}}$ are the expected numbers of signal and background events (both atmospheric neutrinos and muons) with reconstructed event energy $E$ above the selected energy proxy $E_{\mathrm{event}}$ at declination $\delta$, derived from simulations.
+where $N_{\mathrm{signal}}$ and $N_{\mathrm{background}}$ are the expected numbers of signal and background events (both atmospheric neutrinos and muons) with reconstructed event energy $E$ above the selected energy proxy $E_{\mathrm{event}}$ at declination $\delta$, derived from simulations. Following the above definition, **the astrophysical probability quantifies the expected fraction of astrophysical neutrinos, derived from MC simulations, for events with similar reconstructed direction and with reconstructed energies at or above the event energy E_event, assuming a given astrophysical spectrum**.
 
 The streams were optimized assuming an astrophysical neutrino power-law energy spectral index of $E^{-2.19}$.
 
@@ -68,7 +68,7 @@ Each alert selection determines the values to report in the GCN Notice (probabil
 
 The total rate of distributed alerts is approximately 26 per year (10 Gold and 16 Bronze).
 
-The neutrino effective areas for these combined selections, for both through-going and starting events, are shown in Figure 1 of [@2023ApJS..269...25A]. Astrophysical neutrino-generated tracks selected by these selections are expected to have very good angular resolution. The median angular resolution for these events as a function of energy is shown in Figure 2 of [@2023ApJS..269...25A].
+The neutrino effective areas for these combined selections, for both through-going and starting events, are shown in Figure 1 of [@2023ApJS..269...25A]. Astrophysical neutrino-generated tracks selected by these selections are expected to have very good angular resolution. The median angular resolution for these events as a function of energy is shown in Figure 3 of [@2019ICRC...36.1021B].
 
 #### Alert distribution
 
@@ -145,10 +145,18 @@ Key fields are described below:
 ```python
 ra_err_mean = (abs(ra_err_plus) + abs(ra_err_minus)) / 2
 dec_err_mean = (abs(dec_err_plus) + abs(dec_err_minus)) / 2
-err_combined = np.sqrt( (ra_err_mean * np.cos(np.deg2rad(dec)))**2 + (dec_err_mean)**2 )
+err_combined = sqrt(ra_err_mean * cos(dec) * dec_err_mean)
 ```
 
 These `ra_err_plus`, `ra_err_minus`, `dec_err_plus`, and `dec_err_minus` values correspond to the 90% containment errors, which are published in the GCN circular associated with the event.
+
+Multiplying the RA uncertainty by `cos(dec)` correctly accounts for the fact that lines of constant RA converge toward the celestial poles. This converts the RA uncertainty into a true angular distance on the sky.
+
+The adopted formula provides an effective circularized uncertainty radius derived from the localization ellipse, using the mean uncertainties around the best-fit position as the ellipse axes. The resulting `err_combined` approximates the radius of a circle with an area comparable to the estimated 90% containment region around the best-fit position.
+
+It is worth highlighting that this quantity is only an approximate representation of the localization uncertainty. By construction, if `err_combined` is used as the radius of a circular error region, it always defines a circular region centered on the best-fit coordinates. However, the true localization morphology of an alert can be highly irregular, asymmetric, multi-modal, or offset from the best-fit position. In these situations, a simple circular approximation may exclude regions that still contain significant probability density, including high-probability pixels belonging to the true 90% containment region.
+
+**For alerts with asymmetric uncertainties, elongated contours, or complex probability distributions, `err_combined` should therefore be used with caution. The true localization information is provided by the multi-order HEALPix probability maps distributed through the `healpix_url` field (see below). We strongly recommend using these maps for any accurate reconstruction of confidence contours and follow-up analyses.**
 
 - `containment_probability` - Confidence level for the positional error (e.g., `0.9` for 90%).
 - `systematic_included` - `True` if systematics are included in the positional uncertainty, otherwise `False`. For `"record_number"`=`0` (preliminary reconstruction), this is set to `False`. For `"record_number"`=`1` (updated reconstruction associated to the GCN circular), this is set to `True`. In fact, starting from September 2024, the reconstruction algorithms used for realtime alerts have been improved [@2024GCN.38267....1I]. Systematic errors affecting the reconstructions, such as those from the ice model or detector geometry, have been thoroughly investigated to ensure proper statistical coverage (see details in [@2025icrc.confE1184S]).
@@ -161,7 +169,7 @@ These `ra_err_plus`, `ra_err_minus`, `dec_err_plus`, and `dec_err_minus` values 
 > **_NOTE:_** With the transition to GCN over Kafka, the reported values of `p_astro` and `far` are now updated in the revised reconstruction. In the previous system, the same quantities from the preliminary reconstruction were reported. The updated values are computed using the revised best-fit direction and the initial energy estimate of the event.
 
 The [GCN schema](/schema/stable/gcn/notices/icecube/single_neutrino_alerts.schema.json) and
-example [JSON message](/schema/stable/gcn/notices/icecube/single_neutrino_alerts.example.json) files
+example [JSON message](/schema/stable/gcn/notices/icecube/single_neutrino_alerts.gold_bronze_track_alerts.example.json) files
 are available to use.
 
 #### **Multi-order Probability Maps (MOC/HEALPix)**
@@ -185,7 +193,7 @@ The header of each file contains:
 
 #### IceCube Alert Archive
 
-The IceCube alert archive is publicly accessible at: `https://roc-2.icecube.wisc.edu/public/alerts/`
+The IceCube alert archive is publicly accessible at [this link][https://roc-2.icecube.wisc.edu/public/alerts/]
 
 Each alert is provided as a compressed FITS file using the following naming convention:
 `IceCube-YYMMDDX_skymap_probdensity_multiorder.fits.gz`
