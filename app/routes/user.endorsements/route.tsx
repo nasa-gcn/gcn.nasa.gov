@@ -84,10 +84,7 @@ export async function action({ request }: ActionFunctionArgs) {
     case 'filter':
       if (filter?.length) {
         const submitters = (await getSubmitterUsers(user))
-          .filter(
-            ({ name, email }) =>
-              name?.includes(filter) || email.includes(filter)
-          )
+          .filter(({ name }) => name?.includes(filter))
           .slice(0, 5)
         return { submitters }
       }
