@@ -317,7 +317,12 @@ export async function getEndorsements(
     ProjectionExpression:
       'requestorSub, requestorEmail, endorserSub, endorserEmail, #status, created, note',
   })
-  return Items
+  return Items.map((item) => {
+    return {
+      ...item,
+      endorserEmail: item.endorserEmail.replace(/(.)(?:.*)@(.*)/, '$1*****@$2'),
+    }
+  })
 }
 
 /**
