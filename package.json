@@ -99,7 +99,7 @@
     "@aws-sdk/lib-storage": "3.895.0",
     "@aws-sdk/util-dynamodb": "3.895.0",
     "@babel/preset-env": "^7.28.3",
-    "@babel/preset-typescript": "^7.27.0",
+    "@babel/preset-typescript": "^7.29.7",
     "@gitlab/svgs": "^3.83.0",
     "@nasa-gcn/architect-plugin-dynamodb-local": "^2.0.0",
     "@nasa-gcn/architect-plugin-search": "^1.9.0",
