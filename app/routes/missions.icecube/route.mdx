@@ -225,11 +225,11 @@ This helps ensure that particular events and datasets are clearly identified.
 IceCube performs realtime searches for coincident neutrino signals with all
 [LIGO/Virgo/KAGRA gravitational-wave alerts](https://emfollow.docs.ligo.org/userguide/), using
 a realtime muon neutrino track event selection[@2016JInst..1111009I] and the sky maps from gravitational
-wave detectors. These low-latency joint searches identify neutrino signals within a +-500 second time
+wave detectors. These low-latency joint searches identify neutrino signals within a $\pm$ 500 second time
 window surrounding the LVK alert time, and aim to identify multi-messenger transient
 sources and seed electromagnetic followup up observations[@2020ApJ...898L..10A] [@2023ApJ...944...80A].
 
-These searches are performed as quickly as possible, as soon as the realtime neutrino information for the 1000 second window
+These searches are performed as quickly as possible, as soon as the realtime neutrino information for the $\pm$ 500 second window
 are available, and are repeated for each update
 to the LVK alert information. The results from each repeated search will sent as a GCN notice,
 including identifying information to the corresponding LVK alert version. Results from all searches
@@ -259,7 +259,7 @@ Key fields are described below:
 - `trigger_time` – Timestamp of the merger event (UTC time).
 - `observation_start` – beginning of the analysis time window (UTC time).
 - `observation_stop` – end of the analysis time window (UTC time).
-- `observation_livetime` – duration of the analysis (seconds). The analysis duration is always `1000` seconds for these analyses.
+- `observation_livetime` – duration of the analysis (seconds). The total analysis duration is always `1000` seconds for these analyses.
 - `pval_generic` and `pval_bayesian` – the overall search results p-values for the generic and Bayesian searches, respectively. If an analysis is not run on the particular event, this value will be `null` for that pipeline.
 - `n_events_coincident` – the number of events in the time window with a per-event p-value less than 10%.
 - `neutrino_flux_sensitivity_range`: the IceCube sensitivity assuming an E<sup>-2</sup> neutrino spectrum (E<sup>2</sup> dN/dE) found within the points in the 90% region of GW map localization. This includes two values:
