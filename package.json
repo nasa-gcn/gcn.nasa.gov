@@ -155,7 +155,7 @@
     "ts-jest": "^29.4.9",
     "typescript": "^5.9.2",
     "wait-port": "^1.1.0",
-    "yarn": "^1.22.21"
+    "yarn": "^1.22.22"
   },
   "overrides": {
     "@architect/deploy": "github:lpsinger/deploy#e4d55b670a95049109ae42eca5ad1a1f56534d56",
