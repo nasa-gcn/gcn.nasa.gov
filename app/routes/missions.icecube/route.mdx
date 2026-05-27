@@ -193,7 +193,7 @@ The header of each file contains:
 
 #### IceCube Alert Archive
 
-The IceCube alert archive is publicly accessible at [this link](https://roc-2.icecube.wisc.edu/public/alerts/)
+The IceCube alert archive is publicly accessible at [this link](https://roc-2.icecube.wisc.edu/public/alerts/).
 
 Each alert is provided as a compressed FITS file using the following naming convention:
 `IceCube-YYMMDDX_skymap_probdensity_multiorder.fits.gz`
@@ -233,7 +233,7 @@ These searches are performed as quickly as possible, as soon as the realtime neu
 are available, and are repeated for each update
 to the LVK alert information. The results from each repeated search will sent as a GCN notice,
 including identifying information to the corresponding LVK alert version. Results from all searches
-in LVK Runs 03 and 04 are available on the [IceCube Realtime Gravitational Wave Followup page](https://roc.icecube.wisc.edu/public/LvkNuTrackSearch/)
+in LVK Runs 03 and 04 are available on the [IceCube Realtime Gravitational Wave Followup page](https://roc.icecube.wisc.edu/public/LvkNuTrackSearch/). 
 
 For high-significance LVK alerts, two hypothesis tests
 are conducted. The first search is a maximum likelihood analysis which searches for a
@@ -252,19 +252,19 @@ available to use.
 Key fields are described below:
 
 - `$schema` – GCN schema structure according to the `nasa-gcn/gcn-schema` GitHub project.
-- `type` – Alert type (always "IceCube LVK Alert Nu Track Search" in this case).
+- `type` – Alert type (always `"IceCube LVK Alert Nu Track Search"` in this case).
 - `reference` – specifies the LVK alert GCN being followed up, including the GW map revision used in the analysis.
 - `ref_ID` – the LVK event name being followed up.
 - `alert_datetime` – Timestamp of the GCN notice (UTC time).
 - `trigger_time` – Timestamp of the merger event (UTC time).
 - `observation_start` – beginning of the analysis time window (UTC time).
 - `observation_stop` – end of the analysis time window (UTC time).
-- `observation_livetime` – duration of the analysis (seconds). The analysis duration is `1000` seconds for these analyses.
+- `observation_livetime` – duration of the analysis (seconds). The analysis duration is always `1000` seconds for these analyses.
 - `pval_generic` and `pval_bayesian` – the overall search results p-values for the generic and Bayesian searches, respectively. 
 - `n_events_coincident` – the number of events in the time window with a per-event p-value less than 10%.
 - `neutrino_flux_sensitivity_range`: the IceCube sensitivity assuming an E<sup>-2</sup> neutrino spectrum (E<sup>2</sup> dN/dE) found within the points in the 90% region of GW map localization. This includes two values:
-  - `flux_sensitivity` – Time integrated flux sensitivity range (min, max) [GeV cm<sup>-2</sup>]. 
-  - `sensitive_energy_range` – energy sensitivity range (lower, upper) [GeV].
+  - `flux_sensitivity` – Time integrated flux sensitivity range, in the format (min, max) sensitivity (GeV cm<sup>-2</sup>). 
+  - `sensitive_energy_range` – energy sensitivity range, in the format (lower, upper) energy (GeV).
 
 If the analysis p-value from either search is less than 10%, per-event information for coincident neutrino events with a per-event p-value of less than 10% is also provided. The event properties provided include:
   - `event_dt` – relative timing of neutrino to GW alert (seconds).
