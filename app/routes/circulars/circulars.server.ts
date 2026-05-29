@@ -477,7 +477,7 @@ export async function createChangeRequest(
       status: 403,
     })
   if (
-    !user.groups.includes(submitterGroup) ||
+    !user.groups.includes(submitterGroup) &&
     !user.groups.includes(moderatorGroup)
   )
     throw new Response(null, { status: 403 })
