@@ -12,6 +12,7 @@ import { dedent } from 'ts-dedent'
 
 import { sendEmail } from './email.server'
 import { origin } from './env.server'
+import type { UserMetadata } from './user.server'
 import type { User } from '~/routes/_auth/user.server'
 
 const fromName = 'GCN Teams'
@@ -235,7 +236,7 @@ export async function userIsTeamAdmin(
 export async function inviteUserToTeam(
   user: User,
   teamId: string,
-  newUserEmail: string,
+  newUserSub: string,
   topicId: string,
   permission: Permission
 ) {
@@ -249,10 +250,14 @@ export async function inviteUserToTeam(
   const team = (await db.teams.get({ teamId })) as Team
   if (!team) throw new Response(null, { status: 404 })
 
+  const newUserEmail = (
+    (await db.users.get({ sub: newUserSub })) as UserMetadata
+  ).email
+
   await Promise.all([
     db.team_invites.put({
       teamId,
-      email: newUserEmail,
+      sub: newUserSub,
       topicId,
       permission,
     }),
