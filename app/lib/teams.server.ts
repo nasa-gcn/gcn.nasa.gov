@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
 import crypto from 'crypto'
 import { dedent } from 'ts-dedent'
 
@@ -43,7 +44,7 @@ export type TeamMember = {
 
 export type TeamInvite = {
   teamId: string
-  email: string
+  sub: string
   topicId: string
   permission: Permission
 }
@@ -89,21 +90,23 @@ export async function createTeam(
   await db.teams.put(team)
   const topic = await createTopic(topicName, team.teamId)
   // TODO: Add KafkaACL functions here once they are created
-  await db.team_invites.put({
-    teamId: team.teamId,
-    email: pocEmail,
-    topicId: topic.topicId,
-    permission: 'admin',
-  })
 
-  await sendEmail({
-    fromName,
-    to: [pocEmail],
-    subject: 'GCN Team Admin Invite',
-    body: dedent`You have been added as a team admin to ${teamName}. 
-    
-    To continue, go to ${origin}/teams and accept the invite. Once complete, you will be able to invite other users to join your team.`,
-  })
+  await Promise.all([
+    db.team_invites.put({
+      teamId: team.teamId,
+      email: pocEmail,
+      topicId: topic.topicId,
+      permission: 'admin',
+    }),
+    sendEmail({
+      fromName,
+      to: [pocEmail],
+      subject: 'GCN Team Admin Invite',
+      body: dedent`You have been added as a team admin to ${teamName}. 
+      
+      To continue, go to ${origin}/teams and accept the invite. Once complete, you will be able to invite other users to join your team.`,
+    }),
+  ])
 
   return team
 }
@@ -187,17 +190,33 @@ export async function updateTeam(
 
 export async function deleteTeam(teamId: string) {
   const db = await tables()
-
   await db.teams.delete({ teamId })
+  const client = db._doc as unknown as DynamoDBDocument
+  const TeamMembersTableName = db.name('team_members')
+  const TeamInvitesTableName = db.name('team_invites')
   const team_members = await getTeamMembers(teamId)
   const team_invites = await getTeamInvites(teamId)
 
-  await Promise.all([
-    ...team_members.map((x) => db.team_members.delete({ sub: x.sub, teamId })),
-    ...team_invites.map((x) =>
-      db.team_invites.delete({ teamId, email: x.email })
-    ),
-  ])
+  await client.batchWrite({
+    RequestItems: {
+      [TeamMembersTableName]: team_members.map((x) => ({
+        DeleteRequest: {
+          Key: {
+            sub: { S: x.sub },
+            teamId: { S: teamId },
+          },
+        },
+      })),
+      [TeamInvitesTableName]: team_invites.map((x) => ({
+        DeleteRequest: {
+          Key: {
+            teamId: { S: teamId },
+            sub: { S: x.sub },
+          },
+        },
+      })),
+    },
+  })
 }
 
 export async function userIsTeamAdmin(
@@ -230,21 +249,22 @@ export async function inviteUserToTeam(
   const team = (await db.teams.get({ teamId })) as Team
   if (!team) throw new Response(null, { status: 404 })
 
-  await db.team_invites.put({
-    teamId,
-    email: newUserEmail,
-    topicId,
-    permission,
-  })
-
-  await sendEmail({
-    to: [newUserEmail],
-    fromName,
-    subject: `GCN Teams Invite: ${team.teamName}`,
-    body: dedent`You have been invited to join ${team.teamName} by ${user.name}. 
-    To accept, go to ${origin}/teams and accept the invite. Once complete, you will be able to create client credentials to 
-    produce and/or consume Kafka messages, as determined by your team admin.`,
-  })
+  await Promise.all([
+    db.team_invites.put({
+      teamId,
+      email: newUserEmail,
+      topicId,
+      permission,
+    }),
+    sendEmail({
+      to: [newUserEmail],
+      fromName,
+      subject: `GCN Teams Invite: ${team.teamName}`,
+      body: dedent`You have been invited to join ${team.teamName} by ${user.name}. 
+      To accept, go to ${origin}/teams and accept the invite. Once complete, you will be able to create client credentials to 
+      produce and/or consume Kafka messages, as determined by your team admin.`,
+    }),
+  ])
 }
 
 export async function getInvitesForUser(user: User) {
@@ -350,11 +370,21 @@ export async function deleteTopic(topicId: string) {
       },
     })
   ).Items
-  await Promise.all(
-    memberships.map((x) =>
-      db.team_members.delete({ sub: x.sub, teamId: x.teamId })
-    )
-  )
+
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('team_members')
+  await client.batchWrite({
+    RequestItems: {
+      [TableName]: memberships.map((x) => ({
+        DeleteRequest: {
+          Key: {
+            sub: { S: x.sub },
+            teamId: { S: x.teamId },
+          },
+        },
+      })),
+    },
+  })
   // TODO: Add KafkaACL function here to remove rules for this topic
 }
 
