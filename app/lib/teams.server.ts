@@ -53,7 +53,7 @@ export type TeamInvite = {
 export type Topic = {
   topicId: string
   topicName: string
-  public: boolean
+  isPublic: boolean
   teamId: string
 }
 
@@ -79,7 +79,7 @@ export async function createTeam(
   pocEmail: string,
   topicName: string
 ) {
-  if (!user.groups.includes('gcn.nasa.gov/gcn-admin'))
+  if (!(await userHasPermission(user.sub, 'gcn.nasa.gov', 'admin')))
     throw new Response(null, { status: 403 })
 
   const db = await tables()
@@ -333,7 +333,7 @@ export async function createTopic(topicName: string, teamId: string) {
   const topic: Topic = {
     topicId: crypto.randomUUID(),
     topicName,
-    public: false,
+    isPublic: false,
     teamId,
   }
   await db.topics.put(topic)
@@ -393,4 +393,37 @@ export async function deleteTopic(topicId: string) {
   // TODO: Add KafkaACL function here to remove rules for this topic
 }
 
+export async function userHasPermission(
+  sub: string,
+  topicName: string,
+  permission: Permission
+): Promise<boolean> {
+  const db = await tables()
+  const topicId: string = (
+    await db.topics.query({
+      IndexName: 'topicsByName',
+      KeyConditionExpression: 'topicName = :topicName',
+      ExpressionAttributeValues: {
+        ':topicName': topicName,
+      },
+    })
+  ).Items[0].topicId
+
+  const membership = (
+    await db.team_members.query({
+      IndexName: 'membersByTopicId',
+      KeyConditionExpression: 'topicId = :topicId',
+      FilterExpression: '#sub = :sub AND permission = :permission',
+      ExpressionAttributeNames: {
+        '#sub': 'sub',
+      },
+      ExpressionAttributeValues: {
+        ':sub': sub,
+        ':topicId': topicId,
+        ':permission': permission,
+      },
+    })
+  ).Items[0]
+  return Boolean(membership)
+}
 // #endregion

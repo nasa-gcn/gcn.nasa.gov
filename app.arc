@@ -208,6 +208,10 @@ team_invites
   email *String
   name invitesByEmail
 
+topics 
+  topicName *String
+  name topicsByName
+
 @aws
 runtime nodejs24.x
 region us-east-1
