@@ -1,3 +1,3 @@
 @aws
 timeout 900
-memory 512
+memory 1024

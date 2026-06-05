@@ -86,7 +86,7 @@ export default function () {
         <Anchor>Advanced</Anchor>
       </h2>
       <Icon.FileDownload role="presentation" /> Download all Circulars as a
-      .tar.gz archive:{' '}
+      .tar.gz archive (updated once a day):{' '}
       <ButtonGroup type="segmented">
         <DownloadLink href="/circulars/archive.json.tar.gz" size={json}>
           JSON
