@@ -60,7 +60,9 @@ where $N_{\mathrm{signal}}$ and $N_{\mathrm{background}}$ are the expected numbe
 
 The streams were optimized assuming an astrophysical neutrino power-law energy spectral index of $E^{-2.19}$.
 
-The selection criteria for the alerts were tuned to achieve, on average, a probability of being astrophysical of 30% for **Bronze alerts** and 50% for **Gold alerts**.
+The selection criteria are designed such that the expected signal purity, defined as $N_\mathrm{signal}/(N_\mathrm{signal} + N_\mathrm{background})$, is 50% for Gold alerts and 30% for the inclusive Bronze sample (i.e., all alerts satisfying the Bronze threshold, including those that also satisfy the more stringent Gold criteria). Therefore, about 30% of all alerts passing the Bronze selection are expected to be of astrophysical origin.
+Since Gold events are also included in the Bronze stream definition, the exclusive Bronze-only subsample (corresponding to Bronze alerts distributed via GCN) has a lower astrophysical purity, approximately 15%.
+Using the $p_\mathrm{astro}(E>E_\mathrm{event}, \delta)$ definition introduced above, however, the average $p_\mathrm{astro}(E>E_\mathrm{event}, \delta)$ is approximately 30% for the Bronze-only sample and 50% for the Gold sample. These values should not be confused with the signal purities used to define the Bronze and Gold selections, as the average $p_\mathrm{astro}(E>E_\mathrm{event}, \delta)$ of a sample does not necessarily coincide with its signal purity.
 
 Several neutrino candidate selections have been developed, each targeting different types of events. The resulting samples are combined to produce the Gold and Bronze alerts. For details about the selection filters, see [@2023ApJS..269...25A].
 
