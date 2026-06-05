@@ -1,4 +1,4 @@
-import type { ActionFunctionArgs } from '@remix-run/node'
+import { type ActionFunctionArgs, json } from '@remix-run/node'
 
 import { getUser } from './_auth/user.server'
 import { adminGroup } from './admin'
@@ -54,7 +54,12 @@ export async function action({ request }: ActionFunctionArgs) {
     }
   }
 
-  return {
-    users,
-  }
+  return json(
+    { users },
+    {
+      headers: {
+        'Cache-Control': 'no-store',
+      },
+    }
+  )
 }
