@@ -27,6 +27,40 @@ import { Anchor } from '~/components/Anchor'
 
 ## 2026
 
+<CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
+      <CollectionCalendarDate datetime='June 9, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>New MAXI Notices and Schema v7.1.0</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+
+      The GCN Team is pleased to announce new Notice Types and a schema release.
+        - [MAXI X-ray Known and Unknown Transients Notices](/news#maxi-known-and-unknown-x-ray-transient-notices)
+        - [Schema v7.1.0](/news#schema-v710)
+
+      #### MAXI Known and Unknown X-ray Transient Notices
+      The [MAXI](http://maxi.riken.jp/top/) Team and the GCN Team are pleased to announce the availability of MAXI Notices via the [new GCN](https://gcn.nasa.gov) in JSON format. MAXI is a wide-field X-ray telescope designed to perform an all-sky survey onboard the ISS.
+
+      MAXI provides Notices for both known and unknown source detections by [Gas Slit Camera (GSC)](https://iss.jaxa.jp/en/kiboexp/ef/maxi/). The known source Notice is used when the detected event is associated with a known X-ray source or cataloged object. The unknown source Notice is used when the detected event is not immediately associated with a known source and is reported as a new or unidentified transient candidate. Depending on the available localization information, an unknown source Notice may report no position uncertainty, a circular uncertainty region, an elliptical uncertainty region, or rectangular error-region corners.
+
+      Both Notice types provide basic alert metadata, event timing, sky position, flux information, and detection information.
+
+      MAXI notices are published on the GCN Kafka topics `gcn.notices.maxi.gsc.known` and `gcn.notices.maxi.gsc.unknown`.
+
+      See the [MAXI mission page](/missions/maxi) for a more extensive description of the information provided in these new notices.
+
+      #### Schema v7.1.0
+      GCN Schema v7.1.0 is available with recent changes including new Notice types ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v7.1.0)).
+
+    </CollectionDescription>
+
+  </CollectionItem>
+
   <CollectionItem
     className="maxw-none grid-container"
     variantComponent={
