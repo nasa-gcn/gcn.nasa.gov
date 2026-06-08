@@ -139,12 +139,13 @@ export async function listUsersInGroup(GroupName: string) {
     { client: cognito },
     { GroupName, UserPoolId }
   )
+  console.warn('Debugging - Paginator succeeded: ')
   const users: UserType[] = []
   for await (const page of pages) {
     const nextUsers = page.Users
     if (nextUsers) users.push(...nextUsers)
   }
-  console.log('Debugging - List users completed: ', users)
+  console.warn('Debugging - List users completed: ', users)
   return users
 }
 
