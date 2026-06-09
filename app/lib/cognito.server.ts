@@ -32,7 +32,9 @@ import { maybeThrow } from './utils'
 import type { User } from '~/routes/_auth/user.server'
 
 export const gcnGroupPrefix = 'gcn.nasa.gov/'
-export const cognito = new CognitoIdentityProviderClient({})
+export const cognito = new CognitoIdentityProviderClient({
+  logger: console,
+})
 const UserPoolId = process.env.COGNITO_USER_POOL_ID
 
 /**
@@ -139,7 +141,9 @@ export async function listUsersInGroup(GroupName: string) {
     { client: cognito },
     { GroupName, UserPoolId }
   )
-  console.warn('Debugging - Paginator succeeded: ')
+  // Error exsits for some reason here but ONLY in endorsements?
+  // It may be hitting cognito too much and failing under the
+  // hood, hopefully the logger added above should show this
   const users: UserType[] = []
   for await (const page of pages) {
     const nextUsers = page.Users
