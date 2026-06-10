@@ -43,10 +43,11 @@ export const handle: BreadcrumbHandle & SEOHandle = {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(undefined, { status: 403 })
-  const [requestedEndorsements, awaitingEndorsements] = await Promise.all([
-    getEndorsements(user, 'requestor'),
-    getEndorsements(user, 'endorser'),
-  ])
+
+  const requestedEndorsements = await getEndorsements(user, 'requestor')
+
+  const awaitingEndorsements = await getEndorsements(user, 'endorser')
+
   return {
     requestedEndorsements,
     awaitingEndorsements,

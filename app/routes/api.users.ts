@@ -51,7 +51,6 @@ export async function action({ request }: ActionFunctionArgs) {
           name?.toLowerCase().includes(filter.toLowerCase())
         )
         .slice(0, 5)
-      console.warn('Confirming users is returned: ', users)
     } else if (userIsAdmin) {
       users = await listUsers(filter)
     }
