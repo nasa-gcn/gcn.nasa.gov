@@ -31,7 +31,9 @@ export async function action({ request }: ActionFunctionArgs) {
       ((filterableGroups.includes(groupFilter) && userIsVerified) ||
         userIsAdmin)
     ) {
-      users = (await listUsersInGroup(groupFilter))
+      const tempUsers = await listUsersInGroup(groupFilter)
+      console.warn('Debugging - temp users found: ', tempUsers)
+      users = tempUsers
         .map((x) => {
           return {
             sub: x.Attributes?.find((x) => x.Name == 'sub')?.Value,
@@ -49,6 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
           name?.toLowerCase().includes(filter.toLowerCase())
         )
         .slice(0, 5)
+      console.warn('Confirming users is returned: ', users)
     } else if (userIsAdmin) {
       users = await listUsers(filter)
     }

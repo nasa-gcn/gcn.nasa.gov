@@ -3,6 +3,8 @@ handle:
   breadcrumb: MAXI
 ---
 
+import { WithFeature } from '~/root'
+
 import logo from './logo.png'
 
 # Monitor of All-sky X-ray Image (MAXI)
@@ -49,6 +51,23 @@ import logo from './logo.png'
 
 </div>
 
+<WithFeature MAXI_JSON>
+
+**JSON-Serialized GCN Notices Types in GCN Kafka:**
+
+MAXI provides Notices for both known and unknown source detections by GSC.
+The `known` source Notice is used when the detected event is associated with a known X-ray source or cataloged object. The `unknown` source Notice is used when the detected event is not immediately associated with a known source and is reported as a new or unidentified transient candidate. Depending on the available localization information, an unknown source Notice may report no position uncertainty, a circular uncertainty region, an elliptical uncertainty region, or rectangular error-region corners.
+
+Both Notice types provide basic alert metadata, event timing, sky position, flux information, and detection information.
+
+| Type                           | Contents                                                                                                                                                        | Latency     |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------- |
+| `gcn.notices.maxi.gsc.known`   | Known source detections, including source/event identification, sky position, flux information, and detection information                                       | 200 minutes |
+| `gcn.notices.maxi.gsc.unknown` | Unknown source detections or transient candidates, including sky position, flux information, detection information, and localization information when available | 200 minutes |
+
+MAXI [known source](/schema/stable/gcn/notices/MAXI/gsc.known.schema.json) and [unknown source](/schema/stable/gcn/notices/MAXI/gsc.unknown.schema.json) schemas are available. Example JSON message files are available for [known source](/schema/stable/gcn/notices/MAXI/gsc.known.example.json) Notices and for unknown source Notices with [no position uncertainty](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_noerror.json), [circular](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_circle.json), [elliptical](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_ellipse.json), and [rectangular](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_rectangle.json) localization information. See the [Schema Browser](/docs/schema/stable/gcn/notices/MAXI/alert.schema.json) for more information on the properties defined in the schemas.　Detailed description of the properties and examples of MAXI Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/MAXI).
+
+</WithFeature>
 **Common GCN Circular Types:**
 
 <div className="overflow-table">
