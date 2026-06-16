@@ -197,6 +197,7 @@ architecture arm64
 memory 256
 timeout 30
 hydrate false
+tracing true
 
 @search
 instanceType t3.small.search
@@ -220,5 +221,6 @@ email-outgoing  # Grant the Lambda function permission to send email; add email 
 email-incoming  # Enable Lambda handlers for incoming emails
 nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-dynamodb-local
+nasa-gcn/architect-plugin-tracing
 eventbridge # Enable sending Eventbridge Events to lambdas
 circulars-producer-client
