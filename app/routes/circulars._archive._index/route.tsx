@@ -382,6 +382,8 @@ export default function () {
 
           <PaginationSelectionFooter
             query={query}
+            startDate={startDate}
+            endDate={endDate}
             page={page}
             limit={limit}
             totalPages={totalPages}

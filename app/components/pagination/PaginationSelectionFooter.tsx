@@ -15,6 +15,8 @@ export default function PaginationSelectionFooter({
   totalPages,
   limit,
   query,
+  startDate,
+  endDate,
   form,
   view,
 }: {
@@ -22,6 +24,8 @@ export default function PaginationSelectionFooter({
   totalPages: number
   limit?: number
   query?: string
+  startDate?: string
+  endDate?: string
   form: string
   view?: string
 }) {
@@ -54,6 +58,8 @@ export default function PaginationSelectionFooter({
         {totalPages > 1 && (
           <Pagination
             query={query}
+            startDate={startDate}
+            endDate={endDate}
             page={page}
             limit={limit}
             totalPages={totalPages}
