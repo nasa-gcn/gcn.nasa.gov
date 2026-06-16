@@ -226,10 +226,10 @@ This helps ensure that particular events and datasets are clearly identified.
 
 IceCube performs realtime searches for coincident neutrino signals with all
 [LIGO/Virgo/KAGRA gravitational-wave alerts](https://emfollow.docs.ligo.org/userguide/), using
-a realtime muon neutrino track event selection[@2016JInst..1111009I] and the sky maps from gravitational
+a realtime muon neutrino track event selection [@2016JInst..1111009I] and the sky maps from gravitational
 wave detectors. These low-latency joint searches identify neutrino signals within a $\pm$ 500 second time
 window surrounding the LVK alert time, and aim to identify multi-messenger transient
-sources and seed electromagnetic followup up observations[@2020ApJ...898L..10A] [@2023ApJ...944...80A].
+sources and seed electromagnetic followup up observations [@2026arXiv260613762T] [@2023ApJ...944...80A] [@2020ApJ...898L..10A].
 
 These searches are performed as quickly as possible, as soon as the realtime neutrino information for the $\pm$ 500 second window
 are available, and are repeated for each update
@@ -240,7 +240,7 @@ in LVK Runs 03 and 04 are available on the [IceCube Realtime Gravitational Wave 
 For high-significance LVK alerts, two hypothesis tests
 are conducted. The first search is a maximum likelihood analysis which searches for a
 generic point-like neutrino source coincident with the given GW sky map. The
-second uses a Bayesian approach[@2019PhRvD.100h3017B] to quantify the joint GW + neutrino event significance, which
+second uses a Bayesian approach [@2019PhRvD.100h3017B] to quantify the joint GW + neutrino event significance, which
 assumes a binary merger scenario and accounts for known astrophysical priors, such as GW source
 distance, in the significance estimate. For low-significance LVK alerts, only the Bayesian search
 is performed. All searches are reported via GCN Notices over Kafka, and any coincident
