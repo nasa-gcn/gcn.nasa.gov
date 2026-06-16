@@ -235,7 +235,7 @@ These searches are performed as quickly as possible, as soon as the realtime neu
 are available, and are repeated for each update
 to the LVK alert information. The results from each repeated search will sent as a GCN notice,
 including identifying information to the corresponding LVK alert version. Results from all searches
-in LVK Runs 03 and 04 are available on the [IceCube Realtime Gravitational Wave Followup page](https://roc.icecube.wisc.edu/public/LvkNuTrackSearch/). 
+in LVK Runs 03 and 04 are available on the [IceCube Realtime Gravitational Wave Followup page](https://roc.icecube.wisc.edu/public/LvkNuTrackSearch/).
 
 For high-significance LVK alerts, two hypothesis tests
 are conducted. The first search is a maximum likelihood analysis which searches for a
@@ -247,33 +247,34 @@ is performed. All searches are reported via GCN Notices over Kafka, and any coin
 observation with a observed p-value less than 1% will also
 be sent as a [GCN Circular](/circulars).
 
-These alerts follow this [GCN schema](https://github.com/nasa-gcn/gcn-schema/blob/main/gcn/notices/icecube/lvk_nu_track_search.schema.json), 
-with an example [JSON message](https://github.com/nasa-gcn/gcn-schema/blob/main/gcn/notices/icecube/lvk_nu_track_search.example.json) 
+These alerts follow this [GCN schema](https://github.com/nasa-gcn/gcn-schema/blob/main/gcn/notices/icecube/lvk_nu_track_search.schema.json),
+with an example [JSON message](https://github.com/nasa-gcn/gcn-schema/blob/main/gcn/notices/icecube/lvk_nu_track_search.example.json)
 available to use.
 
 Key fields are described below:
 
-- `$schema` – GCN schema structure according to the `nasa-gcn/gcn-schema` GitHub project.
-- `type` – Alert type (always `"IceCube LVK Alert Nu Track Search"` in this case).
-- `reference` – specifies the LVK alert GCN being followed up, including the GW map revision used in the analysis.
-- `ref_ID` – the LVK event name being followed up.
-- `alert_datetime` – Timestamp of the GCN notice (UTC time).
-- `trigger_time` – Timestamp of the merger event (UTC time).
-- `observation_start` – beginning of the analysis time window (UTC time).
-- `observation_stop` – end of the analysis time window (UTC time).
-- `observation_livetime` – duration of the analysis (seconds). The total analysis duration is always `1000` seconds for these analyses.
-- `pval_generic` and `pval_bayesian` – the overall search results p-values for the generic and Bayesian searches, respectively. If an analysis is not run on the particular event, this value will be `null` for that pipeline.
-- `n_events_coincident` – the number of events in the time window with a per-event p-value less than 10%.
+- `$schema`: GCN schema structure according to the `nasa-gcn/gcn-schema` GitHub project.
+- `type`: Alert type (always `"IceCube LVK Alert Nu Track Search"` in this case).
+- `reference`: specifies the LVK alert GCN being followed up, including the GW map revision used in the analysis.
+- `ref_ID`: the LVK event name being followed up.
+- `alert_datetime`: Timestamp of the GCN notice (UTC time).
+- `trigger_time`: Timestamp of the merger event (UTC time).
+- `observation_start`: beginning of the analysis time window (UTC time).
+- `observation_stop`: end of the analysis time window (UTC time).
+- `observation_livetime`: duration of the analysis (seconds). The total analysis duration is always `1000` seconds for these analyses.
+- `pval_generic` and `pval_bayesian`: the overall search results p-values for the generic and Bayesian searches, respectively. If an analysis is not run on the particular event, this value will be `null` for that pipeline.
+- `n_events_coincident`: the number of events in the time window with a per-event p-value less than 10%.
 - `neutrino_flux_sensitivity_range`: the IceCube sensitivity assuming an E<sup>-2</sup> neutrino spectrum (E<sup>2</sup> dN/dE) found within the points in the 90% region of GW map localization. This includes two values:
-  - `flux_sensitivity` – Time integrated flux sensitivity range, in the format (min, max) sensitivity (GeV cm<sup>-2</sup>). 
-  - `sensitive_energy_range` – energy sensitivity range, in the format (lower, upper) energy (GeV).
+  - `flux_sensitivity`: Time integrated flux sensitivity range, in the format (min, max) sensitivity (GeV cm<sup>-2</sup>).
+  - `sensitive_energy_range`: energy sensitivity range, in the format (lower, upper) energy (GeV).
 
 If the analysis p-value from either search is less than 10%, per-event information for coincident neutrino events with a per-event p-value of less than 10% is also provided. The event properties provided include:
-  - `event_dt` – relative timing of neutrino to GW alert (seconds).
-  - `id` - unique identifier label for the coincident neutrino event, formatted as `RUNID_EVENTID`.
-  - `ra` and `dec` – reconstructed neutrino event direction (J200, degrees).
-  - `ra_dec_error` – circular direction error (degrees) at 90% confidence.
-  - `event_pval_generic`and `event_pval_bayesian` – per-event p-values for each search. In the case of multiple coincidences, can be used to determine relative importance of each event to search results. Per-event p-values are only included when the per-event p-value for that event in the respective pipeline is less than 10%, otherwise the value will be `null`.
+
+- `event_dt`: relative timing of neutrino to GW alert (seconds).
+- `id`: unique identifier label for the coincident neutrino event, formatted as `RUNID_EVENTID`.
+- `ra` and `dec`: reconstructed neutrino event direction (J200, degrees).
+- `ra_dec_error`: circular direction error (degrees) at 90% confidence.
+- `event_pval_generic`and `event_pval_bayesian`: per-event p-values for each search. In the case of multiple coincidences, can be used to determine relative importance of each event to search results. Per-event p-values are only included when the per-event p-value for that event in the respective pipeline is less than 10%, otherwise the value will be `null`.
 
 If the analysis p-value from the generic transient search is less than 10%, the most likely direction from the generic neutrino source coincidence search is also given (`most_probable_direction`: RA/DEC, J2000, degrees).
 
