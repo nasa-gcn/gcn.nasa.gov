@@ -42,7 +42,7 @@ import type {
   CircularMetadata,
 } from './circulars.lib'
 import { sendEmail, sendEmailBulk } from '~/lib/email.server'
-import { origin } from '~/lib/env.server'
+import { feature, origin } from '~/lib/env.server'
 import { truncateJsonMaxBytes } from '~/lib/utils'
 import { closeZendeskTicket } from '~/lib/zendesk.server'
 
@@ -202,34 +202,36 @@ export async function search({
     },
   ]
 
-  if (eventTypes && eventTypes.length > 0) {
-    if (eventTypesLogic === 'AND') {
+  if (feature('EVENTTYPE')) {
+    if (eventTypes && eventTypes.length > 0) {
+      if (eventTypesLogic === 'AND') {
+        filterConditions.push({
+          bool: {
+            must: eventTypes.map((type) => ({
+              term: { 'eventType.keyword': type },
+            })),
+          },
+        })
+      } else {
+        filterConditions.push({
+          terms: {
+            'eventType.keyword': eventTypes,
+          },
+        })
+      }
+    }
+
+    if (eventTypesExclude && eventTypesExclude.length > 0) {
       filterConditions.push({
         bool: {
-          must: eventTypes.map((type) => ({
-            term: { 'eventType.keyword': type },
-          })),
-        },
-      })
-    } else {
-      filterConditions.push({
-        terms: {
-          'eventType.keyword': eventTypes,
+          must_not: {
+            terms: {
+              'eventType.keyword': eventTypesExclude,
+            },
+          },
         },
       })
     }
-  }
-
-  if (eventTypesExclude && eventTypesExclude.length > 0) {
-    filterConditions.push({
-      bool: {
-        must_not: {
-          terms: {
-            'eventType.keyword': eventTypesExclude,
-          },
-        },
-      },
-    })
   }
 
   const searchBody = {
