@@ -10,8 +10,8 @@ export const deploy = {
   start({ cloudformation, arc: { appclients } }) {
     appclients.forEach((item) => {
       const [[key, { scope }]] = Object.entries(item)
-      const user_pool_id = process.env.COGNITO_USER_POOL_ID
-      if (!user_pool_id)
+      const UserPoolId = process.env.COGNITO_USER_POOL_ID
+      if (!UserPoolId)
         throw new Error('Environment variable COGNITO_USER_POOL_ID must be set')
       cloudformation.Resources[`AppClient${key}`] = {
         Type: 'AWS::Cognito::UserPoolClient',
@@ -20,28 +20,30 @@ export const deploy = {
           AllowedOAuthFlowsUserPoolClient: true,
           AllowedOAuthScopes: [scope],
           GenerateSecret: true,
-          UserPoolId: user_pool_id,
+          UserPoolId,
         },
       }
     })
   },
   services({ cloudformation, arc: { appclients }, stage }) {
-    return appclients.forEach((item) => {
-      const isLocal = stage === 'testing'
+    let result = {}
+    const isLocal = stage === 'testing'
+    appclients.forEach((item) => {
       const [[key]] = Object.entries(item)
-      return {
-        key,
-        clientId: isLocal
+      result = {
+        ...result,
+        [`${key}-clientId`]: isLocal
           ? 'localClientId'
           : {
               'Fn::GetAtt': `${key}.ClientId`,
             },
-        clientSecret: isLocal
+        [`${key}-clientSecret`]: isLocal
           ? 'localClientSecret'
           : {
               'Fn::GetAtt': `${key}.ClientSecret`,
             },
       }
     })
+    return result
   },
 }
