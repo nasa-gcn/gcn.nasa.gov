@@ -15,11 +15,7 @@ support
 
 @appclients
 circulars-producer
-  clientKey GcnCircularsProducerUserPoolClient
-  envResourceName CircularsTableStreamLambda
   scope gcn.nasa.gov/kafka-circulars-producer
-  envClientIdName KAFKA_CLIENT_ID
-  envClientSecretName KAFKA_CLIENT_SECRET
 
 @eventbridge
 app_clients
