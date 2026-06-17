@@ -288,3 +288,128 @@ export function parseEventFromSubject(value: string) {
     if (match) return normalize(match)
   }
 }
+
+type EventType =
+  | 'Retraction'
+  | 'GRB'
+  | 'Gamma-ray Transient'
+  | 'GW'
+  | 'SGR'
+  | 'FRB'
+  | 'SN'
+  | 'Neutrino'
+  | 'X-ray Transient'
+  | 'Afterglow'
+  | 'Optical Transient'
+  | 'Kilonova'
+  | 'Misc'
+
+const eventTypeMatchers: Record<EventType, RegExp[]> = {
+  Retraction: [
+    /\bRetractions?\b/i,
+    /\bnot\s+a\s+(?:GRB|GW|FRB|SN|SGR|neutrino)\b/i,
+    /\bprobably\s+not\s+a\b/i,
+    /\bis\s+not\b/i,
+    /\bDisregard\b/i,
+    /\bIgnore\b/i,
+    /\bFalse Trigger\b/i,
+    /\bNot real\b/i,
+  ],
+  GRB: [
+    /\bGRB\d{6}[A-Z]?\b/i,
+    /\bGRBs?\b/i,
+    /\bgamma[-\s]?ray[-\s]?bursts?\b/i,
+    /\bXRF\d{6}[A-Z]?\b/i,
+  ],
+  'Gamma-ray Transient': [
+    /\bFermi(?:\s?(?:GBM|LAT)|\d{9})?\b/i,
+    /\bSwift(?![:?/-](?:XRT|UVOT))\b/i,
+    /\bSwift[:?/-]BAT\b/i,
+    /\bSVOM\(?!\/VT|\/C-GFT\)\b/i,
+    /\bINTEGRAL\b/i,
+    /\bHETE\b/i,
+    /\bKONUS\b/i,
+    /\bAstroSat\b/i,
+  ],
+  GW: [
+    /\bGW\d+\b/i,
+    /\bGWs?\b/i,
+    /\bgravitational[-\s]?waves?\b/i,
+    /\bLIGO\b/i,
+    /\bVirgo\b/i,
+    /\bKAGRA\b/i,
+    /\bS\d{6}[a-z]+\b/i,
+    /\bGWTC-\d+\b/i,
+  ],
+  SGR: [/\bSGR\S*/i, /\bsoft[-\s]?gamma[-\s]?repeaters?\b/i],
+  FRB: [
+    /\bFRB\s?\d{6,8}[A-Za-z]?\b/i,
+    /\bFRBs?\b/i,
+    /\bfast[-\s]?radio[-\s]?bursts?\b/i,
+    /\bCHIME\b/i,
+    /\bDSA-110\b/i,
+  ],
+  SN: [/\bSN\d{4}[A-Za-z]*\b/i, /\bSNe?\b/i, /\bsuper[-\s]?novae?\b/i],
+  Neutrino: [
+    /\bneutrinos?\b/i,
+    /\bIceCube(?:-HAWC|-\d+)?\b/i,
+    /\bANTARES\b/i,
+    /\bKM3NeT\b/i,
+    /\bSuper-Kamiokande\b/i,
+    /\bSNEWS2\b/i,
+  ],
+  'X-ray Transient': [
+    /(?<!\S)EP(?=\s|:|$)/,
+    /\bEPW?[-\s]?\d{6,8}[A-Z]{0,2}\b/i,
+    /\bEP-WXT\b/i,
+    /\bEP-FXT\b/i,
+    /\bX[-\s]?ray(?:\s+transient)?\b/i,
+    /\bEinstein\s+Probe\b/i,
+    /\bMAXI\s?J\d{4}[+-]\d+/i,
+    /\bXRT\b/i,
+    /\bXRF\b/i,
+    /\bChandra\b/i,
+    /\bXMM\b/i,
+    /\bNICER\b/i,
+    /\bNuSTAR\b/i,
+    /\bSwift[:?/-]XRT\b/i,
+  ],
+  Afterglow: [/\bafterglows?\b/i, /\bGW170817\b/i],
+  'Optical Transient': [
+    /\boptical\b(?!\s+upper\s+limits?\b)/i,
+    /\bOT\b/i,
+    /\bAT\d{4}[a-z]+\b/i,
+    /\bHubble\b/i,
+    /\bZTF(?:\d{2}[A-Za-z0-9]+)?\b/i,
+    /\bMASTER\b/i,
+    /\bPan-STARRS\b/i,
+    /\bRubin\b/i,
+    /\bSVOM\/VT\b/i,
+    /\bSVOM\/C-GFT\b/i,
+    /\bSwift[:?/-]UVOT\b/i,
+  ],
+  Kilonova: [
+    /\bkilonovae?\b(?!-\w)/i,
+    /\bKN\b/i,
+    /\bGW170817\b/i,
+    /\bAT2017gfo\b/i,
+  ],
+  Misc: [],
+}
+
+export function parseEventTypeFromSubject(subject: string): EventType[] {
+  for (const pattern of eventTypeMatchers.Retraction) {
+    if (pattern.test(subject)) return ['Retraction']
+  }
+
+  let matches = (Object.keys(eventTypeMatchers) as EventType[])
+    .filter((eventType) => eventType !== 'Retraction')
+    .filter((eventType) =>
+      eventTypeMatchers[eventType].some((pattern) => pattern.test(subject))
+    )
+  if (matches.includes('GRB')) {
+    matches = matches.filter((m) => m !== 'Gamma-ray Transient')
+  }
+
+  return matches.length ? matches : ['Misc']
+}
