@@ -146,7 +146,7 @@ export async function search({
   limit,
   startDate,
   endDate,
-  eventType,
+  // eventTypes,
   sort,
 }: {
   query?: string
@@ -154,7 +154,7 @@ export async function search({
   limit?: number
   startDate?: string
   endDate?: string
-  eventType?: string[]
+  // eventTypes?: string[]
   sort?: string
 }): Promise<{
   items: CircularMetadata[]
@@ -167,6 +167,7 @@ export async function search({
   let queryFallback = false
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
+  const eventTypes = ["GW"]
 
   const sortObj =
     sort === 'relevance' && query
@@ -197,6 +198,14 @@ export async function search({
       },
     },
   ]
+  
+  if (eventTypes && eventTypes.length > 0) {
+    filterConditions.push({
+      terms: {
+        'eventType.keyword': eventTypes, 
+      },
+    })
+  }
 
   const searchBody = {
     index: 'circulars',
