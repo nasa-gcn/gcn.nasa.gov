@@ -146,6 +146,7 @@ export async function search({
   limit,
   startDate,
   endDate,
+  eventType,
   sort,
 }: {
   query?: string
@@ -153,6 +154,7 @@ export async function search({
   limit?: number
   startDate?: string
   endDate?: string
+  eventType?: string[]
   sort?: string
 }): Promise<{
   items: CircularMetadata[]
