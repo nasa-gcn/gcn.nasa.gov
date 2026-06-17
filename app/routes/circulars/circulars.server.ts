@@ -187,20 +187,24 @@ export async function search({
       }
     : undefined
 
+  const filterConditions: any[] = [
+    {
+      range: {
+        createdOn: {
+          gte: startTime,
+          lte: endTime,
+        },
+      },
+    },
+  ]
+
   const searchBody = {
     index: 'circulars',
     body: {
       query: {
         bool: {
           must: queryObj,
-          filter: {
-            range: {
-              createdOn: {
-                gte: startTime,
-                lte: endTime,
-              },
-            },
-          },
+          filter: filterConditions, 
         },
       },
       fields: ['subject'],
