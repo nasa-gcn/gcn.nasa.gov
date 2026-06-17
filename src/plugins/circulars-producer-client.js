@@ -10,8 +10,8 @@ export const deploy = {
   start({ cloudformation }) {
     const clientKey = 'GcnCircularsProducerUserPoolClient'
     const env =
-      cloudformation.Resources.CircularsTableStreamLambda.Properties.Environment
-        .Variables
+      cloudformation.Resources.CircularsKafkaTableStreamLambda.Properties
+        .Environment.Variables
     const user_pool_id = env.COGNITO_USER_POOL_ID
     if (!user_pool_id)
       throw new Error('Environment variable COGNITO_USER_POOL_ID must be set')
