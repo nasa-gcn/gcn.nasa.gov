@@ -32,13 +32,8 @@ app-client-expire
   src build/scheduled/app-client-expire
 
 @tables-streams
-circulars-kafka
-  table circulars
-  src build/table-streams/circulars-kafka
-
-circulars-email
-  table circulars
-  src build/table-streams/circulars-email
+circulars
+  src build/table-streams/circulars
 
 synonyms
   src build/table-streams/synonyms
