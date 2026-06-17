@@ -147,6 +147,7 @@ export async function search({
   startDate,
   endDate,
   eventTypes,
+  eventTypesLogic = 'AND',
   sort,
 }: {
   query?: string
@@ -155,6 +156,7 @@ export async function search({
   startDate?: string
   endDate?: string
   eventTypes?: string[]
+  eventTypesLogic?: 'AND' | 'OR'
   sort?: string
 }): Promise<{
   items: CircularMetadata[]
@@ -199,11 +201,21 @@ export async function search({
   ]
   
   if (eventTypes && eventTypes.length > 0) {
-    filterConditions.push({
-      terms: {
-        'eventType.keyword': eventTypes, 
-      },
-    })
+    if (eventTypesLogic === 'AND') {
+      filterConditions.push({
+        bool: {
+          must: eventTypes.map((type) => ({
+            term: { 'eventType.keyword': type },
+          })),
+        },
+      })
+    } else {
+      filterConditions.push({
+        terms: {
+          'eventType.keyword': eventTypes, 
+        },
+      })
+    }
   }
 
   const searchBody = {
