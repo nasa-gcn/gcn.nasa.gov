@@ -5,19 +5,24 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { services } from '@architect/functions'
 import { Kafka, KafkaJSError } from 'gcn-kafka'
 import memoizee from 'memoizee'
 import { custom } from 'openid-client'
 
-import { domain, getEnvOrDieInProduction } from './env.server'
+import { domain } from './env.server'
 
-const client_id = getEnvOrDieInProduction('KAFKA_CLIENT_ID') ?? ''
-const client_secret = getEnvOrDieInProduction('KAFKA_CLIENT_SECRET')
-const kafka = new Kafka({
-  client_id,
-  client_secret,
-  domain,
-})
+async function createKafka() {
+  const serviceDefinitons = await services()
+  const client_id = serviceDefinitons['circulars-producer-clientId'] ?? ''
+  const client_secret =
+    serviceDefinitons['circulars-producer-clientSecret'] ?? ''
+  return new Kafka({
+    client_id,
+    client_secret,
+    domain,
+  })
+}
 
 function setOidcHttpOptions() {
   // Increase the timeout used for OpenID Connect requests.
@@ -45,7 +50,7 @@ export let send: (topic: string, value: string) => Promise<void>
 if (process.env.ARC_SANDBOX) {
   send = async (topic, value) => {
     setOidcHttpOptions()
-    const producer = kafka.producer()
+    const producer = (await createKafka()).producer()
     await producer.connect()
     try {
       await producer.send({ topic, messages: [{ value }] })
@@ -66,7 +71,7 @@ if (process.env.ARC_SANDBOX) {
   const getProducer = memoizee(
     async () => {
       setOidcHttpOptions()
-      const producer = kafka.producer()
+      const producer = (await createKafka()).producer()
       await producer.connect()
       ;['SIGINT', 'SIGTERM'].forEach((event) =>
         process.once(event, async () => {
