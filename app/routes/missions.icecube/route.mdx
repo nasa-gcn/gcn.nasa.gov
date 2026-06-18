@@ -272,7 +272,7 @@ If the analysis p-value from either search is less than 10%, per-event informati
 
 - `event_dt`: relative timing of neutrino to GW alert (seconds).
 - `id`: unique identifier label for the coincident neutrino event, formatted as `RUNID_EVENTID`.
-- `ra` and `dec`: reconstructed neutrino event direction (J200, degrees).
+- `ra` and `dec`: reconstructed neutrino event direction (J2000, degrees).
 - `ra_dec_error`: circular direction error (degrees) at 90% confidence.
 - `event_pval_generic`and `event_pval_bayesian`: per-event p-values for each search. In the case of multiple coincidences, can be used to determine relative importance of each event to search results. Per-event p-values are only included when the per-event p-value for that event in the respective pipeline is less than 10%, otherwise the value will be `null`.
 
