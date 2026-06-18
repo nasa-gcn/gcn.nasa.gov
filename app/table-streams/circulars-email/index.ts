@@ -10,12 +10,9 @@ import { errors } from '@opensearch-project/opensearch'
 import type { DynamoDBRecord } from 'aws-lambda'
 
 import { unmarshallTrigger } from '../utils'
-import { send as sendKafka } from '~/lib/kafka.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 import { send } from '~/routes/circulars/circulars.server'
-
-import { $id as circularsJsonSchemaId } from '@nasa-gcn/schema/gcn/circulars.schema.json'
 
 const index = 'circulars'
 
@@ -42,28 +39,14 @@ async function putIndex(circular: Circular) {
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     const id = unmarshallTrigger(dynamodb!.Keys).circularId as number
-    const promises = []
-
     if (eventName === 'REMOVE') {
-      promises.push(removeIndex(id))
+      await removeIndex(id)
     } /* (eventName === 'INSERT' || eventName === 'MODIFY') */ else {
       const circular = unmarshallTrigger(dynamodb!.NewImage) as Circular
-      const { sub, ...cleanedCircular } = circular
-      promises.push(
-        putIndex(circular),
-        sendKafka(
-          'gcn.circulars',
-          JSON.stringify({
-            $schema: circularsJsonSchemaId,
-            ...cleanedCircular,
-          })
-        )
-      )
+      await putIndex(circular)
       if (eventName === 'INSERT') {
-        promises.push(send(circular))
+        await send(circular)
       }
     }
-
-    await Promise.all(promises)
   }
 )
