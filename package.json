@@ -51,7 +51,7 @@
     "diff": "^8.0.3",
     "downshift": "^9.0.8",
     "email-validator": "^2.0.4",
-    "gcn-kafka": "^0.3.0",
+    "gcn-kafka": "^1.0.0-alpha.1",
     "github-slugger": "^2.0.0",
     "hast-util-find-and-replace": "^5.0.1",
     "hastscript": "^8.0.0",
@@ -165,7 +165,7 @@
     "lambda-runtimes": "3.0.0"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=22 <25"
   },
   "sideEffects": false,
   "prettier": {
@@ -289,5 +289,11 @@
         "forceMediaMerge": false
       }
     }
+  },
+  "allowScripts": {
+    "@confluentinc/kafka-javascript@1.10.0": true,
+    "esbuild@0.17.6": true,
+    "esbuild@0.28.1": true,
+    "esbuild@0.21.5": true
   }
 }
