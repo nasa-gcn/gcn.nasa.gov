@@ -69,7 +69,7 @@ export async function handler(
   const client_id = event.detail.additionalEventData.clientId
   invariant(client_id)
   const {
-    Items: [{ sub }],
+    Items: [item],
   } = await db.client_credentials.query({
     IndexName: 'credentialsByClientId',
     KeyConditionExpression: 'client_id = :client_id',
@@ -77,18 +77,20 @@ export async function handler(
       ':client_id': client_id,
     },
   })
-  await db.client_credentials.update({
-    Key: { sub, client_id },
-    UpdateExpression:
-      'set #lastUsed = :lastUsed, #countUsed = if_not_exists(#countUsed, :countUsedDefault) + :countUsedIncrement',
-    ExpressionAttributeNames: {
-      '#lastUsed': 'lastUsed',
-      '#countUsed': 'countUsed',
-    },
-    ExpressionAttributeValues: {
-      ':lastUsed': Date.parse(event.detail.eventTime),
-      ':countUsedIncrement': 1,
-      ':countUsedDefault': 0,
-    },
-  })
+  if (item !== undefined) {
+    await db.client_credentials.update({
+      Key: { sub: item.sub, client_id },
+      UpdateExpression:
+        'set #lastUsed = :lastUsed, #countUsed = if_not_exists(#countUsed, :countUsedDefault) + :countUsedIncrement',
+      ExpressionAttributeNames: {
+        '#lastUsed': 'lastUsed',
+        '#countUsed': 'countUsed',
+      },
+      ExpressionAttributeValues: {
+        ':lastUsed': Date.parse(event.detail.eventTime),
+        ':countUsedIncrement': 1,
+        ':countUsedDefault': 0,
+      },
+    })
+  }
 }
