@@ -1,8 +1,8 @@
 import esbuild from 'esbuild'
-import { copyFile, unlink, writeFile } from 'fs/promises'
 import { glob } from 'glob'
-import { extname } from 'node:path'
-import { basename, dirname, join } from 'path'
+import { copyFile, mkdir, writeFile } from 'node:fs/promises'
+import { basename } from 'node:path'
+import { dirname, join } from 'path'
 
 const args = process.argv.slice(2)
 const dev = args.includes('--dev')
@@ -30,54 +30,54 @@ const options = {
   publicPath: './',
   plugins: [
     {
-      name: 'copy Node API modules to output directories',
+      name: 'copy @confluentinc/kafka-javascript addon libraries',
       setup(build) {
-        const resolving = Symbol('resolving')
-        build.onResolve(
-          { filter: /\.node$/ },
-          async ({ path, pluginData, ...resolveOptions }) => {
-            // Skip .node modules that don't exist. @mongodb-js/zstd tries to
-            // import Release/zstd.node and falls back to Debug/zstd.node; the
-            // latter does not exist on production builds.
-            if (pluginData === resolving) return
-            const result = await build.resolve(path, {
-              ...resolveOptions,
-              pluginData: resolving,
-            })
-            if (result.errors.length === 0) {
-              return result
-            } else {
-              return {
-                path: '/dev/null',
-                external: true,
-                warnings: [
-                  {
-                    text: 'failed to resolve Node API module; replacing with /dev/null',
-                  },
-                ],
+        build.onEnd(async ({ metafile }) => {
+          // Identify output directories for all bundles that include @confluentinc/kafka-javascript
+          if (metafile) {
+            const pkgDir = 'node_modules/@confluentinc/kafka-javascript'
+            const inputPath = join(pkgDir, 'librdkafka.js')
+            const outDirs = Object.entries(metafile.outputs).flatMap(
+              ([key, { inputs }]) => {
+                if (Object.hasOwn(inputs, inputPath)) return dirname(key)
+                else return []
+              }
+            )
+
+            if (outDirs.length > 0) {
+              const relPaths = await glob('**/*.node', { cwd: pkgDir })
+
+              // Copy addon libraries to all output directories
+              await Promise.all(
+                relPaths.flatMap((relPath) => {
+                  const relDir = dirname(relPath)
+                  const srcPath = join(pkgDir, relPath)
+
+                  return outDirs.map(async (outDir) => {
+                    const destDir = join(outDir, relDir)
+                    const destPath = join(outDir, relPath)
+                    console.log(`Copying ${srcPath} -> ${destPath}`)
+                    await mkdir(destDir, { recursive: true })
+                    await copyFile(srcPath, destPath)
+                  })
+                })
+              )
+
+              // In dev mode, just copy to build directory
+              if (dev) {
+                await Promise.all(
+                  relPaths.map(async (relPath) => {
+                    const srcPath = join(pkgDir, relPath)
+                    const destPath = join(
+                      build.initialOptions.outdir,
+                      basename(relPath)
+                    )
+                    console.log(`Copying ${srcPath} -> ${destPath}`)
+                    await copyFile(srcPath, destPath)
+                  })
+                )
               }
             }
-          }
-        )
-        build.onEnd(async ({ metafile }) => {
-          if (metafile) {
-            const { outputs } = metafile
-            // Copy bundled .node modules from outdir to the Lambda directory.
-            await Promise.all(
-              Object.entries(outputs).flatMap(([entryPoint, { imports }]) =>
-                imports
-                  .filter(({ path }) => extname(path) === '.node')
-                  .map(({ path }) =>
-                    copyFile(path, join(dirname(entryPoint), basename(path)))
-                  )
-              )
-            )
-            // Delete .node modules in outdir.
-            await Promise.all(
-              Object.keys(outputs)
-                .filter((path) => extname(path) === '.node')
-                .map(unlink)
-            )
           }
         })
       },
