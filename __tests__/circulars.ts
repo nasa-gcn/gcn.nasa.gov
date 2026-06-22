@@ -1396,22 +1396,22 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'GRB pattern: \\bGRB\\d{6}[A-Z]?\\b',
       subject: 'IPN localization of GRB000801',
-      expected: ['GRB'],
+      expected: ['GRB', 'Gamma-ray Transient'],
     },
     {
       name: 'GRB pattern: \\bGRBs?\\b',
       subject: 'GRB 100213B: Enhanced Swift-XRT position',
-      expected: ['GRB', 'X-ray Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'X-ray Transient'],
     },
     {
       name: 'GRB pattern: \\bgamma[-\\s]?ray[-\\s]?bursts?\\b',
       subject: 'GRB 171230A CALET Gamma-Ray Burst Monitor detection',
-      expected: ['GRB'],
+      expected: ['GRB', 'Gamma-ray Transient'],
     },
     {
       name: 'GRB pattern: \\bXRF\\d{6}[A-Z]?\\b',
       subject: 'XRF040812: possible afterglow second Chandra observation',
-      expected: ['GRB', 'X-ray Transient', 'Afterglow'],
+      expected: ['GRB', 'Gamma-ray Transient', 'X-ray Transient', 'Afterglow'],
     },
     {
       name: 'Gamma-ray Transient pattern: \\bFermi(?:\\s?(?:GBM|LAT)|\\d{9})?\\b',
@@ -1495,7 +1495,7 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'SGR pattern: \\bsoft[-\\s]?gamma[-\\s]?repeaters?\\b',
       subject: 'New Soft Gamma Repeater 0501+4516 was GRB 080822',
-      expected: ['GRB', 'SGR'],
+      expected: ['GRB', 'Gamma-ray Transient', 'SGR'],
     },
     {
       name: 'FRB pattern: \\bFRB\\s?\\d{6,8}[A-Za-z]?\\b',
@@ -1528,12 +1528,12 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'SN pattern: \\bSN\\d{4}[A-Za-z]*\\b',
       subject: 'SN2002ap (SN/GRB?) Echelle spectra',
-      expected: ['GRB', 'SN'],
+      expected: ['GRB', 'Gamma-ray Transient', 'SN'],
     },
     {
       name: 'SN pattern: \\bSNe?\\b',
       subject: 'Type Ib/c SN2002ap (SN/GRB?)',
-      expected: ['GRB', 'SN'],
+      expected: ['GRB', 'Gamma-ray Transient', 'SN'],
     },
     {
       name: 'SN pattern: \\bsuper[-\\s]?novae?\\b',
@@ -1583,7 +1583,12 @@ describe('parseEventTypeFromSubject', () => {
       name: 'X-ray Transient pattern: \\bEPW?[-\\s]?\\d{6,8}[A-Z]{0,2}\\b',
       subject:
         'EP250404a / GRB 250404A: Montarrenti Observatory optical observations ',
-      expected: ['GRB', 'X-ray Transient', 'Optical Transient'],
+      expected: [
+        'GRB',
+        'Gamma-ray Transient',
+        'X-ray Transient',
+        'Optical Transient',
+      ],
     },
     {
       name: 'X-ray Transient pattern: \\bEP-WXT\\b',
@@ -1600,7 +1605,13 @@ describe('parseEventTypeFromSubject', () => {
       name: 'X-ray Transient pattern: \\bX[-\\s]?ray(?:\\s+transient)?\\b',
       subject:
         'GRB 231129C: PROMPT optical upper limits for the MAXI/GSC X-ray counterpart and the MASTER afterglow candidate ',
-      expected: ['GRB', 'X-ray Transient', 'Afterglow', 'Optical Transient'],
+      expected: [
+        'GRB',
+        'Gamma-ray Transient',
+        'X-ray Transient',
+        'Afterglow',
+        'Optical Transient',
+      ],
     },
     {
       name: 'X-ray Transient pattern: \\bEinstein\\s+Probe\\b',
@@ -1610,12 +1621,12 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'X-ray Transient pattern: \\bMAXI\\s?J\\d{4}[+\\-]\\d+',
       subject: 'GRB 251023B / MAXI J0451+122: MAXI/GSC detection',
-      expected: ['GRB', 'X-ray Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'X-ray Transient'],
     },
     {
       name: 'X-ray Transient pattern: \\bXRT\\b',
       subject: 'GRB 160912A: Swift-XRT refined Analysis',
-      expected: ['GRB', 'X-ray Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'X-ray Transient'],
     },
     {
       name: 'X-ray Transient pattern: \\bXRF\\b',
@@ -1635,12 +1646,12 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'X-ray Transient pattern: \\bNICER\\b',
       subject: 'GRB 221009A: NICER follow-up observations',
-      expected: ['GRB', 'X-ray Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'X-ray Transient'],
     },
     {
       name: 'X-ray Transient pattern: \\bNuSTAR\\b',
       subject: 'GRB 221009A: NuSTAR follow-up observations',
-      expected: ['GRB', 'X-ray Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'X-ray Transient'],
     },
     {
       name: 'X-ray Transient pattern: \\bSwift[:?/-]XRT\\b',
@@ -1650,12 +1661,22 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'Afterglow pattern: \\bafterglows?\\b',
       subject: 'GRB 041006 Optical afterglow observations',
-      expected: ['GRB', 'Afterglow', 'Optical Transient'],
+      expected: [
+        'GRB',
+        'Gamma-ray Transient',
+        'Afterglow',
+        'Optical Transient',
+      ],
     },
     {
       name: 'Optical Transient pattern: \\boptical\\b',
       subject: 'GRB 131014A: RATIR Optical/NIR Afterglow Confirmation',
-      expected: ['GRB', 'Afterglow', 'Optical Transient'],
+      expected: [
+        'GRB',
+        'Gamma-ray Transient',
+        'Afterglow',
+        'Optical Transient',
+      ],
     },
     {
       name: 'Optical Transient pattern: \\bAT\\d{4}[a-z]+\\b',
@@ -1676,7 +1697,7 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'Optical Transient pattern: \\bMASTER\\b',
       subject: 'GRB 181202A: Global MASTER-Net optical observations',
-      expected: ['GRB', 'Optical Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'Optical Transient'],
     },
     {
       name: 'Optical Transient pattern: \\bRubin\\b',
@@ -1687,12 +1708,12 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'Optical Transient pattern: \\bSVOM\\/VT\\b',
       subject: 'GRB 260509A: SVOM/VT optical observations',
-      expected: ['GRB', 'Optical Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'Optical Transient'],
     },
     {
       name: 'Optical Transient pattern: \\bSVOM\\/C-GFT\\b',
       subject: 'GRB 260511B SVOM/C-GFT optical counterpart detection',
-      expected: ['GRB', 'Optical Transient'],
+      expected: ['GRB', 'Gamma-ray Transient', 'Optical Transient'],
     },
     {
       name: 'Optical Transient pattern: \\bSwift[:?/-]UVOT\\b',
@@ -1702,7 +1723,7 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'Kilonova pattern:  /\\bkilonova(?:e|s)?(?!\\s*[-\\w])\\b/i',
       subject: 'GRB 230307A: good match with kilonova models',
-      expected: ['GRB', 'Kilonova'],
+      expected: ['GRB', 'Gamma-ray Transient', 'Kilonova'],
     },
     {
       name: 'Kilonova pattern: \\bKN\b',

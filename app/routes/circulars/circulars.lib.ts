@@ -402,13 +402,14 @@ export function parseEventTypeFromSubject(subject: string): EventType[] {
     if (pattern.test(subject)) return ['Retraction']
   }
 
-  let matches = (Object.keys(eventTypeMatchers) as EventType[])
+  const matches = (Object.keys(eventTypeMatchers) as EventType[])
     .filter((eventType) => eventType !== 'Retraction')
     .filter((eventType) =>
       eventTypeMatchers[eventType].some((pattern) => pattern.test(subject))
     )
   if (matches.includes('GRB')) {
-    matches = matches.filter((m) => m !== 'Gamma-ray Transient')
+    const grbIndex = matches.indexOf('GRB')
+    matches.splice(grbIndex + 1, 0, 'Gamma-ray Transient')
   }
 
   return matches.length ? matches : ['Misc']
