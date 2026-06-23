@@ -77,7 +77,7 @@ export async function handler(
       ':client_id': client_id,
     },
   })
-  if (item !== undefined) {
+  if (item?.sub !== undefined) {
     await db.client_credentials.update({
       Key: { sub: item.sub, client_id },
       UpdateExpression:
