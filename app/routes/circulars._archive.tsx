@@ -5,10 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import {
-  GetObjectAttributesCommand,
-  ObjectAttributes,
-} from '@aws-sdk/client-s3'
+import { HeadObjectCommand } from '@aws-sdk/client-s3'
 import { json } from '@remix-run/node'
 import { Outlet, useLoaderData } from '@remix-run/react'
 import { ButtonGroup, Icon } from '@trussworks/react-uswds'
@@ -24,15 +21,14 @@ import { s3 } from '~/scheduled/circulars/storage'
 async function getFileSize(format: string) {
   const Key = getBucketKey(format)
   try {
-    const { ObjectSize } = await s3.send(
-      new GetObjectAttributesCommand({
+    const { ContentLength } = await s3.send(
+      new HeadObjectCommand({
         Bucket,
         Key,
-        ObjectAttributes: [ObjectAttributes.OBJECT_SIZE],
       })
     )
-    invariant(ObjectSize !== undefined)
-    return ObjectSize
+    invariant(ContentLength !== undefined)
+    return ContentLength
   } catch (e) {
     if (
       process.env.NODE_ENV !== 'production' &&
