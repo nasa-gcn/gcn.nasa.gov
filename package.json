@@ -35,6 +35,8 @@
     "@nasa-gcn/schema": "^6.1.1",
     "@octokit/rest": "^22.0.0",
     "@opensearch-project/opensearch": "^2.11.0",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/semantic-conventions": "^1.41.1",
     "@remix-run/architect": "~2.17.5",
     "@remix-run/css-bundle": "~2.17.5",
     "@remix-run/node": "~2.17.5",
