@@ -25,10 +25,9 @@ const remixHandler = createRequestHandler({
 
 const { CDN_SECRET } = process.env
 
-const tracer = trace.getTracer('remix')
-
 export const handler: RequestHandler = async (event, ...args) => {
-  return tracer.startActiveSpan('handler', async (span) => {
+  const span = trace.getActiveSpan()
+  if (span) {
     const url = new URL(
       event.rawPath,
       `https://${event.requestContext.domainName}`
@@ -50,27 +49,26 @@ export const handler: RequestHandler = async (event, ...args) => {
         ])
       ),
     })
-    try {
-      if (CDN_SECRET && event.headers['x-cdn-secret'] !== CDN_SECRET)
-        // FIXME: this shouldn't need to be a promise.
-        // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69466
-        return Promise.resolve({ statusCode: 502 })
+  }
 
-      // By default, don't cache responses.
-      // This prevents us from showing stale pages. For example, if the user
-      // logs out and then clicks the "back" button, they should not see a page
-      // that looks like they are still logged in.
+  if (CDN_SECRET && event.headers['x-cdn-secret'] !== CDN_SECRET)
+    // FIXME: this shouldn't need to be a promise.
+    // See https://github.com/DefinitelyTyped/DefinitelyTyped/pull/69466
+    return Promise.resolve({ statusCode: 502 })
 
-      const result = (await remixHandler(
-        event,
-        ...args
-      )) as APIGatewayProxyStructuredResultV2
-      ;(result.headers ??= {})['Cache-Control'] ??= 'max-age=0, no-store'
-      if (result.statusCode !== undefined)
-        span.setAttribute(ATTR_HTTP_RESPONSE_STATUS_CODE, result.statusCode)
-      return result
-    } finally {
-      span.end()
-    }
-  })
+  // By default, don't cache responses.
+  // This prevents us from showing stale pages. For example, if the user
+  // logs out and then clicks the "back" button, they should not see a page
+  // that looks like they are still logged in.
+
+  const result = (await remixHandler(
+    event,
+    ...args
+  )) as APIGatewayProxyStructuredResultV2
+  ;(result.headers ??= {})['Cache-Control'] ??= 'max-age=0, no-store'
+
+  if (span && result.statusCode !== undefined)
+    span.setAttribute(ATTR_HTTP_RESPONSE_STATUS_CODE, result.statusCode)
+
+  return result
 }
