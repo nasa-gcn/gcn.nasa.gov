@@ -5,7 +5,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Kafka, KafkaJSError } from 'gcn-kafka'
+import { KafkaJS } from '@confluentinc/kafka-javascript'
+import { Kafka } from 'gcn-kafka'
 import memoizee from 'memoizee'
 import { custom } from 'openid-client'
 
@@ -50,7 +51,7 @@ if (process.env.ARC_SANDBOX) {
     try {
       await producer.send({ topic, messages: [{ value }] })
     } catch (e) {
-      if (e instanceof KafkaJSError) {
+      if (KafkaJS.isKafkaJSError(e)) {
         console.warn(
           'Failed to send Kafka message. This would be an error in production.'
         )
