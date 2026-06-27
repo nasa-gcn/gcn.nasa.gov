@@ -27,6 +27,7 @@ export const deploy = {
               'cognito-idp:AdminAddUserToGroup',
               'cognito-idp:AdminGetUser',
               'cognito-idp:AdminListGroupsForUser',
+              'cognito-idp:AdminRemoveUserFromGroup',
               'cognito-idp:CreateUserPoolClient',
               'cognito-idp:DeleteUserPoolClient',
               'cognito-idp:DescribeUserPoolClient',
