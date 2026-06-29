@@ -37,7 +37,7 @@ export const handler: RequestHandler = async (event, ...args) => {
     span.setAttributes({
       [ATTR_HTTP_REQUEST_METHOD]: event.requestContext.http.method,
       [ATTR_SERVER_ADDRESS]: event.requestContext.domainName,
-      [ATTR_URL_FULL]: url.toString(), // todo
+      [ATTR_URL_FULL]: url.toString(),
       [ATTR_URL_PATH]: event.rawPath,
       [ATTR_URL_SCHEME]: scheme,
       [ATTR_URL_QUERY]: event.rawQueryString,
