@@ -28,9 +28,10 @@ const { CDN_SECRET } = process.env
 export const handler: RequestHandler = async (event, ...args) => {
   const span = trace.getActiveSpan()
   if (span) {
+    const scheme = 'https'
     const url = new URL(
       event.rawPath,
-      `https://${event.requestContext.domainName}`
+      `${scheme}://${event.requestContext.domainName}`
     )
     url.search = event.rawQueryString
     span.setAttributes({
@@ -38,7 +39,7 @@ export const handler: RequestHandler = async (event, ...args) => {
       [ATTR_SERVER_ADDRESS]: event.requestContext.domainName,
       [ATTR_URL_FULL]: url.toString(), // todo
       [ATTR_URL_PATH]: event.rawPath,
-      [ATTR_URL_SCHEME]: 'https',
+      [ATTR_URL_SCHEME]: scheme,
       [ATTR_URL_QUERY]: event.rawQueryString,
       [ATTR_NETWORK_PEER_ADDRESS]: event.requestContext.http.sourceIp,
       [ATTR_USER_AGENT_ORIGINAL]: event.requestContext.http.userAgent,
@@ -48,6 +49,11 @@ export const handler: RequestHandler = async (event, ...args) => {
           value,
         ])
       ),
+      'aws.xray.annotations': [
+        ATTR_URL_FULL,
+        ATTR_HTTP_REQUEST_METHOD,
+        ATTR_HTTP_RESPONSE_STATUS_CODE,
+      ],
     })
   }
 
