@@ -136,7 +136,7 @@ export async function listUsersInGroup(GroupName: string) {
     'using a paginator; replace with alternative API calls that avoid large result sets'
   )
   const pages = paginateListUsersInGroup(
-    { client: cognito },
+    { client: cognito, pageSize: 60 },
     { GroupName, UserPoolId }
   )
   const users: UserType[] = []
