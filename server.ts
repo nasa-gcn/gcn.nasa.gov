@@ -38,7 +38,7 @@ export const handler: RequestHandler = async (event, ...args) => {
       [ATTR_SERVER_ADDRESS]: event.requestContext.domainName,
       [ATTR_URL_FULL]: url.toString(), // todo
       [ATTR_URL_PATH]: event.rawPath,
-      [ATTR_URL_SCHEME]: event.requestContext.http.protocol,
+      [ATTR_URL_SCHEME]: 'https',
       [ATTR_URL_QUERY]: event.rawQueryString,
       [ATTR_NETWORK_PEER_ADDRESS]: event.requestContext.http.sourceIp,
       [ATTR_USER_AGENT_ORIGINAL]: event.requestContext.http.userAgent,
