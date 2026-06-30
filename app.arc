@@ -13,6 +13,10 @@ circulars
 support
   src build/email-incoming/support
 
+@appclients
+circulars-producer
+  scope gcn.nasa.gov/kafka-circulars-producer
+
 @eventbridge
 app_clients
   src build/eventbridge/app-clients
@@ -228,4 +232,4 @@ nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-dynamodb-local
 nasa-gcn/architect-plugin-tracing
 eventbridge # Enable sending Eventbridge Events to lambdas
-circulars-producer-client
+app-clients # Provision app clients tied to specific scopes
