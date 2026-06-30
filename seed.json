@@ -5838,19 +5838,19 @@
       "topicId": "topic_1",
       "topicName": "gcn.notices.team_abc",
       "teamId": "team_abc",
-      "public": true
+      "isPublic": true
     },
     {
       "topicId": "topic_2",
       "topicName": "gcn.notices.team_def",
-      "public": false,
+      "isPublic": false,
       "teamId": "team_def"
     },
     {
       "topicId": "topic_3",
       "topicName": "gcn.notices.team_ghi",
       "teamId": "team_ghi",
-      "public": true
+      "isPublic": true
     }
   ]
 }

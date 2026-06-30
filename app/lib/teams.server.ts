@@ -5,12 +5,25 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { tables } from '@architect/functions'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import crypto from 'crypto'
+import { dedent } from 'ts-dedent'
+
+import { sendEmail } from './email.server'
+import { origin } from './env.server'
+import type { UserMetadata } from './user.server'
+import type { User } from '~/routes/_auth/user.server'
+
+const fromName = 'GCN Teams'
 
 export type Team = {
   teamId: string
   teamName: string
   description: String
 }
+
+export type Permission = 'admin' | 'write' | 'read'
 
 /**
  * Maps a User to a Team and their respective permission level
@@ -27,12 +40,390 @@ export type TeamMember = {
   sub: string
   teamId: string
   topicId: string
-  permission: 'admin' | 'write' | 'read'
+  permission: Permission
+}
+
+export type TeamInvite = {
+  teamId: string
+  sub: string
+  topicId: string
+  permission: Permission
 }
 
 export type Topic = {
   topicId: string
   topicName: string
-  public: boolean
+  isPublic: boolean
   teamId: string
 }
+
+/**
+ * This function will create an entry in DynamoDB for the new
+ * team, and send a notification to the listed PoC that they are
+ * being added as an admin to this team.
+ *
+ * Once the PoC accepts, they will have the ability to perform
+ * team admin level interactions, adding producers, consumers, etc.
+ *
+ * @param user current user, if they are not an site admin, this will throw an error
+ * @param teamName mutable field for team name
+ * @param description mutable field for team description
+ * @param pocEmail address of user to be added as team admin
+ * @param topicName highest level topic/prefix the team can manage topics under.
+ *
+ */
+export async function createTeam(
+  user: User,
+  teamName: string,
+  description: string,
+  pocEmail: string,
+  topicName: string
+) {
+  if (!(await userHasPermission(user.sub, 'gcn.nasa.gov', 'admin')))
+    throw new Response(null, { status: 403 })
+
+  const db = await tables()
+  const team: Team = {
+    teamId: crypto.randomUUID(),
+    teamName,
+    description,
+  }
+  await db.teams.put(team)
+  const topic = await createTopic(topicName, team.teamId)
+  // TODO: Add KafkaACL functions here once they are created
+
+  await Promise.all([
+    db.team_invites.put({
+      teamId: team.teamId,
+      email: pocEmail,
+      topicId: topic.topicId,
+      permission: 'admin',
+    }),
+    sendEmail({
+      fromName,
+      to: [pocEmail],
+      subject: 'GCN Team Admin Invite',
+      body: dedent`You have been added as a team admin to ${teamName}. 
+      
+      To continue, go to ${origin}/teams and accept the invite. Once complete, you will be able to invite other users to join your team.`,
+    }),
+  ])
+
+  return team
+}
+
+export async function getTeam(teamId: string) {
+  const db = await tables()
+  const team: Team = await db.teams.get({ teamId })
+  const teamMembers = await getTeamMembers(teamId)
+  const pendingInvites = await getTeamInvites(teamId)
+  return {
+    ...team,
+    teamMembers,
+    pendingInvites,
+  }
+}
+
+export async function getTeamMembers(teamId: string): Promise<TeamMember[]> {
+  const db = await tables()
+  return (
+    await db.team_members.query({
+      KeyConditionExpression: 'teamId = :teamId',
+      IndexName: 'usersByTeam',
+      ExpressionAttributeValues: {
+        ':teamId': teamId,
+      },
+    })
+  ).Items as TeamMember[]
+}
+
+export async function getTeamInvites(teamId: string) {
+  const db = await tables()
+  return (
+    await db.team_invites.query({
+      KeyConditionExpression: 'teamId = :teamId',
+      ExpressionAttributeValues: {
+        ':teamId': teamId,
+      },
+    })
+  ).Items as TeamInvite[]
+}
+
+export async function getUsersTeams(sub: string) {
+  const db = await tables()
+  const memberships: TeamMember[] = (
+    await db.team_members.query({
+      KeyConditionExpression: '#sub = :sub',
+      ExpressionAttributeNames: {
+        '#sub': 'sub',
+      },
+      ExpressionAttributeValues: {
+        ':sub': sub,
+      },
+    })
+  ).Items
+
+  const teams: Team[] = await Promise.all(
+    memberships.map((x) => db.teams.get({ teamId: x.teamId }))
+  )
+  return teams
+}
+
+export async function updateTeam(
+  teamId: string,
+  teamName: string,
+  description: string
+) {
+  const db = await tables()
+  await db.teams.update({
+    Key: { teamId },
+    UpdateExpression: 'set #teamName = :teamName, #description = :description',
+    ExpressionAttributeNames: {
+      '#teamName': 'teamName',
+      '#description': 'description',
+    },
+    ExpressionAttributeValues: {
+      ':teamName': teamName,
+      ':description': description,
+    },
+  })
+}
+
+export async function deleteTeam(teamId: string) {
+  const db = await tables()
+  await db.teams.delete({ teamId })
+  const client = db._doc as unknown as DynamoDBDocument
+  const TeamMembersTableName = db.name('team_members')
+  const TeamInvitesTableName = db.name('team_invites')
+  const team_members = await getTeamMembers(teamId)
+  const team_invites = await getTeamInvites(teamId)
+
+  await client.batchWrite({
+    RequestItems: {
+      [TeamMembersTableName]: team_members.map((x) => ({
+        DeleteRequest: {
+          Key: {
+            sub: { S: x.sub },
+            teamId: { S: teamId },
+          },
+        },
+      })),
+      [TeamInvitesTableName]: team_invites.map((x) => ({
+        DeleteRequest: {
+          Key: {
+            teamId: { S: teamId },
+            sub: { S: x.sub },
+          },
+        },
+      })),
+    },
+  })
+}
+
+export async function userIsTeamAdmin(
+  sub: string,
+  teamId: string
+): Promise<boolean> {
+  const db = await tables()
+  const membership = await db.team_members.get({
+    sub,
+    teamId,
+  })
+
+  return membership && membership.permission === 'admin'
+}
+
+export async function inviteUserToTeam(
+  user: User,
+  teamId: string,
+  newUserSub: string,
+  topicId: string,
+  permission: Permission
+) {
+  const db = await tables()
+  const userPermission = (await db.team_members.get({
+    teamId,
+    sub: user.sub,
+  })) as TeamMember
+  if (userPermission.permission != 'admin')
+    throw new Response(null, { status: 403 })
+  const team = (await db.teams.get({ teamId })) as Team
+  if (!team) throw new Response(null, { status: 404 })
+
+  const newUserEmail = (
+    (await db.users.get({ sub: newUserSub })) as UserMetadata
+  ).email
+
+  await Promise.all([
+    db.team_invites.put({
+      teamId,
+      sub: newUserSub,
+      topicId,
+      permission,
+    }),
+    sendEmail({
+      to: [newUserEmail],
+      fromName,
+      subject: `GCN Teams Invite: ${team.teamName}`,
+      body: dedent`You have been invited to join ${team.teamName} by ${user.name}. 
+      To accept, go to ${origin}/teams and accept the invite. Once complete, you will be able to create client credentials to 
+      produce and/or consume Kafka messages, as determined by your team admin.`,
+    }),
+  ])
+}
+
+export async function getInvitesForUser(user: User) {
+  const db = await tables()
+  return (
+    await db.team_invites.query({
+      KeyConditionExpression: 'email = :email',
+      IndexName: 'invitesByEmail',
+      ExpressionAttributeValues: {
+        ':email': user.email,
+      },
+    })
+  ).Items as TeamInvite[]
+}
+
+export async function deleteTeamInvite(teamId: string, email: string) {
+  const db = await tables()
+  await db.team_invites.delete({ teamId, email })
+}
+
+export async function acceptTeamInvite(user: User, teamId: string) {
+  const db = await tables()
+  const invite: TeamInvite = await db.team_invites.get({
+    teamId,
+    email: user.email,
+  })
+  if (!invite) throw new Response(null, { status: 404 })
+  await setUsersTeamPermission(
+    user.sub,
+    teamId,
+    invite.topicId,
+    invite.permission
+  )
+  await deleteTeamInvite(teamId, user.email)
+}
+
+export async function setUsersTeamPermission(
+  sub: string,
+  teamId: string,
+  topicId: string,
+  permission: Permission
+) {
+  const db = await tables()
+  await db.team_members.put({
+    sub,
+    teamId,
+    topicId,
+    permission,
+  })
+}
+
+export async function removeUserFromTeam(sub: string, teamId: string) {
+  const db = await tables()
+  await db.team_members.delete({ sub, teamId })
+}
+
+// #region Topic Functions
+
+export async function createTopic(topicName: string, teamId: string) {
+  const db = await tables()
+  const topic: Topic = {
+    topicId: crypto.randomUUID(),
+    topicName,
+    isPublic: false,
+    teamId,
+  }
+  await db.topics.put(topic)
+  return topic
+}
+
+export async function getTopic(topicId: string): Promise<Topic> {
+  const db = await tables()
+  return await db.topics.get({ topicId })
+}
+
+export async function updateTopicPublicAvailability(
+  topicId: string,
+  isPublic: boolean
+) {
+  // TODO: Add KafkaACL function to add public rule
+  const db = await tables()
+  await db.topics.update({
+    Key: { topicId },
+    UpdateExpression: 'set #public = :public',
+    ExpressionAttributeNames: {
+      '#public': 'public',
+    },
+    ExpressionAttributeValues: {
+      ':public': isPublic,
+    },
+  })
+}
+
+export async function deleteTopic(topicId: string) {
+  const db = await tables()
+  await db.topics.delete({ topicId })
+  const memberships: TeamMember[] = (
+    await db.team_members.query({
+      IndexName: 'membersByTopicId',
+      KeyConditionExpression: 'topicId = :topicId',
+      ExpressionAttributeValues: {
+        ':topicId': topicId,
+      },
+    })
+  ).Items
+
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('team_members')
+  await client.batchWrite({
+    RequestItems: {
+      [TableName]: memberships.map((x) => ({
+        DeleteRequest: {
+          Key: {
+            sub: { S: x.sub },
+            teamId: { S: x.teamId },
+          },
+        },
+      })),
+    },
+  })
+  // TODO: Add KafkaACL function here to remove rules for this topic
+}
+
+export async function userHasPermission(
+  sub: string,
+  topicName: string,
+  permission: Permission
+): Promise<boolean> {
+  const db = await tables()
+  const topicId: string = (
+    await db.topics.query({
+      IndexName: 'topicsByName',
+      KeyConditionExpression: 'topicName = :topicName',
+      ExpressionAttributeValues: {
+        ':topicName': topicName,
+      },
+    })
+  ).Items[0].topicId
+
+  const membership = (
+    await db.team_members.query({
+      IndexName: 'membersByTopicId',
+      KeyConditionExpression: 'topicId = :topicId',
+      FilterExpression: '#sub = :sub AND permission = :permission',
+      ExpressionAttributeNames: {
+        '#sub': 'sub',
+      },
+      ExpressionAttributeValues: {
+        ':sub': sub,
+        ':topicId': topicId,
+        ':permission': permission,
+      },
+    })
+  ).Items[0]
+  return Boolean(membership)
+}
+// #endregion
