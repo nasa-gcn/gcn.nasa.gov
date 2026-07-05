@@ -40,6 +40,10 @@ circulars-email
   table circulars
   src build/table-streams/circulars-email
 
+circulars-index
+  table circulars
+  src build/table-streams/circulars-index
+
 synonyms
   src build/table-streams/synonyms
 
