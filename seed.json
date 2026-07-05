@@ -5793,7 +5793,19 @@
       "sub": "default",
       "username": "Example User",
       "affiliation": "Testing Corp",
-      "email": "user@example.com"
+      "email": "user@example.com",
+      "groups": ["example-group-1", "example-group-2"]
+    },
+    {
+      "sub": "default-2",
+      "username": "Second User",
+      "affiliation": "Testing Group",
+      "email": "user-2@example.com",
+      "groups": [
+        "example-group-1",
+        "example-group-2",
+        "gcn.nasa.gov/circulars-submitter"
+      ]
     }
   ],
   "teams": [

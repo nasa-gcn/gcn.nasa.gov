@@ -91,6 +91,22 @@ export async function getCognitoUserFromSub(sub: string) {
   return user
 }
 
+// Gets user from Cognito by sub to be indexed into OpenSearch
+export async function getUserForOpenSearch(sub: string) {
+  const user = await getCognitoUserFromSub(sub)
+  if (!user) throw new Response(null, { status: 404 })
+  const groups = user.Username
+    ? ((await getUserGroupStrings(user.Username)) ?? [])
+    : []
+  return {
+    sub: extractAttributeRequired(user.Attributes, 'sub'),
+    email: extractAttributeRequired(user.Attributes, 'email'),
+    name: extractAttribute(user.Attributes, 'name'),
+    affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
+    groups,
+  }
+}
+
 export async function listUsers(
   filterString: string
 ): Promise<Omit<User, 'idp' | 'cognitoUserName' | 'groups'>[]> {
@@ -135,14 +151,24 @@ export async function listUsersInGroup(GroupName: string) {
   console.warn(
     'using a paginator; replace with alternative API calls that avoid large result sets'
   )
-  const pages = paginateListUsersInGroup(
-    { client: cognito, pageSize: 60 },
-    { GroupName, UserPoolId }
-  )
-  const users: UserType[] = []
-  for await (const page of pages) {
-    const nextUsers = page.Users
-    if (nextUsers) users.push(...nextUsers)
+
+  let users: UserType[]
+  try {
+    const pages = paginateListUsersInGroup(
+      { client: cognito, pageSize: 60 },
+      { GroupName, UserPoolId }
+    )
+    users = []
+    for await (const page of pages) {
+      const nextUsers = page.Users
+      if (nextUsers) users.push(...nextUsers)
+    }
+  } catch (error) {
+    maybeThrowCognito(
+      error,
+      'Error getting paginated users, returning empty list'
+    )
+    users = []
   }
   return users
 }
@@ -241,15 +267,20 @@ export async function getUserGroupStrings(Username: string) {
 }
 
 export async function checkUserIsVerified(sub: string) {
-  const { Username } = await getCognitoUserFromSub(sub)
+  try {
+    const { Username } = await getCognitoUserFromSub(sub)
 
-  const { UserAttributes } = await cognito.send(
-    new AdminGetUserCommand({
-      UserPoolId,
-      Username,
-    })
-  )
-  return extractAttribute(UserAttributes, 'email_verified')
+    const { UserAttributes } = await cognito.send(
+      new AdminGetUserCommand({
+        UserPoolId,
+        Username,
+      })
+    )
+    return extractAttribute(UserAttributes, 'email_verified')
+  } catch (error) {
+    maybeThrowCognito(error, 'returning default verified for local testing')
+    return 'true' // Should this be a string?
+  }
 }
 
 export async function removeUserFromGroup(sub: string, GroupName: string) {
