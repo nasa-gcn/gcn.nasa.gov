@@ -153,6 +153,10 @@ team_invites
   sub **String
   PointInTimeRecovery true
 
+reindex_logs
+  indexName *String
+  PointInTimeRecovery true
+
 @tables-indexes
 email_notification_subscription
   topic *String
@@ -245,6 +249,10 @@ topics
 topics
   teamId *String
   name topicsByTeamId
+
+@queues
+reindex-opensearch
+  src build/queues/reindex-opensearch
 
 @aws
 runtime nodejs24.x
