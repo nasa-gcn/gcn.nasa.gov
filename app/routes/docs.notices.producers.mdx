@@ -72,17 +72,24 @@ also happy to work with the mission teams to help construct your alerts.
       # If there is only one topic, it will be simply as follows:
       topic = 'gcn.notices.mission'
       # JSON data converted to byte string format
+      # Loop to run produce when alert is generated
       data = json.dumps({
           '$schema': 'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/mission/SchemaName.schema.json',
           'key': 'value'
       }).encode()
       producer.produce(topic, data)
       producer.flush()
+      # End produce loop
       ```
 
 <Alert type="info" heading="Schema Version" headingLevel="h4">
 
 Please indicate the latest schema version (i.e., `vX.Y.Z`) against which the mission schema has been validated, rather than referring to the main branch.
+
+</Alert>
+
+<Alert type="info" heading="Producer Loop" headingLevel="h4">
+The producer should always remain connected via `producer = Producer(...)`, with the produce loop kicked off by new alerts from your pipeline. This connectivity enables that credentials do not expire due to disuse and provides the lowest latency in distribution.
 
 </Alert>
 
