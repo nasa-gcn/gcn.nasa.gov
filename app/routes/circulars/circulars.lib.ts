@@ -315,6 +315,8 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bIgnore\b/i,
     /\bFalse Trigger\b/i,
     /\bNot real\b/i,
+    /\bErroneous\b/i,
+    /\bDuplicate\b/i,
   ],
   GRB: [
     /\bGRB\d{6}[A-Z]?\b/i,
