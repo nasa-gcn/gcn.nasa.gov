@@ -61,6 +61,26 @@ Detailed description and examples of Fermi/GBM Notices are available in the [GCN
 
 </WithFeature>
 
+<WithFeature LAT_JSON>
+
+**JSON-Serialized Fermi/LAT Flare Notices in GCN Kafka:**
+
+Fermi/LAT distributes JSON-serialized notices for gamma-ray flares detected by the LAT Flare Advocate pipeline on the GCN Kafka topic `gcn.notices.fermi.lat`.
+
+For schemas and examples see [/schema/stable/gcn/notices/fermi/lat](/schema/stable/gcn/notices/fermi/lat) or use the [Schema Browser](/docs/schema/stable/gcn/notices/fermi/lat/).
+
+Detailed descriptions and examples of Fermi/LAT Flare Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/fermi/lat).
+
+<div className="overflow-table">
+
+| Topic                           | Contents                                            | Latency        |
+| ------------------------------- | --------------------------------------------------- | -------------- |
+| `gcn.notices.fermi.lat.flare`   | Localization, flux, photon index                    | ~1 day         |
+
+</div>
+
+</WithFeature>
+
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/fermi.html)
