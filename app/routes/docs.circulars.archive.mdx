@@ -5,8 +5,6 @@ handle:
 
 import { Link } from '@remix-run/react'
 
-import { WithFeature } from '~/root'
-
 # Circulars Archive
 
 Upon successful submission and distribution, a GCN Circular is assigned a number and stored permanently in the [GCN Circulars archive](/circulars). The archive lists links to the full text of every GCN Circular in reverse chronological order. The archive has a full-text search feature that you can use to find all Circulars that contain a phrase or keyword.
@@ -15,7 +13,13 @@ Upon successful submission and distribution, a GCN Circular is assigned a number
   Go to GCN Circulars Archive
 </Link>
 
-<WithFeature SYNONYMS>
+The following sections describe the search and sort functionality in the Circulars archive and documentation on other related archives.
+
+- [Event View](archive#event-view) describes how Circulars are grouped by the same astronomical event.
+- [Searching the Archive](archive#searching-the-archive) describes search syntax.
+- [Citing GCN Circulars](archive#citing-gcn-circulars) describes how GCN Circulars are ingested into ADS and linked to the Circulars archive.
+- [GCN Viewer](archive#gcn-viewer) describes a tool that collects GCN Circulars and Notices by event type, but is limited to GCN Classic Notice formats.
+
 ## Event View
 
 The Circulars archive provides an Event View that allows users to view all Circulars associated with a particular astronomical event.
@@ -35,8 +39,6 @@ In the Event View search bar, enter in an event name and it will take you to the
 ### Linking to an event name or event group
 
 To save a direct link to all Circulars associated with a particular event name or event group, you can point to any event name in that group, e.g. `https://gcn.nasa.gov/circulars/group/[event_name]'. Event names are also available in the headers of Circulars that are part of an event group under the 'Event' label.
-
-</WithFeature>
 
 ## Searching the Archive
 
