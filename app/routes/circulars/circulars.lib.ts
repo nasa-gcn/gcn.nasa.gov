@@ -331,6 +331,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bHETE\b/i,
     /\bKONUS\b/i,
     /\bAstroSat\b/i,
+    /\bHAWC\b/i,
   ],
   GW: [
     /\bGW\d+\b/i,

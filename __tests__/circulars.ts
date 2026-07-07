@@ -1446,6 +1446,11 @@ describe('parseEventTypeFromSubject', () => {
       expected: ['Gamma-ray Transient', 'GW'],
     },
     {
+      name: 'Gamma-ray Transient pattern: \\b^HAWC(-\\d{6}[A-Za-z])?:?$\\b',
+      subject: 'Alert from the HAWC Burst Monitor HAWC-191019A',
+      expected: ['Gamma-ray Transient'],
+    },
+    {
       name: 'GW pattern: \\bGW\\d+\\b',
       subject:
         'LIGO/Virgo GW170817: Further Hubble Space Telescope observations',
