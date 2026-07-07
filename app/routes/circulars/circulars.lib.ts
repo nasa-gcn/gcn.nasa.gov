@@ -297,6 +297,7 @@ type EventType =
   | 'SGR'
   | 'FRB'
   | 'SN'
+  | 'Nova'
   | 'Neutrino'
   | 'X-ray Transient'
   | 'Afterglow'
@@ -323,7 +324,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
   ],
   'Gamma-ray Transient': [
     /\bFermi(?:\s?(?:GBM|LAT)|\d{9})?\b/i,
-    /\bSwift(?![:?/-](?:XRT|UVOT))\b/i,
+    /\bSwift(?!\s?[:?/-]?(?:XRT|UVOT))\b/i,
     /\bSwift[:?/-]BAT\b/i,
     /\bSVOM\(?!\/VT|\/C-GFT\)\b/i,
     /\bINTEGRAL\b/i,
@@ -350,6 +351,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bDSA-110\b/i,
   ],
   SN: [/\bSN\d{4}[A-Za-z]*\b/i, /\bSNe?\b/i, /\bsuper[-\s]?novae?\b/i],
+  Nova: [/\b(?<!super)nova(ae)?\b/i],
   Neutrino: [
     /\bneutrinos?\b/i,
     /\bIceCube(?:-HAWC|-\d+)?\b/i,

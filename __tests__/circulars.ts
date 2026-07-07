@@ -1536,9 +1536,9 @@ describe('parseEventTypeFromSubject', () => {
       expected: ['GRB', 'Gamma-ray Transient', 'SN'],
     },
     {
-      name: 'SN pattern: \\bsuper[-\\s]?novae?\\b',
-      subject: 'Fwd: GRB 091003: Possible Supernova Component Retraction',
-      expected: ['Retraction'],
+      name: 'Nova pattern: \\b(?<!super)nova(ae)?\\b',
+      subject: 'Nova AT2026oyp (ASASSN-26dt): Pre-outburst Swift UVOT observation',
+      expected: ['Nova', 'Optical Transient'],
     },
     {
       name: 'Neutrino pattern: \\bneutrinos?\\b',
