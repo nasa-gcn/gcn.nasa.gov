@@ -207,6 +207,7 @@ export const validSubjectKeywords = [
   'MAGIC',
   'MASTER',
   'MAXI',
+  'Nova',
   'NuEM',
   'Pan-STARRS',
   'POLAR',
