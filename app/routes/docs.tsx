@@ -127,6 +127,25 @@ export default function () {
                 />
               </>,
               <>
+                <NavLink key="migrations" to="migrations">
+                  GCN Classic Migrations
+                </NavLink>
+                <SideNavSub
+                  base="migrations"
+                  items={[
+                    <NavLink
+                      key="circulars-archive"
+                      to="migrations/circulars-archive"
+                    >
+                      Circulars Archive
+                    </NavLink>,
+                    <NavLink key="migrations/vtp" to="migrations/vtp">
+                      VOEvent Transport Protocol
+                    </NavLink>,
+                  ]}
+                />
+              </>,
+              <>
                 <NavLink key="faq" to="faq">
                   Frequently Asked Questions
                 </NavLink>
@@ -182,6 +201,31 @@ export default function () {
                 />
               </>,
               <>
+                <NavLink key="notices" to="notices">
+                  Notices
+                </NavLink>
+                <SideNavSub
+                  base="notices"
+                  items={[
+                    <NavLink key="about" to="notices" end>
+                      About
+                    </NavLink>,
+                    <NavLink key="consuming" to="notices/consuming">
+                      Consuming
+                    </NavLink>,
+                    <NavLink key="producing" to="notices/producers">
+                      Producing
+                    </NavLink>,
+                    <NavLink key="schema" to="notices/schema">
+                      Unified Schema
+                    </NavLink>,
+                    <NavLink key="archive" to="notices/archive">
+                      Archive
+                    </NavLink>,
+                  ]}
+                />
+              </>,
+              <>
                 <NavLink key="sample" to="sample">
                   Sample Code
                 </NavLink>
@@ -207,36 +251,8 @@ export default function () {
                   ]}
                 />
               </>,
-              <>
-                <NavLink key="notices" to="notices">
-                  Notices
-                </NavLink>
-                <SideNavSub
-                  base="notices"
-                  items={[
-                    <NavLink key="about" to="notices" end>
-                      About
-                    </NavLink>,
-                    <NavLink key="consuming" to="notices/consuming">
-                      Consuming
-                    </NavLink>,
-                    <NavLink key="producing" to="notices/producers">
-                      Producing
-                    </NavLink>,
-                    <NavLink key="schema" to="notices/schema">
-                      Unified Schema
-                    </NavLink>,
-                    <NavLink key="archive" to="notices/archive">
-                      Archive
-                    </NavLink>,
-                  ]}
-                />
-              </>,
               <NavLink key="schema" to="schema">
                 Schema Browser
-              </NavLink>,
-              <NavLink key="vtp" to="vtp">
-                VOEvent Transport Protocol Migration
               </NavLink>,
               <>
                 <NavLink key="internal" to="internal">
