@@ -1542,7 +1542,8 @@ describe('parseEventTypeFromSubject', () => {
     },
     {
       name: 'Nova pattern: \\b(?<!super)nova(ae)?\\b',
-      subject: 'Nova AT2026oyp (ASASSN-26dt): Pre-outburst Swift UVOT observation',
+      subject:
+        'Nova AT2026oyp (ASASSN-26dt): Pre-outburst Swift UVOT observation',
       expected: ['Nova', 'Optical Transient'],
     },
     {
