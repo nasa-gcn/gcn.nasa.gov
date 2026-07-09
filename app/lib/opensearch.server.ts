@@ -5,10 +5,24 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { tables } from '@architect/functions'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import { errors } from '@opensearch-project/opensearch'
 
 import { getUserForOpenSearch } from './cognito.server'
+
+export async function checkIndexStatus() {
+  const db = await tables()
+  return (await db.os_index_history.scan({})).Items
+}
+
+export async function updateIndexTable(indexName: string) {
+  const db = await tables()
+  await db.os_index_history.put({
+    indexName,
+    triggerTime: Date.now(),
+  })
+}
 
 export async function removeIndex(index: string, id: string) {
   const client = await getSearchClient()
@@ -41,12 +55,7 @@ export async function searchUsersIndex(name: string, group?: string) {
         must: [
           {
             query_string: {
-              query: name,
-              fields: ['username'],
-              // username: {
-              //   value: `*${name}*`,
-              //   case_insensitive: true,
-              // },
+              query: `*${name}*`,
             },
           },
         ],
@@ -54,7 +63,7 @@ export async function searchUsersIndex(name: string, group?: string) {
           ? [
               {
                 term: {
-                  'groups.keyword': group,
+                  groups: group,
                 },
               },
             ]
@@ -62,18 +71,10 @@ export async function searchUsersIndex(name: string, group?: string) {
       },
     },
   }
-
+  console.log(queryObject)
   const searchResult = await client.search({
     index: 'users',
     body: queryObject,
-    // {
-
-    //   // fields: ['username'],
-    //   // _source: false,
-    //   // from: page && limit && page * limit,
-    //   // size: limit,
-    //   // track_total_hits: true,
-    // },
   })
 
   console.log('search results: ', searchResult)

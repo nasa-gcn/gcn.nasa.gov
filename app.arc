@@ -47,6 +47,9 @@ circulars-index
 synonyms
   src build/table-streams/synonyms
 
+os_index_history
+  src build/table-streams/os-index-history
+
 @static
 fingerprint external
 folder build/static
@@ -134,6 +137,10 @@ team_invites
   teamId *String
   email **String
   PointInTimeRecovery true
+
+os_index_history
+  indexName *String
+  triggerTime **Number
 
 @tables-indexes
 email_notification_subscription
