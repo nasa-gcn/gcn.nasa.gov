@@ -226,12 +226,12 @@ hydrate false
 tracing true
 
 @search
-instanceType t3.small.search
+instanceType m8g.large.search
 instanceCount 3
 availabilityZoneCount 3
 volumeSize 10
 dedicatedMasterCount 3
-dedicatedMasterType t3.small.search
+dedicatedMasterType m8g.large.search
 autoSoftwareUpdateEnabled true
 offPeakWindowEnabled true
 
