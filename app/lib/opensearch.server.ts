@@ -6,88 +6,53 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
+import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { paginateScan } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
-import { errors } from '@opensearch-project/opensearch'
+import type { RequestBody } from '@opensearch-project/opensearch/lib/Transport.js'
+import pThrottle from 'p-throttle'
 
-import { getUserForOpenSearch } from './cognito.server'
+import type { User } from '~/routes/_auth/user.server'
+import type { Circular } from '~/routes/circulars/circulars.lib'
+import type { SynonymGroup } from '~/routes/synonyms/synonyms.lib'
 
-export async function checkIndexStatus() {
+export async function runReindex(indexName: string) {
   const db = await tables()
-  return (await db.os_index_history.scan({})).Items
-}
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name(indexName)
 
-export async function updateIndexTable(indexName: string) {
-  const db = await tables()
-  await db.os_index_history.put({
-    indexName,
-    triggerTime: Date.now(),
-  })
-}
-
-export async function removeIndex(index: string, id: string) {
-  const client = await getSearchClient()
-  try {
-    await client.delete({ index, id })
-  } catch (e) {
-    if (!(e instanceof errors.ResponseError && e.body.result === 'not_found')) {
-      throw e
-    }
+  const pages = paginateScan({ client }, { TableName })
+  const items = []
+  for await (const page of pages) {
+    items.push(...(page.Items as unknown[]))
   }
+  await Promise.all(items.map((item) => throttledPutIndex(indexName, item)))
 }
 
-export async function putUserIndex(sub: string) {
+async function putIndex(index: string, item: unknown) {
   const client = await getSearchClient()
-  const user = await getUserForOpenSearch(sub)
+  let id
+  switch (index) {
+    case 'circulars':
+      id = (item as Circular).circularId.toString()
+      break
+    case 'users':
+      id = (item as User).sub.toString()
+      break
+    case 'synonym-groups':
+      id = (item as SynonymGroup).synonymId.toString()
+    default:
+      break
+  }
   await client.index({
-    index: 'users',
-    id: sub,
-    body: user,
+    index,
+    id,
+    body: item as RequestBody,
   })
 }
 
-export async function searchUsersIndex(name: string, group?: string) {
-  console.log('Trying to search for: ', name)
-  const client = await getSearchClient()
-
-  const queryObject = {
-    query: {
-      bool: {
-        must: [
-          {
-            query_string: {
-              query: `*${name}*`,
-            },
-          },
-        ],
-        filter: group
-          ? [
-              {
-                term: {
-                  groups: group,
-                },
-              },
-            ]
-          : undefined,
-      },
-    },
-  }
-  console.log(queryObject)
-  const searchResult = await client.search({
-    index: 'users',
-    body: queryObject,
-  })
-
-  console.log('search results: ', searchResult)
-  console.log('hits: ', searchResult.body.hits)
-
-  const {
-    body: {
-      hits: {
-        total: { value: totalItems },
-        hits,
-      },
-    },
-  } = searchResult
-  console.log('hits: ', hits)
-  console.log('total items: ', totalItems)
-}
+const throttledPutIndex = pThrottle({
+  interval: 1000,
+  limit: 10,
+  strict: true,
+})(putIndex)

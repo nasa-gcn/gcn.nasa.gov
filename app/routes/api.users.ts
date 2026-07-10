@@ -10,7 +10,6 @@ import {
   listUsersInGroup,
 } from '~/lib/cognito.server'
 import { notFoundIfBrowserRequest } from '~/lib/headers.server'
-import { searchUsersIndex } from '~/lib/opensearch.server'
 import { getFormDataString } from '~/lib/utils'
 
 // Groups verified users are allowed to search
@@ -51,10 +50,8 @@ export async function action({ request }: ActionFunctionArgs) {
           name?.toLowerCase().includes(filter.toLowerCase())
         )
         .slice(0, 5)
-      await searchUsersIndex(filter, groupFilter)
     } else if (userIsAdmin) {
       users = await listUsers(filter)
-      await searchUsersIndex(filter)
     }
   }
 

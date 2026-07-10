@@ -11,7 +11,6 @@ import { Button, Label } from '@trussworks/react-uswds'
 
 import { getUser } from './_auth/user.server'
 import { adminGroup } from './admin'
-import { checkIndexStatus, updateIndexTable } from '~/lib/opensearch.server'
 import { getFormDataString } from '~/lib/utils'
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -20,7 +19,6 @@ export async function action({ request }: ActionFunctionArgs) {
   console.log(index)
   if (!index) throw new Response(null, { status: 400 })
 
-  await updateIndexTable(index)
   return null
 }
 
@@ -28,20 +26,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (!user?.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
-  const states = await checkIndexStatus()
-  return {
-    states,
-  }
+  return {}
 }
 
 export default function () {
-  const { states } = useLoaderData<typeof loader>()
+  const data = useLoaderData<typeof loader>()
   const fetcher = useFetcher()
   return (
     <>
       <h1>OpenSearch</h1>
       <p>Manage OpenSearch indexes</p>
-      {JSON.stringify(states)}
+      {JSON.stringify(data)}
       <p>Trigger reindexing</p>
       <fetcher.Form method="POST">
         <Label htmlFor="index">Users</Label>
