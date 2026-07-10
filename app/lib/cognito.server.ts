@@ -135,7 +135,6 @@ export async function listUsersInGroup(GroupName: string) {
   console.warn(
     'using a paginator; replace with alternative API calls that avoid large result sets'
   )
-
   const pages = paginateListUsersInGroup(
     { client: cognito, pageSize: 60 },
     { GroupName, UserPoolId }
