@@ -67,7 +67,7 @@ Detailed description and examples of Fermi/GBM Notices are available in the [GCN
 
 Fermi/LAT distributes JSON-serialized notices for gamma-ray flares detected by the LAT Flare Advocate pipeline on the GCN Kafka topic `gcn.notices.fermi.lat`.
 
-Currently, flare notices are issued only for known extragalactic sources. A source is considered to be in a flare state if its observed flux is at least 10 times the flux reported in the 4FGL-DR4 catalog (i.e., a flux ratio ≥ 10), the detection has a Test Statistic (TS) greater than 30, and the angular separation between the detected photons and the nearest 4FGL-DR4 source is less than 25 arcmin.
+Flare notices are issued only for known extragalactic sources. A source is considered to be in a flare state if its observed flux is >10x the flux reported in the 4FGL-DR4 catalog (i.e., a flux ratio ≥ 10), the detection has a Test Statistic (TS) >30, and the angular separation between the detected photons and the nearest 4FGL-DR4 source is <25 arcmin.
 
 For schemas and examples see [/schema/stable/gcn/notices/fermi/lat](/schema/stable/gcn/notices/fermi/lat) or use the [Schema Browser](/docs/schema/stable/gcn/notices/fermi/lat/).
 
