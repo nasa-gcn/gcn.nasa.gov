@@ -276,10 +276,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! BOOM Notices and Schema v7.0.0. See{' '}
+          New! MAXI Notices and Schema v7.2.0. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-boom-notices-and-schema-v700"
+            to="/news#new-maxi-notices-and-schema-v720"
           >
             news and announcements
           </Link>

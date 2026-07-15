@@ -3,8 +3,6 @@ handle:
   breadcrumb: MAXI
 ---
 
-import { WithFeature } from '~/root'
-
 import logo from './logo.png'
 
 # Monitor of All-sky X-ray Image (MAXI)
@@ -51,8 +49,6 @@ import logo from './logo.png'
 
 </div>
 
-<WithFeature MAXI_JSON>
-
 **JSON-Serialized GCN Notices Types in GCN Kafka:**
 
 MAXI provides Notices for both known and unknown source detections by GSC.
@@ -66,6 +62,8 @@ Both Notice types provide basic alert metadata, event timing, sky position, flux
 | `gcn.notices.maxi.gsc.unknown` | Unknown source detections or transient candidates, including sky position, flux information, detection information, and localization information when available | 200 minutes |
 
 MAXI [known source](/schema/stable/gcn/notices/MAXI/gsc.known.schema.json) and [unknown source](/schema/stable/gcn/notices/MAXI/gsc.unknown.schema.json) schemas are available. Example JSON message files are available for [known source](/schema/stable/gcn/notices/MAXI/gsc.known.example.json) Notices and for unknown source Notices with [no position uncertainty](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_noerror.json), [circular](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_circle.json), [elliptical](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_ellipse.json), and [rectangular](/schema/stable/gcn/notices/MAXI/gsc.unknown.example_rectangle.json) localization information. See the [Schema Browser](/docs/schema/stable/gcn/notices/MAXI/alert.schema.json) for more information on the properties defined in the schemas.　Detailed description of the properties and examples of MAXI Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/MAXI).
+
+The MAXI team maintains an archive of their [JSON Notices](https://maxi.riken.jp/alert/novae/json_notices/).
 
 ## Additional Notes on MAXI/GSC Notice Fields
 
@@ -127,8 +125,6 @@ and the error is the 1-sigma statistical uncertainty.
 - `band_flux_low`: 2-4 keV band
 - `band_flux_med`: 4-10 keV band
 - `band_flux_high`: 10-20 keV band
-
-</WithFeature>
 
 **Common GCN Circular Types:**
 

@@ -72,6 +72,7 @@ export const JsonNoticeTypes: { [key: string]: string[] } = {
     'gcn.notices.icecube.gold_bronze_track_alerts',
   ],
   LVK: ['igwn.gwalert'],
+  MAXI: ['gcn.notices.maxi.gsc.known', 'gcn.notices.maxi.gsc.unknown'],
   'Super-Kamiokande': ['gcn.notices.superk.sn_alert'],
   Swift: ['gcn.notices.swift.bat.guano'],
 }
@@ -85,6 +86,7 @@ const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   Heartbeat: '/docs/faq#how-can-i-tell-that-my-kafka-client-is-working',
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
+  MAXI: '/missions/maxi',
   'Super-Kamiokande': '/missions/sksn',
   Swift: '/missions/swift',
 }
