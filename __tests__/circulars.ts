@@ -1354,44 +1354,49 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'Retraction pattern: \\bRetractions?\\b',
       subject: 'GRB 220311A: MASTER OT retraction',
-      expected: ['Retraction'],
+      expected: [
+        'Retraction',
+        'GRB',
+        'Gamma-ray Transient',
+        'Optical Transient',
+      ],
     },
     {
       name: 'Retraction pattern: \\bnot\\s+a\\s+(?:GRB|GW|FRB|SN|SGR|neutrino)\\b',
       subject: 'Swift Trigger 931484 is not a GRB',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'GRB', 'Gamma-ray Transient'],
     },
     {
       name: 'Retraction pattern: \\bprobably\\s+not\\s+a\\b',
       subject: 'BAT GRB 060204C is probably not a GRB',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'GRB', 'Gamma-ray Transient'],
     },
     {
       name: 'Retraction pattern: \\bis\\s+not\\b',
       subject:
         'Fermi Gamma-ray Burst Monitor trigger 757464861/250101954 is not a GRB',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'GRB', 'Gamma-ray Transient'],
     },
     {
       name: 'Retraction pattern: \\bDisregard\\b',
       subject: 'Disregard the Swift-XRT Notices today',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'X-ray Transient'],
     },
     {
       name: 'Retraction pattern: \\bIgnore\\b',
       subject: 'Ignore GCN/Swift-BAT Lightcurve Notices for trigger 353567',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'Gamma-ray Transient'],
     },
     {
       name: 'Retraction pattern: \\bFalse Trigger\\b',
       subject: 'Swift Trigger 287421: False trigger due to star tracker loss',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'Gamma-ray Transient'],
     },
     {
       name: 'Retraction pattern: \\bNot real\\b',
       subject:
         'The EP-WXT triggers 01709047257 and 01709047278 are not real sources',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'X-ray Transient'],
     },
     {
       name: 'GRB pattern: \\bGRB\\d{6}[A-Z]?\\b',
@@ -1599,7 +1604,7 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'X-ray Transient pattern: \\bEP-WXT\\b',
       subject: 'The EP-WXT trigger 01709247525 is not a real source',
-      expected: ['Retraction'],
+      expected: ['Retraction', 'X-ray Transient'],
     },
     {
       name: 'X-ray Transient pattern: \\bEP-FXT\\b',

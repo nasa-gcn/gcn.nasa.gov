@@ -403,19 +403,15 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
 }
 
 export function parseEventTypeFromSubject(subject: string): EventType[] {
-  for (const pattern of eventTypeMatchers.Retraction) {
-    if (pattern.test(subject)) return ['Retraction']
-  }
-
-  const matches = (Object.keys(eventTypeMatchers) as EventType[])
-    .filter((eventType) => eventType !== 'Retraction')
-    .filter((eventType) =>
+  const matches = (Object.keys(eventTypeMatchers) as EventType[]).filter(
+    (eventType) =>
       eventTypeMatchers[eventType].some((pattern) => pattern.test(subject))
-    )
-  if (matches.includes('GRB')) {
+  )
+  if (matches.includes('GRB') && !matches.includes('Gamma-ray Transient')) {
     const grbIndex = matches.indexOf('GRB')
     matches.splice(grbIndex + 1, 0, 'Gamma-ray Transient')
   }
+  const uniqueMatches = [...new Set(matches)]
 
-  return matches.length ? matches : ['Misc']
+  return uniqueMatches.length ? uniqueMatches : ['Misc']
 }
