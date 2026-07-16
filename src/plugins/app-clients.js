@@ -26,7 +26,7 @@ export const deploy = {
       const user_pool_id = env.COGNITO_USER_POOL_ID
       if (!user_pool_id)
         throw new Error('Environment variable COGNITO_USER_POOL_ID must be set')
-      cloudformation.Resources[clientKey] = {
+      cloudformation.Resources[`AppClient${clientKey}`] = {
         Type: 'AWS::Cognito::UserPoolClient',
         Properties: {
           AllowedOAuthFlows: ['client_credentials'],
