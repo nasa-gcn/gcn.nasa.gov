@@ -36,6 +36,9 @@ export const deploy = {
           UserPoolId: user_pool_id,
         },
       }
+      // FIXME: alt method using services in code would be preferred, but
+      // top level awaits aren't supported and would require further updates.
+      // This should be updated to use services
       env[envClientIdName] = {
         'Fn::GetAtt': `${clientKey}.ClientId`,
       }
