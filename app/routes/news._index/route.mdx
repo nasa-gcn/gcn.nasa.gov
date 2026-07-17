@@ -30,6 +30,28 @@ import { Anchor } from '~/components/Anchor'
 <CollectionItem
     className="maxw-none grid-container"
     variantComponent={
+      <CollectionCalendarDate datetime='July 22, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>LVK Notices Now only Available in JSON over Kafka</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+
+      As of July 8, 2026, the LIGO-Virgo-KAGRA (LVK) collaboration has ceased sending gravitational-wave alerts in the VOEvent format to GCN Classic. These alerts were converted to all other GCN Classic formats and distribution methods (text via email and binary via socket connection). This change also disables all legacy LVK formats distributed over GCN-Classic-over-Kafka and email.
+
+      The current deployed LVK alert system sends the hourly Mock Data Challenge (MDC) alerts only in the JSON format using GCN Kafka, and in the AVRO format using SCIMMA. The [LVK Public Alerts User Guide](https://emfollow.docs.ligo.org/userguide/) has been updated to provide information on the alert system that will be deployed in the next observation run (IR1) that is [expected to start later this year](https://observing.docs.ligo.org/plan/).
+
+      To receive GCN Notices on LVK during IR1, please [subscribe to JSON-format Notices](/docs/notices/consuming) on the Kafka topic `igwn.gwalert`.  At this time, these Notices are only available via Kafka, not email.
+
+   </CollectionDescription>
+
+  </CollectionItem>
+
+<CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
       <CollectionCalendarDate datetime='July 15, 2026' />
     }
 >
