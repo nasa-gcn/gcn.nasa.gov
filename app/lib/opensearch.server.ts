@@ -7,7 +7,28 @@
  */
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 
-import { getUserForOpenSearch } from './cognito.server'
+import {
+  extractAttribute,
+  extractAttributeRequired,
+  getCognitoUserFromSub,
+  getUserGroupStrings,
+} from './cognito.server'
+
+// Gets user from Cognito by sub to be indexed into OpenSearch
+export async function getUserForOpenSearch(sub: string) {
+  const user = await getCognitoUserFromSub(sub)
+  if (!user) throw new Response(null, { status: 404 })
+  const groups = user.Username
+    ? ((await getUserGroupStrings(user.Username)) ?? [])
+    : []
+  return {
+    sub: extractAttributeRequired(user.Attributes, 'sub'),
+    email: extractAttributeRequired(user.Attributes, 'email'),
+    name: extractAttribute(user.Attributes, 'name'),
+    affiliation: extractAttribute(user.Attributes, 'custom:affiliation'),
+    groups,
+  }
+}
 
 export async function putUserIndex(sub: string) {
   const client = await getSearchClient()
