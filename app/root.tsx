@@ -276,8 +276,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New JavaScript client! See{' '}
-          <Link className="usa-link" to="/news#new-javascript-client-v100">
+          Updates to LVK & CHIME Notices, Schema v7.2.3! See{' '}
+          <Link
+            className="usa-link"
+            to="/news#lvk-notices-exclusively-available-in-json-over-kafka-updated-chime-notices-and-schema-v723"
+          >
             news and announcements
           </Link>
         </NewsBanner>

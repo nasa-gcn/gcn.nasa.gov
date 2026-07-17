@@ -61,24 +61,9 @@ LIGO, Virgo, and KAGRA comprise the advanced gravitational wave detector network
   alt="LVK Observing Timeline"
 />
 
-**GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
-[LVK public alerts user guide](https://emfollow.docs.ligo.org/userguide/). Additional documentation on LVK GCN Classic notices can be found [here](https://emfollow.docs.ligo.org/userguide/content.html#voevent-notice-gcn-classic).
-
-<div className="overflow-table">
-
-| Type                | Contents                                                                                      | Latency      |
-| ------------------- | --------------------------------------------------------------------------------------------- | ------------ |
-| `LVC_EARLY_WARNING` | A pre-merger alert.                                                                           | -1-0 minutes |
-| `LVC_PRELIMINARY`   | First notice, timestamp alert, location probability sky map; all automated processing.        | 1–10 minutes |
-| `LVC_INITIAL`       | Improved SkyMap now available (human-involved processing).                                    | 4–24 hours   |
-| `LVC_UPDATE`        | Ultimate refined sky map (more detailed offline processing).                                  | ~1–7 days    |
-| `LVC_RETRACTION`    | After human analysis/evaluation, a retraction will be issued if trigger is not astrophysical. | 1 hour–1 day |
-
-</div>
-
 **JSON-Serialized GCN Notices Types in GCN Kafka:**
 
-LVK distributes alerts for the detection of gravitational wave events. These notices are published on the GCN Kafka topic `igwn.gwalert`.
+LVK distributes alerts for the detection of gravitational wave events as described in the [LVK public alerts user guide](https://emfollow.docs.ligo.org/userguide/). These notices are published on the GCN Kafka topic `igwn.gwalert`.
 
 See the [LVK Documentation](https://emfollow.docs.ligo.org/userguide/content.html#kafka-notice-gcn-scimma) for more information on the properties defined in the schema. Detailed description of LVK notice types can be found in the [LVK public alerts user guide](https://emfollow.docs.ligo.org/userguide/content.html#notice-types).
 

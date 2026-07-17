@@ -28,6 +28,41 @@ import { Anchor } from '~/components/Anchor'
 ## 2026
 
 <CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
+      <CollectionCalendarDate datetime='August 6, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>LVK Notices Exclusively Available in JSON over Kafka, Updated CHIME Notices, and Schema v7.2.3</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+
+      The GCN Team announces updates to LVK and CHIME Notices and a schema release.
+        - [LVK Notices Exclusively Available in JSON over Kafka](/news#lvk-notices-exclusively-available-in-json-over-kafka)
+        - [Updated CHIME Notices](/news#updated-chime-notices)
+        - [Schema v7.2.3](/news#schema-v723)
+
+      #### LVK Notices Exclusively Available in JSON over Kafka
+      As of July 8, 2026, the LIGO-Virgo-KAGRA (LVK) collaboration has ceased sending gravitational wave alerts in the VOEvent format to GCN Classic. The LVK VOEvent alerts were converted to all other GCN Classic formats and distribution methods (text via email and binary via socket connection). As a result, this change also disables all legacy LVK formats (text, binary, VOEvent) distributed over Kafka and email.
+
+      GCN now distributes LVK Notices exclusively as JSON over Kafka.  The [LVK Public Alerts User Guide](https://emfollow.docs.ligo.org/userguide/) has been updated to provide information on the alert system that will be deployed in the next observation run (IR1) that is [expected to start in late 2026](https://observing.docs.ligo.org/plan/).
+
+      To receive GCN Notices on LVK during IR1, please [subscribe to JSON-format Notices](/docs/notices/consuming) on the Kafka topic `igwn.gwalert`.  At this time, these Notices are only available via Kafka, not email.
+
+      #### Updated CHIME Notices
+
+      CHIME is now distributing retractions of their FRB Notices on the topic `gcn.notices.chime.frb`, and has updated the [example](docs/schema/stable/gcn/notices/chime/frb.schema.json) added in Schema v7.2.1.
+
+      #### Schema v7.2.3
+      GCN Schema v7.2.3 is available with recent changes including updated Notice examples ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v7.2.3)).
+
+   </CollectionDescription>
+
+  </CollectionItem>
+
+<CollectionItem
   className="maxw-none grid-container"
   variantComponent={
     <CollectionCalendarDate datetime='July 25, 2026' />
