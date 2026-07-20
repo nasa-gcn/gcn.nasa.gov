@@ -28,7 +28,7 @@ export default function () {
   const defaultFormat =
     (params.get('noticeFormat') as NoticeFormat) || undefined
   const [noticeFormat, setFormat] = useState<NoticeFormat>(
-    defaultFormat ?? 'text'
+    defaultFormat ?? 'json'
   )
 
   return (
