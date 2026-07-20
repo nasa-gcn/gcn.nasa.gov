@@ -104,7 +104,7 @@
     "@babel/preset-typescript": "^7.27.0",
     "@gitlab/svgs": "^3.83.0",
     "@nasa-gcn/architect-plugin-dynamodb-local": "^2.0.0",
-    "@nasa-gcn/architect-plugin-search": "^1.9.0",
+    "@nasa-gcn/architect-plugin-search": "github:dakota002/architect-plugin-search#66f1c1100853e7cd9f0bc30d025eee97f81531dc",
     "@nasa-gcn/architect-plugin-tracing": "^2.0.1",
     "@nasa-gcn/eslint-config-gitignore": "^0.0.2",
     "@playwright/test": "^1.56.1",

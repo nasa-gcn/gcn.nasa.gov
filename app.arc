@@ -235,6 +235,10 @@ dedicatedMasterType m8g.large.search
 autoSoftwareUpdateEnabled true
 offPeakWindowEnabled true
 
+@search-index-mapping
+users             # index name
+  groups keyword  # `{field} {type}`
+
 @dynamodb-local
 seedFile seed.json
 
