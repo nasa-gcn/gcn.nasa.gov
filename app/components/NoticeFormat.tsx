@@ -36,6 +36,26 @@ export function NoticeFormatInput({
     label: ReactNode
     description: ReactNode
   }[] = [
+    ...(showJson
+      ? [
+          {
+            value: 'json' as NoticeFormat,
+            label: 'JSON',
+            description: (
+              <>
+                New notice types in JSON format defined using{' '}
+                <a
+                  href="https://json-schema.org"
+                  rel="external noopener"
+                  target="_blank"
+                >
+                  JSON schema
+                </a>
+              </>
+            ),
+          },
+        ]
+      : []),
     {
       value: 'text',
       label: 'Text',
@@ -74,26 +94,6 @@ export function NoticeFormatInput({
         </>
       ),
     },
-    ...(showJson
-      ? [
-          {
-            value: 'json' as NoticeFormat,
-            label: 'JSON',
-            description: (
-              <>
-                New notice types in JSON format defined using{' '}
-                <a
-                  href="https://json-schema.org"
-                  rel="external noopener"
-                  target="_blank"
-                >
-                  JSON schema
-                </a>
-              </>
-            ),
-          },
-        ]
-      : []),
   ]
 
   return (
