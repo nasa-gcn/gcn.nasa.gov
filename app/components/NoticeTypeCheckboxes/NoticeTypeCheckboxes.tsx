@@ -66,6 +66,7 @@ export const JsonNoticeTypes: { [key: string]: string[] } = {
   CHIME: ['gcn.notices.chime.frb'],
   'DSA-110': ['gcn.notices.dsa110.frb'],
   'Einstein Probe': ['gcn.notices.einstein_probe.wxt.alert'],
+  Fermi: ['gcn.notices.fermi.lat.flare'],
   Heartbeat: ['gcn.heartbeat'],
   IceCube: [
     'gcn.notices.icecube.lvk_nu_track_search',
@@ -83,6 +84,7 @@ const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   CHIME: '/missions/chime',
   'DSA-110': '/missions/dsa110',
   'Einstein Probe': '/missions/einstein-probe',
+  Fermi: '/missions/fermi',
   Heartbeat: '/docs/faq#how-can-i-tell-that-my-kafka-client-is-working',
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',

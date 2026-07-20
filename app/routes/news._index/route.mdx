@@ -30,6 +30,38 @@ import { Anchor } from '~/components/Anchor'
 <CollectionItem
     className="maxw-none grid-container"
     variantComponent={
+      <CollectionCalendarDate datetime='July 22, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
+      <Anchor>New Fermi-LAT Flare Notices & CHIME Update</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+
+    The GCN Team is pleased to announce new and updated Notice types.
+        - [Fermi-LAT Flare Notices](/news#fermi-lat-flare-notices)
+        - [Update to CHIME Notices](/news#chime-retraction-notices)
+
+      #### Fermi-LAT Flare Notices
+
+      The Fermi Large Area Telescope (LAT) Team and the GCN Team are pleased to announce a new GCN JSON Notice type for [known extragalactic flaring sources](docs/schema/stable/gcn/notices/fermi/lat/flare.schema.json). A source is considered to be in a flare state if its observed flux is \>10x the flux reported in the 4FGL-DR4 catalog (i.e., a flux ratio $\geq$ 10), the detection has a Test Statistic (TS) \>30, and the angular separation between the detected photons and the nearest 4FGL-DR4 source is \<25 arcmin.  These are generated once per day with analysis on the prior 24 hour interval.
+
+      Fermi-LAT Flare Notices are published on the GCN Kafka topic `gcn.notices.fermi.lat.flare`.
+
+      See the [Fermi mission page](/missions/fermi) for a more extensive description of the information provided in these new Notices.
+
+      #### CHIME Retraction Notices
+
+      CHIME has enabled the capability of issuing retractions of their FRB Notices on the topic `gcn.notices.chime.frb`, and has updated the [example](docs/schema/stable/gcn/notices/chime/frb.schema.json) in Schema v7.2.1.
+
+    </CollectionDescription>
+
+  </CollectionItem>
+
+<CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
       <CollectionCalendarDate datetime='July 15, 2026' />
     }
 >

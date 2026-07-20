@@ -276,10 +276,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! MAXI Notices and Schema v7.2.0. See{' '}
+          New! Fermi-LAT Flare Notices and CHIME Update. See{' '}
           <Link
             className="usa-link"
-            to="/news#new-maxi-notices-and-schema-v720"
+            to="/news#new-fermi-lat-flare-notices--chime-update"
           >
             news and announcements
           </Link>
