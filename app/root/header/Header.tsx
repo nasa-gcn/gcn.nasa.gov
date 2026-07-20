@@ -127,9 +127,6 @@ export function Header() {
             }}
             mobileExpanded={expanded}
             items={[
-              <NavLink className="usa-nav__link" to="/missions" key="/missions">
-                Missions
-              </NavLink>,
               <NavLink className="usa-nav__link" to="/notices" key="/notices">
                 Notices
               </NavLink>,

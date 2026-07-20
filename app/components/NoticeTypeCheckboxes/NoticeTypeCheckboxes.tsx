@@ -78,17 +78,17 @@ export const JsonNoticeTypes: { [key: string]: string[] } = {
 }
 
 const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
-  BOOM: '/missions/boom',
+  BOOM: '/notices/boom',
   Circulars: '/circulars',
-  CHIME: '/missions/chime',
-  'DSA-110': '/missions/dsa110',
-  'Einstein Probe': '/missions/einstein-probe',
+  CHIME: '/notices/chime',
+  'DSA-110': '/notices/dsa110',
+  'Einstein Probe': '/notices/einstein-probe',
   Heartbeat: '/docs/faq#how-can-i-tell-that-my-kafka-client-is-working',
-  IceCube: '/missions/icecube',
+  IceCube: '/notices/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
-  MAXI: '/missions/maxi',
-  'Super-Kamiokande': '/missions/sksn',
-  Swift: '/missions/swift',
+  MAXI: '/notices/maxi',
+  'Super-Kamiokande': '/notices/sksn',
+  Swift: '/notices/swift',
 }
 
 interface NoticeTypeCheckboxProps {
