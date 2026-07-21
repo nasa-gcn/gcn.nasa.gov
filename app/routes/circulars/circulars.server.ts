@@ -42,7 +42,7 @@ import type {
   CircularMetadata,
 } from './circulars.lib'
 import { sendEmail, sendEmailBulk } from '~/lib/email.server'
-import { origin } from '~/lib/env.server'
+import { feature, origin } from '~/lib/env.server'
 import { truncateJsonMaxBytes } from '~/lib/utils'
 import { closeZendeskTicket } from '~/lib/zendesk.server'
 
@@ -146,6 +146,9 @@ export async function search({
   limit,
   startDate,
   endDate,
+  eventTypes,
+  eventTypesLogic = 'AND',
+  eventTypesExclude,
   sort,
 }: {
   query?: string
@@ -153,6 +156,9 @@ export async function search({
   limit?: number
   startDate?: string
   endDate?: string
+  eventTypes?: string[]
+  eventTypesLogic?: 'AND' | 'OR'
+  eventTypesExclude?: string[]
   sort?: string
 }): Promise<{
   items: CircularMetadata[]
@@ -185,20 +191,56 @@ export async function search({
       }
     : undefined
 
+  const filterConditions: any[] = [
+    {
+      range: {
+        createdOn: {
+          gte: startTime,
+          lte: endTime,
+        },
+      },
+    },
+  ]
+
+  if (feature('EVENTTYPE')) {
+    if (eventTypes && eventTypes.length > 0) {
+      if (eventTypesLogic === 'AND') {
+        filterConditions.push({
+          bool: {
+            must: eventTypes.map((type) => ({
+              term: { 'eventType.keyword': type },
+            })),
+          },
+        })
+      } else {
+        filterConditions.push({
+          terms: {
+            'eventType.keyword': eventTypes,
+          },
+        })
+      }
+    }
+
+    if (eventTypesExclude && eventTypesExclude.length > 0) {
+      filterConditions.push({
+        bool: {
+          must_not: {
+            terms: {
+              'eventType.keyword': eventTypesExclude,
+            },
+          },
+        },
+      })
+    }
+  }
+
   const searchBody = {
     index: 'circulars',
     body: {
       query: {
         bool: {
           must: queryObj,
-          filter: {
-            range: {
-              createdOn: {
-                gte: startTime,
-                lte: endTime,
-              },
-            },
-          },
+          filter: filterConditions,
         },
       },
       fields: ['subject'],
