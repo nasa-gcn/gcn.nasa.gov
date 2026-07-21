@@ -289,3 +289,192 @@ export function parseEventFromSubject(value: string) {
     if (match) return normalize(match)
   }
 }
+
+type EventType =
+  | 'Retraction'
+  | 'GRB'
+  | 'Gamma-ray Transient'
+  | 'GW'
+  | 'SGR'
+  | 'FRB'
+  | 'SN'
+  | 'Nova'
+  | 'Neutrino'
+  | 'X-ray Transient'
+  | 'Afterglow'
+  | 'Optical Transient'
+  | 'Radio Transient'
+  | 'Kilonova'
+  | 'Misc'
+
+const eventTypeMatchers: Record<EventType, RegExp[]> = {
+  Retraction: [
+    /\bRetractions?\b/i,
+    /\bnot\s+a\s+(?:GRB|GW|FRB|SN|SGR|neutrino)\b/i,
+    /\bprobably\s+not\s+a\b/i,
+    /\bis\s+not\b/i,
+    /\bDisregard\b/i,
+    /\bIgnore\b/i,
+    /\bFalse Trigger\b/i,
+    /\bNot real\b/i,
+    /\bErroneous\b/i,
+    /\bDuplicate\b/i,
+    /\bMistaken\b/i,
+    /\bIncorrect\b/i,
+    /\bInvalid\b/i,
+    /\bBogus\b/i,
+    /\bFake\b/i,
+  ],
+  GRB: [
+    /\bGRB\d{4,8}[A-Z]?\b/i,
+    /\bGRBs?\b/i,
+    /\bgamma[-\s]?ray[-\s]?bursts?\b/i,
+    /\bXRF\d{6}[A-Z]?\b/i,
+  ],
+  'Gamma-ray Transient': [
+    /\bFermi(?:\s?(?:GBM|LAT)|\d{9})?\b/i,
+    /\bSwift(?!\s?[:?/-]?(?:XRT|UVOT))\b/i,
+    /\bSwift[:?/-]BAT\b/i,
+    /\bSVOM\(?!\/VT|\/C-GFT\)\b/i,
+    /\bINTEGRAL\b/i,
+    /\bHETE\b/i,
+    /\bKONUS\b/i,
+    /\bAstroSat\b/i,
+    /\bHAWC(-\d{6}[A-Za-z])?:?$\b/i,
+    /\bGlowbug\b/i,
+    /\bTERI\b/i,
+    /\bVZLUSAT-2\b/i,
+    /\bAvion\b/i,
+    /\bBurstCube\b/i,
+    /\b239Alferov\b/i,
+    /\bGRBAlpha\b/i,
+    /\bEIRSAT-1\b/i,
+    /\bGRID\b/i,
+    /\bHEBS\b/i,
+    /\bAGILE\b/i,
+    /\bGECAM\b/i,
+    /\bHXMT\b/i,
+    /\bCALET\b/i,
+    /\bBATSE\b/i,
+    /\bOSSE\b/i,
+    /\bBeppoSAX(?:\s?GRBM)?\b/i,
+    /\bSPI\s?ACS\b/i,
+    /\bCOMPTEL\b/i,
+    /\bBALROG\b/i,
+  ],
+  GW: [
+    /\bGW\d+\b/i,
+    /\bGWs?\b/i,
+    /\bgravitational[-\s]?waves?\b/i,
+    /\bLIGO\b/i,
+    /\bVirgo\b/i,
+    /\bKAGRA\b/i,
+    /\bLISA\b/i,
+    /\bGEO600\b/i,
+    /\bS\d{6}[a-z]+\b/i,
+    /\bGWTC-\d+\b/i,
+    /\bFACT\b/i,
+  ],
+  SGR: [/\bSGR\S*/i, /\bsoft[-\s]?gamma[-\s]?repeaters?\b/i],
+  FRB: [
+    /\bFRB\s?\d{6,8}[A-Za-z]?\b/i,
+    /\bFRBs?\b/i,
+    /\bfast[-\s]?radio[-\s]?bursts?\b/i,
+    /\bCHIME\b/i,
+    /\bDSA-110\b/i,
+  ],
+  SN: [/\bSN\d{4}[A-Za-z]*\b/i, /\bSNe?\b/i, /\bsuper[-\s]?novae?\b/i],
+  Nova: [/\b(?<!super)nova(ae)?\b/i],
+  Neutrino: [
+    /\bneutrinos?\b/i,
+    /\bIceCube(?:-HAWC|-\d+)?\b/i,
+    /\bANTARES\b/i,
+    /\bKM3NeT\b/i,
+    /\bSuper-Kamiokande\b/i,
+    /\bSNEWS2\b/i,
+  ],
+  'X-ray Transient': [
+    /(?<!\S)EP(?=\s|:|$)/,
+    /\bEPW?[-\s]?\d{6,8}[A-Z]{0,2}\b/i,
+    /\bEP-WXT\b/i,
+    /\bEP-WXT\d{11}\b/i,
+    /\bEP-FXT\b/i,
+    /\bX[-\s]?ray(?:\s+transient)?\b/i,
+    /\bEinstein\s+Probe\b/i,
+    /\bMAXI\s?J\d{4}[+-]\d+/i,
+    /\bXRT\b/i,
+    /\bXRF\b/i,
+    /\bChandra\b/i,
+    /\bXMM\b/i,
+    /\bNICER\b/i,
+    /\bNuSTAR\b/i,
+    /\bSwift[:?/-]XRT\b/i,
+    /\bSVOM(?!\/VT|\/C-GFT)\b/i,
+    /\bSuzaku\b/i,
+    /\bBeppoSAX\b/i,
+    /\bAstroSat CZTI\b/i,
+  ],
+  Afterglow: [/\bafterglows?\b/i],
+  'Optical Transient': [
+    /\bPhotometry\b/i,
+    /\bOptical\s+transients?\b/i,
+    /\boptical\b(?!\s+upper\s+limits?\b)/i,
+    /\bOT\b/i,
+    /\bAT\d{4}[a-z]+\b/i,
+    /\bHubble\b/i,
+    /\bZTF(?:\d{2}[A-Za-z0-9]+)?\b/i,
+    /\bMASTER\b/i,
+    /\bPan-STARRS\b/i,
+    /\bRubin\b/i,
+    /\bSVOM\/VT\b/i,
+    /\bSVOM\/C-GFT\b/i,
+    /\bSwift[:?/-]UVOT\b/i,
+    /\bGROND\b/i,
+    /\bLCO\b/i,
+    /\bGOTO\b/i,
+    /\bSOAR\b/i,
+    /\bGemini\b/i,
+    /\bKeck\b/i,
+  ],
+  'Radio Transient': [
+    /\bRadio\b/i,
+    /\bradio[-\s]?transients?\b/i,
+    /\bVLA\b/i,
+    /\bJVLA\b/i,
+    /\bEVLA\b/i,
+    /\bVLBI\b/i,
+    /\bMeerKAT\b/i,
+    /\bATCA\b/i,
+    /\bGHz\b/i,
+    /\bMHz\b/i,
+    /\bGMRT\b/i,
+    /\bALMA\b/i,
+    /\bASKAP\b/i,
+    /\be-MERLIN\b/i,
+    /\buGMRT\b/i,
+    /\bAllen\b/i,
+    /\bAMI-LA\b/i,
+    /\bOVRO-LWA\b/i,
+    /\bWSRT\b/i,
+    /\bLOFAR\b/i,
+    /\bMWA\b/i,
+    /\bSKA\b/i,
+  ],
+  Kilonova: [
+    /\bkilonovae?\b(?!-\w)/i,
+    /\bKN\b/i,
+    /\bGW170817\b/i,
+    /\bAT2017gfo\b/i,
+  ],
+  Misc: [],
+}
+
+export function parseEventTypeFromSubject(subject: string): EventType[] {
+  const matches = (Object.keys(eventTypeMatchers) as EventType[]).filter(
+    (eventType) =>
+      eventTypeMatchers[eventType].some((pattern) => pattern.test(subject))
+  )
+  const uniqueMatches = [...new Set(matches)]
+
+  return uniqueMatches.length ? uniqueMatches : ['Misc']
+}
