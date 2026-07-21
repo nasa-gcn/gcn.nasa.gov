@@ -411,6 +411,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bSVOM(?!\/VT|\/C-GFT)\b/i,
     /\bSuzaku\b/i,
     /\bBeppoSAX\b/i,
+    /\bAstroSat CZTI\b/i,
   ],
   Afterglow: [/\bafterglows?\b/i],
   'Optical Transient': [
