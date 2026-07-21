@@ -1517,7 +1517,7 @@ describe('parseEventTypeFromSubject', () => {
       name: 'FRB pattern: \\bfast[-\\s]?radio[-\\s]?bursts?\\b',
       subject:
         'FRB 180725A: MASTER optical observations of the Fast Radio Burst error box',
-      expected: ['FRB', 'Optical Transient'],
+      expected: ['FRB', 'Optical Transient', 'Radio Transient'],
     },
     {
       name: 'FRB pattern: \\bCHIME\\b',
@@ -1672,7 +1672,7 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'Optical Transient pattern: \\bZTF(?:\\d{2}[A-Za-z0-9]+)?\\b',
       subject: 'ZTF22aaajecp/AT2022cmc: ATCA detection',
-      expected: ['Optical Transient'],
+      expected: ['Optical Transient', 'Radio Transient'],
     },
     {
       name: 'Optical Transient pattern: \\bPan-STARRS\\b',

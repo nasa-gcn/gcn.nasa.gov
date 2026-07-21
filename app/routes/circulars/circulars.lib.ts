@@ -302,6 +302,7 @@ type EventType =
   | 'X-ray Transient'
   | 'Afterglow'
   | 'Optical Transient'
+  | 'Radio Transient'
   | 'Kilonova'
   | 'Misc'
 
@@ -429,6 +430,17 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bGROND\b/i,
     /\bLCO\b/i,
     /\bGOTO\b/i,
+  ],
+  'Radio Transient': [
+    /\bRadio\b/i,
+    /\bradio[-\s]?transients?\b/i,
+    /\bVLA\b/i,
+    /\bVLBI\b/i,
+    /\bMeerKAT\b/i,
+    /\bATCA\b/i,
+    /\bGHz\b/i,
+    /\bGMRT\b/i,
+    /\bALMA\b/i,
   ],
   Kilonova: [
     /\bkilonovae?\b(?!-\w)/i,
