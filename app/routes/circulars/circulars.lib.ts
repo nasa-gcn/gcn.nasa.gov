@@ -334,6 +334,26 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bKONUS\b/i,
     /\bAstroSat\b/i,
     /\bHAWC(-\d{6}[A-Za-z])?:?$\b/i,
+    /\bGlowbug\b/i,
+    /\bTERI\b/i,
+    /\bVZLUSAT-2\b/i,
+    /\bAvion\b/i,
+    /\bBurstCube\b/i,
+    /\b239Alferov\b/i,
+    /\bGRBAlpha\b/i,
+    /\bEIRSAT-1\b/i,
+    /\bGRID\b/i,
+    /\bHEBS\b/i,
+    /\bAGILE\b/i,
+    /\bGECAM\b/i,
+    /\bHXMT\b/i,
+    /\bCALET\b/i,
+    /\bBATSE\b/i,
+    /\bOSSE\b/i,
+    /\bBeppoSAX(?:\s?GRBM)?\b/i,
+    /\bSPI\s?ACS\b/i,
+    /\bCOMPTEL\b/i,
+    /\bBALROG\b/i,
   ],
   GW: [
     /\bGW\d+\b/i,
@@ -379,7 +399,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bNuSTAR\b/i,
     /\bSwift[:?/-]XRT\b/i,
   ],
-  Afterglow: [/\bafterglows?\b/i, /\bGW170817\b/i],
+  Afterglow: [/\bafterglows?\b/i],
   'Optical Transient': [
     /\boptical\b(?!\s+upper\s+limits?\b)/i,
     /\bOT\b/i,
@@ -407,10 +427,6 @@ export function parseEventTypeFromSubject(subject: string): EventType[] {
     (eventType) =>
       eventTypeMatchers[eventType].some((pattern) => pattern.test(subject))
   )
-  if (matches.includes('GRB') && !matches.includes('Gamma-ray Transient')) {
-    const grbIndex = matches.indexOf('GRB')
-    matches.splice(grbIndex + 1, 0, 'Gamma-ray Transient')
-  }
   const uniqueMatches = [...new Set(matches)]
 
   return uniqueMatches.length ? uniqueMatches : ['Misc']
