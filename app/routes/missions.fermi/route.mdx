@@ -61,6 +61,28 @@ Detailed description and examples of Fermi/GBM Notices are available in the [GCN
 
 </WithFeature>
 
+<WithFeature LAT_JSON>
+
+**JSON-Serialized Fermi/LAT Flare Notices in GCN Kafka:**
+
+Fermi/LAT distributes JSON-serialized notices for gamma-ray flares detected by the LAT Flare Advocate pipeline on the GCN Kafka topic `gcn.notices.fermi.lat.flare`.
+
+Flare notices are issued only for known extragalactic sources. A source is considered to be in a flare state if its observed flux is at least 10x the flux reported in the 4FGL-DR4 catalog (i.e., a flux ratio $\geq$ 10), the detection has a Test Statistic (TS) \>30, and the angular separation between the detected photons and the nearest 4FGL-DR4 source is \<25 arcmin. These are generated once per day with analysis on the prior 24 hour and 6 hour intervals.
+
+For schemas and examples see [/schema/stable/gcn/notices/fermi/lat](/schema/stable/gcn/notices/fermi/lat) or use the [Schema Browser](/docs/schema/stable/gcn/notices/fermi/lat/).
+
+Detailed descriptions and examples of Fermi/LAT Flare Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/fermi/lat).
+
+<div className="overflow-table">
+
+| Topic                         | Contents                         | Latency |
+| ----------------------------- | -------------------------------- | ------- |
+| `gcn.notices.fermi.lat.flare` | Localization, flux, photon index | \~1 day |
+
+</div>
+
+</WithFeature>
+
 **GCN Notice Types in GCN Classic and GCN Classic Over Kafka:**
 
 [Detailed Descriptions and Examples](https://gcn.gsfc.nasa.gov/fermi.html)
@@ -69,8 +91,8 @@ Detailed description and examples of Fermi/GBM Notices are available in the [GCN
 
 | Type                  | Contents                                              | Latency        |
 | --------------------- | ----------------------------------------------------- | -------------- |
-| `FERMI_GBM_ALERT`     | Trigger info                                          | ~5 seconds     |
-| `FERMI_GBM_FLT_POS`   | Flight localization, classification                   | ~10 seconds    |
+| `FERMI_GBM_ALERT`     | Trigger info                                          | \~5 seconds    |
+| `FERMI_GBM_FLT_POS`   | Flight localization, classification                   | \~10 seconds   |
 | `FERMI_GBM_GND_POS`   | Updated ground localization using finer lookup tables | 20–300 seconds |
 | `FERMI_GBM_FIN_POS`   | Final trigger localization                            | 15 minutes     |
 | `FERMI_GBM_SUBTHRESH` | Ground pipeline detected signals                      | 0.5–6 hours    |
