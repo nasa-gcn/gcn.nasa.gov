@@ -431,6 +431,9 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bGROND\b/i,
     /\bLCO\b/i,
     /\bGOTO\b/i,
+    /\bSOAR\b/i,
+    /\bGemini\b/i,
+    /\bKeck\b/i,
   ],
   'Radio Transient': [
     /\bRadio\b/i,

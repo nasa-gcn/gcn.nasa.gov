@@ -1443,7 +1443,7 @@ describe('parseEventTypeFromSubject', () => {
     {
       name: 'Gamma-ray Transient pattern: \\bAstroSat\\b',
       subject: 'LIGO/Virgo G211117: Astrosat CZTI upper limits',
-      expected: ['Gamma-ray Transient', 'GW'],
+      expected: ['Gamma-ray Transient', 'GW', 'X-ray Transient'],
     },
     {
       name: 'Gamma-ray Transient pattern: \\b^HAWC(-\\d{6}[A-Za-z])?:?$\\b',
@@ -1484,7 +1484,7 @@ describe('parseEventTypeFromSubject', () => {
       name: 'GW pattern: \\bKAGRA\\b',
       subject:
         'LIGO/Virgo/KAGRA S250206dm: continued in SOAR galaxy targeted observations and identification of one possible transient',
-      expected: ['GW'],
+      expected: ['GW', 'Optical Transient'],
     },
     {
       name: 'GW pattern: \\bS\\d{6}[a-z]+\\b',
