@@ -1438,7 +1438,7 @@ describe('parseEventTypeFromSubject', () => {
       name: 'Gamma-ray Transient pattern: \\bKONUS\\b',
       subject:
         'A giant outburst from Cygnus X-1 detected by Konus-Wind and Suzaku-WAM',
-      expected: ['Gamma-ray Transient'],
+      expected: ['Gamma-ray Transient', 'X-ray Transient'],
     },
     {
       name: 'Gamma-ray Transient pattern: \\bAstroSat\\b',
