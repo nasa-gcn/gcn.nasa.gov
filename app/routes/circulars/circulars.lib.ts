@@ -320,6 +320,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
   ],
   GRB: [
     /\bGRB\d{6}[A-Z]?\b/i,
+    /\bGRB\d{8}[A-Z]?\b/i,
     /\bGRBs?\b/i,
     /\bgamma[-\s]?ray[-\s]?bursts?\b/i,
     /\bXRF\d{6}[A-Z]?\b/i,
@@ -364,6 +365,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bKAGRA\b/i,
     /\bS\d{6}[a-z]+\b/i,
     /\bGWTC-\d+\b/i,
+    /\bFACT\b/i,
   ],
   SGR: [/\bSGR\S*/i, /\bsoft[-\s]?gamma[-\s]?repeaters?\b/i],
   FRB: [
@@ -398,9 +400,12 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bNICER\b/i,
     /\bNuSTAR\b/i,
     /\bSwift[:?/-]XRT\b/i,
+    /\bSVOM(?!\/VT|\/C-GFT)\b/i,
   ],
   Afterglow: [/\bafterglows?\b/i],
   'Optical Transient': [
+    /\bPhotometry\b/i,
+    /\bOptical\s+transients?\b/i,
     /\boptical\b(?!\s+upper\s+limits?\b)/i,
     /\bOT\b/i,
     /\bAT\d{4}[a-z]+\b/i,
