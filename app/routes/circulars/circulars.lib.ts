@@ -367,6 +367,8 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bLIGO\b/i,
     /\bVirgo\b/i,
     /\bKAGRA\b/i,
+    /\bLISA\b/i,
+    /\bGEO600\b/i,
     /\bS\d{6}[a-z]+\b/i,
     /\bGWTC-\d+\b/i,
     /\bFACT\b/i,
@@ -426,6 +428,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bSwift[:?/-]UVOT\b/i,
     /\bGROND\b/i,
     /\bLCO\b/i,
+    /\bGOTO\b/i,
   ],
   Kilonova: [
     /\bkilonovae?\b(?!-\w)/i,
