@@ -11,6 +11,7 @@ export interface CircularMetadata {
   circularId: number
   subject: string
   eventId?: string
+  eventType?: string[]
 }
 
 export type SubmittedHow = 'web' | 'email' | 'email-legacy' | 'api'

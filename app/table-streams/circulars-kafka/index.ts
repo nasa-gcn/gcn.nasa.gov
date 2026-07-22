@@ -26,6 +26,14 @@ export const handler = createTriggerHandler(
           ...cleanedCircular,
         })
       )
+      await Promise.all(
+        circular.eventType?.map((eventType) =>
+          send(
+            `gcn.circulars.${eventType.toLowerCase().replaceAll(' ', '_')}`,
+            JSON.stringify(circular)
+          )
+        ) ?? []
+      )
     }
   }
 )
