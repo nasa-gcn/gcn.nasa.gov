@@ -203,7 +203,7 @@ export async function search({
   ]
 
   if (feature('EVENTTYPE')) {
-    if (eventTypes?.length > 0) {
+    if (eventTypes && (eventTypes.length ?? 0) > 0) {
       if (eventTypesLogic === 'AND') {
         filterConditions.push({
           bool: {
