@@ -33,6 +33,7 @@ import {
   formatCircularText,
   formatIsValid,
   parseEventFromSubject,
+  parseEventTypeFromSubject,
   subjectIsValid,
 } from './circulars.lib'
 import type {
@@ -328,7 +329,9 @@ export async function remove(circularId: number, request: Request) {
  * Adds a new entry into the GCN Circulars table WITHOUT authentication
  */
 export async function putRaw(
-  item: Require<Omit<Circular, 'createdOn' | 'circularId'>, 'submittedHow'>
+  item: Require<Omit<Circular, 'createdOn' | 'circularId'>, 'submittedHow'> & {
+    eventType?: string[]
+  }
 ): Promise<Circular> {
   const autoincrement = await getDynamoDBAutoIncrement()
   const createdOn = Date.now()
@@ -350,7 +353,7 @@ export async function put(
   item: Require<
     Omit<
       Circular,
-      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId'
+      'sub' | 'submitter' | 'createdOn' | 'circularId' | 'eventId' | 'eventType'
     >,
     'submittedHow'
   >,
@@ -371,6 +374,8 @@ export async function put(
 
   const eventId = parseEventFromSubject(item.subject)
   if (eventId) circular.eventId = eventId
+  const eventTypes = parseEventTypeFromSubject(item.subject)
+  if (eventTypes) circular.eventType = eventTypes
   const result = await putRaw(circular)
   if (eventId) await tryInitSynonym(eventId, result.createdOn)
   return result
