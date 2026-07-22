@@ -305,7 +305,7 @@ export function CircularEditForm({
         </CollapsableInfo>
         <ButtonGroup>
           <Link
-            to={`/circulars${searchString}`}
+            to={`/circulars/${circularId}${searchString}`}
             className="usa-button usa-button--outline"
           >
             Back
