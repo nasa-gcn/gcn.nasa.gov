@@ -147,7 +147,7 @@ export async function search({
   startDate,
   endDate,
   eventTypes,
-  eventTypesLogic = 'AND',
+  eventTypesLogic = 'OR',
   eventTypesExclude,
   sort,
 }: {
