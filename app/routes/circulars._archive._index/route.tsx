@@ -243,7 +243,7 @@ export function ErrorBoundary() {
   return (
     <ArchiveHeader formId={formId}>
       <div className="margin-top-4">
-        <Alert type="error" headingLevel="h2" heading="Search Unavailable">
+        <Alert type="error" headingLevel="h2" heading="Archive Unavailable">
           Browsing the Circulars Archive is currently unavailable. Please check
           back later.
           <br />
