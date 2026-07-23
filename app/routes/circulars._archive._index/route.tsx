@@ -28,7 +28,7 @@ import {
   putVersion,
   search,
 } from '../circulars/circulars.server'
-import ArchiveHeader from './CircularsHeader'
+import ArchiveHeader from './ArchiveHeader'
 import CircularsIndex from './CircularsIndex'
 import SynonymGroupIndex from './SynonymGroupIndex'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
