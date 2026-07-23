@@ -9,17 +9,13 @@ import { tables } from '@architect/functions'
 import crypto from 'crypto'
 import { validate } from 'email-validator'
 
+import type { EmailSubscription } from '~/lib/email.server'
 import { sendEmail } from '~/lib/email.server'
 import { topicToFormatAndNoticeType } from '~/lib/utils'
 
 // db model
-export type EmailNotification = {
-  name: string
-  recipient: string
-  created: number
-  uuid?: string
+export type EmailNotification = EmailSubscription & {
   topics: string[]
-  sub: string
 }
 
 // view model
