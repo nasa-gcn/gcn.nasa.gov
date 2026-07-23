@@ -195,7 +195,7 @@
       "circularId": 34509,
       "submitter": "P.A. Evans at U. Leicester <pae9@leicester.ac.uk>",
       "body": "P.A. Evans (U. Leicester) reports on behalf of the Swift team.\n\nFurther to GCN Circ. 34502, the subsequent BAT triggers: 1186294, 1186295, 1186296, 1186302 and 1186304 were not caused by astrophysical transients but arose due to the star tracker loss of lock. These events should be disregarded.",
-      "eventType": ["Gamma-ray Transient"]
+      "eventType": ["Retraction", "Gamma-ray Transient"]
     },
     {
       "subject": "Fermi GRB 230818A: Global MASTER-Net observations report",
@@ -248,7 +248,7 @@
       "circularId": 34709,
       "submitter": "David Palmer at LANL <palmer@lanl.gov>",
       "body": "\nK. L. Page (U Leicester) and D. M. Palmer (LANL) report on behalf of\nthe Neil Gehrels Swift Observatory Team:\n\nSwift continues to have star tracker loss-of-lock problems, possibly\ndue to current solar activity.  For the near future, please verify\nthat the Swift GCN notices do not have the comment \n\nCOMMENTS:        This trigger occured while the StarTracker had lost lock, so it is possibly bogus.  \n\nAlso, the loss-of-lock triggers will tend to be reported as having\npositions within a few degrees of the actual sources.  BAT currently\nsees the following sources, so notices near these locations\nshould be treated as suspect\n\nra_deg, dec_deg   name\n40.919   61.432   Swift02436      \n83.633   22.014   Crab            \n170.300 -60.617   Cen_X-3         \n186.650 -62.767   GX_301-2        \n244.980 -15.640   Sco_X-1         \n255.980 -37.844   4U_1700-377     \n261.940 -16.212   SWIFTJ1727-1613 \n263.000 -33.833   GX_354-0           \n299.590  35.202   Cyg_X-1         \n308.110  40.958   Cyg_X-3\n\nFurther retraction notices will not be published until\nthe Loss-of-Lock problem is cleared. \n\n",
-      "eventType": ["Gamma-ray Transient"]
+      "eventType": ["Retraction", "Gamma-ray Transient"]
     },
     {
       "subject": "Fermi  trigger No 712651827: Global MASTER-Net observations report",
@@ -807,7 +807,7 @@
       "circularId": 34724,
       "submitter": "K.L. Page at U Leicester <klp5@leicester.ac.uk>",
       "body": "\nC. Gronwall (PSU) and K. L. Page (U Leicester) report on behalf of the\nNeil Gehrels Swift Observatory Team:\n\nSwift triggers 1192480, 1192481, 1192482 and 1192483, on 2023-09-18 between 02:15:52 and\n02:40:32 UTC, are not an astrophysical events.  They were caused by misidentifcation of various sources when the star trackers had lost lock. \n\nFor the near future, please verify that the Swift GCN notices do not have the comment \n\nCOMMENTS:        This trigger occured while the StarTracker had lost lock, so it is possibly bogus.  \n\nGCN 34709 lists sources which BAT currently sees, so notices with coordinates\nnear these locations should be treated as suspect. \n\n",
-      "eventType": ["Gamma-ray Transient"]
+      "eventType": ["Retraction", "Gamma-ray Transient"]
     },
     {
       "subject": "Konus-Wind detection of GRB 230803A",
@@ -944,7 +944,7 @@
       "circularId": 34771,
       "submitter": "K.L. Page at U Leicester <klp5@leicester.ac.uk>",
       "body": "\nJ. A. Kennea (PSU) and K. L. Page (U Leicester) report on behalf of\nthe Neil Gehrels Swift Observatory Team:\n\nThe Swift triggers 1192735 and 1192737 at 21:51:11 UT and 22:11:52 respectively, were caused by star tracker loss-of-lock problems, and are not astrophysical events. \n",
-      "eventType": ["Gamma-ray Transient"]
+      "eventType": ["Retraction", "Gamma-ray Transient"]
     },
     {
       "subject": "LIGO/Virgo/KAGRA S230814ah: Identification of a GW compact binary merger candidate",
@@ -3542,7 +3542,7 @@
       "circularId": 34774,
       "submitter": "K.L. Page at U Leicester <klp5@leicester.ac.uk>",
       "body": "K. L. Page (U Leicester) reports on behalf of the Neil Gehrels Swift\nObservatory Team:\n\nTo conclude the summary of false triggers caused by the Swift star tracker\nloss-of-lock event on 2023-09-26, triggers 1192745 and 1192747 (at 22:53\nand 23:00 UT respectively) were also not astrophysical events.\n\n",
-      "eventType": ["Gamma-ray Transient"]
+      "eventType": ["Retraction", "Gamma-ray Transient"]
     },
     {
       "subject": "Swift Trigger 1192088 is not an astrophysical event",
@@ -4593,7 +4593,7 @@
       "circularId": 34502,
       "submitter": "David Palmer at LANL <palmer@lanl.gov>",
       "body": "\nS. Dichiara (PSU), J.D. Gropp (PSU), N. P. M. Kuin (UCL-MSSL),\nF. E. Marshall (NASA/GSFC), B. Sbarufatti (INAF-OAB) and\nM. A. Williams (PSU) report on behalf of the Neil Gehrels Swift\nObservatory Team:\n\nSwift BAT triggers 1186280 and 1186291, at 18:28:34 and 19:09:36 \nrespectively on 2023-08-20 UT, were due to misidentification\nof known sources (Sco X-1 and the Crab) during a star tracker\nloss-of-lock event.  They are not astrophysical events. \n\n",
-      "eventType": ["GRB", "Gamma-ray Transient"]
+      "eventType": ["Retraction", "GRB", "Gamma-ray Transient"]
     },
     {
       "subject": "LIGO/Virgo/KAGRA S230924an: Identification of a GW compact binary merger candidate",
@@ -4816,7 +4816,7 @@
       "circularId": 34772,
       "submitter": "K.L. Page at U Leicester <klp5@leicester.ac.uk>",
       "body": "\nK. L. Page (U Leicester) report on behalf of the Neil Gehrels Swift\nObservatory Team:\n\nAs of 22:45 UT, Swift continues to have star tracker loss-of-lock problems. Swift\ntriggers 1192740, 1192742 and 1192743 are also not astrophysical events. As a \nreminder, please verify that the Swift GCN notices do not have the comment \n\nCOMMENTS:        This trigger occured while the StarTracker had lost lock, so it is possibly bogus.  \n\nbefore assuming an event is real. Further retraction circulars will not be published until the loss-of-lock problem is cleared. \n\n",
-      "eventType": ["Gamma-ray Transient"]
+      "eventType": ["Retraction", "Gamma-ray Transient"]
     },
     {
       "subject": "GRB 230905A: Fermi GBM Final Real-time Localization",
