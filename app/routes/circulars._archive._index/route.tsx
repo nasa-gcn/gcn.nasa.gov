@@ -6,11 +6,10 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { defer } from '@remix-run/node'
 import {
-  Await,
   Form,
   Link,
+  json,
   useActionData,
   useLoaderData,
   useSearchParams,
@@ -26,7 +25,7 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { Suspense, useId, useState } from 'react'
+import { useId, useState } from 'react'
 
 import {
   circularRedirect,
@@ -80,7 +79,7 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
   const sort = searchParams.get('sort') || 'circularId'
   const searchFunction = view != 'group' ? search : searchSynonymsByEventId
-  const resultsPromise = searchFunction({
+  const results = await searchFunction({
     query,
     page: page - 1,
     limit,
@@ -90,10 +89,10 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   })
   const requestedChangeCount = (await getChangeRequests()).length
 
-  return defer(
+  return json(
     {
       page,
-      results: resultsPromise,
+      ...results,
       requestedChangeCount,
       limit,
       isGroupView,
@@ -189,8 +188,22 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function () {
   const result = useActionData<typeof action>()
-  const { page, results, requestedChangeCount, limit, isGroupView } =
-    useLoaderData<typeof loader>()
+  const {
+    items,
+    page,
+    totalPages,
+    totalItems,
+    queryFallback,
+    requestedChangeCount,
+    limit,
+    isGroupView,
+  } = useLoaderData<typeof loader>()
+
+  // Concatenate items from the action and loader functions
+  const allItems = [
+    ...(result?.newCircular ? [result.newCircular] : []),
+    ...(items || []),
+  ]
 
   const formId = useId()
   const submit = useSubmit()
@@ -318,7 +331,19 @@ export default function () {
           <SortSelector form={formId} defaultValue={sort} />
         )}
       </ToolbarButtonGroup>
-
+      {queryFallback && (
+        <ErrorMessage>
+          "{query}" does not adhere to advanced search syntax. Please refer to
+          the{' '}
+          <Link
+            className="usa-link"
+            to="/docs/circulars/archive#advanced-search"
+          >
+            documentation
+          </Link>{' '}
+          and try again.
+        </ErrorMessage>
+      )}
       <Hint id="searchHint">
         {isGroupView ? (
           <>
@@ -337,86 +362,36 @@ export default function () {
 
       {!isGroupView && <LuceneAccordion />}
 
-      <Suspense
-        fallback={
-          <div className="padding-y-4 text-center">
-            Loading search results...
-          </div>
-        }
-      >
-        <Await
-          resolve={results}
-          errorElement={
-            <Alert
-              type="error"
-              headingLevel="h4"
-              heading="Search Temporarily Unavailable"
-            >
-              We are having trouble communicating with the search service.
-              Please try again shortly.
-            </Alert>
-          }
-        >
-          {(resolvedResults) => {
-            const { items, totalPages, totalItems, queryFallback } =
-              resolvedResults
+      {clean && (
+        <>
+          {isGroupView ? (
+            <SynonymGroupIndex
+              allItems={items as SynonymGroup[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          ) : (
+            <CircularsIndex
+              allItems={allItems as CircularMetadata[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          )}
 
-            const allItems = [
-              ...(result?.newCircular ? [result.newCircular] : []),
-              ...(items || []),
-            ]
-
-            return (
-              <>
-                {queryFallback && (
-                  <ErrorMessage>
-                    "{query}" does not adhere to advanced search syntax. Please
-                    refer to the{' '}
-                    <Link
-                      className="usa-link"
-                      to="/docs/circulars/archive#advanced-search"
-                    >
-                      documentation
-                    </Link>{' '}
-                    and try again.
-                  </ErrorMessage>
-                )}
-
-                {clean && (
-                  <>
-                    {isGroupView ? (
-                      <SynonymGroupIndex
-                        allItems={items as SynonymGroup[]}
-                        searchString={searchString}
-                        totalItems={totalItems}
-                        query={query}
-                      />
-                    ) : (
-                      <CircularsIndex
-                        allItems={allItems as CircularMetadata[]}
-                        searchString={searchString}
-                        totalItems={totalItems}
-                        query={query}
-                      />
-                    )}
-
-                    <PaginationSelectionFooter
-                      query={query}
-                      startDate={startDate}
-                      endDate={endDate}
-                      page={page}
-                      limit={limit}
-                      totalPages={totalPages}
-                      form={formId}
-                      view={view}
-                    />
-                  </>
-                )}
-              </>
-            )
-          }}
-        </Await>
-      </Suspense>
+          <PaginationSelectionFooter
+            query={query}
+            startDate={startDate}
+            endDate={endDate}
+            page={page}
+            limit={limit}
+            totalPages={totalPages}
+            form={formId}
+            view={view}
+          />
+        </>
+      )}
     </>
   )
 }
