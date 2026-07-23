@@ -244,8 +244,11 @@ export function ErrorBoundary() {
     <ArchiveHeader formId={formId}>
       <div className="margin-top-4">
         <Alert type="error" headingLevel="h2" heading="Search Unavailable">
-          We have encountered an issue with OpenSearch. Please try adjusting
-          your query or check back later.
+          Browsing the Circulars Archive is currently unavailable. Please check
+          back later.
+          <br />
+          Note: Circulars can still be submitted through the web form or by
+          email and are still being distributed to subscribers.
         </Alert>
       </div>
     </ArchiveHeader>
