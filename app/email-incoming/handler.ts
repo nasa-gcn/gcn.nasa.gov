@@ -30,6 +30,8 @@ export function createEmailIncomingMessageHandler(
       throw new Error('Message failed virus check')
     if (message.receipt.action.type !== 'S3')
       throw new Error('Action type must be S3')
+    if (message.receipt.dmarcVerdict.status !== 'PASS')
+      throw new Error('Message failed DMARC validation')
 
     const response = await s3.send(
       new GetObjectCommand({
