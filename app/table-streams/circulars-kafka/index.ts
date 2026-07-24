@@ -19,21 +19,21 @@ export const handler = createTriggerHandler(
     if (eventName === 'INSERT' || eventName === 'MODIFY') {
       const circular = unmarshallTrigger(dynamodb!.NewImage) as Circular
       const { sub, ...cleanedCircular } = circular
-      await send(
+
+      const value = JSON.stringify({
+        $schema: circularsJsonSchemaId,
+        ...cleanedCircular,
+      })
+
+      const topics = [
         'gcn.circulars',
-        JSON.stringify({
-          $schema: circularsJsonSchemaId,
-          ...cleanedCircular,
-        })
-      )
-      await Promise.all(
-        circular.eventType?.map((eventType) =>
-          send(
-            `gcn.circulars.${eventType.toLowerCase().replaceAll(' ', '_')}`,
-            JSON.stringify(circular)
-          )
-        ) ?? []
-      )
+        ...(circular.eventType ?? []).map(
+          (eventType) =>
+            `gcn.circulars.${eventType.toLowerCase().replaceAll(' ', '_')}`
+        ),
+      ]
+
+      await Promise.all(topics.map((topic) => send(topic, value)))
     }
   }
 )
