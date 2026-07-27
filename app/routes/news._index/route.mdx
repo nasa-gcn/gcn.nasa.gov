@@ -28,6 +28,40 @@ import { Anchor } from '~/components/Anchor'
 ## 2026
 
 <CollectionItem
+  className="maxw-none grid-container"
+  variantComponent={
+    <CollectionCalendarDate datetime='July 25, 2026' />
+  }
+>
+  <CollectionHeading headingLevel="h3">
+    <Anchor>New JavaScript client v1.0.0</Anchor>
+  </CollectionHeading>
+  <CollectionDescription>
+    We have released version 1.0.0 of the [official JavaScript client for GCN Kafka](https://www.npmjs.com/package/gcn-kafka). We migrated the client backend from [kafkajs](https://www.npmjs.com/package/kafkajs) to [@confluentinc/kafka-javascript](https://www.npmjs.com/package/@confluentinc/kafka-javascript). They have the same interface, but the latter is better maintained and shares the same underlying Kafka client library as the [Python bindings](https://pypi.org/project/confluent-kafka/).
+
+    Aside from more reliable operation, the only change for users should be that you now have to explicitly call `connect()`, like this:
+
+    ```javascript
+    import { Kafka } from 'gcn-kafka'
+    const kafka = new Kafka({
+      client_id: 'fill me in',
+      client_secret: 'fill me in',
+    })
+
+    const consumer = kafka.consumer()
+    await consumer.connect() // <-- NOW REQUIRED IN VERSION 1.0.0
+    await consumer.subscribe({
+      topics: [
+        'gcn.classic.text.FERMI_GBM_FIN_POS',
+        'gcn.classic.text.LVC_INITIAL',
+      ],
+    })
+    ```
+
+  </CollectionDescription>
+</CollectionItem>
+
+<CollectionItem
     className="maxw-none grid-container"
     variantComponent={
       <CollectionCalendarDate datetime='July 15, 2026' />
