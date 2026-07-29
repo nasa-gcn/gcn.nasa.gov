@@ -7,25 +7,15 @@
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
-  Form,
   Link,
   json,
   useActionData,
   useLoaderData,
   useSearchParams,
-  useSubmit,
 } from '@remix-run/react'
-import {
-  Alert,
-  Button,
-  ButtonGroup,
-  ErrorMessage,
-  Icon,
-  Label,
-  TextInput,
-} from '@trussworks/react-uswds'
+import { Alert } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useId, useState } from 'react'
+import { useId } from 'react'
 
 import {
   circularRedirect,
@@ -38,14 +28,9 @@ import {
   putVersion,
   search,
 } from '../circulars/circulars.server'
-import CircularsHeader from './ArchiveHeader'
-import CircularsIndex from './ArchiveIndex'
-import { DateSelector } from './DateSelectorMenu'
-import { LuceneAccordion } from './LuceneMenu'
-import { SortSelector } from './SortSelectorButton'
+import ArchiveHeader from './ArchiveHeader'
+import ArchiveIndex from './ArchiveIndex'
 import SynonymGroupIndex from './SynonymGroupIndex'
-import Hint from '~/components/Hint'
-import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
@@ -60,8 +45,6 @@ import {
 } from '~/routes/circulars/circulars.lib'
 import type { SynonymGroup } from '~/routes/synonyms/synonyms.lib'
 import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
-
-import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const { searchParams } = new URL(url)
@@ -206,7 +189,6 @@ export default function () {
   ]
 
   const formId = useId()
-  const submit = useSubmit()
   const [searchParams] = useSearchParams()
   const userIsModerator = usePermissionModerator()
 
@@ -217,21 +199,10 @@ export default function () {
   const query = searchParams.get('query') || ''
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
-  const sort = searchParams.get('sort') || 'circularID'
   const view = searchParams.get('view') || 'index'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
-
-  const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
-  const searchText = isGroupView ? 'Event Name' : 'Search'
-
-  function getSelection(selectionOption: string) {
-    return selectionOption === view
-      ? 'usa-button padding-y-1'
-      : 'usa-button usa-button--outline padding-y-1'
-  }
 
   return (
     <>
@@ -247,8 +218,6 @@ export default function () {
         </Alert>
       )}
 
-      <CircularsHeader />
-
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
           Review {requestedChangeCount} Requested Change
@@ -261,137 +230,38 @@ export default function () {
         </Link>
       )}
 
-      <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
-        <Form
-          preventScrollReset
-          className="display-inline-block usa-search usa-search--small"
-          role="search"
-          id={formId}
-        >
-          <Label srOnly htmlFor="query">
-            Search
-          </Label>
-          <input type="hidden" name="view" value={view} />
-          <TextInput
-            autoFocus
-            className="minw-15"
-            id="query"
-            name="query"
-            type="search"
-            defaultValue={inputQuery}
-            placeholder={searchText}
-            aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form, { preventScrollReset: true })
-            }}
-          />
-          <Button type="submit">
-            <img
-              src={searchImg}
-              className="usa-search__submit-icon"
-              alt="Search"
-            />
-          </Button>
-        </Form>
-
-        <ButtonGroup type="segmented">
-          <Link
-            to={`/circulars?view=index&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('index')}
-          >
-            <Icon.List role="presentation" />
-            Circulars
-          </Link>
-          <Link
-            to={`/circulars?view=group&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('group')}
-          >
-            <Icon.ContentCopy role="presentation" />
-            Events
-          </Link>
-        </ButtonGroup>
-
-        <Link to={`/circulars/new${searchString}`}>
-          <Button type="button" className="padding-y-1">
-            <Icon.Edit role="presentation" /> New
-          </Button>
-        </Link>
-        {!isGroupView && (
-          <DateSelector
-            form={formId}
-            defaultStartDate={startDate}
-            defaultEndDate={endDate}
-          />
-        )}
-
-        {query && !isGroupView && (
-          <SortSelector form={formId} defaultValue={sort} />
-        )}
-      </ToolbarButtonGroup>
-      {queryFallback && (
-        <ErrorMessage>
-          "{query}" does not adhere to advanced search syntax. Please refer to
-          the{' '}
-          <Link
-            className="usa-link"
-            to="/docs/circulars/archive#advanced-search"
-          >
-            documentation
-          </Link>{' '}
-          and try again.
-        </ErrorMessage>
-      )}
-      <Hint id="searchHint">
+      <ArchiveHeader
+        result={result}
+        requestedChangeCount={requestedChangeCount}
+        formId={formId}
+        queryFallback={queryFallback}
+      >
         {isGroupView ? (
-          <>
-            Search for Event Groups by event name (e.g. 'GRB 123456A',
-            'GRB123456A', '123456A'). <br />
-          </>
-        ) : (
-          <>
-            Search for Circulars by submitter, subject, or body text (e.g.
-            'Fermi GRB'). <br />
-            To navigate to a specific circular, enter the associated Circular ID
-            (e.g. 'gcn123', 'Circular 123', or '123').
-          </>
-        )}
-      </Hint>
-
-      {!isGroupView && <LuceneAccordion />}
-
-      {clean && (
-        <>
-          {isGroupView ? (
-            <SynonymGroupIndex
-              allItems={items as SynonymGroup[]}
-              searchString={searchString}
-              totalItems={totalItems}
-              query={query}
-            />
-          ) : (
-            <CircularsIndex
-              allItems={allItems as CircularMetadata[]}
-              searchString={searchString}
-              totalItems={totalItems}
-              query={query}
-            />
-          )}
-
-          <PaginationSelectionFooter
+          <SynonymGroupIndex
+            allItems={allItems as SynonymGroup[]}
+            searchString={searchString}
+            totalItems={totalItems}
             query={query}
-            startDate={startDate}
-            endDate={endDate}
-            page={page}
-            limit={limit}
-            totalPages={totalPages}
-            form={formId}
-            view={view}
           />
-        </>
-      )}
+        ) : (
+          <ArchiveIndex
+            allItems={allItems as CircularMetadata[]}
+            searchString={searchString}
+            totalItems={totalItems}
+            query={query}
+          />
+        )}
+      </ArchiveHeader>
+      <PaginationSelectionFooter
+        query={query}
+        startDate={startDate}
+        endDate={endDate}
+        page={page}
+        limit={limit}
+        totalPages={totalPages}
+        form={formId}
+        view={view}
+      />
     </>
   )
 }
