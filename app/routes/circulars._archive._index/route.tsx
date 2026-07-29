@@ -7,13 +7,11 @@
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
-  Link,
   json,
   useActionData,
   useLoaderData,
   useSearchParams,
 } from '@remix-run/react'
-import { Alert } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
@@ -36,7 +34,6 @@ import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { usePermissionModerator } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 import {
   type CircularFormat,
@@ -190,7 +187,6 @@ export default function () {
 
   const formId = useId()
   const [searchParams] = useSearchParams()
-  const userIsModerator = usePermissionModerator()
 
   // Strip off the ?index param if we navigated here from a form.
   // See https://remix.run/docs/en/main/guides/index-query-param.
@@ -210,30 +206,6 @@ export default function () {
 
   return (
     <>
-      {result?.intent === 'correction' && (
-        <Alert
-          type="success"
-          headingLevel="h1"
-          slim
-          heading="Request Submitted"
-        >
-          Thank you for your correction. A GCN Circulars moderator will review
-          it shortly.
-        </Alert>
-      )}
-
-      {userIsModerator && requestedChangeCount > 0 && (
-        <Link to="moderation" className="usa-button usa-button--outline">
-          Review {requestedChangeCount} Requested Change
-          {requestedChangeCount > 1 ? 's' : ''}
-        </Link>
-      )}
-      {userIsModerator && (
-        <Link to="/synonyms" className="usa-button usa-button--outline">
-          Synonym Moderation
-        </Link>
-      )}
-
       <ArchiveHeader
         result={result}
         requestedChangeCount={requestedChangeCount}
