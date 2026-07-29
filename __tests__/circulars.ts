@@ -17,6 +17,18 @@ import {
   subjectIsValid,
 } from '../app/routes/circulars/circulars.lib'
 
+jest.mock('@architect/functions')
+
+// Github-slugger is mocked to prevent jest failing to properly load the package. If Jest attempts
+// to load it, it will encounter a syntax error. Since these eventIds do not have any characters that
+// would be changed by the slugger, ensuring they are all lowercase is enough to mock the behavior
+// of github-slugger in this case.
+jest.mock('github-slugger', () => ({
+  slug: (eventId: string) => {
+    return eventId.toLowerCase()
+  },
+}))
+
 describe('formatAuthor', () => {
   const email = 'foo@example.com'
   const name = 'Data Soong'
