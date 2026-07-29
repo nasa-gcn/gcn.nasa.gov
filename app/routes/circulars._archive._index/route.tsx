@@ -15,7 +15,7 @@ import {
 } from '@remix-run/react'
 import { Alert } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useId } from 'react'
+import { useId, useState } from 'react'
 
 import {
   circularRedirect,
@@ -204,6 +204,10 @@ export default function () {
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
 
+  const [inputQuery] = useState(query)
+
+  const clean = inputQuery === query
+
   return (
     <>
       {result?.intent === 'correction' && (
@@ -235,33 +239,38 @@ export default function () {
         requestedChangeCount={requestedChangeCount}
         formId={formId}
         queryFallback={queryFallback}
-      >
-        {isGroupView ? (
-          <SynonymGroupIndex
-            allItems={allItems as SynonymGroup[]}
-            searchString={searchString}
-            totalItems={totalItems}
+      ></ArchiveHeader>
+
+      {clean && (
+        <>
+          {isGroupView ? (
+            <SynonymGroupIndex
+              allItems={items as SynonymGroup[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          ) : (
+            <ArchiveIndex
+              allItems={allItems as CircularMetadata[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          )}
+
+          <PaginationSelectionFooter
             query={query}
+            startDate={startDate}
+            endDate={endDate}
+            page={page}
+            limit={limit}
+            totalPages={totalPages}
+            form={formId}
+            view={view}
           />
-        ) : (
-          <ArchiveIndex
-            allItems={allItems as CircularMetadata[]}
-            searchString={searchString}
-            totalItems={totalItems}
-            query={query}
-          />
-        )}
-      </ArchiveHeader>
-      <PaginationSelectionFooter
-        query={query}
-        startDate={startDate}
-        endDate={endDate}
-        page={page}
-        limit={limit}
-        totalPages={totalPages}
-        form={formId}
-        view={view}
-      />
+        </>
+      )}
     </>
   )
 }

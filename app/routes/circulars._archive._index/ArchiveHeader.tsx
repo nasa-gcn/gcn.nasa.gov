@@ -50,14 +50,12 @@ const ArchiveHeaderText = () => {
 }
 
 type ArchiveHeaderProps = {
-  children: React.ReactNode
   result?: any
   requestedChangeCount?: number
   formId: string
   queryFallback?: boolean
 }
 export default function ArchiveHeader({
-  children,
   result,
   requestedChangeCount = 0,
   formId,
@@ -83,7 +81,7 @@ export default function ArchiveHeader({
   if (searchString) searchString = `?${searchString}`
 
   const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
+
   const searchText = isGroupView ? 'Event Name' : 'Search'
 
   function getSelection(selectionOption: string) {
@@ -220,7 +218,6 @@ export default function ArchiveHeader({
       </Hint>
 
       {!isGroupView && <LuceneAccordion />}
-      {clean && children}
     </>
   )
 }
