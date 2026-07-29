@@ -150,6 +150,7 @@ export async function search({
   eventTypes,
   eventTypesLogic = 'OR',
   eventTypesExclude,
+  resolvedEventType,
   sort,
 }: {
   query?: string
@@ -160,6 +161,7 @@ export async function search({
   eventTypes?: string[]
   eventTypesLogic?: 'AND' | 'OR'
   eventTypesExclude?: string[]
+  resolvedEventType?: string
   sort?: string
 }): Promise<{
   items: CircularMetadata[]
@@ -202,6 +204,13 @@ export async function search({
       },
     },
   ]
+
+  // if resolvedEventType is present, requires that only circulars with that eventType are returned, regardless of other eventType filters
+  if (feature('EVENTTYPE') && resolvedEventType) {
+    filterConditions.push({
+      term: { 'eventType.keyword': resolvedEventType },
+    })
+  }
 
   if (
     feature('EVENTTYPE') ||

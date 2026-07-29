@@ -100,6 +100,7 @@ export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
     startDate,
     endDate,
     sort,
+    resolvedEventType,
   })
   const requestedChangeCount = (await getChangeRequests()).length
 
