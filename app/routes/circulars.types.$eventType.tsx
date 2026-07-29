@@ -38,7 +38,7 @@ import {
   put,
   putVersion,
   search,
-} from '../circulars/circulars.server'
+} from './circulars/circulars.server'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
