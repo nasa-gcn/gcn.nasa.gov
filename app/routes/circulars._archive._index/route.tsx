@@ -38,8 +38,8 @@ import {
   putVersion,
   search,
 } from '../circulars/circulars.server'
-import CircularsHeader from './CircularsHeader'
-import CircularsIndex from './CircularsIndex'
+import CircularsHeader from './ArchiveHeader'
+import CircularsIndex from './ArchiveIndex'
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
