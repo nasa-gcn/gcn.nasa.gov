@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { slug } from 'github-slugger'
 import { dedent } from 'ts-dedent'
 
 export interface CircularMetadata {
@@ -291,22 +292,35 @@ export function parseEventFromSubject(value: string) {
   }
 }
 
-type EventType =
-  | 'Retraction'
-  | 'GRB'
-  | 'Gamma-ray Transient'
-  | 'GW'
-  | 'SGR'
-  | 'FRB'
-  | 'SN'
-  | 'Nova'
-  | 'Neutrino'
-  | 'X-ray Transient'
-  | 'Afterglow'
-  | 'Optical Transient'
-  | 'Radio Transient'
-  | 'Kilonova'
-  | 'Misc'
+export const eventTypes = [
+  'Retraction',
+  'GRB',
+  'Gamma-ray Transient',
+  'GW',
+  'SGR',
+  'FRB',
+  'SN',
+  'Nova',
+  'Neutrino',
+  'X-ray Transient',
+  'Afterglow',
+  'Optical Transient',
+  'Radio Transient',
+  'Kilonova',
+  'Misc',
+] as const
+
+export type EventType = (typeof eventTypes)[number]
+
+export function formatEventTypeSlug(eventType: string): string {
+  return slug(eventType)
+}
+
+export function getEventTypeFromSlug(slugParam: string): EventType | undefined {
+  const targetSlug = slug(slugParam).toLowerCase()
+
+  return eventTypes.find((type) => slug(type).toLowerCase() === targetSlug)
+}
 
 const eventTypeMatchers: Record<EventType, RegExp[]> = {
   Retraction: [

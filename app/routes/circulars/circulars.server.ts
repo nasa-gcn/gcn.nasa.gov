@@ -203,7 +203,11 @@ export async function search({
     },
   ]
 
-  if (feature('EVENTTYPE')) {
+  if (
+    feature('EVENTTYPE') ||
+    (eventTypes && eventTypes.length > 0) ||
+    (eventTypesExclude && eventTypesExclude.length > 0)
+  ) {
     if (eventTypes && (eventTypes.length ?? 0) > 0) {
       if (eventTypesLogic === 'AND') {
         filterConditions.push({
