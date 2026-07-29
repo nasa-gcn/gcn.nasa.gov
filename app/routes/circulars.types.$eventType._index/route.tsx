@@ -74,6 +74,7 @@ export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
   if (query && view === 'index') {
     await circularRedirect(query)
   }
+
   const { eventType: eventTypeSlug } = params
 
   const resolvedEventType = eventTypeSlug
