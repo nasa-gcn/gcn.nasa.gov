@@ -9,8 +9,8 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
   Form,
   Link,
-  data,
   json,
+  redirect,
   useActionData,
   useLoaderData,
   useSearchParams,
@@ -82,10 +82,7 @@ export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
     : undefined
 
   if (!resolvedEventType) {
-    throw data(
-      { message: `Archive category "${eventTypeSlug}" not found` },
-      { status: 404 }
-    )
+    return redirect('/circulars')
   }
 
   const startDate = searchParams.get('startDate') || undefined
@@ -215,7 +212,6 @@ export default function () {
     requestedChangeCount,
     limit,
     resolvedEventType,
-    eventTypeSlug,
     isGroupView,
   } = useLoaderData<typeof loader>()
 
@@ -266,12 +262,8 @@ export default function () {
           it shortly.
         </Alert>
       )}
-      <div>
-        <h1>event type: {resolvedEventType}</h1>
-        <p>Slug used in URL: {eventTypeSlug}</p>
-      </div>
 
-      <CircularsHeader />
+      <CircularsHeader eventType={resolvedEventType} />
 
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
