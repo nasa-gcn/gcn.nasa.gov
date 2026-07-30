@@ -42,7 +42,7 @@ import {
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
-import { origin } from '~/lib/env.server'
+import { feature, origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
@@ -66,6 +66,9 @@ import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
+  if (!feature('EVENTTYPE')) {
+    return redirect('/circulars')
+  }
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   const view = searchParams.get('view') || 'index'
