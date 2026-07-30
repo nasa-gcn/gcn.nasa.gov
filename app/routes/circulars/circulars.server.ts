@@ -205,7 +205,6 @@ export async function search({
     },
   ]
 
-  // if resolvedEventType is present, requires that only circulars with that eventType are returned, regardless of other eventType filters
   if (feature('EVENTTYPE') && resolvedEventType) {
     filterConditions.push({
       term: { 'eventType.keyword': resolvedEventType },
