@@ -29,6 +29,7 @@ import {
 } from '../synonyms/synonyms.server'
 import {
   bodyIsValid,
+  eventTypesAreValid,
   formatAuthor,
   formatCircularText,
   formatIsValid,
@@ -670,6 +671,7 @@ export async function approveChangeRequest(
     submitter: changeRequest.submitter,
     createdOn: changeRequest.createdOn ?? circular.createdOn, // This is temporary while there are some requests without this property
     eventId: changeRequest.eventId || undefined,
+    eventType: changeRequest.eventType,
   }
 
   await autoincrementVersion.put(newVersion)
@@ -725,12 +727,15 @@ export function validateCircular({
   body,
   subject,
   format,
-}: Pick<Circular, 'body' | 'subject' | 'format'>) {
+  eventType,
+}: Pick<Circular, 'body' | 'subject' | 'format' | 'eventType'>) {
   if (!subjectIsValid(subject))
     throw new Response('subject is invalid', { status: 400 })
   if (!bodyIsValid(body)) throw new Response('body is invalid', { status: 400 })
   if (!(format === undefined || formatIsValid(format)))
     throw new Response('format is invalid', { status: 400 })
+  if (!eventTypesAreValid(eventType))
+    throw new Response('Event types are invalid', { status: 400 })
 }
 
 async function getEmails() {

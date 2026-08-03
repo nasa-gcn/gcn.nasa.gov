@@ -23,6 +23,7 @@ import { dedent } from 'ts-dedent'
 import {
   type CircularFormat,
   bodyIsValid,
+  eventTypes,
   parseEventFromSubject,
   subjectIsValid,
   submitterIsValid,
@@ -113,6 +114,7 @@ export function CircularEditForm({
   defaultSubject,
   searchString,
   defaultEventId: originalEventId,
+  defaultEventTypes = [],
 }: {
   formattedContributor: string
   circularId?: number
@@ -122,6 +124,7 @@ export function CircularEditForm({
   defaultSubject: string
   searchString: string
   defaultEventId?: string
+  defaultEventTypes?: string[]
 }) {
   let formSearchString = '?index'
   if (searchString) {
@@ -132,6 +135,12 @@ export function CircularEditForm({
   const [subject, setSubject] = useState(defaultSubject)
   const [format, setFormat] = useState(defaultFormat)
   const [submitter, setSubmitter] = useState(defaultSubmitter)
+  const defaultSelectedEventTypes = eventTypes.filter((eventType) =>
+    defaultEventTypes.includes(eventType)
+  )
+  const [selectedEventTypes, setSelectedEventTypes] = useState(
+    defaultSelectedEventTypes
+  )
   const subjectValid = subjectIsValid(subject)
   const derivedEventId = parseEventFromSubject(subject)
   const [linkEventId, setLinkEventId] = useState(
@@ -152,7 +161,8 @@ export function CircularEditForm({
     subject.trim() !== defaultSubject.trim() ||
     format !== defaultFormat ||
     submitter?.trim() !== defaultSubmitter ||
-    eventId?.trim() !== originalEventId
+    eventId?.trim() !== originalEventId ||
+    selectedEventTypes.join('|') !== defaultEventTypes.join('|')
 
   const userIsModerator = usePermissionModerator()
 
@@ -254,6 +264,34 @@ export function CircularEditForm({
                 />
               </InputGroup>
             )}
+            <fieldset className="margin-top-2">
+              <legend className="usa-label margin-bottom-1">Event Types</legend>
+              <div className="grid-row grid-gap-2">
+                {eventTypes.map((eventType) => (
+                  <div
+                    key={eventType}
+                    className="tablet:grid-col-6 desktop:grid-col-4"
+                  >
+                    <Checkbox
+                      id={`eventType-${eventType}`}
+                      name="eventTypes"
+                      label={eventType}
+                      checked={selectedEventTypes.includes(eventType)}
+                      onChange={({ target: { checked } }) => {
+                        setSelectedEventTypes((current) =>
+                          checked
+                            ? eventTypes.filter(
+                                (value) =>
+                                  value === eventType || current.includes(value)
+                              )
+                            : current.filter((value) => value !== eventType)
+                        )
+                      }}
+                    />
+                  </div>
+                ))}
+              </div>
+            </fieldset>
             <Checkbox
               id="autofill-eventId"
               name="autofill-eventId"

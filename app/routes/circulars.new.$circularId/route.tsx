@@ -47,6 +47,7 @@ export async function loader({
     circularId: circular.circularId,
     defaultSubmitter: circular.submitter,
     defaultEventId: circular.eventId,
+    defaultEventTypes: circular.eventType ?? [],
     searchString: '',
   }
 }

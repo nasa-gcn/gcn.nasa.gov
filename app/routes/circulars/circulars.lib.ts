@@ -291,22 +291,33 @@ export function parseEventFromSubject(value: string) {
   }
 }
 
-type EventType =
-  | 'Retraction'
-  | 'GRB'
-  | 'Gamma-ray Transient'
-  | 'GW'
-  | 'SGR'
-  | 'FRB'
-  | 'SN'
-  | 'Nova'
-  | 'Neutrino'
-  | 'X-ray Transient'
-  | 'Afterglow'
-  | 'Optical Transient'
-  | 'Radio Transient'
-  | 'Kilonova'
-  | 'Misc'
+export const eventTypes = [
+  'Retraction',
+  'GRB',
+  'Gamma-ray Transient',
+  'GW',
+  'SGR',
+  'FRB',
+  'SN',
+  'Nova',
+  'Neutrino',
+  'X-ray Transient',
+  'Afterglow',
+  'Optical Transient',
+  'Radio Transient',
+  'Kilonova',
+  'Misc',
+] as const
+
+export type EventType = (typeof eventTypes)[number]
+
+export function eventTypeIsValid(eventType: string): eventType is EventType {
+  return (eventTypes as readonly string[]).includes(eventType)
+}
+
+export function eventTypesAreValid(eventTypes?: string[]) {
+  return eventTypes?.every(eventTypeIsValid) ?? true
+}
 
 const eventTypeMatchers: Record<EventType, RegExp[]> = {
   Retraction: [
