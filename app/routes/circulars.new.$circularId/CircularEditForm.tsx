@@ -264,6 +264,24 @@ export function CircularEditForm({
                 />
               </InputGroup>
             )}
+            <Checkbox
+              id="autofill-eventId"
+              name="autofill-eventId"
+              className="margin-bottom-2"
+              label={
+                <>
+                  Automatically fill event ID from subject
+                  {!linkEventId &&
+                    eventId !== derivedEventId &&
+                    '. The event ID does not match.'}
+                </>
+              }
+              checked={linkEventId}
+              onChange={() => {
+                setLinkEventId(!linkEventId)
+                setEventId(derivedEventId)
+              }}
+            />
             <fieldset className="margin-top-2">
               <legend className="usa-label margin-bottom-1">Event Types</legend>
               <div className="grid-row grid-gap-2">
@@ -293,24 +311,6 @@ export function CircularEditForm({
                 ))}
               </div>
             </fieldset>
-            <Checkbox
-              id="autofill-eventId"
-              name="autofill-eventId"
-              className="margin-bottom-2"
-              label={
-                <>
-                  Automatically fill event ID from subject
-                  {!linkEventId &&
-                    eventId !== derivedEventId &&
-                    '. The event ID does not match.'}
-                </>
-              }
-              checked={linkEventId}
-              onChange={() => {
-                setLinkEventId(!linkEventId)
-                setEventId(derivedEventId)
-              }}
-            />
           </>
         )}
         <label hidden htmlFor="body">
