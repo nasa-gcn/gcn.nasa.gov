@@ -287,8 +287,6 @@ export function CircularEditForm({
                               )
                             : current.filter((value) => value !== eventType)
                         )
-                        console.log('Most recent selection:', eventType, checked)
-                        console.log('selectedEventTypes', selectedEventTypes)
                       }}
                     />
                   </div>
@@ -366,17 +364,6 @@ export function CircularEditForm({
               type="submit"
               name="intent"
               value="correction"
-              onClick={() => {
-                console.log('Requesting correction for circularId:', circularId)
-                console.log('Current form values:', {
-                  subject,
-                  body,
-                  format,
-                  submitter,
-                  eventId,
-                  selectedEventTypes,
-                })
-              }}
             >
               Request Correction
             </Button>
