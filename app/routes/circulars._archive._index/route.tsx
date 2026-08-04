@@ -124,6 +124,7 @@ export async function action({ request }: ActionFunctionArgs) {
     eventType,
     ...(format ? { format } : {}),
   }
+  console.log('Action function call with props:', props)
   switch (intent) {
     case 'correction':
       if (circularId === undefined)

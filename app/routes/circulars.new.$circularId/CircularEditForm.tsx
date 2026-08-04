@@ -273,6 +273,7 @@ export function CircularEditForm({
                     className="tablet:grid-col-6 desktop:grid-col-4"
                   >
                     <Checkbox
+                      value={eventType}
                       id={`eventType-${eventType}`}
                       name="eventTypes"
                       label={eventType}
@@ -286,6 +287,8 @@ export function CircularEditForm({
                               )
                             : current.filter((value) => value !== eventType)
                         )
+                        console.log('Most recent selection:', eventType, checked)
+                        console.log('selectedEventTypes', selectedEventTypes)
                       }}
                     />
                   </div>
@@ -363,6 +366,17 @@ export function CircularEditForm({
               type="submit"
               name="intent"
               value="correction"
+              onClick={() => {
+                console.log('Requesting correction for circularId:', circularId)
+                console.log('Current form values:', {
+                  subject,
+                  body,
+                  format,
+                  submitter,
+                  eventId,
+                  selectedEventTypes,
+                })
+              }}
             >
               Request Correction
             </Button>

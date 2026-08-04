@@ -735,6 +735,7 @@ export function validateCircular({
   if (!(format === undefined || formatIsValid(format)))
     throw new Response('format is invalid', { status: 400 })
   if (!eventTypesAreValid(eventType))
+    console.log('eventTypes when failing: ', eventType)
     throw new Response('Event types are invalid', { status: 400 })
 }
 
