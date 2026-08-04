@@ -124,7 +124,7 @@ export function CircularEditForm({
   defaultSubject: string
   searchString: string
   defaultEventId?: string
-  defaultEventTypes?: string[]
+  defaultEventTypes?: (typeof eventTypes)[number][]
 }) {
   let formSearchString = '?index'
   if (searchString) {
@@ -141,6 +141,7 @@ export function CircularEditForm({
   const [selectedEventTypes, setSelectedEventTypes] = useState(
     defaultSelectedEventTypes
   )
+  const [autofillEventTypes, setAutofillEventTypes] = useState(true)
   const subjectValid = subjectIsValid(subject)
   const derivedEventId = parseEventFromSubject(subject)
   const [linkEventId, setLinkEventId] = useState(
@@ -284,6 +285,15 @@ export function CircularEditForm({
             />
             <fieldset className="margin-top-2">
               <legend className="usa-label margin-bottom-1">Event Types</legend>
+              {autofillEventTypes &&
+                selectedEventTypes.map((eventType) => (
+                  <input
+                    key={`selected-${eventType}`}
+                    type="hidden"
+                    name="eventTypes"
+                    value={eventType}
+                  />
+                ))}
               <div className="grid-row grid-gap-2">
                 {eventTypes.map((eventType) => (
                   <div
@@ -296,7 +306,12 @@ export function CircularEditForm({
                       name="eventTypes"
                       label={eventType}
                       checked={selectedEventTypes.includes(eventType)}
+                      disabled={autofillEventTypes}
+                      className={classnames({
+                        'text-base-dark': autofillEventTypes,
+                      })}
                       onChange={({ target: { checked } }) => {
+                        if (autofillEventTypes) return
                         setSelectedEventTypes((current) =>
                           checked
                             ? eventTypes.filter(
@@ -311,6 +326,23 @@ export function CircularEditForm({
                 ))}
               </div>
             </fieldset>
+            <Checkbox
+              id="autofill-eventTypes"
+              name="autofill-eventTypes"
+              className="margin-bottom-2"
+              label="Automatically fill event types from subject"
+              checked={autofillEventTypes}
+              onChange={() => {
+                if (autofillEventTypes) {
+                  setSelectedEventTypes(
+                    eventTypes.filter((eventType) =>
+                      parseEventFromSubject(subject)?.includes(eventType)
+                    )
+                  )
+                }
+                setAutofillEventTypes((current) => !current)
+              }}
+            />
           </>
         )}
         <label hidden htmlFor="body">
