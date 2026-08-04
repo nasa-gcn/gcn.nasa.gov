@@ -339,7 +339,7 @@ export function CircularEditForm({
                   label="Automatically fill event types from subject"
                   checked={autofillEventTypes}
                   onChange={() => {
-                    if (autofillEventTypes) {
+                    if (!autofillEventTypes) {
                       setSelectedEventTypes(
                         eventTypes.filter((eventType) =>
                           parseEventFromSubject(subject)?.includes(eventType)
