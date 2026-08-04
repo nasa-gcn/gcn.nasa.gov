@@ -9,6 +9,7 @@ import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
 import { getUser } from '../_auth/user.server'
+import type { EventType} from '../circulars/circulars.lib';
 import { formatAuthor } from '../circulars/circulars.lib'
 import { get, getChangeRequest } from '../circulars/circulars.server'
 import { CircularEditForm } from './CircularEditForm'
@@ -47,7 +48,7 @@ export async function loader({
     circularId: circular.circularId,
     defaultSubmitter: circular.submitter,
     defaultEventId: circular.eventId,
-    defaultEventTypes: circular.eventType ?? [],
+    defaultEventTypes: (circular.eventType ?? []) as EventType[],
     searchString: '',
   }
 }
