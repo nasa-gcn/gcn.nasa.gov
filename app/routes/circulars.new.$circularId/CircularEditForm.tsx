@@ -34,7 +34,7 @@ import CollapsableInfo from '~/components/CollapsableInfo'
 import Spinner from '~/components/Spinner'
 import { AstroDataContext } from '~/components/circularDisplay/AstroDataContext'
 import { MarkdownBody } from '~/components/circularDisplay/Body'
-import { usePermissionModerator } from '~/root'
+import { useFeature, usePermissionModerator } from '~/root'
 
 function SyntaxExample({
   label,
@@ -157,6 +157,7 @@ export function CircularEditForm({
   const valid = subjectValid && bodyValid && submitterValid
 
   const bodyPlaceholder = useBodyPlaceholder()
+  const showEventTypes = useFeature('EVENTTYPE')
   const changesHaveBeenMade =
     body.trim() !== defaultBody.trim() ||
     subject.trim() !== defaultSubject.trim() ||
@@ -283,66 +284,73 @@ export function CircularEditForm({
                 setEventId(derivedEventId)
               }}
             />
-            <fieldset className="margin-top-2">
-              <legend className="usa-label margin-bottom-1">Event Types</legend>
-              {autofillEventTypes &&
-                selectedEventTypes.map((eventType) => (
-                  <input
-                    key={`selected-${eventType}`}
-                    type="hidden"
-                    name="eventTypes"
-                    value={eventType}
-                  />
-                ))}
-              <div className="grid-row grid-gap-2">
-                {eventTypes.map((eventType) => (
-                  <div
-                    key={eventType}
-                    className="tablet:grid-col-6 desktop:grid-col-4"
-                  >
-                    <Checkbox
-                      value={eventType}
-                      id={`eventType-${eventType}`}
-                      name="eventTypes"
-                      label={eventType}
-                      checked={selectedEventTypes.includes(eventType)}
-                      disabled={autofillEventTypes}
-                      className={classnames({
-                        'text-base-dark': autofillEventTypes,
-                      })}
-                      onChange={({ target: { checked } }) => {
-                        if (autofillEventTypes) return
-                        setSelectedEventTypes((current) =>
-                          checked
-                            ? eventTypes.filter(
-                                (value) =>
-                                  value === eventType || current.includes(value)
-                              )
-                            : current.filter((value) => value !== eventType)
-                        )
-                      }}
-                    />
+            {showEventTypes && (
+              <>
+                <fieldset className="margin-top-2">
+                  <legend className="usa-label margin-bottom-1">
+                    Event Types
+                  </legend>
+                  {autofillEventTypes &&
+                    selectedEventTypes.map((eventType) => (
+                      <input
+                        key={`selected-${eventType}`}
+                        type="hidden"
+                        name="eventTypes"
+                        value={eventType}
+                      />
+                    ))}
+                  <div className="grid-row grid-gap-2">
+                    {eventTypes.map((eventType) => (
+                      <div
+                        key={eventType}
+                        className="tablet:grid-col-6 desktop:grid-col-4"
+                      >
+                        <Checkbox
+                          value={eventType}
+                          id={`eventType-${eventType}`}
+                          name="eventTypes"
+                          label={eventType}
+                          checked={selectedEventTypes.includes(eventType)}
+                          disabled={autofillEventTypes}
+                          className={classnames({
+                            'text-base-dark': autofillEventTypes,
+                          })}
+                          onChange={({ target: { checked } }) => {
+                            if (autofillEventTypes) return
+                            setSelectedEventTypes((current) =>
+                              checked
+                                ? eventTypes.filter(
+                                    (value) =>
+                                      value === eventType ||
+                                      current.includes(value)
+                                  )
+                                : current.filter((value) => value !== eventType)
+                            )
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </fieldset>
-            <Checkbox
-              id="autofill-eventTypes"
-              name="autofill-eventTypes"
-              className="margin-bottom-2"
-              label="Automatically fill event types from subject"
-              checked={autofillEventTypes}
-              onChange={() => {
-                if (autofillEventTypes) {
-                  setSelectedEventTypes(
-                    eventTypes.filter((eventType) =>
-                      parseEventFromSubject(subject)?.includes(eventType)
-                    )
-                  )
-                }
-                setAutofillEventTypes((current) => !current)
-              }}
-            />
+                </fieldset>
+                <Checkbox
+                  id="autofill-eventTypes"
+                  name="autofill-eventTypes"
+                  className="margin-bottom-2"
+                  label="Automatically fill event types from subject"
+                  checked={autofillEventTypes}
+                  onChange={() => {
+                    if (autofillEventTypes) {
+                      setSelectedEventTypes(
+                        eventTypes.filter((eventType) =>
+                          parseEventFromSubject(subject)?.includes(eventType)
+                        )
+                      )
+                    }
+                    setAutofillEventTypes((current) => !current)
+                  }}
+                />
+              </>
+            )}
           </>
         )}
         <label hidden htmlFor="body">
