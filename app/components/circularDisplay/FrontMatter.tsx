@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { Link } from '@remix-run/react'
-import { Grid, Tag } from '@trussworks/react-uswds'
+import { Grid } from '@trussworks/react-uswds'
 import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
 import React from 'react'
