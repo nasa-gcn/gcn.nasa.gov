@@ -81,7 +81,7 @@ export function FrontMatter({
                 className="bg-primary hover:text-underline padding-0 border-0 text-normal-case"
               >
                 <Link
-                  to={`/circulars/?query='eventType':'${type}'`}
+                  to={`/circulars/types/${slug(type)}`}
                   className="display-inline-block text-white text-no-underline padding-y-05 padding-x-1"
                 >
                   {type}
