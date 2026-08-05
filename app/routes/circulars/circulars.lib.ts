@@ -313,13 +313,19 @@ export const eventTypes = [
 export type EventType = (typeof eventTypes)[number]
 
 export function formatEventTypeSlug(eventType: string): string {
-  return slug(eventType)
+  return slug(eventType).toLowerCase()
 }
 
-export function getEventTypeFromSlug(slugParam: string): EventType | undefined {
-  const targetSlug = slug(slugParam).toLowerCase()
+const eventTypeSlugs: Record<string, EventType> = eventTypes.reduce(
+  (map, type) => {
+    map[formatEventTypeSlug(type)] = type
+    return map
+  },
+  {} as Record<string, EventType>
+)
 
-  return eventTypes.find((type) => slug(type).toLowerCase() === targetSlug)
+export function getEventTypeFromSlug(slugParam: string): EventType | undefined {
+  return eventTypeSlugs[slugParam]
 }
 
 const eventTypeMatchers: Record<EventType, RegExp[]> = {

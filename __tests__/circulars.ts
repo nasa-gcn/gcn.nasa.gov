@@ -24,8 +24,8 @@ jest.mock('@architect/functions')
 // would be changed by the slugger, ensuring they are all lowercase is enough to mock the behavior
 // of github-slugger in this case.
 jest.mock('github-slugger', () => ({
-  slug: (eventId: string) => {
-    return eventId.toLowerCase()
+  slug: (eventType: string) => {
+    return eventType.toLowerCase()
   },
 }))
 
