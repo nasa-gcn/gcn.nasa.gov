@@ -22,6 +22,7 @@ import { dedent } from 'ts-dedent'
 
 import {
   type CircularFormat,
+  type EventType,
   bodyIsValid,
   eventTypes,
   parseEventFromSubject,
@@ -124,7 +125,7 @@ export function CircularEditForm({
   defaultSubject: string
   searchString: string
   defaultEventId?: string
-  defaultEventTypes?: (typeof eventTypes)[number][]
+  defaultEventTypes?: EventType[]
 }) {
   let formSearchString = '?index'
   if (searchString) {
