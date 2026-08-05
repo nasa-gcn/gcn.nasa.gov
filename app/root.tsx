@@ -276,11 +276,8 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! MAXI Notices and Schema v7.2.0. See{' '}
-          <Link
-            className="usa-link"
-            to="/news#new-maxi-notices-and-schema-v720"
-          >
+          New JavaScript client! See{' '}
+          <Link className="usa-link" to="/news#new-javascript-client-v100">
             news and announcements
           </Link>
         </NewsBanner>
