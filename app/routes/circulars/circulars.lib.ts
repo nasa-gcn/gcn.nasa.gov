@@ -5,6 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
+import { slug } from 'github-slugger'
 import { dedent } from 'ts-dedent'
 
 export interface CircularMetadata {
@@ -317,6 +318,20 @@ export function eventTypeIsValid(eventType: string): eventType is EventType {
 
 export function eventTypesAreValid(eventTypes?: string[]) {
   return eventTypes?.every(eventTypeIsValid) ?? true
+export function formatEventTypeSlug(eventType: string): string {
+  return slug(eventType).toLowerCase()
+}
+
+const eventTypeSlugs: Record<string, EventType> = eventTypes.reduce(
+  (map, type) => {
+    map[formatEventTypeSlug(type)] = type
+    return map
+  },
+  {} as Record<string, EventType>
+)
+
+export function getEventTypeFromSlug(slugParam: string): EventType | undefined {
+  return eventTypeSlugs[slugParam]
 }
 
 const eventTypeMatchers: Record<EventType, RegExp[]> = {
