@@ -318,6 +318,8 @@ export function eventTypeIsValid(eventType: string): eventType is EventType {
 
 export function eventTypesAreValid(eventTypes?: string[]) {
   return eventTypes?.every(eventTypeIsValid) ?? true
+}
+
 export function formatEventTypeSlug(eventType: string): string {
   return slug(eventType).toLowerCase()
 }
