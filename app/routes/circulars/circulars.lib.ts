@@ -313,7 +313,7 @@ export const eventTypes = [
 export type EventType = (typeof eventTypes)[number]
 
 export function formatEventTypeSlug(eventType: string): string {
-  return slug(eventType).toLocaleLowerCase()
+  return slug(eventType).toLowerCase()
 }
 
 const eventTypeSlugs: Record<string, EventType> = eventTypes.reduce(
