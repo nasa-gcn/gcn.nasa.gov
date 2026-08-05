@@ -735,7 +735,7 @@ export function validateCircular({
   if (!(format === undefined || formatIsValid(format)))
     throw new Response('format is invalid', { status: 400 })
   if (!eventTypesAreValid(eventType))
-    throw new Response('Event types are invalid', { status: 400 })
+    throw new Response('event types are invalid', { status: 400 })
 }
 
 async function getEmails() {
