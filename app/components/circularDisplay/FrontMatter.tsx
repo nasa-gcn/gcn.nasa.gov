@@ -74,10 +74,11 @@ export function FrontMatter({
       )}
       {eventTypeFeatureFlag && eventType && (
         <FrontMatterItem label="Type">
-          {eventType.map((type) => (
-            <Link key={type} to={`/circulars/types/${slug(type)}`}>
-              {type}
-            </Link>
+          {eventType.map((type, index) => (
+            <React.Fragment key={type}>
+              {index > 0 && ', '}
+              <Link to={`/circulars/types/${slug(type)}`}>{type}</Link>
+            </React.Fragment>
           ))}
         </FrontMatterItem>
       )}
