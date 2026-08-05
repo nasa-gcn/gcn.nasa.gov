@@ -74,21 +74,11 @@ export function FrontMatter({
       )}
       {eventTypeFeatureFlag && eventType && (
         <FrontMatterItem label="Type">
-          <div className="usa-collection__tags display-flex flex-wrap gap-1">
-            {eventType.map((type) => (
-              <Tag
-                key={type}
-                className="bg-primary hover:text-underline padding-0 border-0 text-normal-case"
-              >
-                <Link
-                  to={`/circulars/types/${slug(type)}`}
-                  className="display-inline-block text-white text-no-underline padding-y-05 padding-x-1"
-                >
-                  {type}
-                </Link>
-              </Tag>
-            ))}
-          </div>
+          {eventType.map((type) => (
+            <Link key={type} to={`/circulars/types/${slug(type)}`}>
+              {type}
+            </Link>
+          ))}
         </FrontMatterItem>
       )}
       <FrontMatterItem label="Date">
