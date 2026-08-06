@@ -57,15 +57,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'INTEGRAL_WEAK',
   ],
   IPN: ['IPN_POS', 'IPN_RAW', 'IPN_SEG'],
-  LVC: [
-    'LVC_COUNTERPART',
-    'LVC_EARLY_WARNING',
-    'LVC_INITIAL',
-    'LVC_PRELIMINARY',
-    'LVC_RETRACTION',
-    'LVC_TEST',
-    'LVC_UPDATE',
-  ],
   MAXI: ['MAXI_KNOWN', 'MAXI_TEST', 'MAXI_UNKNOWN'],
   Swift: [
     'SWIFT_ACTUAL_POINTDIR',
