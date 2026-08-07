@@ -312,6 +312,14 @@ export const eventTypes = [
 
 export type EventType = (typeof eventTypes)[number]
 
+export function eventTypeIsValid(eventType: string): eventType is EventType {
+  return (eventTypes as readonly string[]).includes(eventType)
+}
+
+export function eventTypesAreValid(eventTypes?: string[]) {
+  return eventTypes?.every(eventTypeIsValid) ?? true
+}
+
 export function formatEventTypeSlug(eventType: string): string {
   return slug(eventType).toLowerCase()
 }
