@@ -7,10 +7,14 @@
  */
 import { Link } from '@remix-run/react'
 
-export default function () {
+export default function CircularsHeader({
+  eventType,
+}: {
+  eventType?: string
+} = {}) {
   return (
     <>
-      <h1>GCN Circulars</h1>
+      <h1>GCN Circulars{eventType ? `: ${eventType}` : ''}</h1>
       <p className="usa-paragraph">
         <b>
           GCN Circulars are rapid astronomical bulletins submitted by and
