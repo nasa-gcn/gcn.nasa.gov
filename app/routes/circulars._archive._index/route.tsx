@@ -7,25 +7,15 @@
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
-  Form,
-  Link,
   json,
   useActionData,
   useLoaderData,
+  useRouteError,
   useSearchParams,
-  useSubmit,
 } from '@remix-run/react'
-import {
-  Alert,
-  Button,
-  ButtonGroup,
-  ErrorMessage,
-  Icon,
-  Label,
-  TextInput,
-} from '@trussworks/react-uswds'
+import { Alert } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useId, useState } from 'react'
+import { useId } from 'react'
 
 import {
   circularRedirect,
@@ -38,20 +28,14 @@ import {
   putVersion,
   search,
 } from '../circulars/circulars.server'
-import CircularsHeader from './CircularsHeader'
+import ArchiveHeader from './ArchiveHeader'
 import CircularsIndex from './CircularsIndex'
-import { DateSelector } from './DateSelectorMenu'
-import { LuceneAccordion } from './LuceneMenu'
-import { SortSelector } from './SortSelectorButton'
 import SynonymGroupIndex from './SynonymGroupIndex'
-import Hint from '~/components/Hint'
-import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { usePermissionModerator } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 import {
   type CircularFormat,
@@ -61,16 +45,16 @@ import {
 import type { SynonymGroup } from '~/routes/synonyms/synonyms.lib'
 import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
 
-import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
-
 export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const { searchParams } = new URL(url)
   const query = searchParams.get('query') || undefined
   const view = searchParams.get('view') || 'index'
   const isGroupView = view === 'group'
-
   if (query && view === 'index') {
     await circularRedirect(query)
+  }
+  if (query == 'crash_test') {
+    throw new Error('Crash test error')
   }
 
   const startDate = searchParams.get('startDate') || undefined
@@ -199,199 +183,74 @@ export default function () {
     isGroupView,
   } = useLoaderData<typeof loader>()
 
+  const formId = useId()
+  const [searchParams] = useSearchParams()
+
+  const query = searchParams.get('query') || ''
+  const startDate = searchParams.get('startDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
+  const view = searchParams.get('view') || 'index'
+  let searchString = searchParams.toString()
+  if (searchString) searchString = `?${searchString}`
+
   // Concatenate items from the action and loader functions
   const allItems = [
     ...(result?.newCircular ? [result.newCircular] : []),
     ...(items || []),
   ]
 
-  const formId = useId()
-  const submit = useSubmit()
-  const [searchParams] = useSearchParams()
-  const userIsModerator = usePermissionModerator()
-
-  // Strip off the ?index param if we navigated here from a form.
-  // See https://remix.run/docs/en/main/guides/index-query-param.
-  searchParams.delete('index')
-
-  const query = searchParams.get('query') || ''
-  const startDate = searchParams.get('startDate') || undefined
-  const endDate = searchParams.get('endDate') || undefined
-  const sort = searchParams.get('sort') || 'circularID'
-  const view = searchParams.get('view') || 'index'
-
-  let searchString = searchParams.toString()
-  if (searchString) searchString = `?${searchString}`
-
-  const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
-  const searchText = isGroupView ? 'Event Name' : 'Search'
-
-  function getSelection(selectionOption: string) {
-    return selectionOption === view
-      ? 'usa-button padding-y-1'
-      : 'usa-button usa-button--outline padding-y-1'
-  }
-
   return (
-    <>
-      {result?.intent === 'correction' && (
-        <Alert
-          type="success"
-          headingLevel="h1"
-          slim
-          heading="Request Submitted"
-        >
-          Thank you for your correction. A GCN Circulars moderator will review
-          it shortly.
+    <ArchiveHeader
+      result={result}
+      requestedChangeCount={requestedChangeCount}
+      formId={formId}
+      queryFallback={queryFallback}
+    >
+      {isGroupView ? (
+        <SynonymGroupIndex
+          allItems={allItems as SynonymGroup[]}
+          searchString={searchString}
+          totalItems={totalItems}
+          query={query}
+        />
+      ) : (
+        <CircularsIndex
+          allItems={allItems as CircularMetadata[]}
+          searchString={searchString}
+          totalItems={totalItems}
+          query={query}
+        />
+      )}
+
+      <PaginationSelectionFooter
+        query={query}
+        startDate={startDate}
+        endDate={endDate}
+        page={page}
+        limit={limit}
+        totalPages={totalPages}
+        form={formId}
+        view={view}
+      />
+    </ArchiveHeader>
+  )
+}
+
+export function ErrorBoundary() {
+  const formId = useId()
+  const error = useRouteError()
+  console.error('Search error:', error)
+  return (
+    <ArchiveHeader formId={formId}>
+      <div className="margin-top-4">
+        <Alert type="error" headingLevel="h2" heading="Archive Unavailable">
+          Browsing the Circulars Archive is currently unavailable. Please check
+          back later.
+          <br />
+          Note: Circulars can still be submitted through the web form or by
+          email and are still being distributed to subscribers.
         </Alert>
-      )}
-
-      <CircularsHeader />
-
-      {userIsModerator && requestedChangeCount > 0 && (
-        <Link to="moderation" className="usa-button usa-button--outline">
-          Review {requestedChangeCount} Requested Change
-          {requestedChangeCount > 1 ? 's' : ''}
-        </Link>
-      )}
-      {userIsModerator && (
-        <Link to="/synonyms" className="usa-button usa-button--outline">
-          Synonym Moderation
-        </Link>
-      )}
-
-      <ToolbarButtonGroup className="position-sticky top-0 bg-white margin-bottom-1 padding-top-1 z-300">
-        <Form
-          preventScrollReset
-          className="display-inline-block usa-search usa-search--small"
-          role="search"
-          id={formId}
-        >
-          <Label srOnly htmlFor="query">
-            Search
-          </Label>
-          <input type="hidden" name="view" value={view} />
-          <TextInput
-            autoFocus
-            className="minw-15"
-            id="query"
-            name="query"
-            type="search"
-            defaultValue={inputQuery}
-            placeholder={searchText}
-            aria-describedby="searchHint"
-            onChange={({ target: { form, value } }) => {
-              setInputQuery(value)
-              if (!value) submit(form, { preventScrollReset: true })
-            }}
-          />
-          <Button type="submit">
-            <img
-              src={searchImg}
-              className="usa-search__submit-icon"
-              alt="Search"
-            />
-          </Button>
-        </Form>
-
-        <ButtonGroup type="segmented">
-          <Link
-            to={`/circulars?view=index&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('index')}
-          >
-            <Icon.List role="presentation" />
-            Circulars
-          </Link>
-          <Link
-            to={`/circulars?view=group&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('group')}
-          >
-            <Icon.ContentCopy role="presentation" />
-            Events
-          </Link>
-        </ButtonGroup>
-
-        <Link to={`/circulars/new${searchString}`}>
-          <Button type="button" className="padding-y-1">
-            <Icon.Edit role="presentation" /> New
-          </Button>
-        </Link>
-        {!isGroupView && (
-          <DateSelector
-            form={formId}
-            defaultStartDate={startDate}
-            defaultEndDate={endDate}
-          />
-        )}
-
-        {query && !isGroupView && (
-          <SortSelector form={formId} defaultValue={sort} />
-        )}
-      </ToolbarButtonGroup>
-      {queryFallback && (
-        <ErrorMessage>
-          "{query}" does not adhere to advanced search syntax. Please refer to
-          the{' '}
-          <Link
-            className="usa-link"
-            to="/docs/circulars/archive#advanced-search"
-          >
-            documentation
-          </Link>{' '}
-          and try again.
-        </ErrorMessage>
-      )}
-      <Hint id="searchHint">
-        {isGroupView ? (
-          <>
-            Search for Event Groups by event name (e.g. 'GRB 123456A',
-            'GRB123456A', '123456A'). <br />
-          </>
-        ) : (
-          <>
-            Search for Circulars by submitter, subject, or body text (e.g.
-            'Fermi GRB'). <br />
-            To navigate to a specific circular, enter the associated Circular ID
-            (e.g. 'gcn123', 'Circular 123', or '123').
-          </>
-        )}
-      </Hint>
-
-      {!isGroupView && <LuceneAccordion />}
-
-      {clean && (
-        <>
-          {isGroupView ? (
-            <SynonymGroupIndex
-              allItems={items as SynonymGroup[]}
-              searchString={searchString}
-              totalItems={totalItems}
-              query={query}
-            />
-          ) : (
-            <CircularsIndex
-              allItems={allItems as CircularMetadata[]}
-              searchString={searchString}
-              totalItems={totalItems}
-              query={query}
-            />
-          )}
-
-          <PaginationSelectionFooter
-            query={query}
-            startDate={startDate}
-            endDate={endDate}
-            page={page}
-            limit={limit}
-            totalPages={totalPages}
-            form={formId}
-            view={view}
-          />
-        </>
-      )}
-    </>
+      </div>
+    </ArchiveHeader>
   )
 }
