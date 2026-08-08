@@ -314,11 +314,6 @@ export default function () {
           </Link>
         </ButtonGroup>
 
-        <Link to={`/circulars/new${searchString}`}>
-          <Button type="button" className="padding-y-1">
-            <Icon.Edit role="presentation" /> New
-          </Button>
-        </Link>
         {!isGroupView && (
           <DateSelector
             form={formId}
