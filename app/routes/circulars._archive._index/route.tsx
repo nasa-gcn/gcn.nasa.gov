@@ -200,8 +200,7 @@ export default function () {
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
 
-  const [inputQuery] = useState(query)
-
+  const [inputQuery, setInputQuery] = useState(query)
   const clean = inputQuery === query
 
   return (
@@ -210,6 +209,8 @@ export default function () {
         result={result}
         requestedChangeCount={requestedChangeCount}
         formId={formId}
+        inputQuery={inputQuery}
+        setInputQuery={setInputQuery}
         queryFallback={queryFallback}
       ></ArchiveHeader>
 

@@ -16,7 +16,6 @@ import {
   TextInput,
 } from '@trussworks/react-uswds'
 import { clamp } from 'lodash'
-import { useState } from 'react'
 
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
@@ -53,12 +52,16 @@ type ArchiveHeaderProps = {
   result?: any
   requestedChangeCount?: number
   formId: string
+  inputQuery: string
+  setInputQuery: (query: string) => void
   queryFallback?: boolean
 }
 export default function ArchiveHeader({
   result,
   requestedChangeCount = 0,
   formId,
+  inputQuery,
+  setInputQuery,
   queryFallback,
 }: ArchiveHeaderProps) {
   const submit = useSubmit()
@@ -79,8 +82,6 @@ export default function ArchiveHeader({
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
-
-  const [inputQuery, setInputQuery] = useState(query)
 
   const searchText = isGroupView ? 'Event Name' : 'Search'
 
