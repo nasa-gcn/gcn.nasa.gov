@@ -310,6 +310,24 @@ export const eventTypes = [
   'Misc',
 ] as const
 
+export const eventTypesHumanReadable: Record<string, string> = {
+  Retraction: 'Retractions',
+  GRB: 'Gamma-ray Bursts',
+  'Gamma-ray Transient': 'Gamma-ray Transients',
+  GW: 'Gravitational Waves',
+  SGR: 'Soft Gamma Repeaters',
+  FRB: 'Fast Radio Bursts',
+  SN: 'Supernovae',
+  Nova: 'Novae',
+  Neutrino: 'Neutrinos',
+  'X-ray Transient': 'X-ray Transients',
+  Afterglow: 'Afterglows',
+  'Optical Transient': 'Optical Transients',
+  'Radio Transient': 'Radio Transients',
+  Kilonova: 'Kilonovae',
+  Misc: 'Miscellaneous',
+}
+
 export type EventType = (typeof eventTypes)[number]
 
 export function formatEventTypeSlug(eventType: string): string {

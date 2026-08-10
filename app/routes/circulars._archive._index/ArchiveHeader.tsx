@@ -23,16 +23,17 @@ import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { usePermissionModerator } from '~/root'
+import { eventTypesHumanReadable } from '~/routes/circulars/circulars.lib'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 const ArchiveHeaderText = ({
-  eventType,
+  eventTypeLabel,
 }: {
-  eventType?: string
+  eventTypeLabel?: string
 } = {}) => (
   <>
-    <h1>GCN Circulars{eventType ? `: ${eventType}` : ''}</h1>
+    <h1>GCN Circulars{eventTypeLabel ? `: ${eventTypeLabel}` : ''}</h1>
     <p className="usa-paragraph">
       <b>
         GCN Circulars are rapid astronomical bulletins submitted by and
@@ -82,7 +83,13 @@ export default function ArchiveHeader({
   const sort = searchParams.get('sort') || 'circularID'
   const view = searchParams.get('view') || 'index'
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
+  // Ensures isGroupView is always false if on an eventType route
   const isGroupView = eventType ? false : view === 'group'
+
+  const eventTypeLabel =
+    eventType && eventTypesHumanReadable[eventType]
+      ? eventTypesHumanReadable[eventType]
+      : undefined
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -109,7 +116,7 @@ export default function ArchiveHeader({
         </Alert>
       )}
 
-      <ArchiveHeaderText eventType={eventType} />
+      <ArchiveHeaderText eventTypeLabel={eventTypeLabel} />
 
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
