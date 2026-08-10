@@ -7,24 +7,12 @@
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import {
-  Form,
-  Link,
   json,
   redirect,
   useActionData,
   useLoaderData,
   useSearchParams,
-  useSubmit,
 } from '@remix-run/react'
-import {
-  Alert,
-  Button,
-  ButtonGroup,
-  ErrorMessage,
-  Icon,
-  Label,
-  TextInput,
-} from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
@@ -39,31 +27,20 @@ import {
   putVersion,
   search,
 } from './circulars/circulars.server'
-import Hint from '~/components/Hint'
-import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { feature, origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 import { getFormDataString } from '~/lib/utils'
 import { postZendeskRequest } from '~/lib/zendesk.server'
-import { usePermissionModerator } from '~/root'
 import { getUser } from '~/routes/_auth/user.server'
 import ArchiveHeader from '~/routes/circulars._archive._index/ArchiveHeader'
 import ArchiveIndex from '~/routes/circulars._archive._index/ArchiveIndex'
-import { DateSelector } from '~/routes/circulars._archive._index/DateSelectorMenu'
-import { LuceneAccordion } from '~/routes/circulars._archive._index/LuceneMenu'
-import { SortSelector } from '~/routes/circulars._archive._index/SortSelectorButton'
-import SynonymGroupIndex from '~/routes/circulars._archive._index/SynonymGroupIndex'
 import { getEventTypeFromSlug } from '~/routes/circulars/circulars.lib'
 import {
   type CircularFormat,
   type CircularMetadata,
   circularFormats,
 } from '~/routes/circulars/circulars.lib'
-import type { SynonymGroup } from '~/routes/synonyms/synonyms.lib'
-import { searchSynonymsByEventId } from '~/routes/synonyms/synonyms.server'
-
-import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
 export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
   if (!feature('EVENTTYPE')) {
