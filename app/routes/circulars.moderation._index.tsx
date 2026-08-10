@@ -17,6 +17,7 @@ import type {
 } from './circulars/circulars.lib'
 import {
   bulkDeleteChangeRequests,
+  get,
   getChangeRequests,
   moderatorGroup,
 } from './circulars/circulars.server'
@@ -34,8 +35,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!user || !user.groups.includes(moderatorGroup))
     throw new Response(null, { status: 403 })
   const changeRequests = await getChangeRequests()
+  const circulars = await Promise.all(
+    changeRequests.map((request) => get(request.circularId))
+  )
   return {
     changeRequests,
+    circulars,
   }
 }
 
@@ -59,7 +64,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function () {
-  const { changeRequests } = useLoaderData<typeof loader>()
+  const { changeRequests, circulars } = useLoaderData<typeof loader>()
   const [selectedCount, setSelectedCount] = useState(0)
 
   function checkboxOnChange(checked: boolean) {
@@ -83,10 +88,11 @@ export default function () {
           </Button>
         </ToolbarButtonGroup>
         <SegmentedCards>
-          {changeRequests.map((correction) => (
+          {changeRequests.map((correction, index) => (
             <CircularChangeRequestRow
               key={`${correction.circularId}-${correction.requestor}`}
               changeRequest={correction}
+              circular={circulars[index]}
               checkboxOnChange={checkboxOnChange}
             />
           ))}
@@ -98,11 +104,15 @@ export default function () {
 
 function CircularChangeRequestRow({
   changeRequest,
+  circular,
   checkboxOnChange,
 }: {
   changeRequest: CircularChangeRequest
+  circular: Awaited<ReturnType<typeof get>>
   checkboxOnChange: (checked: boolean) => void
 }) {
+  const modifiedFields = getModifiedFields(circular, changeRequest)
+
   return (
     <Grid row>
       <div className="tablet:grid-col flex-fill">
@@ -123,6 +133,24 @@ function CircularChangeRequestRow({
                 <strong>Requestor: </strong>
                 {changeRequest.requestor}
               </div>
+              {changeRequest.zendeskTicketId && (
+                <div>
+                  <strong>Zendesk Ticket: </strong>
+                  <a
+                    href={`https://nasa-gcn.zendesk.com/agent/tickets/${changeRequest.zendeskTicketId}`}
+                    target="_blank"
+                    rel="external noopener"
+                  >
+                    {changeRequest.zendeskTicketId}
+                  </a>
+                </div>
+              )}
+              {modifiedFields.length > 0 && (
+                <div>
+                  <strong>Modified Fields: </strong>
+                  {modifiedFields.join(', ')}
+                </div>
+              )}
             </>
           }
         />
@@ -137,4 +165,31 @@ function CircularChangeRequestRow({
       </div>
     </Grid>
   )
+}
+
+type RequestedFieldKey = keyof Pick<
+  CircularChangeRequest,
+  'submitter' | 'subject' | 'eventId' | 'format' | 'body'
+>
+
+const requestedFieldLabels = {
+  submitter: 'Submitter',
+  subject: 'Subject',
+  eventId: 'Event ID',
+  format: 'Format',
+  body: 'Body',
+} satisfies Record<RequestedFieldKey, string>
+
+function getModifiedFields(
+  circular: Awaited<ReturnType<typeof get>>,
+  changeRequest: CircularChangeRequest
+) {
+  return (Object.keys(requestedFieldLabels) as RequestedFieldKey[])
+    .filter((key) => {
+      const changedValue = changeRequest[key]
+      const originalValue = circular[key]
+
+      return changedValue !== originalValue
+    })
+    .map((key) => requestedFieldLabels[key])
 }
