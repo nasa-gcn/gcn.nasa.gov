@@ -17,7 +17,6 @@ import {
 } from '@trussworks/react-uswds'
 import { clamp } from 'lodash'
 
-import { getEventTypeFromSlug } from '../circulars/circulars.lib'
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
