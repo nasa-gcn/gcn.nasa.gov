@@ -17,6 +17,7 @@ import {
 } from '@trussworks/react-uswds'
 import { clamp } from 'lodash'
 
+import { getEventTypeFromSlug } from '../circulars/circulars.lib'
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
@@ -26,27 +27,29 @@ import { usePermissionModerator } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-const ArchiveHeaderText = () => {
-  return (
-    <>
-      <h1>GCN Circulars</h1>
-      <p className="usa-paragraph">
-        <b>
-          GCN Circulars are rapid astronomical bulletins submitted by and
-          distributed to community members worldwide.
-        </b>{' '}
-        They are used to share discoveries, observations, quantitative near-term
-        predictions, requests for follow-up observations, or future observing
-        plans related to high-energy, multi-messenger, and variable or transient
-        astrophysical events. See the{' '}
-        <Link className="usa-link" to="/docs/circulars">
-          documentation
-        </Link>{' '}
-        for help with subscribing to or submitting Circulars.
-      </p>
-    </>
-  )
-}
+const ArchiveHeaderText = ({
+  eventType,
+}: {
+  eventType?: string
+} = {}) => (
+  <>
+    <h1>GCN Circulars{eventType ? `: ${eventType}` : ''}</h1>
+    <p className="usa-paragraph">
+      <b>
+        GCN Circulars are rapid astronomical bulletins submitted by and
+        distributed to community members worldwide.
+      </b>{' '}
+      They are used to share discoveries, observations, quantitative near-term
+      predictions, requests for follow-up observations, or future observing
+      plans related to high-energy, multi-messenger, and variable or transient
+      astrophysical events. See the{' '}
+      <Link className="usa-link" to="/docs/circulars">
+        documentation
+      </Link>{' '}
+      for help with subscribing to or submitting Circulars.
+    </p>
+  </>
+)
 
 type ArchiveHeaderProps = {
   result?: any
@@ -55,6 +58,7 @@ type ArchiveHeaderProps = {
   inputQuery: string
   setInputQuery: (query: string) => void
   queryFallback?: boolean
+  eventType?: string
 }
 export default function ArchiveHeader({
   result,
@@ -63,6 +67,7 @@ export default function ArchiveHeader({
   inputQuery,
   setInputQuery,
   queryFallback,
+  eventType,
 }: ArchiveHeaderProps) {
   const submit = useSubmit()
   const [searchParams] = useSearchParams()
@@ -78,7 +83,7 @@ export default function ArchiveHeader({
   const sort = searchParams.get('sort') || 'circularID'
   const view = searchParams.get('view') || 'index'
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
-  const isGroupView = view === 'group'
+  const isGroupView = eventType ? false : view === 'group'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -105,7 +110,7 @@ export default function ArchiveHeader({
         </Alert>
       )}
 
-      <ArchiveHeaderText />
+      <ArchiveHeaderText eventType={eventType} />
 
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
@@ -153,24 +158,26 @@ export default function ArchiveHeader({
           </Button>
         </Form>
 
-        <ButtonGroup type="segmented">
-          <Link
-            to={`/circulars?view=index&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('index')}
-          >
-            <Icon.List role="presentation" />
-            Circulars
-          </Link>
-          <Link
-            to={`/circulars?view=group&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('group')}
-          >
-            <Icon.ContentCopy role="presentation" />
-            Events
-          </Link>
-        </ButtonGroup>
+        {!eventType && (
+          <ButtonGroup type="segmented">
+            <Link
+              to={`/circulars?view=index&limit=${limit}`}
+              preventScrollReset
+              className={getSelection('index')}
+            >
+              <Icon.List role="presentation" />
+              Circulars
+            </Link>
+            <Link
+              to={`/circulars?view=group&limit=${limit}`}
+              preventScrollReset
+              className={getSelection('group')}
+            >
+              <Icon.ContentCopy role="presentation" />
+              Events
+            </Link>
+          </ButtonGroup>
+        )}
 
         <Link to={`/circulars/new${searchString}`}>
           <Button type="button" className="padding-y-1">
