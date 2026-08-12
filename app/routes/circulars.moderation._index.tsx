@@ -12,6 +12,7 @@ import { useState } from 'react'
 
 import { getUser } from './_auth/user.server'
 import type {
+  Circular,
   CircularChangeRequest,
   CircularChangeRequestKeys,
 } from './circulars/circulars.lib'
@@ -167,29 +168,26 @@ function CircularChangeRequestRow({
   )
 }
 
-type RequestedFieldKey = keyof Pick<
-  CircularChangeRequest,
-  'submitter' | 'subject' | 'eventId' | 'format' | 'body'
->
-
-const requestedFieldLabels = {
-  submitter: 'Submitter',
-  subject: 'Subject',
-  eventId: 'Event ID',
-  format: 'Format',
-  body: 'Body',
-} satisfies Record<RequestedFieldKey, string>
-
 function getModifiedFields(
-  circular: Awaited<ReturnType<typeof get>>,
+  circular: Circular,
   changeRequest: CircularChangeRequest
 ) {
-  return (Object.keys(requestedFieldLabels) as RequestedFieldKey[])
+  const excludedFields = [
+    'submittedHow',
+    'format',
+    'bibcode',
+    'editedOn',
+    'createdOn',
+    'version',
+  ]
+  return (Object.keys(circular) as (keyof Circular)[])
     .filter((key) => {
-      const changedValue = changeRequest[key]
-      const originalValue = circular[key]
+      const changedValue = changeRequest[key as keyof CircularChangeRequest]
+      const originalValue = circular[key as keyof Circular]
 
-      return changedValue !== originalValue
+      return (
+        changedValue !== originalValue && !excludedFields.includes(String(key))
+      )
     })
-    .map((key) => requestedFieldLabels[key])
+    .map((key) => String(key))
 }
