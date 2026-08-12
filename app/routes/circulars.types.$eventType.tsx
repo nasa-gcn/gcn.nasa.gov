@@ -5,7 +5,7 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
+import type { LoaderFunctionArgs } from '@remix-run/node'
 import {
   json,
   redirect,
@@ -18,29 +18,17 @@ import { useId, useState } from 'react'
 
 import {
   circularRedirect,
-  createChangeRequest,
-  get,
-  getChangeRequest,
   getChangeRequests,
-  moderatorGroup,
-  put,
-  putVersion,
   search,
 } from './circulars/circulars.server'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { feature, origin } from '~/lib/env.server'
 import { getCanonicalUrlHeaders } from '~/lib/headers.server'
-import { getFormDataString } from '~/lib/utils'
-import { postZendeskRequest } from '~/lib/zendesk.server'
-import { getUser } from '~/routes/_auth/user.server'
 import ArchiveHeader from '~/routes/circulars._archive._index/ArchiveHeader'
 import ArchiveIndex from '~/routes/circulars._archive._index/ArchiveIndex'
+import type { action } from '~/routes/circulars._archive._index/route'
 import { getEventTypeFromSlug } from '~/routes/circulars/circulars.lib'
-import {
-  type CircularFormat,
-  type CircularMetadata,
-  circularFormats,
-} from '~/routes/circulars/circulars.lib'
+import { type CircularMetadata } from '~/routes/circulars/circulars.lib'
 
 export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
   if (!feature('EVENTTYPE')) {
@@ -92,91 +80,6 @@ export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
     },
     { headers: getCanonicalUrlHeaders(new URL(`/circulars`, origin)) }
   )
-}
-
-export async function action({ request }: ActionFunctionArgs) {
-  const data = await request.formData()
-  const body = getFormDataString(data, 'body')
-  const subject = getFormDataString(data, 'subject')
-  const intent = getFormDataString(data, 'intent')
-  const format = getFormDataString(data, 'format') as CircularFormat | undefined
-  const eventId = getFormDataString(data, 'eventId') || undefined
-  if (format && !circularFormats.includes(format)) {
-    throw new Response('Invalid format', { status: 400 })
-  }
-  if (!body || !subject)
-    throw new Response('Body and subject are required', { status: 400 })
-  const user = await getUser(request)
-  const circularId = getFormDataString(data, 'circularId')
-  let newCircular
-  const props = { body, subject, eventId, ...(format ? { format } : {}) }
-  switch (intent) {
-    case 'correction':
-      if (circularId === undefined)
-        throw new Response('circularId is required', { status: 400 })
-
-      if (!user?.email) throw new Response(null, { status: 403 })
-      const name = user.name ?? user.email
-      let submitter
-      if (user.groups.includes(moderatorGroup)) {
-        submitter = getFormDataString(data, 'submitter')
-        if (!submitter) throw new Response(null, { status: 400 })
-      }
-
-      let zendeskTicketId: number | undefined
-
-      try {
-        zendeskTicketId = (
-          await getChangeRequest(parseFloat(circularId), user.sub)
-        ).zendeskTicketId
-      } catch (err) {
-        if (!(err instanceof Response && err.status === 404)) throw err
-      }
-
-      if (!zendeskTicketId) {
-        zendeskTicketId = await postZendeskRequest({
-          requester: { name, email: user.email },
-          subject: `Change Request for Circular ${circularId}`,
-          comment: {
-            body: `${name} has requested an edit. Review at ${origin}/circulars`,
-          },
-        })
-      }
-
-      if (!zendeskTicketId) throw new Response(null, { status: 500 })
-
-      await createChangeRequest(
-        {
-          circularId: parseFloat(circularId),
-          ...props,
-          submitter,
-          zendeskTicketId,
-          eventId,
-        },
-        user
-      )
-      newCircular = null
-      break
-    case 'edit':
-      if (circularId === undefined)
-        throw new Response('circularId is required', { status: 400 })
-
-      await putVersion(
-        {
-          circularId: parseFloat(circularId),
-          ...props,
-        },
-        user
-      )
-      newCircular = await get(parseFloat(circularId))
-      break
-    case 'new':
-      newCircular = await put({ ...props, submittedHow: 'web' }, user)
-      break
-    default:
-      break
-  }
-  return { newCircular, intent }
 }
 
 export default function () {
