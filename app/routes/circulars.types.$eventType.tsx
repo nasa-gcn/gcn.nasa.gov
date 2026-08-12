@@ -87,7 +87,6 @@ export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
       ...results,
       requestedChangeCount,
       limit,
-
       eventTypeSlug,
       resolvedEventType,
     },
