@@ -227,7 +227,7 @@ export default function () {
         setInputQuery={setInputQuery}
         queryFallback={queryFallback}
         eventType={resolvedEventType}
-      ></ArchiveHeader>
+      />
 
       {clean && (
         <>
