@@ -86,6 +86,18 @@ export default function () {
           {circular.circularId}
         </Link>
       </h2>
+      {correction.zendeskTicketId && (
+        <h3>
+          Zendesk Ticket:{' '}
+          <a
+            href={`https://nasa-gcn.zendesk.com/agent/tickets/${correction.zendeskTicketId}`}
+            target="_blank"
+            rel="external noopener"
+          >
+            {correction.zendeskTicketId}
+          </a>
+        </h3>
+      )}
       <h3>Original Author</h3>
       <DiffedContent
         oldString={circular.submitter}
