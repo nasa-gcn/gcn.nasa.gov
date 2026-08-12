@@ -343,13 +343,6 @@ export const eventTypesHumanReadable: Record<
   Misc: { singular: 'Miscellaneous', plural: 'Miscellaneous' },
 }
 
-export function getEventTypeHumanReadable(
-  eventType: EventType | string,
-  number: 'plural' | 'singular' = 'singular'
-) {
-  return eventTypesHumanReadable[eventType]?.[number] || eventType
-}
-
 export type EventType = (typeof eventTypes)[number]
 
 export function formatEventTypeSlug(eventType: string): string {

@@ -23,7 +23,7 @@ import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { usePermissionModerator } from '~/root'
-import { getEventTypeHumanReadable } from '~/routes/circulars/circulars.lib'
+import { eventTypesHumanReadable } from '~/routes/circulars/circulars.lib'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -86,10 +86,10 @@ export default function ArchiveHeader({
   // Ensures isGroupView is always false if on an eventType route
   const isGroupView = eventType ? false : view === 'group'
 
-  const eventTypeLabel =
-    eventType && getEventTypeHumanReadable(eventType, 'plural')
-      ? getEventTypeHumanReadable(eventType, 'plural')
-      : undefined
+  const eventTypeHumanReadable = eventType
+    ? eventTypesHumanReadable[eventType]?.plural
+    : undefined
+  const eventTypeLabel = eventTypeHumanReadable || undefined
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
