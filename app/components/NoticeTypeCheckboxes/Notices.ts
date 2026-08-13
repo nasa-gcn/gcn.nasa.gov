@@ -6,21 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 export const NoticeTypes: { [key: string]: string[] } = {
-  AGILE: [
-    'AGILE_GRB_GROUND',
-    'AGILE_GRB_POS_TEST',
-    'AGILE_GRB_REFINED',
-    'AGILE_GRB_WAKEUP',
-    'AGILE_MCAL_ALERT',
-    'AGILE_POINTDIR',
-    'AGILE_TRANS',
-  ],
-  AMON: [
-    'AMON_ICECUBE_COINC',
-    'AMON_ICECUBE_EHE',
-    'AMON_ICECUBE_HESE',
-    'AMON_NU_EM_COINC',
-  ],
+  AMON: ['AMON_NU_EM_COINC'],
   Calet: ['CALET_GBM_FLT_LC', 'CALET_GBM_GND_LC'],
   Fermi: [
     'FERMI_GBM_ALERT',
@@ -47,14 +33,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'ICECUBE_ASTROTRACK_BRONZE',
     'ICECUBE_ASTROTRACK_GOLD',
     'ICECUBE_CASCADE',
-  ],
-  INTEGRAL: [
-    'INTEGRAL_OFFLINE',
-    'INTEGRAL_POINTDIR',
-    'INTEGRAL_REFINED',
-    'INTEGRAL_SPIACS',
-    'INTEGRAL_WAKEUP',
-    'INTEGRAL_WEAK',
   ],
   IPN: ['IPN_POS', 'IPN_RAW', 'IPN_SEG'],
   MAXI: ['MAXI_KNOWN', 'MAXI_TEST', 'MAXI_UNKNOWN'],
@@ -110,13 +88,10 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'HUNTS_SRC',
     'KONUS_LC',
     'MAXBC',
-    'MILAGRO_POS',
-    'MOA',
     'OGLE',
     'SIMBADNED',
     'SK_SN',
     'SNEWS',
-    'SUZAKU_LC',
     'TEST_COORDS',
   ],
 }
