@@ -78,7 +78,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'BRAD_COORDS',
     'CBAT',
     'COINCIDENCE',
-    'COMPTEL_SRC',
     'DOW_TOD',
     'GRB_CNTRPART',
     'GRB_COORDS',
