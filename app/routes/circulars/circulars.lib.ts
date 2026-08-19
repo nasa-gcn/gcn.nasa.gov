@@ -347,6 +347,7 @@ const eventTypeMatchers: Record<EventType, RegExp[]> = {
     /\bBogus\b/i,
     /\bFake\b/i,
     /\bErrata\b/i,
+    /\bErratum\b/i,
   ],
   GRB: [
     /\bGRB\d{4,8}[A-Z]?\b/i,
