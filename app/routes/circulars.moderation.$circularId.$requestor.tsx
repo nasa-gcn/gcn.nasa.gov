@@ -110,6 +110,12 @@ export default function () {
         newString={correction.eventId ?? ''}
         method="lines"
       />
+      <h3>Event Types</h3>
+      <DiffedContent
+        oldString={(circular.eventType ?? []).join('\n')}
+        newString={(correction.eventType ?? []).join('\n')}
+        method="lines"
+      />
       <h3>Format</h3>
       <DiffedContent
         oldString={circular.format ?? 'text/plain'}

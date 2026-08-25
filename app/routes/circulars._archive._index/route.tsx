@@ -88,6 +88,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const intent = getFormDataString(data, 'intent')
   const format = getFormDataString(data, 'format') as CircularFormat | undefined
   const eventId = getFormDataString(data, 'eventId') || undefined
+  const eventType = data.getAll('eventTypes').map((value) => value.toString())
   if (format && !circularFormats.includes(format)) {
     throw new Response('Invalid format', { status: 400 })
   }
@@ -96,7 +97,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
   let newCircular
-  const props = { body, subject, eventId, ...(format ? { format } : {}) }
+  const props = {
+    body,
+    subject,
+    eventId,
+    eventType,
+    ...(format ? { format } : {}),
+  }
+
   switch (intent) {
     case 'correction':
       if (circularId === undefined)
