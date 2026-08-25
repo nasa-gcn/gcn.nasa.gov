@@ -42,10 +42,10 @@ export const deploy = {
       // top level awaits aren't supported and would require further updates.
       // This should be updated to use services
       env[envClientIdName] = {
-        'Fn::GetAtt': `${clientKey}.ClientId`,
+        'Fn::GetAtt': `AppClient${clientKey}.ClientId`,
       }
       env[envClientSecretName] = {
-        'Fn::GetAtt': `${clientKey}.ClientSecret`,
+        'Fn::GetAtt': `AppClient${clientKey}.ClientSecret`,
       }
     })
   },
