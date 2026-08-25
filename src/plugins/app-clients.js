@@ -11,6 +11,8 @@ export const deploy = {
     appclients.forEach((item) => {
       const [
         [
+          // eslint-disable-next-line no-unused-vars
+          _,
           {
             clientKey,
             envResourceName,
