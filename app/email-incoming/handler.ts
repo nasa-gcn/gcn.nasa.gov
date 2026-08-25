@@ -8,6 +8,7 @@
 import { GetObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import type { SESMessage, SNSEventRecord } from 'aws-lambda'
 
+import { feature } from '~/lib/env.server'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
 
 const s3 = new S3Client({})
@@ -30,7 +31,7 @@ export function createEmailIncomingMessageHandler(
       throw new Error('Message failed virus check')
     if (message.receipt.action.type !== 'S3')
       throw new Error('Action type must be S3')
-    if (message.receipt.dmarcVerdict.status === 'FAIL')
+    if (feature('DMARC_FAIL') && message.receipt.dmarcVerdict.status === 'FAIL')
       throw new Error('Message failed DMARC validation')
 
     const response = await s3.send(
