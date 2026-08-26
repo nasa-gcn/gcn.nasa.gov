@@ -61,6 +61,17 @@ export function getEnvBannerHeaderAndDescription(hostname?: string) {
   return { heading, description }
 }
 
+export function cleanSearchString(
+  searchString?: string,
+  queryCharacter?: string
+) {
+  if (searchString) {
+    return `${queryCharacter}${searchString}`
+  } else {
+    return searchString
+  }
+}
+
 /** Return the search string for the current page. */
 export function useSearchString() {
   const [searchParams] = useSearchParams()
