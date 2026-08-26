@@ -87,8 +87,8 @@ export default function () {
         </Link>
       </h2>
       {correction.zendeskTicketId && (
-        <h3>
-          Zendesk Ticket:{' '}
+        <>
+          <h3>Zendesk Ticket</h3>
           <a
             href={`https://nasa-gcn.zendesk.com/agent/tickets/${correction.zendeskTicketId}`}
             target="_blank"
@@ -96,7 +96,7 @@ export default function () {
           >
             {correction.zendeskTicketId}
           </a>
-        </h3>
+        </>
       )}
       <h3>Original Author</h3>
       <DiffedContent
