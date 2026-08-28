@@ -21,7 +21,12 @@ export function topicToFormatAndNoticeType(topic: string): {
   noticeFormat: string
   noticeType: string
 } {
-  if (topic.startsWith('gcn.notices.') || topic === 'igwn.gwalert')
+  if (
+    topic.startsWith('gcn.notices.') ||
+    topic.startsWith('gcn.circulars') ||
+    topic.startsWith('gcn.heartbeat') ||
+    topic === 'igwn.gwalert'
+  )
     return {
       noticeFormat: 'json',
       noticeType: topic,
