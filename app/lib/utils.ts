@@ -21,7 +21,12 @@ export function topicToFormatAndNoticeType(topic: string): {
   noticeFormat: string
   noticeType: string
 } {
-  if (
+  if (topic.startsWith('gcn.notices.svom')) {
+    return {
+      noticeFormat: 'voevent',
+      noticeType: topic,
+    }
+  } else if (
     topic.startsWith('gcn.notices.') ||
     topic.startsWith('gcn.circulars') ||
     topic.startsWith('gcn.heartbeat') ||
