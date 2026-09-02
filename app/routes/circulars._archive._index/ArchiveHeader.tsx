@@ -147,7 +147,7 @@ export default function ArchiveHeader({
             id="query"
             name="query"
             type="search"
-            defaultValue={inputQuery}
+            value={inputQuery}
             placeholder={searchText}
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
@@ -164,26 +164,30 @@ export default function ArchiveHeader({
           </Button>
         </Form>
 
-        {!eventType && (
-          <ButtonGroup type="segmented">
-            <Link
-              to={`/circulars?view=index&limit=${limit}`}
-              preventScrollReset
-              className={getSelection('index')}
-            >
-              <Icon.List role="presentation" />
-              Circulars
-            </Link>
-            <Link
-              to={`/circulars?view=group&limit=${limit}`}
-              preventScrollReset
-              className={getSelection('group')}
-            >
-              <Icon.ContentCopy role="presentation" />
-              Events
-            </Link>
-          </ButtonGroup>
-        )}
+        <ButtonGroup type="segmented">
+          <Link
+            to={`/circulars?view=index&limit=${limit}`}
+            preventScrollReset
+            className={getSelection('index')}
+            onClick={() => {
+              setInputQuery('')
+            }}
+          >
+            <Icon.List role="presentation" />
+            Circulars
+          </Link>
+          <Link
+            to={`/circulars?view=group&limit=${limit}`}
+            preventScrollReset
+            className={getSelection('group')}
+            onClick={() => {
+              setInputQuery('')
+            }}
+          >
+            <Icon.ContentCopy role="presentation" />
+            Events
+          </Link>
+        </ButtonGroup>
 
         <Link to={`/circulars/new${searchString}`}>
           <Button type="button" className="padding-y-1">
