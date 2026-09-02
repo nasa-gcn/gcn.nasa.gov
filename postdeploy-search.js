@@ -36,6 +36,23 @@ const data = {
         _meta: { description: 'Synonyms template' },
       },
     },
+    {
+      name: 'users_template',
+      index_template: {
+        index_patterns: ['user*'],
+        template: {
+          settings: {
+            index: {
+              number_of_shards: '1',
+              number_of_replicas: '1',
+            },
+          },
+        },
+        priority: 1,
+        version: 1,
+        _meta: { description: 'Users template' },
+      },
+    },
   ],
 }
 
