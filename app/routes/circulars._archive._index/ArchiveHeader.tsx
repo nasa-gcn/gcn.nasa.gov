@@ -13,16 +13,20 @@ import {
   BreadcrumbLink,
   Button,
   ButtonGroup,
+  CardBody,
   ErrorMessage,
   Icon,
   Label,
   TextInput,
 } from '@trussworks/react-uswds'
 import { clamp } from 'lodash'
+import { useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
+import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { usePermissionModerator } from '~/root'
@@ -93,6 +97,12 @@ export default function ArchiveHeader({
     ? eventTypesHumanReadable[eventType]?.plural
     : undefined
   const eventTypeLabel = eventTypeHumanReadable || undefined
+  const [showEventTypeDropdown, setShowEventTypeDropdown] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useOnClickOutside(ref, () => {
+    setShowEventTypeDropdown(false)
+  })
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -112,7 +122,41 @@ export default function ArchiveHeader({
           <Breadcrumb>
             <BreadcrumbLink href="/circulars">GCN Circulars</BreadcrumbLink>
           </Breadcrumb>
-          <Breadcrumb current>{eventTypeHumanReadable}</Breadcrumb>
+          <Breadcrumb current>
+            <Button
+              type="button"
+              className="padding-y-1"
+              unstyled
+              onClick={() => {
+                setShowEventTypeDropdown(!showEventTypeDropdown)
+              }}
+            >
+              {eventTypeHumanReadable}
+            </Button>
+            <div ref={ref}>
+              {showEventTypeDropdown && (
+                <DetailsDropdownContent className="padding-0">
+                  <CardBody className="padding-0">
+                    <ul className="usa-list usa-list--unstyled">
+                      {Object.entries(eventTypesHumanReadable).map(
+                        ([eventType, { plural }]) => (
+                          <li key={eventType}>
+                            <Link
+                              to={`/circulars/types/${eventType.toLowerCase()}`}
+                              className="usa-link"
+                              onClick={() => setShowEventTypeDropdown(false)}
+                            >
+                              {plural}
+                            </Link>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </CardBody>
+                </DetailsDropdownContent>
+              )}
+            </div>
+          </Breadcrumb>
         </BreadcrumbBar>
       )}
       {result?.intent === 'correction' && (
