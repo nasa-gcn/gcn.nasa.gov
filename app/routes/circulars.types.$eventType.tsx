@@ -6,8 +6,8 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
+import type { MetaFunction } from '@remix-run/react'
 import {
-  MetaFunction,
   json,
   redirect,
   useActionData,
