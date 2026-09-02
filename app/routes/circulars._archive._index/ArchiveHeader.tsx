@@ -135,7 +135,10 @@ export default function ArchiveHeader({
               </Button>
               {showEventTypeDropdown && (
                 <DetailsDropdownContent className="padding-0">
-                  <CardBody className="padding-0">
+                  <CardBody
+                    className="padding-0"
+                    style={{ maxHeight: '15rem', overflowY: 'auto' }}
+                  >
                     <ul className="usa-list usa-list--unstyled">
                       {Object.entries(eventTypesHumanReadable).map(
                         ([eventType, { plural }]) => (
