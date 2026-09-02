@@ -9,7 +9,7 @@ import { NavLink, Outlet } from '@remix-run/react'
 import { GridContainer } from '@trussworks/react-uswds'
 
 import { SideNav } from '~/components/SideNav'
-import { useUserIdp } from '~/root'
+import { useFeature, useUserIdp } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 import type { SEOHandle } from '~/root/seo'
 
@@ -43,6 +43,11 @@ export default function () {
               <NavLink key="credentials" to="credentials">
                 Client Credentials
               </NavLink>,
+              useFeature('TEAMS') && (
+                <NavLink key="teams" to="teams">
+                  Teams
+                </NavLink>
+              ),
               <NavLink key="email" to="email">
                 Email Notifications
               </NavLink>,
