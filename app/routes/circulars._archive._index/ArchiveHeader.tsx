@@ -123,17 +123,16 @@ export default function ArchiveHeader({
             <BreadcrumbLink href="/circulars">GCN Circulars</BreadcrumbLink>
           </Breadcrumb>
           <Breadcrumb current>
-            <Button
-              type="button"
-              className="padding-y-1"
-              unstyled
-              onClick={() => {
-                setShowEventTypeDropdown(!showEventTypeDropdown)
-              }}
-            >
-              {eventTypeHumanReadable}
-            </Button>
-            <div ref={ref}>
+            <div ref={ref} className="display-inline">
+              <Button
+                type="button"
+                unstyled
+                onClick={() => {
+                  setShowEventTypeDropdown((isShown) => !isShown)
+                }}
+              >
+                {eventTypeHumanReadable}
+              </Button>
               {showEventTypeDropdown && (
                 <DetailsDropdownContent className="padding-0">
                   <CardBody className="padding-0">
