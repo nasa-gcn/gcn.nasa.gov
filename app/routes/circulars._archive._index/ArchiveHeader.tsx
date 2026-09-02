@@ -8,6 +8,9 @@
 import { Form, Link, useSearchParams, useSubmit } from '@remix-run/react'
 import {
   Alert,
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
   Button,
   ButtonGroup,
   ErrorMessage,
@@ -104,6 +107,14 @@ export default function ArchiveHeader({
 
   return (
     <>
+      {eventTypeLabel && (
+        <BreadcrumbBar>
+          <Breadcrumb>
+            <BreadcrumbLink href="/circulars">GCN Circulars</BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>{eventTypeHumanReadable}</Breadcrumb>
+        </BreadcrumbBar>
+      )}
       {result?.intent === 'correction' && (
         <Alert
           type="success"
