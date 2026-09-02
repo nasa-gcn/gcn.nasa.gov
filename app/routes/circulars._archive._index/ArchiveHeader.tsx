@@ -163,31 +163,32 @@ export default function ArchiveHeader({
             />
           </Button>
         </Form>
-
-        <ButtonGroup type="segmented">
-          <Link
-            to={`/circulars?view=index&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('index')}
-            onClick={() => {
-              setInputQuery('')
-            }}
-          >
-            <Icon.List role="presentation" />
-            Circulars
-          </Link>
-          <Link
-            to={`/circulars?view=group&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('group')}
-            onClick={() => {
-              setInputQuery('')
-            }}
-          >
-            <Icon.ContentCopy role="presentation" />
-            Events
-          </Link>
-        </ButtonGroup>
+        {!eventType && (
+          <ButtonGroup type="segmented">
+            <Link
+              to={`/circulars?view=index&limit=${limit}`}
+              preventScrollReset
+              className={getSelection('index')}
+              onClick={() => {
+                setInputQuery('')
+              }}
+            >
+              <Icon.List role="presentation" />
+              Circulars
+            </Link>
+            <Link
+              to={`/circulars?view=group&limit=${limit}`}
+              preventScrollReset
+              className={getSelection('group')}
+              onClick={() => {
+                setInputQuery('')
+              }}
+            >
+              <Icon.ContentCopy role="presentation" />
+              Events
+            </Link>
+          </ButtonGroup>
+        )}
 
         <Link to={`/circulars/new${searchString}`}>
           <Button type="button" className="padding-y-1">
