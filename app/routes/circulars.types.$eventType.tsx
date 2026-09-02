@@ -7,6 +7,7 @@
  */
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import {
+  MetaFunction,
   json,
   redirect,
   useActionData,
@@ -80,6 +81,23 @@ export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
     },
     { headers: getCanonicalUrlHeaders(new URL(`/circulars`, origin)) }
   )
+}
+
+export const meta: MetaFunction<typeof loader> = ({ data }) => {
+  const defaultTitle = 'GCN - Circulars'
+  const eventType = data?.resolvedEventType
+  const eventTypeTitle =
+    typeof eventType === 'string'
+      ? eventType
+      : (eventType as any)?.name || data?.eventTypeSlug
+
+  return [
+    {
+      title: eventTypeTitle
+        ? `GCN - ${eventTypeTitle.toUpperCase()} Circulars`
+        : defaultTitle,
+    },
+  ]
 }
 
 export default function () {
