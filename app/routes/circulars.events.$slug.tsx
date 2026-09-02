@@ -72,6 +72,16 @@ export default function Group() {
             <div key={circularId}>
               <h2 className="margin-2">
                 <Anchor>{`GCN Circular ${circularId}`}</Anchor>
+                <Link
+                  to={`/circulars/${circularId}`}
+                  className="margin-left-1"
+                  title="View this circular"
+                >
+                  <Icon.Launch
+                    role="presentation"
+                    className="margin-y-neg-2px"
+                  />
+                </Link>
               </h2>
               <div className="margin-2">
                 <FrontMatter
