@@ -15,7 +15,7 @@ import {
   Label,
   TextInput,
 } from '@trussworks/react-uswds'
-import { clamp } from 'lodash'
+import { useState } from 'react'
 
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
@@ -76,8 +76,7 @@ export default function ArchiveHeader({
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
-  const view = searchParams.get('view') || 'index'
-  const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
+  const [view, setView] = useState(searchParams.get('view') || 'index')
   const isGroupView = view === 'group'
 
   let searchString = searchParams.toString()
@@ -154,22 +153,26 @@ export default function ArchiveHeader({
         </Form>
 
         <ButtonGroup type="segmented">
-          <Link
-            to={`/circulars?view=index&limit=${limit}`}
-            preventScrollReset
+          <Button
+            type="submit"
+            form={formId}
+            onClick={() => {
+              setView('index')
+            }}
             className={getSelection('index')}
           >
             <Icon.List role="presentation" />
             Circulars
-          </Link>
-          <Link
-            to={`/circulars?view=group&limit=${limit}`}
-            preventScrollReset
+          </Button>
+          <Button
+            type="submit"
+            form={formId}
+            onClick={() => setView('group')}
             className={getSelection('group')}
           >
             <Icon.ContentCopy role="presentation" />
             Events
-          </Link>
+          </Button>
         </ButtonGroup>
 
         <Link to={`/circulars/new${searchString}`}>
