@@ -136,7 +136,7 @@ export default function ArchiveHeader({
             id="query"
             name="query"
             type="search"
-            value={inputQuery}
+            defaultValue={inputQuery}
             placeholder={searchText}
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
@@ -158,9 +158,6 @@ export default function ArchiveHeader({
             to={`/circulars?view=index&limit=${limit}`}
             preventScrollReset
             className={getSelection('index')}
-            onClick={() => {
-              setInputQuery('')
-            }}
           >
             <Icon.List role="presentation" />
             Circulars
@@ -169,9 +166,6 @@ export default function ArchiveHeader({
             to={`/circulars?view=group&limit=${limit}`}
             preventScrollReset
             className={getSelection('group')}
-            onClick={() => {
-              setInputQuery('')
-            }}
           >
             <Icon.ContentCopy role="presentation" />
             Events
