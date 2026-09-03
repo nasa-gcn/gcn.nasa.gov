@@ -75,10 +75,8 @@ export const NoticeTypes: { [key: string]: string[] } = {
   Other: [
     'AAVSO',
     'ALEXIS_SRC',
-    'BRAD_COORDS',
     'CBAT',
     'COINCIDENCE',
-    'DOW_TOD',
     'GRB_CNTRPART',
     'GRB_COORDS',
     'GRB_FINAL',
@@ -87,7 +85,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'HUNTS_SRC',
     'KONUS_LC',
     'MAXBC',
-    'OGLE',
     'SIMBADNED',
     'SK_SN',
     'SNEWS',
