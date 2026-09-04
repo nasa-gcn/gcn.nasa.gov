@@ -8,45 +8,55 @@
 import { Form, Link, useSearchParams, useSubmit } from '@remix-run/react'
 import {
   Alert,
+  Breadcrumb,
+  BreadcrumbBar,
+  BreadcrumbLink,
   Button,
   ButtonGroup,
+  CardBody,
   ErrorMessage,
   Icon,
   Label,
   TextInput,
 } from '@trussworks/react-uswds'
 import { clamp } from 'lodash'
+import { useRef, useState } from 'react'
+import { useOnClickOutside } from 'usehooks-ts'
 
 import { DateSelector } from './DateSelectorMenu'
 import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
+import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { usePermissionModerator } from '~/root'
+import { eventTypesHumanReadable } from '~/routes/circulars/circulars.lib'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-const ArchiveHeaderText = () => {
-  return (
-    <>
-      <h1>GCN Circulars</h1>
-      <p className="usa-paragraph">
-        <b>
-          GCN Circulars are rapid astronomical bulletins submitted by and
-          distributed to community members worldwide.
-        </b>{' '}
-        They are used to share discoveries, observations, quantitative near-term
-        predictions, requests for follow-up observations, or future observing
-        plans related to high-energy, multi-messenger, and variable or transient
-        astrophysical events. See the{' '}
-        <Link className="usa-link" to="/docs/circulars">
-          documentation
-        </Link>{' '}
-        for help with subscribing to or submitting Circulars.
-      </p>
-    </>
-  )
-}
+const ArchiveHeaderText = ({
+  eventTypeLabel,
+}: {
+  eventTypeLabel?: string
+} = {}) => (
+  <>
+    <h1>GCN Circulars{eventTypeLabel ? `: ${eventTypeLabel}` : ''}</h1>
+    <p className="usa-paragraph">
+      <b>
+        GCN Circulars are rapid astronomical bulletins submitted by and
+        distributed to community members worldwide.
+      </b>{' '}
+      They are used to share discoveries, observations, quantitative near-term
+      predictions, requests for follow-up observations, or future observing
+      plans related to high-energy, multi-messenger, and variable or transient
+      astrophysical events. See the{' '}
+      <Link className="usa-link" to="/docs/circulars">
+        documentation
+      </Link>{' '}
+      for help with subscribing to or submitting Circulars.
+    </p>
+  </>
+)
 
 type ArchiveHeaderProps = {
   result?: any
@@ -55,6 +65,7 @@ type ArchiveHeaderProps = {
   inputQuery: string
   setInputQuery: (query: string) => void
   queryFallback?: boolean
+  eventType?: string
 }
 export default function ArchiveHeader({
   result,
@@ -63,6 +74,7 @@ export default function ArchiveHeader({
   inputQuery,
   setInputQuery,
   queryFallback,
+  eventType,
 }: ArchiveHeaderProps) {
   const submit = useSubmit()
   const [searchParams] = useSearchParams()
@@ -78,7 +90,19 @@ export default function ArchiveHeader({
   const sort = searchParams.get('sort') || 'circularID'
   const view = searchParams.get('view') || 'index'
   const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
-  const isGroupView = view === 'group'
+  // Ensures isGroupView is always false if on an eventType route
+  const isGroupView = eventType ? false : view === 'group'
+
+  const eventTypeHumanReadable = eventType
+    ? eventTypesHumanReadable[eventType]?.plural
+    : undefined
+  const eventTypeLabel = eventTypeHumanReadable || undefined
+  const [showEventTypeDropdown, setShowEventTypeDropdown] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useOnClickOutside(ref, () => {
+    setShowEventTypeDropdown(false)
+  })
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
@@ -93,6 +117,50 @@ export default function ArchiveHeader({
 
   return (
     <>
+      {eventTypeLabel && (
+        <BreadcrumbBar className="usa-breadcrumb--wrap desktop:margin-top-neg-8 margin-top-neg-4 padding-top-0 margin-bottom-neg-2">
+          <Breadcrumb>
+            <BreadcrumbLink href="/circulars">GCN Circulars</BreadcrumbLink>
+          </Breadcrumb>
+          <Breadcrumb current>
+            <div ref={ref} className="display-inline">
+              <Button
+                type="button"
+                unstyled
+                onClick={() => {
+                  setShowEventTypeDropdown((isShown) => !isShown)
+                }}
+              >
+                {eventTypeHumanReadable}
+              </Button>
+              {showEventTypeDropdown && (
+                <DetailsDropdownContent className="padding-0">
+                  <CardBody
+                    className="padding-0"
+                    style={{ maxHeight: '15rem', overflowY: 'auto' }}
+                  >
+                    <ul className="usa-list usa-list--unstyled">
+                      {Object.entries(eventTypesHumanReadable).map(
+                        ([eventType, { plural }]) => (
+                          <li key={eventType}>
+                            <Link
+                              to={`/circulars/types/${eventType.toLowerCase()}`}
+                              className="usa-link"
+                              onClick={() => setShowEventTypeDropdown(false)}
+                            >
+                              {plural}
+                            </Link>
+                          </li>
+                        )
+                      )}
+                    </ul>
+                  </CardBody>
+                </DetailsDropdownContent>
+              )}
+            </div>
+          </Breadcrumb>
+        </BreadcrumbBar>
+      )}
       {result?.intent === 'correction' && (
         <Alert
           type="success"
@@ -105,7 +173,7 @@ export default function ArchiveHeader({
         </Alert>
       )}
 
-      <ArchiveHeaderText />
+      <ArchiveHeaderText eventTypeLabel={eventTypeLabel} />
 
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
@@ -152,31 +220,32 @@ export default function ArchiveHeader({
             />
           </Button>
         </Form>
-
-        <ButtonGroup type="segmented">
-          <Link
-            to={`/circulars?view=index&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('index')}
-            onClick={() => {
-              setInputQuery('')
-            }}
-          >
-            <Icon.List role="presentation" />
-            Circulars
-          </Link>
-          <Link
-            to={`/circulars?view=group&limit=${limit}`}
-            preventScrollReset
-            className={getSelection('group')}
-            onClick={() => {
-              setInputQuery('')
-            }}
-          >
-            <Icon.ContentCopy role="presentation" />
-            Events
-          </Link>
-        </ButtonGroup>
+        {!eventType && (
+          <ButtonGroup type="segmented">
+            <Link
+              to={`/circulars?view=index&limit=${limit}`}
+              preventScrollReset
+              className={getSelection('index')}
+              onClick={() => {
+                setInputQuery('')
+              }}
+            >
+              <Icon.List role="presentation" />
+              Circulars
+            </Link>
+            <Link
+              to={`/circulars?view=group&limit=${limit}`}
+              preventScrollReset
+              className={getSelection('group')}
+              onClick={() => {
+                setInputQuery('')
+              }}
+            >
+              <Icon.ContentCopy role="presentation" />
+              Events
+            </Link>
+          </ButtonGroup>
+        )}
 
         <Link to={`/circulars/new${searchString}`}>
           <Button type="button" className="padding-y-1">

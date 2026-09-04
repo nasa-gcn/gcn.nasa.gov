@@ -10,6 +10,8 @@ import { dedent } from 'ts-dedent'
 import {
   bodyIsValid,
   emailIsAutoReply,
+  eventTypes,
+  eventTypesHumanReadable,
   formatAuthor,
   formatCircularText,
   parseEventFromSubject,
@@ -1744,5 +1746,14 @@ describe('parseEventTypeFromSubject', () => {
 
   test.each(cases)('%s', ({ subject, expected }) => {
     expect(parseEventTypeFromSubject(subject)).toStrictEqual(expected)
+  })
+})
+
+// Tests that all eventTypes defined in circulars.lib have a corresponding human readable name in eventTypeHumanReadableNames
+describe('eventTypesHumanReadable', () => {
+  test('all eventTypes have a human readable name', () => {
+    const eventTypesKeys = eventTypes
+    const humanReadableNames = Object.keys(eventTypesHumanReadable)
+    expect(eventTypesKeys).toEqual(humanReadableNames)
   })
 })
