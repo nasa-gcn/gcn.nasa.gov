@@ -2,7 +2,7 @@
   "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx"],
   "compilerOptions": {
     "incremental": true,
-    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "lib": ["DOM", "DOM.Iterable", "ES2022", "ES2024"],
     "isolatedModules": true,
     "esModuleInterop": true,
     "jsx": "react-jsx",
