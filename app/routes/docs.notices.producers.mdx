@@ -73,12 +73,14 @@ also happy to work with the mission teams to help construct your alerts.
       topic = 'gcn.notices.mission'
       # When you have an event, produce to the topic
       # JSON data converted to byte string format
+      # Loop to run produce when alert is generated
       data = json.dumps({
           '$schema': 'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/mission/SchemaName.schema.json',
           'key': 'value'
       }).encode()
       producer.produce(topic, data)
       producer.flush()
+      # End produce loop
       ```
 
 <Alert type="info" heading="Schema Version" headingLevel="h4">
