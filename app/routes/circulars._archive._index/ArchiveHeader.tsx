@@ -135,6 +135,7 @@ export default function ArchiveHeader({
                 }}
               >
                 {eventTypeHumanReadable}
+                <Icon.ExpandMore role="presentation" />
               </Button>
               {showEventTypeDropdown && (
                 <DetailsDropdownContent className="padding-0">
