@@ -143,8 +143,9 @@ export default function ArchiveHeader({
                     style={{ maxHeight: '15rem', overflowY: 'auto' }}
                   >
                     <ul className="usa-list usa-list--unstyled">
-                      {Object.entries(eventTypesHumanReadable).map(
-                        ([eventType, { plural }]) => (
+                      {Object.entries(eventTypesHumanReadable)
+                        .sort()
+                        .map(([eventType, { plural }]) => (
                           <li key={eventType}>
                             <Link
                               to={`/circulars/types/${formatEventTypeSlug(eventType)}`}
@@ -154,8 +155,7 @@ export default function ArchiveHeader({
                               {plural}
                             </Link>
                           </li>
-                        )
-                      )}
+                        ))}
                     </ul>
                   </CardBody>
                 </DetailsDropdownContent>
