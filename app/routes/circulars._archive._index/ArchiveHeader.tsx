@@ -30,7 +30,10 @@ import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { usePermissionModerator } from '~/root'
-import { eventTypesHumanReadable } from '~/routes/circulars/circulars.lib'
+import {
+  eventTypesHumanReadable,
+  formatEventTypeSlug,
+} from '~/routes/circulars/circulars.lib'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
@@ -144,7 +147,7 @@ export default function ArchiveHeader({
                         ([eventType, { plural }]) => (
                           <li key={eventType}>
                             <Link
-                              to={`/circulars/types/${eventType.toLowerCase()}`}
+                              to={`/circulars/types/${formatEventTypeSlug(eventType)}`}
                               className="usa-link"
                               onClick={() => setShowEventTypeDropdown(false)}
                             >
