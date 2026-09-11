@@ -121,7 +121,7 @@ export default function ArchiveHeader({
   return (
     <>
       {eventTypeLabel && (
-        <BreadcrumbBar className="usa-breadcrumb--wrap desktop:margin-top-neg-8 margin-top-neg-4 padding-top-0 margin-bottom-neg-2">
+        <BreadcrumbBar className="usa-breadcrumb--wrap desktop:margin-top-neg-6 margin-top-neg-4 padding-top-0 margin-bottom-neg-3">
           <Breadcrumb>
             <BreadcrumbLink href="/circulars">GCN Circulars</BreadcrumbLink>
           </Breadcrumb>
