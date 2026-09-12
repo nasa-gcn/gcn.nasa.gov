@@ -208,7 +208,7 @@ export default function ArchiveHeader({
             id="query"
             name="query"
             type="search"
-            value={inputQuery}
+            defaultValue={inputQuery}
             placeholder={searchText}
             aria-describedby="searchHint"
             onChange={({ target: { form, value } }) => {
@@ -224,6 +224,7 @@ export default function ArchiveHeader({
             />
           </Button>
         </Form>
+
         {!eventType && (
           <ButtonGroup type="segmented">
             <Link
