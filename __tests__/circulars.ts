@@ -1749,7 +1749,7 @@ describe('parseEventTypeFromSubject', () => {
   })
 })
 
-// Tests that all eventTypes defined in circulars.lib have a corresponding human readable name in eventTypeHumanReadableNames
+// Tests that all eventTypes defined in circulars.lib have a corresponding human readable name in eventTypeHumanReadable
 describe('eventTypesHumanReadable', () => {
   test('all eventTypes have a human readable name', () => {
     const eventTypesKeys = eventTypes
