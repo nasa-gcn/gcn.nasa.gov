@@ -91,7 +91,6 @@ export default function ArchiveHeader({
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
   const [view, setView] = useState(searchParams.get('view') || 'index')
-  // Ensures isGroupView is always false if on an eventType route
   const isGroupView = view === 'group'
 
   const eventTypeHumanReadable = eventType

@@ -285,6 +285,15 @@ export function CircularEditForm({
                 setEventId(derivedEventId)
               }}
             />
+            {!showEventTypes &&
+              defaultEventTypes.map((eventType) => (
+                <input
+                  key={`preserved-event-type-${eventType}`}
+                  type="hidden"
+                  name="eventTypes"
+                  value={eventType}
+                />
+              ))}
             {showEventTypes && (
               <>
                 <fieldset className="margin-top-2">
