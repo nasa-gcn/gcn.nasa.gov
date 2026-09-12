@@ -28,7 +28,10 @@ import { getCanonicalUrlHeaders } from '~/lib/headers.server'
 import ArchiveHeader from '~/routes/circulars._archive._index/ArchiveHeader'
 import ArchiveIndex from '~/routes/circulars._archive._index/ArchiveIndex'
 import type { action } from '~/routes/circulars._archive._index/route'
-import { getEventTypeFromSlug } from '~/routes/circulars/circulars.lib'
+import {
+  eventTypesHumanReadable,
+  getEventTypeFromSlug,
+} from '~/routes/circulars/circulars.lib'
 import { type CircularMetadata } from '~/routes/circulars/circulars.lib'
 
 export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
@@ -86,15 +89,14 @@ export async function loader({ params, request: { url } }: LoaderFunctionArgs) {
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   const defaultTitle = 'GCN - Circulars'
   const eventType = data?.resolvedEventType
-  const eventTypeTitle =
-    typeof eventType === 'string'
-      ? eventType
-      : (eventType as any)?.name || data?.eventTypeSlug
+  const eventTypeTitle = eventType
+    ? eventTypesHumanReadable[eventType]?.singular
+    : undefined
 
   return [
     {
       title: eventTypeTitle
-        ? `GCN - ${eventTypeTitle.toUpperCase()} Circulars`
+        ? `GCN - ${eventTypeTitle} Circulars`
         : defaultTitle,
     },
   ]
