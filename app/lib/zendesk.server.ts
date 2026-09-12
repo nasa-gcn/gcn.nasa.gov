@@ -8,7 +8,7 @@
 import memoizee from 'memoizee'
 import { Issuer } from 'openid-client'
 
-import { feature, getEnvOrDie } from './env.server'
+import { feature, getEnvOrDieInProduction } from './env.server'
 import { getBearerAuthHeaders } from './headers.server'
 import { throwForStatus } from './utils'
 
@@ -32,14 +32,18 @@ const disableZendesk = feature('DISABLE_ZENDESK')
 
 const getAccessToken = memoizee(
   async () => {
+    const clientId = getEnvOrDieInProduction('ZENDESK_CLIENT_ID')
+    const clientSecret = getEnvOrDieInProduction('ZENDESK_CLIENT_SECRET')
+    if (!clientId || !clientSecret) return
+
     const issuer = new Issuer({
       issuer: zendeskDomain,
       token_endpoint: `${zendeskDomain}/oauth/tokens`,
       token_endpoint_auth_methods_supported: ['client_secret_post'],
     })
     const client = new issuer.Client({
-      client_id: getEnvOrDie('ZENDESK_CLIENT_ID'),
-      client_secret: getEnvOrDie('ZENDESK_CLIENT_SECRET'),
+      client_id: clientId,
+      client_secret: clientSecret,
     })
     const { access_token } = await client.grant({
       grant_type: 'client_credentials',
@@ -61,6 +65,12 @@ async function fetchZendesk(url: string | URL, method: string, body: any) {
   }
 
   const accessToken = await getAccessToken()
+  if (!accessToken) {
+    return new Response(JSON.stringify({ request: { id: 1 } }), {
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+
   const response = await fetch(url, {
     method,
     headers: {
