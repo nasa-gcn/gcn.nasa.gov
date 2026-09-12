@@ -366,6 +366,57 @@ input.react-tags__combobox-input:focus {
 }
 
 /*
+ * Show full breadcrumbs on mobile
+ */
+@media all and (max-width: 29.99em) {
+  .usa-breadcrumb--wrap .usa-breadcrumb__list-item {
+    position: static;
+  }
+
+  .usa-breadcrumb--wrap .usa-breadcrumb__list-item:not(:last-child)::after {
+    background-image: url('nasawds/src/img/usa-icons/navigate_next.svg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: 2ex 2ex;
+    display: inline-block;
+    height: 2ex;
+    width: 2ex;
+    content: '';
+    vertical-align: baseline;
+    position: relative;
+    bottom: -0.2em;
+  }
+
+  @supports (mask: url('')) {
+    .usa-breadcrumb--wrap .usa-breadcrumb__list-item:not(:last-child)::after {
+      background: none;
+      background-color: #71767a;
+      mask-image:
+        url('nasawds/src/img/usa-icons/navigate_next.svg'),
+        linear-gradient(transparent, transparent);
+      mask-position: center center;
+      mask-repeat: no-repeat;
+      mask-size: 2ex 2ex;
+    }
+  }
+
+  .usa-breadcrumb--wrap
+    .usa-breadcrumb__list-item:nth-last-child(2)
+    .usa-breadcrumb__link {
+    display: inline;
+    padding: 0;
+    text-indent: 0;
+    text-decoration: none;
+  }
+
+  .usa-breadcrumb--wrap
+    .usa-breadcrumb__list-item:nth-last-child(2)
+    .usa-breadcrumb__link::before {
+    display: none;
+  }
+}
+
+/*
  * Suppress vertical margins for nested button groups inside button groups
  */
 
