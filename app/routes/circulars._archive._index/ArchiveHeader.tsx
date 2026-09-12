@@ -19,7 +19,6 @@ import {
   Label,
   TextInput,
 } from '@trussworks/react-uswds'
-import { clamp } from 'lodash'
 import { useRef, useState } from 'react'
 import { useOnClickOutside } from 'usehooks-ts'
 
@@ -91,10 +90,9 @@ export default function ArchiveHeader({
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
-  const view = searchParams.get('view') || 'index'
-  const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
+  const [view, setView] = useState(searchParams.get('view') || 'index')
   // Ensures isGroupView is always false if on an eventType route
-  const isGroupView = eventType ? false : view === 'group'
+  const isGroupView = view === 'group'
 
   const eventTypeHumanReadable = eventType
     ? eventTypesHumanReadable[eventType]?.plural
@@ -227,28 +225,26 @@ export default function ArchiveHeader({
 
         {!eventType && (
           <ButtonGroup type="segmented">
-            <Link
-              to={`/circulars?view=index&limit=${limit}`}
-              preventScrollReset
-              className={getSelection('index')}
+            <Button
+              type="submit"
+              form={formId}
               onClick={() => {
-                setInputQuery('')
+                setView('index')
               }}
+              className={getSelection('index')}
             >
               <Icon.List role="presentation" />
               Circulars
-            </Link>
-            <Link
-              to={`/circulars?view=group&limit=${limit}`}
-              preventScrollReset
+            </Button>{' '}
+            <Button
+              type="submit"
+              form={formId}
+              onClick={() => setView('group')}
               className={getSelection('group')}
-              onClick={() => {
-                setInputQuery('')
-              }}
             >
               <Icon.ContentCopy role="presentation" />
               Events
-            </Link>
+            </Button>
           </ButtonGroup>
         )}
 
