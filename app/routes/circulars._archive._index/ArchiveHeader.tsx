@@ -142,7 +142,26 @@ export default function ArchiveHeader({
                   >
                     <ul className="usa-list usa-list--unstyled">
                       {Object.entries(eventTypesHumanReadable)
-                        .sort()
+                        .sort(
+                          (
+                            [eventTypeA, { plural: pluralA }],
+                            [eventTypeB, { plural: pluralB }]
+                          ) => {
+                            const eventTypesBreadcrumbOrder: Record<
+                              string,
+                              number
+                            > = {
+                              Misc: 1,
+                              Retraction: 2,
+                            }
+
+                            return (
+                              (eventTypesBreadcrumbOrder[eventTypeA] ?? 0) -
+                                (eventTypesBreadcrumbOrder[eventTypeB] ?? 0) ||
+                              pluralA.localeCompare(pluralB)
+                            )
+                          }
+                        )
                         .map(([eventType, { plural }]) => (
                           <li key={eventType}>
                             <Link
