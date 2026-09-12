@@ -18,9 +18,9 @@ import {
 import { useState } from 'react'
 
 import { DateSelector } from './DateSelectorMenu'
+import { EventTypeBreadcrumb } from './EventTypeBreadcrumb'
 import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
-import { EventTypeBreadcrumb } from './eventTypeBreadcrumb'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { usePermissionModerator } from '~/root'
