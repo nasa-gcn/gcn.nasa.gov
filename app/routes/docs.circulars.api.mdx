@@ -1,0 +1,174 @@
+---
+handle:
+  breadcrumb: Submission API
+---
+
+import {
+  Alert,
+  ProcessList,
+  ProcessListHeading,
+  ProcessListItem,
+} from '@trussworks/react-uswds'
+
+# Circular Submission API
+
+Third-party applications can submit and edit GCN Circulars programmatically using the Circular Submission API. The API uses [OAuth 2.0](https://oauth.net/2/) with [AWS Cognito](https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html) as the identity provider, allowing your application to act on behalf of a GCN user.
+
+<Alert type="info" heading="Contact the GCN Team First" headingLevel="h4">
+  Before you begin, [contact the GCN Team](/contact) to have a Cognito app
+  client created for your application. You will need to supply a callback URL.
+  The GCN Team will provide you with the client ID, client secret, and the OIDC
+  autodiscovery URL.
+</Alert>
+
+## OAuth Scopes
+
+The API uses custom OAuth scopes to control access. When requesting an access token, include the appropriate scope(s) for the operations your application needs:
+
+| Scope | Permission |
+|---|---|
+| `gcn.nasa.gov/circular-submitter` | Submit new GCN Circulars (`POST`) |
+| `gcn.nasa.gov/circular-moderator` | Edit existing GCN Circulars (`PUT`) |
+
+In addition to any custom scopes, always include the standard OpenID Connect scopes: `openid profile`.
+
+## App Client Setup
+
+The GCN Team will configure a Cognito app client for your application with the following settings:
+
+- **Client type:** Confidential client with a generated client secret
+- **Authentication flows:** `ALLOW_USER_SRP_AUTH`
+- **Allowed callback URLs:** provided by you
+- **Identity providers:** all
+- **OpenID Connect scopes:** `Phone`, `Email`, `OpenID`, `Profile` — do **not** include `aws.cognito.signin.user.admin`
+- **Custom scopes:** `gcn.nasa.gov/circular-submitter` (required for `POST`; add `gcn.nasa.gov/circular-moderator` for `PUT`)
+- **Attribute read and write permissions:** all enabled
+
+## Auth Flow
+
+<ProcessList>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Authorization Code Flow
+    </ProcessListHeading>
+    Initiate the [Authorization Code Flow](https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow) to sign the user in with GCN's identity provider. When requesting the authorization endpoint, include the required scopes in the `scope` parameter:
+
+    ```
+    scope=openid profile gcn.nasa.gov/circular-submitter
+    ```
+
+    Include `gcn.nasa.gov/circular-moderator` as well if your application needs to edit existing Circulars.
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Handle the existingIdp Claim
+    </ProcessListHeading>
+    After the user signs in, inspect the returned ID token. If it contains an `existingIdp` claim, the user's email address is already associated with a different federated identity provider (for example, a Google account that is also registered with a username and password). In this case, you **must** restart the Authorization Code Flow, passing the `identity_provider` query parameter to the authorization endpoint:
+
+    ```
+    identity_provider=<value of existingIdp claim>
+    ```
+
+    This step ensures the user authenticates with the correct identity provider.
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Store Tokens Securely
+    </ProcessListHeading>
+    Save the resulting **refresh token** and **access token** server-side, associated with the user's account in your application. Never expose these tokens client-side.
+  </ProcessListItem>
+  <ProcessListItem>
+    <ProcessListHeading type="h3">
+      Renew Access Tokens
+    </ProcessListHeading>
+    Access tokens are short-lived. Your application is responsible for using the refresh token to obtain a new access token before the current one expires. The refresh token expiration is configured by the GCN Team and determines how often a user must re-authorize your application.
+  </ProcessListItem>
+</ProcessList>
+
+## API Endpoint
+
+All requests are made to:
+
+```
+https://gcn.nasa.gov/api/circulars
+```
+
+Include the access token as a Bearer token in the `Authorization` header:
+
+```
+Authorization: Bearer <access_token>
+```
+
+<Alert type="warning" heading="Non-browser requests only" headingLevel="h4">
+  The API endpoint returns `404 Not Found` when called from a web browser. It is
+  intended for server-to-server use only.
+</Alert>
+
+## POST — Submit a New Circular
+
+Submits a new GCN Circular on behalf of the authenticated user. Requires the `gcn.nasa.gov/circular-submitter` scope.
+
+**Request**
+
+```http
+POST /api/circulars HTTP/1.1
+Host: gcn.nasa.gov
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "subject": "GRB 231017A: Example Observatory optical afterglow detection",
+  "body": "J. Smith (Example University) reports...",
+  "format": "text/plain"
+}
+```
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `subject` | string | **yes** | Subject line of the Circular. See the [Style Guide](/docs/circulars/styleguide) for formatting conventions. |
+| `body` | string | **yes** | Body text of the Circular. |
+| `format` | string | no | Content format of `body`. Accepted values: `text/plain` (default) or `text/markdown`. See [Markdown](/docs/circulars/markdown) for details. |
+| `eventId` | string | no | Identifier of the astrophysical event. GCN always attempts to parse the event ID from the subject line first; the `eventId` you provide here is only used as a fallback if that parsing fails. |
+
+**Response**
+
+On success, returns `200 OK` with a JSON body containing the created Circular, including its assigned `circularId` and `createdOn` timestamp.
+
+## PUT — Edit an Existing Circular
+
+Creates a new version of an existing Circular. Requires the `gcn.nasa.gov/circular-moderator` scope.
+
+**Request**
+
+```http
+PUT /api/circulars HTTP/1.1
+Host: gcn.nasa.gov
+Authorization: Bearer <access_token>
+Content-Type: application/json
+
+{
+  "circularId": 12345,
+  "subject": "GRB 231017A: Example Observatory optical afterglow detection (corrected)",
+  "body": "J. Smith (Example University) reports (corrected)...",
+  "eventId": "GRB 231017A"
+}
+```
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `circularId` | number | **yes** | ID of the Circular to edit. |
+| `subject` | string | **yes** | Updated subject line. Must be provided even if unchanged. |
+| `body` | string | **yes** | Updated body text. Must be provided even if unchanged. |
+| `eventId` | string | no | Updated event identifier. |
+
+**Response**
+
+On success, returns `200 OK` with a JSON body containing the new version number.
+
+## Error Responses
+
+| Status | Meaning |
+|---|---|
+| `400 Bad Request` | Missing required fields, or the user's account is linked to the wrong identity provider (re-run the auth flow with the `identity_provider` parameter). |
+| `403 Forbidden` | Missing or invalid `Authorization: Bearer` header, or the access token does not include the required scope. |
+| `405 Method Not Allowed` | HTTP method other than `POST` or `PUT` was used. |
