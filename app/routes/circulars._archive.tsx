@@ -34,7 +34,9 @@ async function getFileSize(format: string) {
       process.env.NODE_ENV !== 'production' &&
       e instanceof Object &&
       'name' in e &&
-      e.name === 'InvalidBucketName'
+      // TODO: This may have to do with a change to the error response from s3
+      // Look inot this and get a better fix, I noticed it on main as well
+      (e.name === 'InvalidBucketName' || e.name === '400')
     ) {
       console.warn('making up fake object size')
       return 1024 * 1024 * 50
