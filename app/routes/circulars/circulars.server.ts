@@ -835,7 +835,7 @@ export async function sendEventTypedEmails(circular: Circular) {
   await sendBulkCircularsTo(circular, to)
 }
 
-export async function createEventBasedCircularEmailSubscription(
+export async function createEventTypeBasedCircularEmailSubscription(
   item: CircularsEventTypeSubscriptions
 ) {
   const created = Date.now()
