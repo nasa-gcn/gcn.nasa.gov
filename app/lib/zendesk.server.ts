@@ -8,7 +8,7 @@
 import memoizee from 'memoizee'
 import { Issuer } from 'openid-client'
 
-import { feature, getEnvOrDieInProduction } from './env.server'
+import { getEnvOrDieInProduction } from './env.server'
 import { getBearerAuthHeaders } from './headers.server'
 import { throwForStatus } from './utils'
 
@@ -28,7 +28,6 @@ interface RequestComment {
 }
 
 const zendeskDomain = 'https://nasa-gcn.zendesk.com'
-const disableZendesk = feature('DISABLE_ZENDESK')
 
 const getAccessToken = memoizee(
   async () => {
@@ -58,12 +57,6 @@ const getAccessToken = memoizee(
 )
 
 async function fetchZendesk(url: string | URL, method: string, body: any) {
-  if (disableZendesk) {
-    return new Response(JSON.stringify({ request: { id: 1 } }), {
-      headers: { 'Content-Type': 'application/json' },
-    })
-  }
-
   const accessToken = await getAccessToken()
   if (!accessToken) {
     return new Response(JSON.stringify({ request: { id: 1 } }), {
