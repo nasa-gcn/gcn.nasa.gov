@@ -140,7 +140,7 @@ export default function () {
         )}
       </ToolbarButtonGroup>
       <h1 className="margin-bottom-0">GCN Circular {circularId}</h1>
-      <FrontMatter {...frontMatter} />
+      <FrontMatter circularId={circularId} {...frontMatter} />
       <Body className="margin-y-2">{body}</Body>
       <ButtonGroup type="segmented">
         {Number.isFinite(previousCircular) ? (

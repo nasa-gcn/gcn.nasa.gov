@@ -8,6 +8,7 @@
 import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData, useSearchParams } from '@remix-run/react'
 import { Icon } from '@trussworks/react-uswds'
+import { slug } from 'github-slugger'
 import invariant from 'tiny-invariant'
 
 import type { Synonym } from './synonyms/synonyms.lib'
@@ -19,6 +20,7 @@ import { Anchor } from '~/components/Anchor'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { MarkdownBody, PlainTextBody } from '~/components/circularDisplay/Body'
 import { FrontMatter } from '~/components/circularDisplay/FrontMatter'
+import { cleanSearchString } from '~/lib/utils'
 import type { BreadcrumbHandle } from '~/root/Title'
 
 export const handle: BreadcrumbHandle<Awaited<ReturnType<typeof loader>>> = {
@@ -40,13 +42,20 @@ export async function loader({ params: { slug } }: LoaderFunctionArgs) {
 export default function Group() {
   const { members, eventIds } = useLoaderData<typeof loader>()
   const [searchParams] = useSearchParams()
-  const searchString = searchParams.toString()
+  const fromCircularId = searchParams.get('fromCircular')
 
+  let searchString = cleanSearchString(searchParams.toString(), '?')
+
+  if (fromCircularId) {
+    searchParams.delete('fromCircular')
+    const newSearchString = cleanSearchString(searchParams.toString(), '?')
+    searchString = `/${slug(fromCircularId)}${newSearchString}`
+  }
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
         <Link
-          to={`/circulars?${searchString}`}
+          to={`/circulars${searchString}`}
           className="usa-button flex-align-stretch"
         >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
@@ -75,6 +84,7 @@ export default function Group() {
               </h2>
               <div className="margin-2">
                 <FrontMatter
+                  circularId={circularId}
                   createdOn={createdOn}
                   submitter={submitter}
                   subject={subject}
