@@ -45,6 +45,15 @@ interface BulkMessageProps extends MessageProps {
   topic: string
 }
 
+// Basis for email subscription types
+export type EmailSubscription = {
+  uuid?: string // Unique identifier for this subscription
+  sub: string // User ID
+  name: string // Reader friendly name of this subscription
+  recipient: string // Address to send to
+  created: number // Created on date
+}
+
 function getBody(body: string) {
   if (hostname !== 'gcn.nasa.gov') {
     const { heading, description } = getEnvBannerHeaderAndDescription(hostname)
