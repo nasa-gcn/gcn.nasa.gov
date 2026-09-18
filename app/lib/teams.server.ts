@@ -39,7 +39,6 @@ export type Permission = 'admin' | 'write' | 'read'
 export type TeamMember = {
   sub: string
   teamId: string
-  // topicId: string
   permission: Permission
 }
 
@@ -47,7 +46,6 @@ export type FullMemberInfo = TeamMember & {
   email?: string
   groups?: string[]
   username?: string
-  // affiliation?: string
 }
 
 export type TeamInvite = {

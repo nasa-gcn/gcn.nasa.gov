@@ -47,8 +47,6 @@ import {
 } from '~/lib/teams.server'
 import { getFormDataString } from '~/lib/utils'
 
-// import { useIsCurrentUser } from '~/root'
-
 export async function action({
   request,
   params: { teamId },
