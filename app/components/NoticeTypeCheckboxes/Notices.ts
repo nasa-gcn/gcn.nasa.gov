@@ -84,7 +84,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'HAWC_BURST_MONITOR',
     'HUNTS_SRC',
     'KONUS_LC',
-    'MAXBC',
     'SIMBADNED',
     'SK_SN',
     'SNEWS',
