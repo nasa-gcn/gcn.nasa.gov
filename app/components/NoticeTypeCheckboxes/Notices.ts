@@ -74,7 +74,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
   ],
   Other: [
     'AAVSO',
-    'ALEXIS_SRC',
     'CBAT',
     'COINCIDENCE',
     'GRB_CNTRPART',
