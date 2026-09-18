@@ -78,7 +78,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'GRB_CNTRPART',
     'GRB_COORDS',
     'GRB_FINAL',
-    'GWHEN_COINC',
     'HAWC_BURST_MONITOR',
     'HUNTS_SRC',
     'KONUS_LC',
