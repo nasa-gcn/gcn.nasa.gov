@@ -6318,43 +6318,86 @@
       "username": "Example User",
       "affiliation": "Testing Corp",
       "email": "user@example.com"
+    },
+    {
+      "sub": "teammate1",
+      "username": "Team Member",
+      "email": "team_member@example.com"
+    },
+    {
+      "sub": "invited_user",
+      "username": "Invited User",
+      "email": "invited.user@example.com"
     }
   ],
   "teams": [
     {
       "teamId": "team_abc",
       "teamName": "Team ABC",
-      "description": "A cool new team"
+      "description": "A cool new team",
+      "topicId": "topic_1"
     },
     {
       "teamId": "team_def",
       "teamName": "Team Def",
-      "description": "A second team"
+      "description": "A second team",
+      "topicId": "topic_2"
     },
     {
       "teamId": "team_ghi",
       "teamName": "Team ghi",
-      "description": "Example team"
+      "description": "Example team",
+      "topicId": "topic_3"
+    },
+    {
+      "teamId": "team_jkl",
+      "teamName": "Team jkl",
+      "description": "Example team",
+      "topicId": "topic_4"
     }
   ],
   "team_members": [
     {
       "sub": "default",
       "teamId": "team_abc",
-      "permission": "admin",
-      "topicId": "topic_1"
+      "permission": "admin"
     },
     {
       "sub": "default",
       "teamId": "team_def",
-      "permission": "write",
-      "topicId": "topic_2"
+      "permission": "write"
     },
     {
       "sub": "default",
       "teamId": "team_ghi",
-      "permission": "read",
-      "topicId": "topic_3"
+      "permission": "read"
+    },
+    {
+      "sub": "teammate1",
+      "teamId": "team_abc",
+      "permission": "write"
+    },
+    {
+      "sub": "teammate1",
+      "teamId": "team_jkl",
+      "permission": "admin"
+    },
+    {
+      "sub": "teammate1",
+      "teamId": "team_def",
+      "permission": "admin"
+    }
+  ],
+  "team_invites": [
+    {
+      "teamId": "team_abc",
+      "sub": "invited_user",
+      "permission": "write"
+    },
+    {
+      "teamId": "team_jkl",
+      "sub": "default",
+      "permission": "read"
     }
   ],
   "topics": [
@@ -6374,6 +6417,12 @@
       "topicId": "topic_3",
       "topicName": "gcn.notices.team_ghi",
       "teamId": "team_ghi",
+      "isPublic": true
+    },
+    {
+      "topicId": "topic_4",
+      "topicName": "gcn.notices.team_jkl",
+      "teamId": "team_jkl",
       "isPublic": true
     }
   ]
