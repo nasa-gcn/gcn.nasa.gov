@@ -74,7 +74,6 @@ export const NoticeTypes: { [key: string]: string[] } = {
   ],
   Other: [
     'AAVSO',
-    'CBAT',
     'COINCIDENCE',
     'GRB_CNTRPART',
     'GRB_COORDS',
