@@ -443,7 +443,7 @@ export async function updateTopicPublicAvailability(
     Key: { topicId },
     UpdateExpression: 'set #public = :public',
     ExpressionAttributeNames: {
-      '#public': 'public',
+      '#public': 'isPublic',
     },
     ExpressionAttributeValues: {
       ':public': isPublic,
@@ -457,7 +457,6 @@ export async function deleteTopic(topicId: string) {
   // TODO: Add KafkaACL function here to remove rules for this topic
 }
 
-// TODO: Does this still make sense? I dont think so
 export async function userHasPermission(
   sub: string,
   topicName: string,
