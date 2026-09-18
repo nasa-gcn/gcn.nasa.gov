@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
-import { useFetcher, useLoaderData } from '@remix-run/react'
+import { Form, redirect, useFetcher, useLoaderData } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import {
   Button,
@@ -24,6 +24,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 
 import { getUser } from './_auth/user.server'
+import Hint from '~/components/Hint'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
@@ -46,14 +47,17 @@ import {
 } from '~/lib/teams.server'
 import { getFormDataString } from '~/lib/utils'
 
+// import { useIsCurrentUser } from '~/root'
+
 export async function action({
   request,
   params: { teamId },
 }: ActionFunctionArgs) {
   if (!teamId) throw new Response(null, { status: 400 })
   const user = await getUser(request)
-  if (!user || !(await userIsTeamAdmin(user.sub, teamId)))
-    throw new Response(null, { status: 403 })
+
+  if (!user) throw new Response(null, { status: 403 })
+  const userIsAdmin = await userIsTeamAdmin(user.sub, teamId)
   const data = await request.formData()
   const intent = getFormDataString(data, 'intent')
   const permission = getFormDataString(data, 'permission')
@@ -62,24 +66,31 @@ export async function action({
   if (!intent) throw new Response(null, { status: 400 })
   switch (intent) {
     case 'update-permissions':
-      if (!sub || !permission) throw new Response(null, { status: 400 })
+      if (!userIsAdmin || !sub || !permission)
+        throw new Response(null, { status: 400 })
       await setUsersTeamPermission(sub, teamId, permission as Permission)
       break
     case 'remove-user':
+      if (!userIsAdmin) throw new Response(null, { status: 400 })
       const userToRemove = getFormDataString(data, 'userToRemove')
       if (!userToRemove) throw new Response(null, { status: 400 })
       await removeUserFromTeam(userToRemove, teamId)
       break
+    case 'leave-team':
+      await removeUserFromTeam(user.sub, teamId)
+      return redirect('/user/teams')
     case 'invite-user':
+      if (!userIsAdmin) throw new Response(null, { status: 400 })
       const inviteeSub = getFormDataString(data, 'inviteeSub')
       if (!inviteeSub || !permission) throw new Response(null, { status: 400 })
       await inviteUserToTeam(user, teamId, inviteeSub, permission as Permission)
       break
     case 'delete-invite':
-      if (!sub) throw new Response(null, { status: 400 })
+      if (!sub || !userIsAdmin) throw new Response(null, { status: 400 })
       await deleteTeamInvite(sub, teamId)
       break
     case 'update-description':
+      if (!userIsAdmin) throw new Response(null, { status: 400 })
       const description = getFormDataString(data, 'description')
       if (!description) throw new Response(null, { status: 400 })
       await updateTeam(teamId, description)
@@ -105,7 +116,7 @@ export async function loader({
 }
 
 export default function () {
-  const { team, teamAdmin, topics } = useLoaderData<typeof loader>()
+  const { team, teamAdmin, topics, sub } = useLoaderData<typeof loader>()
   const inviteRef = useRef<ModalRef>(null)
   const inviteFetcher = useFetcher()
   const descriptionFetcher = useFetcher()
@@ -179,7 +190,7 @@ export default function () {
         <h3>Topic</h3>
         <p>
           Members of this team can generate Kafka Client Credentials with
-          permissions to read or write from topics starting with{' '}
+          permissions to read or write from topics starting with:{' '}
           <strong>{topics.map((x) => x.topicName)}</strong>.
         </p>
         {teamAdmin && (
@@ -200,7 +211,7 @@ export default function () {
               key={member.sub}
               member={member}
               teamAdmin={teamAdmin}
-              topic={topics.find((x) => x.topicId == member.topicId)?.topicName}
+              currentUser={sub}
             />
           ))}
         </SegmentedCards>
@@ -262,18 +273,52 @@ export default function () {
 
 function MemberCard({
   member,
-  topic,
   teamAdmin,
+  currentUser,
 }: {
   member: FullMemberInfo
   teamAdmin: Boolean
-  topic?: string
+  currentUser: string
 }) {
   const removeUserRef = useRef<ModalRef>(null)
   const editPermissionRef = useRef<ModalRef>(null)
+  const leaveTeamRef = useRef<ModalRef>(null)
 
   const removeUserFetcher = useFetcher()
   const editPermissiionFetcher = useFetcher()
+
+  const buttons = [
+    teamAdmin && (
+      <ModalToggleButton
+        opener
+        modalRef={editPermissionRef}
+        type="button"
+        className="usa-button--outline"
+      >
+        Edit
+      </ModalToggleButton>
+    ),
+    currentUser === member.sub && (
+      <ModalToggleButton
+        opener
+        modalRef={leaveTeamRef}
+        type="button"
+        className="usa-button--secondary"
+      >
+        Leave Team
+      </ModalToggleButton>
+    ),
+    teamAdmin && !(currentUser === member.sub) && (
+      <ModalToggleButton
+        opener
+        modalRef={removeUserRef}
+        type="button"
+        className="usa-button--secondary"
+      >
+        Remove
+      </ModalToggleButton>
+    ),
+  ].filter((x) => x !== false)
 
   return (
     <>
@@ -284,18 +329,8 @@ function MemberCard({
               <strong>{member.username}</strong>
             </small>
           </div>
-          {member.affiliation && (
-            <div>
-              <small>{member.affiliation}</small>
-            </div>
-          )}
           <div>
             <small>{member.email}</small>
-          </div>
-          <div>
-            <small>
-              <strong>Topic:</strong> {topic}
-            </small>
           </div>
           <div>
             <small>
@@ -303,28 +338,9 @@ function MemberCard({
             </small>
           </div>
         </div>
-        {teamAdmin && (
-          <div className="tablet:grid-col flex-auto margin-y-auto">
-            <ToolbarButtonGroup>
-              <ModalToggleButton
-                opener
-                modalRef={editPermissionRef}
-                type="button"
-              >
-                Edit
-              </ModalToggleButton>
-              <ModalToggleButton
-                opener
-                modalRef={removeUserRef}
-                type="button"
-                className="usa-button--secondary"
-              >
-                <Icon.Delete role="presentation" className="margin-y-neg-2px" />
-                Remove
-              </ModalToggleButton>
-            </ToolbarButtonGroup>
-          </div>
-        )}
+        <div className="tablet:grid-col flex-auto margin-y-auto">
+          <ToolbarButtonGroup>{...buttons}</ToolbarButtonGroup>
+        </div>
       </Grid>
       <Modal
         id="modal-delete"
@@ -366,10 +382,9 @@ function MemberCard({
           <ModalHeading id="modal-update-heading">
             Update {member.username}'s Permission
           </ModalHeading>
-          <p id="modal-update-description">
-            Topic: {topic}
+          <div id="modal-update-description">
             <PermissionSelector defaultPermission={member.permission} />
-          </p>
+          </div>
 
           <ModalFooter>
             <ModalToggleButton modalRef={removeUserRef} closer outline>
@@ -380,6 +395,32 @@ function MemberCard({
             </Button>
           </ModalFooter>
         </editPermissiionFetcher.Form>
+      </Modal>
+      <Modal
+        id="modal-leave"
+        ref={leaveTeamRef}
+        aria-labelledby="modal-leave-heading"
+        aria-describedby="modal-leave-description"
+        renderToPortal={false} // FIXME: https://github.com/trussworks/react-uswds/pull/1890#issuecomment-1023730448
+      >
+        <Form method="POST">
+          <input type="hidden" name="sub" value={member.sub} />
+          <input type="hidden" name="intent" value="leave-team" />
+          <ModalHeading id="modal-leave-heading">Leave Team</ModalHeading>
+          <p id="modal-update-description">
+            Area you sure you would like to leave this team? You can only be
+            added back by a team admin with a new invite.
+          </p>
+
+          <ModalFooter>
+            <ModalToggleButton modalRef={leaveTeamRef} closer outline>
+              Cancel
+            </ModalToggleButton>
+            <Button data-close-modal type="submit">
+              Confirm
+            </Button>
+          </ModalFooter>
+        </Form>
       </Modal>
     </>
   )
@@ -402,6 +443,18 @@ function PermissionSelector({
         <option value="write">Write</option>
         <option value="read">Read</option>
       </Select>
+      <Hint>
+        <ul>
+          <li>
+            Admin: Can manage users in this team and produce to and consume from
+            this team's topic stream
+          </li>
+          <li>
+            Write: Can produce to and consume from this team's topic stream
+          </li>
+          <li>Read: Can only consume messages from this team's topic stream</li>
+        </ul>
+      </Hint>
     </>
   )
 }
@@ -430,7 +483,6 @@ function InviteCard({ invite }: { invite: TeamInviteWithEmail }) {
               type="button"
               className="usa-button--secondary"
             >
-              <Icon.Delete role="presentation" className="margin-y-neg-2px" />
               Delete Invite
             </ModalToggleButton>
           </ToolbarButtonGroup>

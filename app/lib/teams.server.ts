@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
-import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
+import { type DynamoDBDocument, paginateScan } from '@aws-sdk/lib-dynamodb'
 import crypto from 'crypto'
 import { dedent } from 'ts-dedent'
 
@@ -39,7 +39,7 @@ export type Permission = 'admin' | 'write' | 'read'
 export type TeamMember = {
   sub: string
   teamId: string
-  topicId: string
+  // topicId: string
   permission: Permission
 }
 
@@ -47,7 +47,7 @@ export type FullMemberInfo = TeamMember & {
   email?: string
   groups?: string[]
   username?: string
-  affiliation?: string
+  // affiliation?: string
 }
 
 export type TeamInvite = {
@@ -208,7 +208,7 @@ export async function getTeamTopics(teamId: string) {
  * @returns An array of team items containing the team' name, description,
  * and ID for each Team which a user belongs to
  */
-export async function getUsersTeams(sub: string) {
+export async function getUsersTeams(sub: string): Promise<Team[]> {
   const db = await tables()
   const memberships: TeamMember[] = (
     await db.team_members.query({
@@ -226,6 +226,21 @@ export async function getUsersTeams(sub: string) {
     memberships.map((x) => db.teams.get({ teamId: x.teamId }))
   )
   return teams
+}
+
+export async function getAllTeams(): Promise<Team[]> {
+  const db = await tables()
+  const client = db._doc as unknown as DynamoDBDocument
+  const TableName = db.name('teams')
+  const pages = paginateScan(
+    { client },
+    { AttributesToGet: ['teamId', 'teamName', 'description'], TableName }
+  )
+  const results: Team[] = []
+  for await (const page of pages) {
+    results.push(...(page.Items as Team[]))
+  }
+  return results
 }
 
 export async function updateTeam(teamId: string, description: string) {
@@ -380,9 +395,14 @@ export async function removeUserFromTeam(sub: string, teamId: string) {
   const admins = (
     await db.team_members.query({
       IndexName: 'teamMembersByPermission',
-      FilterExpression: 'permission = :permission',
+      KeyConditionExpression: '#permission = :permission',
+      FilterExpression: 'teamId = :teamId',
+      ExpressionAttributeNames: {
+        '#permission': 'permission',
+      },
       ExpressionAttributeValues: {
         ':permission': 'admin',
+        ':teamId': teamId,
       },
     })
   ).Items as TeamMember[]

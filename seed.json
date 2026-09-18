@@ -6356,32 +6356,32 @@
     {
       "sub": "default",
       "teamId": "team_abc",
-      "permission": "admin",
-      "topicId": "topic_1"
+      "permission": "admin"
     },
     {
       "sub": "default",
       "teamId": "team_def",
-      "permission": "write",
-      "topicId": "topic_2"
+      "permission": "write"
     },
     {
       "sub": "default",
       "teamId": "team_ghi",
-      "permission": "read",
-      "topicId": "topic_3"
+      "permission": "read"
     },
     {
       "sub": "teammate1",
       "teamId": "team_abc",
-      "permission": "write",
-      "topicId": "topic_1"
+      "permission": "write"
     },
     {
       "sub": "teammate1",
       "teamId": "team_jkl",
-      "permission": "admin",
-      "topicId": "topic_1"
+      "permission": "admin"
+    },
+    {
+      "sub": "teammate1",
+      "teamId": "team_def",
+      "permission": "admin"
     }
   ],
   "team_invites": [

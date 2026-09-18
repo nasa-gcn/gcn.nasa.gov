@@ -19,12 +19,14 @@ import {
 import { useRef } from 'react'
 
 import { getUser } from '../_auth/user.server'
+import { adminGroup } from '../admin'
 import SegmentedCards from '~/components/SegmentedCards'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import type { Team, TeamInvite } from '~/lib/teams.server'
 import {
   acceptTeamInvite,
   deleteTeamInvite,
+  getAllTeams,
   getInvitesForUser,
   getUsersTeams,
 } from '~/lib/teams.server'
@@ -55,7 +57,9 @@ export async function action({ request }: LoaderFunctionArgs) {
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
-  const teams = await getUsersTeams(user.sub)
+  const teams = user.groups.includes(adminGroup)
+    ? await getAllTeams()
+    : await getUsersTeams(user.sub)
   const invites = await getInvitesForUser(user)
   return { teams, invites }
 }
@@ -79,7 +83,7 @@ export default function () {
       )}
       <SegmentedCards>
         {teams.map((team) => (
-          <TeamCard key={team.teamId} team={team} />
+          <TeamCard key={team.teamId} team={team} userIsAdmin={userIsAdmin} />
         ))}
       </SegmentedCards>
       {invites.length > 0 && (
@@ -96,7 +100,13 @@ export default function () {
   )
 }
 
-function TeamCard({ team }: { team: Team }) {
+function TeamCard({
+  team,
+  userIsAdmin,
+}: {
+  team: Team
+  userIsAdmin?: Boolean
+}) {
   return (
     <>
       <Grid row>
@@ -112,6 +122,7 @@ function TeamCard({ team }: { team: Team }) {
         </div>
         <div className="tablet:grid-col flex-auto margin-y-auto">
           <ToolbarButtonGroup>
+            {userIsAdmin && <>Modal open delete button here</>}
             <Link
               to={team.teamId}
               type="button"
