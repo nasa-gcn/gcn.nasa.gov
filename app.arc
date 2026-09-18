@@ -226,10 +226,6 @@ team_members
   permission *String
   name teamMembersByPermission
 
-team_members
-  topicId *String
-  name membersByTopicId
-
 team_invites
   sub *String
   name invitesBySub

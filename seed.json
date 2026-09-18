@@ -6334,22 +6334,26 @@
     {
       "teamId": "team_abc",
       "teamName": "Team ABC",
-      "description": "A cool new team"
+      "description": "A cool new team",
+      "topicId": "topic_1"
     },
     {
       "teamId": "team_def",
       "teamName": "Team Def",
-      "description": "A second team"
+      "description": "A second team",
+      "topicId": "topic_2"
     },
     {
       "teamId": "team_ghi",
       "teamName": "Team ghi",
-      "description": "Example team"
+      "description": "Example team",
+      "topicId": "topic_3"
     },
     {
       "teamId": "team_jkl",
       "teamName": "Team jkl",
-      "description": "Example team"
+      "description": "Example team",
+      "topicId": "topic_4"
     }
   ],
   "team_members": [

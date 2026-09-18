@@ -38,7 +38,6 @@ import {
   deleteTeamInvite,
   getTeam,
   getTeamMembership,
-  getTeamTopics,
   inviteUserToTeam,
   removeUserFromTeam,
   setUsersTeamPermission,
@@ -109,12 +108,11 @@ export async function loader({
   if (!membership) throw new Response(null, { status: 403 })
   const team = await getTeam(teamId)
   const teamAdmin = await userIsTeamAdmin(user.sub, teamId)
-  const topics = await getTeamTopics(teamId)
-  return { team, teamAdmin, topics, sub: user.sub }
+  return { team, teamAdmin, sub: user.sub }
 }
 
 export default function () {
-  const { team, teamAdmin, topics, sub } = useLoaderData<typeof loader>()
+  const { team, teamAdmin, sub } = useLoaderData<typeof loader>()
   const inviteRef = useRef<ModalRef>(null)
   const inviteFetcher = useFetcher()
   const descriptionFetcher = useFetcher()
@@ -186,11 +184,21 @@ export default function () {
         )}
 
         <h3>Topic</h3>
-        <p>
-          Members of this team can generate Kafka Client Credentials with
-          permissions to read or write from topics starting with:{' '}
-          <strong>{topics.map((x) => x.topicName)}</strong>.
-        </p>
+        {/* TODO: A topic being public/private is directly tied to the ACLs functions */}
+        {team.topic.isPublic ? (
+          <p>
+            Your team's topic is publicly available. Any GCN user can consume
+            topics you produce starting with{' '}
+            <strong>{team.topic.topicName}</strong>.
+          </p>
+        ) : (
+          <p>
+            Your team's topic is private. Only user's within this team may
+            consume messages starting with{' '}
+            <strong>{team.topic.topicName}</strong>.
+          </p>
+        )}
+
         {teamAdmin && (
           <>
             <h3>Admin Note</h3>

@@ -21,6 +21,7 @@ export type Team = {
   teamId: string
   teamName: string
   description: String
+  topicId: string
 }
 
 export type Permission = 'admin' | 'write' | 'read'
@@ -51,7 +52,6 @@ export type FullMemberInfo = TeamMember & {
 export type TeamInvite = {
   teamId: string
   sub: string
-  topicId: string
   permission: Permission
 }
 
@@ -92,20 +92,21 @@ export async function createTeam(
     throw new Response(null, { status: 403 })
 
   const db = await tables()
+  const teamId = crypto.randomUUID()
+  const topic = await createTopic(topicName, teamId)
   const team: Team = {
-    teamId: crypto.randomUUID(),
+    teamId,
     teamName,
     description,
+    topicId: topic.topicId,
   }
   await db.teams.put(team)
-  const topic = await createTopic(topicName, team.teamId)
-  // TODO: Add KafkaACL functions here once they are created
+  // TODO: Add KafkaACL functions
 
   await Promise.all([
     db.team_invites.put({
       teamId: team.teamId,
       email: pocEmail,
-      topicId: topic.topicId,
       permission: 'admin',
     }),
     sendEmail({
@@ -126,10 +127,12 @@ export async function getTeam(teamId: string) {
   const team: Team = await db.teams.get({ teamId })
   const teamMembers = await getTeamMembers(teamId)
   const pendingInvites = await getTeamInvites(teamId)
+  const topic = await getTopic(team.topicId)
   return {
     ...team,
     teamMembers,
     pendingInvites,
+    topic,
   }
 }
 
@@ -451,30 +454,6 @@ export async function updateTopicPublicAvailability(
 export async function deleteTopic(topicId: string) {
   const db = await tables()
   await db.topics.delete({ topicId })
-  const memberships: TeamMember[] = (
-    await db.team_members.query({
-      IndexName: 'membersByTopicId',
-      KeyConditionExpression: 'topicId = :topicId',
-      ExpressionAttributeValues: {
-        ':topicId': topicId,
-      },
-    })
-  ).Items
-
-  const client = db._doc as unknown as DynamoDBDocument
-  const TableName = db.name('team_members')
-  await client.batchWrite({
-    RequestItems: {
-      [TableName]: memberships.map((x) => ({
-        DeleteRequest: {
-          Key: {
-            sub: { S: x.sub },
-            teamId: { S: x.teamId },
-          },
-        },
-      })),
-    },
-  })
   // TODO: Add KafkaACL function here to remove rules for this topic
 }
 
@@ -485,7 +464,7 @@ export async function userHasPermission(
   permission: Permission
 ): Promise<boolean> {
   const db = await tables()
-  const topicId: string = (
+  const teamId: string = (
     await db.topics.query({
       IndexName: 'topicsByName',
       KeyConditionExpression: 'topicName = :topicName',
@@ -493,23 +472,25 @@ export async function userHasPermission(
         ':topicName': topicName,
       },
     })
-  ).Items[0].topicId
+  ).Items[0].teamId
 
   const membership = (
     await db.team_members.query({
-      IndexName: 'membersByTopicId',
-      KeyConditionExpression: 'topicId = :topicId',
-      FilterExpression: '#sub = :sub AND permission = :permission',
+      IndexName: 'teamMembersByPermission',
+      KeyConditionExpression: '#permission = :permission',
+      FilterExpression: 'teamId = :teamId AND #sub = :sub',
       ExpressionAttributeNames: {
+        '#permission': 'permission',
         '#sub': 'sub',
       },
       ExpressionAttributeValues: {
-        ':sub': sub,
-        ':topicId': topicId,
         ':permission': permission,
+        ':teamId': teamId,
+        ':sub': sub,
       },
     })
   ).Items[0]
+
   return Boolean(membership)
 }
 // #endregion
