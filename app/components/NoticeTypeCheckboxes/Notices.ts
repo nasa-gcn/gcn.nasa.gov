@@ -73,13 +73,9 @@ export const NoticeTypes: { [key: string]: string[] } = {
     'SWIFT_XRT_THRESHPIX_PROC',
   ],
   Other: [
-    'AAVSO',
     'COINCIDENCE',
     'GRB_CNTRPART',
-    'GRB_COORDS',
-    'GRB_FINAL',
     'HAWC_BURST_MONITOR',
-    'HUNTS_SRC',
     'KONUS_LC',
     'SK_SN',
     'SNEWS',
