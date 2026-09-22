@@ -35,6 +35,23 @@ import { Anchor } from '~/components/Anchor'
 >
 
     <CollectionHeading headingLevel="h3">
+      <Anchor>JSON Notices Available via Email</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+      Users can now choose to receive any public JSON Notice via email. To sign up for Notices via email](/docs/notices/consuming) in JSON or any legacy format, visit the [Email Notifications page](/user/email).  Note that base 64 encoded attachments are automatically stripped out out of emails, but remain available via Kafka.  All new Notice types added in the last couple of years are JSON Notice type, and many of the legacy producers have started also producing JSON Notices or are in the process of migrating. Visit the [Missions page](/missions) to see which Notice types are available in legacy or JSON formats.
+
+    </CollectionDescription>
+
+  </CollectionItem>
+
+<CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
+      <CollectionCalendarDate datetime='August 6, 2026' />
+    }
+>
+
+    <CollectionHeading headingLevel="h3">
       <Anchor>LVK Notices Exclusively Available in JSON over Kafka, Updated CHIME Notices, and Schema v7.2.3</Anchor>
     </CollectionHeading>
     <CollectionDescription>
