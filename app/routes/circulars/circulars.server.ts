@@ -64,7 +64,7 @@ type EventTypePreference = {
   eventType: string
   ignore: boolean
 }
-const fromName = 'GCN Circualrs'
+const fromName = 'GCN Circulars'
 
 const getDynamoDBAutoIncrement = memoizee(
   async function () {
