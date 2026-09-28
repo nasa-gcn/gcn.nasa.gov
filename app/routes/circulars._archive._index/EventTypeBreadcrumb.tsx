@@ -41,7 +41,7 @@ export function EventTypeBreadcrumb({ eventType }: { eventType?: string }) {
       <Breadcrumb>
         <BreadcrumbLink href="/circulars">GCN Circulars</BreadcrumbLink>
       </Breadcrumb>
-      <Breadcrumb current>
+      <Breadcrumb current className="position-static">
         <div ref={ref} className="display-inline">
           <Button
             type="button"
@@ -51,7 +51,7 @@ export function EventTypeBreadcrumb({ eventType }: { eventType?: string }) {
             }}
           >
             {eventTypeHumanReadable}
-            <Icon.ExpandMore role="presentation" />
+            <Icon.ExpandMore role="presentation" className="text-base" />
           </Button>
           {showEventTypeDropdown && (
             <DetailsDropdownContent className="padding-0">
