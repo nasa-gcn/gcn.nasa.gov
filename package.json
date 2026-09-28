@@ -162,7 +162,7 @@
   },
   "overrides": {
     "@architect/deploy": "github:lpsinger/deploy#e4d55b670a95049109ae42eca5ad1a1f56534d56",
-    "@aws-lite/client": "github:lpsinger/aws-lite#1d017205b3c67b318ba8b0a395c31b33b2c59af7",
+    "@aws-lite/client": "0.24.0",
     "lambda-runtimes": "3.0.0"
   },
   "engines": {
