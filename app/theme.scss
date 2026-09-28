@@ -369,7 +369,6 @@ input.react-tags__combobox-input:focus {
  * Show full breadcrumbs on mobile
  */
 @media all and (max-width: 29.99em) {
-
   .usa-breadcrumb--wrap .usa-breadcrumb__list-item:not(:last-child)::after {
     background-image: url('nasawds/src/img/usa-icons/navigate_next.svg');
     background-repeat: no-repeat;
@@ -396,7 +395,6 @@ input.react-tags__combobox-input:focus {
       mask-size: 2ex 2ex;
     }
   }
-  
 }
 
 /*
