@@ -53,9 +53,6 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   if (query && view === 'index') {
     await circularRedirect(query)
   }
-  if (query == 'crash_test') {
-    throw new Error('Crash test error')
-  }
 
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
@@ -247,8 +244,8 @@ export function ErrorBoundary() {
           Browsing the Circulars Archive is currently unavailable. Please check
           back later.
           <br />
-          Note: Circulars can still be submitted through the web form or by
-          email and are still being distributed to subscribers.
+          Note: Circulars may still be able to be submitted through the web form
+          or by email and should still be distributed to subscribers.
         </Alert>
       </div>
     </ArchiveHeader>
