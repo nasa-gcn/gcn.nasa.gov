@@ -11,6 +11,7 @@ import type { Root } from 'mdast'
 import { Fragment, createElement } from 'react'
 import rehypeClassNames from 'rehype-class-names'
 import rehypeReact from 'rehype-react'
+import rehypeSanitize from 'rehype-sanitize'
 import remarkGfm from 'remark-gfm'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
@@ -54,6 +55,7 @@ export function MarkdownBody({
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkRehype)
+    .use(rehypeSanitize)
     .use(rehypeAstro)
     .use(rehypeClassNames, {
       ol: 'usa-list',

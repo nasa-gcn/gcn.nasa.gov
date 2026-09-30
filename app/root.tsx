@@ -276,10 +276,10 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          New! MAXI Notices and Schema v7.2.0. See{' '}
+          Updates to LVK & CHIME Notices, Schema v7.2.3! See{' '}
           <Link
             className="usa-link"
-            to="/news#new-maxi-notices-and-schema-v720"
+            to="/news#lvk-notices-exclusively-available-in-json-over-kafka-updated-chime-notices-and-schema-v723"
           >
             news and announcements
           </Link>

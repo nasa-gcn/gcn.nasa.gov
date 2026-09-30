@@ -34,6 +34,10 @@ export function getCanonicalUrlHeaders(url: string | URL) {
   }
 }
 
+export function getBearerAuthHeaders(bearer: string) {
+  return { Authorization: `Bearer ${bearer}` }
+}
+
 /**
  * Get HTTP Basic auth request headers for a username and password.
  *

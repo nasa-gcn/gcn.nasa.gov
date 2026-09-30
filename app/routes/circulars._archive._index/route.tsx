@@ -15,7 +15,7 @@ import {
 } from '@remix-run/react'
 import { Alert } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
-import { useId } from 'react'
+import { useId, useState } from 'react'
 
 import {
   circularRedirect,
@@ -29,7 +29,7 @@ import {
   search,
 } from '../circulars/circulars.server'
 import ArchiveHeader from './ArchiveHeader'
-import CircularsIndex from './CircularsIndex'
+import ArchiveIndex from './ArchiveIndex'
 import SynonymGroupIndex from './SynonymGroupIndex'
 import PaginationSelectionFooter from '~/components/pagination/PaginationSelectionFooter'
 import { origin } from '~/lib/env.server'
@@ -50,6 +50,7 @@ export async function loader({ request: { url } }: LoaderFunctionArgs) {
   const query = searchParams.get('query') || undefined
   const view = searchParams.get('view') || 'index'
   const isGroupView = view === 'group'
+
   if (query && view === 'index') {
     await circularRedirect(query)
   }
@@ -89,6 +90,7 @@ export async function action({ request }: ActionFunctionArgs) {
   const intent = getFormDataString(data, 'intent')
   const format = getFormDataString(data, 'format') as CircularFormat | undefined
   const eventId = getFormDataString(data, 'eventId') || undefined
+  const eventType = data.getAll('eventTypes').map((value) => value.toString())
   if (format && !circularFormats.includes(format)) {
     throw new Response('Invalid format', { status: 400 })
   }
@@ -97,7 +99,14 @@ export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   const circularId = getFormDataString(data, 'circularId')
   let newCircular
-  const props = { body, subject, eventId, ...(format ? { format } : {}) }
+  const props = {
+    body,
+    subject,
+    eventId,
+    eventType,
+    ...(format ? { format } : {}),
+  }
+
   switch (intent) {
     case 'correction':
       if (circularId === undefined)
@@ -180,56 +189,72 @@ export default function () {
     isGroupView,
   } = useLoaderData<typeof loader>()
 
-  const formId = useId()
-  const [searchParams] = useSearchParams()
-
-  const query = searchParams.get('query') || ''
-  const startDate = searchParams.get('startDate') || undefined
-  const endDate = searchParams.get('endDate') || undefined
-  const view = searchParams.get('view') || 'index'
-  let searchString = searchParams.toString()
-  if (searchString) searchString = `?${searchString}`
-
   // Concatenate items from the action and loader functions
   const allItems = [
     ...(result?.newCircular ? [result.newCircular] : []),
     ...(items || []),
   ]
 
-  return (
-    <ArchiveHeader
-      result={result}
-      requestedChangeCount={requestedChangeCount}
-      formId={formId}
-      queryFallback={queryFallback}
-    >
-      {isGroupView ? (
-        <SynonymGroupIndex
-          allItems={allItems as SynonymGroup[]}
-          searchString={searchString}
-          totalItems={totalItems}
-          query={query}
-        />
-      ) : (
-        <CircularsIndex
-          allItems={allItems as CircularMetadata[]}
-          searchString={searchString}
-          totalItems={totalItems}
-          query={query}
-        />
-      )}
+  const formId = useId()
+  const [searchParams] = useSearchParams()
 
-      <PaginationSelectionFooter
-        query={query}
-        startDate={startDate}
-        endDate={endDate}
-        page={page}
-        limit={limit}
-        totalPages={totalPages}
-        form={formId}
-        view={view}
-      />
-    </ArchiveHeader>
+  // Strip off the ?index param if we navigated here from a form.
+  // See https://remix.run/docs/en/main/guides/index-query-param.
+  searchParams.delete('index')
+
+  const query = searchParams.get('query') || ''
+  const startDate = searchParams.get('startDate') || undefined
+  const endDate = searchParams.get('endDate') || undefined
+  const view = searchParams.get('view') || 'index'
+
+  let searchString = searchParams.toString()
+  if (searchString) searchString = `?${searchString}`
+
+  const [inputQuery, setInputQuery] = useState(query)
+  const clean = inputQuery === query
+
+  return (
+    <>
+      <ArchiveHeader
+        result={result}
+        requestedChangeCount={requestedChangeCount}
+        formId={formId}
+        inputQuery={inputQuery}
+        setInputQuery={setInputQuery}
+        queryFallback={queryFallback}
+      ></ArchiveHeader>
+
+      {clean && (
+        <>
+          {isGroupView ? (
+            <SynonymGroupIndex
+              allItems={items as SynonymGroup[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          ) : (
+            <ArchiveIndex
+              allItems={allItems as CircularMetadata[]}
+              searchString={searchString}
+              totalItems={totalItems}
+              query={query}
+            />
+          )}
+
+          <PaginationSelectionFooter
+            query={query}
+            startDate={startDate}
+            endDate={endDate}
+            page={page}
+            limit={limit}
+            totalPages={totalPages}
+            form={formId}
+            view={view}
+          />
+        </>
+      )}
+    </>
   )
 }
 

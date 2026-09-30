@@ -38,7 +38,7 @@ export async function loader({
   params: { circularId, version },
 }: LoaderFunctionArgs) {
   invariant(circularId)
-  const result = await get(
+  const { sub, ...result } = await get(
     parseFloat(circularId),
     version ? parseFloat(version) : undefined
   )

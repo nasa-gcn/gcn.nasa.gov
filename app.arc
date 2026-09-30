@@ -13,6 +13,14 @@ circulars
 support
   src build/email-incoming/support
 
+@appclients
+circulars-producer
+  clientKey GcnCircularsProducerUserPoolClient
+  envResourceName CircularsKafkaTableStreamLambda
+  scope gcn.nasa.gov/kafka-circulars-producer
+  envClientIdName KAFKA_CLIENT_ID
+  envClientSecretName KAFKA_CLIENT_SECRET
+
 @eventbridge
 app_clients
   src build/eventbridge/app-clients
@@ -70,6 +78,16 @@ announcement_subscriptions
 circulars_subscriptions
   email *String
   sub **String
+  PointInTimeRecovery true
+
+circular_eventType_email
+  sub *String
+  uuid **String
+  PointInTimeRecovery true
+
+circular_eventType_email_subscriptions
+  uuid *String
+  eventType **String
   PointInTimeRecovery true
 
 email_notification
@@ -226,12 +244,10 @@ hydrate false
 tracing true
 
 @search
-instanceType m8g.large.search
+instanceType c8g.large.search
 instanceCount 3
 availabilityZoneCount 3
 volumeSize 10
-dedicatedMasterCount 3
-dedicatedMasterType m8g.large.search
 autoSoftwareUpdateEnabled true
 offPeakWindowEnabled true
 
@@ -249,4 +265,4 @@ nasa-gcn/architect-plugin-search  # Add an AWS OpenSearch Serverless collection.
 nasa-gcn/architect-plugin-dynamodb-local
 nasa-gcn/architect-plugin-tracing
 eventbridge # Enable sending Eventbridge Events to lambdas
-circulars-producer-client
+app-clients # Provision app clients tied to specific scopes

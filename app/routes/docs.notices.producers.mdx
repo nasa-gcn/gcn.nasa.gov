@@ -64,13 +64,14 @@ also happy to work with the mission teams to help construct your alerts.
 
       ```python
       from gcn_kafka import Producer
-      # Connect as a producer.
+      # Connect as a producer and always remain connected.
       # Warning: don't share the client secret with others.
       producer = Producer(client_id='fill me in', client_secret='fill me in')
       # Choose the right topic for this notice.  If your mission has
       # multiple topics, they all start with 'gcn.notices.mission.'
       # If there is only one topic, it will be simply as follows:
       topic = 'gcn.notices.mission'
+      # When you have an event to report, produce to the topic to generate a Notice
       # JSON data converted to byte string format
       data = json.dumps({
           '$schema': 'https://gcn.nasa.gov/schema/vX.Y.Z/gcn/notices/mission/SchemaName.schema.json',
@@ -83,6 +84,11 @@ also happy to work with the mission teams to help construct your alerts.
 <Alert type="info" heading="Schema Version" headingLevel="h4">
 
 Please indicate the latest schema version (i.e., `vX.Y.Z`) against which the mission schema has been validated, rather than referring to the main branch.
+
+</Alert>
+
+<Alert type="info" heading="Produce the Notice" headingLevel="h4">
+The producer should always remain connected via `producer = Producer(...)`, with the JSON generation and `producer.produce` commands kicked off by new alerts from your pipeline. If you do not connect to Kafka with your credentials at least monthly, they will expire.  Leaving your alert script running and your Kafka client connected indefinitely ensures that your credentials do not expire and provides the lowest latency.
 
 </Alert>
 

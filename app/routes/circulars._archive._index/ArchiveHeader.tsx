@@ -15,7 +15,6 @@ import {
   Label,
   TextInput,
 } from '@trussworks/react-uswds'
-import { clamp } from 'lodash'
 import { useState } from 'react'
 
 import { DateSelector } from './DateSelectorMenu'
@@ -27,7 +26,7 @@ import { usePermissionModerator } from '~/root'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
 
-const CircularsHeaderText = () => {
+const ArchiveHeaderText = () => {
   return (
     <>
       <h1>GCN Circulars</h1>
@@ -50,17 +49,21 @@ const CircularsHeaderText = () => {
 }
 
 type ArchiveHeaderProps = {
-  children: React.ReactNode
   result?: any
+  children?: React.ReactNode
   requestedChangeCount?: number
   formId: string
+  inputQuery?: string
+  setInputQuery?: (query: string) => void
   queryFallback?: boolean
 }
 export default function ArchiveHeader({
-  children,
   result,
+  children,
   requestedChangeCount = 0,
   formId,
+  inputQuery = '',
+  setInputQuery = () => {},
   queryFallback,
 }: ArchiveHeaderProps) {
   const submit = useSubmit()
@@ -75,15 +78,12 @@ export default function ArchiveHeader({
   const startDate = searchParams.get('startDate') || undefined
   const endDate = searchParams.get('endDate') || undefined
   const sort = searchParams.get('sort') || 'circularID'
-  const view = searchParams.get('view') || 'index'
-  const limit = clamp(parseInt(searchParams.get('limit') || '100'), 1, 100)
+  const [view, setView] = useState(searchParams.get('view') || 'index')
   const isGroupView = view === 'group'
 
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
 
-  const [inputQuery, setInputQuery] = useState(query)
-  const clean = inputQuery === query
   const searchText = isGroupView ? 'Event Name' : 'Search'
 
   function getSelection(selectionOption: string) {
@@ -106,7 +106,7 @@ export default function ArchiveHeader({
         </Alert>
       )}
 
-      <CircularsHeaderText />
+      <ArchiveHeaderText />
 
       {userIsModerator && requestedChangeCount > 0 && (
         <Link to="moderation" className="usa-button usa-button--outline">
@@ -155,22 +155,26 @@ export default function ArchiveHeader({
         </Form>
 
         <ButtonGroup type="segmented">
-          <Link
-            to={`/circulars?view=index&limit=${limit}`}
-            preventScrollReset
+          <Button
+            type="submit"
+            form={formId}
+            onClick={() => {
+              setView('index')
+            }}
             className={getSelection('index')}
           >
             <Icon.List role="presentation" />
             Circulars
-          </Link>
-          <Link
-            to={`/circulars?view=group&limit=${limit}`}
-            preventScrollReset
+          </Button>
+          <Button
+            type="submit"
+            form={formId}
+            onClick={() => setView('group')}
             className={getSelection('group')}
           >
             <Icon.ContentCopy role="presentation" />
             Events
-          </Link>
+          </Button>
         </ButtonGroup>
 
         <Link to={`/circulars/new${searchString}`}>
@@ -220,7 +224,7 @@ export default function ArchiveHeader({
       </Hint>
 
       {!isGroupView && <LuceneAccordion />}
-      {clean && children}
+      {children}
     </>
   )
 }

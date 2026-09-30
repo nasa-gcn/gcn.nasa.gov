@@ -117,8 +117,8 @@ The software classification determines which of NPR 7150.2D's requirements are i
       <td>
         To better estimate the cost of development, the project manager shall establish, document, and maintain:
         <ol type="a">
-          <li>Two cost estimate models and associated cost parameters for all Class A and B software projects that have an estimated project cost of $2 million or more.</li>
-          <li>One software cost estimate model and associated cost parameter(s) for all Class A and Class B software projects that have an estimated project cost of less than $2 million.</li>
+          <li>Two cost estimate models and associated cost parameters for all Class A and B software projects that have an estimated project cost of \$2 million or more.</li>
+          <li>One software cost estimate model and associated cost parameter(s) for all Class A and Class B software projects that have an estimated project cost of less than \$2 million.</li>
           <li>One software cost estimate model and associated cost parameter(s) for all Class C and Class D software projects.</li>
           <li>One software cost estimate model and associated cost parameter(s) for all Class F software projects.</li>
         </ol>

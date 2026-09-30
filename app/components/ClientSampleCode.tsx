@@ -156,12 +156,14 @@ export function ClientSampleCode({
             // List topics
             const admin = kafka.admin()
             const topics = await admin.listTopics()
+            await admin.disconnect()
             console.log(topics)
             `
                 : ''
             }
             // Subscribe to topics and receive alerts
             const consumer = kafka.consumer()
+            await consumer.connect()
             try {
               await consumer.subscribe({
                 topics: [${topics
@@ -241,12 +243,14 @@ export function ClientSampleCode({
               // List topics
               const admin = kafka.admin()
               const topics = await admin.listTopics()
+              await admin.disconnect()
               console.log(topics)
               `
                 : ''
             }
               // Subscribe to topics and receive alerts
               const consumer = kafka.consumer()
+              await consumer.connect()
               try {
                 await consumer.subscribe({
                   topics: [${topics

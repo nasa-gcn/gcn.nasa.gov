@@ -86,6 +86,18 @@ export default function () {
           {circular.circularId}
         </Link>
       </h2>
+      {correction.zendeskTicketId && (
+        <>
+          <h3>Zendesk Ticket</h3>
+          <a
+            href={`https://nasa-gcn.zendesk.com/agent/tickets/${correction.zendeskTicketId}`}
+            target="_blank"
+            rel="external noopener"
+          >
+            {correction.zendeskTicketId}
+          </a>
+        </>
+      )}
       <h3>Original Author</h3>
       <DiffedContent
         oldString={circular.submitter}
@@ -108,6 +120,12 @@ export default function () {
       <DiffedContent
         oldString={circular.eventId ?? ''}
         newString={correction.eventId ?? ''}
+        method="lines"
+      />
+      <h3>Event Types</h3>
+      <DiffedContent
+        oldString={(circular.eventType ?? []).join('\n')}
+        newString={(correction.eventType ?? []).join('\n')}
         method="lines"
       />
       <h3>Format</h3>
