@@ -310,6 +310,39 @@ export const eventTypes = [
   'Misc',
 ] as const
 
+export const eventTypesHumanReadable: Record<
+  string,
+  { singular: string; plural: string }
+> = {
+  Retraction: { singular: 'Retraction', plural: 'Retractions' },
+  GRB: { singular: 'Gamma-ray Burst', plural: 'Gamma-ray Bursts' },
+  'Gamma-ray Transient': {
+    singular: 'Gamma-ray Transient',
+    plural: 'Gamma-ray Transients',
+  },
+  GW: { singular: 'Gravitational Wave', plural: 'Gravitational Waves' },
+  SGR: { singular: 'Soft Gamma Repeater', plural: 'Soft Gamma Repeaters' },
+  FRB: { singular: 'Fast Radio Burst', plural: 'Fast Radio Bursts' },
+  SN: { singular: 'Supernova', plural: 'Supernovae' },
+  Nova: { singular: 'Nova', plural: 'Novae' },
+  Neutrino: { singular: 'Neutrino', plural: 'Neutrinos' },
+  'X-ray Transient': {
+    singular: 'X-ray Transient',
+    plural: 'X-ray Transients',
+  },
+  Afterglow: { singular: 'Afterglow', plural: 'Afterglows' },
+  'Optical Transient': {
+    singular: 'Optical Transient',
+    plural: 'Optical Transients',
+  },
+  'Radio Transient': {
+    singular: 'Radio Transient',
+    plural: 'Radio Transients',
+  },
+  Kilonova: { singular: 'Kilonova', plural: 'Kilonovae' },
+  Misc: { singular: 'Miscellaneous', plural: 'Miscellaneous' },
+}
+
 export type EventType = (typeof eventTypes)[number]
 
 export function eventTypeIsValid(eventType: string): eventType is EventType {
