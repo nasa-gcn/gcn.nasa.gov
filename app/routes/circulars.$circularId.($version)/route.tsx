@@ -11,6 +11,7 @@ import { Link, useLoaderData, useRouteLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, CardBody, Icon } from '@trussworks/react-uswds'
 import { useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
+import { useBack } from 'use-back'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import type { loader as parentLoader } from '../circulars.$circularId/route'
@@ -85,11 +86,16 @@ export default function () {
   const linkString = `/circulars/${circularId}${
     !latest && version ? `/${version}` : ''
   }`
+  const { handleBack } = useBack(`/circulars${searchString}`)
 
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link to={`/circulars${searchString}`} className="usa-button">
+        <Link
+          onClick={handleBack}
+          className="usa-button"
+          to={`/circulars${searchString}`}
+        >
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back
         </Link>
