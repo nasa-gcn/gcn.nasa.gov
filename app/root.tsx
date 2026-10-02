@@ -276,10 +276,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          Updates to LVK & CHIME Notices, Schema v7.2.3! See{' '}
+          New! JSON Notices via Email, Update Your Submitter Profile, GCN is
+          Hiring. See{' '}
           <Link
             className="usa-link"
-            to="/news#lvk-notices-exclusively-available-in-json-over-kafka-updated-chime-notices-and-schema-v723"
+            to="/news#json-notices-via-email-update-your-submitter-profile-gcn-is-hiring"
           >
             news and announcements
           </Link>
