@@ -50,18 +50,20 @@ const ArchiveHeaderText = () => {
 
 type ArchiveHeaderProps = {
   result?: any
+  children?: React.ReactNode
   requestedChangeCount?: number
   formId: string
-  inputQuery: string
-  setInputQuery: (query: string) => void
+  inputQuery?: string
+  setInputQuery?: (query: string) => void
   queryFallback?: boolean
 }
 export default function ArchiveHeader({
   result,
+  children,
   requestedChangeCount = 0,
   formId,
-  inputQuery,
-  setInputQuery,
+  inputQuery = '',
+  setInputQuery = () => {},
   queryFallback,
 }: ArchiveHeaderProps) {
   const submit = useSubmit()
@@ -222,6 +224,7 @@ export default function ArchiveHeader({
       </Hint>
 
       {!isGroupView && <LuceneAccordion />}
+      {children}
     </>
   )
 }
