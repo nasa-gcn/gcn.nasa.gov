@@ -322,6 +322,7 @@ export async function search({
   )
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
+
   return { items, totalPages, totalItems, queryFallback }
 }
 
