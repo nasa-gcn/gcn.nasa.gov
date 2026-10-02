@@ -34,7 +34,10 @@ export default function () {
         <div className="desktop:grid-col-3">
           <SideNav
             items={[
-              <NavLink key="users" to="users" end>
+              <NavLink key="opensearch" to="opensearch" end>
+                OpenSearch
+              </NavLink>,
+              <NavLink key="users" to="users">
                 Users
               </NavLink>,
             ]}

@@ -12,7 +12,8 @@ import min from 'lodash/min.js'
 
 import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
-import type { Synonym, SynonymGroup } from '~/routes/synonyms/synonyms.lib'
+import { putIndex } from '~/lib/opensearch.server'
+import type { Synonym } from '~/routes/synonyms/synonyms.lib'
 import { getSynonymsByUuid } from '~/routes/synonyms/synonyms.server'
 
 const index = 'synonym-groups'
@@ -27,15 +28,6 @@ async function removeIndex(id: string) {
       throw e
     }
   }
-}
-
-async function putIndex(synonymGroup: SynonymGroup) {
-  const client = await getSearchClient()
-  await client.index({
-    index,
-    id: synonymGroup.synonymId,
-    body: synonymGroup,
-  })
 }
 
 export const handler = createTriggerHandler(
@@ -54,7 +46,7 @@ export const handler = createTriggerHandler(
             )!
             const initialDate = oldestDate ?? -1
 
-            await putIndex({
+            await putIndex('synonym-groups', {
               synonymId,
               eventIds: synonyms.map((synonym) => synonym.eventId),
               slugs: synonyms.map((synonym) => synonym.slug),
