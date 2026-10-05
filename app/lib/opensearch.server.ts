@@ -7,39 +7,20 @@
  */
 import { queues, tables } from '@architect/functions'
 import type { DynamoDBDocument } from '@aws-sdk/lib-dynamodb'
-import { paginateScan } from '@aws-sdk/lib-dynamodb'
+import { paginateQuery, paginateScan } from '@aws-sdk/lib-dynamodb'
 import { search as getSearchClient } from '@nasa-gcn/architect-functions-search'
 import type { IndicesRecord } from '@opensearch-project/opensearch/api/_types/cat.indices.js'
 import type {
   Bulk_RequestBody,
   Index_RequestBody,
 } from '@opensearch-project/opensearch/api/index.js'
-import chunk from 'lodash/chunk'
 import min from 'lodash/min'
 
-import type { User } from '~/routes/_auth/user.server'
-import type { Circular } from '~/routes/circulars/circulars.lib'
-import type { Synonym, SynonymGroup } from '~/routes/synonyms/synonyms.lib'
+import type { Synonym } from '~/routes/synonyms/synonyms.lib'
 
 export type OpenSearchIndex = IndicesRecord & {
   reindexTriggerTime?: number
   reindexStatus?: 'RUNNING' | 'COMPLETE'
-}
-
-export async function runReindex(indexName: string) {
-  const items = await buildIndexData(indexName)
-  await bulkPutItemsIntoIndex(indexName, items)
-  const db = await tables()
-  await db.reindex_logs.update({
-    Key: { indexName },
-    UpdateExpression: 'set #status = :status',
-    ExpressionAttributeNames: {
-      '#status': 'status',
-    },
-    ExpressionAttributeValues: {
-      ':status': 'COMPLETE',
-    },
-  })
 }
 
 export async function putIndex(index: string, item: unknown) {
@@ -52,25 +33,21 @@ export async function putIndex(index: string, item: unknown) {
 }
 
 function getItemIdString(index: string, item: unknown) {
-  let id
-  switch (index) {
-    case 'circulars':
-      id = (item as Circular).circularId.toString()
-      break
-    case 'users':
-      id = (item as User).sub.toString()
-      break
-    case 'synonym-groups':
-      id = (item as SynonymGroup).synonymId.toString()
-    default:
-      break
+  if (typeof item !== 'object' || item === null) return undefined
+
+  const keyMap: Record<string, string> = {
+    circulars: 'circularId',
+    users: 'sub',
+    'synonym-groups': 'synonymId',
   }
-  return id
+
+  const key = keyMap[index]
+  if (!(key in item)) return undefined
+  return (item as Record<string, unknown>)[key]?.toString()
 }
 
 async function bulkPutItemsIntoIndex(index: string, items: unknown[]) {
   const client = await getSearchClient()
-  const batch_size = 20
   const bulkFormattedItems = items.flatMap((item) => [
     {
       index: {
@@ -80,10 +57,10 @@ async function bulkPutItemsIntoIndex(index: string, items: unknown[]) {
     },
     item,
   ])
-  const batches = chunk(bulkFormattedItems, batch_size)
-  for (const batch of batches) {
-    await client.bulk({ body: batch as Bulk_RequestBody })
-  }
+  // const batches = chunk(bulkFormattedItems, batchSize)
+  await client.bulk({ body: bulkFormattedItems as Bulk_RequestBody })
+  // for (const batch of batches) {
+  // }
   await client.indices.refresh({ index })
 }
 
@@ -120,40 +97,76 @@ export async function listIndexes() {
   return results
 }
 
-/**
- * Returns a list of items corresponding to the specified index name
- */
-async function buildIndexData(indexName: string): Promise<unknown[]> {
+export async function runReindex(indexName: string) {
   const db = await tables()
   const client = db._doc as unknown as DynamoDBDocument
 
-  const items = []
   if (indexName == 'synonym-groups') {
     // Synonym groups does not have a persistant data entry, it must be constructed
     const TableName = db.name('synonyms')
-    const pages = paginateScan({ client }, { TableName })
-    const synonyms: Synonym[] = []
-    for await (const page of pages) {
-      synonyms.push(...(page.Items as Synonym[]))
-    }
-    items.push(
-      ...Object.entries(
-        Object.groupBy(synonyms, ({ synonymId }) => synonymId)
-      ).flatMap(([synonymId, values]) => [
-        {
-          synonymId,
-          eventIds: values?.map(({ eventId }) => eventId),
-          slugs: values?.map(({ slug }) => slug),
-          initialDate: min(values?.map(({ initialDate }) => initialDate)),
-        },
-      ])
+    // Get all unique synonym ids:
+    const pages = paginateScan(
+      { client },
+      {
+        TableName,
+        ProjectionExpression: 'synonymId',
+      }
     )
+
+    const synonymIds = []
+    for await (const page of pages) {
+      synonymIds.push(...(page.Items?.map((x) => x.synonymId) as string[]))
+    }
+
+    // Then for each synonym Id, get all that match and update the index
+    for (const synonymId of synonymIds) {
+      const items = []
+      const queryPages = paginateQuery(
+        { client },
+        {
+          IndexName: 'synonymsByUuid',
+          KeyConditionExpression: 'synonymId = :synonymId',
+          ExpressionAttributeValues: {
+            ':synonymId': synonymId,
+          },
+          TableName,
+        }
+      )
+      const synonyms: Synonym[] = []
+      for await (const page of queryPages) {
+        synonyms.push(...(page.Items as Synonym[]))
+      }
+      items.push(
+        ...Object.entries(
+          Object.groupBy(synonyms, ({ synonymId }) => synonymId)
+        ).flatMap(([synonymId, values]) => [
+          {
+            synonymId,
+            eventIds: values?.map(({ eventId }) => eventId),
+            slugs: values?.map(({ slug }) => slug),
+            initialDate: min(values?.map(({ initialDate }) => initialDate)),
+          },
+        ])
+      )
+      // Continue to refactor
+      await bulkPutItemsIntoIndex(indexName, items)
+    }
   } else {
     const TableName = db.name(indexName)
     const pages = paginateScan({ client }, { TableName })
     for await (const page of pages) {
-      items.push(...(page.Items as unknown[]))
+      if (page.Items) await bulkPutItemsIntoIndex(indexName, page.Items)
     }
   }
-  return items
+
+  await db.reindex_logs.update({
+    Key: { indexName },
+    UpdateExpression: 'set #status = :status',
+    ExpressionAttributeNames: {
+      '#status': 'status',
+    },
+    ExpressionAttributeValues: {
+      ':status': 'COMPLETE',
+    },
+  })
 }
