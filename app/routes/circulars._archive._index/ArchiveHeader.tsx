@@ -35,14 +35,14 @@ const ArchiveHeaderText = ({
 } = {}) => (
   <>
     <h1>GCN Circulars{eventTypeLabel ? `: ${eventTypeLabel}` : ''}</h1>
-      <p className="usa-paragraph">
-        GCN Circulars are rapid bulletins submitted by and distributed to the
-        community. See the{' '}
-        <Link className="usa-link" to="/docs/circulars">
-          documentation
-        </Link>{' '}
-        for help with subscribing to or submitting Circulars.
-      </p>
+    <p className="usa-paragraph">
+      GCN Circulars are rapid bulletins submitted by and distributed to the
+      community. See the{' '}
+      <Link className="usa-link" to="/docs/circulars">
+        documentation
+      </Link>{' '}
+      for help with subscribing to or submitting Circulars.
+    </p>
   </>
 )
 
