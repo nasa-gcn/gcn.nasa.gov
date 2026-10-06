@@ -10,8 +10,10 @@ import {
   json,
   useActionData,
   useLoaderData,
+  useRouteError,
   useSearchParams,
 } from '@remix-run/react'
+import { Alert } from '@trussworks/react-uswds'
 import clamp from 'lodash/clamp'
 import { useId, useState } from 'react'
 
@@ -253,5 +255,24 @@ export default function () {
         </>
       )}
     </>
+  )
+}
+
+export function ErrorBoundary() {
+  const formId = useId()
+  const error = useRouteError()
+  console.error('Search error:', error)
+  return (
+    <ArchiveHeader formId={formId}>
+      <div className="margin-top-4">
+        <Alert type="error" headingLevel="h2" heading="Archive Unavailable">
+          Browsing the Circulars Archive is currently unavailable. Please check
+          back later.
+          <br />
+          Note: Circulars may still be able to be submitted through the web form
+          or by email and should still be distributed to subscribers.
+        </Alert>
+      </div>
+    </ArchiveHeader>
   )
 }
