@@ -30,3 +30,7 @@ Circulars submitting privileges are granted for new users via the GCN [peer endo
 ## Acknowledgement
 
 The GCN team requests that any presentation, publication, or document that mentions the GCN system, specific GCN Circulars or Notices, to please reference the General Coordinates Network (https://gcn.nasa.gov) and cite Circulars using bibliographic records from the [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu).
+
+## Use of Generative AI
+
+The GCN team welcomes [contributions](/docs/contributing) including those developed with the assisitance of AI coding tools as long as that usage is disclosed and the submitter is accountable. The GCN project adopts the [AI usage policy developed by the Astropy project](https://github.com/astropy/astropy-project/blob/main/policies/ai-policy.md).

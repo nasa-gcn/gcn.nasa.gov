@@ -59,9 +59,9 @@
     "isbot": "^5.1.28",
     "lodash": "^4.18.1",
     "lucene": "^2.1.1",
-    "mailparser": "^3.9.14",
+    "mailparser": "^3.9.31",
     "memoizee": "^0.4.15",
-    "nodemailer": "^9.1.1",
+    "nodemailer": "^10.0.12",
     "openid-client": "^5.6.1",
     "p-throttle": "^8.1.0",
     "pretty-bytes": "^6.1.1",
@@ -162,7 +162,7 @@
   },
   "overrides": {
     "@architect/deploy": "github:lpsinger/deploy#e4d55b670a95049109ae42eca5ad1a1f56534d56",
-    "@aws-lite/client": "github:lpsinger/aws-lite#1d017205b3c67b318ba8b0a395c31b33b2c59af7",
+    "@aws-lite/client": "0.24.0",
     "lambda-runtimes": "3.0.0"
   },
   "engines": {
