@@ -15,8 +15,8 @@ import TimeAgo from '~/components/TimeAgo'
 import { useSearchString } from '~/lib/utils'
 import { useFeature } from '~/root'
 import {
-  eventTypesHumanReadable,
   type Circular,
+  eventTypesHumanReadable,
   formatDateISO,
 } from '~/routes/circulars/circulars.lib'
 
@@ -66,6 +66,21 @@ export function FrontMatter({
 >) {
   const searchString = useSearchString()
   const eventTypeFeatureFlag = useFeature('eventType')
+  const sortedEventTypes = eventType?.slice().sort((eventTypeA, eventTypeB) => {
+    const eventTypesOrder: Record<string, number> = {
+      Misc: 1,
+      Retraction: 2,
+    }
+    const eventTypeAName =
+      eventTypesHumanReadable[eventTypeA]?.singular ?? eventTypeA
+    const eventTypeBName =
+      eventTypesHumanReadable[eventTypeB]?.singular ?? eventTypeB
+
+    return (
+      (eventTypesOrder[eventTypeA] ?? 0) - (eventTypesOrder[eventTypeB] ?? 0) ||
+      eventTypeAName.localeCompare(eventTypeBName)
+    )
+  })
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
@@ -76,9 +91,9 @@ export function FrontMatter({
           </Link>
         </FrontMatterItem>
       )}
-      {eventTypeFeatureFlag && eventType && (
+      {eventTypeFeatureFlag && sortedEventTypes && (
         <FrontMatterItem label="Type">
-          {eventType.map((type, index) => (
+          {sortedEventTypes.map((type, index) => (
             <React.Fragment key={type}>
               {index > 0 && ', '}
               <Link to={`/circulars/types/${slug(type)}`}>
