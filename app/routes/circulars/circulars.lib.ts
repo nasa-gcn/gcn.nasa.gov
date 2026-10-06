@@ -321,7 +321,7 @@ export const eventTypesHumanReadable: Record<
     plural: 'Gamma-ray Transients',
   },
   GW: { singular: 'Gravitational Wave', plural: 'Gravitational Waves' },
-  SGR: { singular: 'Soft Gamma Repeater', plural: 'Soft Gamma Repeaters' },
+  SGR: { singular: 'Magnetar', plural: 'Magnetars' },
   FRB: { singular: 'Fast Radio Burst', plural: 'Fast Radio Bursts' },
   SN: { singular: 'Supernova', plural: 'Supernovae' },
   Nova: { singular: 'Nova', plural: 'Novae' },
