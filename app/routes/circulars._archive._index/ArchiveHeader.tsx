@@ -30,14 +30,14 @@ const ArchiveHeaderText = () => {
   return (
     <>
       <h1>GCN Circulars</h1>
-      <div className="usa-paragraph">
+      <p className="usa-paragraph">
         GCN Circulars are rapid bulletins submitted by and distributed to the
         community. See the{' '}
         <Link className="usa-link" to="/docs/circulars">
           documentation
         </Link>{' '}
         for help with subscribing to or submitting Circulars.
-      </div>
+      </p>
     </>
   )
 }
