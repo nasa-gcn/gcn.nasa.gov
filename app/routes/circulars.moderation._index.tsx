@@ -11,10 +11,10 @@ import { Button, Checkbox, Grid } from '@trussworks/react-uswds'
 import { useState } from 'react'
 
 import { getUser } from './_auth/user.server'
-import type {
-  Circular,
-  CircularChangeRequest,
-  CircularChangeRequestKeys,
+import {
+  type CircularChangeRequest,
+  type CircularChangeRequestKeys,
+  getModifiedFields,
 } from './circulars/circulars.lib'
 import {
   bulkDeleteChangeRequests,
@@ -166,32 +166,4 @@ function CircularChangeRequestRow({
       </div>
     </Grid>
   )
-}
-
-function getModifiedFields(
-  circular: Circular,
-  changeRequest: CircularChangeRequest
-) {
-  const excludedFields = [
-    'sub',
-    'submittedHow',
-    'format',
-    'bibcode',
-    'editedOn',
-    'createdOn',
-    'version',
-  ]
-  return (Object.keys(circular) as (keyof Circular)[])
-    .filter((key) => {
-      const changedValue = changeRequest[key as keyof CircularChangeRequest]
-      const originalValue = circular[key]
-      const valuesAreEqual =
-        Array.isArray(changedValue) && Array.isArray(originalValue)
-          ? changedValue.length === originalValue.length &&
-            changedValue.every((value, index) => value === originalValue[index])
-          : changedValue === originalValue
-
-      return !valuesAreEqual && !excludedFields.includes(String(key))
-    })
-    .map((key) => String(key))
 }

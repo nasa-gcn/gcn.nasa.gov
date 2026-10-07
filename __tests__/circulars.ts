@@ -14,6 +14,7 @@ import {
   eventTypesHumanReadable,
   formatAuthor,
   formatCircularText,
+  getModifiedFields,
   parseEventFromSubject,
   parseEventTypeFromSubject,
   subjectIsValid,
@@ -74,6 +75,45 @@ describe('formatCircular', () => {
 
       You're never going to believe this...
     `)
+  })
+})
+
+describe('getModifiedFields', () => {
+  const circular = {
+    circularId: 123,
+    subject: 'GRB 170817A',
+    body: 'Original body',
+    createdOn: 1678416915088,
+    submitter: 'Data Soong <data@starfleet.org>',
+    eventType: ['GRB'],
+  }
+
+  test('does not report unchanged array fields', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...circular,
+        eventType: [...circular.eventType],
+        requestor: 'Data Soong <data@starfleet.org>',
+        requestorSub: 'sub',
+        requestorEmail: 'data@starfleet.org',
+        format: 'text/plain',
+        zendeskTicketId: 123,
+      })
+    ).toEqual([])
+  })
+
+  test('reports changed array fields', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...circular,
+        eventType: ['GRB', 'GW'],
+        requestor: 'Data Soong <data@starfleet.org>',
+        requestorSub: 'sub',
+        requestorEmail: 'data@starfleet.org',
+        format: 'text/plain',
+        zendeskTicketId: 123,
+      })
+    ).toEqual(['eventType'])
   })
 })
 

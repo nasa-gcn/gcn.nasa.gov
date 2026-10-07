@@ -49,6 +49,35 @@ export interface CircularChangeRequestKeys {
   requestorSub: string
 }
 
+export function getModifiedFields(
+  circular: Circular,
+  changeRequest: CircularChangeRequest
+) {
+  const excludedFields = [
+    'sub',
+    'submittedHow',
+    'format',
+    'bibcode',
+    'editedOn',
+    'createdOn',
+    'version',
+  ]
+
+  return (Object.keys(circular) as (keyof Circular)[])
+    .filter((key) => {
+      const changedValue = changeRequest[key as keyof CircularChangeRequest]
+      const originalValue = circular[key]
+      const valuesAreEqual =
+        Array.isArray(changedValue) && Array.isArray(originalValue)
+          ? changedValue.length === originalValue.length &&
+            changedValue.every((value, index) => value === originalValue[index])
+          : changedValue === originalValue
+
+      return !valuesAreEqual && !excludedFields.includes(String(key))
+    })
+    .map((key) => String(key))
+}
+
 type SubjectMatcher = [RegExp, (match: RegExpMatchArray) => string]
 
 const subjectMatchers: SubjectMatcher[] = [
