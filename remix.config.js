@@ -94,6 +94,9 @@ export default {
   },
   postcss: true,
   ignoredRouteFiles: ['**/.*'],
+  dev: {
+    port: 8002,
+  },
   assetsBuildDirectory: 'build/static',
   publicPath: '/_static/app/',
   server: './server.ts',
