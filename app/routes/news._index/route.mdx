@@ -30,6 +30,40 @@ import { Anchor } from '~/components/Anchor'
 <CollectionItem
     className="maxw-none grid-container"
     variantComponent={
+      <CollectionCalendarDate datetime='October 7, 2026' />
+    }
+>
+    <CollectionHeading headingLevel="h3">
+      <Anchor>JSON Notices via Email, Advisory for Kafka Cron Jobs, Update Your Submitter Profile, GCN is Hiring</Anchor>
+    </CollectionHeading>
+    <CollectionDescription>
+      The GCN Team announces:
+      - [JSON-Format Notices Now Available via Email](/news#json-format-notices-now-available-via-email)
+      - [Advisory for Kafka Cron Jobs](/news#advisory-for-kafka-cron-jobs)
+      - [Update your Circular Submitter Profile](/news#update-your-circular-submitter-profile)
+      - [GCN is Hiringa Full-Stack Web Developer](/news#gcn-is-hiring-a-full-stack-web-developer)
+
+      #### JSON-Format Notices Now Available via Email
+      You can now receive any any public JSON Notice types via email. To [sign up for Notices via email](/docs/notices/consuming) in JSON or any legacy format, visit the [Email Notifications page](/user/email).  Note that base 64 encoded attachments (e.g. HEALPix localization maps) are automatically stripped out out of emails, but remain available via Kafka.  All new Notice types added in the last couple of years are JSON format, and many of the legacy producers have started also producing JSON Notices or are in the process of migrating. Visit the [Missions page](/missions) to see which Notice types are available in legacy or JSON formats.
+
+      #### Advisory for Kafka Cron Jobs
+      Our [Kafka client setup code sample](/docs/client) is designed to be used as part of a long or indefinitely running program. If you leave it running, our Kafka client code will promptly provide you with the latest received messages, and will recover automatically from transient failures like network connectivity problems or temporary broker outages.
+
+      Please do _not_ launch short-lived, single-shot, high-frequency (>hourly) clients (e.g., clients that consume or produce zero or one messages, and then halt). Each time that you launch a new client, we are billed a tiny amount which can add up significantly. Due to how our authentication works, launching many short-lived clients can increase our operating costs. Please be responsible and don't launch clients periodically in [cron](https://en.wikipedia.org/wiki/Cron) jobs.
+
+      #### Update Your Circular Submitter Profile
+      The Circular submitter field includes your email address, full name, and affiliation.  If you don't fill out [your profile](/user), it will only contain your email address. Login and check your profile today.
+
+      #### GCN is Hiring a Full-Stack Web Developer
+      The GCN team is hiring a full-stack web developer. Please share the [GCN developer advertisement](https://www.adnet-sys.com/careers/?gnk=job&gni=8a7887aca0abfca001a0cef58353322c&lang=en) with anyone you think might be intereted.
+
+    </CollectionDescription>
+
+  </CollectionItem>
+
+<CollectionItem
+    className="maxw-none grid-container"
+    variantComponent={
       <CollectionCalendarDate datetime='August 6, 2026' />
     }
 >
@@ -59,7 +93,6 @@ import { Anchor } from '~/components/Anchor'
       GCN Schema v7.2.3 is available with recent changes including updated Notice examples ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v7.2.3)).
 
    </CollectionDescription>
-
   </CollectionItem>
 
 <CollectionItem
