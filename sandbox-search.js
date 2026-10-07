@@ -10,7 +10,8 @@ import min from 'lodash/min.js'
 
 export default async function () {
   const text = await readFile('seed.json', { encoding: 'utf-8' })
-  const { circulars, synonyms } = JSON.parse(text)
+  const { circulars, synonyms, users } = JSON.parse(text)
+
   const groups = Object.entries(
     Object.groupBy(synonyms, ({ synonymId }) => synonymId)
   ).flatMap(([synonymId, values]) => [
@@ -28,6 +29,10 @@ export default async function () {
     ]),
     ...groups.flatMap((item) => [
       { index: { _index: 'synonym-groups', _id: item.synonymId.toString() } },
+      item,
+    ]),
+    ...users.flatMap((item) => [
+      { index: { _index: 'users', _id: item.sub.toString() } },
       item,
     ]),
   ]
