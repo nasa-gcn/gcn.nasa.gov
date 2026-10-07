@@ -173,6 +173,7 @@ function getModifiedFields(
   changeRequest: CircularChangeRequest
 ) {
   const excludedFields = [
+    'sub',
     'submittedHow',
     'format',
     'bibcode',
@@ -183,11 +184,14 @@ function getModifiedFields(
   return (Object.keys(circular) as (keyof Circular)[])
     .filter((key) => {
       const changedValue = changeRequest[key as keyof CircularChangeRequest]
-      const originalValue = circular[key as keyof Circular]
+      const originalValue = circular[key]
+      const valuesAreEqual =
+        Array.isArray(changedValue) && Array.isArray(originalValue)
+          ? changedValue.length === originalValue.length &&
+            changedValue.every((value, index) => value === originalValue[index])
+          : changedValue === originalValue
 
-      return (
-        changedValue !== originalValue && !excludedFields.includes(String(key))
-      )
+      return !valuesAreEqual && !excludedFields.includes(String(key))
     })
     .map((key) => String(key))
 }
