@@ -90,7 +90,8 @@ describe('getModifiedFields', () => {
     eventType: ['GRB'],
   }
 
-  const submissionFields = {
+  const changeRequest = {
+    ...circular,
     requestor: 'Data Soong <data@starfleet.org>',
     requestorSub: 'sub',
     requestorEmail: 'data@starfleet.org',
@@ -108,8 +109,7 @@ describe('getModifiedFields', () => {
   ])('reports a change in the editable %s field', (field, change) => {
     expect(
       getModifiedFields(circular, {
-        ...circular,
-        ...submissionFields,
+        ...changeRequest,
         ...change,
       })
     ).toEqual([field])
@@ -126,8 +126,7 @@ describe('getModifiedFields', () => {
   ])('does not report ignored %s fields as changed', (_field, change) => {
     expect(
       getModifiedFields(circular, {
-        ...circular,
-        ...submissionFields,
+        ...changeRequest,
         ...change,
       })
     ).toEqual([])
@@ -136,8 +135,7 @@ describe('getModifiedFields', () => {
   test('does not report unchanged array fields', () => {
     expect(
       getModifiedFields(circular, {
-        ...circular,
-        ...submissionFields,
+        ...changeRequest,
         eventType: [...circular.eventType],
       })
     ).toEqual([])
@@ -146,11 +144,30 @@ describe('getModifiedFields', () => {
   test('reports changed array fields', () => {
     expect(
       getModifiedFields(circular, {
-        ...circular,
-        ...submissionFields,
+        ...changeRequest,
         eventType: ['GRB', 'GW'],
       })
     ).toEqual(['eventType'])
+  })
+
+  test('reports multiple changed fields with a changed array field', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        body: 'A new body',
+        eventType: ['GRB', 'GW'],
+      })
+    ).toEqual(['body', 'eventType'])
+  })
+
+  test('reports multiple changed fields with no changed array fields', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        subject: 'A new subject',
+        body: 'A new body',
+      })
+    ).toEqual(['subject', 'body'])
   })
 })
 
