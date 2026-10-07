@@ -36,14 +36,8 @@ const ArchiveHeaderText = ({
   <>
     <h1>GCN Circulars{eventTypeLabel ? `: ${eventTypeLabel}` : ''}</h1>
     <p className="usa-paragraph">
-      <b>
-        GCN Circulars are rapid astronomical bulletins submitted by and
-        distributed to community members worldwide.
-      </b>{' '}
-      They are used to share discoveries, observations, quantitative near-term
-      predictions, requests for follow-up observations, or future observing
-      plans related to high-energy, multi-messenger, and variable or transient
-      astrophysical events. See the{' '}
+      GCN Circulars are rapid bulletins submitted by and distributed to the
+      community. See the{' '}
       <Link className="usa-link" to="/docs/circulars">
         documentation
       </Link>{' '}
