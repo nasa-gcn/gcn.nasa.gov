@@ -280,7 +280,7 @@ export function Layout({ children }: { children?: ReactNode }) {
           Hiring. See{' '}
           <Link
             className="usa-link"
-            to="/news#json-notices-via-email-kafka-cron-jobs-are-bad-update-your-submitter-profile-gcn-is-hiring"
+            to="/news#json-notices-via-email-advisory-for-kafka-cron-jobs-update-your-submitter-profile-gcn-is-hiring"
           >
             news and announcements
           </Link>
