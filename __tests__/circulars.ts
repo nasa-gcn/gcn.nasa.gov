@@ -81,6 +81,7 @@ describe('formatCircular', () => {
 describe('getModifiedFields', () => {
   const circular = {
     circularId: 123,
+    eventId: 'event-id',
     subject: 'GRB 170817A',
     body: 'Original body',
     createdOn: 1678416915088,
@@ -114,6 +115,20 @@ describe('getModifiedFields', () => {
         zendeskTicketId: 123,
       })
     ).toEqual(['eventType'])
+  })
+
+  test('reports change in eventId field', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...circular,
+        eventId: 'new-event-id',
+        requestor: 'Data Soong <data@starfleet.org>',
+        requestorSub: 'sub',
+        requestorEmail: 'data@starfleet.org',
+        format: 'text/plain',
+        zendeskTicketId: 123,
+      })
+    ).toEqual(['eventId'])
   })
 })
 
