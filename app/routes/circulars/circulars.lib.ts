@@ -54,6 +54,7 @@ export function getModifiedFields(
   changeRequest: CircularChangeRequest
 ) {
   const excludedFields = [
+    'circularId',
     'sub',
     'submittedHow',
     'format',

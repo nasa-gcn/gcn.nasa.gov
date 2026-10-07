@@ -86,19 +86,59 @@ describe('getModifiedFields', () => {
     body: 'Original body',
     createdOn: 1678416915088,
     submitter: 'Data Soong <data@starfleet.org>',
+    editedBy: 'Worf <worf@starfleet.org>',
     eventType: ['GRB'],
   }
+
+  const submissionFields = {
+    requestor: 'Data Soong <data@starfleet.org>',
+    requestorSub: 'sub',
+    requestorEmail: 'data@starfleet.org',
+    format: 'text/plain' as const,
+    zendeskTicketId: 123,
+  }
+
+  test.each([
+    ['eventId', { eventId: 'new-event-id' }],
+    ['submitter', { submitter: 'New Submitter <new@example.com>' }],
+    ['editedBy', { editedBy: 'New Editor <new@example.com>' }],
+    ['subject', { subject: 'A new subject' }],
+    ['body', { body: 'A new body' }],
+    ['eventType', { eventType: ['GRB', 'GW'] }],
+  ])('reports a change in the editable %s field', (field, change) => {
+    expect(
+      getModifiedFields(circular, {
+        ...circular,
+        ...submissionFields,
+        ...change,
+      })
+    ).toEqual([field])
+  })
+
+  test.each([
+    ['circularId', { circularId: 456 }],
+    ['createdOn', { createdOn: 1678416916000 }],
+    ['requestor', { requestor: 'New Requestor <new@example.com>' }],
+    ['requestorSub', { requestorSub: 'new-sub' }],
+    ['requestorEmail', { requestorEmail: 'new@example.com' }],
+    ['format', { format: 'text/markdown' as const }],
+    ['zendeskTicketId', { zendeskTicketId: 456 }],
+  ])('does not report ignored %s fields as changed', (_field, change) => {
+    expect(
+      getModifiedFields(circular, {
+        ...circular,
+        ...submissionFields,
+        ...change,
+      })
+    ).toEqual([])
+  })
 
   test('does not report unchanged array fields', () => {
     expect(
       getModifiedFields(circular, {
         ...circular,
+        ...submissionFields,
         eventType: [...circular.eventType],
-        requestor: 'Data Soong <data@starfleet.org>',
-        requestorSub: 'sub',
-        requestorEmail: 'data@starfleet.org',
-        format: 'text/plain',
-        zendeskTicketId: 123,
       })
     ).toEqual([])
   })
@@ -107,28 +147,10 @@ describe('getModifiedFields', () => {
     expect(
       getModifiedFields(circular, {
         ...circular,
+        ...submissionFields,
         eventType: ['GRB', 'GW'],
-        requestor: 'Data Soong <data@starfleet.org>',
-        requestorSub: 'sub',
-        requestorEmail: 'data@starfleet.org',
-        format: 'text/plain',
-        zendeskTicketId: 123,
       })
     ).toEqual(['eventType'])
-  })
-
-  test('reports change in eventId field', () => {
-    expect(
-      getModifiedFields(circular, {
-        ...circular,
-        eventId: 'new-event-id',
-        requestor: 'Data Soong <data@starfleet.org>',
-        requestorSub: 'sub',
-        requestorEmail: 'data@starfleet.org',
-        format: 'text/plain',
-        zendeskTicketId: 123,
-      })
-    ).toEqual(['eventId'])
   })
 })
 
