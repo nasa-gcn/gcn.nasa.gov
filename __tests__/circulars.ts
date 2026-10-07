@@ -14,6 +14,7 @@ import {
   eventTypesHumanReadable,
   formatAuthor,
   formatCircularText,
+  getModifiedFields,
   parseEventFromSubject,
   parseEventTypeFromSubject,
   subjectIsValid,
@@ -74,6 +75,99 @@ describe('formatCircular', () => {
 
       You're never going to believe this...
     `)
+  })
+})
+
+describe('getModifiedFields', () => {
+  const circular = {
+    circularId: 123,
+    eventId: 'event-id',
+    subject: 'GRB 170817A',
+    body: 'Original body',
+    createdOn: 1678416915088,
+    submitter: 'Data Soong <data@starfleet.org>',
+    editedBy: 'Worf <worf@starfleet.org>',
+    eventType: ['GRB'],
+  }
+
+  const changeRequest = {
+    ...circular,
+    requestor: 'Data Soong <data@starfleet.org>',
+    requestorSub: 'sub',
+    requestorEmail: 'data@starfleet.org',
+    format: 'text/plain' as const,
+    zendeskTicketId: 123,
+  }
+
+  test.each([
+    ['eventId', { eventId: 'new-event-id' }],
+    ['submitter', { submitter: 'New Submitter <new@example.com>' }],
+    ['editedBy', { editedBy: 'New Editor <new@example.com>' }],
+    ['subject', { subject: 'A new subject' }],
+    ['body', { body: 'A new body' }],
+    ['eventType', { eventType: ['GRB', 'GW'] }],
+  ])('reports a change in the editable %s field', (field, change) => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        ...change,
+      })
+    ).toEqual([field])
+  })
+
+  test.each([
+    ['circularId', { circularId: 456 }],
+    ['createdOn', { createdOn: 1678416916000 }],
+    ['requestor', { requestor: 'New Requestor <new@example.com>' }],
+    ['requestorSub', { requestorSub: 'new-sub' }],
+    ['requestorEmail', { requestorEmail: 'new@example.com' }],
+    ['format', { format: 'text/markdown' as const }],
+    ['zendeskTicketId', { zendeskTicketId: 456 }],
+  ])('does not report ignored %s fields as changed', (_field, change) => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        ...change,
+      })
+    ).toEqual([])
+  })
+
+  test('does not report unchanged array fields', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        eventType: [...circular.eventType],
+      })
+    ).toEqual([])
+  })
+
+  test('reports changed array fields', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        eventType: ['GRB', 'GW'],
+      })
+    ).toEqual(['eventType'])
+  })
+
+  test('reports multiple changed fields with a changed array field', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        body: 'A new body',
+        eventType: ['GRB', 'GW'],
+      })
+    ).toEqual(['body', 'eventType'])
+  })
+
+  test('reports multiple changed fields with no changed array fields', () => {
+    expect(
+      getModifiedFields(circular, {
+        ...changeRequest,
+        subject: 'A new subject',
+        body: 'A new body',
+      })
+    ).toEqual(['subject', 'body'])
   })
 })
 
