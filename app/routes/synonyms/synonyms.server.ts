@@ -94,33 +94,28 @@ export async function searchSynonymsByEventId({
     ]
   }
 
-  const {
-    body: {
-      hits: {
-        total: { value: totalItems },
-        hits,
-      },
-    },
-  } = await client.search({
+  const searchResult = await client.search({
     index: 'synonym-groups',
     from: page * limit,
     size: limit,
     body,
   })
 
+  const totalItems: number =
+    typeof searchResult.body.hits.total == 'number'
+      ? searchResult.body.hits.total
+      : (searchResult.body.hits.total?.value ?? 0)
+
   const totalPages: number = Math.ceil(totalItems / limit)
-  const results = hits.map(
-    ({
-      _source: body,
-    }: {
-      _source: SynonymGroup
-      fields: {
-        eventIds: string[]
-        synonymId: string
-        slugs: string[]
-        initialDate: number
+  const results: SynonymGroup[] = searchResult.body.hits.hits.map(
+    ({ _source }) => {
+      return {
+        synonymId: _source?.synonymId,
+        eventIds: _source?.eventIds,
+        slugs: _source?.slugs,
+        initialDate: _source?.initialDate,
       }
-    }) => body
+    }
   )
 
   return {
@@ -402,16 +397,7 @@ export async function autoCompleteEventIds({
       track_total_hits: true,
     },
   })
-  const options = hits.map(
-    ({
-      fields: {
-        eventId: [eventId],
-      },
-    }: {
-      _id: string
-      fields: { eventId: string }
-    }) => eventId
-  )
+  const options = hits.map(({ _source }) => _source?.eventId[0])
 
   return { options }
 }
