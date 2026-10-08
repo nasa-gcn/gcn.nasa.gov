@@ -257,9 +257,9 @@ Key fields are described below:
 - `type`: Alert type (always `"IceCube LVK Alert Nu Followup"`).
 - `reference`: dictionary object specifying the LVK alert GCN being followed up, including the GW map revision used in the analysis. It includes two parameters:
   - `gcn.notices.LVK.alert`: Unique reference to the LVK notice. It includes the event name, map type, and the time the LVK notice was created (`time_created` in the LVK notice, but with special characters removed). The format is `eventname-maptype-YYYYMMDDTHHMMSSZ`.
-  - `skymap_filename`: The filename of the skymap used in the analyses. This parameter is included if it is sent in the corresponding LVK notice. 
+  - `skymap_filename`: The filename of the skymap used in the analyses. This parameter is included if it is sent in the corresponding LVK notice.
 - `ref_ID`: the LVK event name being followed up.
-- `pipeline`: The dataset being used in the analyses, in this case `"HE Tracks"`
+- `pipeline`: The dataset being used in the analyses, in this case `"HE Tracks"`.
 - `alert_datetime`: Timestamp of the GCN notice (UTC time).
 - `trigger_time`: Timestamp of the merger event (UTC time).
 - `observation_start`: beginning of the analysis time window (UTC time).
