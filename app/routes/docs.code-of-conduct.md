@@ -30,3 +30,11 @@ Circulars submitting privileges are granted for new users via the GCN [peer endo
 ## Acknowledgement
 
 The GCN team requests that any presentation, publication, or document that mentions the GCN system, specific GCN Circulars or Notices, to please reference the General Coordinates Network (https://gcn.nasa.gov) and cite Circulars using bibliographic records from the [SAO/NASA Astrophysics Data System (ADS)](https://ui.adsabs.harvard.edu).
+
+## Use of Generative AI
+
+The GCN team welcomes [contributions](/docs/contributing) including those developed with the assisitance of AI coding tools as long as that usage is disclosed and the submitter is accountable. The GCN project adopts the [AI usage policy developed by the Astropy project](https://github.com/astropy/astropy-project/blob/main/policies/ai-policy.md).
+
+## Kafka Token Usage
+
+Our [Kafka client setup code sample](/docs/client) is designed to be used as part of a long or indefinitely running program. While running, the Kafka client requests a new token once per hour. We have seen users create high-frequency scripts or cron jobs that are requesting tokens at a significantly higher rate. This does not provide users with Kafka messages any faster and it increases our operating costs. We do our best to alert users to best practices when we notice an issue, but we may deactivate Kafka credentials if this is not resolved in a timely manner. See [this FAQ](/docs/faq#how-do-i-make-a-cron-job-to-periodically-check-for-new-kafka-messages) for more details.
