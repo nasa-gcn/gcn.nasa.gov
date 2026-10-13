@@ -9,7 +9,6 @@ import { Link } from '@remix-run/react'
 import { Grid } from '@trussworks/react-uswds'
 import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
-import React from 'react'
 
 import TimeAgo from '~/components/TimeAgo'
 import { useSearchString } from '~/lib/utils'
@@ -94,12 +93,12 @@ export function FrontMatter({
       {eventTypeFeatureFlag && sortedEventTypes && (
         <FrontMatterItem label="Type">
           {sortedEventTypes.map((type, index) => (
-            <React.Fragment key={type}>
+            <span key={type}>
               {index > 0 && ', '}
               <Link to={`/circulars/types/${slug(type)}`}>
                 {eventTypesHumanReadable[type]?.singular ?? type}
               </Link>
-            </React.Fragment>
+            </span>
           ))}
         </FrontMatterItem>
       )}
