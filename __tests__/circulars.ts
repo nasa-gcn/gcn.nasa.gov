@@ -19,6 +19,10 @@ import {
   parseEventTypeFromSubject,
   subjectIsValid,
 } from '../app/routes/circulars/circulars.lib'
+import type {
+  CircularChangeRequest,
+  CircularFormat,
+} from '../app/routes/circulars/circulars.lib'
 
 jest.mock('@architect/functions')
 
@@ -90,12 +94,12 @@ describe('getModifiedFields', () => {
     eventType: ['GRB'],
   }
 
-  const changeRequest = {
+  const changeRequest: CircularChangeRequest = {
     ...circular,
     requestor: 'Data Soong <data@starfleet.org>',
     requestorSub: 'sub',
     requestorEmail: 'data@starfleet.org',
-    format: 'text/plain' as const,
+    format: 'text/plain',
     zendeskTicketId: 123,
   }
 
@@ -121,7 +125,7 @@ describe('getModifiedFields', () => {
     ['requestor', { requestor: 'New Requestor <new@example.com>' }],
     ['requestorSub', { requestorSub: 'new-sub' }],
     ['requestorEmail', { requestorEmail: 'new@example.com' }],
-    ['format', { format: 'text/markdown' as const }],
+    ['format', { format: 'text/markdown' as CircularFormat }],
     ['zendeskTicketId', { zendeskTicketId: 456 }],
   ])('does not report ignored %s fields as changed', (_field, change) => {
     expect(
