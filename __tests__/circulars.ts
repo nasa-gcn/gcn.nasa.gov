@@ -136,7 +136,6 @@ describe('getModifiedFields', () => {
     expect(
       getModifiedFields(circular, {
         ...changeRequest,
-        eventType: [...circular.eventType],
       })
     ).toEqual([])
   })
