@@ -79,7 +79,7 @@ export default function () {
         />
         <Label htmlFor="teamDescription">Team Description</Label>
         <Textarea name="teamDescription" id="teamDescription" required />
-        <Label htmlFor="userSub">Point of Contact</Label>
+        <Label htmlFor="userSub">Team Manager</Label>
         <Hint id="pocHint">
           This user will immediately be invited to join this new team with Admin
           permissions. They will be able to make updates and invite other member
