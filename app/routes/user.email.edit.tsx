@@ -16,6 +16,7 @@ import {
   ButtonGroup,
   FormGroup,
   Label,
+  Select,
   TextInput,
 } from '@trussworks/react-uswds'
 import { useState } from 'react'
@@ -33,6 +34,7 @@ import {
 import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
+import { getValidEmails } from '~/lib/user.server'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
 import { useRecaptchaSiteKey } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
@@ -57,6 +59,8 @@ export async function action({ request }: ActionFunctionArgs) {
     'g-recaptcha-response': recaptchaResponse,
     ...rest
   } = Object.fromEntries(data)
+  if (!(await getValidEmails(user.sub)).some((x) => x.address === recipient))
+    throw new Response(null, { status: 403 })
   if (intent !== 'delete') await verifyRecaptcha(recaptchaResponse?.toString())
   const noticeTypes = Object.keys(rest)
   const topics =
@@ -95,13 +99,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
   let intent = 'create'
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
-  const email = user?.email
+  const validEmails = (await getValidEmails(user.sub)) ?? {
+    address: user.email,
+    verified: true,
+  }
+  const email = validEmails.length !== 0 ? validEmails[0].address : user.email
 
   let notification: EmailNotificationVM = {
     format: 'text',
     noticeTypes: [],
     name: '',
-    recipient: email ?? '',
+    recipient: email,
     created: 0,
     topics: [],
     sub: user.sub,
@@ -111,16 +119,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     intent = 'update'
   }
   const format = notification.format as NoticeFormat
-  return { notification, intent, format }
+  return { notification, intent, format, validEmails }
 }
 
 export default function () {
   const [params] = useSearchParams()
-  const { notification, format } = useLoaderData<typeof loader>()
+  const { notification, format, validEmails } = useLoaderData<typeof loader>()
   const defaultNameValid = Boolean(notification.name)
   const [nameValid, setNameValid] = useState(defaultNameValid)
-  const defaultRecipientValid = Boolean(notification.recipient)
-  const [recipientValid, setRecipientValid] = useState(defaultRecipientValid)
   const alerts = params.getAll('alerts') || undefined
   const defaultAlerts =
     notification.noticeTypes.length > 0 ? notification.noticeTypes : alerts
@@ -158,17 +164,17 @@ export default function () {
           *
         </span>
       </Label>
-      <TextInput
+      <Select
         id="recipient"
         name="recipient"
-        type="email"
-        autoCapitalize="off"
-        autoCorrect="off"
-        required
-        placeholder="email"
         defaultValue={notification.recipient}
-        onChange={(e) => setRecipientValid(Boolean(e.target.value))}
-      />
+      >
+        {validEmails.map((item) => (
+          <option key={item.address} value={item.address}>
+            {item.address}
+          </option>
+        ))}
+      </Select>
       <Label htmlFor="format">Format</Label>
       <NoticeFormatInput
         name="noticeFormat"
@@ -210,9 +216,7 @@ export default function () {
           <Button
             name="intent"
             value={notification.uuid ? 'update' : 'create'}
-            disabled={
-              !(nameValid && recipientValid && alertsValid && recaptchaValid)
-            }
+            disabled={!(nameValid && alertsValid && recaptchaValid)}
             type="submit"
           >
             {notification.uuid ? 'Update' : 'Save'}
