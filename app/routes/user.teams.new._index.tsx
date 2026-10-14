@@ -21,22 +21,26 @@ import { useState } from 'react'
 import { getUser } from './_auth/user.server'
 import { adminGroup } from './admin'
 import Hint from '~/components/Hint'
+import { UserLookupComboBox } from '~/components/UserLookup'
+import { feature } from '~/lib/env.server'
 import { createTeam } from '~/lib/teams.server'
 import { getFormDataString } from '~/lib/utils'
 import { usePermissionAdmin } from '~/root'
 
 export async function action({ request }: ActionFunctionArgs) {
+  if (!feature('TEAMS')) throw new Response(null, { status: 404 })
   const user = await getUser(request)
   if (!user || !user.groups.includes(adminGroup))
     throw new Response(null, { status: 403 })
   const data = await request.formData()
   const teamName = getFormDataString(data, 'teamName')
-  const description = getFormDataString(data, 'description')
+  const description = getFormDataString(data, 'teamDescription')
   const pocEmail = getFormDataString(data, 'pocEmail')
+  const userSub = getFormDataString(data, 'userSub')
   const topicName = getFormDataString(data, 'topicName')
-  if (!teamName || !description || !pocEmail || !topicName)
+  if (!teamName || !description || !pocEmail || !topicName || !userSub)
     throw new Response(null, { status: 400 })
-  await createTeam(user, teamName, description, pocEmail, topicName)
+  await createTeam(user, teamName, description, userSub, topicName)
   return null
 }
 
@@ -58,6 +62,7 @@ const topicPrefix = 'gcn.notices.'
 
 export default function () {
   const [topicName, setTopicName] = useState(topicPrefix)
+  const [userSub, setUserSub] = useState('')
   const topicValid = topicIsValid(topicName)
   const userIsAdmin = usePermissionAdmin()
   return (
@@ -74,18 +79,17 @@ export default function () {
         />
         <Label htmlFor="teamDescription">Team Description</Label>
         <Textarea name="teamDescription" id="teamDescription" required />
-        <Label htmlFor="pocEmail">Point of Contact Email Address</Label>
+        <Label htmlFor="userSub">Point of Contact</Label>
         <Hint id="pocHint">
           This user will immediately be invited to join this new team with Admin
           permissions. They will be able to make updates and invite other member
           to this team.
         </Hint>
-        <TextInput
-          type="email"
-          name="pocEmail"
-          id="pocEmail"
-          required
-          aria-describedby="pocHint"
+        <input type="hidden" name="userSub" value={userSub} />
+        <UserLookupComboBox
+          onSelectedItemChange={({ selectedItem }) =>
+            setUserSub(selectedItem?.sub ?? '')
+          }
         />
         <Label htmlFor="topicName">Topic Name</Label>
         <Hint id="topicHint">

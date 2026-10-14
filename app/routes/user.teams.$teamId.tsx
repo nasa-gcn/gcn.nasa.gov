@@ -65,6 +65,8 @@ export async function action({
     case 'update-permissions':
       if (!userIsAdmin || !sub || !permission)
         throw new Response(null, { status: 400 })
+      const existingMembership = await getTeamMembership(sub, teamId)
+      if (!existingMembership) throw new Response(null, { status: 403 })
       await setUsersTeamPermission(sub, teamId, permission as Permission)
       break
     case 'remove-user':
@@ -108,6 +110,14 @@ export async function loader({
   if (!membership) throw new Response(null, { status: 403 })
   const team = await getTeam(teamId)
   const teamAdmin = await userIsTeamAdmin(user.sub, teamId)
+  if (!teamAdmin) {
+    team.pendingInvites = team.pendingInvites.map((invite) => {
+      return {
+        ...invite,
+        email: invite.email.replace(/(.)(?:.*)@(.*)/, '$1*****@$2'),
+      }
+    })
+  }
   return { team, teamAdmin, sub: user.sub }
 }
 
@@ -223,9 +233,9 @@ export default function () {
         </SegmentedCards>
         {teamAdmin && (
           <>
-            <h3>Team Invites</h3>
+            <h3>Pending Team Invites</h3>
             <ModalToggleButton opener modalRef={inviteRef} type="button">
-              Invite
+              Invite New Member
             </ModalToggleButton>
             {team.pendingInvites.length ? (
               <SegmentedCards>

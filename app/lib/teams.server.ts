@@ -85,7 +85,7 @@ export async function createTeam(
   user: User,
   teamName: string,
   description: string,
-  pocEmail: string,
+  userSub: string,
   topicName: string
 ) {
   if (!(await userHasPermission(user.sub, 'gcn.nasa.gov', 'admin')))
@@ -102,11 +102,11 @@ export async function createTeam(
   }
   await db.teams.put(team)
   // TODO: Add KafkaACL functions
-
+  const pocEmail = (await db.users.get({ sub: userSub })).email
   await Promise.all([
     db.team_invites.put({
       teamId: team.teamId,
-      email: pocEmail,
+      sub: userSub,
       permission: 'admin',
     }),
     sendEmail({
@@ -382,6 +382,7 @@ export async function setUsersTeamPermission(
   teamId: string,
   permission: Permission
 ) {
+  await teamAdminCheck(teamId, sub)
   const db = await tables()
   await db.team_members.put({
     sub,
@@ -392,7 +393,18 @@ export async function setUsersTeamPermission(
 
 export async function removeUserFromTeam(sub: string, teamId: string) {
   const db = await tables()
-  // Check that we are not about to delete the only team admin
+  await teamAdminCheck(teamId, sub)
+  await db.team_members.delete({ sub, teamId })
+}
+
+/**
+ * This function should be used to prevent changes that may result in a team no longer having an admin
+ * @throws 400 error if the sub provided is the only team admin for a given teamId
+ * @param teamId
+ * @param sub
+ */
+async function teamAdminCheck(teamId: string, sub: string) {
+  const db = await tables()
   const admins = (
     await db.team_members.query({
       IndexName: 'teamMembersByPermission',
@@ -407,11 +419,9 @@ export async function removeUserFromTeam(sub: string, teamId: string) {
       },
     })
   ).Items as TeamMember[]
-  // So long as there is at least another admin, we may delete the user
   if (!admins.some((user) => user.sub !== sub)) {
     throw new Response(null, { status: 400 })
   }
-  await db.team_members.delete({ sub, teamId })
 }
 
 // #region Topic Functions

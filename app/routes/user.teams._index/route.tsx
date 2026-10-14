@@ -22,6 +22,7 @@ import { getUser } from '../_auth/user.server'
 import { adminGroup } from '../admin'
 import SegmentedCards from '~/components/SegmentedCards'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
+import { feature } from '~/lib/env.server'
 import type { Team, TeamInvite } from '~/lib/teams.server'
 import {
   acceptTeamInvite,
@@ -37,6 +38,7 @@ import type { SEOHandle } from '~/root/seo'
 export const handle: SEOHandle = { noIndex: true }
 
 export async function action({ request }: LoaderFunctionArgs) {
+  if (!feature('TEAMS')) throw new Response(null, { status: 404 })
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
   const data = await request.formData()
@@ -122,7 +124,6 @@ function TeamCard({
         </div>
         <div className="tablet:grid-col flex-auto margin-y-auto">
           <ToolbarButtonGroup>
-            {userIsAdmin && <>Modal open delete button here</>}
             <Link
               to={team.teamId}
               type="button"
