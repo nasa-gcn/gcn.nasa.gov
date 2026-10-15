@@ -65,7 +65,7 @@ export function FrontMatter({
 >) {
   const searchString = useSearchString()
   const eventTypeFeatureFlag = useFeature('eventType')
-  const sortedEventTypes = eventType?.slice().sort((eventTypeA, eventTypeB) => {
+  const sortedEventTypes = eventType?.sort((eventTypeA, eventTypeB) => {
     const eventTypesOrder: Record<string, number> = {
       Misc: 1,
       Retraction: 2,
