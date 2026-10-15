@@ -5,7 +5,11 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { joinListWithOxfordComma, truncateJsonMaxBytes } from '~/lib/utils'
+import {
+  cleanSearchString,
+  joinListWithOxfordComma,
+  truncateJsonMaxBytes,
+} from '~/lib/utils'
 import { stripTags } from '~/lib/utils.server'
 
 describe('stripTags', () => {
@@ -21,6 +25,25 @@ describe('stripTags', () => {
   })
   test('handles partial html tags', () => {
     expect(stripTags(partialTag)).toBe('')
+  })
+})
+
+describe('cleanSearchsString', () => {
+  test('handles searchString with sample parameters and a standard question mark.', () => {
+    expect(cleanSearchString('view=index&query=ligo', '?')).toBe(
+      '?view=index&query=ligo'
+    )
+  })
+  test('handles searchString with sample parameters and a standard ampersand.', () => {
+    expect(cleanSearchString('view=index&query=ligo', '&')).toBe(
+      '&view=index&query=ligo'
+    )
+  })
+  test('handles empty searchString and a standard question mark.', () => {
+    expect(cleanSearchString('', '?')).toBe('')
+  })
+  test('handles empty searchString and a standard ampersand.', () => {
+    expect(cleanSearchString('', '&')).toBe('')
   })
 })
 
