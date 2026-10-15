@@ -177,8 +177,9 @@ export default function () {
               You are not yet a GCN Circulars submitter. Use the form below to
               request an endorsement from an existing GCN Circulars user.
             </b>{' '}
-            This should be someone who you know and who knows you: a fellow
-            researcher, an advisor, or an instructor.
+            This should be the name (not email address) of someone who you know
+            and who knows you: a fellow researcher, an advisor, or an
+            instructor.
           </p>
           <p className="usa-paragraph">
             If you don't find anyone who you recognize, then{' '}
