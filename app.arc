@@ -150,7 +150,7 @@ topics
 
 team_invites
   teamId *String
-  email **String
+  sub **String
   PointInTimeRecovery true
 
 @tables-indexes
@@ -223,16 +223,20 @@ team_members
   name usersByTeam
 
 team_members
-  topicId *String
-  name membersByTopicId
+  permission *String
+  name teamMembersByPermission
 
 team_invites
-  email *String
-  name invitesByEmail
+  sub *String
+  name invitesBySub
 
 topics 
   topicName *String
   name topicsByName
+
+topics
+  teamId *String
+  name topicsByTeamId
 
 @aws
 runtime nodejs24.x
