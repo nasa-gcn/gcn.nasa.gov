@@ -81,9 +81,9 @@ export default function () {
         <Textarea name="teamDescription" id="teamDescription" required />
         <Label htmlFor="userSub">Team Manager</Label>
         <Hint id="pocHint">
-          This user will immediately be invited to join this new team with Admin
-          permissions. They will be able to make updates and invite other member
-          to this team.
+          This user will immediately be invited to join this new team as a
+          Manager. They will be able to make updates and invite other members to
+          this team.
         </Hint>
         <input type="hidden" name="userSub" value={userSub} />
         <UserLookupComboBox
