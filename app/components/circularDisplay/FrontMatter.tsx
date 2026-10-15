@@ -5,8 +5,8 @@
  *
  * SPDX-License-Identifier: Apache-2.0
  */
-import { Link } from '@remix-run/react'
-import { Grid } from '@trussworks/react-uswds'
+import { Grid, Link } from '@trussworks/react-uswds'
+import { term } from 'lucene'
 import { slug } from 'github-slugger'
 import type { ReactNode } from 'react'
 
@@ -56,7 +56,17 @@ export function FrontMatter({
   | 'editedBy'
   | 'editedOn'
 >) {
-  const searchString = useSearchString()
+  const safeSubmitter = submitter ?? ''
+  const authorName = safeSubmitter.includes(' at ')
+    ? safeSubmitter.split(' at ')[0]
+    : safeSubmitter
+  const authorEmail = safeSubmitter.match(/<([^>]+)>/)?.[1] ?? ''
+  const authorSearchParams = new URLSearchParams({
+    query: `submitter:"${term.escape(authorName)}"${
+      authorEmail ? ` OR submitter:"${term.escape(authorEmail)}"` : ''
+    }`,
+  })
+  const submitterUrl = `/circulars?${authorSearchParams}`
   return (
     <>
       <FrontMatterItem label="Subject">{subject}</FrontMatterItem>
@@ -81,7 +91,9 @@ export function FrontMatter({
           </small>
         </FrontMatterItem>
       )}
-      <FrontMatterItem label="From">{submitter}</FrontMatterItem>
+      <FrontMatterItem label="From">
+        <Link href={submitterUrl}>{submitter}</Link>
+      </FrontMatterItem>
       {editedBy && (
         <FrontMatterItem label="Edited By">{editedBy}</FrontMatterItem>
       )}
