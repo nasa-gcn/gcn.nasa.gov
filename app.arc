@@ -223,8 +223,16 @@ team_members
   name usersByTeam
 
 team_members
+  topicId *String
+  name membersByTopicId
+
+team_members
   permission *String
   name teamMembersByPermission
+
+team_invites
+  email *String
+  name invitesByEmail
 
 team_invites
   sub *String
