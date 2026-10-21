@@ -24,6 +24,7 @@ import {
 import { useEffect, useRef, useState } from 'react'
 
 import { getUser } from './_auth/user.server'
+import { adminGroup } from './admin'
 import Hint from '~/components/Hint'
 import SegmentedCards from '~/components/SegmentedCards'
 import Spinner from '~/components/Spinner'
@@ -52,9 +53,10 @@ export async function action({
 }: ActionFunctionArgs) {
   if (!teamId) throw new Response(null, { status: 400 })
   const user = await getUser(request)
-
+  const userIsSiteAdmin = user?.groups.includes(adminGroup)
   if (!user) throw new Response(null, { status: 403 })
-  const userIsAdmin = await userIsTeamAdmin(user.sub, teamId)
+  const userIsAdmin =
+    (await userIsTeamAdmin(user.sub, teamId)) || userIsSiteAdmin
   const data = await request.formData()
   const intent = getFormDataString(data, 'intent')
   const permission = getFormDataString(data, 'permission')
@@ -107,9 +109,11 @@ export async function loader({
   if (!user) throw new Response(null, { status: 403 })
   if (!teamId) throw new Response(null, { status: 404 })
   const membership = await getTeamMembership(user.sub, teamId)
-  if (!membership) throw new Response(null, { status: 403 })
+  const userIsSiteAdmin = user?.groups.includes(adminGroup)
+  if (!(membership || userIsSiteAdmin))
+    throw new Response(null, { status: 403 })
   const team = await getTeam(teamId)
-  const teamAdmin = await userIsTeamAdmin(user.sub, teamId)
+  const teamAdmin = (await userIsTeamAdmin(user.sub, teamId)) || userIsSiteAdmin
   if (!teamAdmin) {
     team.pendingInvites = team.pendingInvites.map((invite) => {
       return {
