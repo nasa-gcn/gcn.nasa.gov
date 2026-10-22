@@ -34,7 +34,7 @@ import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
-import { useFeature, useRecaptchaSiteKey } from '~/root'
+import { useRecaptchaSiteKey } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 import type { SEOHandle } from '~/root/seo'
 import { getUser } from '~/routes/_auth/user.server'
@@ -173,7 +173,7 @@ export default function () {
       <NoticeFormatInput
         name="noticeFormat"
         value={defaultFormat}
-        showJson={useFeature('JSON_NOTICES')}
+        showJson
         onChange={setFormat}
       />
       <Label htmlFor="noticeTypes">Types</Label>
