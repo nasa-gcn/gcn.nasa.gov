@@ -6335,25 +6335,29 @@
       "teamId": "team_abc",
       "teamName": "Team ABC",
       "description": "A cool new team",
-      "topicId": "topic_1"
+      "topic": "gcn.notices.team_abc",
+      "isPublic": true
     },
     {
       "teamId": "team_def",
       "teamName": "Team Def",
       "description": "A second team",
-      "topicId": "topic_2"
+      "topic": "gcn.notices.team_def",
+      "isPublic": false
     },
     {
       "teamId": "team_ghi",
       "teamName": "Team ghi",
       "description": "Example team",
-      "topicId": "topic_3"
+      "topic": "gcn.notices.team_ghi",
+      "isPublic": true
     },
     {
       "teamId": "team_jkl",
       "teamName": "Team jkl",
       "description": "Example team",
-      "topicId": "topic_4"
+      "topic": "gcn.notices.team_jkl",
+      "isPublic": true
     }
   ],
   "team_members": [
@@ -6398,32 +6402,6 @@
       "teamId": "team_jkl",
       "sub": "default",
       "permission": "read"
-    }
-  ],
-  "topics": [
-    {
-      "topicId": "topic_1",
-      "topicName": "gcn.notices.team_abc",
-      "teamId": "team_abc",
-      "isPublic": true
-    },
-    {
-      "topicId": "topic_2",
-      "topicName": "gcn.notices.team_def",
-      "isPublic": false,
-      "teamId": "team_def"
-    },
-    {
-      "topicId": "topic_3",
-      "topicName": "gcn.notices.team_ghi",
-      "teamId": "team_ghi",
-      "isPublic": true
-    },
-    {
-      "topicId": "topic_4",
-      "topicName": "gcn.notices.team_jkl",
-      "teamId": "team_jkl",
-      "isPublic": true
     }
   ]
 }
