@@ -22,7 +22,13 @@ import { useState } from 'react'
 import { ReCAPTCHA, verifyRecaptcha } from './ReCAPTCHA'
 import { getFormDataString } from '~/lib/utils'
 import { useRecaptchaSiteKey } from '~/root'
-import { ClientCredentialVendingMachine } from '~/routes/user.credentials/client_credentials.server'
+import { getUser } from '~/routes/_auth/user.server'
+import {
+  createClientCredential,
+  deleteClientCredential,
+  getClientCredentials,
+  getGroupDescriptions,
+} from '~/routes/user.credentials/client_credentials.server'
 
 export async function loader(args: LoaderFunctionArgs) {
   return await handleCredentialLoader(args)
@@ -32,10 +38,9 @@ export async function handleCredentialActions(
   request: Request,
   redirectSource: string
 ) {
-  const [data, machine] = await Promise.all([
-    request.formData(),
-    ClientCredentialVendingMachine.create(request),
-  ])
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+  const data = await request.formData()
 
   switch (getFormDataString(data, 'intent')) {
     case 'create':
@@ -43,7 +48,7 @@ export async function handleCredentialActions(
       const scope = getFormDataString(data, 'scope')
       const recaptchaResponse = getFormDataString(data, 'g-recaptcha-response')
       await verifyRecaptcha(recaptchaResponse)
-      const { client_id } = await machine.createClientCredential(name, scope)
+      const { client_id } = await createClientCredential(user, name, scope)
       let redirectTarget = ''
       if (redirectSource == 'quickstart') {
         const params = new URL(request.url).searchParams
@@ -60,7 +65,7 @@ export async function handleCredentialActions(
       if (!clientId) {
         throw new Response('clientId not present', { status: 400 })
       }
-      await machine.deleteClientCredential(clientId)
+      await deleteClientCredential(user.sub, clientId)
       return null
 
     default:
@@ -68,9 +73,10 @@ export async function handleCredentialActions(
   }
 }
 export async function handleCredentialLoader({ request }: LoaderFunctionArgs) {
-  const machine = await ClientCredentialVendingMachine.create(request)
-  const client_credentials = await machine.getClientCredentials()
-  const groups = await machine.getGroupDescriptions()
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+  const client_credentials = await getClientCredentials(user.sub)
+  const groups = await getGroupDescriptions(user)
   return { client_credentials, groups }
 }
 
