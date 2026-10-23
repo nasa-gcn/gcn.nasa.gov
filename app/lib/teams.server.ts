@@ -21,7 +21,8 @@ export type Team = {
   teamId: string
   teamName: string
   description: String
-  topicId: string
+  topic: string
+  isPublic: boolean
 }
 
 export type Permission = 'admin' | 'write' | 'read'
@@ -59,13 +60,6 @@ export type TeamInviteWithEmail = TeamInvite & {
   email: string
 }
 
-export type Topic = {
-  topicId: string
-  topicName: string
-  isPublic: boolean
-  teamId: string
-}
-
 /**
  * This function will create an entry in DynamoDB for the new
  * team, and send a notification to the listed PoC that they are
@@ -93,12 +87,12 @@ export async function createTeam(
 
   const db = await tables()
   const teamId = crypto.randomUUID()
-  const topic = await createTopic(topicName, teamId)
   const team: Team = {
     teamId,
     teamName,
     description,
-    topicId: topic.topicId,
+    topic: topicName,
+    isPublic: false,
   }
   await db.teams.put(team)
   // TODO: Add KafkaACL functions
@@ -127,12 +121,10 @@ export async function getTeam(teamId: string) {
   const team: Team = await db.teams.get({ teamId })
   const teamMembers = await getTeamMembers(teamId)
   const pendingInvites = await getTeamInvites(teamId)
-  const topic = await getTopic(team.topicId)
   return {
     ...team,
     teamMembers,
     pendingInvites,
-    topic,
   }
 }
 
@@ -187,20 +179,6 @@ export async function getTeamInvites(
       email: ((await db.users.get({ sub: invite.sub })) as UserMetadata).email,
     }))
   )
-}
-
-// TODO: Rework teams-topic relation, teams get 1-1 association to topic spaces
-export async function getTeamTopics(teamId: string) {
-  const db = await tables()
-  return (
-    await db.topics.query({
-      IndexName: 'topicsByTeamId',
-      KeyConditionExpression: 'teamId = :teamId',
-      ExpressionAttributeValues: {
-        ':teamId': teamId,
-      },
-    })
-  ).Items as Topic[]
 }
 
 /**
@@ -311,7 +289,6 @@ export async function inviteUserToTeam(
   newUserSub: string,
   permission: Permission
 ) {
-  console.log('inviteUserToTeam', { user, teamId, newUserSub, permission })
   const db = await tables()
   const team = (await db.teams.get({ teamId })) as Team
   if (!team) throw new Response(null, { status: 404 })
@@ -424,49 +401,6 @@ async function teamAdminCheck(teamId: string, sub: string) {
   }
 }
 
-// #region Topic Functions
-
-export async function createTopic(topicName: string, teamId: string) {
-  const db = await tables()
-  const topic: Topic = {
-    topicId: crypto.randomUUID(),
-    topicName,
-    isPublic: false,
-    teamId,
-  }
-  await db.topics.put(topic)
-  return topic
-}
-
-export async function getTopic(topicId: string): Promise<Topic> {
-  const db = await tables()
-  return await db.topics.get({ topicId })
-}
-
-export async function updateTopicPublicAvailability(
-  topicId: string,
-  isPublic: boolean
-) {
-  // TODO: Add KafkaACL function to add public rule
-  const db = await tables()
-  await db.topics.update({
-    Key: { topicId },
-    UpdateExpression: 'set #public = :public',
-    ExpressionAttributeNames: {
-      '#public': 'isPublic',
-    },
-    ExpressionAttributeValues: {
-      ':public': isPublic,
-    },
-  })
-}
-
-export async function deleteTopic(topicId: string) {
-  const db = await tables()
-  await db.topics.delete({ topicId })
-  // TODO: Add KafkaACL function here to remove rules for this topic
-}
-
 export async function userHasPermission(
   sub: string,
   topicName: string,
@@ -474,14 +408,16 @@ export async function userHasPermission(
 ): Promise<boolean> {
   const db = await tables()
   const teamId: string = (
-    await db.topics.query({
-      IndexName: 'topicsByName',
+    await db.teams.query({
+      IndexName: 'teamsByTopic',
       KeyConditionExpression: 'topicName = :topicName',
       ExpressionAttributeValues: {
         ':topicName': topicName,
       },
     })
-  ).Items[0].teamId
+  ).Items[0]?.teamId
+
+  if (!teamId) throw new Response(null, { status: 404 })
 
   const membership = (
     await db.team_members.query({
@@ -502,4 +438,3 @@ export async function userHasPermission(
 
   return Boolean(membership)
 }
-// #endregion
