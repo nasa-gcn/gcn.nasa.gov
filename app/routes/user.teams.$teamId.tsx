@@ -199,17 +199,15 @@ export default function () {
 
         <h3>Topic</h3>
         {/* TODO: A topic being public/private is directly tied to the ACLs functions */}
-        {team.topic.isPublic ? (
+        {team.isPublic ? (
           <p>
             Your team's topic is publicly available. Any GCN user can consume
-            topics you produce starting with{' '}
-            <strong>{team.topic.topicName}</strong>.
+            topics you produce starting with <strong>{team.topic}</strong>.
           </p>
         ) : (
           <p>
             Your team's topic is private. Only user's within this team may
-            consume messages starting with{' '}
-            <strong>{team.topic.topicName}</strong>.
+            consume messages starting with <strong>{team.topic}</strong>.
           </p>
         )}
 
