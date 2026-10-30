@@ -18,6 +18,9 @@ import {
   DynamoDBHistoryAutoIncrement,
 } from '@nasa-gcn/dynamodb-autoincrement'
 import { errors } from '@opensearch-project/opensearch'
+import type { Sort } from '@opensearch-project/opensearch/api/_types/_common.js'
+import type { Hit } from '@opensearch-project/opensearch/api/_types/_core.search.js'
+import type { Search_Request } from '@opensearch-project/opensearch/api/index.js'
 import { redirect } from '@remix-run/node'
 import memoizee from 'memoizee'
 import { dedent } from 'ts-dedent'
@@ -186,7 +189,7 @@ export async function search({
 
   const [startTime, endTime] = getValidDates(startDate, endDate)
 
-  const sortObj =
+  const sortObj: Sort =
     sort === 'relevance' && query
       ? {}
       : {
@@ -258,7 +261,7 @@ export async function search({
     }
   }
 
-  const searchBody = {
+  const searchBody: Search_Request = {
     index: 'circulars',
     body: {
       query: {
@@ -284,6 +287,13 @@ export async function search({
       error instanceof errors.ResponseError &&
       error.message.includes('Failed to parse query')
     ) {
+      if (
+        !searchBody.body ||
+        !searchBody.body.query ||
+        !searchBody.body.query.bool
+      ) {
+        throw new Response(null, { status: 500 })
+      }
       searchBody.body.query.bool.must = {
         multi_match: {
           query: query ?? '',
@@ -297,29 +307,14 @@ export async function search({
     }
   }
 
-  const {
-    body: {
-      hits: {
-        total: { value: totalItems },
-        hits,
-      },
-    },
-  } = searchResult
+  const totalItems: number =
+    typeof searchResult.body.hits.total == 'number'
+      ? searchResult.body.hits.total
+      : (searchResult.body.hits.total?.value ?? 0)
 
-  const items = hits.map(
-    ({
-      _id: circularId,
-      fields: {
-        subject: [subject],
-      },
-    }: {
-      _id: string
-      fields: { subject: string[] }
-    }) => ({
-      circularId,
-      subject,
-    })
-  )
+  const items = searchResult.body.hits.hits.map((x: Hit) => {
+    return { circularId: Number(x._id), subject: x.fields?.subject }
+  })
 
   const totalPages = limit ? Math.ceil(totalItems / limit) : 1
 
