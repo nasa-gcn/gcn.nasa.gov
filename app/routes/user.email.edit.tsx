@@ -164,7 +164,11 @@ export default function () {
           *
         </span>
       </Label>
-      <Select id="recipient" name="recipient">
+      <Select
+        id="recipient"
+        name="recipient"
+        defaultValue={notification.recipient}
+      >
         {validEmails.map((item) => (
           <option key={item.address} value={item.address}>
             {item.address}
