@@ -59,6 +59,8 @@ export async function action({ request }: ActionFunctionArgs) {
     'g-recaptcha-response': recaptchaResponse,
     ...rest
   } = Object.fromEntries(data)
+  if (!(await getValidEmails(user.sub)).some((x) => x.address === recipient))
+    throw new Response(null, { status: 403 })
   if (intent !== 'delete') await verifyRecaptcha(recaptchaResponse?.toString())
   const noticeTypes = Object.keys(rest)
   const topics =
