@@ -34,8 +34,6 @@ export function EventTypeBreadcrumb({ eventType }: { eventType?: string }) {
     setShowEventTypeDropdown(false)
   })
 
-  if (!eventTypeHumanReadable) return null
-
   return (
     <BreadcrumbBar className="usa-breadcrumb--wrap desktop:margin-top-neg-6 margin-top-neg-4 padding-top-0 margin-bottom-neg-3">
       <Breadcrumb>
@@ -50,7 +48,7 @@ export function EventTypeBreadcrumb({ eventType }: { eventType?: string }) {
               setShowEventTypeDropdown((isShown) => !isShown)
             }}
           >
-            {eventTypeHumanReadable}
+            {eventTypeHumanReadable ?? 'All Circulars'}
             <Icon.ExpandMore role="presentation" className="text-base" />
           </Button>
           {showEventTypeDropdown && (
@@ -60,6 +58,15 @@ export function EventTypeBreadcrumb({ eventType }: { eventType?: string }) {
                 style={{ maxHeight: '15rem', overflowY: 'auto' }}
               >
                 <ul className="usa-list usa-list--unstyled">
+                  <li>
+                    <Link
+                      to="/circulars"
+                      className="usa-link"
+                      onClick={() => setShowEventTypeDropdown(false)}
+                    >
+                      All Circulars
+                    </Link>
+                  </li>
                   {Object.entries(eventTypesHumanReadable)
                     .sort(
                       (
