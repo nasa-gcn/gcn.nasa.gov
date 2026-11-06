@@ -10,6 +10,7 @@ import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { useFetcher, useLoaderData } from '@remix-run/react'
 import type { ModalRef } from '@trussworks/react-uswds'
 import {
+  Alert,
   Button,
   FormGroup,
   Grid,
@@ -21,7 +22,7 @@ import {
   ModalToggleButton,
   TextInput,
 } from '@trussworks/react-uswds'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { storage } from './_auth/auth.server'
 import { getUser, updateSession } from './_auth/user.server'
@@ -31,6 +32,7 @@ import Spinner from '~/components/Spinner'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
 import { cognito, maybeThrowCognito } from '~/lib/cognito.server'
 import { sendUserEmailVerificationMessage } from '~/lib/email.server'
+import { feature } from '~/lib/env.server'
 import type { EmailItem } from '~/lib/user.server'
 import {
   addNewUserEmail,
@@ -39,6 +41,7 @@ import {
   updateUserFields,
 } from '~/lib/user.server'
 import { getFormDataString } from '~/lib/utils'
+import { useFeature } from '~/root'
 import type { BreadcrumbHandle } from '~/root/Title'
 import type { SEOHandle } from '~/root/seo'
 
@@ -59,12 +62,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export async function action({ request }: ActionFunctionArgs) {
   const user = await getUser(request)
   if (!user) throw new Response(null, { status: 403 })
-
+  const newEmailsEnabled = feature('MULTI_EMAIL')
   const formData = await request.formData()
   const intent = getFormDataString(formData, 'intent')
   if (!intent) throw new Response(null, { status: 400 })
   const address = getFormDataString(formData, 'address')
-
+  let displayConfirmationEmailAlert = false
   switch (intent) {
     case 'update-user':
       const session = await storage.getSession(request.headers.get('Cookie'))
@@ -97,22 +100,27 @@ export async function action({ request }: ActionFunctionArgs) {
       await updateSession({ user }, session)
       break
     case 'new-email':
-      if (!address) throw new Response(null, { status: 400 })
+      if (!newEmailsEnabled || !address)
+        throw new Response(null, { status: 400 })
       await addNewUserEmail(user.sub, address)
+      displayConfirmationEmailAlert = true
       break
     case 'remove-address':
-      if (!address) throw new Response(null, { status: 400 })
+      if (!newEmailsEnabled || !address)
+        throw new Response(null, { status: 400 })
       await removeUserEmailAddress(user.sub, address)
       break
     case 'verify-address':
-      if (!address) throw new Response(null, { status: 400 })
+      if (!newEmailsEnabled || !address)
+        throw new Response(null, { status: 400 })
       await sendUserEmailVerificationMessage(user.sub, address)
+      displayConfirmationEmailAlert = true
       break
     default:
       break
   }
 
-  return null
+  return { displayConfirmationEmailAlert }
 }
 
 export default function () {
@@ -120,10 +128,19 @@ export default function () {
     useLoaderData<typeof loader>()
   const fetcher = useFetcher<typeof action>()
   const newEmailFetcher = useFetcher<typeof action>()
+  const formRef = useRef<HTMLFormElement>(null)
   const [dirty, setDirty] = useState(false)
   const [currentName, setCurrentName] = useState(name)
   const [currentAffiliation, setCurrentAffiliation] = useState(affiliation)
   const disabled = fetcher.state !== 'idle'
+  const [emailValid, setEmailValid] = useState(false)
+  const newEmailsEnabled = useFeature('MULTI_EMAIL')
+
+  useEffect(() => {
+    if (newEmailFetcher.state === 'idle' && newEmailFetcher.data) {
+      formRef.current?.reset()
+    }
+  })
 
   return (
     <>
@@ -201,33 +218,52 @@ export default function () {
           )}
         </FormGroup>
       </fetcher.Form>
-      <hr />
-      <h2>Email Addresses</h2>
-      <p className="usa-paragraph">
-        You may associate other email addresses with your account. Only verified
-        email addresses may recieve email notifications.
-      </p>
-      {validEmails.map((item) => (
-        <EmailForm key={item.address} item={item} />
-      ))}
-      <newEmailFetcher.Form method="POST">
-        <input type="hidden" name="intent" value="new-email" />
-        <Label htmlFor="address">Add New Address</Label>
-        <TextInput
-          id="address"
-          name="address"
-          type="email"
-          autoCapitalize="off"
-          autoCorrect="off"
-          required
-          placeholder="email"
-        />
-        <FormGroup>
-          <Button type="submit" disabled={newEmailFetcher.state !== 'idle'}>
-            Add
-          </Button>
-        </FormGroup>
-      </newEmailFetcher.Form>
+      {newEmailsEnabled && (
+        <>
+          <hr />
+          <h2>Email Addresses</h2>
+          {newEmailFetcher.data?.displayConfirmationEmailAlert && (
+            <Alert type="info" headingLevel="h3" slim>
+              A Verification email has been sent to the provided address. Please
+              check your inbox to confirm this addition.
+            </Alert>
+          )}
+          <p className="usa-paragraph">
+            You may associate other email addresses with your account. Only
+            verified email addresses may recieve email notifications.
+          </p>
+          {validEmails.map((item) => (
+            <EmailForm key={item.address} item={item} />
+          ))}
+          <newEmailFetcher.Form method="POST" ref={formRef}>
+            <input type="hidden" name="intent" value="new-email" />
+            <Label htmlFor="address">Add New Address</Label>
+            <TextInput
+              id="address"
+              name="address"
+              type="email"
+              autoCapitalize="off"
+              autoCorrect="off"
+              required
+              placeholder="email"
+              disabled={newEmailFetcher.state !== 'idle'}
+              onChange={(e) => {
+                setEmailValid(
+                  !validEmails.some((x) => x.address === e.target.value)
+                )
+              }}
+            />
+            <FormGroup>
+              <Button
+                type="submit"
+                disabled={newEmailFetcher.state !== 'idle' || !emailValid}
+              >
+                Add
+              </Button>
+            </FormGroup>
+          </newEmailFetcher.Form>
+        </>
+      )}
     </>
   )
 }
