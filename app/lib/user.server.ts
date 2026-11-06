@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 import { tables } from '@architect/functions'
+import { ConditionalCheckFailedException } from '@aws-sdk/client-dynamodb'
 
 import { sendUserEmailVerificationMessage } from './email.server'
 
@@ -51,15 +52,29 @@ export async function getAllUserEmails(sub: string) {
 }
 
 export async function addNewUserEmail(sub: string, address: string) {
+  const newItem = { address, verified: false }
+  const previouslyVerified = { address, verified: true }
   const db = await tables()
-  await db.users.update({
-    Key: { sub },
-    UpdateExpression: 'set validEmails = list_append(validEmails, :new_items)',
-    ExpressionAttributeValues: {
-      ':new_items': [{ address, verified: false }],
-    },
-  })
-  await sendUserEmailVerificationMessage(sub, address)
+  try {
+    await db.users.update({
+      Key: { sub },
+      ConditionExpression:
+        'NOT contains(validEmails, :newItem) AND NOT contains(validEmails, :previouslyVerified)',
+      UpdateExpression:
+        'set validEmails = list_append(validEmails, :newItemList)',
+      ExpressionAttributeValues: {
+        ':newItemList': [newItem],
+        ':newItem': newItem,
+        ':previouslyVerified': previouslyVerified,
+      },
+    })
+    await sendUserEmailVerificationMessage(sub, address)
+  } catch (error) {
+    if (!(error instanceof ConditionalCheckFailedException)) {
+      throw error
+    }
+    console.warn('Duplicate email provided')
+  }
 }
 
 export async function removeUserEmailAddress(sub: string, address: string) {
