@@ -12,8 +12,8 @@ import {
   ModalFooter,
   ModalHeading,
 } from '@trussworks/react-uswds'
+import { useBack } from 'use-back'
 
-import { useSearchString } from '~/lib/utils'
 import {
   useEmail,
   usePermissionModerator,
@@ -54,9 +54,8 @@ function SignInButton() {
 }
 
 function ModalUnauthorized() {
-  const searchString = useSearchString()
   const isAuthenticated = useAuthenticated()
-
+  const { handleBack } = useBack(`/circulars`)
   return (
     <Modal
       id="modal-unauthorized"
@@ -75,7 +74,7 @@ function ModalUnauthorized() {
         get a peer endorsement from an existing GCN Circulars user.
       </p>
       <ModalFooter>
-        <Link to={`/circulars${searchString}`}>
+        <Link onClick={handleBack} className="usa-button" to="/circulars">
           <Button type="button" outline>
             Cancel
           </Button>
