@@ -74,6 +74,10 @@ Subscribe to the topic `gcn.heartbeat`, which broadcasts a test message approxim
 
 <SampleHeartbeat />
 
+### Why am I seeing the message, "You have exceeded the rate limit" from my Kafka script?
+
+Due to users running [short-lived single-shot high-frequency Kafka clients](/docs/faq#how-do-i-make-a-cron-job-to-periodically-check-for-new-kafka-messages), we have implemented rate limiting to prevent this misuse. Our [Kafka client setup code sample](/docs/client) is designed to be used as part of a long or indefinitely running program. These high-frequency Kafka clients are not needed to [check the health of your connection](/docs/faq#how-can-i-tell-that-my-kafka-client-is-working). If you are unsure of how to resolve this issue, please contact the [GCN Helpdesk](/contact).
+
 ### I have an intermittent or flaky Internet connection. How do I ensure that my Kafka client script won't miss messages?
 
 A common mistake that we see is that users stop and restart their Kafka client script to try to resolve connectivity issues. We do not recommend this.
