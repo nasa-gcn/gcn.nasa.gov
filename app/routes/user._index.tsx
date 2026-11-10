@@ -20,6 +20,7 @@ import {
   ModalFooter,
   ModalHeading,
   ModalToggleButton,
+  Tag,
   TextInput,
 } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
@@ -275,14 +276,22 @@ function EmailForm({ item }: { item: EmailItem }) {
 
   return (
     <>
-      <Grid row>
+      <Grid row className="flex-align-center">
         <div className="tablet:grid-col flex-fill">
           <div>
             <strong>{item.address}</strong>
+          </div>
+          <div>
             {item.verified ? (
-              <Icon.Check color="success" />
+              <Tag className="bg-success">
+                Verified
+                <Icon.Check />
+              </Tag>
             ) : (
-              <Icon.ErrorOutline color="warning" />
+              <Tag className="bg-warning">
+                Not Verified
+                <Icon.ErrorOutline />
+              </Tag>
             )}
           </div>
         </div>
