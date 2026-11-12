@@ -8,7 +8,8 @@
 import type { ActionFunctionArgs } from '@remix-run/node'
 import { Link, useLoaderData } from '@remix-run/react'
 
-import { ClientCredentialVendingMachine } from './user.credentials/client_credentials.server'
+import { getUser } from './_auth/user.server'
+import { deleteClientCredential } from './user.credentials/client_credentials.server'
 import HeadingWithAddButton from '~/components/HeadingWithAddButton'
 import { handleCredentialLoader } from '~/components/NewCredentialForm'
 import { UserCredentials } from '~/components/UserCredentials'
@@ -20,10 +21,9 @@ export const handle: SEOHandle = { noIndex: true }
 export const loader = handleCredentialLoader
 
 export async function action({ request }: ActionFunctionArgs) {
-  const [data, machine] = await Promise.all([
-    request.formData(),
-    ClientCredentialVendingMachine.create(request),
-  ])
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
+  const data = await request.formData()
 
   switch (getFormDataString(data, 'intent')) {
     case 'delete':
@@ -31,7 +31,7 @@ export async function action({ request }: ActionFunctionArgs) {
       if (!clientId) {
         throw new Response('clientId not present', { status: 400 })
       }
-      await machine.deleteClientCredential(clientId)
+      await deleteClientCredential(user.sub, clientId)
       return null
 
     default:

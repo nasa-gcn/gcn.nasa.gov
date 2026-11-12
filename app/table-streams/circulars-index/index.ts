@@ -11,6 +11,7 @@ import type { DynamoDBRecord } from 'aws-lambda'
 
 import { unmarshallTrigger } from '../utils'
 import { createTriggerHandler } from '~/lib/lambdaTrigger.server'
+import { putIndex } from '~/lib/opensearch.server'
 import type { Circular } from '~/routes/circulars/circulars.lib'
 
 const index = 'circulars'
@@ -26,15 +27,6 @@ async function removeIndex(id: number) {
   }
 }
 
-async function putIndex(circular: Circular) {
-  const client = await getSearchClient()
-  await client.index({
-    index,
-    id: circular.circularId.toString(),
-    body: circular,
-  })
-}
-
 export const handler = createTriggerHandler(
   async ({ eventName, dynamodb }: DynamoDBRecord) => {
     const id = unmarshallTrigger(dynamodb!.Keys).circularId as number
@@ -42,7 +34,7 @@ export const handler = createTriggerHandler(
       await removeIndex(id)
     } /* (eventName === 'INSERT' || eventName === 'MODIFY') */ else {
       const circular = unmarshallTrigger(dynamodb!.NewImage) as Circular
-      await putIndex(circular)
+      await putIndex('circulars', circular)
     }
   }
 )

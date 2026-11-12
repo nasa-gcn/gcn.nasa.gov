@@ -150,7 +150,11 @@ topics
 
 team_invites
   teamId *String
-  email **String
+  sub **String
+  PointInTimeRecovery true
+
+reindex_logs
+  indexName *String
   PointInTimeRecovery true
 
 @tables-indexes
@@ -226,13 +230,29 @@ team_members
   topicId *String
   name membersByTopicId
 
+team_members
+  permission *String
+  name teamMembersByPermission
+
 team_invites
   email *String
   name invitesByEmail
 
+team_invites
+  sub *String
+  name invitesBySub
+
 topics 
   topicName *String
   name topicsByName
+
+topics
+  teamId *String
+  name topicsByTeamId
+
+@queues
+reindex-opensearch
+  src build/queues/reindex-opensearch
 
 @aws
 runtime nodejs24.x

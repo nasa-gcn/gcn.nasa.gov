@@ -276,11 +276,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          JSON Notices via Email, Kafka Cron Jobs, Submitter Profile, GCN is
-          Hiring. See{' '}
+          End of Swift Science Operations, CHIME Notices Unavailable During
+          Upgrade. See{' '}
           <Link
             className="usa-link"
-            to="/news#json-notices-via-email-advisory-for-kafka-cron-jobs-update-your-submitter-profile-gcn-is-hiring"
+            to="news#end-of-swift-science-operations-chime-notices-unavailable-during-upgrade"
           >
             news and announcements
           </Link>

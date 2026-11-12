@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react'
 import { useClickAnyWhere, useWindowSize } from 'usehooks-ts'
 
 import { Meatball } from '~/components/meatball/Meatball'
-import { useEmail, usePermissionAdmin, useUserIdp } from '~/root'
+import { useEmail, useFeature, usePermissionAdmin, useUserIdp } from '~/root'
 
 import styles from './header.module.css'
 
@@ -75,6 +75,7 @@ export function Header() {
   const [expanded, setExpanded] = useState(false)
   const [userMenuIsOpen, setUserMenuIsOpen] = useState(false)
   const isMobile = useWindowSize().width < 1024
+  const teamsEnabled = useFeature('TEAMS')
 
   function toggleMobileNav() {
     setExpanded((expanded) => !expanded)
@@ -178,6 +179,11 @@ export function Header() {
                       <NavLink key="credentials" to="/user/credentials">
                         Client Credentials
                       </NavLink>,
+                      teamsEnabled && (
+                        <NavLink key="teams" to="/user/teams">
+                          Teams
+                        </NavLink>
+                      ),
                       <NavLink key="email" to="/user/email">
                         Email Notifications
                       </NavLink>,

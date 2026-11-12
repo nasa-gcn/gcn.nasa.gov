@@ -15,7 +15,7 @@ import {
 import { generators } from 'openid-client'
 
 import { cognito, getGroups, maybeThrowCognito } from '~/lib/cognito.server'
-import { getUser } from '~/routes/_auth/user.server'
+import type { User } from '~/routes/_auth/user.server'
 
 export interface RedactedClientCredential {
   name: string
@@ -37,208 +37,186 @@ export interface UnRedactedClientCredential extends RedactedClientCredential {
 
 export const defaultGroup = 'gcn.nasa.gov/kafka-public-consumer'
 
-export class ClientCredentialVendingMachine {
-  #sub: string
-  #groups: string[]
+export async function getClientCredentials(sub: string) {
+  const db = await tables()
+  const results = await db.client_credentials.query({
+    KeyConditionExpression: '#sub = :sub',
+    ExpressionAttributeNames: {
+      '#name': 'name',
+      '#scope': 'scope',
+      '#sub': 'sub',
+    },
+    ExpressionAttributeValues: {
+      ':sub': sub,
+    },
+    ProjectionExpression:
+      'client_id, #name, #scope, created, lastUsed, countUsed, expired',
+  })
+  const credentials = results.Items as RedactedClientCredential[]
+  credentials.sort((a, b) => a.created - b.created)
+  return credentials
+}
 
-  private constructor(sub: string, groups: string[]) {
-    this.#sub = sub
-    this.#groups = groups
+export async function getClientCredential(
+  client_id: string,
+  sub: string
+): Promise<UnRedactedClientCredential> {
+  const db = await tables()
+
+  // Make sure that the user actually owns the given client ID before
+  // we try to get its client secret
+  const item = (await db.client_credentials.get({
+    sub,
+    client_id,
+  })) as ({ sub: string } & RedactedClientCredential) | null
+  if (!item) throw new Response(null, { status: 404 })
+
+  const { ...client_credential } = item
+  const client_secret = await getClientSecretInternal(client_id)
+
+  return {
+    client_secret,
+    ...client_credential,
   }
+}
 
-  static async create(request: Request) {
-    const user = await getUser(request)
-    if (!user) throw new Response('not signed in', { status: 403 })
-    return new this(
-      user.sub,
-      user.groups.filter((x) => x.startsWith('gcn.nasa.gov/kafka'))
-    )
-  }
+export async function deleteClientCredential(sub: string, client_id: string) {
+  const db = await tables()
 
-  get groups() {
-    return this.#groups
-  }
+  // Make sure that the user actually owns the given client ID before
+  // we try to delete it
+  const item = await db.client_credentials.get({
+    sub,
+    client_id,
+  })
+  if (!item) throw new Response(null, { status: 404 })
 
-  async getClientCredentials() {
-    const db = await tables()
-    const results = await db.client_credentials.query({
-      KeyConditionExpression: '#sub = :sub',
-      ExpressionAttributeNames: {
-        '#name': 'name',
-        '#scope': 'scope',
-        '#sub': 'sub',
-      },
-      ExpressionAttributeValues: {
-        ':sub': this.#sub,
-      },
-      ProjectionExpression:
-        'client_id, #name, #scope, created, lastUsed, countUsed, expired',
-    })
-    const credentials = results.Items as RedactedClientCredential[]
-    credentials.sort((a, b) => a.created - b.created)
-    return credentials
-  }
+  await Promise.all([
+    deleteClientCredentialInternal(client_id),
+    db.client_credentials.delete({ sub, client_id }),
+  ])
+}
 
-  async getClientCredential(
-    client_id: string
-  ): Promise<UnRedactedClientCredential> {
-    const db = await tables()
-
-    // Make sure that the user actually owns the given client ID before
-    // we try to get its client secret
-    const item = (await db.client_credentials.get({
-      sub: this.#sub,
-      client_id,
-    })) as ({ sub: string } & RedactedClientCredential) | null
-    if (!item) throw new Response(null, { status: 404 })
-
-    const { sub, ...client_credential } = item
-    const client_secret = await this.#getClientSecretInternal(client_id)
-
-    return {
-      client_secret,
-      ...client_credential,
-    }
-  }
-
-  async deleteClientCredential(client_id: string) {
-    const db = await tables()
-
-    // Make sure that the user actually owns the given client ID before
-    // we try to delete it
-    const item = await db.client_credentials.get({
-      sub: this.#sub,
-      client_id,
-    })
-    if (!item) throw new Response(null, { status: 404 })
-
-    await Promise.all([
-      this.#deleteClientCredentialInternal(client_id),
-      db.client_credentials.delete({ sub: this.#sub, client_id }),
-    ])
-  }
-
-  async createClientCredential(
-    name?: string,
-    scope?: string
-  ): Promise<UnRedactedClientCredential> {
-    if (!name) throw new Response('name must not be empty', { status: 400 })
-    if (!scope) throw new Response('scope must not be empty', { status: 400 })
-    if (!this.#groups.includes(scope))
-      throw new Response('user does not belong to the requested group', {
-        status: 403,
-      })
-
-    const { client_id, client_secret } =
-      await this.#createClientCredentialInternal(scope)
-    const created = Date.now()
-
-    const db = await tables()
-    await db.client_credentials.put({
-      name,
-      created,
-      client_id,
-      scope,
-      sub: this.#sub,
+export async function createClientCredential(
+  user: User,
+  name?: string,
+  scope?: string
+): Promise<UnRedactedClientCredential> {
+  if (!name) throw new Response('name must not be empty', { status: 400 })
+  if (!scope) throw new Response('scope must not be empty', { status: 400 })
+  if (!user.groups.includes(scope))
+    throw new Response('user does not belong to the requested group', {
+      status: 403,
     })
 
-    return { name, created, client_id, client_secret, scope }
-  }
+  const { client_id, client_secret } =
+    await createClientCredentialInternal(scope)
+  const created = Date.now()
 
-  async #createClientCredentialInternal(scope: string) {
-    const command = new CreateUserPoolClientCommand({
-      AllowedOAuthFlows: ['client_credentials'],
-      AllowedOAuthFlowsUserPoolClient: true,
-      AllowedOAuthScopes: [scope],
-      ClientName: 'auto-generated',
-      GenerateSecret: true,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
+  const db = await tables()
+  await db.client_credentials.put({
+    name,
+    created,
+    client_id,
+    scope,
+    sub: user.sub,
+  })
 
-    let response
-    try {
-      response = await cognito.send(command)
-    } catch (e) {
-      maybeThrowCognito(e, 'creating fake client credentials')
-      const client_id = generators.random(26)
-      const client_secret = generators.random(51)
-      return { client_id, client_secret }
-    }
+  return { name, created, client_id, client_secret, scope }
+}
 
-    const client_id = response.UserPoolClient?.ClientId
-    const client_secret = response.UserPoolClient?.ClientSecret
-    if (!client_id) throw new Error('AWS SDK must return ClientId')
-    if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
+async function createClientCredentialInternal(scope: string) {
+  const command = new CreateUserPoolClientCommand({
+    AllowedOAuthFlows: ['client_credentials'],
+    AllowedOAuthFlowsUserPoolClient: true,
+    AllowedOAuthScopes: [scope],
+    ClientName: 'auto-generated',
+    GenerateSecret: true,
+    UserPoolId: process.env.COGNITO_USER_POOL_ID,
+  })
+
+  let response
+  try {
+    response = await cognito.send(command)
+  } catch (e) {
+    maybeThrowCognito(e, 'creating fake client credentials')
+    const client_id = generators.random(26)
+    const client_secret = generators.random(51)
     return { client_id, client_secret }
   }
 
-  async #getClientSecretInternal(client_id: string) {
-    const command = new DescribeUserPoolClientCommand({
-      ClientId: client_id,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
+  const client_id = response.UserPoolClient?.ClientId
+  const client_secret = response.UserPoolClient?.ClientSecret
+  if (!client_id) throw new Error('AWS SDK must return ClientId')
+  if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
+  return { client_id, client_secret }
+}
 
-    let response
-    try {
-      response = await cognito.send(command)
-    } catch (e) {
-      maybeThrowCognito(e, 'creating fake client secret')
-      const client_secret = generators.random(51)
-      return client_secret
-    }
+async function getClientSecretInternal(client_id: string) {
+  const command = new DescribeUserPoolClientCommand({
+    ClientId: client_id,
+    UserPoolId: process.env.COGNITO_USER_POOL_ID,
+  })
 
-    const client_secret = response.UserPoolClient?.ClientSecret
-    if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
+  let response
+  try {
+    response = await cognito.send(command)
+  } catch (e) {
+    maybeThrowCognito(e, 'creating fake client secret')
+    const client_secret = generators.random(51)
     return client_secret
   }
 
-  async #deleteClientCredentialInternal(client_id: string) {
-    const command = new DeleteUserPoolClientCommand({
-      ClientId: client_id,
-      UserPoolId: process.env.COGNITO_USER_POOL_ID,
-    })
+  const client_secret = response.UserPoolClient?.ClientSecret
+  if (!client_secret) throw new Error('AWS SDK must return ClientSecret')
+  return client_secret
+}
 
-    try {
-      await cognito.send(command)
-    } catch (e) {
-      // Suppress error if Resource not found, which will throw when the
-      // DeleteUserPoolClientCommand is called after a credential has
-      // expired and the App Client is already deleted
-      if (e instanceof ResourceNotFoundException) {
-        return
-      }
-      maybeThrowCognito(e, 'deleting fake client credentials')
+async function deleteClientCredentialInternal(client_id: string) {
+  const command = new DeleteUserPoolClientCommand({
+    ClientId: client_id,
+    UserPoolId: process.env.COGNITO_USER_POOL_ID,
+  })
+
+  try {
+    await cognito.send(command)
+  } catch (e) {
+    // Suppress error if Resource not found, which will throw when the
+    // DeleteUserPoolClientCommand is called after a credential has
+    // expired and the App Client is already deleted
+    if (e instanceof ResourceNotFoundException) {
+      return
     }
+    maybeThrowCognito(e, 'deleting fake client credentials')
+  }
+}
+
+/**
+ * Get the names and descriptions of the groups to which the current user
+ * belongs. The groups are sorted such that the default group is first,
+ * followed by the remaining group sin alphabetical order.
+ */
+export async function getGroupDescriptions(
+  user: User
+): Promise<[string, string | undefined][]> {
+  let groups
+  try {
+    groups = await getGroups()
+  } catch (e) {
+    maybeThrowCognito(e, 'returning fake group descriptions')
+    return [
+      ['gcn.nasa.gov/kafka-public-consumer', 'Consume any public Kafka topic'],
+    ]
   }
 
-  /**
-   * Get the names and descriptions of the groups to which the current user
-   * belongs. The groups are sorted such that the default group is first,
-   * followed by the remaining group sin alphabetical order.
-   */
-  async getGroupDescriptions(): Promise<[string, string | undefined][]> {
-    let groups
-    try {
-      groups = await getGroups()
-    } catch (e) {
-      maybeThrowCognito(e, 'returning fake group descriptions')
-      return [
-        [
-          'gcn.nasa.gov/kafka-public-consumer',
-          'Consume any public Kafka topic',
-        ],
-      ]
-    }
+  const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(
+    groups
+      .map(({ GroupName, Description }) => [GroupName, Description])
+      ?.filter(([GroupName]) => GroupName) ?? []
+  )
 
-    const groupsMap: { [key: string]: string | undefined } = Object.fromEntries(
-      groups
-        .map(({ GroupName, Description }) => [GroupName, Description])
-        ?.filter(([GroupName]) => GroupName) ?? []
-    )
-
-    return [...this.groups]
-      .sort()
-      .sort((a, b) => Number(b === defaultGroup) - Number(a === defaultGroup))
-      .map((key) => [key, groupsMap[key]])
-  }
+  return [...user.groups]
+    .sort()
+    .sort((a, b) => Number(b === defaultGroup) - Number(a === defaultGroup))
+    .map((key) => [key, groupsMap[key]])
 }

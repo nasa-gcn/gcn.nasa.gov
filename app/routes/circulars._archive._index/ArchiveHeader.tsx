@@ -100,6 +100,35 @@ export default function ArchiveHeader({
   return (
     <>
       <EventTypeBreadcrumb eventType={eventType} />
+      {result?.intent === 'new' && result?.newCircular && (
+        <Alert
+          type="success"
+          headingLevel="h1"
+          slim
+          heading="Circular Submitted"
+        >
+          Your circular has been successfully submitted as{' '}
+          <Link
+            className="usa-link"
+            to={`/circulars/${result.newCircular.circularId}`}
+          >
+            GCN Circular {result.newCircular.circularId}
+          </Link>
+          .
+        </Alert>
+      )}
+      {result?.intent === 'edit' && result?.newCircular && (
+        <Alert type="success" headingLevel="h1" slim heading="Circular Edited">
+          Your edit has been successfully saved as a new version of{' '}
+          <Link
+            className="usa-link"
+            to={`/circulars/${result.newCircular.circularId}`}
+          >
+            GCN Circular {result.newCircular.circularId}
+          </Link>
+          .
+        </Alert>
+      )}
       {result?.intent === 'correction' && (
         <Alert
           type="success"

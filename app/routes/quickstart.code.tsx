@@ -9,7 +9,8 @@ import type { LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, FormGroup } from '@trussworks/react-uswds'
 
-import { ClientCredentialVendingMachine } from './user.credentials/client_credentials.server'
+import { getUser } from './_auth/user.server'
+import { getClientCredential } from './user.credentials/client_credentials.server'
 import { ClientSampleCode } from '~/components/ClientSampleCode'
 import { Tab, Tabs } from '~/components/tabs'
 import { formatAndNoticeTypeToTopic } from '~/lib/utils'
@@ -22,12 +23,13 @@ export const handle: BreadcrumbHandle & SEOHandle = {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
+  const user = await getUser(request)
+  if (!user) throw new Response(null, { status: 403 })
   const { clientId, noticeFormat, ...rest } = Object.fromEntries(
     new URL(request.url).searchParams
   )
   const noticeTypes = Object.keys(rest)
-  const machine = await ClientCredentialVendingMachine.create(request)
-  const clientCredentialProps = await machine.getClientCredential(clientId)
+  const clientCredentialProps = await getClientCredential(clientId, user.sub)
   return {
     noticeFormat,
     noticeTypes,
