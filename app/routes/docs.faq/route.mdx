@@ -104,7 +104,7 @@ See GitHub issue [confluentinc/librdkafka#3125](https://github.com/confluentinc/
 
 #### `You have exceeded the rate limit. Please visit https://${domain}/docs/faq#how-do-i-make-a-cron-job-to-periodically-check-for-new-kafka-messages for more info`
 
-If you are seeing this error, your Kafka clients have exceeded our rate limiting. This is a common occurance if you are running short lived clients or if your clients are defined in such a way that they are being recreated within a loop. If you see this message, you should review the structure of your clients. You should be able to reconnect using them after a cooldown period of about 10 minutes
+If you are seeing this error, your Kafka clients have exceeded our rate limiting. This is a common occurance if you are running short lived clients or if your clients are defined in such a way that they are being recreated within a loop. If you see this message, you should review the structure of your clients. You should be able to reconnect using them after a cooldown period of about 10 minutes.
 
 #### `Failed to retrieve OIDC token from "https://auth.{domain}.gcn.nasa.gov/oauth2/token": {"error":"invalid_client"} (400)`
 
