@@ -21,7 +21,10 @@ import chunk from 'lodash/chunk'
 
 import { hostname } from './env.server'
 import { getEnvBannerHeaderAndDescription, maybeThrow } from './utils'
-import { encodeToURL } from '~/routes/unsubscribe.$jwt/jwt.server'
+import {
+  encodeToConfirmationUrl,
+  encodeToURL,
+} from '~/routes/unsubscribe.$jwt/jwt.server'
 
 const client = new SESv2Client({})
 // https://docs.aws.amazon.com/ses/latest/dg/quotas.html
@@ -170,6 +173,32 @@ export async function sendEmail({
         Body: {
           Text: {
             Data: getBody(body),
+          },
+        },
+      },
+    },
+  })
+}
+
+export async function sendUserEmailVerificationMessage(
+  sub: string,
+  address: string
+) {
+  const emailBody = `To verify this email address, open this link in your web browser: ${await encodeToConfirmationUrl(sub, address)} `
+
+  await send({
+    Destination: {
+      ToAddresses: [address],
+    },
+    FromEmailAddress: getFrom('GCN Email Verification'),
+    Content: {
+      Simple: {
+        Subject: {
+          Data: 'Verify Additional Email Address',
+        },
+        Body: {
+          Text: {
+            Data: getBody(emailBody),
           },
         },
       },
