@@ -5,8 +5,6 @@ handle:
 
 import logo from './logo.jpg'
 
-import { WithFeature } from '~/root'
-
 # SuperNova Early Warning System (SNEWS)
 
 <img
@@ -45,8 +43,6 @@ import { WithFeature } from '~/root'
 | ------- | ---------------------------- | ------- |
 | `SNEWS` | REAL or TEST supernova alert | Minutes |
 
-<WithFeature SNEWS_2>
-
 **JSON-Serialized GCN Notices Types in GCN Kafka:**
 
 SNEWS2 distributes alerts for neutrino coincidences detected by the SuperNova Early Warning System (SNEWS 2.0). The SNEWS 2.0 coincidence network provides early alerts for candidate core-collapse supernovae by identifying statistically significant neutrino coincidences across participating neutrino observatories, including Super-Kamiokande, IceCube, and KM3NeT. Notices are issued for both real and test alerts. Real alerts may include triangulation information when available to improve source localization. These notices are published on the GCN Kafka topic `gcn.notices.snews2.coincidence`.
@@ -60,8 +56,6 @@ SNEWS2 [GCN Schema](/schema/stable/gcn/notices/snews2/coincidence.schema.json) a
 | `gcn.notices.snews2.coincidence` | Coincidence information, alert type, localization | Minutes |
 
 </div>
-
-</WithFeature>
 
 **Yearly Event Rates:**
 
