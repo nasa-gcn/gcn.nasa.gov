@@ -19,6 +19,11 @@ type UnsubscribeOptions = {
   topics: string[]
 }
 
+type AddressUpdateOptions = {
+  sub: string
+  address: string
+}
+
 function isArrayOfStrings(obj: unknown): obj is string[] {
   return Array.isArray(obj) && obj.every((item) => typeof item === 'string')
 }
@@ -59,4 +64,34 @@ export async function decodeFromURLParams({
   invariant(isArrayOfStrings(topics))
 
   return { email, topics }
+}
+
+export async function encodeToConfirmationUrl(sub: string, address: string) {
+  const jwt = await new SignJWT({ sub, address })
+    .setProtectedHeader({ alg: 'HS256' })
+    .setIssuedAt()
+    .setIssuer(issuer)
+    .sign(key)
+  return `${issuer}/user/confirm/${jwt}`
+}
+
+export async function decodeAddressConfirmation({
+  jwt,
+}: Params): Promise<AddressUpdateOptions> {
+  invariant(jwt)
+
+  let jwtVerified
+  try {
+    jwtVerified = await jwtVerify(jwt, key, {
+      maxTokenAge,
+      issuer,
+    })
+  } catch (e) {
+    console.error(e)
+    throw new Response('invalid JWT', { status: 400 })
+  }
+  const { sub, address } = jwtVerified.payload
+  invariant(typeof sub === 'string')
+  invariant(typeof address === 'string')
+  return { sub, address }
 }

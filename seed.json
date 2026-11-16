@@ -6317,7 +6317,21 @@
       "sub": "default",
       "username": "Example User",
       "affiliation": "Testing Corp",
-      "email": "user@example.com"
+      "email": "user@example.com",
+      "validEmails": [
+        {
+          "address": "user@example.com",
+          "verified": true
+        },
+        {
+          "address": "example.user@example.com",
+          "verified": "true"
+        },
+        {
+          "address": "example.user.new@example.com",
+          "verified": false
+        }
+      ]
     },
     {
       "sub": "teammate1",
