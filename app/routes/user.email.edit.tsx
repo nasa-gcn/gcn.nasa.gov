@@ -31,6 +31,7 @@ import {
   getEmailNotification,
   updateEmailNotification,
 } from './user.email/email_notices.server'
+import Hint from '~/components/Hint'
 import { type NoticeFormat, NoticeFormatInput } from '~/components/NoticeFormat'
 import { NoticeTypeCheckboxes } from '~/components/NoticeTypeCheckboxes/NoticeTypeCheckboxes'
 import { ReCAPTCHA, verifyRecaptcha } from '~/components/ReCAPTCHA'
@@ -164,6 +165,10 @@ export default function () {
           *
         </span>
       </Label>
+      <Hint>
+        Select from your verified email addresses. New addresses can be added to
+        your account on your <a href="/user">profile page</a>.
+      </Hint>
       <Select
         id="recipient"
         name="recipient"

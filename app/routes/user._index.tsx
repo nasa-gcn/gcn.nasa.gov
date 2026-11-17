@@ -20,7 +20,6 @@ import {
   ModalFooter,
   ModalHeading,
   ModalToggleButton,
-  Tag,
   TextInput,
 } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
@@ -281,23 +280,15 @@ function EmailForm({ item }: { item: EmailItem }) {
           <div>
             <strong>{item.address}</strong>
           </div>
-          <div>
-            {item.verified ? (
-              <Tag className="bg-success">
-                Verified
-                <Icon.Check />
-              </Tag>
-            ) : (
-              <Tag className="bg-warning">
-                Not Verified
-                <Icon.ErrorOutline />
-              </Tag>
-            )}
-          </div>
         </div>
         <div className="tablet:grid-col flex-auto margin-y-auto">
-          <ToolbarButtonGroup>
-            {!item.verified && (
+          <ToolbarButtonGroup className="margin-y-auto">
+            {item.verified ? (
+              <div className="margin-y-105">
+                Verified
+                <Icon.Check className="text-green" />
+              </div>
+            ) : (
               <ModalToggleButton
                 opener
                 modalRef={verifyRef}
