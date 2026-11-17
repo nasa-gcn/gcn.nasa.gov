@@ -30,6 +30,7 @@ import {
 } from '@trussworks/react-uswds'
 import { useEffect, useRef, useState } from 'react'
 import invariant from 'tiny-invariant'
+import { useBack } from 'use-back'
 import { useOnClickOutside } from 'usehooks-ts'
 
 import { getUser } from './_auth/user.server'
@@ -121,8 +122,8 @@ export default function () {
   const ref = useRef<HTMLDivElement>(null)
   const fetcher = useFetcher()
   const submit = useSubmit()
-
   const [showContent, setShowContent] = useState(false)
+  const { handleBack } = useBack(`/synonyms`)
   useOnClickOutside(ref, () => {
     setShowContent(false)
   })
@@ -139,7 +140,7 @@ export default function () {
   return (
     <>
       <ToolbarButtonGroup className="flex-wrap">
-        <Link to="/synonyms" className="usa-button">
+        <Link onClick={handleBack} className="usa-button" to="/synonyms">
           <Icon.ArrowBack role="presentation" className="margin-y-neg-2px" />
           Back
         </Link>
