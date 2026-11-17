@@ -20,6 +20,10 @@ export const publicStaticShortTermCacheControlHeaders = {
   'Cache-Control': 'public, max-age=86400',
 }
 
+export const restrictedContentSecurityPolicy = {
+  'Content-Security-Policy': "script-src 'self';",
+}
+
 /**
  * Get HTTP headers for declaring the canonical URL to search engines.
  *

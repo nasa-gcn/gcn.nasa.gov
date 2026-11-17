@@ -36,7 +36,10 @@ import DetailsDropdownButton from '~/components/DetailsDropdownButton'
 import DetailsDropdownContent from '~/components/DetailsDropdownContent'
 import { Highlight } from '~/components/Highlight'
 import { Tab, Tabs } from '~/components/tabs'
-import { publicStaticShortTermCacheControlHeaders } from '~/lib/headers.server'
+import {
+  publicStaticShortTermCacheControlHeaders,
+  restrictedContentSecurityPolicy,
+} from '~/lib/headers.server'
 import { exampleSuffix, schemaSuffix } from '~/lib/schema-data'
 import type {
   ExampleFile,
@@ -82,7 +85,12 @@ export async function loader({
   data = data.filter((x) => !x.name.endsWith(exampleSuffix))
   return json(
     { data, jsonContent, examples },
-    { headers: publicStaticShortTermCacheControlHeaders }
+    {
+      headers: {
+        ...publicStaticShortTermCacheControlHeaders,
+        ...restrictedContentSecurityPolicy,
+      },
+    }
   )
 }
 
@@ -209,7 +217,11 @@ export default function () {
               <Documentation />
               <CardGroup>
                 {data.map((x) => (
-                  <Link key={x.path} to={x.name} className="tablet:grid-col-3">
+                  <Link
+                    key={x.path}
+                    to={encodeURIComponent(x.name)}
+                    className="tablet:grid-col-3"
+                  >
                     <Card key={x.path} className="">
                       <CardHeader>
                         <h3 className="display-flex flex-align-center">
