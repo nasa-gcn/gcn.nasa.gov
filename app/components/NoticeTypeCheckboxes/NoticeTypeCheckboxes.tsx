@@ -89,9 +89,9 @@ const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   MAXI: '/missions/maxi',
+  SNEWS2: '/missions/snews',
   'Super-Kamiokande': '/missions/sksn',
   Swift: '/missions/swift',
-  SNEWS: '/missions/snews',
 }
 
 interface NoticeTypeCheckboxProps {
