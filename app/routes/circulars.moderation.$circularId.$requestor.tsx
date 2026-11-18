@@ -8,7 +8,7 @@
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node'
 import { Form, Link, redirect, useLoaderData } from '@remix-run/react'
 import { Button, ButtonGroup, Checkbox } from '@trussworks/react-uswds'
-import { diffLines, diffWords } from 'diff'
+import { diffLines, diffWordsWithSpace } from 'diff'
 
 import { getUser } from './_auth/user.server'
 import {
@@ -115,6 +115,7 @@ export default function () {
       <DiffedContent
         oldString={circular.subject}
         newString={correction.subject}
+        method="words"
       />
       <h3>Event ID</h3>
       <DiffedContent
@@ -134,7 +135,11 @@ export default function () {
         newString={correction.format ?? 'text/plain'}
       />
       <h3>Body</h3>
-      <DiffedContent oldString={circular.body} newString={correction.body} />
+      <DiffedContent
+        oldString={circular.body}
+        newString={correction.body}
+        method="words"
+      />
       <Form method="POST">
         <Checkbox
           id="redistribute"
@@ -167,7 +172,7 @@ function DiffedContent({
 }) {
   const diff =
     method == 'words'
-      ? diffWords(oldString, newString)
+      ? diffWordsWithSpace(oldString, newString)
       : diffLines(oldString, newString)
 
   return (
