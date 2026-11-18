@@ -6276,6 +6276,7 @@
     },
     {
       "subject": "LIGO/Virgo/KAGRA S230811n: Identification of a GW compact binary merger candidate",
+      "requestorSub": "12345678-abcd-1234-abcd-1234abcd1234",
       "submittedHow": "web",
       "bibcode": "2023GCN.34380....1L",
       "createdOn": 1691726847630,
