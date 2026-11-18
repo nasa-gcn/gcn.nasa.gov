@@ -133,7 +133,7 @@ export default function () {
   const [alertsValid, setAlertsValid] = useState(false)
   const [recaptchaValid, setRecaptchaValid] = useState(!useRecaptchaSiteKey())
   const [defaultFormat, setFormat] = useState<NoticeFormat>(
-    (params.get('format') as NoticeFormat) ?? format
+    (params.get('noticeFormat') as NoticeFormat) ?? format
   )
 
   return (
