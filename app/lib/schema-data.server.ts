@@ -151,6 +151,14 @@ export const getGithubDir = memoizee(
     path: string,
     ref = 'main'
   ): Promise<GitContentDataResponse[]> {
+    const validTags = await octokit.repos.listTags({
+      ...repoData,
+    })
+
+    if (!validTags.data.some((x) => x.name === ref)) {
+      throw new Response(null, { status: 404 })
+    }
+
     return (
       await octokit.repos.getContent({
         ...repoData,
