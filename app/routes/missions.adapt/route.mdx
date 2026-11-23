@@ -1,0 +1,59 @@
+---
+handle:
+  breadcrumb: ADAPT
+---
+
+import logo from './adapt-logo.png'
+
+# Antarctic Demonstrator for the Advanced Particle-astrophysics Telescope
+
+<img
+  src={logo}
+  align="right"
+  width="900"
+  height="600"
+  alt="ADAPT logo"
+  className="grid-col-6 mobile-lg:grid-col-4 tablet:grid-col-2 desktop:grid-col-3 height-auto"
+/>
+
+**Launch Readiness Date:** December 1, 2026
+
+**End of Operations:** Mission duration of 1 month
+
+The [Antarctic Demonstrator for the Advanced Particle-astrophysics Telescope (ADAPT)](https://adapt.physics.wustl.edu) is a NASA suborbital mission designed for a high-altitude balloon flight from Antarctica. The 0.5 m x 0.5 m cross-section instrument comprises a scintillating fiber tracker, an imaging CsI calorimeter, and a silicon strip detector for gamma-ray and cosmic-ray measurements. ADAPT will demonstrate key detector technologies for the larger space-based Advanced Particle-astrophysics Telescope (APT) mission and survey the sky for gamma-ray transients in the MeV -GeV energy range during its approximately 30-day flight. It is expected to provide prompt, degree-scale localizations and polarization measurements of several gamma-ray bursts (GRBs), with improved instantaneous sensitivity over existing instruments at energies below 100 MeV. ADAPT will also demonstrate the potential of APT for measuring the elemental abundances of rare ultra-heavy cosmic rays.
+
+The ADAPT instrument is being developed by the APT collaboration, involving Washington University (the PI institution), the Erlangen Centre for Astroparticle Physics, NASA Goddard Space Flight Center, Louisiana State University, INFN Bari, INFN Pisa, the Naval Research Laboratory, the University of Hawaii, and the University of Minnesota.
+
+<div className="overflow-table">
+
+| Instruments | Energy Range | Field of View      | Localization |
+| ----------- | ------------ | ------------------ | ------------ |
+| APT         | MeV - GeV    | xx deg<sup>2</sup> | xx arcmin    |
+
+</div>
+
+**JSON-Serialized GCN Notices Types in GCN Kafka:**
+
+ADAPT is expected to distribute alerts for gamma-ray transients detected during its flight. Details of the GCN Kafka topics, schema, and example JSON messages will be provided once finalized.
+
+ADAPT [GCN schema](/schema/stable/gcn/notices/adapt/alert.schema.json) and
+example [JSON message](/schema/stable/gcn/notices/adapt/alert.example.json) files are available. See the [Schema Browser](/docs/schema/stable/gcn/notices/adapt/alert.schema.json) for more information on the properties defined in the schema. Detailed description and examples of ADAPT Notices are available in the [GCN Schema GitHub project](https://github.com/nasa-gcn/gcn-schema/tree/main/gcn/notices/adapt).
+
+<div className="overflow-table">
+
+| Type                      | Contents                               | Latency |
+| ------------------------- | -------------------------------------- | ------- |
+| `gcn.notices.adapt.alert` | Localization, Count Rate, Significance | ~xx min |
+
+</div>
+
+**Yearly Trigger Rates:**
+
+<div className="overflow-table">
+
+| Instrument | Type                                                   | Rates |
+| ---------- | ------------------------------------------------------ | ----- |
+| ADAPT      | GRBs, other transients, and non-astrophysical triggers | ~xx   |
+|            | Test alert                                             | ~xx   |
+
+</div>
