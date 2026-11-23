@@ -24,6 +24,9 @@ export default function () {
               <NavLink key="." to="." end>
                 Missions, Instruments, and Facilities
               </NavLink>,
+              <NavLink key="adapt" to="adapt" end>
+                ADAPT
+              </NavLink>,
               <NavLink key="boom" to="boom" end>
                 BOOM
               </NavLink>,
