@@ -30,19 +30,30 @@ import { Anchor } from '~/components/Anchor'
 <CollectionItem
     className="maxw-none grid-container"
     variantComponent={
-      <CollectionCalendarDate datetime='Nov 19, 2026' />
+      <CollectionCalendarDate datetime='Nov 30, 2026' />
     }
 >
     <CollectionHeading headingLevel="h3">
-      <Anchor>SNEWS2 JSON Notices, Schema v7.3.0, Kafka Rate Limiting</Anchor>
+      <Anchor>SNEWS2 Notices, IceCube Update, Kafka Rate Limiting, Schema v7.3.0</Anchor>
     </CollectionHeading>
     <CollectionDescription>
       The GCN Team announces:
       - [SNEWS2 JSON Notices](/news#snews2-json-notices)
+      - [IceCube Updates to LVK Follow-up Notices](/news#icecube-updates-to-lvk-follow-up-notices)
+      - [Kafka Rate Limiting](/news#kafka-rate-limiting)
       - [Schema v7.3.0](/news#schema-v730)
 
+      #### SNEWS2 JSON Notices
+      The [SNEWS2](https://snews2.org/) Team and the GCN Team are pleased to announce the availability of SNEWS2 Notices via the [new GCN](https://gcn.nasa.gov) in JSON format. SNEWS2 distributes alerts for neutrino coincidences detected by the SuperNova Early Warning System (SNEWS 2.0). The SNEWS 2.0 coincidence network provides early alerts for candidate core-collapse supernovae by identifying statistically significant neutrino coincidences across participating neutrino observatories, including Super-Kamiokande, IceCube, and KM3NeT. Notices are issued for both real and test alerts. Real alerts may include triangulation information when available to improve source localization. These notices are published on the GCN Kafka topic `gcn.notices.snews2.coincidence`.  See the [SNEWS mission page](/missions/snews) for a more extensive description of the information provided in these new notices.
+
+      #### IceCube Updates to LVK Follow-up Notices
+      In advance of LVK IR1, IceCube has modified the `gcn.notices.icecube.lvk_nu_track_search` schema to add fields and modify their schema to generalize it for a future additional Notice Type. These modifications should be non-breaking changes. See the [IceCube mission page](/missions/icecube) for more information.
+
+      #### Kafka Rate Limiting
+      The GCN Team has implemented rate limiting to excessive Kafka token requests. See the [FAQ](/docs/faq#you-have-exceeded-the-rate-limit-please-visit-httpsdomaindocsfaqhow-do-i-make-a-cron-job-to-periodically-check-for-new-kafka-messages-for-more-info) for more information.
+
       #### Schema v7.3.0
-          GCN Schema v7.3.0 is available with recent changes including new Notice types and examples ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v7.3.0)).
+      GCN Schema v7.3.0 is available with recent changes including new Notice types and examples ([Release Notes](https://github.com/nasa-gcn/gcn-schema/releases/tag/v7.3.0)).
 
     </CollectionDescription>
 

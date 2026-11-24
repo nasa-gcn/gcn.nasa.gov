@@ -276,11 +276,11 @@ export function Layout({ children }: { children?: ReactNode }) {
         <DevBanner />
         <Header />
         <NewsBanner>
-          End of Swift Science Operations, CHIME Notices Unavailable During
-          Upgrade. See{' '}
+          New! SNEWS2 Notices, IceCube Update, Kafka Rate Limiting, Schema
+          v7.3.0. See{' '}
           <Link
             className="usa-link"
-            to="news#end-of-swift-science-operations-chime-notices-unavailable-during-upgrade"
+            to="news#snews2-notices-icecube-update-kafka-rate-limiting-schema-v730"
           >
             news and announcements
           </Link>
