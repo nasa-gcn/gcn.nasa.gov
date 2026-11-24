@@ -57,6 +57,7 @@ const NoticeTypeLinks: { [key: string]: string | undefined } = {
   LVC: 'lvk',
   MAXI: 'maxi',
   Swift: 'swift',
+  SNEWS: 'snews',
   Other: undefined,
 }
 
@@ -74,6 +75,7 @@ export const JsonNoticeTypes: { [key: string]: string[] } = {
   LVK: ['igwn.gwalert'],
   MAXI: ['gcn.notices.maxi.gsc.known', 'gcn.notices.maxi.gsc.unknown'],
   'Super-Kamiokande': ['gcn.notices.superk.sn_alert'],
+  SNEWS2: ['gcn.notices.snews2.coincidence'],
   Swift: ['gcn.notices.swift.bat.guano'],
 }
 
@@ -87,6 +89,7 @@ const JsonNoticeTypeLinks: { [key: string]: string | undefined } = {
   IceCube: '/missions/icecube',
   LVK: 'https://emfollow.docs.ligo.org/userguide/tutorial/receiving/gcn.html#receiving-and-parsing-notices',
   MAXI: '/missions/maxi',
+  SNEWS2: '/missions/snews',
   'Super-Kamiokande': '/missions/sksn',
   Swift: '/missions/swift',
 }
