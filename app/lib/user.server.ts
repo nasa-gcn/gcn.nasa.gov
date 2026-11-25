@@ -81,6 +81,9 @@ export async function removeUserEmailAddress(sub: string, address: string) {
   const userEmails = (await getAllUserEmails(sub)).filter(
     (item) => item.address !== address
   )
+  if (userEmails.length === 0)
+    // There should always be at least 1
+    throw new Response(null, { status: 409 })
   const db = await tables()
   await db.users.update({
     Key: { sub },
