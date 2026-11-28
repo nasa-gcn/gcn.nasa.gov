@@ -23,7 +23,7 @@ import { LuceneAccordion } from './LuceneMenu'
 import { SortSelector } from './SortSelectorButton'
 import Hint from '~/components/Hint'
 import { ToolbarButtonGroup } from '~/components/ToolbarButtonGroup'
-import { usePermissionModerator } from '~/root'
+import { useFeature, usePermissionModerator } from '~/root'
 import { eventTypesHumanReadable } from '~/routes/circulars/circulars.lib'
 
 import searchImg from 'nasawds/src/img/usa-icons-bg/search--white.svg'
@@ -86,6 +86,8 @@ export default function ArchiveHeader({
     : undefined
   const eventTypeLabel = eventTypeHumanReadable || undefined
 
+  const showEventTypes = useFeature('EVENTTYPE')
+
   let searchString = searchParams.toString()
   if (searchString) searchString = `?${searchString}`
 
@@ -99,7 +101,7 @@ export default function ArchiveHeader({
 
   return (
     <>
-      <EventTypeBreadcrumb eventType={eventType} />
+      {showEventTypes && <EventTypeBreadcrumb eventType={eventType} />}
       {result?.intent === 'new' && result?.newCircular && (
         <Alert
           type="success"
